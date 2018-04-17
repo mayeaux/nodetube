@@ -1,0 +1,18 @@
+extends ../layout
+
+block content
+    each upload in uploads
+        p.
+            #{upload.reacts.length} Reacts | #{upload.title} by
+        if upload.uploader
+            p #{upload.uploader.channelName}
+
+        br
+
+
+
+
+
+
+
+

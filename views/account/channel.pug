@@ -1,0 +1,524 @@
+extends ../layout
+
+
+
+
+block content
+    style.
+        .editLink  {
+            display: inline-block;
+        }
+
+block content
+    style.
+        .dropdown {
+            text-align: center;
+        }
+
+        .button, .dropdown-menu {
+            margin: 10px auto
+        }
+
+        .dropdown-menu {
+            width: 200px;
+            left: 50%;
+            margin-left: -100px;
+        }
+
+        input[type=checkbox] {
+            /* Double-sized Checkboxes */
+            -ms-transform: scale(2); /* IE */
+            -moz-transform: scale(2); /* FF */
+            -webkit-transform: scale(2); /* Safari and Chrome */
+            -o-transform: scale(2); /* Opera */
+            padding: 10px;
+        }
+
+        .pewtube-pro {
+            background: #edeeee;
+            font-weight: 400;
+            font-size: 13px;
+            margin-left: 3px;
+            padding: 8px 9px;
+            display: inline-block;
+            border-radius: 3px;
+            transform: translateY(-2px);
+        }
+
+
+    div.channel-information
+        div.col-sm-12
+            div.col-sm-4
+                h3 #{channel.channelName || channel.channelUrl}
+                    if channel.verified == true
+                        img(src="/images/verified.jpg" width="25px" height="25px" style="margin-left:3px;margin-top:-2px;margin-right:5px;")
+                    if channel.plan == 'plus'
+                        span.pewtube-pro PLUS
+            div.user-stats.col-sm-6(style="margin-top:14px")
+                div.col-sm-4
+                    h4 Uploads: #{channel.uploads.length} &nbsp &nbsp
+                div.col-sm-4
+                    h4 Views : #{channel.totalViews}
+                if channel.receivedSubscriptions
+                    div.col-sm-4
+                        h4 Subscribers : #{channel.receivedSubscriptions.length}
+                else
+                    div.col-sm-4
+                        h4 Subscribers : 0
+            br
+            br
+            br
+            br
+            if channel.thumbnailUrl || channel.customThumbnail
+                div.col-sm-2
+                    if channel.customThumbnail
+                        img(src=`${uploadServer}/${channel.channelUrl}/${channel.customThumbnail}` width="120px" height="120px")
+                    else
+                        img(src=`${uploadServer}/${channel._id}/unique.png` width="120px" height="120px")
+
+                    //img(src=channel.thumbnailUrl width="120px" height="120px")
+
+
+            div.col-sm-8
+                p(id="descriptionText") #{channel.channelDescription}
+                if user && user.role == 'admin'
+                    each ip in ips
+                        p= ip
+
+
+                if alreadySubbed
+                    button.subscribe.btn.btn-success Subscribed (#{subscriberAmount})
+                else
+                    button.subscribe.btn.btn-success Subscribe (#{subscriberAmount})
+
+                if user && user.role == 'admin'
+                    br
+                    br
+                    button.delete-account.btn.btn-danger Delete
+                    button.delete-ips.btn.btn-danger Delete All Accounts / Ips
+
+        br
+        div
+        br
+
+    div(style="margin-top:80px;")
+        div
+
+    br
+    br
+    br
+    br
+    br
+    p
+    hr
+
+    br
+    div.center-block.text-center
+        div.dropdown(style="display:inline;margin-right:15px;")
+            button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
+                | Order By: #{orderByEnglishString} &nbsp
+                span.caret
+
+            ul.dropdown-menu.dropdown
+                li
+                    a(href=`/user/${channel.channelUrl}?orderBy=popular`) Popular
+                li
+                    a(href=`/user/${channel.channelUrl}?orderBy=newToOld`) New To Old
+                li
+                    a(href=`/user/${channel.channelUrl}?orderBy=oldToNew`) Old To New
+
+        div.dropdown(style="display:inline")
+            button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
+                if siteVisitor.filter == 'allAges'
+                    | Rating: SFW &nbsp
+                else if siteVisitor.filter == 'mature'
+                    | Rating: SFW/NSWF &nbsp
+                span.caret
+
+            ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1')
+                li(role='presentation')
+                    if siteVisitor.filter == 'mature'
+                        a.changeFilterButton(value="allAges" href="#") SFW
+                    else if siteVisitor.filter == 'allAges'
+                        a.changeFilterButton(value="mature" href="#") SFW/NFSW
+
+    br
+    br
+
+    each upload in channel.uploads
+        div.col-sm-4(style="text-align:center;height:360px")
+            if isUser || isAdmin
+                div.editFileButtons
+                    a.editLink(href=`/user/${channel.channelUrl}/${upload.uniqueTag}/edit` style="display:inline-block")
+                        button.btn.btn-primary Edit
+
+                    form.editLink(action="/api/upload/delete" method="POST" style="display:inline-block")
+                        input(type='hidden', name='_csrf', value=_csrf)
+                        input(type='hidden', name='videoId', value=upload.uniqueTag)
+                        button.btn.btn-danger.delete-media Delete
+
+
+            // TODO: Sub out thumbnail here
+            a(href=`/user/${channel.channelUrl}/${upload.uniqueTag}` style="text-decoration:none;color:black;")
+                if upload.thumbnails && upload.thumbnails.custom
+                    img.preview-image(src=`${uploadServer}/${channel.channelUrl}/${upload.thumbnails.custom}` style="width:inherit;max-width:302px;")
+
+                else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.generated
+                    img.preview-image(src=`${uploadServer}/${channel.channelUrl}/${upload.thumbnails.generated}` style="width:inherit;max-width:302px;")
+
+                else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.medium
+                    img.preview-image(src=`${uploadServer}/${channel.channelUrl}/${upload.thumbnails.medium}` style="width:inherit;max-width:302px;")
+
+                else if upload.fileType == 'audio'
+                    img.preview-image(src='/audio.svg')
+
+                else if upload.fileType == 'image'
+                    img.preview-image(src=`${uploadServer}/${channel.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="width:inherit;max-width:302px;")
+
+                else if upload.fileType == 'unknown'
+                    img.preview-image(src='/no_img.png')
+
+                div
+                    p.upload-title-text #{upload.title}
+
+            div.upload-details(style="width:80%;margin:0 auto")
+                div.views
+                    p.views-text #{upload.legitViewAmount} Views
+                div.uploaded-by
+                    p #{upload.fileType.charAt(0).toUpperCase() + upload.fileType.slice(1)} uploaded #{upload.timeAgo}
+
+            if user && user.role == 'admin'
+                div.changeRating(style="margin-top:30px;")
+                    input.ratingChanged(type="checkbox" value=`${upload._id}`)
+
+    if user && user.role == 'admin'
+        div.center-block.text-center.col-sm-12
+            button.btn-lg.button-success.change-rating(rating="sensitive") Mark As Sensitive
+            button.btn-lg.button-success.change-rating(rating="mature") Mark As NSFW (Mature)
+            button.btn-lg.button-success.change-rating(rating="allAges") Mark As SFW (AllAges)
+
+    if user && user.role == 'admin'
+        script.
+          $('.change-rating').on('click', function () {
+            var checkedValues = $('input:checkbox:checked').map(function () {
+              return this.value;
+            }).get();
+
+            var rating = $(this).attr('rating');
+            var csrf = '#{_csrf}'
+
+
+            var data = {
+              rating: rating,
+              uploads: checkedValues,
+              csrf: csrf
+            }
+
+            $.ajax({
+              type: 'POST',
+              url: `/admin/changeRatings`, // todo: change to user filter
+              data,
+              success: function (data) {
+                if (data == 'success') {
+                  window.location.reload(true);
+                } else {
+                  swal("Something didn't work, please contact PewTube at ceo@pew.tube or via the widget in the bottom right corner")
+                }
+                console.log(data);
+              },
+              error: function (err) {
+                console.log(err);
+              }
+            });
+
+
+            console.log(rating);
+          })
+
+    script.
+      $('.changeFilterButton').on('click', function () {
+
+        function changeUserRatingFilter(value) {
+
+          console.log('running here')
+
+          var data = {
+            filter: value
+          }
+
+          $.ajax({
+            type: 'POST',
+            url: `/api/changeUserFilter`, // todo: change to user filter
+            data,
+            success: function (data) {
+              if (data == 'success') {
+                window.location.reload(true);
+              } else {
+                swal("Something didn't work, please contact PewTube at ceo@pew.tube or via the widget in the bottom right corner")
+              }
+              console.log(data);
+            },
+            error: function (err) {
+              console.log(err);
+            }
+          });
+
+        }
+
+        const value = $(this).attr('value');
+
+        if (value == 'mature') {
+
+          swal({
+            title: '',
+            text: 'Please confirm you are 18 or older and willing to see \n not safe for work content',
+            showCancelButton: true,
+            confirmButtonText: "Confirm Age",
+          }).then(function (result) {
+
+            console.log(result);
+
+            if (result.value == true) {
+              changeUserRatingFilter(value)
+            }
+          })
+
+        } else {
+          changeUserRatingFilter(value);
+        }
+
+        console.log('here')
+      })
+
+    script.
+      $(document).on({
+        mouseenter: function () {
+          var width = $(this).width()
+          var height = $(this).height()
+
+
+          $(this).css("width", width * 1.10);
+          $(this).css("height", height * 1.10);
+
+        },
+        mouseleave: function () {
+          var width = $(this).width()
+          var height = $(this).height()
+
+          $(this).css("width", width / 1.10);
+          $(this).css("height", height / 1.10);
+        }
+      }, '.preview-image');
+
+    if user
+        script.
+          var user = '#{user.channelUrl}'
+    else
+        script.
+          var user = undefined
+
+    script.
+      var amountOfSubs = #{subscriberAmount}
+      var alreadySubbed = #{alreadySubbed}
+
+      $('.subscribe').on('touchstart click', function (e) {
+
+        if (!user) {
+          return swal('Please register an account to subscribe')
+        }
+
+        var channelUrl = '#{channel.channelUrl}'
+        var csrf = '#{_csrf}'
+
+        // dont move browser
+        e.preventDefault();
+
+        if (alreadySubbed) {
+          amountOfSubs = amountOfSubs - 1
+          alreadySubbed = false;
+        } else {
+          amountOfSubs = amountOfSubs + 1
+          alreadySubbed = true;
+        }
+
+        var userName = "#{channel.channelName || channel.channelUrl}"
+
+        if (!alreadySubbed) {
+          $('.subscribe').html(`Subscribe (${amountOfSubs})`)
+          swal('You have unsubscribed from ' + userName)
+
+        } else {
+          $('.subscribe').html(`Subscribed (${amountOfSubs})`)
+          swal('You have subscribed to ' + userName )
+        }
+
+        //
+        var data = {
+          _csrf: csrf,
+          channelUrl
+        }
+
+        $.ajax({
+          type: 'POST',
+          url: `/api/subscribe`,
+          data,
+          success: function (data) {
+            console.log(data);
+          },
+          error: function (err) {
+            console.log(err);
+          }
+        });
+      })
+
+    script.
+      var myTextEl = document.getElementById('descriptionText');
+      myTextEl.innerHTML = Autolinker.link(myTextEl.innerHTML);
+
+
+
+
+    script.
+      $('.delete-media').on('click', function (e) {
+        e.preventDefault();
+        var form = $(this).parents('form');
+
+        swal({
+          title: "WARNING",
+          text: "Are you sure you want to delete this upload?",
+          type: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#DD6B55",
+          confirmButtonText: "Yes, delete it"
+        }).then(function (result) {
+          if (result.value == true) {
+            form.submit();
+          }
+          console.log(result);
+        })
+      });
+
+    if user && user.role == 'admin'
+        script.
+            $('.delete-account').on('click', function (e) {
+                e.preventDefault();
+                swal({
+                    title: "WARNING",
+                    text: "Are you sure you want to delete this account?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, delete it"
+                }).then(function (result) {
+                      if(result.value !== true){
+                        return
+                      }
+
+                      var channelUrl = '#{channel.channelUrl}';
+                      var csrf = '#{_csrf}';
+                        // sweetalert2.js:131 SweetAlert2: Unknown parameter "closeOnConfirm"
+                      // dont move browser
+                      e.preventDefault();
+
+                      //
+                      var data = {
+                        _csrf: csrf,
+                        channelUrl
+                      }
+
+                      console.log(data);
+
+                      $.ajax({
+                        type: 'POST',
+                        url: `/admin/deleteAccount`,
+                        data,
+                        success: function (data) {
+
+                          console.log(data);
+
+                          location.reload();
+
+                        },
+                        error: function (err) {
+                          console.log(err);
+                        }
+                      });
+                });
+            });
+
+    if user && user.role == 'admin'
+        script.
+          $('.delete-ips').on('click', function (e) {
+            e.preventDefault();
+
+            $.ajax({
+              type: 'POST',
+              url: `/admin/getUserAccounts`,
+              data : {
+                _csrf: '#{_csrf}',
+                channelUrl: '#{channel.channelUrl}'
+              },
+              success: function (data) {
+
+                // console.log(data);
+
+                var string = '';
+                for(var channelUrl of data.channelUrls){
+                  string = string + ' ' + channelUrl;
+                }
+
+                var siteVisitorAmount = data.ids.length;
+
+                swal({
+                  title: "WARNING",
+                  text: "Are you sure you want to delete this account?" + string + '. ' + siteVisitorAmount + ' site visitors',
+                  type: "warning",
+                  showCancelButton: true,
+                  confirmButtonColor: "#DD6B55",
+                  confirmButtonText: "Yes, delete it"
+                }).then(function (result) {
+                  if (result.value !== true) {
+                    return
+                  }
+
+                  var channelUrl = '#{channel.channelUrl}'
+                  var csrf = '#{_csrf}'
+                  // sweetalert2.js:131 SweetAlert2: Unknown parameter "closeOnConfirm"
+                  // dont move browser
+                  e.preventDefault();
+
+                  //
+                  var data = {
+                    _csrf: csrf,
+                    channelUrl
+                  }
+
+                  console.log(data);
+
+                  $.ajax({
+                    type: 'POST',
+                    url: `/admin/deleteAllUsersAndBlockIps`,
+                    data,
+                    success: function (data) {
+
+                      console.log(data);
+
+                      location.reload();
+
+                    },
+                    error: function (err) {
+                      console.log(err);
+                    }
+                  });
+                });
+
+                console.log(data);
+
+              },
+              error: function (err) {
+                console.log(err);
+              }
+            });
+
+
+          });

@@ -1,0 +1,16 @@
+extends ../layout
+
+block content
+    div
+        div
+            h2
+            h2.view-header Reacts (Admin)
+        hr
+        each react in reacts
+            p Upload Title #{react.upload.title}
+            p Channel Name #{react.upload.uploader.channelName}
+            p Reacter : #{react.user.channelName}
+            p Reaction: #{react.react}
+
+            br
+            br

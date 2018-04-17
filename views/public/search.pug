@@ -1,0 +1,182 @@
+extends ../layout
+
+block content
+    div
+        div.col-sm-12.text-center(style="margin:0 auto;")
+            h2
+            h2(style="display:inline;") Search For Keyword
+            br
+            br
+            div(style="margin: 0 auto;")
+                form(action='/search', method='POST')
+                    input(type='hidden', name='_csrf', value=_csrf)
+                    input.form-control(style="margin: 0 auto;width:400px" type='search', name='search', id='search')
+                    br
+                    button.btn-lg.btn.btn-primary(type='submit' style="margin-right:10px" name="type" value="upload")
+                        //i.fa.fa-lock
+                        | Search For Media
+
+                    button.btn-lg.btn.btn-primary(type='submit' style="margin-left:10px" name="type" value="user")
+                        //i.fa.fa-lock
+                        | Search For User
+
+
+
+        // UPLOADS RESULTS
+        br
+        div.col-sm-12.text-center(style="margin:0 auto;margin-top:50px;")
+            if uploads
+                if uploads.length > 0
+                    p(style="text-decoration:underline;font-size:20px;") #{uploads.length} Results
+
+                    div.text-center.center-div
+
+                        div.dropdown(style="display:inline")
+                            button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
+                                if siteVisitor.filter == 'allAges'
+                                    | Rating: SFW &nbsp
+                                else if siteVisitor.filter == 'mature'
+                                    | Rating: SFW/NSWF &nbsp
+                                span.caret
+
+                            ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1')
+                                li(role='presentation')
+                                    if siteVisitor.filter == 'mature'
+                                        a.changeFilterButton(value="allAges" href="#") SFW
+                                    else if siteVisitor.filter == 'allAges'
+                                        a.changeFilterButton(value="mature" href="#") SFW/NFSW
+                    br
+                    br
+
+                    each upload in uploads
+                      if upload.uploader
+                          div.col-sm-4(style="text-align:center;height:360px")
+                              a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}` style="color:black")
+                                  // TODO: Sub out thumbnail here
+
+                                  if upload.thumbnails && upload.thumbnails.custom
+                                      img.preview-image(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.custom}` style="width:inherit;max-width:302px;")
+
+                                  else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.generated
+                                      img.preview-image(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated}` style="width:inherit;max-width:302px;")
+
+                                  else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.medium
+                                      img.preview-image(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.medium}` style="width:inherit;max-width:302px;")
+
+                                  else if upload.fileType == 'video' && !upload.thumbnailUrl
+                                      img.preview-image(src="/no_img.png")
+
+                                  else if upload.fileType == 'image'
+                                      img.preview-image(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`)
+
+                                  else if upload.fileType == 'audio'
+                                      img.preview-image(src='/audio.svg')
+
+                                  else if upload.fileType == 'unknown'
+                                      img.preview-image(src='/no_img.png')
+
+                                  div
+                                      p.upload-title-text #{upload.title}
+                                  br
+
+                              div.upload-details
+                                  div.views
+                                      p.views-text #{upload.legitViewAmount} Views
+                                      // capitalize media type
+                                  div.uploaded-by #{upload.fileType.charAt(0).toUpperCase() + upload.fileType.slice(1)} uploaded
+                                      | &nbsp#{upload.timeAgo} by
+                                      a(href=`/user/${upload.uploader.channelUrl}`)
+                                          p(style="font-size:16px") #{upload.uploader.channelName}
+                else
+                    div.center-block.text-center
+                        br
+                        br
+                        p(style="font-size:20px") No Results Found
+
+
+        // USERS RESULTS
+        div.col-sm-12.text-center(style="margin:0 auto;")
+            if channels
+                if channels.length > 0
+                    p(style="text-decoration:underline;font-size:20px;")  Results
+                    each channel in channels
+                        div.col-sm-4(style="text-align:center;height:360px")
+                            a(href=`/user/${channel.channelUrl}` style="color:black")
+                                if channel.thumbnailUrl
+                                    img.preview-image(src=channel.thumbnailUrl)
+                                else if channel.uploads && channel.uploads[0]
+                                    img.preview-image(src=channel.uploads[0].thumbnailUrl)
+                                else
+                                    img.preview-image(src='/no_img.png')
+
+
+                                div
+                                    p.upload-title-text Channel Username: #{channel.channelUrl}
+                                    p.upload-title-text Channel Name: #{channel.channelName}
+                                br
+
+                            div.upload-details
+                                div.views
+                                    p.views-text #{channel.uploads.length} Uploads
+
+                else
+                    div.center-block.text-center
+                        br
+                        br
+                        p(style="font-size:20px") No Results Found
+
+
+    script.
+      $('.changeFilterButton').on('click', function () {
+
+        function changeUserRatingFilter(value) {
+
+          console.log('running here')
+
+          var data = {
+            filter: value
+          }
+
+          $.ajax({
+            type: 'POST',
+            url: `/api/changeUserFilter`, // todo: change to user filter
+            data,
+            success: function (data) {
+              if (data == 'success') {
+                window.location.reload(true);
+              } else {
+                swal("Something didn't work, please contact PewTube at ceo@pew.tube or via the widget in the bottom right corner")
+              }
+              console.log(data);
+            },
+            error: function (err) {
+              console.log(err);
+            }
+          });
+
+        }
+
+        const value = $(this).attr('value');
+
+        if (value == 'mature') {
+
+          swal({
+            title: '',
+            text: 'Please confirm you are 18 or older and willing to see \n not safe for work content',
+            showCancelButton: true,
+            confirmButtonText: "Confirm Age",
+          }).then(function (result) {
+
+            console.log(result);
+
+            if (result.value == true) {
+              changeUserRatingFilter(value)
+            }
+          })
+
+        } else {
+          changeUserRatingFilter(value);
+        }
+
+        console.log('here')
+      })

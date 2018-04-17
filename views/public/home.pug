@@ -1,0 +1,65 @@
+extends ../layout
+
+block content
+  div(style="text-align:center")
+    br
+    br
+    br
+    //h1(style="font-size:80px") PewTube
+
+
+    //h2 A &nbsp
+    //  img(src="/youtube.png" style="width: 116px;")
+    //  | and &nbsp
+    //  img(src="/soundcloud.ico" style="width:116px;")
+    //  | &nbsp alternative that isn't run by
+    //  img(src="/goolag.jpg" style="height:118px;")
+    br
+    br
+    br
+    h2 Welcome to PewTube:
+    h2 The most creator friendly media hosting on the internet
+    br
+    br
+    br
+    br
+
+    hr
+
+    .row
+      .col-sm-4
+        h2 Video, Audio, Images &nbsp
+          i.fa.fa-thumbs-o-up
+        p Host all forms of media on
+        | our robust and innovative platform
+        br
+        br
+        br
+      .col-sm-4
+        h2 Livestreaming &nbsp
+          i.fa.fa-video-camera
+        p Stream on our platform with
+        | playback support for all devices
+      .col-sm-4
+        h2 Monetization &nbsp
+          i.fa.fa-usd
+        p Earn one-time or recurring
+        | donations directly from users
+
+
+    .row
+      .col-sm-4
+        h2 #{channelAmount} Channels &nbsp
+          i.fa.fa-users
+        p The amount of people who have
+        | chosen PewTube for their hosting
+      .col-sm-4
+        h2 #{mediaAmount} Uploads &nbsp
+          i.fa.fa-upload
+        p The amount of  times users have
+        | chosen us for hosting their media
+      .col-sm-4
+        h2 #{viewAmount} Views &nbsp
+          i.fa.fa-users
+        p The amount of times people have
+        | enjoyed the innovative new platform

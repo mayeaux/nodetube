@@ -1,0 +1,1239 @@
+extends layout
+
+block content
+
+    script(src='https://checkout.stripe.com/checkout.js')
+
+    style.
+        .pewtube-pro {
+            background: #edeeee;
+            font-weight: 400;
+            font-size: 13px;
+            margin-left: 3px;
+            padding: 8px 9px;
+            display: inline-block;
+            border-radius: 3px;
+            transform: translateY(-2px);
+        }
+
+        .dropdown {
+            text-align: center;
+        }
+
+        .button, .dropdown-menu {
+            margin: 10px auto
+        }
+
+        .dropdown-menu {
+            width: 200px;
+            left: 50%;
+            margin-left: -100px;
+            margin-top: 0px;
+        }
+
+
+    br
+    div.center-block.text-center.col-sm-12
+        if upload.status == 'processing'
+            h2 Your upload #{upload.title } is processing. Check back in a couple minutes.
+            br
+            br
+
+        br
+        br
+        if upload.fileType === 'video'
+            div.display-div(style="min-width:50%;min-height:50%;margin:0 auto;")
+                // TODO: Sub out thumbnail here
+
+                video.display-element(poster=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;")
+                    // to
+                    source.video-source(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`, type='video/mp4')
+                    //source(src=upload.uploadUrl, type='video/mp4')
+
+        else if upload.fileType === 'audio'
+            div
+                audio.my_audio(style="width:80%;" controls='', preload='none')
+                    source(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`, type='audio/mp3')
+                    //source(src=upload.uploadUrl, type='audio/mp3')
+
+        else if upload.fileType === 'image'
+            div.display-div(style="")
+                a(href=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`)
+                    img.display-element(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="max-width:80%;min-width:50%;min-height:50%;max-height:620px;")
+
+
+        div.non-player-content(style="position:relative;")
+
+            br
+            br
+            // Upload Title
+            //h2(class="upload-title-value" style="align-content:center;justify-content:normal;width:60%;margin: 0 auto;")=upload.title
+            h2.balance-text(class="upload-title-value" style="text-wrap:balance;width:80%;margin:0 auto;")=upload.title
+
+            br
+            // uploader byline
+            h3.uploader-name(style="margin-top:25px;font-size:26px;")
+                a(href=`/user/${upload.uploader.channelUrl}`)
+                    if upload.uploader.thumbnailUrl || upload.uploader.customThumbnail
+                        if upload.uploader.customThumbnail
+                            img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` width="140px" height="140px")
+                        else
+                            img(src=`${uploadServer}/${upload.uploader._id}/unique.png` width="140px" height="140px")
+                br
+                br
+                a(href=`/user/${upload.uploader.channelUrl}` style="color:rgb(51, 51, 51)") #{upload.uploader.channelName || upload.uploader.channelUrl}
+                    if upload.uploader.verified == true
+                        img(src="/images/verified.jpg" width="25px" height="25px" style="margin-left:3px;margin-top:-2px;margin-right:5px;")
+                    if upload.uploader.plan == 'plus'
+                        span.pewtube-pro PLUS
+
+            if alreadySubbed
+                button.subscribe.btn.btn-danger(style="border-radius:4px") Unsubscribe (#{subscriberAmount})
+            else
+                button.subscribe.btn.btn-success(style="border-radius:4px") Subscribe (#{subscriberAmount})
+            br
+            br
+
+            if upload.quality && upload.quality.high
+                br
+                br
+                div.dropdown
+                    button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:4px;" quality="low")
+                        | Quality: Low
+                        span.caret
+
+                    ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1')
+                        li(role='presentation')
+                            a.low-quality Low
+                        li(role='presentation')
+                            a.high-quality High
+
+            if upload.uploader.plan == 'plus' && ( upload.uploader.channelUrl == 'pewtube' || upload.uploader.channelUrl == 'anthony')
+                br
+                button.donate.btn.btn-success(style="margin-bottom:-10px") Donate
+
+            // EXTRA BUTTONS
+            div
+                if upload.fileType == 'image' || upload.fileType == 'video'
+                    div.change-size-button.increase-size
+                        h1(style="cursor:pointer") +
+                    div.change-size-button.decrease-size
+                        h1(style="cursor:pointer") -
+                div.change-size-button
+                    h2.download-button
+                        i.download-icon.fa.fa-download(aria-hidden="true" style="cursor:pointer")
+                div.change-size-button
+                    h2.share-button
+                        i.share-icon.fa.fa-share(aria-hidden="true" style="cursor:pointer")
+                if upload.fileType == 'video' || upload.fileType == 'audio'
+                    div.change-size-button(style="margin-left:0px")
+                        h2.repeat-div(style="opacity:0.4")
+                            i.repeat-icon.fa.fa-repeat(aria-hidden="true" style="cursor:pointer")
+                div.change-size-button(style="cursor:pointer")
+                    h2.report-button(style="")
+                        i.share-icon.fa.fa-exclamation-triangle(aria-hidden="true" style="cursor:pointer;font-size:19px;")
+
+
+
+            // More Upload Details
+            div.col-sm-12
+                // Upload View Amount
+                h3 #{upload.views} Views
+
+                // Upload time ago and uploader
+                if upload.uploader
+                    h4
+                        | Uploaded #{upload.timeAgo} &nbsp
+
+                    if upload.fileType == 'video' || upload.fileType == 'audio'
+                        h5(style="margin-top:15px") File Size: #{ ( upload.fileSize/ ( 1000 * 1000)).toFixed() } MB
+
+                    if upload.rating
+                        if upload.rating == 'allAges'
+                            h5 Rating: Safe For Work
+                        if upload.rating == 'mature'
+                            h5 Rating: Not Safe For Work
+                        if upload.rating == 'sensitive'
+                            h5 Rating: Sensitive (18+)
+
+
+                    br
+
+                // react functionality
+                div.react(style="width:39%;background-color:white;margin:0 auto;border-radius:10px;margin-bottom:21px;padding-bottom:12px;")
+                    br
+                    each emoji in emojis
+                        div(style="padding-right:15px;display:inline-block;")
+                            a(href="#")
+                                if currentReact
+                                    if currentReact == emoji.name
+                                        div.clicked-emoji
+                                            img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
+
+                                    else
+                                        div.unclicked-emoji
+                                            img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
+
+                                else
+                                    div.clicked-emoji
+                                        img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
+
+                            p(class=emoji.name) #{emoji.amount}
+
+
+
+                // Upload Description
+                if upload.description
+                    h4(class="upload-description-value") Description
+                    p(style="width:50%;text-align: center;margin: 0 auto;white-space:pre-line;word-wrap:break-word;" id="descriptionText") #{upload.description}
+
+                br
+                br
+
+            // SHARING BUTTONS
+            div
+
+                a(href=`https://www.facebook.com/sharer/sharer.php?u=${url}` target="_blank")
+                    img(src='/images/facebook-share.jpg', width='100', height='30', alt='Share on Twitter')
+                a(href=`https://twitter.com/share?url=${url}` target="_blank")
+                    img(src='/images/twitter-share.jpg', width='100', height='30', alt='Share on Twitter')
+                a(href=`mailto:?subject=Check out this ${upload.fileType}&body=Check out this ${upload.fileType} on PewTube: ${url}`, title='Share by Email')
+                    img(src='/images/email-share.jpg')
+
+            br
+            button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} \n\nhttps://pew.tube/user/${upload.uploader.channelUrl}/${upload.uniqueTag}`)
+                i.fa.fa-info
+                | Copy Details
+
+            button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} by ${upload.uploader.channelName} \n\n https://pew.tube/user/${upload.uploader.channelUrl}/${upload.uniqueTag} \n\n #PewTube`)
+                i.fa.fa-info
+                | With User Info
+
+
+            // COMMENT SECTION AND FORM
+            div
+                br
+                br
+                br
+                div.col-sm-12
+                if user
+                    // comment form
+                    div.comment-form.form-group
+                        form.form-horizontal.overall-comment-form(class="comment-form" action='/api/comment', method='post')
+                            input(type='hidden', name='_csrf', value=_csrf)
+                            label(for="comment" style="font-size:17px;") Enter Comment
+                            br
+                            input(type="hidden" name="upload" id="upload" value=upload._id)
+                            textarea(name="comment" id="comment" minlength="2" style="width:400px;max-width:100%")
+                            br
+                            input.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
+                else
+                    div.comment-form.form-group.no-user-comment-form
+                        form.form-horizontal.overall-comment-form(class="comment-form")
+                            label(for="comment" style="font-size:17px;") Enter Comment
+                            br
+                            textarea(name="comment" id="comment" minlength="2" style="width:400px;max-width:100%")
+                            br
+                            input.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
+
+
+                // DISPLAY COMMENTS
+
+                // otherwise display all comments
+                if commentCount == 0
+                    div.comment-containing-div(style="width:400px;margin:0 auto;margin-top:70px;")
+                        div(style="display:block")
+                            h3.no-comments-header(style="text-decoration:underline;text-align:left;") No Comments Yet
+
+                            div.comment-thread
+                                div.original-comment.no-comments-div(style="display:block;padding-bottom:15px;padding-top:10px;")
+
+                else
+                    if commentCount > 0
+                        div.comment-containing-div.col-sm-6.col-sm-offset-3(style="margin-top:60px;text-align:center")
+                            if commentCount < 1
+                                div(style="display:block")
+                                    h3(style="text-decoration:underline;text-align:left;") #{commentCount} Comment
+                            else
+                                div(style="display:block")
+                                    h3(style="text-decoration:underline;text-align:left;") #{commentCount} Comments
+                            each comment in comments
+                                if comment.commenter
+                                    div.comment-thread
+                                        div.original-comment(style="display:block;padding-bottom:15px;padding-top:10px;")
+                                            // TODO: Add it here
+                                            div.top-line(style="text-align:left;")
+                                                p(style="text-align:left;display:inline-block;")
+                                                    a(href=`/user/${comment.commenter.channelUrl}` style="color:black;margin-right:5px;") #{comment.commenter.channelName || comment.commenter.channelUrl}
+                                                p(style="display:inline-block;") - #{comment.timeAgo} &nbsp
+                                                    a.reply-link Reply
+                                                    // delete button
+                                                    if user && ( user.channelUrl == upload.uploader.channelUrl || user.channelUrl == comment.commenter.channelUrl)
+                                                        a.delete-comment-button(style="margin-left:9px;" commentId=comment._id) Delete
+                                            p(style="text-align:left;") #{comment.text}
+
+                                            // container that appears after you hit Reply
+                                            div.reply-container(style="display:none")
+                                                form.form-horizontal.reply-comment-form(class="comment-form" action='/api/comment', method='post')
+                                                    input(type='hidden', name='_csrf', value=_csrf)
+                                                    input(type="hidden" name="upload" id="upload" value=upload._id)
+                                                    input(type="hidden" name="commentId" id="commentId" value=comment.id)
+                                                    textarea(name="comment" id="comment" minlength="2" style="width:400px;max-width:100%;")
+                                                    br
+                                                    input.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
+                                                    br
+                                                    br
+
+                                        div.responses
+                                            each responseComment in comment.responses
+                                                if responseComment.visibility !== 'removed'
+                                                    div(style="display:block;padding-bottom:15px;padding-left:40px;")
+                                                        div.top-line(style="text-align:left;")
+                                                            p(style="text-align:left;display:inline-block;")
+                                                                a(href=`/user/${responseComment.commenter.channelUrl}` style="color:black;margin-right:5px;") #{responseComment.commenter.channelName || responseComment.commenter.channelUrl}
+                                                            p(style="display:inline-block;") - #{responseComment.timeAgo} &nbsp
+                                                        p(style="text-align:left;") #{responseComment.text}
+
+                                                    //div.reply-container(style="display:none")
+                                                    //    form.form-horizontal.reply-form(class="comment-form" action='/api/comment', method='post')
+                                                    //        input(type='hidden', name='_csrf', value=_csrf)
+                                                    //        input(type="hidden" name="upload" id="upload" value=upload._id)
+                                                    //        input(type="hidden" name="commentId" id="commentId" value=responseComment.id)
+                                                    //        textarea(name="comment" id="comment" style="width:400px;")
+                                                    //        br
+                                                    //        input.btn.btn-md.btn-success(type='submit' value="Post Comment")
+                                                    //        br
+                                                    //        br
+
+
+
+
+
+
+                                else
+                                    p No commenter
+
+
+    script.
+      balanceText();
+
+    script.
+
+      // inputOptions can be an object or Promise
+      var inputOptions1 = new Promise(function (resolve) {
+        resolve({
+          'tos': 'Terms Of Service Violation',
+          'copyright': 'Copyrighted Content',
+          'rating': 'Incorrect Upload Rating'
+        });
+      });
+
+      var alreadyReported = '#{alreadyReported}'
+
+      console.log('already reported ' + alreadyReported)
+
+      console.log(alreadyReported)
+
+      if(alreadyReported == 'true'){
+
+        console.log('running here')
+
+        $('.report-button').on('click', function(){
+          swal({ text: 'Thank you for reporting this upload '})
+        });
+
+      } else {
+          console.log('thing here')
+
+          $('.report-button').on('click', function () {
+            swal({
+              title: 'Report Upload',
+              text: 'Select your reason for reporting upload',
+              input: 'radio',
+              showCancelButton: true,
+              confirmButtonText: "Report Upload",
+              inputOptions: inputOptions1,
+              inputValidator: function (result) {
+                return new Promise(function (resolve, reject) {
+                  if (result) {
+                    resolve();
+                  } else {
+                    reject('You need to select something!');
+                  }
+                });
+              }
+            }).then(function (result) {
+
+              var uploadId = '#{upload._id}'
+
+              var data = {
+                uploadId,
+                reason: result.value
+              }
+
+              $.ajax({
+                type: 'POST',
+                url: '/api/report',
+                data,
+                success: function (data) {
+                  if (data == 'success') {
+                    swal({ title: "Reported", text : 'Thank you for reporting the upload'})
+                  } else {
+                    swal("Something didn't work, please contact PewTube at ceo@pew.tube or via the widget in the bottom right corner")
+                  }
+                  console.log(data);
+                },
+                error: function (err) {
+                  console.log(err);
+                }
+              });
+
+
+              // send via ajax
+
+              if (!result.value) return
+
+
+            })
+          })
+
+      }
+
+
+
+    script.
+
+        // change video qualities
+
+        var lowQualityVideo = '#{uploadServer}/#{upload.uploader.channelUrl}/#{upload.uniqueTag}.mp4'
+        var highQualityVideo = '#{uploadServer}/#{upload.uploader.channelUrl}/#{upload.uniqueTag}-high.mp4'
+
+
+        var fileType = '#{upload.fileType}'
+
+        if (fileType == 'video') {
+            var media = $(fileType)[0];
+        }
+
+        $('.low-quality').on('click', function(){
+          var quality = $('#dropdownMenu1').attr('quality');
+          if(quality == 'low') return
+
+          $('#dropdownMenu1').text('Quality: Low')
+          $('#dropdownMenu1').attr('quality', 'low');
+          $("#dropdownMenu1").append("<span class='caret'></span>");
+
+          var currentTime = media.currentTime;
+
+          $('.video-source').attr('src', lowQualityVideo)
+          media = $(fileType)[0];
+          media.load();
+          media.play();
+
+          media.currentTime = currentTime;
+        })
+
+        $('.high-quality').on('click', function () {
+
+          var quality = $('#dropdownMenu1').attr('quality');
+          if (quality == 'high') return
+
+          $('#dropdownMenu1').text('Quality: High')
+          $('#dropdownMenu1').attr('quality', 'high');
+          $("#dropdownMenu1").append("<span class='caret'></span>");
+
+          var currentTime = media.currentTime;
+
+          $('.video-source').attr('src', highQualityVideo)
+          media = $(fileType)[0];
+          media.load();
+          media.play();
+
+          media.currentTime = currentTime;
+        })
+
+
+
+    script(src="/js/media.js")
+
+    script(src="https://cdn.plyr.io/2.0.16/plyr.js")
+    if user
+        script.
+
+          var channelUrl = '#{upload.uploader.channelUrl}'
+          var channelName = '#{upload.uploader.channelName}'
+          var upload = '#{upload._id}'
+
+
+          function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+              results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+
+          }
+
+          var amountOfCreditPurchased = getParameterByName('credit');
+
+          if(amountOfCreditPurchased){
+            swal({ text : 'Congratulations, you just successfully purchased $' + amountOfCreditPurchased/100 + ' of PewTube credit'
+              // + 'you can use these credits to support your favorite content creators'
+            });
+          }
+
+          console.log(amountOfCreditPurchased);
+
+          // inputOptions can be an object or Promise
+          var inputOptions = new Promise(function (resolve) {
+            resolve({
+              '10': '$10',
+              '25': '$25',
+              '50': '$50'
+            });
+          });
+
+          $(document).on("click", ".swal2-container input[name='swal2-radio']", function () {
+            var id = $('input[name=swal2-radio]:checked').val();
+            console.log('id: ' + id);
+          });
+
+          $(function () {
+
+            var path = window.location.pathname;
+
+            console.log(path);
+
+            var stripeToken = '#{stripeToken}'
+
+            console.log(stripeToken);
+
+            var amountForStripe;
+
+            var handler = StripeCheckout.configure({
+              key: stripeToken,
+              image: 'https://f001.backblazeb2.com/file/pewtube/pewtube/RCbutDM.jpg',
+              locale: 'auto',
+              // bitcoin: true,
+              token: function (token) {
+
+                console.log('token')
+                console.log(token)
+
+                var data = {
+                  _csrf: csrf,
+                  token,
+                  amount: amountForStripe,
+                  upload
+                }
+
+                $.ajax({
+                  type: 'POST',
+                  url: '/api/purchase/credit',
+                  data,
+                  success: function (data) {
+                    if (data == 'success') {
+                      window.location = path + '?credit=' + amountForStripe
+                    } else {
+                      swal("Something didn't work, please contact PewTube at ceo@pew.tube or via the widget in the bottom right corner")
+                    }
+                    console.log(data);
+                  },
+                  error: function (err) {
+                    console.log(err);
+                  }
+                });
+
+
+                console.log(token);
+                // TODO: Post this guy to the backend
+              }
+            });
+
+            // make sure to set the font size to font-size: 34px; for the radio buttons
+
+            var credit = #{user.credit};
+
+            if(credit == 0){
+              $('.donate').on('click', function () {
+                swal({
+                  title: 'Top-Up Account',
+                  text: 'You currently have no credit to donate, please select an account to top up your account with',
+                  input: 'radio',
+                  inputOptions: inputOptions,
+                  inputValidator: function (result) {
+                    return new Promise(function (resolve, reject) {
+                      if (result) {
+                        resolve();
+                      } else {
+                        reject('You need to select something!');
+                      }
+                    });
+                  }
+                }).then(function (result) {
+
+                  if(!result.value) return
+
+                  // turn amount from dollars to cents
+                  amountForStripe = (Number(result.value)) * 100
+
+                  handler.open({
+                    name: 'PewTube, Inc.',
+                    description: '$' + result.value + ' of PewTube Credits',
+                    amount: amountForStripe ,
+                    allowRememberMe: false
+                    // email: "customer@email.com"
+                  });
+                })
+              })
+            }
+
+            // if user has credit
+            if(credit > 0){
+              $('.donate').on('click', function () {
+
+                swal({
+                    title: "Donate To User",
+                    text: "Your credit is $" + (credit/100) + ". Please input the amount in dollars you'd like to donate to user (minimum $0.25)",
+                    input: "text",
+                    showCancelButton: true,
+                    animation: "slide-from-top",
+                    inputPlaceholder: "Amount To Donate",
+                    inputValidator: function(result){
+                      return new Promise(function(resolve){
+                        console.log(result);
+                        var isNotANumber = isNaN(result)
+                        console.log(isNotANumber)
+                        if(result < 0.25){
+                          resolve('Please enter a value equal to or greater than 0.25');
+                        } else if (isNotANumber){
+                          resolve('Please enter a number')
+                        } else if ( credit < ( result * 100 ) ) {
+                          resolve('Please enter a number smaller than your credit')
+                        } else if (result < 0) {
+                          resolve('Please enter a positive number')
+                        } else {
+                          resolve()
+                        }
+                      })
+                    }
+                  }).then(function(result){
+
+                  // turn amount from dollars to cents
+                  var creditAmount = (Number(result.value)) * 100
+
+                  var data = {
+                    _csrf: csrf,
+                    channelUrl,
+                    amount : creditAmount
+                  }
+
+                  $.ajax({
+                    type: 'POST',
+                    url: '/api/credit',
+                    data,
+                    success: function (data) {
+                      if (data == 'success') {
+                        swal({ text: 'Congratulations, you have donated $' + result.value + ' of credits to ' + channelName || channelUrl })
+                      } else {
+                        swal("Something didn't work, please contact PewTube at ceo@pew.tube or via the widget in the bottom right corner")
+                      }
+                      console.log(data);
+                    },
+                    error: function (err) {
+                      console.log(err);
+                    }
+                  });
+
+                  console.log(result.value);
+                })
+              });
+            }
+
+
+
+          });
+
+    // delete comment functionality
+    script.
+      function deleteComment(commentId, commentThread){
+
+        var upload = '#{upload._id}';
+
+        var csrf = '#{_csrf}'
+
+        var data = {
+          _csrf: csrf,
+          upload,
+          commentId,
+          uniqueTag: mediaUniqueTag
+        }
+
+        $.ajax({
+          type: 'POST',
+          url: `/api/comment/delete`,
+          data,
+          success: function (data) {
+
+            swal('Comment deleted!');
+
+            commentThread.hide();
+
+
+
+            // remove comment
+            console.log(data);
+          },
+          error: function (err) {
+
+            swal('Unable to delete comment please contact administrator')
+            console.log(err);
+          }
+        });
+
+      }
+
+      $('.delete-comment-button').on('touchstart click', function (e) {
+
+            var commentThread = $(this).parent().parent().parent().parent();
+
+            var commentId = $(this).attr('commentId');
+
+            // dont move browser
+            e.preventDefault();
+
+            swal({
+              title: "Delete Comment",
+              text: "Are you sure you want to delete the comment? \n The entire comment thread will be deleted.",
+              type: "warning",
+              showCancelButton: true,
+              confirmButtonClass: "btn-danger",
+              confirmButtonText: "Delete Comment",
+              cancelButtonText: "Cancel",
+              closeOnConfirm: false,
+              closeOnCancel: false
+            },
+            function (isConfirm) {
+              if (isConfirm) {
+                 deleteComment(commentId, commentThread)
+              } else {
+                swal.close()
+              }
+            });
+      })
+
+
+    //script.
+    //  function getParameterByName(name, url) {
+    //    if (!url) url = window.location.href;
+    //    name = name.replace(/[\[\]]/g, "\\$&");
+    //    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+    //      results = regex.exec(url);
+    //    if (!results) return null;
+    //    if (!results[2]) return '';
+    //    return decodeURIComponent(results[2].replace(/\+/g, " "));
+    //  }
+    //
+    //  var autoplay = getParameterByName('autoplay');
+    //
+    //  #{recs[0].uploader}/#{recs[0].upload.uniqueTag}
+    //
+    //  console.log(autoplay); // turn autoplay button on here
+    //
+    //    //      if(autoplay){
+    //    //        markTheButtonAsOn
+    //    //      }
+    //
+    //    //      on('songfinish', function(){
+    //    //        if(this thing is true){
+    //    //          window.href = recs[0].channelUrl + '?autoplay=on'
+    //    //        }
+    //    //      })
+
+
+    script.
+      var sensitive = #{upload.sensitive}
+      if(sensitive){
+        swal({
+            title: "This content is marked as sensitive",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonText: "View Media",
+            cancelButtonText: "Return to previous page",
+            closeOnConfirm: false,
+            closeOnCancel: false,
+            customClass: 'swal-wide'
+          },
+          function (isConfirm) {
+
+            if (isConfirm) {
+              swal.close();
+            } else {
+              window.history.go(-1)
+              swal.close()
+            }
+          });
+      }
+
+      setTimeout(function(){
+        $('.swal-wide').siblings('.sweet-overlay').css({
+          'background-color': 'black',
+          'opacity' : 0.85
+        })
+      }, 200)
+
+    script.
+
+      $('.no-user-comment-form').on('click touchstart', function(event){
+        event.preventDefault();
+        // swal("Please register to leave a comment")
+
+        swal({
+            title: "Please register to leave a comment",
+            type: "info",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "Register now",
+            cancelButtonText: "Return to media",
+            closeOnConfirm: false,
+            closeOnCancel: false
+          },
+          function (isConfirm) {
+            if (isConfirm) {
+              window.location.href = "/signup";
+            } else {
+              swal.close()
+            }
+          });
+
+
+            //        swal({
+            //          title: 'Please register to leave a comment',
+            //          type: 'info',
+            //          showCancelButton: true,
+            //          confirmButtonColor: '#3085d6',
+            //          cancelButtonColor: '#d33',
+            //          confirmButtonText: 'Register now'
+            //        }).then(function () {
+            //          swal(
+            //            'Deleted!',
+            //            'Your file has been deleted.',
+            //            'success'
+            //          )
+            //        })
+
+      })
+
+
+        console.log('here')
+
+        function getParameterByName(name, url) {
+          if (!url) url = window.location.href;
+          name = name.replace(/[\[\]]/g, "\\$&");
+          var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+          results = regex.exec(url);
+          if (!results) return null;
+          if (!results[2]) return '';
+          return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+
+        var autoplay = getParameterByName('autoplay');
+
+        var sensitive = #{upload.sensitive}
+
+        var autoplay;
+        if(sensitive || autoplay == 'off'){
+          autoplay = false;
+        } else {
+          autoplay = true;
+        }
+
+        var plyr_options = {
+          autoplay: autoplay,
+          clickToPlay: true,
+          controls: ['mute', 'progress', 'play', 'fullscreen', 'volume', 'play-large', 'current-time']
+        };
+
+        // Create the plyr instances - this defines players[0] as our primary player.
+        var players = plyr.setup(plyr_options);
+
+        players[0].on('ready', function (event) {
+          $('.display-element').css('max-height', '620px')
+
+          // set video max-height to 620px
+        });
+
+        players[0].on('enterfullscreen', function (event) {
+
+          console.log('this is running');
+
+          $('.display-element').css('max-height', "")
+
+
+          // remove video max-height
+
+        });
+
+        players[0].on('exitfullscreen', function (event) {
+          // add max height
+          $('.display-element').css('max-height','620px')
+        });
+
+
+
+
+    script.
+        var uniqueTag = '#{upload.uniqueTag}';
+
+        var fileType = '#{upload.fileType}';
+
+        var embedString = '<iframe width="560" height="315" src="https://pew.tube/embed/' + uniqueTag + '" frameborder="0" allowfullscreen=""></iframe>'
+
+        if(fileType == 'audio'){
+          embedString = '<iframe width="560" height="54" src="https://pew.tube/embed/' + uniqueTag + '" frameborder="0" allowfullscreen=""></iframe>'
+        }
+
+        $('.share-button').on('click', function(){
+          swal({
+            title: 'Embed',
+            text: embedString
+          });
+        })
+
+    script.
+
+      var downloadUrl = '#{uploadServer}/#{upload.uploader.channelUrl}/#{upload.uniqueTag}#{upload.fileExtension}'
+
+      var uploadType = '#{upload.fileType}'
+
+      if(uploadType=='video'){
+        downloadUrl = '#{uploadServer}/#{upload.uploader.channelUrl}/#{upload.uniqueTag}.mp4'
+      }
+
+      function downloadIt() {
+        var name = "#{upload.title}"
+        if (name && name !== '') {
+          var link = document.createElement('a');
+           link.download = name;
+
+          // TODO: If I'm serving from the same origin this will work
+          // link.href = '/images/twitter-share.jpg'
+          //link.href = '/user/#{upload.uploader.channelUrl}/#{upload.uniqueTag}#{upload.fileType}'
+
+          link.href = downloadUrl
+
+          link.click();
+        }
+      }
+
+      $('.download-button').click(function () {
+
+        downloadIt()
+
+      });
+
+    script.
+
+      $('button').tooltip({
+        trigger: 'click',
+        placement: 'bottom'
+      });
+
+      function setTooltip(btn, message) {
+        $(btn).tooltip('hide')
+          .attr('data-original-title', message)
+          .tooltip('show');
+      }
+
+      function hideTooltip(btn) {
+        setTimeout(function () {
+          $(btn).tooltip('hide');
+        }, 1000);
+      }
+
+      // Clipboard
+
+      var clipboard = new Clipboard('.copy-button');
+
+      clipboard.on('success', function (e) {
+        setTooltip(e.trigger, 'Copied!');
+        hideTooltip(e.trigger);
+      });
+
+      clipboard.on('error', function (e) {
+        setTooltip(e.trigger, 'Failed!');
+        hideTooltip(e.trigger);
+      });
+
+    script.
+      var myTextEl = document.getElementById('descriptionText');
+      myTextEl.innerHTML = Autolinker.link(myTextEl.innerHTML);
+
+
+    script.
+        /* REPEAT FUNCTIONALITY BEGIN */
+        var fileType = '#{upload.fileType}';
+
+        /* REPEAT FUNCTIONALITY START */
+        var repeat = false;
+
+        if (fileType == 'audio' || fileType == 'video') {
+          var media = $(fileType)[0];
+
+          media.onended = function (e) {
+            if (repeat) {
+              media.pause();
+              media.currentTime = '0';
+              media.play();
+            }
+          };
+        }
+
+        // anything on repeat div clicked
+        $('.repeat-div').on('click', function (e) {
+          // toggle repeat value
+          repeat = !repeat;
+
+          if (repeat) {
+            swal({text: 'Repeat functionality turned on'})
+            $('.repeat-status').text('REPEAT: ON')
+            $('.repeat-div').css('opacity', '1');
+          } else {
+            swal({text: 'Repeat functionality turned off'})
+            $('.repeat-status').text('REPEAT: OFF')
+            $('.repeat-div').css('opacity', '0.7');
+          }
+        });
+        /* REPEAT FUNCTIONALITY END */
+
+    if user
+        script.
+          var user = '#{user.id}'
+    else
+        script.
+          var user = undefined
+
+
+    script.
+
+      // SUBSCRIBE FUNCTIONALITY
+      var amountOfSubs = #{subscriberAmount}
+      var alreadySubbed = #{alreadySubbed}
+      var mediaUniqueTag = '#{upload.uniqueTag}'
+
+      console.log(alreadySubbed + ' already subbed');
+
+      $('.subscribe').on('touchstart click', function (e) {
+
+        // if user is not logged in
+        if (!user) {
+          return swal({
+              title: "Please register to subscribe",
+              type: "info",
+              showCancelButton: true,
+              confirmButtonClass: "btn-danger",
+              confirmButtonText: "Register now",
+              cancelButtonText: "Return to media",
+              closeOnConfirm: false,
+              closeOnCancel: false
+            },
+            function (isConfirm) {
+              if (isConfirm) {
+                window.location.href = "/signup";
+              } else {
+                swal.close()
+              }
+            });
+        }
+
+        var channelUrl = '#{upload.uploader.channelUrl}'
+        var csrf = '#{_csrf}'
+
+        // dont move browser
+        e.preventDefault();
+
+        var userName = "#{upload.uploader.channelName || upload.uploader.channelUrl}"
+
+        var unsubbing = alreadySubbed
+
+        // the user is unsubbing
+        if(unsubbing){
+          $('.subscribe').html(`Subscribe (${amountOfSubs})`)
+          // change from red to green
+
+          console.log('unsubscribing');
+          $('.subscribe').removeClass("btn-danger")
+          $('.subscribe').addClass("btn-success")
+
+
+          // remove class, add class
+
+          swal({ text: 'You have unsubscribed from ' + userName })
+
+        } else {
+          console.log('subscribing')
+
+          $('.subscribe').html(`Unsubscribe (${amountOfSubs})`)
+          $('.subscribe').removeClass("btn-success")
+          $('.subscribe').addClass("btn-danger")
+
+          // change from green to red
+          swal({ text: 'You have subscribed to ' + userName })
+        }
+
+        // switch value of alreadySubbed
+        if (alreadySubbed) {
+          amountOfSubs = amountOfSubs - 1
+          alreadySubbed = false;
+        } else {
+          amountOfSubs = amountOfSubs + 1
+          alreadySubbed = true;
+        }
+
+        //
+        var data = {
+          _csrf: csrf,
+          channelUrl,
+          uniqueTag : mediaUniqueTag
+        }
+
+        $.ajax({
+          type: 'POST',
+          url: `/api/subscribe`,
+          data,
+          success: function (data) {
+            console.log(data);
+          },
+          error: function (err) {
+            console.log(err);
+          }
+        });
+      })
+
+
+    script.
+      // REACT FUNCTIONALITY
+      var activeEmoji = '#{currentReact}'
+
+      var upload = '#{upload._id}'
+      var csrf = '#{_csrf}'
+
+      var height = 50;
+      var width = 50;
+      var duration = 400;
+
+      var changeSize = 0.33
+
+      $('.react img').on('mouseover', function() {
+
+        $(this).animate({
+              width: width + (width * changeSize)
+            },{
+              duration, queue: false
+            });
+
+            $(this).animate({
+              height: height + (height * changeSize )
+            },{
+              duration, queue: false
+            });
+        })
+
+        $('.react img').on('mouseout', function () {
+
+          $(this).animate({
+            width
+          }, {
+            duration, queue: false
+          });
+
+          $(this).animate({
+            height
+          }, {
+            duration, queue: false
+          });
+
+        })
+
+
+      $('.react img').on('touchstart click', function (e) {
+        if(!user){
+            return swal({
+                title: "Please register to react to content",
+                type: "info",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Register now",
+                cancelButtonText: "Return to media",
+                closeOnConfirm: false,
+                closeOnCancel: false
+              },
+              function (isConfirm) {
+                if (isConfirm) {
+                  window.location.href = "/signup";
+                } else {
+                  swal.close()
+                }
+              });
+        }
+
+
+
+        // dont move browser
+        e.preventDefault();
+
+
+        // change opacities
+        $('.react img').css({
+          opacity: '0.565'
+        })
+        $(this).css({
+          opacity: 1
+        })
+
+        // note active emoji
+        var oldEmoji = activeEmoji
+        var emoji = $(this).attr('class')
+        activeEmoji = emoji;
+
+        // decrement old emoji if needed
+        if(oldEmoji){
+          var oldEmojiValue = $('p.' + oldEmoji).text()
+          console.log(oldEmojiValue)
+
+          var decrementedValue = oldEmojiValue - 1
+          var updateEmoji = $('p.' + oldEmoji).text(decrementedValue)
+
+        }
+
+        var newEmojiValue = $('p.' + emoji).text()
+        var incrementedValue = parseInt(newEmojiValue) + 1
+        console.log(newEmojiValue)
+        var updatedEmojiValue = $('p.' + emoji).text(incrementedValue)
+
+        var data = {
+          _csrf : csrf,
+          emoji
+        }
+
+        $.ajax({
+          type: 'POST',
+          url: `/api/react/${upload}/${user}`,
+          data,
+          success: function (data) {
+            console.log(data);
+          },
+          error: function (err) {
+            console.log(err);
+          }
+        });
+
+
+        // app.post('/api/react/:upload/:user', internalApiController.react);
+
+
+      })
+
+

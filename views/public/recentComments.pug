@@ -1,0 +1,86 @@
+extends ../layout
+
+block content
+    div
+        div.row
+            div.col-sm-3
+                h3
+                    a(href="/media/recent") Recently Uploaded
+            div.col-sm-3
+                h3
+                    a(href="/media/recentComments") Recent Comments
+            div.col-sm-3
+                h3
+                    a(href="/media/recentViews") Recent Views
+            div.col-sm-3
+                h3
+                    a(href="/media/recentReacts") Recent Reacts
+
+        hr
+
+        div.center-block.text-center.col-sm-12
+            h1 Recent Comments
+            // TOP PAGINATION
+            nav.center-block.text-center(aria-label='Page navigation example')
+                ul.pagination
+                    li.page-item
+                        a.page-link(href=`/media/recentComments/${previousNumber}`) <
+
+                    each number in numbersArray
+                        li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
+                            a.page-link(href=`/media/recentComments/${number}`) #{number}
+
+                    li.page-item
+                        a.page-link(href=`/media/recentComments/${nextNumber}`) >
+
+
+
+
+
+
+            br
+
+            each comment in comments
+                if comment.upload
+                    if comment.upload.uploader && comment.commenter
+                        div.col-sm-4(style="text-align:center;height:360px")
+                                a.title-anchor(href=`/user/${comment.upload.uploader.channelUrl}/${comment.upload.uniqueTag}`)
+                                    if comment.upload.fileType == 'video' && comment.upload.thumbnailUrl
+                                        img.preview-image(src=comment.upload.thumbnailUrl)
+                                    else if comment.upload.fileType == 'image'
+                                        img.preview-image(src=comment.upload.uploadUrl)
+                                    else if comment.upload.fileType == 'audio'
+                                        img.preview-image(src='/audio.svg')
+                                    else if comment.upload.fileType == 'unknown'
+                                        img.preview-image(src='/no_img.png')
+
+                                    //div
+                                    //    p.upload-title-text.twentysix #{comment.upload.title}
+                                    //br
+
+                                    div
+                                        p.upload-title-text #{comment.upload.title}
+
+                                // comment text
+                                div(style="height:93px;overflow:hidden;")
+                                    p(style="width:80%;margin:0 auto;margin-top:10px;") #{comment.text} &nbsp  -#{comment.commenter.channelName || comment.commenter.channelUrl}
+
+    script.
+      $(document).on({
+        mouseenter: function () {
+          var width = $(this).width()
+          var height = $(this).height()
+
+
+          $(this).css("width", width * 1.10);
+          $(this).css("height", height * 1.10);
+
+        },
+        mouseleave: function () {
+          var width = $(this).width()
+          var height = $(this).height()
+
+          $(this).css("width", width / 1.10);
+          $(this).css("height", height / 1.10);
+        }
+      }, '.preview-image');

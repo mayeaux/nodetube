@@ -1,0 +1,65 @@
+extends ../layout
+
+block content
+  .page-header
+    h3 Sign Up
+  form.form-horizontal.signup-form(id='signup-form', method='POST')
+    input(type='hidden', name='_csrf', value=_csrf)
+    //.form-group
+    //  label.col-sm-3.control-label(for='channelName') Display Name
+    //  .col-sm-7
+    //    input.form-control(type='text', name='channelName', id='channelName', placeholder='The name that shows up for your channel',
+    //    autofocus, minlength=3, maxlength=25, required)
+    .form-group
+      label.col-sm-3.control-label(for='channelUrl') Channel Username
+      .col-sm-7
+        input.form-control.username(type='text', name='channelUrl', id='channelUrl', autofocus, required)
+    .form-group
+      label.col-sm-3.control-label(for='password') Password
+      .col-sm-7
+        input.form-control(type='password', name='password', id='password', placeholder='Please enter your password', required)
+    .form-group
+      label.col-sm-3.control-label(for='confirmPassword') Confirm Password
+      .col-sm-7
+        input.form-control(type='password', name='confirmPassword', id='confirmPassword', placeholder='Please confirm your password', required)
+
+    if nodeEnv == 'production'
+      .form-group
+        label.col-sm-3.control-label(for='captcha') Captcha
+        //.col-sm-offset-3.col-sm-7
+        .form-group.col-md-4(style="margin-left:1pt;")
+          .g-recaptcha(data-sitekey=`${recaptchaPublicKey}` id='captcha')
+
+    //var regex = new RegExp("^[a-zA-Z]+$");
+
+    .form-group
+      .col-sm-offset-3.col-sm-7
+        p By signing up you are agreeing you have read and agree to the
+          a(href="/termsofservice") &nbspTerms Of Service
+    .form-group
+      .col-sm-offset-3.col-sm-7
+        button.btn.btn-success(type='submit')
+          i.fa.fa-user-plus
+          | Signup
+
+
+  script.
+    $('.signup-form').submit(function (evt) {
+
+      var username = $('.username').val();
+
+      if (!/^\w+$/.test(username)) {
+         evt.preventDefault();
+         swal('Please only use letters, numbers and underscores in your username');
+      } else {
+        /** form will submit properly **/
+      }
+
+      if (username.length > 20 || username.length < 3 ) {
+        evt.preventDefault();
+        swal('Please make sure your username is between 3 and 20 characters');
+      } else {
+        /** form will submit properly **/
+      }
+
+    });

@@ -1,0 +1,88 @@
+extends ../layout
+
+block content
+    .page-header
+        h2 Notifications
+
+        div.col-sm-12
+            br
+            br
+            if notifications.length == 0
+                p You have no notifications
+
+            else
+                h3 Unread Notifications
+                br
+
+                each notification in notifications
+                    if notification.read == false
+                        // react notification
+                        if notification.action == 'react'
+                            p(style="display:inline") A user has reacted with a #{notification.react.react} to your #{notification.upload.fileType} &nbsp
+                                a(href=`/user/${user.channelUrl}/${notification.upload.uniqueTag}`) #{notification.upload.title}
+                                p(style="display:inline") &nbsp #{notification.timeAgo}
+
+                            // comment notification
+                        else if notification.action == 'comment' && notification.comment && !notification.comment.inResponseTo
+                            p(style="display:inline") #{notification.sender.channelName || notification.sender.channelUrl} has commented "#{notification.comment.text}" on your #{notification.upload.fileType} &nbsp
+                                a(href=`/user/${user.channelUrl}/${notification.upload.uniqueTag}`) #{notification.upload.title}
+                                p(style="display:inline") &nbsp #{notification.timeAgo}
+
+                            // response notification
+                        else if notification.action == 'comment' && notification.comment && notification.comment.inResponseTo
+                            p(style="display:inline") #{notification.sender.channelName || notification.sender.channelUrl} has responded "#{notification.comment.text}" to your comment on the #{notification.upload.fileType} &nbsp
+                                a(href=`/user/${user.channelUrl}/${notification.upload.uniqueTag}`) #{notification.upload.title}
+                                p(style="display:inline") &nbsp #{notification.timeAgo}
+
+                            // subscription via media notification
+                        else if notification.action == 'subscription' && notification.upload
+                            p(style="display:inline") A user has subscribed to your channel from your #{notification.upload.fileType} &nbsp
+                                a(href=`/user/${user.channelUrl}/${notification.upload.uniqueTag}`) #{notification.upload.title}
+                                p(style="display:inline") &nbsp #{notification.timeAgo}
+
+                            // subscription from channel page notification
+                        else if notification.action == 'subscription' && !notification.upload
+                            p A user has subscribed to your channel from your channel page #{notification.timeAgo} &nbsp
+
+                            // message from admin notification
+                        else if notification.action == 'message'
+                            p Note From Admin: #{notification.text}
+
+                br
+                h3 Read Notifications
+
+                each notification in notifications
+                    if notification.read == true
+                        // react notification
+                        if notification.action == 'react'
+                            p(style="display:inline") A user has reacted with a #{notification.react.react} to your #{notification.upload.fileType} &nbsp
+                                a(href=`/user/${user.channelUrl}/${notification.upload.uniqueTag}`) #{notification.upload.title}
+                                p(style="display:inline") &nbsp #{notification.timeAgo}
+
+                            // comment notification
+                        else if notification.action == 'comment' && notification.comment && !notification.comment.inResponseTo
+                            p(style="display:inline") #{notification.sender.channelName || notification.sender.channelUrl} has commented "#{notification.comment.text}" on your #{notification.upload.fileType} &nbsp
+                                a(href=`/user/${user.channelUrl}/${notification.upload.uniqueTag}`) #{notification.upload.title}
+                                p(style="display:inline") &nbsp #{notification.timeAgo}
+
+                            // response notification
+                        else if notification.action == 'comment' && notification.comment && notification.comment.inResponseTo
+                            p(style="display:inline") #{notification.sender.channelName || notification.sender.channelUrl} has responded "#{notification.comment.text}" to your comment on the #{notification.upload.fileType} &nbsp
+                                a(href=`/user/${user.channelUrl}/${notification.upload.uniqueTag}`) #{notification.upload.title}
+                                p(style="display:inline") &nbsp #{notification.timeAgo}
+
+                            // subscription via media notification
+                        else if notification.action == 'subscription' && notification.upload
+                            p(style="display:inline") A user has subscribed to your channel from your #{notification.upload.fileType} &nbsp
+                                a(href=`/user/${user.channelUrl}/${notification.upload.uniqueTag}`) #{notification.upload.title}
+                                p(style="display:inline") &nbsp #{notification.timeAgo}
+
+                            // subscription from channel page notification
+                        else if notification.action == 'subscription' && !notification.upload
+                            p A user has subscribed to your channel from your channel page #{notification.timeAgo} &nbsp
+
+                            // message from admin notification
+                        else if notification.action == 'message'
+                            p Note From Admin: #{notification.text}
+
+

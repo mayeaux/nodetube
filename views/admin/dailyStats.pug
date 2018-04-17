@@ -1,0 +1,16 @@
+extends ../layout
+
+block content
+    div
+        br
+        br
+        each model in array
+           div.col-sm-4
+               h4=  model.name[0].toUpperCase() + model.name.substr(1)
+               p= 'All Time: ' + model.alltime
+               p= 'Last Month: ' + model.month
+               p= 'Last Week: ' + model.week
+               p= 'Last Day: ' + model.day
+               p= 'Last Hour: ' + model.hour
+               p= 'Last Minute: ' + model.minute
+               br

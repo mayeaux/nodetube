@@ -1,0 +1,144 @@
+extends ../layout
+
+
+
+
+block content
+    style.
+        .pewtube-pro {
+            background: #edeeee;
+            font-weight: 400;
+            font-size: 10px;
+            margin-left: 3px;
+            padding: 2px 4px;
+            display: inline-block;
+            border-radius: 3px;
+            transform: translateY(-2px);
+        }
+
+    div
+        div.row
+            div.col-sm-2
+                h3
+                    a(href="/channels?within=24hour") Last Day
+            div.col-sm-2
+                h3
+                    a(href="/channels?within=1week") Last Week
+            div.col-sm-2
+                h3
+                    a(href="/channels?within=1month") Last Month
+            div.col-sm-2
+                h3
+                    a(href="/channels?within=alltime") All-Time
+            div.col-sm-2
+                h3
+                    // style="margin-left:-32px;"
+                    a(href="/channelsBySubs" ) Subscriber Count
+            //div.col-sm-2
+            //    h3
+            //        a(href="/channelsByReacts") React Count
+
+
+
+        hr
+
+        h2.center-block.text-center Channels (#{englishString} Views) &nbsp  &nbsp
+
+        hr
+
+        // TOP PAGINATION
+        nav.center-block.text-center(aria-label='Page navigation example')
+            ul.pagination
+                li.page-item
+                    a.page-link(href=`/channels/${previousNumber}/${withinString}`) <
+
+                each number in numbersArray
+                    li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
+                        a.page-link(href=`/channels/${number}/${withinString}`) #{number}
+
+                li.page-item
+                    a.page-link(href=`/channels/${nextNumber}/${withinString}`) >
+
+        br
+        each channel in channels
+            div.col-sm-4(style="text-align:center;height:320px")
+                a(href=`/user/${channel.channelUrl}`)
+                    // TODO: Sub out thumbnail here
+                    img.preview-image(src=channel.thumbnail style="width:inherit;max-width:302px;")
+
+                div.upload-title(style="width:100%;margin:0 auto;display:block;margin-bottom:10px;")
+                    a.title-anchor(style="text-align:center;margin:0 auto;" href=`/user/${channel.channelUrl}`)
+                        p.upload-title-text(style="font-size:16px;padding-bottom:10px;") #{channel.channelName || channel.channelUrl }
+                            if channel.verified == true
+                                img(src="/images/verified.jpg" width="19px" height="19px" style="margin-left:3px;margin-top:-2px;")
+                            if channel.plan == 'plus'
+                                span.pewtube-pro PLUS
+
+
+                div.upload-details(style="margin-top:-56px")
+
+
+                    p.views-text(style="margin-bottom:5px") #{channel.totalViews} All-Time Views
+
+
+
+
+                    if withinQuery == '24hour'
+                        p.views-text #{channel.totalViewsWithin24hour} Last Day Views
+
+                    if withinQuery == '1week'
+                        p.views-text #{channel.totalViewsWithin1week} Last Week Views
+
+                    if withinQuery == '1month'
+                        p.views-text #{channel.totalViewsWithin1month} Last Month Views
+
+
+
+
+
+
+                    div.channel-uploads-amount
+                        p #{channel.uploadAmount} Uploads
+
+
+
+
+        //// BOTTOM PAGINATION
+        if channels.length > 0
+
+            nav.center-block.text-center(aria-label='Page navigation example')
+                ul.pagination
+                    li.page-item
+                        a.page-link(href=`/channels/${previousNumber}/${withinString}`) <
+
+                    each number in numbersArray
+                        li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
+                            a.page-link(href=`/channels/${number}/${withinString}`) #{number}
+
+                    li.page-item
+                        a.page-link(href=`/channels/${nextNumber}/${withinString}`) >
+
+
+    script.
+
+
+
+    script.
+      $(document).on({
+        mouseenter: function () {
+          var width = $(this).width()
+          var height = $(this).height()
+
+
+          $(this).css("width", width * 1.10);
+          $(this).css("height", height * 1.10);
+
+        },
+        mouseleave: function () {
+          var width = $(this).width()
+          var height = $(this).height()
+
+          $(this).css("width", width / 1.10);
+          $(this).css("height", height / 1.10);
+        }
+      }, '.preview-image');

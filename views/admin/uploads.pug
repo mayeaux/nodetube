@@ -1,0 +1,65 @@
+extends ../layout
+
+block content
+    div
+        div
+            h2
+            h2.view-header Upload Overview
+        hr
+        each upload in uploads
+                div.col-sm-4(style="text-align:center;height:600px;")
+                    if upload.uploader
+                        a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}`)
+                            if upload.fileType == 'video' && upload.thumbnailUrl
+                                img.preview-image.border-preview(src=upload.thumbnailUrl)
+                            else if upload.fileType == 'image'
+                                img.preview-image.border-preview(src=upload.uploadUrl)
+                            else if upload.fileType == 'audio'
+                                img.preview-image.border-preview(src='/audio.svg')
+                            else if upload.fileType == 'unknown'
+                                img.preview-image.border-preview(src='/no_img.png')
+
+                            div
+                                p.upload-title-text #{upload.title}
+                            br
+
+                        div.upload-details
+                            // capitalize media type
+                            div.uploaded-by #{upload.fileType.charAt(0).toUpperCase() + upload.fileType.slice(1)} uploaded by
+                                a(href=`/user/${upload.uploader.channelUrl}`)
+                                    p(style="font-size:16px") #{upload.uploader.channelName}
+
+                                p Visibility: #{upload.visibility}
+
+
+                        div.moderator-buttons
+                            form(action="/pending" method="POST")
+                                input(type='hidden', name='_csrf', value=_csrf)
+                                input(type='hidden', name='uniqueTag', value=`${upload.uniqueTag}`)
+                                button.btn.btn-success(name="moderationValue" value="approve" type="submit") Approve
+                                br
+                                br
+                                button.btn.btn-success(name="moderationValue" value="approveAndTrustUser" type="submit") Approve And Trust User
+                                br
+                                br
+                                button.btn.btn-danger(name="moderationValue" value="banVideo" type="submit" ) Ban Video
+                                br
+                                br
+                                button.btn.btn-danger(name="moderationValue" value="banVideoAndUser" type="submit") Ban Video And User
+
+                    else
+                        h3 NO UPLOADER?
+                        h3 #{upload._id}
+
+
+                    //    form(action="/pending" method="POST")
+                    //        input(type='hidden', name='_csrf', value=_csrf)
+                    //        input(type='hidden', name='uniqueTag', value=`${upload.uniqueTag}`)
+                    //        button.btn.btn-success(name="moderationValue" value="approve" type="submit") Approve
+                    //        br
+                    //        br
+                    //        button.btn.btn-danger(name="moderationValue" value="banVideo" type="submit" ) Ban Video
+                    //        br
+                    //        br
+                    //        button.btn.btn-danger(name="moderationValue" value="banVideoAndUser" type="submit") Ban Video And User
+                    //

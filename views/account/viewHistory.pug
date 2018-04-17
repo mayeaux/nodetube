@@ -1,0 +1,33 @@
+extends ../layout
+
+block content
+
+
+    div.row
+        div.col-sm-3
+            h3
+                a(href="/account") Channel Overview
+        div.col-sm-3
+            h3
+                a(href="/account/viewHistory") View History
+        div.col-sm-3
+            h3
+                a(href="/account/reactHistory") React History
+    p
+    hr
+
+    h2 View History
+
+    div.col-sm-12
+        br
+        br
+        if views.length == 0
+            p You have not viewed any media
+
+        else
+            each view in views
+                if view.upload
+                    if view.upload.uploader
+                        div
+                            p #{view.timeAgo} you viewed &nbsp
+                                a(href=`/user/${view.upload.uploader.channelUrl}/${view.upload.uniqueTag}`) #{view.upload.title}

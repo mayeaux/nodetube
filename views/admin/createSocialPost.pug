@@ -1,0 +1,58 @@
+extends ../layout
+
+block content
+
+    h1 Create Social Post
+    .content
+        form.form-horizontal(id='createSocialPostForm', method='POST')
+            input(type='hidden', name='_csrf', value=_csrf)
+            //Channel URL
+            .form-group
+                label.col-sm-3.control-label(for='uniqueTag') Unique Tag Or Url
+                .col-sm-7
+                    input(type='text', name='uniqueTag', id='uniqueTag' style="width:400px;")
+
+            //Message for Channel
+            .form-group
+                label.col-sm-3.control-label(for='distance') Distance (long, short or new)
+                .col-sm-7
+                    input(type='text' id="distance" name="distance" value="new")
+
+            .form-group
+                label.col-sm-3.control-label(for='gab') Gab
+                .col-sm-7
+                    input(type='checkbox' id="gab" name="gab" checked="true")
+
+            .form-group
+                label.col-sm-3.control-label(for='twitter') Twitter
+                .col-sm-7
+                    input(type='checkbox' id="twitter" name="twitter" checked="true")
+
+            .form-group
+                label.col-sm-3.control-label(for='facebook') Facebook
+                .col-sm-7
+                    input(type='checkbox' id="facebook" name="facebook" checked="true")
+
+            .form-group
+                .col-sm-offset-3.col-sm-7
+                    button.btn.btn-success(type='submit')
+                        | Create Social Post
+
+
+        br
+        br
+        h3 Unfinished Socialposts
+        each socialpost, finishedIndex in socialposts
+            if socialpost.finished == false
+                p.
+                    #{finishedIndex + 1}) #{socialpost.upload.title} | by #{socialpost.upload.uploader.channelName} (#{socialpost.upload.uploader.channelUrl})
+                    | Distance: #{socialpost.postData[0].distance} | Finished:#{socialpost.finished} | Success: #{socialpost.postData[0].postedCorrectly}
+
+        br
+        br
+        h3 Finished Socialposts
+        each socialpost, index in socialposts
+            if socialpost.finished == true
+                p.
+                    #{index + 1}) #{socialpost.upload.title} | by #{socialpost.upload.uploader.channelName} (#{socialpost.upload.uploader.channelUrl})
+                    | Distance: #{socialpost.postData[0].distance} | Finished:#{socialpost.finished} | Success: #{socialpost.postData[0].postedCorrectly}

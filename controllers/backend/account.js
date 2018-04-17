@@ -1,0 +1,442 @@
+const bluebird = require('bluebird');
+const Promise = require('bluebird');
+const crypto = bluebird.promisifyAll(require('crypto'));
+const nodemailer = require('nodemailer');
+const passport = Promise.promisifyAll(require('passport'));
+const path = require('path');
+const captchapng = require('captchapng');
+const _ = require('lodash');
+const reCAPTCHA = require('recaptcha2');
+var formidable = require('formidable');
+const mv = require('mv');
+const fs = require('fs-extra');
+const mkdirp = Promise.promisifyAll(require('mkdirp'));
+const randomstring = require("randomstring");
+
+
+const User = require('../../models/index').User;
+const getMediaType = require('../../lib/uploading/media');
+
+const thumbnailServer = process.env.THUMBNAIL_SERVER || '';
+
+const frontendServer = process.env.FRONTEND_SERVER || '';
+
+const verifyEmailPassword = process.env.PEWTUBE_VERIFY_EMAIL_PASSWORD;
+
+// a.mayfield.contact
+const recaptcha = new reCAPTCHA({
+  siteKey : process.env.RECAPTCHA_SITEKEY,
+  secretKey : process.env.RECAPTCHA_SECRETKEY
+});
+
+const { b2 } = require('../../lib/uploading/backblaze');
+const pagination = require('../../lib/helpers/pagination');
+
+
+
+// where to send users to after login
+const redirectUrl = '/account';
+
+
+
+
+/**
+ * POST /login
+ * Sign in using email and password.
+ * Email value can either be email or channelUrl (username)
+ */
+exports.postLogin = async (req, res, next) => {
+  // req.assert('email', 'Email is not valid').isEmail();
+  req.assert('password', 'Password cannot be blank').notEmpty();
+  // req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
+
+  const errors = req.validationErrors();
+
+  if (errors) {
+    req.flash('errors', errors);
+    return res.redirect('/login');
+  }
+
+  /** TODO: refactor without callbacks **/
+
+  /** login with passport **/
+  passport.authenticate('local', (err, user, info) => {
+
+    if (err) { return next(err); }
+
+    // redirect to login if no user
+    if (!user) {
+      req.flash('errors', info);
+      return res.redirect('/login');
+    }
+
+    // don't let restricted users login
+    if(user.status == 'restricted'){
+      req.flash('errors', 'Sorry your password was incorrect, please try again');
+      console.log('FAILED LOGIN ATTEMPT');
+      return res.redirect('/login');
+    }
+
+    req.logIn(user, (err) => {
+      if (err) { return next(err); }
+      req.flash('success', { msg: 'Success! You are logged in.' });
+
+      // ?? i dont get this
+      if(process.env.LIVESTREAM_APP == 'true'){
+        // always redirect to sign-in url to see plus
+        res.redirect(req.session.returnTo || redirectUrl);
+        // res.redirect(`/user/${user.channelUrl}/live/staging`);
+      } else {
+        res.redirect(redirectUrl);
+      }
+
+    });
+  })(req, res, next);
+};
+
+
+/**
+ * POST /signup
+ * Create a new local account.
+ */
+exports.postSignup = async (req, res, next) => {
+
+  // CAPTCHA VALIDATION
+  if(process.env.NODE_ENV == 'production'){
+    try {
+      const response = await recaptcha.validate(req.body['g-recaptcha-response']);
+    } catch (err){
+      req.flash('errors', { msg: 'Captcha failed, please try again' });
+      return res.redirect('/signup');
+    }
+  }
+
+  /** assertion testing the data **/
+  // req.assert('email', 'Email is not valid').isEmail();
+  req.assert('password', 'Password must be at least 4 characters long').len(4);
+  req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
+  // req.assert('channelName', 'Channel name must be entered').notEmpty();
+  req.assert('channelUrl', 'Channel username must be entered').notEmpty();
+  req.assert('channelUrl', 'Channel username must be between 3 and 25 characters.').len(3,25);
+
+  console.log(req.body.channelUrl + ' <--- inputted channelUrl for' + req.body.email);
+  //console.log(req.body.grecaptcha.getResponse('captcha'));
+
+  if(!/^\w+$/.test(req.body.channelUrl)){
+    req.flash('errors', { msg: 'Please only use letters, numbers and underscores for your username.' });
+    return res.redirect('/signup');
+  }
+
+  // req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
+
+  const errors = req.validationErrors();
+
+  if (errors) {
+    req.flash('errors', errors);
+    return res.redirect('/signup');
+  }
+
+  const user = new User({
+    email: '' + Math.random() + Math.random(),
+    password: req.body.password,
+    channelUrl: req.body.channelUrl,
+    // channelName: req.body.channelName,
+  });
+
+  User.findOne({ channelUrl : req.body.channelUrl }, (err, existingUser) => {
+    if (err) { return next(err); }
+    if (existingUser) {
+      req.flash('errors', { msg: 'That channel username is taken, please choose another one.' });
+      return res.redirect('/signup');
+    }
+    user.save((err) => {
+
+      console.log(err);
+
+      if (err && err.errors && err.errors.channelUrl && err.errors.channelUrl.kind == 'unique') {
+        req.flash('errors', { msg: "That channel username is taken, please choose another one" });
+        return res.redirect('/signup');
+      }
+
+
+      if (err) { return next(err); }
+      req.logIn(user, (err) => {
+        if (err) {
+          return next(err);
+        }
+
+        const id = user.id;
+
+        res.redirect(redirectUrl);
+      });
+    });
+  });
+};
+
+
+/**
+ * POST /account/profile
+ * Update profile information.
+ */
+
+exports.postUpdateProfile = async (req, res, next)  => {
+
+  if(!req.user && req.body.uploadToken){
+    req.user = await User.findOne({ uploadToken : req.body.uploadToken })
+  }
+
+  // console.log('REQ FILES')
+  // console.log(req.files);
+
+  req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
+
+  const errors = req.validationErrors();
+
+  if (errors) {
+    req.flash('errors', errors);
+    return res.redirect('/account');
+  }
+
+
+
+  // load up file info
+  let filename, fileType, fileExtension;
+  if(req.files && req.files.filetoupload){
+    filename = req.files.filetoupload.originalFilename;
+    fileType = getMediaType(filename);
+    fileExtension = path.extname(filename);
+  }
+
+  if(req.body.channelName.length < 3 &&  req.body.channelName.length < 0 || req.body.channelName.length > 20){
+    console.log('SHOULDNT BE POSSIBLE: Someone messing with channelName?')
+  }
+
+
+  // reject the file
+  if(req.files && req.files.filetoupload && req.files.filetoupload.size > 0 && fileType && fileType !== 'image'){
+    return res.send('We cant accept this file');
+    // save and upload image if conditions met
+  } else if(req.files && req.files.filetoupload && req.files.filetoupload.size > 0 && fileType == 'image'){
+
+    const channelUrlFolder = `./uploads/${req.user.channelUrl}`;
+
+    // make the directory if it doesnt exist
+    await mkdirp.mkdirpAsync(channelUrlFolder);
+
+    // save the file
+    mv(req.files.filetoupload.path, `./uploads/${req.user.channelUrl}/user-thumbnail${fileExtension}`, async function (err) {
+
+      // upload thumbnail to b2
+      if(process.env.UPLOAD_TO_B2){
+        const response = await b2.uploadFileAsync(`./uploads/${req.user.channelUrl}/user-thumbnail${fileExtension}`, {
+          name : `${req.user.channelUrl}/user-thumbnail${fileExtension}`,
+          bucket // Optional, defaults to first bucket
+        });
+        console.log(response);
+        req.user.thumbnailUrl = response;
+      };
+
+      req.user.customThumbnail = `user-thumbnail${fileExtension}`;
+
+      req.user.channelName = req.body.channelName ?  req.body.channelName : req.user.channelUrl;
+
+      req.user.channelDescription = req.body.description;
+
+      await req.user.save();
+
+      // download if theres an image
+      req.flash('success', { msg: 'Profile information has been updated.' });
+      res.redirect(`${frontendServer}/account`);
+
+    });
+  } else {
+    console.log('THIS IS RUNNING');
+
+    let user = await User.findById(req.user.id);
+
+    user.channelName = req.body.channelName ?  req.body.channelName : req.user.channelUrl;
+
+    user.channelDescription = req.body.description;
+
+    console.log(user);
+
+    await user.save();
+
+    // download if theres an image
+    req.flash('success', { msg: 'Profile information has been updated.' });
+    res.redirect(`${frontendServer}/account`);
+  }
+
+
+};
+
+/**
+ * POST /account/password
+ * Update current password.
+ */
+exports.postUpdatePassword = (req, res, next) => {
+  req.assert('password', 'Password must be at least 4 characters long').len(4);
+  req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
+
+  const errors = req.validationErrors();
+
+  if (errors) {
+    req.flash('errors', errors);
+    return res.redirect('/account');
+  }
+
+  User.findById(req.user.id, (err, user) => {
+    if (err) { return next(err); }
+    user.password = req.body.password;
+    user.save((err) => {
+      if (err) { return next(err); }
+      req.flash('success', { msg: 'Password has been changed.' });
+      res.redirect('/account');
+    });
+  });
+};
+
+/**
+ * POST /account/delete
+ * Delete user account.
+ */
+exports.postDeleteAccount = (req, res, next) => {
+  User.remove({ _id: req.user.id }, (err) => {
+    if (err) { return next(err); }
+    req.logout();
+    req.flash('info', { msg: 'Your account has been deleted.' });
+    res.redirect('/');
+  });
+};
+
+
+/**
+ * POST /reset/:token
+ * Process the reset password request.
+ */
+exports.postReset = (req, res, next) => {
+  req.assert('password', 'Password must be at least 4 characters long.').len(4);
+  req.assert('confirm', 'Passwords must match.').equals(req.body.password);
+
+  const errors = req.validationErrors();
+
+  if (errors) {
+    req.flash('errors', errors);
+    return res.redirect('back');
+  }
+
+  const resetPassword = () =>
+    User
+      .findOne({ passwordResetToken: req.params.token })
+      .where('passwordResetExpires').gt(Date.now())
+      .then((user) => {
+        if (!user) {
+          req.flash('errors', { msg: 'Password reset token is invalid or has expired.' });
+          return res.redirect('back');
+        }
+        user.password = req.body.password;
+        user.passwordResetToken = undefined;
+        user.passwordResetExpires = undefined;
+        return user.save().then(() => new Promise((resolve, reject) => {
+          req.logIn(user, (err) => {
+            if (err) { return reject(err); }
+            resolve(user);
+          });
+        }));
+      });
+
+  const sendResetPasswordEmail = (user) => {
+    if (!user) { return; }
+    var transporter = nodemailer.createTransport({
+      host: 'smtp.zoho.com',
+      port: 465,
+      secure: true, // use SSL
+      auth: {
+        user: 'verify@pew.tube',
+        pass: verifyEmailPassword
+      }
+    });
+    const mailOptions = {
+      to: user.email,
+      from: 'verify@pew.tube',
+      subject: 'Your PewTube password has been changed',
+      text: `Hello,\n\nThis is a confirmation that the password for your account ${user.email} has just been changed.\n`
+    };
+    return transporter.sendMail(mailOptions)
+      .then(() => {
+        req.flash('success', { msg: 'Success! Your password has been changed.' });
+      });
+  };
+
+  resetPassword()
+    .then(sendResetPasswordEmail)
+    .then(() => { if (!res.finished) res.redirect('/'); })
+    .catch(err => next(err));
+};
+
+/**
+ * POST /forgot
+ * Create a random token, then the send user an email with a reset link.
+ */
+exports.postForgot = (req, res, next) => {
+  req.assert('email', 'Please enter a valid email address.').isEmail();
+  req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
+
+  const errors = req.validationErrors();
+
+  if (errors) {
+    req.flash('errors', errors);
+    return res.redirect('/forgot');
+  }
+
+  const createRandomToken = crypto
+    .randomBytesAsync(16)
+    .then(buf => buf.toString('hex'));
+
+  const setRandomToken = token =>
+    User
+      .findOne({ email: req.body.email })
+      .then((user) => {
+        if (!user) {
+          req.flash('info', { msg: 'If the email address exists you will receive further instructions on resetting your password there.' });
+        } else {
+          user.passwordResetToken = token;
+          user.passwordResetExpires = Date.now() + 3600000; // 1 hour
+          user = user.save();
+        }
+        return user;
+      });
+
+  const sendForgotPasswordEmail = (user) => {
+    if (!user) { return; }
+    const token = user.passwordResetToken;
+    var transporter = nodemailer.createTransport({
+      host: process.env.EMAIL_HOST,
+      port: 465,
+      secure: true, // use SSL
+      auth: {
+        user: process.env.EMAIL_ADDRESS,
+        pass: verifyEmailPassword
+      }
+    });
+    const mailOptions = {
+      to: user.email,
+      from: process.env.EMAIL_ADDRESS,
+      subject: 'Reset your password on PewTube',
+      text: `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
+        Please click on the following link, or paste this into your browser to complete the process:\n\n
+        http://${req.headers.host}/reset/${token}\n\n
+        If you did not request this, please ignore this email and your password will remain unchanged.\n`
+    };
+    return transporter.sendMail(mailOptions)
+      .then(() => {
+        req.flash('info', { msg: `If the email address exists you will receive further instructions on resetting your password there.` });
+      });
+  };
+
+  createRandomToken
+    .then(setRandomToken)
+    .then(sendForgotPasswordEmail)
+    .then(() => res.redirect('/forgot'))
+    .catch(next);
+};

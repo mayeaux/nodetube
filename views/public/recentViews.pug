@@ -1,0 +1,89 @@
+extends ../layout
+
+
+
+block content
+    div
+        div.row
+            div.col-sm-3
+                h3
+                    a(href="/media/recent") Recently Uploaded
+            div.col-sm-3
+                h3
+                    a(href="/media/recentComments") Recent Comments
+            div.col-sm-3
+                h3
+                    a(href="/media/recentViews") Recent Views
+            div.col-sm-3
+                h3
+                    a(href="/media/recentReacts") Recent Reacts
+
+        hr
+
+        div.center-block.text-center.col-sm-12
+            h1 Recently Viewed
+            // TOP PAGINATION
+            nav.center-block.text-center(aria-label='Page navigation example')
+                ul.pagination
+                    li.page-item
+                        a.page-link(href=`/media/recentViews/${previousNumber}`) <
+
+                    each number in numbersArray
+                        li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
+                            a.page-link(href=`/media/recentViews/${number}`) #{number}
+
+                    li.page-item
+                        a.page-link(href=`/media/recentViews/${nextNumber}`) >
+
+
+
+
+
+
+            br
+
+            each view in views
+                        if view.upload.uploader
+                            div.col-sm-4(style="text-align:center;height:335px")
+                                // NEW CHANNEL UPLOAD FORMAT
+
+                                a.title-anchor(href=`/user/${view.upload.uploader.channelUrl}/${view.upload.uniqueTag}`)
+                                    if view.upload.fileType == 'video' && view.upload.thumbnailUrl
+                                        img.preview-image(src=view.upload.thumbnailUrl)
+                                    else if view.upload.fileType == 'video' && !view.upload.thumbnailUrl
+                                        img.preview-image(src="/no_img.png")
+                                    else if view.upload.fileType == 'image'
+                                        img.preview-image(src=view.upload.uploadUrl)
+                                    else if view.upload.fileType == 'audio'
+                                        img.preview-image(src='/audio.svg')
+                                    else if view.upload.fileType == 'unknown'
+                                        img.preview-image(src='/no_img.png')
+
+                                    div
+                                        p.upload-title-text #{view.upload.title}
+                                    br
+
+                                div.upload-details
+                                    p Viewed #{view.timeAgo}
+                                div.uploaded-by #{view.upload.fileType.charAt(0).toUpperCase() + view.upload.fileType.slice(1)}&nbsp
+                                    |uploaded by #{view.upload.uploader.channelName}
+
+    script.
+      $(document).on({
+        mouseenter: function () {
+          var width = $(this).width()
+          var height = $(this).height()
+
+
+          $(this).css("width", width * 1.10);
+          $(this).css("height", height * 1.10);
+
+        },
+        mouseleave: function () {
+          var width = $(this).width()
+          var height = $(this).height()
+
+          $(this).css("width", width / 1.10);
+          $(this).css("height", height / 1.10);
+        }
+      }, '.preview-image');

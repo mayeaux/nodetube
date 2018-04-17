@@ -1,0 +1,32 @@
+extends ../layout
+
+block content
+
+
+    div.row
+        div.col-sm-3
+            h3
+                a(href="/account") Channel Overview
+        div.col-sm-3
+          h3
+            a(href="/account/viewHistory") View History
+        div.col-sm-3
+          h3
+            a(href="/account/reactHistory") React History
+    p
+    hr
+
+    h2 React History
+
+    div.col-sm-12
+        br
+        br
+        if reacts.length == 0
+            p You have not made any reacts
+
+        else
+            each react in reacts
+                div
+                    p You reacted with a #{react.react} #{react.timeAgo} to &nbsp
+                        if react.upload.uploader
+                            a(href=`/user/${react.upload.uploader.channelUrl}/${react.upload.uniqueTag}`) #{react.upload.title}

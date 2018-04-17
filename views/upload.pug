@@ -1,0 +1,333 @@
+extends layout
+
+block content
+  br
+  div.center-block.text-center
+      div.upload-information
+        h1
+          i.fa.fa-upload
+          | File Upload
+
+        br
+        h3 PewTube supports video, audio and image files.
+
+        br
+        br
+        p Supported file formats:
+        p Videos : ['.mp4', '.avi', '.flv', '.MOV', '.m4v', '.ogv', '.webm', '.wmv', '.mkv', '.mov', '.m2t', '.MTS', '.m2ts', '.MPG', '.AVI', '.mpg']
+        p Audio: ['.mp3', '.wav', '.ogg', '.m4a'];
+        p Images: ['.png', '.jpg', '.jpeg', '.gif', '.JPG', '.PNG'];
+
+        br
+
+        p Your current upload file size limit is #{user.privs.uploadSize} MB (#{user.privs.uploadSize / 1000} GB)
+        if user.plan == 'free'
+          p You can raise this limit to 2000 MB by subscribing for&nbsp
+            a(href="/account?to=pt-plus") PewTube Plus
+
+        br
+        p Graphic violence, content that uses racial epithets, and overtly sexual content must be marked as Not Safe For Work
+        p Shocking content must be marked as sensitive.
+        p Not properly marking content as mature may result in a restriction of rating content as Safe For Work
+
+
+      .row
+        .col-sm-12
+
+
+
+
+          div.upload-form
+
+              .upload-form
+                .form-group.center-block.text-center
+                  br
+                  a.resumable-browse
+                      button.btn.btn-success.resumable-brwoser Select File
+                  br
+                  br
+                  br
+
+                  label(for='title') Title (*)
+                  input.form-group.center-block.text-center(style="width:400px;" type="text" name="title" id="title" minlength=3, maxlength=100 required)
+
+                  // add endpoint for visibility
+                  if user.plan == 'plus'
+                    label(for='title') Visibility
+                    br
+                    div.radio-buttons.visibility
+                      label.radio-inline
+                        input.radio-button(type='radio', name='visibility' value="public" checked)
+                        | Public
+                      label.radio-inline
+                        input.radio-button(type='radio', name='visibility' value="unlisted")
+                        | Unlisted
+                      label.radio-inline
+                        input.radio-button(type='radio', name='visibility' value="private")
+                        | Private
+                    br
+
+                  label(for='rating') Rating
+                  br
+                  div.radio-buttons.rating
+                    label.radio-inline
+                      input.radio-button(type='radio', name='rating' value="sensitive" required)
+                      | Sensitive (Shocking content) 18+
+
+                    br
+                    br
+                    label.radio-inline
+                      input.radio-button(type='radio', name='rating' value="mature")
+                      | Not Safe For Work
+                    br
+                    br
+                    if user.privs.safeForWorkUpload
+                      label.radio-inline
+                        input.radio-button(type='radio', name='rating' value="allAges")
+                        | Safe For Work
+                        br
+                        br
+                        br
+                        br
+                  label(for="description") Description
+                  br
+                  textarea.form-group(style="width:400px;" type="text" name="description" id="description" maxlength='2000' rows="10" cols="70")
+
+                  //br
+                  //label.control-label(for='filetoupload' style="") Channel Thumbnail
+                  //br
+                  //brs
+                  //input.center-block.text-center(style="margin-bottom:40px" class="upload-file" data-max-size="500000000" type="file" id="filetoupload" name="filetoupload" accept="image/*")
+
+
+
+                button.btn.btn-primary.submit-button(type="submit") Upload
+
+          div.upload-gif
+              h3.upload-title-name Your file is uploading
+              br
+              h1 Uploading...
+              img(src='/images/uploading.gif' style="max-width:75px")
+
+              h2.file-progress
+
+
+
+
+
+
+  script(src='/js/lib/jquery-3.1.1.min.js')
+  script(src='/js/lib/resumable.js')
+  script.
+    $(document).ready(function () {
+
+      // HIDE GIF
+       $(".upload-gif").hide();
+
+
+      var privs = #{user.privs}
+
+      var maxSize;
+
+      if(privs){
+        maxSize = '#{user.privs.uploadSize}' || 500;
+      } else {
+        maxSize = 500;
+
+      }
+
+      var maxSizeInBytes = maxSize * 1000000
+
+      console.log(maxSizeInBytes)
+
+      // set chunk size to 25MB
+      var chunkSize = 1000 * 1000 * 25;
+
+      // on submit, build a resumable, and then fire it off
+
+      var r = new Resumable({
+        target: '#{uploadUrl}',
+        chunkSize: chunkSize,
+        simultaneousUploads: 1,
+        testChunks: false,
+        throttleProgressCallbacks: 1,
+        maxFiles: 1,
+        maxFileSize: maxSizeInBytes,
+        maxFileSizeErrorCallback: function (file, errorCount) {
+          swal(`Please upload a file smaller than ${maxSize} MB`);
+          // console.log(file);
+        }
+
+      });
+
+      // Resumable.js isn't supported, fall back on a different method
+      if (!r.support) {
+        swal('Sorry, your browser isn\'t supported currently, please update your browser');
+      } else {
+
+        r.assignBrowse($('.resumable-browse')[0]);
+        // Handle file add event
+
+        r.on('fileAdded', function (file) {
+
+          // replace underlines with spaces just to be nice
+          var fileName = file.fileName.replace(/_/g, " ");
+
+          fileName = fileName.substring(0, fileName.lastIndexOf('.'));
+
+          var title = $('#title').val();
+
+          console.log(title);
+
+          if(!title || title == ""){
+            $('#title').val(fileName);
+          }
+
+          // auto fill in title
+
+          // console.log(file);
+
+        });
+
+        $('.submit-button').on('click', function (e) {
+
+          var title = $('#title').val();
+          var description = $('#description').val();
+
+          var visibility = $(".visilibity label input[type='radio']:checked").val();
+          var rating = $(".rating label input[type='radio']:checked").val();
+
+          if(!rating){
+            return swal('Please select a rating')
+          }
+
+          if(!visibility){
+            visibility = 'public'
+          }
+
+          $('.upload-title-name').text('File: ' + title);
+
+          if (r.files.length == 0) {
+            swal('Please select a file')
+            return
+          }
+
+          if (title == '') {
+            swal('Please enter a title')
+            return
+          }
+
+          //  HIDE FORM SHOW GIF
+          $(".upload-form").hide();
+
+          $('.upload-information').hide();
+
+          $(".upload-gif").show();
+
+
+
+          var uploadToken = '#{user.uploadToken}'
+
+          r.opts.query = {
+            title,
+            description,
+            uploadToken,
+            visibility,
+            rating
+          };
+
+          r.upload();
+
+          $('.file-progress').html('BEGINNING UPLOAD...');
+        });
+
+
+        r.on('fileSuccess', function (file, response) {
+
+          console.log('message:')
+          console.log(response);
+
+          response = JSON.parse(response);
+
+          if (response.message == 'UNKNOWN FILE') {
+            //  HIDE FORM SHOW GIF
+            $(".upload-form").show();
+            $(".upload-gif").hide();
+
+            // auto fill in title
+            $('#title').val('');
+            return swal('Sorry, the file type is unknown, please try another file')
+
+          }
+
+          if(response.message == 'ALREADY-UPLOADED'){
+            //  HIDE FORM SHOW GIF
+            $(".upload-form").show();
+            $(".upload-gif").hide();
+
+            // auto fill in title
+            $('#title').val('');
+            return swal({ title: 'File Already Uploaded', text: 'Sorry, this file has already been uploaded, please try another'}, function(){
+              window.location.href = '/upload'
+            })
+          }
+
+          if (response.url) {
+            window.location.href = response.url;
+          }
+
+
+          // Reflect that the file upload has completed
+          $('.file-progress').html('UPLOAD COMPLETED');
+        });
+
+
+        r.on('fileError', function (file, response) {
+
+          response = JSON.parse(response);
+
+          console.log(response.message);
+
+          console.log('file error');
+
+          if (response.message == 'ALREADY-UPLOADED') {
+            //  HIDE FORM SHOW GIF
+            $(".upload-form").show();
+            $(".upload-gif").hide();
+
+            // auto fill in title
+            $('#title').val('');
+            return swal({
+              title: 'File Already Uploaded',
+              text: 'Sorry, this file has already been uploaded, please try another'
+            }, function () {
+              window.location.href = '/upload'
+            })
+          }
+
+          // Reflect that the file upload has resulted in error
+          $('.file-progress').html('File could not be uploaded: (' + response.message + ')');
+        });
+        r.on('fileProgress', function (file, response) {
+
+          const progress = Math.floor(file.progress() * 100);
+
+          if (progress === 0 || progress === '0') {
+
+            $('.file-progress').html('BEGINNING UPLOAD...');
+          } else {
+
+            $('.file-progress').html('PROGRESS: ' + progress + '%');
+          }
+
+
+        });
+      }
+
+
+
+
+
+    });
+
+

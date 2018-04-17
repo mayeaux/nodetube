@@ -1,0 +1,114 @@
+.navbar.navbar-default.navbar-fixed-top(style="background-color:rgb(24,55,147)")
+  .container
+    .navbar-header
+      button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
+        span.sr-only Toggle navigation
+        span.icon-bar
+        span.icon-bar
+        span.icon-bar
+      a.navbar-brand(href=`/`)
+        img(src="/images/navbar.svg" style="height:85px;margin-top:-27px;")
+    .collapse.navbar-collapse
+      ul.nav.navbar-nav.front-header
+        li(class=(title == 'Home') ? 'active' : undefined)
+          a(href=`/`) Home
+        if user && user.role == 'admin'
+          li(class=(title == 'Popular Uploads') ? 'active' : undefined)
+            a(href=`/media/popular/1?within=24hour`) Popular
+          li(class=(title == 'Recent Uploads') ? 'active' : undefined)
+            a(href=`/media/recent`) Recent
+        if user && user.role == 'admin'
+          li(class=(title == 'Channels') ? 'active' : undefined)
+            a(href=`/channels?within=24hour`) Channels
+        li(class=(title == 'Search') ? 'active' : undefined)
+          a(href=`/search`) Search
+        li.subscribed-link(class=(title == 'Subscriptions') ? 'active' : undefined)
+          if user && user.unseenSubscriptionUploads || user && user.unseenSubscriptionUploads == 0
+            a(href=`/media/subscribed`) Subscribed (#{user.unseenSubscriptionUploads})
+          else
+            a(href=`/media/subscribed`) Subscribed (0)
+      ul.nav.navbar-nav.navbar-right
+        if user
+          // admin panel
+          if user.role == 'admin'
+            li.dropdown(class=(title == 'Admin Panel') ? 'active' : undefined)
+              a.dropdown-toggle(href='#', data-toggle='dropdown')
+                span= 'Admin Panel'
+                i.caret
+              ul.dropdown-menu
+                li(class=(title == 'Comments') ? 'active' : undefined)
+                  a(href=`/admin/comments`) Comments
+                li(class=(title == 'Uploads') ? 'active' : undefined)
+                  a(href=`/admin/uploads`) Uploads
+                li(class=(title == 'Users') ? 'active' : undefined)
+                  a(href=`/admin/users`) Users
+                li
+                  a(href=`/admin/siteVisitors`) Site Visitors
+                li
+                  a(href=`/admin/dailyStats`) Daily Stats
+                li
+                  a(href=`/admin/reacts`) Reacts
+                li
+                  a(href=`/admin/createSocialPost`) Create Social Post
+                li
+                  a(href=`/admin/oneOffSocialPost`) One Off Social Post
+
+          // pending section
+          if user.role == 'admin' || user.role == 'moderator'
+            li(class=(title == 'Pending') ? 'active' : undefined)
+              a(href=`/pending`) Pending
+
+        li(class=(title == 'About') ? 'active' : undefined)
+          a(href=`/about`) About
+        if !user
+          li(class=(title == 'Login') ? 'active' : undefined)
+            a(href=`/login`) Login
+          li(class=(title == 'Create Account') ? 'active' : undefined)
+            a(href=`/signup`) Create Account
+        else
+          li(class=(title == 'Upload') ? 'active' : undefined)
+            a(href=`/upload`) Upload
+          li.hidden-md.hidden-lg.hidden-sm
+            a(href=`/notifications`) Notifications (#{unreadNotifAmount})
+          li.hidden-md.hidden-lg.hidden-sm
+            a(href=`/user/` + user.channelUrl) My Channel
+          li.hidden-md.hidden-lg.hidden-sm
+            a(href=`/account`) My Account
+          li.hidden-md.hidden-lg.hidden-sm
+            a(href=`/logout`) Logout
+          li.dropdown(class=(title == 'Account Management') ? 'active' : undefined)
+            a.dropdown-toggle(href='#', data-toggle='dropdown')
+              span #{user.channelName || user.channelUrl } (#{unreadNotifAmount}) &nbsp
+              i.caret
+            ul.dropdown-menu
+              li
+                a(href=`/notifications`) Notifications (#{unreadNotifAmount})
+              li
+                a(href=`/user/` + user.channelUrl) My Channel
+              li
+                a(href=`/account`) My Account
+
+              li(class=(title == 'Upload') ? 'active' : undefined)
+                a(href=`/upload`) Upload
+              li.divider
+              li
+                a(href=`/logout`) Logout
+
+if !user
+  script.
+    $('.subscribed-link').on('touchstart click', function(e){
+      e.preventDefault();
+
+      swal({
+        text: "Please register to subscribe to content",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sign Up Now'
+      }).then(function(result){
+        if(result.value){
+          window.location.href = "/signup";
+        }
+      })
+
+
+    })

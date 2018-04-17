@@ -1,0 +1,470 @@
+extends ../layout
+
+block content
+
+    style.
+        .pewtube-pro {
+            background: #edeeee;
+            font-weight: 400;
+            font-size: 10px;
+            margin-left: 3px;
+            padding: 2px 4px;
+            display: inline-block;
+            border-radius: 3px;
+            transform: translateY(-2px);
+        }
+
+        .filter-text {
+            font-size: 12px;
+        }
+
+        form {
+            width: 100%;
+            box-sizing: border-box;
+            background-color: white;
+            box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.4);
+            text-align: center;
+            position: relative;
+            border-radius: 2px;
+        }
+
+        form > div {
+            color: white;
+            padding-top: 24px;
+            display: block;
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            bottom: -4px;
+            width: calc(33.33% + 8px);
+            background-color: rgba(50, 150, 255, 1);
+            border-radius: 2px;
+            box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.4);
+            z-index: 1;
+            pointer-events: none;
+            transition: transform 0.3s;
+        }
+
+        form::after {
+            content: "";
+            display: block;
+            clear: both;
+        }
+
+        form label {
+            float: left;
+            width: calc(33.333% - 1px);
+            position: relative;
+            padding: 20px 0px 40px;
+            overflow: hidden;
+            border-left: solid 1px rgba(0, 0, 0, 0.2);
+            transition: color 0.3s;
+            cursor: pointer;
+            -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+        }
+
+        form label:first-child {
+            border-left: none;
+        }
+
+        form label input {
+            position: absolute;
+            top: -200%;
+        }
+
+        form label div {
+            z-index: 5;
+            position: absolute;
+            width: 100%;
+        }
+
+        form label.selected {
+            color: white;
+        }
+
+        input[type=checkbox] {
+            /* Double-sized Checkboxes */
+            -ms-transform: scale(2); /* IE */
+            -moz-transform: scale(2); /* FF */
+            -webkit-transform: scale(2); /* Safari and Chrome */
+            -o-transform: scale(2); /* Opera */
+            padding: 10px;
+        }
+
+    div
+        div.row
+            // NAVBAR
+            div.col-sm-2
+                h3
+                    a(href=`/media/popular/1?within=1hour`) Last Hour
+            div.col-sm-2
+                h3
+                    a(href=`/media/popular/1?within=24hour`) Last Day
+            div.col-sm-2
+                h3
+                    a(href=`/media/popular/1?within=1week`) Last Week
+            div.col-sm-2
+                h3
+                    a(href=`/media/popular/1?within=1month`) Last Month
+            div.col-sm-2
+                h3
+                    a(href="/media/popular") All-Time
+            //div.col-sm-2
+            //    form#searchTypeToggle(action='')
+            //        div
+            //        label.allAges
+            //            input(type='radio', name='searchtype', data-location='0', value='one')
+            //            div.filter-text All Ages (13+)
+            //        label.mature
+            //            input(type='radio', name='searchtype', data-location='calc(100% - 8px)', value='two')
+            //            div.filter-text Mature (18+)
+            //        label.sensitive
+            //            input(type='radio', name='searchtype', data-location='calc(200% - 17px)', value='three')
+            //            div.filter-text Sensitive (18+)
+
+
+
+        hr
+
+    h1.center-block.text-center #{englishString} (#{viewAmountInPeriod})
+
+    p
+
+        h2.center-block.text-center #{timeAgoEnglish}
+
+        div.center-block.text-center.col-sm-12
+
+
+            br
+
+            //br
+
+            div.dropdown(style="display:inline")
+                button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
+                    if siteVisitor.filter == 'allAges'
+                        | Rating: SFW &nbsp
+                    else if siteVisitor.filter == 'mature'
+                        | Rating: SFW/NSWF &nbsp
+                    span.caret
+
+                ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1')
+                    li(role='presentation')
+                        if siteVisitor.filter == 'mature'
+                            a.changeFilterButton(value="allAges" href="#") SFW
+                        else if siteVisitor.filter == 'allAges'
+                            a.changeFilterButton(value="mature" href="#") SFW/NFSW
+
+
+        // TOP PAGINATION
+        nav.center-block.text-center(aria-label='Page navigation example')
+            ul.pagination
+                li.page-item
+                    a.page-link(href=`/media/popular/${previousNumber}${withinString}`) <
+
+                each number in numbersArray
+                    li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
+                        a.page-link(href=`/media/popular/${number}${withinString}`) #{number}
+
+                li.page-item
+                    a.page-link(href=`/media/popular/${nextNumber}${withinString}`) >
+
+
+        br
+        each upload in uploads
+            div.col-sm-4(style="text-align:center;height:360px;")
+                a.title-anchor(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}` style="color:black" )
+
+                    if upload.thumbnails && upload.thumbnails.custom
+                        img.preview-image(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.custom}` style="width:inherit;max-width:302px;")
+
+                    else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.generated
+                        img.preview-image(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated}` style="width:inherit;max-width:302px;")
+
+                    else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.medium
+                        img.preview-image(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.medium}` style="width:inherit;max-width:302px;")
+
+                    else if upload.fileType == 'video' && !upload.thumbnailUrl
+                        img.preview-image(src="/no_img.png")
+
+                    else if upload.fileType == 'image'
+                        img.preview-image(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="width:inherit;max-width:302px;")
+
+                    else if upload.fileType == 'audio'
+                        img.preview-image(src='/audio.svg')
+
+                    else if upload.fileType == 'unknown'
+                        img.preview-image(src='/no_img.png')
+
+                    div
+                        p.balance-text.upload-title-text(style="width:100%;margin:0 auto;margin-top:6px;") #{upload.title}
+                    br
+
+                div.upload-details
+                    if englishString !== 'All Time'
+                        div.views
+                            p.center-block.text-center #{upload.legitViewAmount} Total Views
+                    div.views
+                        if englishString == 'All Time'
+                            p(style="margin-top:8px").center-block.text-center #{upload.legitViewAmount} #{englishString}
+                        if englishString == 'Last Month'
+                            p.center-block.text-center #{upload.viewsWithin1month} #{englishString}
+                        if englishString == 'Last Week'
+                            p.center-block.text-center #{upload.viewsWithin1week} #{englishString}
+                        if englishString == 'Last Day'
+                            p.center-block.text-center #{upload.viewsWithin24hour} #{englishString}
+                        if englishString == 'Last Hour'
+                            p.center-block.text-center #{upload.viewsWithin1hour} #{englishString}
+
+                        // capitalize media type
+                    div.uploaded-by #{upload.fileType.charAt(0).toUpperCase() + upload.fileType.slice(1)} uploaded by
+                        a.upload-user-text(href=`/user/${upload.uploader.channelUrl}`)
+                            p(style="font-size:15px") #{upload.uploader.channelName || upload.uploader.channelUrl}
+                                if upload.uploader.verified == true
+                                    img(src="/images/verified.jpg" width="19px" height="19px" style="margin-left:3px;margin-top:-2px;")
+                                if upload.uploader.plan == 'plus'
+                                    span.pewtube-pro PLUS
+
+                if user && user.role == 'admin'
+                    div.changeRating(style="margin-top:12px;")
+                        input.ratingChanged(type="checkbox" value=`${upload._id}`)
+
+
+        if user && user.role == 'admin'
+            div.center-block.text-center.col-sm-12
+                button.btn-lg.button-success.change-rating(rating="sensitive") Mark As Sensitive
+                button.btn-lg.button-success.change-rating(rating="mature") Mark As NSFW (Mature)
+                button.btn-lg.button-success.change-rating(rating="allAges") Mark As SFW (AllAges)
+
+
+        if uploads
+            div.col-sm-12
+                nav.center-block.text-center(aria-label='Page navigation example')
+                    ul.pagination
+                        li.page-item
+                            a.page-link(href=`/media/popular/${previousNumber}${withinString}`) <
+
+                        each number in numbersArray
+                            li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
+                                a.page-link(href=`/media/popular/${number}${withinString}`) #{number}
+
+                        li.page-item
+                            a.page-link(href=`/media/popular/${nextNumber}${withinString}`) >
+
+
+    if user && user.role == 'admin'
+        script.
+          $('.change-rating').on('click', function () {
+            var checkedValues = $('input:checkbox:checked').map(function () {
+              return this.value;
+            }).get();
+
+            var rating = $(this).attr('rating');
+            var csrf = '#{_csrf}'
+
+
+            var data = {
+              rating: rating,
+              uploads: checkedValues,
+              csrf: csrf
+            }
+
+            $.ajax({
+              type: 'POST',
+              url: `/admin/changeRatings`, // todo: change to user filter
+              data,
+              success: function (data) {
+                if (data == 'success') {
+                  window.location.reload(true);
+                } else {
+                  swal("Something didn't work, please contact PewTube at ceo@pew.tube or via the widget in the bottom right corner")
+                }
+                console.log(data);
+              },
+              error: function (err) {
+                console.log(err);
+              }
+            });
+
+
+            console.log(rating);
+          })
+
+
+    script.
+      $('.changeFilterButton').on('click', function () {
+
+        function changeUserRatingFilter(value) {
+
+          console.log('running here')
+
+          var data = {
+            filter: value
+          }
+
+          $.ajax({
+            type: 'POST',
+            url: `/api/changeUserFilter`, // todo: change to user filter
+            data,
+            success: function (data) {
+              if (data == 'success') {
+                window.location.reload(true);
+              } else {
+                swal("Something didn't work, please contact PewTube at ceo@pew.tube or via the widget in the bottom right corner")
+              }
+              console.log(data);
+            },
+            error: function (err) {
+              console.log(err);
+            }
+          });
+
+        }
+
+        const value = $(this).attr('value');
+
+        if (value == 'mature') {
+
+          swal({
+            title: '',
+            text: 'Please confirm you are 18 or older and willing to see \n not safe for work content',
+            showCancelButton: true,
+            confirmButtonText: "Confirm Age",
+          }).then(function (result) {
+
+            console.log(result);
+
+            if (result.value == true) {
+              changeUserRatingFilter(value)
+            }
+          })
+
+        } else {
+          changeUserRatingFilter(value);
+        }
+
+        console.log('here')
+      })
+
+    script.
+      $(document).ready(function (event) {
+
+        var filter = '#{filter}';
+
+        console.log(filter)
+
+        var filterLabel = $('.' + filter);
+        filterLabel.addClass('selected');
+        $('form > div').css('transform', 'translateX(' + $(filterLabel.children(0)).data('location') + ')');
+
+
+
+        $('form input').click(function (event) {
+          $('form > div').css('transform', 'translateX(' + $(this).data('location') + ')');
+          $(this).parent().siblings().removeClass('selected');
+          $(this).parent().addClass('selected');
+
+
+          var label = $(this).parent();
+
+          var classes = label.attr('class');
+
+          console.log(classes);
+
+          var classList = classes.split(/\s+/);
+
+          console.log(classList);
+
+          var data = {}
+
+          $.each(classList, function (index, item) {
+            if (item === 'allAges') {
+              data.filter = 'allAges'
+
+              $.ajax({
+                type: 'POST',
+                url: `/api/changeUserFilter`,
+                data,
+                success: function (data) {
+                  window.location.reload(true);
+
+                  console.log(data);
+                },
+                error: function (err) {
+                  console.log(err);
+                }
+              });
+
+              console.log('all ages')
+            } else if (item == 'mature'){
+              data.filter = 'mature'
+
+
+              $.ajax({
+                type: 'POST',
+                url: `/api/changeUserFilter`,
+                data,
+                success: function (data) {
+                  window.location.reload(true);
+
+                  console.log(data);
+                },
+                error: function (err) {
+                  console.log(err);
+                }
+              });
+
+              console.log('mature')
+
+            } else if (item == 'sensitive'){
+
+              data.filter = 'sensitive'
+
+
+              $.ajax({
+                type: 'POST',
+                url: `/api/changeUserFilter`,
+                data,
+                success: function (data) {
+                  window.location.reload(true);
+
+                  console.log(data);
+                },
+                error: function (err) {
+                  console.log(err);
+                }
+              });
+
+              console.log('sensitive')
+
+            }
+          });
+
+
+
+        });
+      });
+
+
+
+    script.
+      balanceText();
+
+    script.
+      $(document).on({
+        mouseenter: function () {
+          var width = $(this).width()
+          var height = $(this).height()
+
+
+          $(this).css("width", width * 1.10);
+          $(this).css("height", height * 1.10);
+
+        },
+        mouseleave: function () {
+          var width = $(this).width()
+          var height = $(this).height()
+
+          $(this).css("width", width / 1.10);
+          $(this).css("height", height / 1.10);
+        }
+      }, '.preview-image');

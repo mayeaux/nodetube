@@ -1,0 +1,90 @@
+extends ../layout
+
+block content
+    div
+        div.row
+            div.col-sm-2
+                h3
+                    a(href="/channels?within=24hour") Last Day
+            div.col-sm-2
+                h3
+                    a(href="/channels?within=1week") Last Week
+            div.col-sm-2
+                h3
+                    a(href="/channels?within=1month") Last Month
+            div.col-sm-2
+                h3
+                    a(href="/channels?within=alltime") All-Time
+            div.col-sm-2
+                h3
+                    // style="margin-left:-32px;"
+                    a(href="/channelsBySubs" ) Subscriber Count
+            //div.col-sm-2
+            //    h3
+            //        a(href="/channelsByReacts") React Count
+
+
+
+        hr
+
+        h2.center-block.text-center Channels (Subscriber Count) &nbsp  &nbsp
+            //| Pages: &nbsp 1 &nbsp
+            //a(href="/channels?page=2") 2
+        hr
+
+        br
+        each channel in channels
+            div.col-sm-4(style="text-align:center;height:300px")
+                // NEW CHANNEL UPLOAD FORMAT
+
+                if channel.uploads.length > 0
+                    a(href=`/user/${channel.channelUrl}`)
+                        // TODO: Sub out thumbnail here
+                        if channel.thumbnailUrl
+                            img.preview-image(src=channel.thumbnailUrl)
+                        else
+                            if channel.uploads[0].fileType == 'video' && channel.uploads[0].thumbnailUrl
+                                img.preview-image(src=channel.uploads[0].thumbnailUrl)
+                            else if channel.uploads[0].fileType == 'image'
+                                img.preview-image(src=channel.uploads[0].uploadUrl)
+                            else if channel.uploads[0].fileType == 'audio'
+                                img.preview-image(src='/audio.svg')
+                            else if channel.uploads[0].fileType == 'unknown'
+                                img.preview-image(src='/no_img.png')
+
+                else
+                    a(href=`/user/${channel.channelUrl}`)
+                        img.preview-image(src='/no_img.png')
+
+                div.upload-title(style="width:80%;margin:0 auto;display:block;margin-bottom:10px;")
+                    a.title-anchor(style="text-align:center;margin:0 auto;" href=`/user/${channel.channelUrl}`)
+                        p.upload-title-text(style="") #{channel.channelName}
+
+
+                div.upload-details(style="margin-top:-56px")
+                    div.channel-uploads-amount
+                        if channel.receivedSubscriptions.length == 1
+                            p #{channel.receivedSubscriptions.length} Subscriber
+                        if channel.receivedSubscriptions.length > 1
+                            p #{channel.receivedSubscriptions.length} Subscribers
+
+
+    script.
+      $(document).on({
+        mouseenter: function () {
+          var width = $(this).width()
+          var height = $(this).height()
+
+
+          $(this).css("width", width * 1.10);
+          $(this).css("height", height * 1.10);
+
+        },
+        mouseleave: function () {
+          var width = $(this).width()
+          var height = $(this).height()
+
+          $(this).css("width", width / 1.10);
+          $(this).css("height", height / 1.10);
+        }
+      }, '.preview-image');

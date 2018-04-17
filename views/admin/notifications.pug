@@ -1,0 +1,24 @@
+extends ../layout
+
+block content
+
+    h1 Send Notifications
+    .content
+        form.form-horizontal(id='messageForm', method='POST')
+            input(type='hidden', name='_csrf', value=_csrf)
+            //Channel URL
+            .form-group
+                label.col-sm-3.control-label(for='channelUrl') Channel url
+                .col-sm-7
+                    input.form-control(type='text', name='channelUrl', id='channelUrl')
+
+            //Message for Channel
+            .form-group
+                label.col-sm-3.control-label(for='message') Message
+                .col-sm-7
+                    textarea(id="message" name="message" maxlength='500' rows="10" cols="70")
+
+            .form-group
+                .col-sm-offset-3.col-sm-7
+                    button.btn.btn-success(type='submit')
+                        | Send Message

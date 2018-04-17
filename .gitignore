@@ -1,0 +1,52 @@
+# API keys and secrets
+.env.private
+
+uploadedRecordings
+recordings
+upload
+thing
+ytdl/videos/
+hls
+
+lib-cov
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
+*.swp
+
+pids
+logs
+results
+tmp
+
+#Build
+public/css/main.css
+
+# Dependency directory
+node_modules
+bower_components
+
+# Editors
+.idea
+*.iml
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+uploads
+testing/transcode
+
+database
+
+middleware/custom
+lib/custom
+
+scripts/local
+scripts/custom
+
+testing-manual

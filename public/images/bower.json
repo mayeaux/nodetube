@@ -1,0 +1,29 @@
+{
+  "name": "kurento-one2many-call",
+  "description": "Kurento Browser JavaScript Tutorial",
+  "authors": [
+    "Kurento <info@kurento.org>"
+  ],
+  "main": "index.html",
+  "moduleType": [
+    "globals"
+  ],
+  "license": "ALv2",
+  "homepage": "http://www.kurento.org/",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "adapter.js": "v0.2.9",
+    "bootstrap": "~3.3.0",
+    "ekko-lightbox": "~3.3.0",
+    "demo-console": "1.5.1",
+    "kurento-utils": "master",
+    "sweetalert2": "^7.3.4"
+  }
+}

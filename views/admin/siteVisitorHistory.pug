@@ -1,0 +1,15 @@
+extends ../layout
+
+block content
+    div
+        div
+            h2
+            h2.view-header Site Visitor History (Admin)
+            div
+                h3 History
+                each view in visitor.history
+                    p= view
+            div
+                h3 References
+                each view in visitor.refs
+                    p= view

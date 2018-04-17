@@ -1,0 +1,72 @@
+extends ../layout
+
+block content
+
+    div.center-block.text-center.col-sm-12
+
+
+        h1 Subscriptions
+
+        hr
+
+    hr
+    if uploads.length == 0
+        h3.text-center Subscribe to a channel to see your subscriptions
+    else
+        br
+        br
+        each upload in uploads
+            if upload.uploader
+                div.col-sm-4(style="text-align:center;height:360px")
+                    a.title-anchor(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}`)
+                        if upload.customThumbnailUrl
+                            // TODO: Sub out URL here
+                            img.preview-image(src=upload.customThumbnailUrl)
+
+                        // TODO: Sub out URL here
+                        else if upload.fileType == 'video' && upload.thumbnailUrl
+                            img.preview-image(src=upload.thumbnailUrl)
+                        else if upload.fileType == 'video' && !upload.thumbnailUrl
+                            img.preview-image(src="/no_img.png")
+                        else if upload.fileType == 'image'
+                            img.preview-image(src=upload.uploadUrl)
+                        else if upload.fileType == 'audio'
+                            img.preview-image(src='/audio.svg')
+                        else if upload.fileType == 'unknown'
+                            img.preview-image(src='/no_img.png')
+
+                        div
+                            p.upload-title-text #{upload.title}
+                        br
+
+                    div.upload-details
+                        div.views
+                            p.views-text #{upload.legitViewAmount} Views
+                            // capitalize media type
+                        div.uploaded-by #{upload.fileType.charAt(0).toUpperCase() + upload.fileType.slice(1)} uploaded
+                            | &nbsp#{upload.timeAgo} by
+                            a.upload-user-text(href=`/user/${upload.uploader.channelUrl}`)
+                                p(style="font-size:16px") #{upload.uploader.channelName}
+
+
+
+
+    script.
+      $(document).on({
+        mouseenter: function () {
+          var width = $(this).width()
+          var height = $(this).height()
+
+
+          $(this).css("width", width * 1.10);
+          $(this).css("height", height * 1.10);
+
+        },
+        mouseleave: function () {
+          var width = $(this).width()
+          var height = $(this).height()
+
+          $(this).css("width", width / 1.10);
+          $(this).css("height", height / 1.10);
+        }
+      }, '.preview-image');

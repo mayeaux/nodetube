@@ -1,0 +1,66 @@
+extends ../layout
+
+block content
+    style.
+
+    div.row
+        div.col-sm-2
+            h4
+                a(href=`/user/${user.channelUrl}`) Channel Page
+        div.col-sm-2
+            h4
+                a(href="/account/viewHistory") View History
+        div.col-sm-2
+            h4
+                a(href="/account/reactHistory") React History
+        div.col-sm-2
+            h4
+                a.livestream-button Livestreaming
+                //a.livestreaming-link(href=`/user/${user.channelUrl}/live/staging`) Livestreaming
+        div.col-sm-2
+            h4 Credit ($#{user.credit/100})
+        div.col-sm-2
+            h4 Earnings ($#{user.receivedCredit / 100})
+        //div.col-sm-2
+        //  h3
+        //    a(href=`/account/creditHistory`) Credit History
+
+    p
+    hr
+
+
+    h2.text-center Livestreaming
+
+    if user.plan == 'plus'
+
+        hr
+
+        p Please stream to the following RTMP url (don't share this publicly):
+
+        p rtmp://broadcast.pewtube.com/live/#{user.channelUrl}?key=#{user.uploadToken}
+
+        br
+        br
+
+        p You can view here (please give it about 10s to start)
+
+        //https://live.pewtube.com/live/newuser
+
+        a(href=`https://live.pewtube.com/live/${user.channelUrl}`)
+             p https://live.pewtube.com/live/#{user.channelUrl}
+
+        if user
+            script.
+              var username = '#{user.channelUrl}'
+              var uploadToken = '#{user.uploadToken}'
+
+              console.log(username, uploadToken)
+
+              $('.livestream-button').on('click', function () {
+                swal('Please stream to rtmp://broadcast.pewtube.com/live/' + username + '?key=' + uploadToken + ' \n\n You will be live at https://live.pewtube.com/User/' + username)
+              })
+
+    else
+        h5 Your livestreaming credentials will appear here upon purchasing Plus
+
+
