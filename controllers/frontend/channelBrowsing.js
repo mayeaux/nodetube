@@ -1,3 +1,6 @@
+const pagination = require('../../lib/helpers/pagination');
+const _ = require('lodash');
+
 
 exports.channelsByReacts = async (req, res) => {
   // setup page
@@ -10,9 +13,10 @@ exports.channelsByReacts = async (req, res) => {
   const skipAmount = (page * limit) - limit;
 
   const startingNumber = pagination.getMiddleNumber(page);
-  const numbersArray = createArray(startingNumber);
+  const numbersArray = pagination.createArray(startingNumer);
   const previousNumber = pagination.getPreviousNumber(page);
   const nextNumber = pagination.getNextNumber(page);
+
 
   //get and render
   try {
@@ -90,10 +94,11 @@ exports.channelsBySubs = async (req, res) => {
   const limit = 51;
   const skipAmount = (page * limit) - limit;
 
-  const startingNumber = getMiddleNumber(page);
-  const numbersArray = createArray(startingNumber);
+  const startingNumber = pagination.getMiddleNumber(page);
+  const numbersArray = pagination.createArray(startingNumer);
   const previousNumber = pagination.getPreviousNumber(page);
   const nextNumber = pagination.getNextNumber(page);
+
 
   //get and render
   try {
@@ -144,14 +149,15 @@ exports.channels = async (req, res) => {
   const limit = 51;
   const skipAmount = (page * limit) - limit;
 
-  const startingNumber = getMiddleNumber(page);
-  const numbersArray = createArray(startingNumber);
+  const startingNumber = pagination.getMiddleNumber(page);
+  const numbersArray = pagination.createArray(startingNumer);
   const previousNumber = pagination.getPreviousNumber(page);
   const nextNumber = pagination.getNextNumber(page);
 
 
-  const withinString = createWithinString(req.query.within);
-  const englishString = createEnglishString(req.query.within);
+
+  const withinString = pagination.createWithinString(req.query.within);
+  const englishString = pagination.createEnglishString(req.query.within);
 
   // console.log(withinString, englishString);
 

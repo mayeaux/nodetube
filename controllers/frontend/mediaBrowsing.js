@@ -139,14 +139,15 @@ exports.popularUploads = async (req, res) => {
   const limit = 102;
   const skipAmount = (page * limit) - limit;
 
-  const startingNumber = getMiddleNumber(page);
-  const numbersArray = createArray(startingNumber);
+  const startingNumber = pagination.getMiddleNumber(page);
+  const numbersArray = pagination.createArray(startingNumer);
   const previousNumber = pagination.getPreviousNumber(page);
   const nextNumber = pagination.getNextNumber(page);
 
-  const withinString = createWithinString(req.query.within);
 
-  const englishString = createEnglishString(req.query.within);
+  const withinString = pagination.createWithinString(req.query.within);
+
+  const englishString = pagination.createEnglishString(req.query.within);
 
   // console.log(englishString)
 
