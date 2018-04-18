@@ -12,6 +12,22 @@ const uploadHelpers = require('../../lib/helpers/settings');
 
 const uploadServer = uploadHelpers.uploadServer;
 
+const getFromCache = require('../../lib/caching/getFromCache');
+
+// TODO: pull into its own func
+let indexResponse;
+async function setIndex(){
+  indexResponse = await redisClient.hgetallAsync('indexValues');
+  console.log('got index cache');
+}
+
+setIndex();
+setInterval(function(){
+  setIndex()
+}, 1000 * 60 * 2);
+
+
+
 console.log('UPLOAD SERVER: ' + uploadServer);
 
 
