@@ -45,7 +45,8 @@ block content
                         else if upload.fileType == 'video' && !upload.thumbnailUrl
                             img.preview-image(src="/no_img.png")
                         else if upload.fileType == 'image'
-                            img.preview-image(src=upload.uploadUrl)
+                            // TODO: have to fix this
+                            img.preview-image(src=`${'/uploads'}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="width:inherit;max-width:302px;")
                         else if upload.fileType == 'audio'
                             img.preview-image(src='/audio.svg')
                         else if upload.fileType == 'unknown'

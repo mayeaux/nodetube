@@ -46,56 +46,64 @@ exports.getFileUpload = async (req, res) => {
 };
 
 /**
- * GET /subscriptions
+ * GET /media/subscribed
  * Get user's individual subscriptions page
  */
 exports.subscriptions = async (req, res) => {
 
-  if(!req.user){
-    req.flash('errors', { msg: 'Please register to see your subscriptions' });
+  try {
 
-    return res.redirect('/signup')
+    if (!req.user) {
+      req.flash('errors', {msg: 'Please register to see your subscriptions'});
+
+      return res.redirect('/signup')
+    }
+
+    req.user.unseenSubscriptionUploads = 0;
+    await req.user.save();
+
+    let page = req.params.page;
+    if (!page) {
+      page = 1
+    }
+    page = parseInt(page);
+
+    const limit = 51;
+    const skipAmount = (page * limit) - limit;
+
+    const startingNumber = pagination.getMiddleNumber(page);
+    const numbersArray = pagination.createArray(startingNumber);
+    const previousNumber = pagination.getPreviousNumber(page);
+    const nextNumber = pagination.getNextNumber(page);
+
+    const subscriptions = await Subscription.find({subscribingUser: req.user._id, active: true});
+
+    let subscribedToUsers = [];
+    for (const subscription of subscriptions) {
+      subscribedToUsers.push(subscription.subscribedToUser);
+    }
+
+    const uploads = await Upload.find({
+      uploader: {$in: subscribedToUsers},
+      visibility: 'public',
+      $or : [ { status: 'completed' }, { uploadUrl: { $exists: true } } ]
+    }).populate('uploader checkedViews')
+      .skip((page * limit) - limit)
+      .limit(limit).sort({createdAt: -1});
+
+    res.render('account/subscriptions', {
+      title: 'Subscriptions',
+      uploads,
+      numbersArray,
+      highlightedNumber: page,
+      previousNumber,
+      nextNumber,
+      uploadServer
+    });
+
+  } catch (err){
+    console.log(err);
   }
-
-  req.user.unseenSubscriptionUploads = 0;
-  await req.user.save();
-
-  let page = req.params.page;
-  if(!page){ page = 1 }
-  page = parseInt(page);
-
-  const limit = 51;
-  const skipAmount = (page * limit) - limit;
-
-  const startingNumber = pagination.getMiddleNumber(page);
-  const numbersArray = pagination.createArray(startingNumber);
-  const previousNumber = pagination.getPreviousNumber(page);
-  const nextNumber = pagination.getNextNumber(page);
-
-  const subscriptions = await Subscription.find({ subscribingUser: req.user._id, active: true });
-
-  let subscribedToUsers = [];
-  for(const subscription of subscriptions){
-    subscribedToUsers.push(subscription.subscribedToUser);
-  }
-
-  const uploads = await Upload.find({
-    uploader: { $in: subscribedToUsers },
-    visibility: 'public',
-    uploadUrl: { $exists: true }
-  }).populate('uploader checkedViews')
-    .skip((page * limit) - limit)
-    .limit(limit).sort({ createdAt: -1 });
-
-  res.render('account/subscriptions', {
-    title: 'Subscriptions',
-    uploads,
-    numbersArray,
-    highlightedNumber: page,
-    previousNumber,
-    nextNumber,
-    uploadServer
-  });
 };
 
 
