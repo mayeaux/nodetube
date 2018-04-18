@@ -345,29 +345,36 @@ exports.getChannel = async (req, res) => {
  */
 exports.notification = async (req, res) => {
 
-  const notifications = await Notification.find({
-    user: req.user._id
-  }).populate('user sender upload react comment').sort({ createdAt: -1 });
+  try {
 
-  // // console.log(notifications);
-  // for(let notif of notifications){
-  //   console.log(notif);
-  //   console.log(notif.sender);
-  //   console.log(notif.sender.channelName)
-  // }
+    const notifications = await Notification.find({
+      user: req.user._id
+    }).populate('user sender upload react comment').sort({createdAt: -1});
 
-  res.render('account/notifications', {
-    title : 'Notifications',
-    notifications
-  });
+    // // console.log(notifications);
+    // for(let notif of notifications){
+    //   console.log(notif);
+    //   console.log(notif.sender);
+    //   console.log(notif.sender.channelName)
+    // }
 
-  // mark notifs as read
-  for(const notif of notifications){
-    if(notif.read == false){
+    res.render('account/notifications', {
+      title: 'Notifications',
+      notifications
+    });
 
-      notif.read = true;
-      await notif.save();
+    // mark notifs as read
+    for (const notif of notifications) {
+      if (notif.read == false) {
+
+        notif.read = true;
+        await notif.save();
+      }
     }
+
+  } catch (err){
+    console.log(err);
+    return res.render('error/500');
   }
 };
 
