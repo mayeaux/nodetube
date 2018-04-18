@@ -1,6 +1,8 @@
 const pagination = require('../../lib/helpers/pagination');
 const _ = require('lodash');
 
+const getFromCache = require('../../lib/caching/getFromCache');
+
 
 exports.channelsByReacts = async (req, res) => {
   // setup page
