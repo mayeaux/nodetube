@@ -140,7 +140,7 @@ exports.popularUploads = async (req, res) => {
   const skipAmount = (page * limit) - limit;
 
   const startingNumber = pagination.getMiddleNumber(page);
-  const numbersArray = pagination.createArray(startingNumer);
+  const numbersArray = pagination.createArray(startingNumber);
   const previousNumber = pagination.getPreviousNumber(page);
   const nextNumber = pagination.getNextNumber(page);
 
