@@ -1,4 +1,5 @@
 # API keys and secrets
+.env.private
 
 uploadedRecordings
 recordings
