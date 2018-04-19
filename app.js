@@ -34,7 +34,12 @@ const _ = require('lodash');
 const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
 
+/** Load environment variables from .env file, where API keys and passwords are configured. **/
+dotenv.load({path: '.env.settings'});
+dotenv.load({path: '.env.private'});
+
 const amountOfProcesses = process.env.WEB_CONCURRENCY || numCPUs;
+
 
 // /** Code to find errant console logs **/
 // ['log', 'warn', 'error'].forEach(function(method) {
@@ -104,11 +109,6 @@ if (cluster.isMaster) {
 
 
     // require('./lib/deleteUsers');
-
-
-    /** Load environment variables from .env file, where API keys and passwords are configured. **/
-    dotenv.load({path: '.env.settings'});
-    dotenv.load({path: '.env.private'});
 
     /** connect to MongoDB **/
     const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/nov28pewtube';
