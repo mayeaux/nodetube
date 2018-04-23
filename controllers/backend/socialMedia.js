@@ -8,7 +8,6 @@ const gab = require('../../lib/socialMedia/gab');
 const twitter = require('../../lib/socialMedia/twitter');
 const facebook = require('../../lib/socialMedia/facebook');
 
-/** TODO: Pull into its own module **/
 exports.postCreateSocialPost = async (req, res) => {
 
   let uniqueTag = req.body.uniqueTag;
