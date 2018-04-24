@@ -42,21 +42,19 @@ function moderatorAuth(req, res, next){
 
 
 function plusAuth(req, res, next){
+  // redirect to login if it's not there already
   if(!req.user){
-    // TODO: redirect to login page first, then redirect
-    return res.render('error/404', {
-      title: 'Not Found'
-    });
+    return res.redirect('/login')
   }
 
-  // kick out if not admin or moderator
   const userRole = req.user.role;
   const userPlan = req.user.plan;
+
+  // kick out if no plus and not admin or moderator
   if(userPlan !== 'plus' && ( userRole !== 'admin' || userRole !== 'moderator') ){
-    // TODO: redirect where they came from, flash 'sorry only plus users can access this'
     res.status(404);
-    return res.render('error/404', {
-      title: 'Not Found'
+    return res.render('error/plus', {
+      title: 'Not Authorized'
     });
   }
 
