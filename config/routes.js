@@ -133,11 +133,13 @@ function frontendRoutes(app){
   app.get('/user/:channel/:media', mediaPlayerController.getMedia);
 
   /** media browsing routes **/
-  app.get('/media/recent', mediaBrowsingController.recentUploads);
-  app.get('/media/popularByReacts', mediaBrowsingController.popularByReacts);
-  app.get('/media/recent/:page', mediaBrowsingController.recentUploads);
-  app.get('/media/popular/:page', mediaBrowsingController.popularUploads);
-  app.get('/media/popular', mediaBrowsingController.popularUploads);
+  app.get('/media/recent', authMiddleware.plusAuth, mediaBrowsingController.recentUploads);
+  app.get('/media/popularByReacts', authMiddleware.plusAuth, mediaBrowsingController.popularByReacts);
+  app.get('/media/recent/:page', authMiddleware.plusAuth, mediaBrowsingController.recentUploads);
+  app.get('/media/popular/:page', authMiddleware.plusAuth, mediaBrowsingController.popularUploads);
+  app.get('/media/popular', authMiddleware.plusAuth, mediaBrowsingController.popularUploads);
+
+  /** search functionality **/
   app.get('/search', mediaBrowsingController.search);
   app.post('/search', mediaBrowsingController.results);
 
@@ -149,12 +151,12 @@ function frontendRoutes(app){
   // app.get('/staging', livestreamController.getStaging);
 
   /** recent action routes **/
-  app.get('/media/recentComments/:page', recentActionsController.recentComments);
-  app.get('/media/recentComments', recentActionsController.recentComments);
-  app.get('/media/recentViews/:page', recentActionsController.recentViews);
-  app.get('/media/recentViews', recentActionsController.recentViews);
-  app.get('/media/recentReacts/:page', recentActionsController.recentReacts);
-  app.get('/media/recentReacts', recentActionsController.recentReacts);
+  app.get('/media/recentComments/:page', authMiddleware.adminAuth, recentActionsController.recentComments);
+  app.get('/media/recentComments', authMiddleware.adminAuth, recentActionsController.recentComments);
+  app.get('/media/recentViews/:page', authMiddleware.adminAuth, recentActionsController.recentViews);
+  app.get('/media/recentViews', authMiddleware.adminAuth, recentActionsController.recentViews);
+  app.get('/media/recentReacts/:page', authMiddleware.adminAuth, recentActionsController.recentReacts);
+  app.get('/media/recentReacts', authMiddleware.adminAuth, recentActionsController.recentReacts);
 
   /** account pages **/
   app.get('/notifications', accountFrontendController.notification);
