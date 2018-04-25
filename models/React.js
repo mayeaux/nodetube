@@ -13,7 +13,8 @@ const reactSchema = new mongoose.Schema({
   },
   upload: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Upload'
+    ref: 'Upload',
+    index: true
   },
   react: {
     type: String,
