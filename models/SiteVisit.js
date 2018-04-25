@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const siteVisitSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    index: true
   },
   ip: {
     type: String,

@@ -16,7 +16,7 @@ const uploadSchema = new mongoose.Schema({
   uploadServer: { type: String, enum: ['uploads1', 'uploads3' ] },
 
   hostUrl: String, // (backblaze prepend)  TODO: can eventually delete this
-  uniqueTag: { type: String },
+  uniqueTag: { type: String, index: true, unique: true },
   fileType: { type: String, enum: ['video', 'image', 'audio', 'unknown', 'convert'] },
   fileSize: Number,
   views: {
