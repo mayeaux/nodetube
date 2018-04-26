@@ -27,21 +27,19 @@ html
 
     if recaptchaOn
       script(src='https://www.google.com/recaptcha/api.js')
-    script(src="https://cdnjs.cloudflare.com/ajax/libs/autolinker/1.4.4/Autolinker.js")
+
     script(src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js")
     script(src='https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js')
     script(src='https://cdnjs.cloudflare.com/ajax/libs/balance-text/3.2.0/balancetext.min.js')
     script(src='/bower_components/sweetalert2/dist/sweetalert2.js')
+    block extra_js
 
-    link(rel="stylesheet" href="https://cdn.plyr.io/2.0.16/plyr.css")
     link(rel="stylesheet" href="/bower_components/sweetalert2/dist/sweetalert2.css")
     link(rel='stylesheet', href='/css/main.css')
     link(rel='stylesheet', href='/css/pewtube.css')
     link(rel='shortcut icon', href='/favicon.ico')
     link(href='https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css', rel='stylesheet')
-
-    if googleAnalyticsOn
-      include widgets/google-analytics
+    block extra_css
 
     if recaptchaOn
       include widgets/recaptcha
@@ -61,6 +59,9 @@ html
 
     if zopimOn
       include widgets/zopim
+
+    if googleAnalyticsOn
+      include widgets/google-analytics
 
     script(src='/js/main.js')
     block extra_footer_js
