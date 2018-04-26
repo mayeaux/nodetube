@@ -9,7 +9,8 @@ const timeAgoEnglish = new javascriptTimeAgo('en-US');
 const reactSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    index: true
   },
   upload: {
     type: mongoose.Schema.Types.ObjectId,

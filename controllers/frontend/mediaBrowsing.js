@@ -74,13 +74,16 @@ exports.recentUploads = async (req, res) => {
     sensitive: { $ne: true }
   };
 
+  let queryHint = "All Media List";
   if(media !== 'all'){
     searchQuery.fileType = media
+    queryHint = "File Type List";
   }
 
   let uploads = await Upload.find(searchQuery)
-    .populate('uploader checkedViews')
+    .populate('uploader')
     .sort({ createdAt: -1 })
+    .hint(queryHint)
     .skip((page * limit) - limit)
     .limit(limit);
 
@@ -108,7 +111,6 @@ exports.recentUploads = async (req, res) => {
     uploads = _.filter(uploads, function(upload){
       return upload.rating !== 'sensitive' && upload.rating !== 'mature'
     });
-
   }
 
   // site visitor?

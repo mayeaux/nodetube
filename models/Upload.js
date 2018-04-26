@@ -218,6 +218,10 @@ uploadSchema.virtual('legitViewAmount').get(function () {
   return legitViews
 });
 
+
+uploadSchema.index({sensitive: 1, visibility: 1, status: 1, createdAt: -1}, {name: "All Media List"});
+uploadSchema.index({sensitive: 1, visibility: 1, status: 1, fileType: 1, createdAt: -1}, {name: "File Type List"});
+
 const Upload = mongoose.model('Upload', uploadSchema);
 
 module.exports = Upload;
