@@ -118,42 +118,12 @@ exports.getMedia = async (req, res) => {
       userReact = await React.findOne({ upload: upload._id, user: req.user._id });
     }
 
-    const likeReacts = await React.find({ react: 'like', upload: upload._id });
-    const dislikeReacts = await React.find({ react: 'dislike', upload: upload._id });
-    const laughReacts = await React.find({ react: 'laugh', upload: upload._id });
-    const sadReacts = await React.find({ react: 'sad', upload: upload._id });
-    const digustReacts = await React.find({ react: 'disgust', upload: upload._id });
-    const loveReacts = await React.find({ react: 'love', upload: upload._id });
-
-    let likeAmount = 0;
-    if(likeReacts){
-      likeAmount = likeReacts.length;
-    }
-
-    let dislikeAmount = 0;
-    if(dislikeReacts){
-      dislikeAmount = dislikeReacts.length;
-    }
-
-    let laughAmount = 0;
-    if(laughReacts){
-      laughAmount = laughReacts.length;
-    }
-
-    let sadAmount = 0;
-    if(sadReacts){
-      sadAmount = sadReacts.length;
-    }
-
-    let disgustAmount = 0;
-    if(digustReacts){
-      disgustAmount = digustReacts.length;
-    }
-
-    let loveAmount = 0;
-    if(loveReacts){
-      loveAmount = loveReacts.length;
-    }
+    let likeAmount = await React.count({ react: 'like', upload: upload._id });
+    let dislikeAmount = await React.count({ react: 'dislike', upload: upload._id });
+    let laughAmount = await React.count({ react: 'laugh', upload: upload._id });
+    let sadAmount  = await React.count({ react: 'sad', upload: upload._id });
+    let disgustAmount  = await React.count({ react: 'disgust', upload: upload._id });
+    let loveAmount = await React.count({ react: 'love', upload: upload._id });
 
     let currentReact;
     if(userReact){
