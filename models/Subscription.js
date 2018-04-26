@@ -9,7 +9,8 @@ const timeAgoEnglish = new javascriptTimeAgo('en-US');
 const subscriptionSchema = new mongoose.Schema({
   subscribingUser: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    index: true
   },
   subscribedToUser: {
     type: mongoose.Schema.Types.ObjectId,
