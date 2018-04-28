@@ -13,7 +13,7 @@ const React = require('../../models/index').React;
 const Notification = require('../../models/index').Notification;
 const SocialPost = require('../../models/index').SocialPost;
 const Subscription = require('../../models/index').Subscription;
-const Report = require('../../models/index').Subscription;
+const Report = require('../../models/index').Report;
 
 const uploadHelpers = require('../../lib/helpers/settings');
 
@@ -97,19 +97,20 @@ exports.getMedia = async (req, res) => {
       return !comment.inResponseTo
     });
 
-
-    let subscriptions = await Subscription.find({ subscribedToUser: upload.uploader._id, active: true });
+    let subscriptions = req.user ? await Subscription.count({subscribedToUser: upload.uploader._id, subscribingUser: req.user._id, active: true}) : 0
+    let alreadySubbed = (subscriptions > 0) ? true : false;
+    /*let subscriptions = await Subscription.find({ subscribedToUser: upload.uploader._id, active: true });
 
     let alreadySubbed = false;
     // determine if user is subbed already
     if(req.user && subscriptions){
       for(let subscription of subscriptions){
-
         if(subscription.subscribingUser.toString() == req.user._id.toString()){
           alreadySubbed = true
         }
       }
     }
+    */
 
 
     // TODO: A better implementation is in branches 'server-down' and 'nov-25'
@@ -289,8 +290,8 @@ exports.getMedia = async (req, res) => {
 
       let alreadyReported;
       // need to add the upload
-      let reportForReportingUser = await Report.findOne({ reportingSiteVisitor : req.siteVisitor, upload: upload._id  });
-      let reportForSiteVisitor = await Report.findOne({ reportingUser : req.user, upload: upload._id });
+      let reportForSiteVisitor = await Report.findOne({ reportingSiteVisitor : req.siteVisitor, upload: upload._id  });
+      let reportForReportingUser = await Report.findOne({ reportingUser : req.user, upload: upload._id });
 
       if(reportForReportingUser || reportForSiteVisitor){
         alreadyReported = true
