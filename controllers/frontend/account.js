@@ -87,7 +87,7 @@ exports.subscriptions = async (req, res) => {
       uploader: {$in: subscribedToUsers},
       visibility: 'public',
       $or : [ { status: 'completed' }, { uploadUrl: { $exists: true } } ]
-    }).populate('uploader checkedViews')
+    }).populate('uploader')
       .skip((page * limit) - limit)
       .limit(limit).sort({createdAt: -1});
 
