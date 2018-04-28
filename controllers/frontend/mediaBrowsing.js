@@ -81,7 +81,7 @@ exports.recentUploads = async (req, res) => {
   }
 
   let uploads = await Upload.find(searchQuery)
-    .populate('uploader')
+    .populate('uploader checkedViews')
     .sort({ createdAt: -1 })
     .hint(queryHint)
     .skip((page * limit) - limit)
