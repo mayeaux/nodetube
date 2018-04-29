@@ -3,6 +3,7 @@ const _ = require('lodash');
 
 const getFromCache = require('../../lib/caching/getFromCache');
 
+const User = require('../../models/index').User;
 
 
 
@@ -67,7 +68,7 @@ exports.channelsByReacts = async (req, res) => {
 
     console.log(allChannels);
 
-    res.render('channelsByReacts', {
+    res.render('public/channelsByReacts', {
       channels : allChannels,
       title: 'Channels',
       numbersArray,
@@ -116,7 +117,7 @@ exports.channelsBySubs = async (req, res) => {
       return b.receivedSubscriptions.length - a.receivedSubscriptions.length;
     });
 
-    res.render('channelsBySubs', {
+    res.render('public/channelsBySubs', {
       channels : allChannels,
       title: 'Channels',
       numbersArray,
@@ -173,7 +174,7 @@ exports.channels = async (req, res) => {
     // let uploads = await getUploads.getUploads(req.query.within, limit, skipAmount);
 
 
-    res.render('channels', {
+    res.render('public/channels', {
       withinQuery: req.query.within,
       withinString,
       englishString,
