@@ -23,10 +23,10 @@ The easiest way to get started is to clone the repository:
 
 ```bash
 # Get the latest snapshot
-git clone --depth=1 https://github.com/sahat/hackathon-starter.git myproject
+git clone https://github.com/mayeaux/nodetube
 
 # Change directory
-cd myproject
+cd nodetube
 
 # Install NPM dependencies
 npm install
