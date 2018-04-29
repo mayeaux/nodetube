@@ -1,6 +1,4 @@
 function adminAuth(req, res, next){
-  console.log('not an admin');
-
   if(!req.user){
     res.status(404);
     return res.render('error/404', {
@@ -11,10 +9,14 @@ function adminAuth(req, res, next){
 // kick out if not admin
   const userRole = req.user.role;
   if(userRole !== 'admin'){
+
+    console.log('not an admin');
+
     res.status(404);
     return res.render('error/404', {
       title: 'Not Found'
     });
+
   }
 
   return next()

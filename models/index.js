@@ -10,6 +10,7 @@ const Subscription = require('./Subscription');
 const Report = require('./Report');
 const SocialPost = require('./SocialPost');
 const CreditAction = require('./CreditAction');
+const AdminAction = require('./AdminAction');
 
 
 module.exports = {
@@ -24,6 +25,7 @@ module.exports = {
   Subscription,
   Report,
   SocialPost,
-  CreditAction
+  CreditAction,
+  AdminAction
 };
 

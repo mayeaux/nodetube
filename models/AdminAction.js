@@ -10,9 +10,9 @@ const timeAgoEnglish = new javascriptTimeAgo('en-US');
  * Allows for an audit of actions taken by admin
  */
 const adminActionSchema = new mongoose.Schema({
-  actionTaken: {
+  actionType: {
     type: String,
-    enum: ['userDeleted', 'uploadDeleted', 'fullIpDeletion'],
+    enum: ['userDeleted', 'userUndeleted', 'uploadDeleted', 'fullIpDeletion', 'banUser', 'unbanUser'],
     default: 'public'
   },
   adminOrModerator: {
