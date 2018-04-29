@@ -12,14 +12,16 @@
       ul.nav.navbar-nav.front-header
         li(class=(title == 'Home') ? 'active' : undefined)
           a(href=`/`) Home
-        if user && user.role == 'admin'
+
+        // popular/recent/channels only visible to plus users atm
+        if user && user.plan == 'plus'
           li(class=(title == 'Popular Uploads') ? 'active' : undefined)
             a(href=`/media/popular/1?within=24hour`) Popular
           li(class=(title == 'Recent Uploads') ? 'active' : undefined)
             a(href=`/media/recent`) Recent
-        if user && user.role == 'admin'
           li(class=(title == 'Channels') ? 'active' : undefined)
             a(href=`/channels?within=24hour`) Channels
+
         li(class=(title == 'Search') ? 'active' : undefined)
           a(href=`/search`) Search
         li.subscribed-link(class=(title == 'Subscriptions') ? 'active' : undefined)
@@ -60,12 +62,15 @@
 
         li(class=(title == 'About') ? 'active' : undefined)
           a(href=`/about`) About
+
+        // if user not logged in
         if !user
           li(class=(title == 'Login') ? 'active' : undefined)
             a(href=`/login`) Login
           li(class=(title == 'Create Account') ? 'active' : undefined)
             a(href=`/signup`) Create Account
         else
+          // if user logged in
           li(class=(title == 'Upload') ? 'active' : undefined)
             a(href=`/upload`) Upload
           li.hidden-md.hidden-lg.hidden-sm
