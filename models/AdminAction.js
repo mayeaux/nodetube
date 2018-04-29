@@ -21,15 +21,15 @@ const adminActionSchema = new mongoose.Schema({
   },
   usersAffected: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Comment'
+    ref: 'User'
   }],
   uploadsAffected: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Comment'
+    ref: 'Upload'
   }],
   siteVisitorsAffected: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Comment'
+    ref: 'SiteVisitor'
   }],
   note: String
 }, { timestamps: true });
