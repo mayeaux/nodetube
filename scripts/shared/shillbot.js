@@ -2,16 +2,16 @@ var rp = require('request-promise');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
-const gab = require('./gab');
-const twitter = require('./twitter');
+const gab = require('../../lib/socialMedia/gab');
+const twitter = require('../../lib/socialMedia/twitter');
 // const facebook = require('./facebook');
-const facebook = require('./fb');
-
+const facebook = require('../../lib/socialMedia/facebook');
 
 
 process.on('unhandledRejection', console.log);
 
-dotenv.load({ path: '../.env.example' });
+dotenv.load({ path: '../.env.private' });
+dotenv.load({ path: '../.env.settings' });
 
 const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/nov28pewtube';
 
@@ -32,7 +32,7 @@ mongoose.connection.on('error', (err) => {
   process.exit();
 });
 
-const SocialPost = require('../models').SocialPost;
+const SocialPost = require('../../models').SocialPost;
 
 async function socialPostQueue(){
   const socialPost = await SocialPost.findOne({
@@ -94,5 +94,7 @@ if(process.env.SHILLBOT_ON == 'true'){
   const shillInterval = process.env.SHILL_INTERVAL || 30;
 
   setInterval(socialPostQueue, 1000 * 60 * shillInterval);
+} else {
+  console.log('Shillbot not turned on')
 }
 
