@@ -121,12 +121,12 @@
 }
 
 
-.plyr--video{
+.plyr.plyr--video{
     max-width: 80%;
     margin: 0 auto;
 }
 
-.plyr__video-wrapper{
+.plyr.plyr__video-wrapper{
     background:white;
 }
 

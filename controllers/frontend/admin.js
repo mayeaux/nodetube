@@ -1,4 +1,5 @@
 const redisClient = require('../../config/redis');
+const _ = require('lodash');
 
 const _ = require('lodash');
 

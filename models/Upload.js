@@ -16,7 +16,7 @@ const uploadSchema = new mongoose.Schema({
   uploadServer: { type: String, enum: ['uploads1', 'uploads3' ] },
 
   hostUrl: String, // (backblaze prepend)  TODO: can eventually delete this
-  uniqueTag: { type: String },
+  uniqueTag: { type: String, index: true, unique: true },
   fileType: { type: String, enum: ['video', 'image', 'audio', 'unknown', 'convert'] },
   fileSize: Number,
   views: {
@@ -217,6 +217,10 @@ uploadSchema.virtual('legitViewAmount').get(function () {
 
   return legitViews
 });
+
+
+uploadSchema.index({sensitive: 1, visibility: 1, status: 1, createdAt: -1}, {name: "All Media List"});
+uploadSchema.index({sensitive: 1, visibility: 1, status: 1, fileType: 1, createdAt: -1}, {name: "File Type List"});
 
 const Upload = mongoose.model('Upload', uploadSchema);
 

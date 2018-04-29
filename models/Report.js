@@ -41,6 +41,9 @@ reportSchema.virtual('timeAgo').get(function () {
   return timeAgoEnglish.format( new Date(this.createdAt) )
 });
 
+reportSchema.index({upload: 1, reportingUser: 1}, {name: "Report For User"});
+reportSchema.index({upload: 1, reportingSiteVisitor: 1}, {name: "Report For Site Visitor"});
+
 const Report = mongoose.model('Report', reportSchema);
 
 module.exports = Report;

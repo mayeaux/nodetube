@@ -15,17 +15,18 @@ block content
                         h1 Messages:
                         ul.message-list
         script.
-          var user = '#{user}'
+          var channel = '#{channelUrl}'
 
           if (Hls.isSupported()) {
             var video = document.getElementById('video');
             var hls = new Hls();
-            hls.loadSource('/' + user + '.m3u8');
+            hls.loadSource('/' + channel + '.m3u8');
             hls.attachMedia(video);
             hls.on(Hls.Events.MANIFEST_PARSED, function () {
               video.play();
             });
           }
+
 
         script.
           /** MESSAGING FUNCTIONALITY**/
@@ -83,10 +84,10 @@ block content
             });
           }
 
-          var usernamePicked = false;
-
           // var usernamePicked = true;
-          var messagingUsername;
+          var usernamePicked = #{(user && user.channelName !== null) ? true : false};
+          var messagingUsername = "#{(user && user.channelName !== null) ? user.channelName : ""}";
+
 
           $(document).ready(function () {
 
