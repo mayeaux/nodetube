@@ -18,8 +18,6 @@ const deleteUsers = require('../../lib/administration/deleteUsers');
 
 exports.postUsers = async (req, res) => {
 
-  console.log('hit here');
-
   const userId = req.body.user;
 
   const userChangeValue = req.body.userChangeValue;
@@ -55,7 +53,7 @@ exports.postUsers = async (req, res) => {
 
   actionType = userChangeValue;
 
-  await createAdminAction(adminOrModerator, actionType, [user.id], [], []);
+  await createAdminAction(adminOrModerator, actionType, user._id, [], []);
 
   req.flash('success', {msg: `User ${user.channelUrl} moderated, thank you.`});
 
