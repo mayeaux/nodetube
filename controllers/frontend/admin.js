@@ -1,4 +1,5 @@
 const redisClient = require('../../config/redis');
+const _ = require('lodash');
 
 const Upload = require('../../models/index').Upload;
 const View = require('../../models/index').View;

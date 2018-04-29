@@ -454,7 +454,6 @@ block content
 
 
 
-    script(src="/js/media.js")
 
     script(src="https://cdn.plyr.io/2.0.16/plyr.js")
     if user
@@ -1236,4 +1235,16 @@ block content
 
       })
 
+
+block extra_js
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/autolinker/1.4.4/Autolinker.js")
+
+
+block extra_css
+  link(rel="stylesheet" href="https://cdn.plyr.io/2.0.16/plyr.css")
+
+
+block extra_footer_js
+  script(src="/js/media.js")
+  script(src="https://cdn.plyr.io/2.0.16/plyr.js")
 
