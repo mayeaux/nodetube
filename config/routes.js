@@ -123,8 +123,12 @@ function frontendRoutes(app){
   /** channel browsing routes **/
   app.get('/channels/:page', channelBrowsingController.channels);
   app.get('/channels', channelBrowsingController.channels);
+
+  // TODO: cache this rather than searching whole db
   app.get('/channelsBySubs', channelBrowsingController.channelsBySubs);
-  app.get('/channelsByReacts', channelBrowsingController.channelsByReacts);
+
+  // behind admin auth atm, needs to use cache
+  app.get('/channelsByReacts', authMiddleware.adminAuth, channelBrowsingController.channelsByReacts);
 
   /** user channel and individual media page */
   app.get('/user/:channel', accountFrontendController.getChannel);
