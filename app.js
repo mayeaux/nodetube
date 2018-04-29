@@ -299,10 +299,10 @@ if (cluster.isMaster) {
 
     app.use(async function (req, res, next) {
       if (req.user) {
-        const unreadNotifs = await Notification.find({read: false, user: req.user._id});
-        res.locals.unreadNotifAmount = unreadNotifs.length;
+        let unreadNotifs = await Notification.count({read: false, user: req.user._id});
+        res.locals.unreadNotifAmount = unreadNotifs;
 
-        // console.log(unreadNotifs.length + ' unreadnotifs')
+        // console.log(unreadNotifs + ' unreadnotifs')
 
       }
 

@@ -8,7 +8,8 @@ const siteVisitSchema = new mongoose.Schema({
   },
   ip: {
     type: String,
-    required: true
+    required: true,
+    index: true
   },
   siteUserData: mongoose.Schema.Types.Mixed,
 

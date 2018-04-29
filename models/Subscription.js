@@ -14,7 +14,8 @@ const subscriptionSchema = new mongoose.Schema({
   },
   subscribedToUser: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    index: true
   },
   drivingUpload: {
     type: mongoose.Schema.Types.ObjectId,

@@ -48,7 +48,7 @@ exports.getMedia = async (req, res) => {
     let upload = await Upload.findOne({
       uniqueTag: media,
       visibility: { $ne: 'removed' }
-    }).populate({path: 'uploader comments checkedViews reacts', populate: {path: 'commenter receivedSubscriptions'}}).exec();
+    }).populate({path: 'uploader comments checkedViews', populate: {path: 'commenter'}}).exec();
 
     if(!upload){
       console.log('Visible upload not found');
@@ -56,24 +56,8 @@ exports.getMedia = async (req, res) => {
       return res.render('error/404')
     }
 
-    let uploadUser = await User.findOne({ _id: upload.uploader._id }).populate('receivedSubscriptions');
-
-    // TODO: Just do chronological at the moment
-    // const recs = await recommendations.getRecs(upload);
-    //
-    // console.log(recs);
-
-    uploadUser.receivedSubscriptions = _.filter(uploadUser.receivedSubscriptions, function(receivedSubscription){
-      return receivedSubscription.active == true;
-    });
-
-    let subscriberAmount = uploadUser.receivedSubscriptions.length;
-
-    if(!uploadUser.receivedSubscriptions){
-      subscriberAmount = 0;
-    }
-    // console.log(uploadUser.receivedSubscriptions.length)
-
+    let subscriberAmount = await Subscription.count({subscribedToUser: upload.uploader._id, active: true});
+    // console.log(subscriberAmount);
 
 
     /** COMMENTS **/
@@ -290,8 +274,8 @@ exports.getMedia = async (req, res) => {
 
       let alreadyReported;
       // need to add the upload
-      let reportForSiteVisitor = await Report.findOne({ reportingSiteVisitor : req.siteVisitor, upload: upload._id  });
-      let reportForReportingUser = await Report.findOne({ reportingUser : req.user, upload: upload._id });
+      let reportForSiteVisitor = await Report.findOne({ reportingSiteVisitor : req.siteVisitor, upload: upload._id  }).hint("Report For Site Visitor");
+      let reportForReportingUser = await Report.findOne({ reportingUser : req.user, upload: upload._id }).hint("Report For User");
 
       if(reportForReportingUser || reportForSiteVisitor){
         alreadyReported = true
