@@ -111,7 +111,7 @@ if (cluster.isMaster) {
     // require('./lib/deleteUsers');
 
     /** connect to MongoDB **/
-    const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/nov28pewtube';
+    const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/april15pewtube';
 
     mongoose.Promise = global.Promise;
 

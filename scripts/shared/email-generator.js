@@ -1,6 +1,30 @@
 var MailListener = require("mail-listener2");
 
 const dotenv = require('dotenv');
+const mongoose = require('mongoose');
+
+const ReceivedEmail = require('../../models').ReceivedEmail;
+
+/** connect to MongoDB **/
+const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/april15pewtube';
+
+mongoose.Promise = global.Promise;
+
+mongoose.Promise = global.Promise;
+mongoose.connect(mongoUri, {
+  keepAlive: true,
+  reconnectTries: Number.MAX_VALUE,
+  useMongoClient: true
+});
+
+// mongoose.set('debug', true);
+mongoose.connection.on('error', (err) => {
+  console.error(err);
+  console.log('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'));
+  process.exit();
+});
+
+console.log('Connected to ' + mongoUri);
 
 // have to run from project directory to work
 dotenv.load({ path: '.env.private' });
@@ -11,7 +35,7 @@ const imapPassword = process.env.PEWTUBE_VERIFY_EMAIL_PASSWORD;
 const imapHost = process.env.EMAIL_HOST;
 const imapPort = process.env.EMAIL_PORT;
 
-console.log(imapPassword, imapUsername, imapHost)
+console.log(imapPassword, imapUsername, imapHost);
 
 var mailListener = new MailListener({
   username: imapUsername,
@@ -50,7 +74,7 @@ mailListener.on("error", function(err){
 });
 
 // seqno just an incrementing index
-mailListener.on("mail", function(mail, seqno, attributes){
+mailListener.on("mail", async function(mail, seqno, attributes){
 
   // console.log(attributes);
 
@@ -63,6 +87,37 @@ mailListener.on("mail", function(mail, seqno, attributes){
   console.log(mail['messageId']);
   console.log(mail.subject);
   console.log('\n');
+
+  const fromEmailAddress = mail.from[0].address;
+  const subject = mail.subject;
+  const emailId = mail.messageId;
+  const text = mail.text;
+  const sentDate = mail.date;
+
+  const emailObject = {
+    emailId,
+    toEmailAddress: imapUsername,
+    fromEmailAddress,
+    subject,
+    text,
+    sentDate
+  };
+
+  const email = new ReceivedEmail(emailObject);
+
+  await email.save();
+
+
+
+  // toEmailAddress: String,
+  //   fromEmailAddress: String,
+  //   subject: String,
+  //   text: String,
+  //   date: Date,
+  //   emailId: String,
+  //   response: String
+
+
 
   // console.log(mail.priority);
   // console.log(mail.eml);

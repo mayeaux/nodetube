@@ -7,13 +7,12 @@ require('intl-messageformat/dist/locale-data/en');
 const timeAgoEnglish = new javascriptTimeAgo('en-US');
 
 const receivedEmailSchema = new mongoose.Schema({
+  emailId: String,
   toEmailAddress: String,
   fromEmailAddress: String,
   subject: String,
   text: String,
-  query: String,
-  date: Date,
-  emailId: String,
+  sentDate: Date,
   response: String
 }, {
     timestamps: true
