@@ -83,7 +83,7 @@ function livestreamRoutes(app){
   app.get('/live/:user', livestreamFrontendController.getLiveRTMP);
 
   // user's pages
-  app.get('/account', passportConfig.isAuthenticated, userController.getAccount);
+  app.get('/account', passportConfig.isAuthenticated, accountFrontendController.getAccount);
   app.get('/login', accountFrontendController.getLogin);
   app.get('/logout', accountFrontendController.logout);
 

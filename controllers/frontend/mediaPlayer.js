@@ -13,7 +13,7 @@ const React = require('../../models/index').React;
 const Notification = require('../../models/index').Notification;
 const SocialPost = require('../../models/index').SocialPost;
 const Subscription = require('../../models/index').Subscription;
-const Report = require('../../models/index').Subscription;
+const Report = require('../../models/index').Report;
 
 const uploadHelpers = require('../../lib/helpers/settings');
 
@@ -48,7 +48,7 @@ exports.getMedia = async (req, res) => {
     let upload = await Upload.findOne({
       uniqueTag: media,
       visibility: { $ne: 'removed' }
-    }).populate({path: 'uploader comments checkedViews reacts', populate: {path: 'commenter receivedSubscriptions'}}).exec();
+    }).populate({path: 'uploader comments checkedViews', populate: {path: 'commenter'}}).exec();
 
     if(!upload){
       console.log('Visible upload not found');
@@ -56,24 +56,8 @@ exports.getMedia = async (req, res) => {
       return res.render('error/404')
     }
 
-    let uploadUser = await User.findOne({ _id: upload.uploader._id }).populate('receivedSubscriptions');
-
-    // TODO: Just do chronological at the moment
-    // const recs = await recommendations.getRecs(upload);
-    //
-    // console.log(recs);
-
-    uploadUser.receivedSubscriptions = _.filter(uploadUser.receivedSubscriptions, function(receivedSubscription){
-      return receivedSubscription.active == true;
-    });
-
-    let subscriberAmount = uploadUser.receivedSubscriptions.length;
-
-    if(!uploadUser.receivedSubscriptions){
-      subscriberAmount = 0;
-    }
-    // console.log(uploadUser.receivedSubscriptions.length)
-
+    let subscriberAmount = await Subscription.count({subscribedToUser: upload.uploader._id, active: true});
+    // console.log(subscriberAmount);
 
 
     /** COMMENTS **/
@@ -97,19 +81,20 @@ exports.getMedia = async (req, res) => {
       return !comment.inResponseTo
     });
 
-
-    let subscriptions = await Subscription.find({ subscribedToUser: upload.uploader._id, active: true });
+    let subscriptions = req.user ? await Subscription.count({subscribedToUser: upload.uploader._id, subscribingUser: req.user._id, active: true}) : 0
+    let alreadySubbed = (subscriptions > 0) ? true : false;
+    /*let subscriptions = await Subscription.find({ subscribedToUser: upload.uploader._id, active: true });
 
     let alreadySubbed = false;
     // determine if user is subbed already
     if(req.user && subscriptions){
       for(let subscription of subscriptions){
-
         if(subscription.subscribingUser.toString() == req.user._id.toString()){
           alreadySubbed = true
         }
       }
     }
+    */
 
 
     // TODO: A better implementation is in branches 'server-down' and 'nov-25'
@@ -118,42 +103,12 @@ exports.getMedia = async (req, res) => {
       userReact = await React.findOne({ upload: upload._id, user: req.user._id });
     }
 
-    const likeReacts = await React.find({ react: 'like', upload: upload._id });
-    const dislikeReacts = await React.find({ react: 'dislike', upload: upload._id });
-    const laughReacts = await React.find({ react: 'laugh', upload: upload._id });
-    const sadReacts = await React.find({ react: 'sad', upload: upload._id });
-    const digustReacts = await React.find({ react: 'disgust', upload: upload._id });
-    const loveReacts = await React.find({ react: 'love', upload: upload._id });
-
-    let likeAmount = 0;
-    if(likeReacts){
-      likeAmount = likeReacts.length;
-    }
-
-    let dislikeAmount = 0;
-    if(dislikeReacts){
-      dislikeAmount = dislikeReacts.length;
-    }
-
-    let laughAmount = 0;
-    if(laughReacts){
-      laughAmount = laughReacts.length;
-    }
-
-    let sadAmount = 0;
-    if(sadReacts){
-      sadAmount = sadReacts.length;
-    }
-
-    let disgustAmount = 0;
-    if(digustReacts){
-      disgustAmount = digustReacts.length;
-    }
-
-    let loveAmount = 0;
-    if(loveReacts){
-      loveAmount = loveReacts.length;
-    }
+    let likeAmount = await React.count({ react: 'like', upload: upload._id });
+    let dislikeAmount = await React.count({ react: 'dislike', upload: upload._id });
+    let laughAmount = await React.count({ react: 'laugh', upload: upload._id });
+    let sadAmount  = await React.count({ react: 'sad', upload: upload._id });
+    let disgustAmount  = await React.count({ react: 'disgust', upload: upload._id });
+    let loveAmount = await React.count({ react: 'love', upload: upload._id });
 
     let currentReact;
     if(userReact){
@@ -319,8 +274,8 @@ exports.getMedia = async (req, res) => {
 
       let alreadyReported;
       // need to add the upload
-      let reportForReportingUser = await Report.findOne({ reportingSiteVisitor : req.siteVisitor, upload: upload._id  });
-      let reportForSiteVisitor = await Report.findOne({ reportingUser : req.user, upload: upload._id });
+      let reportForSiteVisitor = await Report.findOne({ reportingSiteVisitor : req.siteVisitor, upload: upload._id  }).hint("Report For Site Visitor");
+      let reportForReportingUser = await Report.findOne({ reportingUser : req.user, upload: upload._id }).hint("Report For User");
 
       if(reportForReportingUser || reportForSiteVisitor){
         alreadyReported = true

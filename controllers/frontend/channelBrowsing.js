@@ -5,8 +5,6 @@ const getFromCache = require('../../lib/caching/getFromCache');
 
 const User = require('../../models/index').User;
 
-
-
 exports.channelsByReacts = async (req, res) => {
   // setup page
   let page = req.params.page;
