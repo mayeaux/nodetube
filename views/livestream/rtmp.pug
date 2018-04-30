@@ -11,6 +11,7 @@ block content
                     h2.userAmount Users In Room: 1
                     input.message-text(type='text', style='width:600px;margin-top:20px;')
                     button.send-text Send Message
+                    p.countdown-timer Countdown to send new message : 10 seconds
                     .messages
                         h1 Messages:
                         ul.message-list
@@ -133,6 +134,13 @@ block content
               }
 
             });
+
+            var amountOfSeconds = 10;
+
+            setInterval(function(){
+              amountOfSeconds = amountOfSeconds - 1;
+              $('.countdown-timer').text('Countdown to send new message : ' + amountOfSeconds  + ' seconds')
+            }, 1000)
 
             var messageSent = false;
 
