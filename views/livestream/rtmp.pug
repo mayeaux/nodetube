@@ -84,8 +84,9 @@ block content
             });
           }
 
-          // var usernamePicked = true;
-          var usernamePicked = false;
+          var usernamePicked = true;
+          // var usernamePicked = false;
+
           var messagingUsername;
 
 
@@ -133,7 +134,7 @@ block content
 
             });
 
-            var messageSent;
+            var messageSent = false;
 
             // send message via websocket
             function sendChatMessage() {
@@ -143,11 +144,17 @@ block content
                 return
               }
 
-              if(messageSent == true) return
+              console.log(messageSent)
+
+              if(messageSent == true){
+               return swal('Please wait __ seconds to send a message');
+              }
 
               setTimeout(function(){
                 messageSent = false;
               }, 1000 * 5)
+
+              messageSent = true;
 
               
 
