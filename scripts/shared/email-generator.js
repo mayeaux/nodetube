@@ -49,12 +49,29 @@ mailListener.on("error", function(err){
   console.log(err);
 });
 
+// seqno just an incrementing index
 mailListener.on("mail", function(mail, seqno, attributes){
 
-  console.log(attributes);
+  // console.log(attributes);
 
-  // console.log(mail['messageId']);
-  // console.log(mail.text);
+
+
+  /** data collected **/
+  console.log('from: ' + mail.from[0].address);
+  console.log('to: ' + mail.to[0].address);
+  console.log(mail.date);
+  console.log(mail['messageId']);
+  console.log(mail.subject);
+  console.log('\n');
+
+  // console.log(mail.priority);
+  // console.log(mail.eml);
+  // console.log(mail.text)
+
+
+
+
+  // console.log(mail.headers['message-id']);
 
   const keys = Object.keys(mail.headers);
 
@@ -88,7 +105,7 @@ mailListener.on("mail", function(mail, seqno, attributes){
     // 'in-reply-to',
     // 'x-zohomail-sender' ]
 
-    // example attribute
+    /** EXAMPLE ATTRIBUTE **/
     // { date: 2017-09-22T17:03:05.000Z,
     //   flags: [ '\\Recent', '\\Seen', 'NONJUNK' ],
     //   uid: 7,
