@@ -137,12 +137,18 @@ block content
 
             var amountOfSeconds = 10;
 
-            setInterval(function(){
-              amountOfSeconds = amountOfSeconds - 1;
-              if(amountOfSeconds >= 0){
-                $('.countdown-timer').text('Countdown to send new message : ' + amountOfSeconds  + ' seconds')
-              }
-            }, 1000)
+            function runInterval(){
+              var myTimer = setInterval(function () {
+                amountOfSeconds = amountOfSeconds - 1;
+                if (amountOfSeconds >= 0) {
+                  $('.countdown-timer').text('Countdown to send new message : ' + amountOfSeconds + ' seconds')
+                } else {
+                  $('.countdown-timer').text('Countdown to send new message : ' + 10 + ' seconds')
+                  amountOfSeconds = 10
+                  clearInterval(myTimer)
+                }
+              }, 1000)
+            }
 
             var messageSent = false;
 
@@ -160,17 +166,11 @@ block content
 
               console.log(messageSent)
 
-              if(messageSent == true){
-               return swal('Please wait __ seconds to send a message');
+              if(amountOfSeconds !== 10){
+               return swal('Please wait ' + amountOfSeconds + ' seconds to send a message');
+              } else {
+                runInterval()
               }
-
-              setTimeout(function(){
-                messageSent = false;
-              }, 1000 * 5)
-
-              messageSent = true;
-
-              
 
               messageText = messagingUsername + ': ' + messageText;
 
