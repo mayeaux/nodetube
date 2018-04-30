@@ -67,6 +67,8 @@ exports.getAdminAudit = async (req, res) => {
   // exclude uploads without an uploadUrl
   let adminActions = await AdminAction.find({}).populate().lean();
 
+  adminActions = adminActions.reverse();
+
   console.log(adminActions);
 
   res.render('admin/adminAudit', {

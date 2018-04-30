@@ -7,7 +7,10 @@ block content
             h2.view-header Users (Admin)
         hr
         each action in adminActions
-            p= action
+            each val, index in action
+                p= index + ': ' + val
+            br
+            br
         //
         //each comment in adminActions
         //    div.col-sm-4(style="text-align:center;height:420px;border:1px solid black;")
