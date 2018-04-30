@@ -165,11 +165,13 @@ exports.getMedia = async (req, res) => {
       return ( view.siteVisitor.toString() == req.siteVisitor._id.toString() ) && view.validity == 'fake';
     });
 
+
+    /** FRAUD CALCULATION, SHOULD PULL OUT INTO OWN LIBRARY **/
     let doingFraud;
     if(process.env.CUSTOM_FRAUD_DETECTION == 'true'){
       const testIfViewIsLegitimate = require('../../lib/custom/fraudPrevention').testIfViewIsLegitimate;
 
-      doingFraud = testIfViewIsLegitimate(upload, req.siteVisitor._id)
+      doingFraud = await testIfViewIsLegitimate(upload, req.siteVisitor._id)
     } else {
       doingFraud = false
     }
@@ -206,39 +208,33 @@ exports.getMedia = async (req, res) => {
       await upload.save();
     }
 
+
+
     upload.views = upload.views + legitViews.length + userFakeViews.length;
 
-    // filter out removed comments
-    if(upload){
+    // filter out removed comments *AND* comments that are responses
+    upload.comments = _.filter(upload.comments, function(comment){
+      return comment.visibility !== 'removed' && !comment.inResponseTo
+    });
 
-      // return out removed comments *AND* comments that are responses
-      upload.comments = _.filter(upload.comments, function(comment){
-        return comment.visibility !== 'removed' && !comment.inResponseTo
-      });
-    }
-
-    if(!upload){
-
-      res.status(404);
-      return res.render('error/404');
-
-      // if upload pending and its not user document, 404
-    } else if (upload.visibility == 'pending' || upload.visibility == 'private'){
+    // if upload should only be visible to logged in user
+    if (upload.visibility == 'pending' || upload.visibility == 'private'){
 
       if(!req.user){
         res.status(404);
         return res.render('error/404')
       }
 
+      // if the requesting user id matches upload's uploader id
       const isUsersDocument = req.user._id.toString() == upload.uploader._id.toString();
 
-      console.log(isUsersDocument);
-
-      if(!isUsersDocument && req.user.role !== 'admin'){
+      // if its not the user's document and the user is not admin
+      if(!isUsersDocument && ( req.user.role !== 'admin' && req.user.role !== 'moderator' )){
         res.status(404);
         return res.render('error/404')
       }
 
+      // if is user's document or requesting user is admin
       if(isUsersDocument || req.user.role == 'admin'){
         res.render('media', {
           title: upload.title,
@@ -251,6 +247,8 @@ exports.getMedia = async (req, res) => {
 
 
     } else {
+
+      // document is fine to be shown publicly
 
       /** SET META TAGS **/
       res.locals.meta.title = `${upload.title}`;

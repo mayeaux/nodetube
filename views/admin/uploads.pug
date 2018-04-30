@@ -15,9 +15,9 @@ block content
                             else if upload.fileType == 'image'
                                 img.preview-image.border-preview(src=upload.uploadUrl)
                             else if upload.fileType == 'audio'
-                                img.preview-image.border-preview(src='/audio.svg')
+                                img.preview-image.border-preview(src='/images/audio.svg')
                             else if upload.fileType == 'unknown'
-                                img.preview-image.border-preview(src='/no_img.png')
+                                img.preview-image.border-preview(src='/images/no_img.png')
 
                             div
                                 p.upload-title-text #{upload.title}

@@ -1,8 +1,6 @@
 const redisClient = require('../../config/redis');
 const _ = require('lodash');
 
-const _ = require('lodash');
-
 const Upload = require('../../models/index').Upload;
 const AdminAction = require('../../models/index').AdminAction;
 const User = require('../../models/index').User;

@@ -55,9 +55,9 @@ block content
                             else if react.upload.fileType == 'image'
                                 img.preview-image(src=react.upload.uploadUrl)
                             else if react.upload.fileType == 'audio'
-                                img.preview-image(src='/audio.svg')
+                                img.preview-image(src='/images/audio.svg')
                             else if react.upload.fileType == 'unknown'
-                                img.preview-image(src='/no_img.png')
+                                img.preview-image(src='/images/no_img.png')
 
                             div
                                 p.upload-title-text #{react.upload.title}
