@@ -241,6 +241,8 @@ function frontendRoutes(app){
   app.get('/admin/siteVisitors', authMiddleware.adminAuth, adminFrontendController.getSiteVisitors);
   app.get('/admin/siteVisitors/:id', authMiddleware.adminAuth, adminFrontendController.getSiteVisitorHistory);
   app.get('/admin/notifications', authMiddleware.adminAuth, adminFrontendController.getNotificationPage);
+  app.get('/admin/adminAudit', authMiddleware.adminAuth, adminFrontendController.getAdminAudit);
+
 
   /** SOCIAL MEDIA ENDPOINTS **/
   app.get('/admin/createSocialPost', authMiddleware.adminAuth, socialMediaFrontendController.getCreateSocialPost);
