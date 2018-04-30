@@ -73,65 +73,85 @@ mailListener.on("error", function(err){
   console.log(err);
 });
 
-// seqno just an incrementing index
-mailListener.on("mail", async function(mail, seqno, attributes){
+(async function(){
 
-  // console.log(attributes);
+  const existingEmails = await ReceivedEmail.find({});
 
+  const emailIds = existingEmails.map(function(email){
+    return email.emailId
+  });
 
+  // seqno just an incrementing index
+  mailListener.on("mail", async function(mail, seqno, attributes){
 
-  /** data collected **/
-  console.log('from: ' + mail.from[0].address);
-  console.log('to: ' + mail.to[0].address);
-  console.log(mail.date);
-  console.log(mail['messageId']);
-  console.log(mail.subject);
-  console.log('\n');
-
-  const fromEmailAddress = mail.from[0].address;
-  const subject = mail.subject;
-  const emailId = mail.messageId;
-  const text = mail.text;
-  const sentDate = mail.date;
-
-  const emailObject = {
-    emailId,
-    toEmailAddress: imapUsername,
-    fromEmailAddress,
-    subject,
-    text,
-    sentDate
-  };
-
-  const email = new ReceivedEmail(emailObject);
-
-  await email.save();
-
-
-
-  // toEmailAddress: String,
-  //   fromEmailAddress: String,
-  //   subject: String,
-  //   text: String,
-  //   date: Date,
-  //   emailId: String,
-  //   response: String
-
-
-
-  // console.log(mail.priority);
-  // console.log(mail.eml);
-  // console.log(mail.text)
+    // console.log(attributes);
 
 
 
 
-  // console.log(mail.headers['message-id']);
+    // /** data collected **/
+    // console.log('from: ' + mail.from[0].address);
+    // console.log('to: ' + mail.to[0].address);
+    // console.log(mail.date);
+    // console.log(mail['messageId']);
+    // console.log(mail.subject);
+    // console.log('\n');
 
-  const keys = Object.keys(mail.headers);
+    const fromEmailAddress = mail.from[0].address;
+    const subject = mail.subject;
+    const emailId = mail.messageId;
+    const text = mail.text;
+    const sentDate = mail.date;
 
-  // console.log(keys);
-  // console.log(mail.eml)
+    // TODO: only save the email if there is a check
+
+    if(emailIds.includes(emailId)){
+      console.log('Already done, skipping');
+      return
+    } else {
+      console.log('Not downloaded yet, saving now');
+    }
+
+    const emailObject = {
+      emailId,
+      toEmailAddress: imapUsername,
+      fromEmailAddress,
+      subject,
+      text,
+      sentDate
+    };
+
+    const email = new ReceivedEmail(emailObject);
+
+    await email.save();
+
+    console.log('Email saved');
+
+
+
+    // toEmailAddress: String,
+    //   fromEmailAddress: String,
+    //   subject: String,
+    //   text: String,
+    //   date: Date,
+    //   emailId: String,
+    //   response: String
+
+
+
+    // console.log(mail.priority);
+    // console.log(mail.eml);
+    // console.log(mail.text)
+
+
+
+
+    // console.log(mail.headers['message-id']);
+
+    const keys = Object.keys(mail.headers);
+
+    // console.log(keys);
+    // console.log(mail.eml)
 
     /** MAIL KEYS **/
     // 'text',
@@ -168,9 +188,14 @@ mailListener.on("mail", async function(mail, seqno, attributes){
 
 
 
-  // do something with mail object including attachments
-  // console.log("emailParsed", mail);
-  // mail processing code goes here
-});
+    // do something with mail object including attachments
+    // console.log("emailParsed", mail);
+    // mail processing code goes here
+  });
 
 // mailListener.imap.move(:msguids, :mailboxes, function(){})
+
+
+
+})();
+
