@@ -48,9 +48,9 @@ block content
                             else if channel.uploads[0].fileType == 'image'
                                 img.preview-image(src=channel.uploads[0].uploadUrl)
                             else if channel.uploads[0].fileType == 'audio'
-                                img.preview-image(src='/audio.svg')
+                                img.preview-image(src='/images/audio.svg')
                             else if channel.uploads[0].fileType == 'unknown'
-                                img.preview-image(src='/no_img.png')
+                                img.preview-image(src='/images/no_img.png')
 
                 else
                     a(href=`/user/${channel.channelUrl}`)

@@ -170,13 +170,13 @@ block content
                     img.preview-image(src=`${uploadServer}/${channel.channelUrl}/${upload.thumbnails.medium}` style="width:inherit;max-width:302px;")
 
                 else if upload.fileType == 'audio'
-                    img.preview-image(src='/audio.svg')
+                    img.preview-image(src='/images/audio.svg')
 
                 else if upload.fileType == 'image'
                     img.preview-image(src=`${uploadServer}/${channel.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="width:inherit;max-width:302px;")
 
                 else if upload.fileType == 'unknown'
-                    img.preview-image(src='/no_img.png')
+                    img.preview-image(src='/images/no_img.png')
 
                 div
                     p.upload-title-text #{upload.title}

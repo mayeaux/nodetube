@@ -1,8 +1,9 @@
 /**
- * GET /
+ * GET /live/${username}
  * Get staging page.
  */
 exports.getLiveRTMP = (req, res) => {
+
 
   const channelUrl = req.params.user;
 
@@ -17,10 +18,13 @@ exports.getLiveRTMP = (req, res) => {
 };
 
 /**
- * GET /
+ * GET /live/$username
  * Get viewing page.
  */
 exports.getLive = (req, res) => {
+
+  console.log('here');
+
   // ?
   if(process.env.LIVESTREAM_APP !== 'true' && process.env.NODE_ENV == 'production'){
     const livestreamApp = 'https://live.pewtube.com';

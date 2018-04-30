@@ -158,7 +158,10 @@ if (cluster.isMaster) {
       src: path.join(__dirname, 'public'),
       dest: path.join(__dirname, 'public')
     }));
-    // app.use(logger('dev'));
+
+    if(process.env.NODE_ENV == 'development'){
+      app.use(logger('dev'));
+    }
 
     // run from local pewtube media backups
     if (process.env.LOCAL_BACKUP) {

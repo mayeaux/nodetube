@@ -1,10 +1,8 @@
 const redisClient = require('../../config/redis');
 const _ = require('lodash');
 
-const _ = require('lodash');
-
 const Upload = require('../../models/index').Upload;
-const View = require('../../models/index').View;
+const AdminAction = require('../../models/index').AdminAction;
 const User = require('../../models/index').User;
 const Subscription = require('../../models/index').Subscription;
 const React = require('../../models/index').React;
@@ -63,29 +61,23 @@ exports.dailyStats = async (req, res) => {
 };
 
 
-// TODO: this doesn't look great (refactor with async/await)
 exports.getAdminAudit = async (req, res) => {
 
-
-
   // exclude uploads without an uploadUrl
-  Upload.find({
-    uploadUrl: {$exists: true },
-    visibility: 'pending'
-  }).populate('uploader').lean().exec(function(err, uploads){
+  let adminActions = await AdminAction.find({}).populate().lean();
 
-    uploads = _.sortBy(uploads, [function(c) { return c.createdAt }]).reverse();
+  adminActions = adminActions.reverse();
 
+  console.log(adminActions);
 
-    res.render('moderator/pending', {
-      title: 'Pending',
-      uploads
-    });
-
+  res.render('admin/adminAudit', {
+    title: 'Admin Audit',
+    adminActions
   });
+
 };
 
-// TODO: this doesn't look great (refactor with async/await)
+
 exports.getPending = async (req, res) => {
 
   // exclude uploads without an uploadUrl

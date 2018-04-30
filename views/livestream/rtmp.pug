@@ -11,16 +11,17 @@ block content
                     h2.userAmount Users In Room: 1
                     input.message-text(type='text', style='width:600px;margin-top:20px;')
                     button.send-text Send Message
+                    p.countdown-timer Countdown to send new message : 10 seconds
                     .messages
                         h1 Messages:
                         ul.message-list
         script.
-          var channel = '#{channelUrl}'
+          var channelUrl = '#{channelUrl}'
 
           if (Hls.isSupported()) {
             var video = document.getElementById('video');
             var hls = new Hls();
-            hls.loadSource('/' + channel + '.m3u8');
+            hls.loadSource('/' + channelUrl + '.m3u8');
             hls.attachMedia(video);
             hls.on(Hls.Events.MANIFEST_PARSED, function () {
               video.play();
@@ -84,9 +85,10 @@ block content
             });
           }
 
-          // var usernamePicked = true;
-          var usernamePicked = #{(user && user.channelName !== null) ? true : false};
-          var messagingUsername = "#{(user && user.channelName !== null) ? user.channelName : ""}";
+          var usernamePicked = true;
+          // var usernamePicked = false;
+
+          var messagingUsername;
 
 
           $(document).ready(function () {
@@ -133,12 +135,41 @@ block content
 
             });
 
+            var amountOfSeconds = 10;
+
+            function runInterval(){
+              var myTimer = setInterval(function () {
+                amountOfSeconds = amountOfSeconds - 1;
+                if (amountOfSeconds >= 0) {
+                  $('.countdown-timer').text('Countdown to send new message : ' + amountOfSeconds + ' seconds')
+                } else {
+                  $('.countdown-timer').text('Countdown to send new message : ' + 10 + ' seconds')
+                  amountOfSeconds = 10
+                  clearInterval(myTimer)
+                }
+              }, 1000)
+            }
+
+            var messageSent = false;
+
             // send message via websocket
             function sendChatMessage() {
               var messageText = $('.message-text').val();
 
               if (messageText == '') {
                 return
+              }
+
+              if (messageText.length > 150 ) {
+                return swal('Please send a smaller message, your message is currently ' + messageText.length + ' but the max is 150');
+              }
+
+              console.log(messageSent)
+
+              if(amountOfSeconds !== 10){
+               return swal('Please wait ' + amountOfSeconds + ' seconds to send a message');
+              } else {
+                runInterval()
               }
 
               messageText = messagingUsername + ': ' + messageText;
@@ -177,7 +208,7 @@ block content
 
             data = JSON.parse(message.data);
 
-            console.log(data);
+            // console.log(data);
 
             // if message, prepend it to messages list
             if (data.message && data.message !== 'undefined: undefined') {
