@@ -103,10 +103,8 @@ mailListener.on("error", function(err){
     const text = mail.text;
     const sentDate = mail.date;
 
-    // TODO: only save the email if there is a check
-
     if(emailIds.includes(emailId)){
-      console.log('Already done, skipping');
+      console.log('Already done, skipping ' + sentDate);
       return
     } else {
       console.log('Not downloaded yet, saving now');
