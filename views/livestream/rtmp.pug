@@ -15,12 +15,12 @@ block content
                         h1 Messages:
                         ul.message-list
         script.
-          var channel = '#{channelUrl}'
+          var channelUrl = '#{channelUrl}'
 
           if (Hls.isSupported()) {
             var video = document.getElementById('video');
             var hls = new Hls();
-            hls.loadSource('/' + channel + '.m3u8');
+            hls.loadSource('/' + channelUrl + '.m3u8');
             hls.attachMedia(video);
             hls.on(Hls.Events.MANIFEST_PARSED, function () {
               video.play();
@@ -85,8 +85,8 @@ block content
           }
 
           // var usernamePicked = true;
-          var usernamePicked = #{(user && user.channelName !== null) ? true : false};
-          var messagingUsername = "#{(user && user.channelName !== null) ? user.channelName : ""}";
+          var usernamePicked = false;
+          var messagingUsername;
 
 
           $(document).ready(function () {
@@ -133,6 +133,8 @@ block content
 
             });
 
+            var messageSent;
+
             // send message via websocket
             function sendChatMessage() {
               var messageText = $('.message-text').val();
@@ -140,6 +142,14 @@ block content
               if (messageText == '') {
                 return
               }
+
+              if(messageSent == true) return
+
+              setTimeout(function(){
+                messageSent = false;
+              }, 1000 * 5)
+
+              
 
               messageText = messagingUsername + ': ' + messageText;
 
@@ -177,7 +187,7 @@ block content
 
             data = JSON.parse(message.data);
 
-            console.log(data);
+            // console.log(data);
 
             // if message, prepend it to messages list
             if (data.message && data.message !== 'undefined: undefined') {
