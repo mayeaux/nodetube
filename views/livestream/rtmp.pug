@@ -139,7 +139,9 @@ block content
 
             setInterval(function(){
               amountOfSeconds = amountOfSeconds - 1;
-              $('.countdown-timer').text('Countdown to send new message : ' + amountOfSeconds  + ' seconds')
+              if(amountOfSeconds >= 0){
+                $('.countdown-timer').text('Countdown to send new message : ' + amountOfSeconds  + ' seconds')
+              }
             }, 1000)
 
             var messageSent = false;
@@ -150,6 +152,10 @@ block content
 
               if (messageText == '') {
                 return
+              }
+
+              if (messageText.length > 150 ) {
+                return swal('Please send a smaller message, your message is currently ' + messageText.length + ' but the max is 150');
               }
 
               console.log(messageSent)
