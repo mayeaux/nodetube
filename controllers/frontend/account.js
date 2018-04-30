@@ -86,7 +86,7 @@ exports.subscriptions = async (req, res) => {
     const uploads = await Upload.find({
       uploader: {$in: subscribedToUsers},
       visibility: 'public',
-      $or : [ { status: 'completed' }, { uploadUrl: { $exists: true } } ]
+      status: 'completed'
     }).populate('uploader checkedViews')
       .skip((page * limit) - limit)
       .limit(limit).sort({createdAt: -1});
@@ -172,7 +172,7 @@ exports.getChannel = async (req, res) => {
     const searchQuery = {
       uploader: user._id,
       visibility: 'public',
-      $or : [ { status: 'completed' }, { uploadUrl: { $exists: true } } ]
+      status: 'completed'
       // uploadUrl: {$exists: true }
       // status: 'completed'
     };
