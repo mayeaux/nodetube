@@ -1,10 +1,10 @@
 {
-  "name": "pewdietube",
+  "name": "NodeTube",
   "version": "1.0.0",
   "description": "Video, audio and image hosting",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mayeuax/pewdietube"
+    "url": "https://github.com/mayeuax/nodetube"
   },
   "engines": {
     "node": "8.3.0"

@@ -1,6 +1,8 @@
 const redisClient = require('../../config/redis');
 const _ = require('lodash');
 
+const _ = require('lodash');
+
 const Upload = require('../../models/index').Upload;
 const View = require('../../models/index').View;
 const User = require('../../models/index').User;
@@ -61,10 +63,10 @@ exports.dailyStats = async (req, res) => {
 };
 
 
-
-
 // TODO: this doesn't look great (refactor with async/await)
-exports.getPending = async (req, res) => {
+exports.getAdminAudit = async (req, res) => {
+
+
 
   // exclude uploads without an uploadUrl
   Upload.find({
@@ -81,6 +83,24 @@ exports.getPending = async (req, res) => {
     });
 
   });
+};
+
+// TODO: this doesn't look great (refactor with async/await)
+exports.getPending = async (req, res) => {
+
+  // exclude uploads without an uploadUrl
+  let uploads = await Upload.find({
+    uploadUrl: {$exists: true },
+    visibility: 'pending'
+  }).populate('uploader').lean();
+
+  uploads = _.sortBy(uploads, [function(c) { return c.createdAt }]).reverse();
+
+  res.render('moderator/pending', {
+    title: 'Pending',
+    uploads
+  });
+
 };
 
 

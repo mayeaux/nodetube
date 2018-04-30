@@ -4,37 +4,17 @@ const moment = require('moment');
 const Promise = require('bluebird');
 const randomstring = require('randomstring');
 const mkdirp = Promise.promisifyAll(require('mkdirp'));
-const ffmpegHelper = require('../../lib/uploading/ffmpeg');
-
-const javascriptTimeAgo = require('javascript-time-ago');
-javascriptTimeAgo.locale(require('javascript-time-ago/locales/en'));
-require('javascript-time-ago/intl-messageformat-global');
-require('intl-messageformat/dist/locale-data/en');
-const timeAgoEnglish = new javascriptTimeAgo('en-US');
+const mongoose = require('mongoose');
 
 const User = require('../../models/index').User;
 const Upload = require('../../models/index').Upload;
 const Comment = require('../../models/index').Comment;
-const View = require('../../models/index').View;
-const SiteVisit = require('../../models/index').SiteVisit;
-const React = require('../../models/index').React;
 const Notification = require('../../models/index').Notification;
-const SocialPost = require('../../models/index').SocialPost;
-const Subscription = require('../../models/index').Subscription;
 
-const gab = require('../../lib/socialMedia/gab');
-const twitter = require('../../lib/socialMedia/twitter');
-const facebook = require('../../lib/socialMedia/facebook');
-
-const oneOffSocialPost = require('../../lib/socialMedia/oneOffSocialPost');
-
-const mongoose = require('mongoose');
-
-const redisClient = require('../../config/redis');
-
+// const adminActions  = ['userDeleted', 'userUndeleted', 'uploadDeleted', 'fullIpDeletion', 'banUser', 'unbanUser'];
+const createAdminAction = require('../../lib/administration/createAdminAction');
 
 const deleteUsers = require('../../lib/administration/deleteUsers');
-
 
 exports.postUsers = async (req, res) => {
 
@@ -43,13 +23,11 @@ exports.postUsers = async (req, res) => {
   const userChangeValue = req.body.userChangeValue;
 
   // kick out if not admin or moderator
-  const userRole = req.user.role;
-  if(userRole !== 'admin'){
-    res.status(404);
-    return res.redirect('error/404', {
-      title: 'Not Found'
-    });
-  }
+  const adminOrModerator = req.user.id;
+
+  // await createAdminAction(adminOrModerator, actionType, affectedUsers, affectedUploads, affectedSiteVisitors);
+
+  let actionType;
 
   const user = await User.findOne({ _id: userId });
 
@@ -73,7 +51,11 @@ exports.postUsers = async (req, res) => {
     await user.save();
   }
 
-  req.flash('success', {msg: `User ${user.channelName} moderated, thank you.`});
+  actionType = userChangeValue;
+
+  await createAdminAction(adminOrModerator, actionType, user._id, [], []);
+
+  req.flash('success', {msg: `User ${user.channelUrl} moderated, thank you.`});
 
   res.redirect('/admin/users');
 
@@ -132,35 +114,6 @@ exports.changeRatings = async (req, res) => {
 
 
 };
-
-
-
-
-async function markUploadAsComplete(uniqueTag, channelUrl, user, res){
-  upload = await Upload.findOne({ uniqueTag });
-  upload.status = 'completed';
-  await upload.save();
-
-  user.uploads.push(upload._id);
-  await user.save();
-
-  return 'success'
-}
-
-async function updateUsersUnreadSubscriptions(user){
-  const subscriptions = await Subscription.find({ subscribedToUser: user._id, active: true });
-
-  for(const subscription of subscriptions){
-    let subscribingUser = await User.findOne({ _id: subscription.subscribingUser });
-
-    subscribingUser.unseenSubscriptionUploads = subscribingUser.unseenSubscriptionUploads + 1;
-    await subscribingUser.save();
-  }
-
-};
-
-
-
 
 
 exports.deleteAccount = async (req, res) => {
@@ -331,42 +284,6 @@ exports.sendNotification = async (req, res) => {
   await notification.save();
 
   res.redirect('/admin/notifications');
-};
-
-
-
-exports.postUsers = async (req, res) => {
-
-  const userId = req.body.user;
-
-  const userChangeValue = req.body.userChangeValue;
-
-  const user = await User.findOne({ _id: userId });
-
-  if(userChangeValue == 'trustUser'){
-    user.privs.autoVisibleUpload = true;
-    await user.save();
-  }
-
-  if(userChangeValue == 'untrustUser'){
-    user.privs.autoVisibleUpload = false;
-    await user.save();
-  }
-
-  if(userChangeValue == 'banUser'){
-    user.status = 'restricted';
-    await user.save();
-  }
-
-  if(userChangeValue == 'unbanUser'){
-    user.status = '';
-    await user.save();
-  }
-
-  req.flash('success', {msg: `User ${user.channelName} moderated, thank you.`});
-
-  res.redirect('/admin/users');
-
 };
 
 
