@@ -10,3 +10,43 @@ block content
             p= index + ': ' + val
         br
         br
+        if !receivedEmail.response
+            h3 Response:
+            textarea.form-group(maxlength='2000' rows="10" cols="70" style="width:400px;" id="response")
+            br
+            button.btn.btn-primary.submit-button(type="submit") Send Response For Final Verification
+
+
+        script(src='/js/lib/jquery-3.1.1.min.js')
+        script.
+          $(document).ready(function () {
+            var csrf = '#{_csrf}'
+            var id = '#{receivedEmail._id}'
+
+            $('.submit-button').on('click', function (e) {
+
+              var response = $('#response').val();
+
+              var data = {
+                _csrf: csrf,
+                response
+              }
+
+              $.ajax({
+                type: 'POST',
+                url: `/support/emails/` + id,
+                data,
+                success: function (data) {
+                  console.log(data);
+
+                  if(data == 'success'){
+                    location.href = location.href;
+                  }
+
+                },
+                error: function (err) {
+                  console.log(err);
+                }
+              });
+            })
+          })

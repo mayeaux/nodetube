@@ -13,6 +13,8 @@ const purchaseController = require('../controllers/backend/purchase');
 const socialMediaBackendController = require('../controllers/backend/socialMedia');
 const uploadingController = require('../controllers/backend/uploading');
 const youtubeController = require('../controllers/backend/youtube');
+const supportBackendController = require('../controllers/backend/support');
+
 
 /** FRONTEND PAGE CONTROLLERS **/
 const accountFrontendController = require('../controllers/frontend/account');
@@ -247,6 +249,9 @@ function frontendRoutes(app){
 
   app.get('/support/emails', authMiddleware.moderatorAuth, supportFrontendController.getReceivedEmails);
   app.get('/support/emails/:id', authMiddleware.moderatorAuth, supportFrontendController.getReceivedEmail);
+
+  app.post('/support/emails/:id', authMiddleware.moderatorAuth, supportBackendController.sendResponse);
+
 
 
 
