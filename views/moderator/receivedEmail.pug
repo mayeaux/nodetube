@@ -25,28 +25,41 @@ block content
 
             $('.submit-button').on('click', function (e) {
 
-              var response = $('#response').val();
+              Swal({
+                title: 'Send Response?',
+                text: 'Do you want to send this as a response?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, keep it'
+              }).then(function (result) {
+                if (result.value) {
+                  var response = $('#response').val();
 
-              var data = {
-                _csrf: csrf,
-                response
-              }
-
-              $.ajax({
-                type: 'POST',
-                url: `/support/emails/` + id,
-                data,
-                success: function (data) {
-                  console.log(data);
-
-                  if(data == 'success'){
-                    location.href = location.href;
+                  var data = {
+                    _csrf: csrf,
+                    response
                   }
 
-                },
-                error: function (err) {
-                  console.log(err);
+                  $.ajax({
+                    type: 'POST',
+                    url: `/support/emails/` + id,
+                    data,
+                    success: function (data) {
+                      console.log(data);
+
+                      if (data == 'success') {
+                        location.href = location.href;
+                      }
+
+                    },
+                    error: function (err) {
+                      console.log(err);
+                    }
+                  });
+                } else {
+                  Swal.close()
                 }
-              });
+              })
             })
           })
