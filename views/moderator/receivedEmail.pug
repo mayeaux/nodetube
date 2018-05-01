@@ -30,8 +30,8 @@ block content
                 text: 'Do you want to send this as a response?',
                 type: 'warning',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'No, keep it'
+                confirmButtonText: 'Yes, send it',
+                cancelButtonText: 'Cancel'
               }).then(function (result) {
                 if (result.value) {
                   var response = $('#response').val();
