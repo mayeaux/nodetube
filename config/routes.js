@@ -13,6 +13,8 @@ const purchaseController = require('../controllers/backend/purchase');
 const socialMediaBackendController = require('../controllers/backend/socialMedia');
 const uploadingController = require('../controllers/backend/uploading');
 const youtubeController = require('../controllers/backend/youtube');
+const supportBackendController = require('../controllers/backend/support');
+
 
 /** FRONTEND PAGE CONTROLLERS **/
 const accountFrontendController = require('../controllers/frontend/account');
@@ -24,6 +26,8 @@ const mediaPlayerController = require('../controllers/frontend/mediaPlayer');
 const publicController = require('../controllers/frontend/public');
 const recentActionsController = require('../controllers/frontend/recentActions');
 const socialMediaFrontendController = require('../controllers/frontend/socialMedia');
+const supportFrontendController = require('../controllers/frontend/support');
+
 
 /** passport config **/
 const passportConfig = require('../config/passport');
@@ -242,6 +246,13 @@ function frontendRoutes(app){
   app.get('/admin/siteVisitors/:id', authMiddleware.adminAuth, adminFrontendController.getSiteVisitorHistory);
   app.get('/admin/notifications', authMiddleware.adminAuth, adminFrontendController.getNotificationPage);
   app.get('/admin/adminAudit', authMiddleware.adminAuth, adminFrontendController.getAdminAudit);
+
+  app.get('/support/emails', authMiddleware.moderatorAuth, supportFrontendController.getReceivedEmails);
+  app.get('/support/emails/:id', authMiddleware.moderatorAuth, supportFrontendController.getReceivedEmail);
+
+  app.post('/support/emails/:id', authMiddleware.moderatorAuth, supportBackendController.sendResponse);
+
+
 
 
   /** SOCIAL MEDIA ENDPOINTS **/

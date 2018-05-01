@@ -1,0 +1,16 @@
+extends ../layout
+
+block content
+    div
+        div
+            h2
+            h2.view-header Pending Uploads
+        hr
+        each email in receivedEmails
+            each val, index in email
+                if index == '_id'
+                    a(href=`/support/emails/${val}`) #{val}
+
+                else
+                    p= index + ': ' + val
+            br

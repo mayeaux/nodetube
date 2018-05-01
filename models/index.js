@@ -11,6 +11,7 @@ const Report = require('./Report');
 const SocialPost = require('./SocialPost');
 const CreditAction = require('./CreditAction');
 const AdminAction = require('./AdminAction');
+const ReceivedEmail = require('./ReceivedEmail');
 
 
 module.exports = {
@@ -26,6 +27,7 @@ module.exports = {
   Report,
   SocialPost,
   CreditAction,
-  AdminAction
+  AdminAction,
+  ReceivedEmail
 };
 
