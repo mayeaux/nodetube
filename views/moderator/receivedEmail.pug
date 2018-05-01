@@ -1,0 +1,12 @@
+extends ../layout
+
+block content
+    div
+        div
+            h2
+            h2.view-header Pending Uploads
+        hr
+        each val, index in receivedEmail
+            p= index + ': ' + val
+        br
+        br
