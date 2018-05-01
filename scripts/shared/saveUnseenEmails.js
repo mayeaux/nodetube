@@ -89,12 +89,12 @@ mailListener.on("error", function(err){
 
 
     /** data collected **/
-    console.log('from: ' + mail.from[0].address);
-    console.log('to: ' + mail.to[0].address);
-    console.log(mail.date);
-    console.log(mail['messageId']);
-    console.log(mail.subject);
-    console.log('\n');
+    // console.log('from: ' + mail.from[0].address);
+    // console.log('to: ' + mail.to[0].address);
+    // console.log(mail.date);
+    // console.log(mail['messageId']);
+    // console.log(mail.subject);
+    // console.log('\n');
 
     const fromEmailAddress = mail.from[0].address;
     const subject = mail.subject;
@@ -122,7 +122,7 @@ mailListener.on("error", function(err){
 
     const email = new ReceivedEmail(emailObject);
 
-    // await email.save();
+    await email.save();
 
     console.log('Email saved');
 
