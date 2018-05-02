@@ -16,6 +16,8 @@ const uploadServer = uploadHelpers.uploadServer;
 
 const getFromCache = require('../../lib/caching/getFromCache');
 
+const { getFilter, filterUploads } = require('../../lib/mediaBrowsing/helpers');
+
 // TODO: pull into its own func
 let indexResponse;
 async function setIndex(){
@@ -89,46 +91,19 @@ exports.recentUploads = async (req, res) => {
     .skip((page * limit) - limit)
     .limit(limit);
 
+  // populate upload.legitViewAmount
   uploads = await Promise.all(
-
     uploads.map(async function(upload){
       upload = upload.toObject();
       const checkedViews = await View.count({ upload: upload.id, validity: 'real' });
       upload.legitViewAmount = checkedViews;
       return upload
-    }));
+    })
+  );
 
-  // console.log(uploads);
-
-  // uploads = await mongooseHelpers.determineLegitViewsForUploads(uploads);
-
-  let filter;
-  if(req.user){
-    filter = req.user.filter
-  } else {
-    filter = req.siteVisitor.filter
-  }
-
-  if(filter == 'sensitive'){
-    // nothing to do
-  } else if (filter == 'mature'){
-
-    // return ones not marked as sensitive
-    uploads = _.filter(uploads, function(upload){
-      return upload.rating !== 'sensitive'
-    });
-
-  } else if (filter == 'allAges'){
-
-    // return ones not marked as sensitive or mature
-    uploads = _.filter(uploads, function(upload){
-      return upload.rating !== 'sensitive' && upload.rating !== 'mature'
-    });
-  }
-
-  console.log(uploads);
-
-  // site visitor?
+  // filter uploads based on sensitivity
+  let filter = getFilter(req.user, req.siteVisitor);
+  uploads = filterUploads(uploads, filter);
 
   res.render('public/recentUploads', {
     title: 'Recent Uploads',
