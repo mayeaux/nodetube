@@ -15,8 +15,58 @@ block content
                     p= index + ': ' + val
 
             if user.role == 'admin' && !email.responseSent
-                h1 Send Email
+                h1.submit-button Send Email
             br
             br
             br
+
+    script(src='/js/lib/jquery-3.1.1.min.js')
+    script.
+      $(document).ready(function () {
+
+        var csrf = '#{_csrf}'
+        var id = '400'
+
+        var data = {
+          _csrf: csrf
+        }
+
+        $('.submit-button').on('click', function (e) {
+
+          Swal({
+            title: 'Send Response?',
+            text: 'Do you want to send this as a response?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, send it',
+            cancelButtonText: 'Cancel'
+          }).then(function (result) {
+            if (result.value) {
+              var response = $('#response').val();
+
+              var data = {
+                _csrf: csrf,
+                response
+              }
+
+              $.ajax({
+                type: 'POST',
+                url: `/support/emails/` + id + '/send',
+                data,
+                success: function (data) {
+                  console.log(data);
+
+                },
+                error: function (err) {
+                  console.log(err);
+                }
+              });
+
+
+            } else {
+              Swal.close()
+            }
+          })
+        })
+      })
 

@@ -7,7 +7,7 @@ exports.getReceivedEmails = async (req, res) => {
 
   receivedEmails = receivedEmails.reverse();
 
-  console.log(receivedEmails);
+  // console.log(receivedEmails);
 
   res.render('moderator/receivedEmails', {
     title: 'Received Emails',

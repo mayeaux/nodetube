@@ -43,14 +43,10 @@ block content
 
                   $.ajax({
                     type: 'POST',
-                    url: `/support/emails/` + id,
+                    url: `/support/emails/` + id + '/send',
                     data,
                     success: function (data) {
                       console.log(data);
-
-                      if (data == 'success') {
-                        location.href = location.href;
-                      }
 
                     },
                     error: function (err) {
