@@ -15,7 +15,7 @@ block content
                     p= index + ': ' + val
 
             if user.role == 'admin' && !email.responseSent
-                h1.submit-button Send Email
+                h1.submit-button(email-id=`${email._id}`) Send Email
             br
             br
             br
@@ -32,6 +32,14 @@ block content
         }
 
         $('.submit-button').on('click', function (e) {
+
+          console.log(e);
+
+          var emailId = $(this).attr('email-id')
+
+          console.log(emailId + 'email id')
+
+          // console.log(this);
 
           Swal({
             title: 'Send Response?',
