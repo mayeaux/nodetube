@@ -7,6 +7,8 @@ const pagination = require('../../lib/helpers/pagination');
 const User = require('../../models/index').User;
 const Upload = require('../../models/index').Upload;
 const SearchQuery = require('../../models/index').SearchQuery;
+const View = require('../../models/index').View;
+
 
 const uploadHelpers = require('../../lib/helpers/settings');
 
@@ -81,13 +83,24 @@ exports.recentUploads = async (req, res) => {
   }
 
   let uploads = await Upload.find(searchQuery)
-    .populate('uploader checkedViews')
+    .populate('uploader')
     .sort({ createdAt: -1 })
     .hint(queryHint)
     .skip((page * limit) - limit)
     .limit(limit);
 
-  uploads = await mongooseHelpers.determineLegitViewsForUploads(uploads);
+  uploads = await Promise.all(
+
+    uploads.map(async function(upload){
+      upload = upload.toObject();
+      const checkedViews = await View.count({ upload: upload.id, validity: 'real' });
+      upload.legitViewAmount = checkedViews;
+      return upload
+    }));
+
+  // console.log(uploads);
+
+  // uploads = await mongooseHelpers.determineLegitViewsForUploads(uploads);
 
   let filter;
   if(req.user){
@@ -112,6 +125,8 @@ exports.recentUploads = async (req, res) => {
       return upload.rating !== 'sensitive' && upload.rating !== 'mature'
     });
   }
+
+  console.log(uploads);
 
   // site visitor?
 
