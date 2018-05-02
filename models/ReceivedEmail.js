@@ -13,7 +13,11 @@ const receivedEmailSchema = new mongoose.Schema({
   subject: String,
   text: String,
   sentDate: Date,
-  response: String
+  response: String,
+  responseSent: {
+    type: Boolean,
+    default: false
+  }
 }, {
     timestamps: true
   });

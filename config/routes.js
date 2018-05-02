@@ -236,6 +236,14 @@ function frontendRoutes(app){
 
   app.post('/pending', authMiddleware.moderatorAuth, adminBackendController.postPending);
 
+  // send email as admin
+  app.post('/support/emails/:id/send', authMiddleware.adminAuth, supportBackendController.sendEmail);
+  app.post('/support/emails/:id', authMiddleware.moderatorAuth, supportBackendController.sendResponse);
+
+  app.get('/support/emails', authMiddleware.moderatorAuth, supportFrontendController.getReceivedEmails);
+  app.get('/support/emails/:id', authMiddleware.moderatorAuth, supportFrontendController.getReceivedEmail);
+
+
   /** ADMIN PAGES **/
   app.get('/admin/users', authMiddleware.adminAuth, adminFrontendController.getUsers);
   app.get('/admin/comments', authMiddleware.adminAuth, adminFrontendController.getComments);
@@ -246,11 +254,6 @@ function frontendRoutes(app){
   app.get('/admin/siteVisitors/:id', authMiddleware.adminAuth, adminFrontendController.getSiteVisitorHistory);
   app.get('/admin/notifications', authMiddleware.adminAuth, adminFrontendController.getNotificationPage);
   app.get('/admin/adminAudit', authMiddleware.adminAuth, adminFrontendController.getAdminAudit);
-
-  app.get('/support/emails', authMiddleware.moderatorAuth, supportFrontendController.getReceivedEmails);
-  app.get('/support/emails/:id', authMiddleware.moderatorAuth, supportFrontendController.getReceivedEmail);
-
-  app.post('/support/emails/:id', authMiddleware.moderatorAuth, supportBackendController.sendResponse);
 
 
 
