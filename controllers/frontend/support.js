@@ -34,7 +34,8 @@ exports.getReceivedEmail = async (req, res) => {
 
   res.render('moderator/receivedEmail', {
     title: 'Received Email',
-    receivedEmail
+    receivedEmail,
+    email: receivedEmail
   });
 
 };

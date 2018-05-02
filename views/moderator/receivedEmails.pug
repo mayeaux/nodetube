@@ -14,18 +14,29 @@ block content
                     a(href="/support/emails?to=ceo@pew.tube") Ceo Emails
         hr
         each email in receivedEmails
-            each val, index in email
-                if index == '_id'
-                    a(href=`/support/emails/${val}`) #{val}
+            a(href=`/support/emails/${email._id}`) #{email._id}
+            p Sent Date: #{email.sentDate}
+            p To: #{email.toEmailAddress}
+            p From: #{email.fromEmailAddress}
+            p Subject: #{email.subject}
+            p Text: #{email.text}
+            p Email Id: #{email.emailId}
+            p Responded To: #{email.respondedTo}
+            br
+            br
 
-                else
-                    p= index + ': ' + val
-
-            if user.role == 'admin' && email.response && !email.respondedTo
-                h1.submit-button(email-id=`${email._id}`) Send Email
-            br
-            br
-            br
+            //each val, index in email
+            //    if index == '_id'
+            //        a(href=`/support/emails/${val}`) #{val}
+            //
+            //    else
+            //        p= index + ': ' + val
+            //
+            //if user.role == 'admin' && email.response && !email.respondedTo
+            //    h1.submit-button(email-id=`${email._id}`) Send Email
+            //br
+            //br
+            //br
 
     script(src='/js/lib/jquery-3.1.1.min.js')
     script.

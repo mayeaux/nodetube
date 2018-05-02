@@ -4,10 +4,20 @@ block content
     div
         div
             h2
-            h2.view-header Pending Uploads
+            h2.view-header Email
+            h3
+                a(href="/support/emails") Support Emails
+
         hr
-        each val, index in receivedEmail
-            p= index + ': ' + val
+        p Sent Date: #{email.sentDate}
+            p To: #{email.toEmailAddress}
+            p From: #{email.fromEmailAddress}
+            p Subject: #{email.subject}
+            p Text: #{email.text}
+            p Email Id: #{email.emailId}
+            p Responded To: #{email.respondedTo}
+            br
+            br
         br
         br
         if !receivedEmail.response
