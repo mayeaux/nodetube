@@ -31,6 +31,27 @@
             a(href=`/media/subscribed`) Subscribed (0)
       ul.nav.navbar-nav.navbar-right
         if user
+
+          // support dropdown
+          if user.role == 'support' || user.role == 'admin'
+            li.dropdown(class=(title == 'Admin Panel') ? 'active' : undefined)
+              a.dropdown-toggle(href='#', data-toggle='dropdown')
+                span= 'Support'
+                i.caret
+              ul.dropdown-menu
+                li(class=(title == 'Emails') ? 'active' : undefined)
+                  a(href=`/support/emails`) Emails
+
+          //// moderator dropdown
+          //if user.role == 'moderator' || user.role == 'admin'
+          //  li.dropdown(class=(title == 'Admin Panel') ? 'active' : undefined)
+          //    a.dropdown-toggle(href='#', data-toggle='dropdown')
+          //      span= 'Moderator'
+          //      i.caret
+          //    ul.dropdown-menu
+          //      li(class=(title == 'Comments') ? 'active' : undefined)
+          //        a(href=`/admin/comments`) Comments
+
           // admin panel
           if user.role == 'admin'
             li.dropdown(class=(title == 'Admin Panel') ? 'active' : undefined)

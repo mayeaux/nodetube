@@ -6,15 +6,16 @@ block content
             h2
             h2.view-header Received Emails
             h3
-                a(href="/support/emails?to=support@pewtube.com") Support Emails
+                a(href="/support/emails?to=support@pewtube.com&respondedTo=false") Support Emails
             h3
-                a(href="/support/emails?to=copyright@pewtube.com") Copyright Emails
+                a(href="/support/emails?to=copyright@pewtube.com&respondedTo=false") Copyright Emails
             if user.role == 'admin'
                 h3
-                    a(href="/support/emails?to=ceo@pew.tube") Ceo Emails
+                    a(href="/support/emails?to=ceo@pew.tube&respondedTo=false") Ceo Emails
         hr
         each email in receivedEmails
-            a(href=`/support/emails/${email._id}`) #{email._id}
+            a(href=`/support/emails/${email._id}`)
+                p #{email._id}
             p Sent Date: #{email.sentDate}
             p To: #{email.toEmailAddress}
             p From: #{email.fromEmailAddress}
@@ -22,21 +23,11 @@ block content
             p Text: #{email.text}
             p Email Id: #{email.emailId}
             p Responded To: #{email.respondedTo}
+            if user.role == 'admin' && email.response && !email.respondedTo
+                h3.submit-button(email-id=`${email._id}`) Send Email
             br
             br
 
-            //each val, index in email
-            //    if index == '_id'
-            //        a(href=`/support/emails/${val}`) #{val}
-            //
-            //    else
-            //        p= index + ': ' + val
-            //
-            //if user.role == 'admin' && email.response && !email.respondedTo
-            //    h1.submit-button(email-id=`${email._id}`) Send Email
-            //br
-            //br
-            //br
 
     script(src='/js/lib/jquery-3.1.1.min.js')
     script.

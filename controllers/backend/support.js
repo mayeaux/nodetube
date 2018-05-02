@@ -5,20 +5,31 @@ console.log(process.env.PEWTUBE_VERIFY_EMAIL_PASSWORD)
 
 exports.sendResponse = async (req, res) => {
 
-  const response = req.body.response;
+  try {
 
-  const id = req.params.id;
+    const response = req.body.response;
 
-  // exclude uploads without an uploadUrl
-  let receivedEmail = await ReceivedEmail.findById(id);
+    const id = req.params.id;
 
-  receivedEmail.response = response;
+    // exclude uploads without an uploadUrl
+    let receivedEmail = await ReceivedEmail.findById(id);
 
-  await receivedEmail.save();
+    if (receivedEmail.response) {
+      throw new Error('Already has a response')
+    }
 
-  console.log(receivedEmail);
+    receivedEmail.response = response;
 
-  res.send('success')
+    await receivedEmail.save();
+
+    console.log(receivedEmail);
+
+    res.send('success')
+
+  } catch (err){
+    console.log(err);
+    res.send('err');
+  }
 
 };
 
