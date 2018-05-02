@@ -59,7 +59,7 @@ block content
 
               $.ajax({
                 type: 'POST',
-                url: `/support/emails/` + id + '/send',
+                url: `/support/emails/` + emailId + '/send',
                 data,
                 success: function (data) {
                   console.log(data);
