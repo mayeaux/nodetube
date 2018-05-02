@@ -4,7 +4,14 @@ block content
     div
         div
             h2
-            h2.view-header Pending Uploads
+            h2.view-header Received Emails
+            h3
+                a(href="/support/emails?to=support@pewtube.com") Support Emails
+            h3
+                a(href="/support/emails?to=copyright@pewtube.com") Copyright Emails
+            if user.role == 'admin'
+                h3
+                    a(href="/support/emails?to=ceo@pew.tube") Ceo Emails
         hr
         each email in receivedEmails
             each val, index in email

@@ -2,8 +2,15 @@ const ReceivedEmail = require('../../models/index').ReceivedEmail
 
 exports.getReceivedEmails = async (req, res) => {
 
+  const receivingEmailAddress = req.query.to;
+
+  // dont let users access ceo emails unless
+  if(receivingEmailAddress == 'ceo@pew.tube' && req.user.role !== 'admin'){
+    return [];
+  }
+
   // exclude uploads without an uploadUrl
-  let receivedEmails = await ReceivedEmail.find({}).populate().lean();
+  let receivedEmails = await ReceivedEmail.find({ toEmailAddress: receivingEmailAddress }).populate().lean();
 
   receivedEmails = receivedEmails.reverse();
 
