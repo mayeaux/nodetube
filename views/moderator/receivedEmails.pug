@@ -21,7 +21,7 @@ block content
                 else
                     p= index + ': ' + val
 
-            if user.role == 'admin' && !email.respondedTo
+            if user.role == 'admin' && email.response && !email.respondedTo
                 h1.submit-button(email-id=`${email._id}`) Send Email
             br
             br
@@ -68,6 +68,7 @@ block content
                 data,
                 success: function (data) {
                   console.log(data);
+                  location.href = location.href;
 
                 },
                 error: function (err) {

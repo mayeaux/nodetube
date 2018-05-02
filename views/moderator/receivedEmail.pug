@@ -26,11 +26,11 @@ block content
             $('.submit-button').on('click', function (e) {
 
               Swal({
-                title: 'Send Response?',
-                text: 'Do you want to send this as a response?',
+                title: 'Save Response?',
+                text: 'Do you want to save this as a response?',
                 type: 'warning',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, send it',
+                confirmButtonText: 'Yes, save it',
                 cancelButtonText: 'Cancel'
               }).then(function (result) {
                 if (result.value) {
@@ -43,10 +43,12 @@ block content
 
                   $.ajax({
                     type: 'POST',
-                    url: `/support/emails/` + id + '/send',
+                    url: `/support/emails/` + id,
                     data,
                     success: function (data) {
                       console.log(data);
+                      location.href = location.href;
+
 
                     },
                     error: function (err) {
