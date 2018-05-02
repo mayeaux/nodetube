@@ -18,7 +18,7 @@ const zohoTransport = nodemailer.createTransport({
 const mailgunTransport = nodemailer.createTransport(mg({
   auth: {
     api_key: process.env.MAILGUN_API_KEY,
-    domain: 'sandbox1976f4ad59764de18b0ba4d0040a471c.mailgun.org'
+    domain: process.env.MAILGUN_DOMAIN
   }
 }));
 

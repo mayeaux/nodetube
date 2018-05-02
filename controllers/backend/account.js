@@ -390,7 +390,7 @@ exports.postForgot = async (req, res, next) => {
 
     const errors = req.validationErrors();
 
-    console.log(req.body.email)
+    console.log(req.body.email);
 
     const token = await crypto.randomBytesAsync(16).toString('hex');
 
