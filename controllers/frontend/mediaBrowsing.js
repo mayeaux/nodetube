@@ -44,20 +44,13 @@ const mongooseHelpers = require('../../lib/caching/mongooseHelpers');
  * Page displaying most recently uploaded content
  */
 exports.recentUploads = async (req, res) => {
-  let media = req.query.media;
+  let media = req.query.media || 'all';
 
-  if(!media){
-    media = 'all'
-  }
-
-  let page = req.params.page;
-
-  if(!page){
-    page = 1
-  }
+  let page = req.params.page || 1;
 
   page = parseInt(page);
 
+  // limit amount to list per page
   const limit = 102;
 
   const startingNumber = pagination.getMiddleNumber(page);
@@ -70,20 +63,19 @@ exports.recentUploads = async (req, res) => {
 
   // FILTER UPLOADS
   let searchQuery = {
-
-    // uploadUrl: {$exists: true }, // TODO: removing for local development
-    status: 'completed',
-
+    $or : [ { status: 'completed' }, { uploadUrl: { $exists: true } } ],
     visibility: 'public',
     sensitive: { $ne: true }
   };
 
+  // setup query hint based on media type
   let queryHint = "All Media List";
   if(media !== 'all'){
-    searchQuery.fileType = media
+    searchQuery.fileType = media;
     queryHint = "File Type List";
   }
 
+  // get uploads based on skipping based on createdAt time
   let uploads = await Upload.find(searchQuery)
     .populate('uploader')
     .sort({ createdAt: -1 })
