@@ -44,21 +44,20 @@ const mongooseHelpers = require('../../lib/caching/mongooseHelpers');
  * Page displaying most recently uploaded content
  */
 exports.recentUploads = async (req, res) => {
+  // get media page, either video, image, audio or all
   let media = req.query.media || 'all';
 
-  let page = req.params.page || 1;
+  // get current page
+  let page = parseInt(req.params.page || 1);
 
-  page = parseInt(page);
 
   // limit amount to list per page
   const limit = 102;
 
+  // get numbers for pagination
   const startingNumber = pagination.getMiddleNumber(page);
-
   const numbersArray = pagination.createArray(startingNumber);
-
   const previousNumber = pagination.getPreviousNumber(page);
-
   const nextNumber = pagination.getNextNumber(page);
 
   // FILTER UPLOADS
