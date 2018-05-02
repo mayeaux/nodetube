@@ -14,7 +14,7 @@ const receivedEmailSchema = new mongoose.Schema({
   text: String,
   sentDate: Date,
   response: String,
-  responseSent: {
+  respondedTo: {
     type: Boolean,
     default: false
   }

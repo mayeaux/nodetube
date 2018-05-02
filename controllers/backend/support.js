@@ -32,13 +32,21 @@ exports.sendEmail = async (req, res) => {
     //
     // const emailId = "5ae7ad6e8fc862007ee331cd";
 
-    const receivedEmail = await ReceivedEmail.findById(emailId);
+    let receivedEmail = await ReceivedEmail.findById(emailId);
+
+    if(!receivedEmail.response){
+      throw new Error('No response written yet')
+    }
 
     // console.log(receivedEmail)
 
     const response = await supportLib.sendEmailResponse(receivedEmail);
 
     console.log(response);
+
+    receivedEmail.respondedTo = true;
+
+    await receivedEmail.save();
 
     res.send('success')
 

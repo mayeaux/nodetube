@@ -14,7 +14,7 @@ block content
                 else
                     p= index + ': ' + val
 
-            if user.role == 'admin' && !email.responseSent
+            if user.role == 'admin' && !email.respondedTo
                 h1.submit-button(email-id=`${email._id}`) Send Email
             br
             br
@@ -32,8 +32,6 @@ block content
         }
 
         $('.submit-button').on('click', function (e) {
-
-          console.log(e);
 
           var emailId = $(this).attr('email-id')
 
