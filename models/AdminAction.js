@@ -12,7 +12,7 @@ const timeAgoEnglish = new javascriptTimeAgo('en-US');
 const adminActionSchema = new mongoose.Schema({
   actionType: {
     type: String,
-    enum: ['userDeleted', 'userUndeleted', 'uploadDeleted', 'fullIpDeletion', 'banUser', 'unbanUser'],
+    enum: ['userDeleted', 'userUndeleted', 'uploadDeleted', 'fullIpDeletion', 'banUser', 'unbanUser', 'fullUserDeletion', 'fullUserUndeletion'],
     default: 'public'
   },
   adminOrModerator: {
@@ -30,6 +30,10 @@ const adminActionSchema = new mongoose.Schema({
   siteVisitorsAffected: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'SiteVisitor'
+  }],
+  commentsAffected: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Comment'
   }],
   note: String
 }, { timestamps: true });
