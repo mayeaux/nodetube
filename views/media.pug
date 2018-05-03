@@ -143,6 +143,9 @@ block content
                     h4
                         | Uploaded #{upload.timeAgo} &nbsp
 
+                    if upload.visibility == 'removed'
+                        h2 Upload Deleted
+
                     if upload.fileType == 'video' || upload.fileType == 'audio'
                         h5(style="margin-top:15px") File Size: #{ ( upload.fileSize/ ( 1000 * 1000)).toFixed() } MB
 
