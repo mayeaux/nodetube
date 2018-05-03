@@ -172,7 +172,6 @@ exports.getChannel = async (req, res) => {
 
     const searchQuery = {
       uploader: user._id,
-      visibility: 'public',
       $or : [ { status: 'completed' }, { uploadUrl: { $exists: true } } ]
       // uploadUrl: {$exists: true }
       // status: 'completed'
@@ -184,9 +183,11 @@ exports.getChannel = async (req, res) => {
 
     user.uploads = await mongooseHelper.determineLegitViewsForUploads(uploads);
 
-    user.uploads = _.filter(user.uploads, function(upload){
-      return upload.visibility == 'public'
-    });
+    if(!viewerIsAdminOrMod){
+      user.uploads = _.filter(user.uploads, function(upload){
+        return upload.visibility == 'public'
+      });
+    }
 
     // console.log(user.uploads.length);
 

@@ -103,10 +103,10 @@ block content
 
                     br
                     h3 ACCOUNT DELETED
-                    button.delete-account.btn.btn-warning Undelete Account
-                    button.delete-account.btn.btn-warning Undelete Account And Unban Ip
-                    if user.role == 'admin'
-                        button.delete-ips.btn.btn-warning Undelete All Accounts / Unban All Ips
+                    //button.delete-account.btn.btn-warning Undelete Account
+                    //button.delete-account.btn.btn-warning Undelete Account And Unban Ip
+                    //if user.role == 'admin'
+                    //    button.delete-ips.btn.btn-warning Undelete All Accounts / Unban All Ips
 
         br
         div
@@ -197,6 +197,9 @@ block content
                     p.views-text #{upload.legitViewAmount} Views
                 div.uploaded-by
                     p #{upload.fileType.charAt(0).toUpperCase() + upload.fileType.slice(1)} uploaded #{upload.timeAgo}
+                if user && (user.role == 'admin' || user.role == 'moderator') && upload.visibility == 'removed'
+                div
+                    h4(style="margin-top:-5px;margin-bottom:-18px;") DELETED
 
             if user && user.role == 'admin'
                 div.changeRating(style="margin-top:30px;")
