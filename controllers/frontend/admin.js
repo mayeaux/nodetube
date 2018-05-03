@@ -64,7 +64,7 @@ exports.dailyStats = async (req, res) => {
 exports.getAdminAudit = async (req, res) => {
 
   // exclude uploads without an uploadUrl
-  let adminActions = await AdminAction.find({}).populate().lean();
+  let adminActions = await AdminAction.find({}).populate('adminOrModerator uploadsAffected usersAffected').lean();
 
   adminActions = adminActions.reverse();
 
