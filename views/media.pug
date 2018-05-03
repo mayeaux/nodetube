@@ -95,8 +95,6 @@ block content
             br
 
             if upload.quality && upload.quality.high
-                br
-                br
                 div.dropdown
                     button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:4px;" quality="low")
                         | Quality: Low
@@ -416,6 +414,9 @@ block content
         }
 
         $('.low-quality').on('click', function(){
+
+          // TODO: change quality
+
           var quality = $('#dropdownMenu1').attr('quality');
           if(quality == 'low') return
 
@@ -434,6 +435,8 @@ block content
         })
 
         $('.high-quality').on('click', function () {
+
+          // TODO: change quality
 
           var quality = $('#dropdownMenu1').attr('quality');
           if (quality == 'high') return

@@ -89,6 +89,26 @@ async function updateUsersUnreadSubscriptions(user){
 };
 
 /**
+ * POST /api/changeUserQuality
+ * Change user's default quality option
+ */
+exports.changeQuality = async (req, res) => {
+
+
+  const quality = req.params.quality;
+
+  req.user.defaultQuality = quality;
+
+  await req.user.save();
+
+  res.send('success');
+
+};
+
+
+
+
+/**
  * POST /api/report
  * Report an upload
  */

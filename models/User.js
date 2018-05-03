@@ -170,6 +170,12 @@ const userSchema = new mongoose.Schema({
   receivedCredit: {
     type: Number,
     default: 0
+  },
+
+  defaultQuality: {
+    type: String,
+    enum: ['high', 'low'],
+    default: 'low'
   }
 
 }, { timestamps: true, minimize: false });
