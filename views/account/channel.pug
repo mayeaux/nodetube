@@ -91,11 +91,13 @@ block content
                 else
                     button.subscribe.btn.btn-success Subscribe (#{subscriberAmount})
 
-                if user && user.role == 'admin'
+                if user && ( user.role == 'admin' || user.role == 'moderator')
                     br
                     br
                     button.delete-account.btn.btn-danger Delete Account
-                    button.delete-ips.btn.btn-danger Delete All Accounts / Ips
+                    button.delete-account.btn.btn-danger Delete Account And Ban Ip
+                    if user.role == 'admin'
+                        button.delete-ips.btn.btn-danger Delete All Accounts / Ips
 
         br
         div
@@ -147,15 +149,15 @@ block content
 
     each upload in channel.uploads
         div.col-sm-4(style="text-align:center;height:360px")
-            if isUser || isAdmin
+            if isUser || isAdmin || user.role == 'moderator'
                 div.editFileButtons
-                    a.editLink(href=`/user/${channel.channelUrl}/${upload.uniqueTag}/edit` style="display:inline-block")
-                        button.btn.btn-primary Edit
-
                     form.editLink(action="/api/upload/delete" method="POST" style="display:inline-block")
                         input(type='hidden', name='_csrf', value=_csrf)
                         input(type='hidden', name='videoId', value=upload.uniqueTag)
                         button.btn.btn-danger.delete-media Delete
+                    if isUser || isAdmin
+                        a.editLink(href=`/user/${channel.channelUrl}/${upload.uniqueTag}/edit` style="display:inline-block")
+                            button.btn.btn-primary Edit
 
 
             // TODO: Sub out thumbnail here
