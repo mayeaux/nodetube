@@ -133,8 +133,11 @@ exports.deleteAccount = async (req, res) => {
   // create admin action after all received
   await createAdminAction(req.user, 'fullUserDeletion', user._id, uploads, comments, []);
 
+  const modDeletingAdmin = req.user.role == 'moderator' && user.role == 'admin'
+  const modDeletingMod = req.user.role == 'moderator' && user.role == 'moderator'
+
   // dont let moderator delete admins
-  if(req.user.role == 'moderator' && user.role == 'admin'){
+  if(modDeletingAdmin || modDeletingMod){
     return res.send('err');
   }
 
