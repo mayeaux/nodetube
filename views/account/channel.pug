@@ -103,8 +103,8 @@ block content
 
                     br
                     h3 ACCOUNT DELETED
-                    button.delete-account.btn.btn-warning Undelete Account
-                    button.delete-account.btn.btn-warning Undelete Account And Unban Ip
+                    button.undelete-account.btn.btn-warning Undelete Account
+                    button.undelete-account.btn.btn-warning Undelete Account And Unban Ip
                     if user.role == 'admin'
                         button.delete-ips.btn.btn-warning Undelete All Accounts / Unban All Ips
 
@@ -210,7 +210,6 @@ block content
             button.btn-lg.button-success.change-rating(rating="sensitive") Mark As Sensitive
             button.btn-lg.button-success.change-rating(rating="mature") Mark As NSFW (Mature)
             button.btn-lg.button-success.change-rating(rating="allAges") Mark As SFW (AllAges)
-            button.btn-lg.btn-danger.delete-media-button Delete Media
 
     if user && user.role == 'admin'
         script.
@@ -451,7 +450,7 @@ block content
         })
       });
 
-    if user && user.role == 'admin'
+    if user && ( user.role == 'admin' || user.role == 'moderator' )
         script.
             $('.delete-account').on('click', function (e) {
                 e.preventDefault();
@@ -498,6 +497,54 @@ block content
                       });
                 });
             });
+
+    if user && ( user.role == 'admin' || user.role == 'moderator' )
+        script.
+          $('.undelete-account').on('click', function (e) {
+            e.preventDefault();
+            swal({
+              title: "WARNING",
+              text: "Are you sure you want to undelete this account?",
+              type: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#DD6B55",
+              confirmButtonText: "Yes, delete it"
+            }).then(function (result) {
+              if (result.value !== true) {
+                return
+              }
+
+              var channelUrl = '#{channel.channelUrl}';
+              var csrf = '#{_csrf}';
+              // sweetalert2.js:131 SweetAlert2: Unknown parameter "closeOnConfirm"
+              // dont move browser
+              e.preventDefault();
+
+              //
+              var data = {
+                _csrf: csrf,
+                channelUrl
+              }
+
+              console.log(data);
+
+              $.ajax({
+                type: 'POST',
+                url: `/admin/undeleteAccount`,
+                data,
+                success: function (data) {
+
+                  console.log(data);
+
+                  location.reload();
+
+                },
+                error: function (err) {
+                  console.log(err);
+                }
+              });
+            });
+          });
 
     if user && user.role == 'admin'
         script.

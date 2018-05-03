@@ -272,7 +272,8 @@ function frontendRoutes(app){
   /** ADMIN API ROUTES **/
   app.post('/admin/comments', authMiddleware.adminAuth, adminBackendController.postComments);
   app.post('/admin/users', authMiddleware.adminAuth, adminBackendController.postUsers);
-  app.post('/admin/deleteAccount', authMiddleware.adminAuth, adminBackendController.deleteAccount);
+  app.post('/admin/deleteAccount', authMiddleware.moderatorAuth, adminBackendController.deleteAccount);
+  app.post('/admin/undeleteAccount', authMiddleware.moderatorAuth, adminBackendController.undeleteAccount);
   app.post('/admin/changeRatings', authMiddleware.adminAuth, adminBackendController.changeRatings);
   app.post('/admin/getUserAccounts', authMiddleware.adminAuth, adminBackendController.getUserAccounts);
   app.post('/admin/deleteAllUsersAndBlockIps', authMiddleware.adminAuth, adminBackendController.deleteAllUsersAndBlockIps);
