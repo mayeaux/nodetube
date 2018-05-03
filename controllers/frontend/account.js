@@ -106,7 +106,7 @@ exports.subscriptions = async (req, res) => {
   }
 };
 
-
+// TODO: find a new home, wrong controller
 /**
  * GET /channel
  * Profile page.
@@ -130,12 +130,13 @@ exports.getChannel = async (req, res) => {
 
     // find the user per channelUrl
     user = await User.findOne({
-      channelUrl : new RegExp(["^", req.params.channel, "$"].join(""), "i"),
-      status: { $ne: 'restricted' }
+      channelUrl : new RegExp(["^", req.params.channel, "$"].join(""), "i")
     }).populate('receivedSubscriptions').lean().exec();
 
+    const viewerIsAdminOrMod = req.user.role == 'admin' || req.user.role == 'moderator';
+
     // 404 if nothing found
-    if(!user){
+    if(!user && !viewerIsAdminOrMod){
       res.status(404);
       return res.render('error/404', {
         title: 'Not Found'

@@ -118,6 +118,8 @@ exports.changeRatings = async (req, res) => {
 
 exports.deleteAccount = async (req, res) => {
 
+  // fullUserDeletion
+
   let channelUrl = req.body.channelUrl;
 
   let user = await User.findOne({
@@ -133,6 +135,7 @@ exports.deleteAccount = async (req, res) => {
   const comments = await Comment.find({ commenter: user._id });
 
 
+  // TODO: bug here, set all visibility as public will have deleterious effects on private uploads, should use status instead
   for(let upload of uploads){
     upload.visibility = 'removed';
     await upload.save();
@@ -142,6 +145,47 @@ exports.deleteAccount = async (req, res) => {
     comment.visibility = 'removed';
     await comment.save();
   }
+
+  await createAdminAction(req.user, 'fullUserDeletion', user._id, uploads, comments, []);
+
+
+  res.send('success');
+
+  // res.redirect(`/user/${channelUrl}`);
+};
+
+exports.undeleteAccount = async (req, res) => {
+
+  // fullUserDeletion
+
+  let channelUrl = req.body.channelUrl;
+
+  let user = await User.findOne({
+    channelUrl
+  });
+
+  user.status = '';
+
+  await user.save();
+
+  const uploads = await Upload.find({ uploader: user._id });
+
+  const comments = await Comment.find({ commenter: user._id });
+
+
+  // TODO: bug here, set all visibility as public will have deleterious effects on private uploads, should use status instead
+  for(let upload of uploads){
+    upload.visibility = 'public';
+    await upload.save();
+  }
+
+  for(let comment of comments){
+    comment.visibility = 'public';
+    await comment.save();
+  }
+
+  await createAdminAction(req.user, 'fullUserUndeletion', user._id, uploads, comments, []);
+
 
   res.send('success');
 
