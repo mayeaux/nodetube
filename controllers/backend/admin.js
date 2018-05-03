@@ -126,28 +126,36 @@ exports.deleteAccount = async (req, res) => {
     channelUrl
   });
 
-  user.status = 'restricted';
-
-  await user.save();
-
   const uploads = await Upload.find({ uploader: user._id });
 
   const comments = await Comment.find({ commenter: user._id });
 
+  // create admin action after all received
+  await createAdminAction(req.user, 'fullUserDeletion', user._id, uploads, comments, []);
+
+  // dont let moderator delete admins
+  if(req.user.role == 'moderator' && user.role == 'admin'){
+    res.send('err');
+  }
+
+  // set user to restricted
+  user.status = 'restricted';
+
+  await user.save();
+
 
   // TODO: bug here, set all visibility as public will have deleterious effects on private uploads, should use status instead
+  // make all uploads visibility to removed
   for(let upload of uploads){
     upload.visibility = 'removed';
     await upload.save();
   }
 
+  // make all comment visibility to removed
   for(let comment of comments){
     comment.visibility = 'removed';
     await comment.save();
   }
-
-  await createAdminAction(req.user, 'fullUserDeletion', user._id, uploads, comments, []);
-
 
   res.send('success');
 
