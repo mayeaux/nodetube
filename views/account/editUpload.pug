@@ -24,7 +24,9 @@ block content
             .col-sm-7
                 textarea(id="description" name="description" maxlength='2000' rows="10" cols="70") #{upload.description}
 
-        if !upload.moderated
+
+        // dont show if its already moderated by admin or mod
+        if !hideRatingFrontend
             .form-group
                 label.col-sm-3.control-label(for='rating') Rating
                 .col-sm-7

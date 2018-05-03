@@ -103,10 +103,10 @@ block content
 
                     br
                     h3 ACCOUNT DELETED
-                    //button.delete-account.btn.btn-warning Undelete Account
-                    //button.delete-account.btn.btn-warning Undelete Account And Unban Ip
-                    //if user.role == 'admin'
-                    //    button.delete-ips.btn.btn-warning Undelete All Accounts / Unban All Ips
+                    button.delete-account.btn.btn-warning Undelete Account
+                    button.delete-account.btn.btn-warning Undelete Account And Unban Ip
+                    if user.role == 'admin'
+                        button.delete-ips.btn.btn-warning Undelete All Accounts / Unban All Ips
 
         br
         div
@@ -164,7 +164,7 @@ block content
                         input(type='hidden', name='_csrf', value=_csrf)
                         input(type='hidden', name='videoId', value=upload.uniqueTag)
                         button.btn.btn-danger.delete-media Delete
-                    if isUser || isAdmin
+                    if isUser || isAdmin || user.role == 'moderator'
                         a.editLink(href=`/user/${channel.channelUrl}/${upload.uniqueTag}/edit` style="display:inline-block")
                             button.btn.btn-primary Edit
 

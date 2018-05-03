@@ -442,19 +442,25 @@ exports.editUpload = async (req, res, next) => {
   }).populate({path: 'uploader comments checkedViews', populate: {path: 'commenter'}}).exec();
 
   // determine if its the user of the channel
-  let isAdmin = false;
-  let isUser = false;
-  if(req.user){
-    // its the same user
-    isUser =  ( req.user._id.toString() == upload.uploader._id.toString()  );
-
-    // the requesting user is an adming
-    isAdmin = req.user.role == 'admin';
-  }
+  const isAdmin = req.user && req.user.role == 'admin';
+  const isModerator = req.user && req.user.role == 'moderator';
+  const isAdminOrModerator = isAdmin || isModerator;
+  const isUser = req.user && ( req.user._id.toString() == upload.uploader._id.toString() );
 
   // TODO: Do something better here, including record
-  if(!isUser && !isAdmin){
+  if(!isUser && !isAdmin && !isAdminOrModerator){
     return res.render('error/403');
+  }
+
+  // if moderator is updating rating
+  if(isModerator && upload.rating !== req.body.rating){
+    upload.moderated = true;
+    // TODO: save admin thing here
+    upload.rating = req.body.rating;
+    req.flash('success', { msg: 'Title and description updated.' });
+    await upload.save();
+
+    return res.redirect(`${frontendServer}/user/${req.user.channelUrl}/${uniqueTag}/edit`);
   }
 
   upload.title = req.body.title;
@@ -471,6 +477,7 @@ exports.editUpload = async (req, res, next) => {
 
   // console.log(req.files);
 
+  // TODO: would be great if this was its own endpoint
 
   // reject the file
   if(req.files && req.files.filetoupload && req.files.filetoupload.size > 0 && fileType && fileType !== 'image'){

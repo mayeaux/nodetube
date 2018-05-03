@@ -162,6 +162,7 @@ exports.getChannel = async (req, res) => {
     // determine if its the user of the channel
     let isAdmin = false;
     let isUser = false;
+    const isModerator = req.user.role == 'isModerator';
     if(req.user){
       // its the same user
       isUser =  ( req.user._id.toString() == user._id.toString()  );
@@ -200,7 +201,7 @@ exports.getChannel = async (req, res) => {
     user.totalViews = totalViews;
 
     // remove unlisted videos if its not user and is not admin
-    if(!isUser && !isAdmin){
+    if(!isUser && !viewerIsAdminOrMod){
       user.uploads = _.filter(user.uploads, function(upload){return upload.visibility == 'public'})
     }
 
@@ -312,8 +313,6 @@ exports.getChannel = async (req, res) => {
 
     }
 
-
-
     const siteVisitor = req.siteVisitor;
 
     res.render('account/channel', {
@@ -326,7 +325,8 @@ exports.getChannel = async (req, res) => {
       subscriberAmount,
       uploadServer,
       ips,
-      siteVisitor
+      siteVisitor,
+      isModerator
     });
 
 
@@ -428,23 +428,23 @@ exports.editUpload = async (req, res) => {
 
   let upload = await Upload.findOne({
     uniqueTag: media,
-    visibility: { $ne: 'removed' }
   }).populate({path: 'uploader comments checkedViews', populate: {path: 'commenter'}}).exec();
 
   console.log(upload.rating);
 
   // determine if its the user of the channel
-  let isAdmin = false;
-  let isUser = false;
-  if(req.user){
-    // its the same user
-    isUser =  ( req.user._id.toString() == upload.uploader._id.toString()  );
+  const isAdmin = req.user && req.user.role == 'admin';
+  const isModerator = req.user && req.user.role == 'moderator';
+  const isAdminOrModerator = isAdmin || isModerator;
+  const isUser = req.user && ( req.user._id.toString() == upload.uploader._id.toString() );
 
-    // the requesting user is an adming
-    isAdmin = req.user.role == 'admin';
+  const hideRatingFrontend = req.user.role == 'user' && upload.moderated == true;
+
+  if(upload.visibility == 'removed' && !isAdminOrModerator){
+    return res.render('error/404')
   }
 
-  if(!isUser && !isAdmin){
+  if(!isUser && !isAdmin && !isModerator){
     return res.render('error/403');
   }
 
@@ -453,7 +453,9 @@ exports.editUpload = async (req, res) => {
     upload,
     uploadServer,
     thumbnailServer,
-    rating: upload.rating
+    rating: upload.rating,
+    isAdminOrModerator,
+    hideRatingFrontend
   })
 
 

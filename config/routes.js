@@ -220,7 +220,6 @@ function frontendRoutes(app){
   // upload page
   app.get('/upload', passportConfig.isAuthenticated, accountFrontendController.getFileUpload);
 
-  // TODO: is this route secure?
   app.get('/user/:channel/:media/edit', passportConfig.isAuthenticated, accountFrontendController.editUpload);
 
   // ??
