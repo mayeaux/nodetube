@@ -194,9 +194,13 @@ function frontendRoutes(app){
   app.post('/api/comment', passportConfig.isAuthenticated, internalApiController.postComment);
   app.post('/api/comment/delete', passportConfig.isAuthenticated, internalApiController.deleteComment);
   app.post(`/api/subscribe`, passportConfig.isAuthenticated, internalApiController.subscribeEndpoint);
-  app.post(`/api/changeUserFilter`, passportConfig.isAuthenticated, internalApiController.changeUserFilter);
   app.post('/api/credit', passportConfig.isAuthenticated, internalApiController.sendUserCredit);
   app.post('/api/report', passportConfig.isAuthenticated, internalApiController.reportUpload);
+
+  // for users or siteVisitors
+  app.post(`/api/changeUserFilter`, internalApiController.changeUserFilter);
+  app.post('/api/changeUserDefaultQuality/:quality/',  internalApiController.changeDefaultUserQuality);
+
 
   // purchase endpoints
   app.post('/api/purchase/plus', passportConfig.isAuthenticated, purchaseController.purchasePlus);

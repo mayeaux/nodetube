@@ -89,23 +89,27 @@ async function updateUsersUnreadSubscriptions(user){
 };
 
 /**
- * POST /api/changeUserQuality
+ * POST /api/changeDefaultUserQuality
  * Change user's default quality option
  */
-exports.changeQuality = async (req, res) => {
-
-
+exports.changeDefaultUserQuality = async (req, res) => {
   const quality = req.params.quality;
 
-  req.user.defaultQuality = quality;
+  let siteVisitor = req.siteVisitor;
+  let user = req.user;
 
-  await req.user.save();
+  // save siteVisitor quality
+  siteVisitor.defaultQuality = quality;
+  await siteVisitor.save();
+
+  // save user default quality
+  if(user){
+    user.defaultQuality = quality;
+    await user.save();
+  }
 
   res.send('success');
-
 };
-
-
 
 
 /**

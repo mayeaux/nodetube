@@ -34,6 +34,11 @@ const siteVisitSchema = new mongoose.Schema({
 
   blocked : {
     type: Boolean
+  },
+  defaultQuality: {
+    type: String,
+    enum: ['high', 'low'],
+    default: 'low'
   }
 
 }, { timestamps: true });

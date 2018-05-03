@@ -102,6 +102,8 @@ async function iptracker (req, res, next) {
     // console.log('next:no-match')
     next();
   }
+
+  res.locals.siteVisitor = req.siteVisitor;
 }
 
 module.exports = iptracker;
