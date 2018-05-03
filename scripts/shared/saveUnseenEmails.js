@@ -37,11 +37,7 @@ const imapPort = process.env.EMAIL_PORT;
 
 console.log(imapPassword, imapUsername, imapHost);
 
-var mailListener = new MailListener({
-  username: imapUsername,
-  password: imapPassword,
-  host: imapHost,
-  port: imapPort,
+const mailListenerSettings = {
   tls: true,
   connTimeout: 10000, // Default by node-imap
   debug: console.log, // Or your custom function with only one incoming argument. Default: null
@@ -52,7 +48,32 @@ var mailListener = new MailListener({
   mailParserOptions: {streamAttachments: true}, // options to be passed to mailParser lib.
   attachments: true, // download attachments as they are encountered to the project directory
   attachmentOptions: { directory: "attachments/" } // specify a download directory for attachments
-});
+};
+
+const copyrightEmailCredentials = {
+  username: imapUsername,
+  password: imapPassword,
+  host: imapHost,
+  port: imapPort,
+};
+
+const supportEmailCredentials = {
+  username: imapUsername,
+  password: imapPassword,
+  host: imapHost,
+  port: imapPort,
+};
+
+const ceoEmailCredentials = {
+  username: imapUsername,
+  password: imapPassword,
+  host: imapHost,
+  port: imapPort,
+};
+
+
+
+var mailListener = new MailListener(Object.assign(ceoEmailCredentials, mailListenerSettings));
 
 mailListener.start(); // start listening
 
@@ -83,26 +104,11 @@ mailListener.on("error", function(err){
   // seqno just an incrementing index
   mailListener.on("mail", async function(mail, seqno, attributes){
 
-    // console.log(attributes);
-
-
-
-
-    /** data collected **/
-    // console.log('from: ' + mail.from[0].address);
-    // console.log('to: ' + mail.to[0].address);
-    // console.log(mail.date);
-    // console.log(mail['messageId']);
-    // console.log(mail.subject);
-    // console.log('\n');
-
     const fromEmailAddress = mail.from[0].address;
     const subject = mail.subject;
     const emailId = mail.messageId;
     const text = mail.text;
     const sentDate = mail.date;
-
-    // TODO: only save the email if there is a check
 
     if(emailIds.includes(emailId)){
       console.log('Already done, skipping');
@@ -126,75 +132,7 @@ mailListener.on("error", function(err){
 
     console.log('Email saved');
 
-
-
-    // toEmailAddress: String,
-    //   fromEmailAddress: String,
-    //   subject: String,
-    //   text: String,
-    //   date: Date,
-    //   emailId: String,
-    //   response: String
-
-
-
-    // console.log(mail.priority);
-    // console.log(mail.eml);
-    // console.log(mail.text)
-
-
-
-
-    // console.log(mail.headers['message-id']);
-
-    const keys = Object.keys(mail.headers);
-
-    // console.log(keys);
-    // console.log(mail.eml)
-
-    /** MAIL KEYS **/
-    // 'text',
-    // 'headers',
-    // 'subject',
-    // 'messageId',
-    // 'priority',
-    // 'from',
-    // 'to',
-    // 'date',
-    // 'receivedDate',
-    // 'eml' ]
-
-    /** HEADERS **/
-    // [ 'from',
-    // 'message-id',
-    // 'subject',
-    // 'mime-version',
-    // 'content-type',
-    // 'x-priority',
-    // 'user-agent',
-    // 'x-mailer',
-    // 'x-zoho-virus-status',
-    // 'to',
-    // 'date',
-    // 'in-reply-to',
-    // 'x-zohomail-sender' ]
-
-    /** EXAMPLE ATTRIBUTE **/
-    // { date: 2017-09-22T17:03:05.000Z,
-    //   flags: [ '\\Recent', '\\Seen', 'NONJUNK' ],
-    //   uid: 7,
-    //   modseq: '1000000000000000000' }
-
-
-
-    // do something with mail object including attachments
-    // console.log("emailParsed", mail);
-    // mail processing code goes here
   });
 
-// mailListener.imap.move(:msguids, :mailboxes, function(){})
-
-
-
-}())
+}());
 

@@ -4,10 +4,20 @@ block content
     div
         div
             h2
-            h2.view-header Pending Uploads
+            h2.view-header Email
+            h3
+                a(href="/support/emails") Support Emails
+
         hr
-        each val, index in receivedEmail
-            p= index + ': ' + val
+        p Sent Date: #{email.sentDate}
+            p To: #{email.toEmailAddress}
+            p From: #{email.fromEmailAddress}
+            p Subject: #{email.subject}
+            p Text: #{email.text}
+            p Email Id: #{email.emailId}
+            p Responded To: #{email.respondedTo}
+            br
+            br
         br
         br
         if !receivedEmail.response
@@ -26,11 +36,11 @@ block content
             $('.submit-button').on('click', function (e) {
 
               Swal({
-                title: 'Send Response?',
-                text: 'Do you want to send this as a response?',
+                title: 'Save Response?',
+                text: 'Do you want to save this as a response?',
                 type: 'warning',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, send it',
+                confirmButtonText: 'Yes, save it',
                 cancelButtonText: 'Cancel'
               }).then(function (result) {
                 if (result.value) {
@@ -47,10 +57,8 @@ block content
                     data,
                     success: function (data) {
                       console.log(data);
+                      location.href = location.href;
 
-                      if (data == 'success') {
-                        location.href = location.href;
-                      }
 
                     },
                     error: function (err) {

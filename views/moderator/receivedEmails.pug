@@ -4,13 +4,85 @@ block content
     div
         div
             h2
-            h2.view-header Pending Uploads
+            h2.view-header Received Emails
+            h3
+                a(href="/support/emails?to=support@pewtube.com&respondedTo=false") Support Emails
+            h3
+                a(href="/support/emails?to=copyright@pewtube.com&respondedTo=false") Copyright Emails
+            if user.role == 'admin'
+                h3
+                    a(href="/support/emails?to=ceo@pew.tube&respondedTo=false") Ceo Emails
         hr
         each email in receivedEmails
-            each val, index in email
-                if index == '_id'
-                    a(href=`/support/emails/${val}`) #{val}
-
-                else
-                    p= index + ': ' + val
+            a(href=`/support/emails/${email._id}`)
+                p #{email._id}
+            p Sent Date: #{email.sentDate}
+            p To: #{email.toEmailAddress}
+            p From: #{email.fromEmailAddress}
+            p Subject: #{email.subject}
+            p Text: #{email.text}
+            p Email Id: #{email.emailId}
+            p Responded To: #{email.respondedTo}
+            if user.role == 'admin' && email.response && !email.respondedTo
+                h3.submit-button(email-id=`${email._id}`) Send Email
             br
+            br
+
+
+    script(src='/js/lib/jquery-3.1.1.min.js')
+    script.
+      $(document).ready(function () {
+
+        var csrf = '#{_csrf}'
+        var id = '400'
+
+        var data = {
+          _csrf: csrf
+        }
+
+        $('.submit-button').on('click', function (e) {
+
+          var emailId = $(this).attr('email-id')
+
+          console.log(emailId + 'email id')
+
+          // console.log(this);
+
+          Swal({
+            title: 'Send Response?',
+            text: 'Do you want to send this as a response?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, send it',
+            cancelButtonText: 'Cancel'
+          }).then(function (result) {
+            if (result.value) {
+              var response = $('#response').val();
+
+              var data = {
+                _csrf: csrf,
+                response
+              }
+
+              $.ajax({
+                type: 'POST',
+                url: `/support/emails/` + emailId + '/send',
+                data,
+                success: function (data) {
+                  console.log(data);
+                  location.href = location.href;
+
+                },
+                error: function (err) {
+                  console.log(err);
+                }
+              });
+
+
+            } else {
+              Swal.close()
+            }
+          })
+        })
+      })
+

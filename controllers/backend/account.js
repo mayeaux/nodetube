@@ -13,6 +13,9 @@ const fs = require('fs-extra');
 const mkdirp = Promise.promisifyAll(require('mkdirp'));
 const randomstring = require("randomstring");
 
+const mailTransports = require('../../config/nodemailer');
+
+const mailgunTransport = mailTransports.mailgunTransport;
 
 const User = require('../../models/index').User;
 const getMediaType = require('../../lib/uploading/media');
@@ -378,65 +381,50 @@ exports.postReset = (req, res, next) => {
  * POST /forgot
  * Create a random token, then the send user an email with a reset link.
  */
-exports.postForgot = (req, res, next) => {
-  req.assert('email', 'Please enter a valid email address.').isEmail();
-  req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
+exports.postForgot = async (req, res, next) => {
 
-  const errors = req.validationErrors();
+  try {
 
-  if (errors) {
-    req.flash('errors', errors);
-    return res.redirect('/forgot');
-  }
+    req.assert('email', 'Please enter a valid email address.').isEmail();
+    req.sanitize('email').normalizeEmail({gmail_remove_dots: false});
 
-  const createRandomToken = crypto
-    .randomBytesAsync(16)
-    .then(buf => buf.toString('hex'));
+    const errors = req.validationErrors();
 
-  const setRandomToken = token =>
-    User
-      .findOne({ email: req.body.email })
-      .then((user) => {
-        if (!user) {
-          req.flash('info', { msg: 'If the email address exists you will receive further instructions on resetting your password there.' });
-        } else {
-          user.passwordResetToken = token;
-          user.passwordResetExpires = Date.now() + 3600000; // 1 hour
-          user = user.save();
-        }
-        return user;
-      });
+    console.log(req.body.email);
 
-  const sendForgotPasswordEmail = (user) => {
-    if (!user) { return; }
-    const token = user.passwordResetToken;
-    var transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST,
-      port: 465,
-      secure: true, // use SSL
-      auth: {
-        user: process.env.EMAIL_ADDRESS,
-        pass: verifyEmailPassword
-      }
-    });
+    const token = await crypto.randomBytesAsync(16).toString('hex');
+
+    let user = await User.findOne({email: req.body.email});
+
+    if (!user) {
+      req.flash('info', {msg: 'If the email address exists you will receive further instructions on resetting your password there.'});
+      return res.redirect('/forgot')
+    } else {
+      user.passwordResetToken = token;
+      user.passwordResetExpires = Date.now() + 3600000; // 1 hour
+      user = user.save();
+    }
+
     const mailOptions = {
       to: user.email,
       from: process.env.EMAIL_ADDRESS,
       subject: 'Reset your password on PewTube',
       text: `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
-        Please click on the following link, or paste this into your browser to complete the process:\n\n
-        http://${req.headers.host}/reset/${token}\n\n
-        If you did not request this, please ignore this email and your password will remain unchanged.\n`
+      Please click on the following link, or paste this into your browser to complete the process:\n\n
+      http://${req.headers.host}/reset/${token}\n\n
+      If you did not request this, please ignore this email and your password will remain unchanged.\n`
     };
-    return transporter.sendMail(mailOptions)
-      .then(() => {
-        req.flash('info', { msg: `If the email address exists you will receive further instructions on resetting your password there.` });
-      });
-  };
 
-  createRandomToken
-    .then(setRandomToken)
-    .then(sendForgotPasswordEmail)
-    .then(() => res.redirect('/forgot'))
-    .catch(next);
+    const response = await mailgunTransport.sendMail(mailOptions);
+
+    console.log(response);
+
+    req.flash('info', {msg: `If the email address exists you will receive further instructions on resetting your password there.`});
+
+    return res.redirect('/forgot')
+
+  } catch (err){
+    console.log(err);
+    res.render('error/500')
+  }
 };

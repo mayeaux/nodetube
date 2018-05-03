@@ -7,12 +7,16 @@ const pagination = require('../../lib/helpers/pagination');
 const User = require('../../models/index').User;
 const Upload = require('../../models/index').Upload;
 const SearchQuery = require('../../models/index').SearchQuery;
+const View = require('../../models/index').View;
+
 
 const uploadHelpers = require('../../lib/helpers/settings');
 
 const uploadServer = uploadHelpers.uploadServer;
 
 const getFromCache = require('../../lib/caching/getFromCache');
+
+const { getFilter, filterUploads } = require('../../lib/mediaBrowsing/helpers');
 
 // TODO: pull into its own func
 let indexResponse;
@@ -40,80 +44,57 @@ const mongooseHelpers = require('../../lib/caching/mongooseHelpers');
  * Page displaying most recently uploaded content
  */
 exports.recentUploads = async (req, res) => {
-  let media = req.query.media;
+  // get media page, either video, image, audio or all
+  let media = req.query.media || 'all';
 
-  if(!media){
-    media = 'all'
-  }
+  // get current page
+  let page = parseInt(req.params.page || 1);
 
-  let page = req.params.page;
 
-  if(!page){
-    page = 1
-  }
-
-  page = parseInt(page);
-
+  // limit amount to list per page
   const limit = 102;
 
+  // get numbers for pagination
   const startingNumber = pagination.getMiddleNumber(page);
-
   const numbersArray = pagination.createArray(startingNumber);
-
   const previousNumber = pagination.getPreviousNumber(page);
-
   const nextNumber = pagination.getNextNumber(page);
 
   // FILTER UPLOADS
   let searchQuery = {
-
-    // uploadUrl: {$exists: true }, // TODO: removing for local development
-    status: 'completed',
-
+    $or : [ { status: 'completed' }, { uploadUrl: { $exists: true } } ],
     visibility: 'public',
     sensitive: { $ne: true }
   };
 
+  // setup query hint based on media type
   let queryHint = "All Media List";
   if(media !== 'all'){
-    searchQuery.fileType = media
+    searchQuery.fileType = media;
     queryHint = "File Type List";
   }
 
+  // get uploads based on skipping based on createdAt time
   let uploads = await Upload.find(searchQuery)
-    .populate('uploader checkedViews')
+    .populate('uploader')
     .sort({ createdAt: -1 })
     .hint(queryHint)
     .skip((page * limit) - limit)
     .limit(limit);
 
-  uploads = await mongooseHelpers.determineLegitViewsForUploads(uploads);
+  // populate upload.legitViewAmount
+  uploads = await Promise.all(
+    uploads.map(async function(upload){
+      upload = upload.toObject();
+      const checkedViews = await View.count({ upload: upload.id, validity: 'real' });
+      upload.legitViewAmount = checkedViews;
+      return upload
+    })
+  );
 
-  let filter;
-  if(req.user){
-    filter = req.user.filter
-  } else {
-    filter = req.siteVisitor.filter
-  }
-
-  if(filter == 'sensitive'){
-    // nothing to do
-  } else if (filter == 'mature'){
-
-    // return ones not marked as sensitive
-    uploads = _.filter(uploads, function(upload){
-      return upload.rating !== 'sensitive'
-    });
-
-  } else if (filter == 'allAges'){
-
-    // return ones not marked as sensitive or mature
-    uploads = _.filter(uploads, function(upload){
-      return upload.rating !== 'sensitive' && upload.rating !== 'mature'
-    });
-  }
-
-  // site visitor?
+  // filter uploads based on sensitivity
+  let filter = getFilter(req.user, req.siteVisitor);
+  uploads = filterUploads(uploads, filter);
 
   res.render('public/recentUploads', {
     title: 'Recent Uploads',
