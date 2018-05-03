@@ -19,7 +19,7 @@ const adminActionSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
-  affectedUsers: [{
+  usersAffected: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   }],

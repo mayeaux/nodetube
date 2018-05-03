@@ -161,8 +161,14 @@ exports.deleteUpload = async (req, res) => {
   if(userOwnsUploads || userIsAdmin){
     upload.visibility = 'removed';
     await upload.save();
+
+    // create admin action if deleting user is an admin
+    if(userIsAdmin){
+      await createAdminAction(req.user, 'uploadDeleted', upload.uploader, upload, []);
+    }
+
     req.flash('success', {msg: `Upload successfully deleted`});
-    res.redirect(`/user/${req.user.channelUrl}/`)
+    res.redirect(`/user/${upload.uploader.channelUrl}/`)
   } else {
     res.status(403);
     return res.render('error/500', {
