@@ -400,6 +400,15 @@ block content
 
     if user
         script.
+            // change video qualities
+
+            var highQualityVideo = '#{uploadServer}/#{upload.uploader.channelUrl}/#{upload.uniqueTag}-high.mp4'
+
+            var fileType = '#{upload.fileType}'
+
+            if (fileType == 'video') {
+                var media = $(fileType)[0];
+            }
             var userDefaultQuality = '#{user.defaultQuality}'
 
             if (userDefaultQuality == 'high') {
@@ -413,6 +422,17 @@ block content
             }
     else
         script.
+
+          // change video qualities
+
+          var highQualityVideo = '#{uploadServer}/#{upload.uploader.channelUrl}/#{upload.uniqueTag}-high.mp4'
+
+          var fileType = '#{upload.fileType}'
+
+          if (fileType == 'video') {
+            var media = $(fileType)[0];
+          }
+
           var siteVisitorDefaultQuality = '#{siteVisitor.defaultQuality}'
 
           if (siteVisitorDefaultQuality == 'high') {
