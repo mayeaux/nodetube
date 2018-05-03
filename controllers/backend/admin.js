@@ -135,7 +135,7 @@ exports.deleteAccount = async (req, res) => {
 
   // dont let moderator delete admins
   if(req.user.role == 'moderator' && user.role == 'admin'){
-    res.send('err');
+    return res.send('err');
   }
 
   // set user to restricted
