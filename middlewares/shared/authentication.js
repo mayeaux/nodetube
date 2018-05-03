@@ -52,8 +52,10 @@ function plusAuth(req, res, next){
   const userRole = req.user.role;
   const userPlan = req.user.plan;
 
+  const userIsModOrAdmin = userRole == 'admin' || userRole == 'moderator';
+
   // kick out if no plus and not admin or moderator
-  if(userPlan !== 'plus' && ( userRole !== 'admin' || userRole !== 'moderator') ){
+  if(userPlan !== 'plus' && !userIsModOrAdmin ){
     res.status(404);
     return res.render('error/plus', {
       title: 'Not Authorized'

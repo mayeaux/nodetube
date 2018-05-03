@@ -42,15 +42,15 @@
                 li(class=(title == 'Emails') ? 'active' : undefined)
                   a(href=`/support/emails`) Emails
 
-          //// moderator dropdown
-          //if user.role == 'moderator' || user.role == 'admin'
-          //  li.dropdown(class=(title == 'Admin Panel') ? 'active' : undefined)
-          //    a.dropdown-toggle(href='#', data-toggle='dropdown')
-          //      span= 'Moderator'
-          //      i.caret
-          //    ul.dropdown-menu
-          //      li(class=(title == 'Comments') ? 'active' : undefined)
-          //        a(href=`/admin/comments`) Comments
+          // moderator dropdown
+          if user.role == 'moderator' || user.role == 'admin'
+            li.dropdown(class=(title == 'Admin Panel') ? 'active' : undefined)
+              a.dropdown-toggle(href='#', data-toggle='dropdown')
+                span= 'Moderator'
+                i.caret
+              ul.dropdown-menu
+                li(class=(title == 'Recent Uploads') ? 'active' : undefined)
+                  a(href=`/media/recent`) Recent Uploads
 
           // admin panel
           if user.role == 'admin'
