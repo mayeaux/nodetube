@@ -91,13 +91,22 @@ block content
                 else
                     button.subscribe.btn.btn-success Subscribe (#{subscriberAmount})
 
-                if user && ( user.role == 'admin' || user.role == 'moderator')
+                if user && ( user.role == 'admin' || user.role == 'moderator') && channel.status !== 'restricted'
                     br
                     br
                     button.delete-account.btn.btn-danger Delete Account
                     button.delete-account.btn.btn-danger Delete Account And Ban Ip
                     if user.role == 'admin'
                         button.delete-ips.btn.btn-danger Delete All Accounts / Ips
+
+                if user && ( user.role == 'admin' || user.role == 'moderator') && channel.status == 'restricted'
+
+                    br
+                    h3 ACCOUNT DELETED
+                    button.delete-account.btn.btn-warning Undelete Account
+                    button.delete-account.btn.btn-warning Undelete Account And Unban Ip
+                    if user.role == 'admin'
+                        button.delete-ips.btn.btn-warning Undelete All Accounts / Unban All Ips
 
         br
         div
