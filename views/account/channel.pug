@@ -198,8 +198,8 @@ block content
                 div.uploaded-by
                     p #{upload.fileType.charAt(0).toUpperCase() + upload.fileType.slice(1)} uploaded #{upload.timeAgo}
                 if user && (user.role == 'admin' || user.role == 'moderator') && upload.visibility == 'removed'
-                div
-                    h4(style="margin-top:-5px;margin-bottom:-18px;") DELETED
+                    div
+                        h4(style="margin-top:-5px;margin-bottom:-18px;") DELETED
 
             if user && user.role == 'admin'
                 div.changeRating(style="margin-top:30px;")
