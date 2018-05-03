@@ -13,7 +13,8 @@ block content
                     p #{siteVisitor.channelUrl}
             if action.uploadsAffected
                 for upload in action.uploadsAffected
-                    p Title Affected: #{upload.title}
+                    a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}`)
+                        p Title Affected: #{upload.title}
             if action.usersAffected
                 for user in action.usersAffected
                     p User Affected: #{user.channelUrl}
