@@ -19,6 +19,11 @@ block content
                 for user in action.usersAffected
                     p User Affected: #{user.channelUrl}
             p Action Type : #{action.actionType}
+            if action.data
+                if action.data.originalRating
+                    p Original Rating: #{action.data.originalRating}
+                if action.data.updatedRating
+                    p Original Rating: #{action.data.updatedRating}
             br
             br
 
