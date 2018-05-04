@@ -365,9 +365,12 @@ block content
               }
             }).then(function (result) {
 
+              var csrf = '#{_csrf}'
+
               var uploadId = '#{upload._id}'
 
               var data = {
+                _csrf: csrf,
                 uploadId,
                 reason: result.value
               }
