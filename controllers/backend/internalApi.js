@@ -450,7 +450,8 @@ exports.editUpload = async (req, res, next) => {
   const isAdminOrModerator = isAdmin || isModerator;
   const isUser = req.user && ( req.user._id.toString() == upload.uploader._id.toString() );
 
-  // TODO: Do something better here, including record
+  /** If it is an admin or moderator changing the rating, save as adminAction and only change rating, mark as moderated  **/
+  // TODO: pull this logic out of controller
   if(!isUser && !isAdmin && !isAdminOrModerator){
     return res.render('error/403');
   }
@@ -461,7 +462,14 @@ exports.editUpload = async (req, res, next) => {
   // if moderator or admin is updating rating
   if( isModeratorOrAdmin && uploadRatingIsChanging ){
     upload.moderated = true;
-    await createAdminAction(req.user, 'changeUploadRating', upload.uploader._id, upload, [], []);
+
+    const data = {
+      originalRating: upload.rating,
+      updatedRating: req.body.rating
+    };
+
+    // TODO: save data
+    await createAdminAction(req.user, 'changeUploadRating', upload.uploader._id, upload, [], [], data);
 
     upload.rating = req.body.rating;
     req.flash('success', { msg: 'Title and description updated.' });
@@ -469,6 +477,8 @@ exports.editUpload = async (req, res, next) => {
 
     return res.redirect(`${frontendServer}/user/${req.user.channelUrl}/${uniqueTag}/edit`);
   }
+
+  /** **/
 
   upload.title = req.body.title;
   upload.description = req.body.description;
