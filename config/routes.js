@@ -194,9 +194,13 @@ function frontendRoutes(app){
   app.post('/api/comment', passportConfig.isAuthenticated, internalApiController.postComment);
   app.post('/api/comment/delete', passportConfig.isAuthenticated, internalApiController.deleteComment);
   app.post(`/api/subscribe`, passportConfig.isAuthenticated, internalApiController.subscribeEndpoint);
-  app.post(`/api/changeUserFilter`, passportConfig.isAuthenticated, internalApiController.changeUserFilter);
   app.post('/api/credit', passportConfig.isAuthenticated, internalApiController.sendUserCredit);
   app.post('/api/report', passportConfig.isAuthenticated, internalApiController.reportUpload);
+
+  // for users or siteVisitors
+  app.post(`/api/changeUserFilter`, internalApiController.changeUserFilter);
+  app.post('/api/changeUserDefaultQuality/:quality/',  internalApiController.changeDefaultUserQuality);
+
 
   // purchase endpoints
   app.post('/api/purchase/plus', passportConfig.isAuthenticated, purchaseController.purchasePlus);
@@ -216,7 +220,6 @@ function frontendRoutes(app){
   // upload page
   app.get('/upload', passportConfig.isAuthenticated, accountFrontendController.getFileUpload);
 
-  // TODO: is this route secure?
   app.get('/user/:channel/:media/edit', passportConfig.isAuthenticated, accountFrontendController.editUpload);
 
   // ??
@@ -242,6 +245,9 @@ function frontendRoutes(app){
 
   app.get('/support/emails', authMiddleware.moderatorAuth, supportFrontendController.getReceivedEmails);
   app.get('/support/emails/:id', authMiddleware.moderatorAuth, supportFrontendController.getReceivedEmail);
+
+  app.get('/support/reports', authMiddleware.moderatorAuth, supportFrontendController.getReports);
+
 
 
   /** ADMIN PAGES **/
@@ -269,9 +275,12 @@ function frontendRoutes(app){
   /** ADMIN API ROUTES **/
   app.post('/admin/comments', authMiddleware.adminAuth, adminBackendController.postComments);
   app.post('/admin/users', authMiddleware.adminAuth, adminBackendController.postUsers);
-  app.post('/admin/deleteAccount', authMiddleware.adminAuth, adminBackendController.deleteAccount);
+  app.post('/admin/deleteAccount', authMiddleware.moderatorAuth, adminBackendController.deleteAccount);
+  app.post('/admin/undeleteAccount', authMiddleware.moderatorAuth, adminBackendController.undeleteAccount);
   app.post('/admin/changeRatings', authMiddleware.adminAuth, adminBackendController.changeRatings);
   app.post('/admin/getUserAccounts', authMiddleware.adminAuth, adminBackendController.getUserAccounts);
+
+  // find all ips and accounts associated
   app.post('/admin/deleteAllUsersAndBlockIps', authMiddleware.adminAuth, adminBackendController.deleteAllUsersAndBlockIps);
 
   app.post('/admin/siteVisitors', authMiddleware.adminAuth, adminBackendController.postSiteVisitors);

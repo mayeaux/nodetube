@@ -1,7 +1,5 @@
 const ReceivedEmail = require('../../models/index').ReceivedEmail;
-const supportLib = require('../../lib/support/email.js')
-
-console.log(process.env.PEWTUBE_VERIFY_EMAIL_PASSWORD)
+const supportLib = require('../../lib/support/email.js');
 
 exports.sendResponse = async (req, res) => {
 

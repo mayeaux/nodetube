@@ -95,8 +95,6 @@ block content
             br
 
             if upload.quality && upload.quality.high
-                br
-                br
                 div.dropdown
                     button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:4px;" quality="low")
                         | Quality: Low
@@ -144,6 +142,9 @@ block content
                 if upload.uploader
                     h4
                         | Uploaded #{upload.timeAgo} &nbsp
+
+                    if upload.visibility == 'removed'
+                        h2 Upload Deleted
 
                     if upload.fileType == 'video' || upload.fileType == 'audio'
                         h5(style="margin-top:15px") File Size: #{ ( upload.fileSize/ ( 1000 * 1000)).toFixed() } MB
@@ -364,9 +365,12 @@ block content
               }
             }).then(function (result) {
 
+              var csrf = '#{_csrf}'
+
               var uploadId = '#{upload._id}'
 
               var data = {
+                _csrf: csrf,
                 uploadId,
                 reason: result.value
               }
@@ -400,6 +404,55 @@ block content
       }
 
 
+    if user
+        script.
+            // change video qualities
+
+            var highQualityVideo = '#{uploadServer}/#{upload.uploader.channelUrl}/#{upload.uniqueTag}-high.mp4'
+
+            var fileType = '#{upload.fileType}'
+
+            if (fileType == 'video') {
+                var media = $(fileType)[0];
+            }
+            var userDefaultQuality = '#{user.defaultQuality}'
+
+            if (userDefaultQuality == 'high') {
+              $('.video-source').attr('src', highQualityVideo)
+              media = $(fileType)[0];
+              media.load();
+
+              $('#dropdownMenu1').text('Quality: High')
+              $('#dropdownMenu1').attr('quality', 'high');
+              $("#dropdownMenu1").append("<span class='caret'></span>");
+            }
+    else
+        script.
+
+          // change video qualities
+
+          var highQualityVideo = '#{uploadServer}/#{upload.uploader.channelUrl}/#{upload.uniqueTag}-high.mp4'
+
+          var fileType = '#{upload.fileType}'
+
+          if (fileType == 'video') {
+            var media = $(fileType)[0];
+          }
+
+          var siteVisitorDefaultQuality = '#{siteVisitor.defaultQuality}'
+
+          if (siteVisitorDefaultQuality == 'high') {
+            $('.video-source').attr('src', highQualityVideo)
+            media = $(fileType)[0];
+            media.load();
+
+            $('#dropdownMenu1').text('Quality: High')
+            $('#dropdownMenu1').attr('quality', 'high');
+            $("#dropdownMenu1").append("<span class='caret'></span>");
+          }
+
+
+
 
     script.
 
@@ -408,7 +461,6 @@ block content
         var lowQualityVideo = '#{uploadServer}/#{upload.uploader.channelUrl}/#{upload.uniqueTag}.mp4'
         var highQualityVideo = '#{uploadServer}/#{upload.uploader.channelUrl}/#{upload.uniqueTag}-high.mp4'
 
-
         var fileType = '#{upload.fileType}'
 
         if (fileType == 'video') {
@@ -416,6 +468,23 @@ block content
         }
 
         $('.low-quality').on('click', function(){
+
+          var data = {
+            _csrf: csrf,
+          }
+
+          $.ajax({
+            type: 'POST',
+            url: '/api/changeUserDefaultQuality/low',
+            data,
+            success: function (data) {
+              console.log(data);
+            },
+            error: function (err) {
+              console.log(err);
+            }
+          });
+
           var quality = $('#dropdownMenu1').attr('quality');
           if(quality == 'low') return
 
@@ -434,6 +503,22 @@ block content
         })
 
         $('.high-quality').on('click', function () {
+
+          var data = {
+            _csrf: csrf,
+          }
+
+          $.ajax({
+            type: 'POST',
+            url: '/api/changeUserDefaultQuality/high',
+            data,
+            success: function (data) {
+              console.log(data);
+            },
+            error: function (err) {
+              console.log(err);
+            }
+          });
 
           var quality = $('#dropdownMenu1').attr('quality');
           if (quality == 'high') return

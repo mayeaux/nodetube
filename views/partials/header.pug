@@ -42,23 +42,27 @@
                 li(class=(title == 'Emails') ? 'active' : undefined)
                   a(href=`/support/emails`) Emails
 
-          //// moderator dropdown
-          //if user.role == 'moderator' || user.role == 'admin'
-          //  li.dropdown(class=(title == 'Admin Panel') ? 'active' : undefined)
-          //    a.dropdown-toggle(href='#', data-toggle='dropdown')
-          //      span= 'Moderator'
-          //      i.caret
-          //    ul.dropdown-menu
-          //      li(class=(title == 'Comments') ? 'active' : undefined)
-          //        a(href=`/admin/comments`) Comments
+          // moderator dropdown
+          if user.role == 'moderator' || user.role == 'admin'
+            li.dropdown(class=(title == 'Admin Panel') ? 'active' : undefined)
+              a.dropdown-toggle(href='#', data-toggle='dropdown')
+                span= 'Moderator'
+                i.caret
+              ul.dropdown-menu
+                li(class=(title == 'Reports') ? 'active' : undefined)
+                  a(href=`/support/reports`) Reports
+                li(class=(title == 'Recent Uploads') ? 'active' : undefined)
+                  a(href=`/media/recent`) Recent Uploads
 
-          // admin panel
+          // admin dropdown
           if user.role == 'admin'
             li.dropdown(class=(title == 'Admin Panel') ? 'active' : undefined)
               a.dropdown-toggle(href='#', data-toggle='dropdown')
                 span= 'Admin Panel'
                 i.caret
               ul.dropdown-menu
+                li
+                  a(href=`/admin/adminAudit`) Admin Audit
                 li(class=(title == 'Comments') ? 'active' : undefined)
                   a(href=`/admin/comments`) Comments
                 li(class=(title == 'Uploads') ? 'active' : undefined)
@@ -75,8 +79,7 @@
                   a(href=`/admin/createSocialPost`) Create Social Post
                 li
                   a(href=`/admin/oneOffSocialPost`) One Off Social Post
-                li
-                  a(href=`/admin/adminAudit`) Admin Audit
+
 
           // pending section
           if user.role == 'admin' || user.role == 'moderator'

@@ -47,10 +47,12 @@ exports.getMedia = async (req, res) => {
 
     let upload = await Upload.findOne({
       uniqueTag: media,
-      visibility: { $ne: 'removed' }
     }).populate({path: 'uploader comments checkedViews', populate: {path: 'commenter'}}).exec();
 
-    if(!upload){
+    const userIsAdmin = req.user && req.user.role == 'admin';
+
+    // if there is no upload, or upload is deleted and user is not admin
+    if(!upload || ( upload.visibility == 'removed' && !userIsAdmin)){
       console.log('Visible upload not found');
       res.status(404);
       return res.render('error/404')

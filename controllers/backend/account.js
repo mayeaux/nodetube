@@ -75,7 +75,7 @@ exports.postLogin = async (req, res, next) => {
 
     // don't let restricted users login
     if(user.status == 'restricted'){
-      req.flash('errors', 'Sorry your password was incorrect, please try again');
+      req.flash('errors', { msg: 'There was an error logging, in please try again' });
       console.log('FAILED LOGIN ATTEMPT');
       return res.redirect('/login');
     }

@@ -4,13 +4,34 @@ block content
     div
         div
             h2
-            h2.view-header Users (Admin)
+            h2.view-header Admin Actions
         hr
         each action in adminActions
-            each val, index in action
-                p= index + ': ' + val
+            p Admin Or Moderator: #{action.adminOrModerator.channelUrl}
+            if action.siteVisitorsAffected
+                for siteVisitor in action.siteVisitorsAffected
+                    p #{siteVisitor.channelUrl}
+            if action.uploadsAffected
+                for upload in action.uploadsAffected
+                    a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}`)
+                        p Title Affected: #{upload.title}
+            if action.usersAffected
+                for user in action.usersAffected
+                    p User Affected: #{user.channelUrl}
+            p Action Type : #{action.actionType}
+            if action.data
+                if action.data.originalRating
+                    p Original Rating: #{action.data.originalRating}
+                if action.data.updatedRating
+                    p Updated Rating: #{action.data.updatedRating}
             br
             br
+
+
+            //each val, index in action
+            //    p= index + ': ' + val
+            //br
+            //br
         //
         //each comment in adminActions
         //    div.col-sm-4(style="text-align:center;height:420px;border:1px solid black;")

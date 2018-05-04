@@ -98,6 +98,8 @@ exports.changeRatings = async (req, res) => {
     for (let upload of uploads) {
       let foundUpload = await Upload.findOne({_id: upload});
       foundUpload.rating = rating;
+
+      // mark it as moderated so user can't change it
       foundUpload.moderated = true;
       await foundUpload.save();
     }
@@ -118,13 +120,64 @@ exports.changeRatings = async (req, res) => {
 
 exports.deleteAccount = async (req, res) => {
 
+  // fullUserDeletion
+
   let channelUrl = req.body.channelUrl;
 
   let user = await User.findOne({
     channelUrl
   });
 
+  const uploads = await Upload.find({ uploader: user._id });
+
+  const comments = await Comment.find({ commenter: user._id });
+
+  // create admin action after all received
+  await createAdminAction(req.user, 'fullUserDeletion', user._id, uploads, comments, []);
+
+  const modDeletingAdmin = req.user.role == 'moderator' && user.role == 'admin'
+  const modDeletingMod = req.user.role == 'moderator' && user.role == 'moderator'
+
+  // dont let moderator delete admins
+  if(modDeletingAdmin || modDeletingMod){
+    return res.send('err');
+  }
+
+  // set user to restricted
   user.status = 'restricted';
+
+  await user.save();
+
+
+  // TODO: bug here, set all visibility as public will have deleterious effects on private uploads, should use status instead
+  // make all uploads visibility to removed
+  for(let upload of uploads){
+    upload.visibility = 'removed';
+    await upload.save();
+  }
+
+  // make all comment visibility to removed
+  for(let comment of comments){
+    comment.visibility = 'removed';
+    await comment.save();
+  }
+
+  res.send('success');
+
+  // res.redirect(`/user/${channelUrl}`);
+};
+
+exports.undeleteAccount = async (req, res) => {
+
+  // fullUserDeletion
+
+  let channelUrl = req.body.channelUrl;
+
+  let user = await User.findOne({
+    channelUrl
+  });
+
+  user.status = '';
 
   await user.save();
 
@@ -133,15 +186,19 @@ exports.deleteAccount = async (req, res) => {
   const comments = await Comment.find({ commenter: user._id });
 
 
+  // TODO: bug here, set all visibility as public will have deleterious effects on private uploads, should use status instead
   for(let upload of uploads){
-    upload.visibility = 'removed';
+    upload.visibility = 'public';
     await upload.save();
   }
 
   for(let comment of comments){
-    comment.visibility = 'removed';
+    comment.visibility = 'public';
     await comment.save();
   }
+
+  await createAdminAction(req.user, 'fullUserUndeletion', user._id, uploads, comments, []);
+
 
   res.send('success');
 
@@ -161,8 +218,14 @@ exports.deleteUpload = async (req, res) => {
   if(userOwnsUploads || userIsAdmin){
     upload.visibility = 'removed';
     await upload.save();
+
+    // create admin action if deleting user is an admin
+    if(userIsAdmin){
+      await createAdminAction(req.user, 'uploadDeleted', upload.uploader, upload, []);
+    }
+
     req.flash('success', {msg: `Upload successfully deleted`});
-    res.redirect(`/user/${req.user.channelUrl}/`)
+    res.redirect(`/user/${upload.uploader.channelUrl}/`)
   } else {
     res.status(403);
     return res.render('error/500', {

@@ -91,11 +91,22 @@ block content
                 else
                     button.subscribe.btn.btn-success Subscribe (#{subscriberAmount})
 
-                if user && user.role == 'admin'
+                if user && ( user.role == 'admin' || user.role == 'moderator') && channel.status !== 'restricted'
                     br
                     br
-                    button.delete-account.btn.btn-danger Delete
-                    button.delete-ips.btn.btn-danger Delete All Accounts / Ips
+                    button.delete-account.btn.btn-danger Delete Account
+                    //button.delete-account.btn.btn-danger Delete Account And Ban Ip
+                    if user.role == 'admin'
+                        button.delete-ips.btn.btn-danger Delete All Accounts / Ips
+
+                if user && ( user.role == 'admin' || user.role == 'moderator') && channel.status == 'restricted'
+
+                    br
+                    h3 ACCOUNT DELETED
+                    button.undelete-account.btn.btn-warning Undelete Account
+                    //button.undelete-account.btn.btn-warning Undelete Account And Unban Ip
+                    if user.role == 'admin'
+                        button.delete-ips.btn.btn-warning Undelete All Accounts / Unban All Ips
 
         br
         div
@@ -147,15 +158,15 @@ block content
 
     each upload in channel.uploads
         div.col-sm-4(style="text-align:center;height:360px")
-            if isUser || isAdmin
+            if isUser || isAdmin || user.role == 'moderator'
                 div.editFileButtons
-                    a.editLink(href=`/user/${channel.channelUrl}/${upload.uniqueTag}/edit` style="display:inline-block")
-                        button.btn.btn-primary Edit
-
                     form.editLink(action="/api/upload/delete" method="POST" style="display:inline-block")
                         input(type='hidden', name='_csrf', value=_csrf)
                         input(type='hidden', name='videoId', value=upload.uniqueTag)
                         button.btn.btn-danger.delete-media Delete
+                    if isUser || isAdmin || user.role == 'moderator'
+                        a.editLink(href=`/user/${channel.channelUrl}/${upload.uniqueTag}/edit` style="display:inline-block")
+                            button.btn.btn-primary Edit
 
 
             // TODO: Sub out thumbnail here
@@ -186,6 +197,9 @@ block content
                     p.views-text #{upload.legitViewAmount} Views
                 div.uploaded-by
                     p #{upload.fileType.charAt(0).toUpperCase() + upload.fileType.slice(1)} uploaded #{upload.timeAgo}
+                if user && (user.role == 'admin' || user.role == 'moderator') && upload.visibility == 'removed'
+                    div
+                        h4(style="margin-top:-5px;margin-bottom:-18px;") DELETED
 
             if user && user.role == 'admin'
                 div.changeRating(style="margin-top:30px;")
@@ -210,6 +224,44 @@ block content
 
             var data = {
               rating: rating,
+              uploads: checkedValues,
+              csrf: csrf
+            }
+
+            $.ajax({
+              type: 'POST',
+              url: `/admin/changeRatings`, // todo: change to user filter
+              data,
+              success: function (data) {
+                if (data == 'success') {
+                  window.location.reload(true);
+                } else {
+                  swal("Something didn't work, please contact PewTube at ceo@pew.tube or via the widget in the bottom right corner")
+                }
+                console.log(data);
+              },
+              error: function (err) {
+                console.log(err);
+              }
+            });
+
+
+            console.log(rating);
+          })
+
+    // delete multiple media at once
+    if user && user.role == 'admin'
+        script.
+          $('.change-rating').on('click', function () {
+            var checkedValues = $('input:checkbox:checked').map(function () {
+              return this.value;
+            }).get();
+
+            var rating = $(this).attr('rating');
+            var csrf = '#{_csrf}'
+
+
+            var data = {
               uploads: checkedValues,
               csrf: csrf
             }
@@ -398,7 +450,7 @@ block content
         })
       });
 
-    if user && user.role == 'admin'
+    if user && ( user.role == 'admin' || user.role == 'moderator' )
         script.
             $('.delete-account').on('click', function (e) {
                 e.preventDefault();
@@ -445,6 +497,54 @@ block content
                       });
                 });
             });
+
+    if user && ( user.role == 'admin' || user.role == 'moderator' )
+        script.
+          $('.undelete-account').on('click', function (e) {
+            e.preventDefault();
+            swal({
+              title: "WARNING",
+              text: "Are you sure you want to undelete this account?",
+              type: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#DD6B55",
+              confirmButtonText: "Yes, delete it"
+            }).then(function (result) {
+              if (result.value !== true) {
+                return
+              }
+
+              var channelUrl = '#{channel.channelUrl}';
+              var csrf = '#{_csrf}';
+              // sweetalert2.js:131 SweetAlert2: Unknown parameter "closeOnConfirm"
+              // dont move browser
+              e.preventDefault();
+
+              //
+              var data = {
+                _csrf: csrf,
+                channelUrl
+              }
+
+              console.log(data);
+
+              $.ajax({
+                type: 'POST',
+                url: `/admin/undeleteAccount`,
+                data,
+                success: function (data) {
+
+                  console.log(data);
+
+                  location.reload();
+
+                },
+                error: function (err) {
+                  console.log(err);
+                }
+              });
+            });
+          });
 
     if user && user.role == 'admin'
         script.

@@ -18,6 +18,9 @@ var Busboy = require('busboy');
 const mkdirp = Promise.promisifyAll(require('mkdirp'));
 const mv = require('mv');
 
+const createAdminAction = require('../../lib/administration/createAdminAction');
+
+
 // const stripe = require('stripe')(process.env.STRIPE_SKEY);
 // const twilio = require('twilio')(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
 // const paypal = require('paypal-rest-sdk');
@@ -87,6 +90,30 @@ async function updateUsersUnreadSubscriptions(user){
   }
 
 };
+
+/**
+ * POST /api/changeDefaultUserQuality
+ * Change user's default quality option
+ */
+exports.changeDefaultUserQuality = async (req, res) => {
+  const quality = req.params.quality;
+
+  let siteVisitor = req.siteVisitor;
+  let user = req.user;
+
+  // save siteVisitor quality
+  siteVisitor.defaultQuality = quality;
+  await siteVisitor.save();
+
+  // save user default quality
+  if(user){
+    user.defaultQuality = quality;
+    await user.save();
+  }
+
+  res.send('success');
+};
+
 
 /**
  * POST /api/report
@@ -418,20 +445,40 @@ exports.editUpload = async (req, res, next) => {
   }).populate({path: 'uploader comments checkedViews', populate: {path: 'commenter'}}).exec();
 
   // determine if its the user of the channel
-  let isAdmin = false;
-  let isUser = false;
-  if(req.user){
-    // its the same user
-    isUser =  ( req.user._id.toString() == upload.uploader._id.toString()  );
+  const isAdmin = req.user && req.user.role == 'admin';
+  const isModerator = req.user && req.user.role == 'moderator';
+  const isAdminOrModerator = isAdmin || isModerator;
+  const isUser = req.user && ( req.user._id.toString() == upload.uploader._id.toString() );
 
-    // the requesting user is an adming
-    isAdmin = req.user.role == 'admin';
-  }
-
-  // TODO: Do something better here, including record
-  if(!isUser && !isAdmin){
+  /** If it is an admin or moderator changing the rating, save as adminAction and only change rating, mark as moderated  **/
+  // TODO: pull this logic out of controller
+  if(!isUser && !isAdmin && !isAdminOrModerator){
     return res.render('error/403');
   }
+
+  const uploadRatingIsChanging = upload.rating !== req.body.rating;
+  const isModeratorOrAdmin = isModerator || isAdmin;
+
+  // if moderator or admin is updating rating
+  if( isModeratorOrAdmin && uploadRatingIsChanging ){
+    upload.moderated = true;
+
+    const data = {
+      originalRating: upload.rating,
+      updatedRating: req.body.rating
+    };
+
+    // TODO: save data
+    await createAdminAction(req.user, 'changeUploadRating', upload.uploader._id, upload, [], [], data);
+
+    upload.rating = req.body.rating;
+    req.flash('success', { msg: 'Title and description updated.' });
+    await upload.save();
+
+    return res.redirect(`${frontendServer}/user/${req.user.channelUrl}/${uniqueTag}/edit`);
+  }
+
+  /** **/
 
   upload.title = req.body.title;
   upload.description = req.body.description;
@@ -447,6 +494,7 @@ exports.editUpload = async (req, res, next) => {
 
   // console.log(req.files);
 
+  // TODO: would be great if this was its own endpoint
 
   // reject the file
   if(req.files && req.files.filetoupload && req.files.filetoupload.size > 0 && fileType && fileType !== 'image'){
