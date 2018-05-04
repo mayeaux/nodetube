@@ -4,7 +4,7 @@ block content
     div
         div
             h2
-            h2.view-header Users (Admin)
+            h2.view-header Admin Actions
         hr
         each action in adminActions
             p Admin Or Moderator: #{action.adminOrModerator.channelUrl}
@@ -23,7 +23,7 @@ block content
                 if action.data.originalRating
                     p Original Rating: #{action.data.originalRating}
                 if action.data.updatedRating
-                    p Original Rating: #{action.data.updatedRating}
+                    p Updated Rating: #{action.data.updatedRating}
             br
             br
 
