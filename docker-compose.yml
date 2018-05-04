@@ -1,0 +1,29 @@
+version: '3.1'
+services:
+  node:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "49160:3000"
+    volumes:
+      - .:/app/
+      - /app/node_modules
+    environment:
+      - REDIS_HOST=redis
+      - MONGODB_DOCKER_URI=mongodb://mongodb:27017/april15pewtube
+    depends_on:
+      - redis
+      - mongo
+    command: npm start
+
+  mongo:
+    container_name: mongodb
+    image: mongo:2.2
+    volumes:
+      - /data/db
+    ports:
+      - "27017:27017"
+
+  redis:
+    image: redis

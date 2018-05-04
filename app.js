@@ -111,7 +111,7 @@ if (cluster.isMaster) {
     // require('./lib/deleteUsers');
 
     /** connect to MongoDB **/
-    const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/april15pewtube';
+    const mongoUri = process.env.MONGODB_DOCKER_URI || process.env.MONGO_URI || process.env.MONGODB_URI || process.env.MONGOLAB_URI || 'mongodb://localhost:27017/april15pewtube';
 
     mongoose.Promise = global.Promise;
 
@@ -188,7 +188,7 @@ if (cluster.isMaster) {
       saveUninitialized: true,
       secret: process.env.PEWTUBE_SESSION_SECRET || process.env.SESSION_SECRET,
       store: new MongoStore({
-        url: process.env.MONGODB_URI || process.env.MONGOLAB_URI,
+        url: mongoUri,
         autoReconnect: true,
         clear_interval: 3600
       })

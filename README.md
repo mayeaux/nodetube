@@ -63,6 +63,12 @@ Hackathon Starter includes a `yarn.lock` file by default and as project dependen
 To upgrade your local dependencies using Yarn, simply run `yarn upgrade`. This will update all dependencies to their latest version based on the [version range](https://docs.npmjs.com/getting-started/semantic-versioning#semver-for-consumers) specified in the `package.json` file. The yarn.lock file will be recreated as well.
 For further information, please see the official documention for [managing dependencies](https://yarnpkg.com/en/docs/managing-dependencies) and [upgrading dependencies](https://yarnpkg.com/en/docs/cli/upgrade). This [Yarn vs NPM](https://www.sitepoint.com/yarn-vs-npm/) article by SitePoint also has some very useful information.
 
+Docker
+------
+
+The project has an experimental [Docker](https://www.docker.com/what-docker) setup, using [Docker Compose](https://docs.docker.com/compose/overview/).  It is entirely optional, so if you don't want to use Docker, feel free to ignore it.
+
+If you have Docker installed, there's a non-zero chance that running `docker-compose up` is all you need to do to build and start 3 docker containers (one each for the app itself, Redis, and MongoDB). From there, you should be able to connect to http://localhost:49160 and see the app running.
 
 Project Structure
 -----------------
