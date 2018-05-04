@@ -279,6 +279,8 @@ function frontendRoutes(app){
   app.post('/admin/undeleteAccount', authMiddleware.moderatorAuth, adminBackendController.undeleteAccount);
   app.post('/admin/changeRatings', authMiddleware.adminAuth, adminBackendController.changeRatings);
   app.post('/admin/getUserAccounts', authMiddleware.adminAuth, adminBackendController.getUserAccounts);
+
+  // find all ips and accounts associated
   app.post('/admin/deleteAllUsersAndBlockIps', authMiddleware.adminAuth, adminBackendController.deleteAllUsersAndBlockIps);
 
   app.post('/admin/siteVisitors', authMiddleware.adminAuth, adminBackendController.postSiteVisitors);
