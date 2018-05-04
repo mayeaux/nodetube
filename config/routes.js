@@ -246,6 +246,9 @@ function frontendRoutes(app){
   app.get('/support/emails', authMiddleware.moderatorAuth, supportFrontendController.getReceivedEmails);
   app.get('/support/emails/:id', authMiddleware.moderatorAuth, supportFrontendController.getReceivedEmail);
 
+  app.get('/support/reports', authMiddleware.moderatorAuth, supportFrontendController.getReports);
+
+
 
   /** ADMIN PAGES **/
   app.get('/admin/users', authMiddleware.adminAuth, adminFrontendController.getUsers);
