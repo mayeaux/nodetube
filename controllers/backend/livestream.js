@@ -86,33 +86,33 @@ if (process.env.LIVESTREAM_APP == "true")
 {
   app = express();
 
-  /*server = http.createServer(app).listen(8080, function listening() {
-    console.log('Listening on %d', server.address().port);
-  });
-  */
-
+  // default certs that came with I believe Kurento
   var options =
   {
     key:  fs.readFileSync('keys/server.key'),
     cert: fs.readFileSync('keys/server.crt')
   };
 
+  // boot up express server to handle websocket connections
   server = https.createServer(options, app).listen(8080, function() {
     console.log('Websockets server started on port 8080');
   });
 
+  // object which will hold message data and boot up servers
   webSockets = {};
 
+  // code to run when user connects to :8080
   server.on('upgrade', (request, socket, head) => {
 
-    // console.log(request);
-
+    // get the pathname that the individual is hitting
     const pathname = url.parse(request.url).pathname;
 
+    // if the user is hitting a messages endpoint ie: (wss://localhost:8080/messages/anthony)
     var regexp1 = /\/messages\/(.*)/;
 
     if ( pathname.match(regexp1) ) {
 
+      // username succeeds :8080/messages/__
       const username = pathname.match(regexp1)[1];
 
       // instantiate the username for the websockets object if it doesn't exist yet
@@ -124,11 +124,10 @@ if (process.env.LIVESTREAM_APP == "true")
       if(!webSockets[username].messages){
         webSockets[username].messages = new WebSocket.Server({ noServer: true });
 
-        // oldstream websocket connections (??)
+        // when someone connects to this websocket server, run them through callback
         webSockets[username].messages.on('connection', messageSocketCallback);
 
       }
-
       // code to run when a new connection is made
       webSockets[username].messages.handleUpgrade(request, socket, head, (ws) => {
 
@@ -148,10 +147,12 @@ if (process.env.LIVESTREAM_APP == "true")
   connectedUsers = [];
   connectedUsersAmount = 2;
 
+  // stringifies message objects
   function stringifyAndSend(webSocketConnection, objectToSend){
     webSocketConnection.send( JSON.stringify( objectToSend ) );
   }
 
+  // save already sent messages
   messagesObject = {};
 
   /** CALLBACK TO SEND A MESSAGE **/
@@ -162,8 +163,10 @@ if (process.env.LIVESTREAM_APP == "true")
 
       // console.log(_message);
 
+      // parse stingified message sent from frontend
       message = JSON.parse(_message);
 
+      // get username that sent the message
       var streamingUser = message.username;
 
       // code to run when a new user connects
@@ -177,6 +180,7 @@ if (process.env.LIVESTREAM_APP == "true")
       var message = message.message;
 
       // TODO: need to add a close message here
+      // this is sent right before changing href location of client
       if(message == 'DISCONNECTING'){
 
         messagesObject[streamingUser].connectedUsersCount--;
@@ -187,24 +191,29 @@ if (process.env.LIVESTREAM_APP == "true")
       // code to run when a new user connects
       if(message == 'CONNECTING'){
 
+        // send all existing messages
+        // TODO: limit it to latest 200
         for(const message of messagesObject[streamingUser].messages){
           stringifyAndSend(ws, { message });
         }
 
+        // increment amount of connected users
         messagesObject[streamingUser].connectedUsersCount++;
 
         console.log('new user connected to chat of: ' + streamingUser);
 
+        // add websocket connection to object
         messagesObject[streamingUser].connectedUsers.push(ws);
 
+        // send new message to already connected users
         for(const user of messagesObject[streamingUser].connectedUsers){
 
+          // if the user is still connected
           if(user.readyState == 1){
 
+            // update how many users are connected
             stringifyAndSend(user, { connectedUsersAmount: messagesObject[streamingUser].connectedUsersCount });
-
           }
-
         }
 
         console.log('connecting');
@@ -215,11 +224,13 @@ if (process.env.LIVESTREAM_APP == "true")
       // this conditional means that a new message has been sent
       if(message !== 'KEEP-ALIVE' && message !== 'undefined' ){
 
+        // save message to existing sent messages
         messagesObject[streamingUser].messages.push(message);
 
+        // push new message down to all still connected clients
         for(const user of messagesObject[streamingUser].connectedUsers){
 
-          // push new message down to all ws clients
+          // check if connection is still running
           if(user.readyState == 1){
 
             stringifyAndSend(user, { message });
