@@ -143,6 +143,7 @@ exports.postFileUpload = async (req, res, next) => {
 
         const hostFilePath = `${channelUrl}/${uniqueTag}`;
         // const uploadServer = process.env.UPLOAD_SERVER || 'uploads1' ;
+        let responseSent = false;
 
         let upload = new Upload({
           uploader: req.user._id,
@@ -176,10 +177,14 @@ exports.postFileUpload = async (req, res, next) => {
             timeoutUpload.status = 'processing';
             await timeoutUpload.save();
 
-            res.send({
-              message: 'ABOUT TO PROCESS',
-              url: `/user/${channelUrl}/${uniqueTag}`
-            });
+            if (!responseSent)
+            {
+              responseSent = true;
+              res.send({
+                message: 'ABOUT TO PROCESS',
+                url: `/user/${channelUrl}/${uniqueTag}`
+              });
+            }
           }
         })();
 
@@ -302,14 +307,15 @@ exports.postFileUpload = async (req, res, next) => {
 
           uploadHelpers.updateUsersUnreadSubscriptions(user);
 
-          res.send({
-            message: 'DONE PROCESSING',
-            url: `/user/${channelUrl}/${uniqueTag}?autoplay=off`
-          });
-
+          if (!responseSent)
+          {
+            responseSent = true;
+            res.send({
+              message: 'DONE PROCESSING',
+              url: `/user/${channelUrl}/${uniqueTag}?autoplay=off`
+            });
+          }
         });
-
-
       } else {
         res.send(status);
       }

@@ -33,6 +33,8 @@ viewSchema.virtual('timeAgo').get(function () {
   return timeAgoEnglish.format( new Date(this.createdAt) )
 });
 
+viewSchema.index({upload: 1, validity: 1}, {name: "Real View Count"});
+
 const View = mongoose.model('View', viewSchema);
 
 module.exports = View;
