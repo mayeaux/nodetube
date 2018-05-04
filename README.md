@@ -6,6 +6,7 @@ Prerequisites
 - [Node.js 8.0+](https://nodejs.org/en/download/)
 - [Redis](https://redis.io/download)
 - [ffmpeg](https://www.ffmpeg.org/download.html)
+- [bower](https://bower.io/#install-bower)
 
 Please also check the [Wiki](https://github.com/mayeaux/nodetube/wiki) for additional information on getting site functionality running
 
@@ -38,6 +39,9 @@ npm install
 
 # Or, if you prefer to use `yarn` instead of `npm`
 yarn install
+
+# Then, install frontend deps via bower 
+cd public && bower install && cd ..
 
 # Then simply start your app
 npm start
