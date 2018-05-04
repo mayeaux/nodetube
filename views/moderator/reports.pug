@@ -1,3 +1,19 @@
-//
-   Created by anthony on 2018-05-03.
+extends ../layout
+
+block content
+    div
+        div
+            h2
+            h2.view-header Reports
+        hr
+        each report in reports
+            p Reporting User: #{report.reportingUser.channelUrl}
+            p Reported At: #{report.createdAt}
+            a(href=`/user/${report.uploadingUser.channelUrl}/${report.upload.uniqueTag}`)
+                p Upload Title: #{report.upload.title}
+            p Reason: #{report.reason}
+            p Uploading User: #{report.uploadingUser.channelUrl}
+            //p Reported At: #{report.createdAt}
+            //p Reported At: #{report.createdAt}
+
 

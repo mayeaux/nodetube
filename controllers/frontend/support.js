@@ -1,4 +1,5 @@
-const ReceivedEmail = require('../../models/index').ReceivedEmail
+const ReceivedEmail = require('../../models/index').ReceivedEmail;
+const Report = require('../../models/index').Report;
 
 exports.getReceivedEmails = async (req, res) => {
 
@@ -49,6 +50,19 @@ exports.getReceivedEmail = async (req, res) => {
     title: 'Received Email',
     receivedEmail,
     email: receivedEmail
+  });
+
+};
+
+exports.getReports = async (req, res) => {
+
+  let reports = await Report.find({
+
+  }).populate('reportingUser upload uploadingUser');
+
+  res.render('moderator/reports', {
+    title: 'Reports',
+    reports
   });
 
 };
