@@ -98,6 +98,8 @@ exports.changeRatings = async (req, res) => {
     for (let upload of uploads) {
       let foundUpload = await Upload.findOne({_id: upload});
       foundUpload.rating = rating;
+
+      // mark it as moderated so user can't change it
       foundUpload.moderated = true;
       await foundUpload.save();
     }

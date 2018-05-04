@@ -18,6 +18,9 @@ var Busboy = require('busboy');
 const mkdirp = Promise.promisifyAll(require('mkdirp'));
 const mv = require('mv');
 
+const createAdminAction = require('../../lib/administration/createAdminAction');
+
+
 // const stripe = require('stripe')(process.env.STRIPE_SKEY);
 // const twilio = require('twilio')(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
 // const paypal = require('paypal-rest-sdk');
@@ -452,10 +455,14 @@ exports.editUpload = async (req, res, next) => {
     return res.render('error/403');
   }
 
-  // if moderator is updating rating
-  if(isModerator && upload.rating !== req.body.rating){
+  const uploadRatingIsChanging = upload.rating !== req.body.rating;
+  const isModeratorOrAdmin = isModerator || isAdmin;
+
+  // if moderator or admin is updating rating
+  if( isModeratorOrAdmin && uploadRatingIsChanging ){
     upload.moderated = true;
-    // TODO: save admin thing here
+    await createAdminAction(req.user, 'changeUploadRating', upload.uploader._id, upload, [], []);
+
     upload.rating = req.body.rating;
     req.flash('success', { msg: 'Title and description updated.' });
     await upload.save();

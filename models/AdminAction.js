@@ -12,8 +12,8 @@ const timeAgoEnglish = new javascriptTimeAgo('en-US');
 const adminActionSchema = new mongoose.Schema({
   actionType: {
     type: String,
-    enum: ['userDeleted', 'userUndeleted', 'uploadDeleted', 'fullIpDeletion', 'banUser', 'unbanUser', 'fullUserDeletion', 'fullUserUndeletion'],
-    default: 'public'
+    enum: ['userDeleted', 'userUndeleted', 'uploadDeleted', 'fullIpDeletion', 'banUser', 'unbanUser', 'fullUserDeletion',
+           'fullUserUndeletion', 'changeUploadRating'],
   },
   adminOrModerator: {
     type: mongoose.Schema.Types.ObjectId,
@@ -35,7 +35,10 @@ const adminActionSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Comment'
   }],
-  note: String
+  note: String,
+  data : {
+    type: mongoose.Schema.Types.Mixed
+  },
 }, { timestamps: true });
 
 adminActionSchema.virtual('timeAgo').get(function () {
