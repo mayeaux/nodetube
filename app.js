@@ -188,7 +188,7 @@ if (cluster.isMaster) {
       saveUninitialized: true,
       secret: process.env.PEWTUBE_SESSION_SECRET || process.env.SESSION_SECRET,
       store: new MongoStore({
-        url: process.env.MONGODB_URI || process.env.MONGOLAB_URI,
+        url: mongoUri,
         autoReconnect: true,
         clear_interval: 3600
       })
