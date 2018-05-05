@@ -45,26 +45,33 @@ block content
                     if comment.upload.uploader && comment.commenter
                         div.col-sm-4(style="text-align:center;height:360px")
                                 a.title-anchor(href=`/user/${comment.upload.uploader.channelUrl}/${comment.upload.uniqueTag}`)
-                                    if comment.upload.fileType == 'video' && comment.upload.thumbnailUrl
-                                        img.preview-image(src=comment.upload.thumbnailUrl)
+                                    if comment.upload.fileType == 'video' && comment.upload.thumbnails.generated
+                                        img.preview-image(src=`${uploadServer}/${comment.upload.uploader.channelUrl}/${comment.upload.thumbnails.generated}`)
+                                    else if comment.upload.fileType == 'video' && comment.upload.thumbnails.custom
+                                        img.preview-image(src=`${uploadServer}/${comment.upload.uploader.channelUrl}/${comment.upload.thumbnails.custom}`)
+                                    else if comment.upload.fileType == 'video'
+                                        img.preview-image(src='/images/no_img.png')
                                     else if comment.upload.fileType == 'image'
                                         img.preview-image(src=comment.upload.uploadUrl)
                                     else if comment.upload.fileType == 'audio'
                                         img.preview-image(src='/images/images/audio.svg')
                                     else if comment.upload.fileType == 'unknown'
-                                        img.preview-image(src='/no_img.png')
+                                        img.preview-image(src='/images/no_img.png')
 
                                     //div
                                     //    p.upload-title-text.twentysix #{comment.upload.title}
                                     //br
 
-                                    div
-                                        p.upload-title-text #{comment.upload.title}
+                                    a.title-anchor(href=`/user/${comment.upload.uploader.channelUrl}/${comment.upload.uniqueTag}`)
+                                      div
+                                          p.upload-title-text #{comment.upload.title}
 
                                 // comment text
                                 div(style="height:93px;overflow:hidden;")
                                     p(style="width:80%;margin:0 auto;margin-top:10px;") #{comment.text} &nbsp  -#{comment.commenter.channelName || comment.commenter.channelUrl}
 
+
+block extra_footer_js
     script.
       $(document).on({
         mouseenter: function () {
@@ -84,3 +91,4 @@ block content
           $(this).css("height", height / 1.10);
         }
       }, '.preview-image');
+

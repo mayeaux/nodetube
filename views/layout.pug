@@ -22,17 +22,6 @@ html
 
 
     title #{title} - PewTube
-    script(src='/js/lib/jquery-3.1.1.min.js')
-    script(src='/js/lib/bootstrap.min.js')
-
-    if recaptchaOn
-      script(src='https://www.google.com/recaptcha/api.js')
-
-    script(src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js")
-    script(src='https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js')
-    script(src='https://cdnjs.cloudflare.com/ajax/libs/balance-text/3.2.0/balancetext.min.js')
-    script(src='/bower_components/sweetalert2/dist/sweetalert2.js')
-    block extra_js
 
     link(rel="stylesheet" href="/bower_components/sweetalert2/dist/sweetalert2.css")
     link(rel='stylesheet', href='/css/main.css')
@@ -41,8 +30,19 @@ html
     link(href='https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css', rel='stylesheet')
     block extra_css
 
+    script(src='/js/lib/jquery-3.1.1.min.js')
+    script(src='/js/lib/bootstrap.min.js')
+
+    script(src='https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/balance-text/3.2.0/balancetext.min.js')
+    script(src='/bower_components/sweetalert2/dist/sweetalert2.js')
+
     if recaptchaOn
+      script(src='https://www.google.com/recaptcha/api.js')
       include widgets/recaptcha
+
+    block extra_js
+
 
   body
     //layout.pug

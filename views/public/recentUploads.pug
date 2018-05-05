@@ -1,343 +1,346 @@
 extends ../layout
 
 
+block extra_css
+  style.
+    .dropdown {
+        text-align: center;
+    }
+
+    .button, .dropdown-menu {
+        margin: 10px auto
+    }
+
+    .dropdown-menu {
+        width: 200px;
+        left: 50%;
+        margin-left: -100px;
+    }
+
+    input[type=checkbox] {
+        /* Double-sized Checkboxes */
+        -ms-transform: scale(2); /* IE */
+        -moz-transform: scale(2); /* FF */
+        -webkit-transform: scale(2); /* Safari and Chrome */
+        -o-transform: scale(2); /* Opera */
+        padding: 10px;
+    }
+
+    .pewtube-pro {
+        background: #edeeee;
+        font-weight: 400;
+        font-size: 10px;
+        margin-left: 3px;
+        padding: 2px 4px;
+        display: inline-block;
+        border-radius: 3px;
+        transform: translateY(-2px);
+    }
+
+
 block content
-        style.
-            .dropdown {
-                text-align: center;
+
+  if user && user.role == 'admin'
+      div.row
+          div.col-sm-3
+              h3
+                  a(href="/media/recent") Recently Uploaded
+          div.col-sm-3
+              h3
+                  a(href="/media/recentComments") Recent Comments
+          div.col-sm-2
+              h3
+                  a(href="/media/recentViews") Recent Views
+          div.col-sm-2
+              h3
+                  a(href="/media/recentReacts") Recent Reacts
+
+      //div.col-sm-2
+      //    h3 Sensitive
+      //    input(type='checkbox', data-toggle='toggle')
+
+      hr
+
+  br
+
+  div.center-block.text-center.col-sm-12
+
+      h1 Recently Uploaded
+      br
+
+      div.dropdown(style="display:inline;padding-right:15px;")
+          button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px;")
+              | File Type: #{media.charAt(0).toUpperCase() + media.slice(1)} &nbsp
+              span.caret
+
+          ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1')
+              li(role='presentation')
+                  a(href=`/media/recent/1?media=all`) All
+              li(role='presentation')
+                  a(href=`/media/recent/1?media=video`) Videos
+              li(role='presentation')
+                  a(href=`/media/recent/1?media=audio`) Audio
+              li(role='presentation')
+                  a(href=`/media/recent/1?media=image`) Images
+      //br
+
+      div.dropdown(style="display:inline")
+          button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
+              if siteVisitor.filter == 'allAges'
+                  | Rating: SFW &nbsp
+              else if siteVisitor.filter == 'mature'
+                  | Rating: SFW/NSWF &nbsp
+              span.caret
+
+          ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1')
+              li(role='presentation')
+                  if siteVisitor.filter == 'mature'
+                      a.changeFilterButton(value="allAges" href="#") SFW
+                  else if siteVisitor.filter == 'allAges'
+                      a.changeFilterButton(value="mature" href="#") SFW/NFSW
+              //li(role='presentation')
+              //    a(href=`/media/recent/1?media=video`) Sensitive
+              //li(role='presentation')
+              //    a(href=`/media/recent/1?media=audio`) Audio
+              //li(role='presentation')
+              //    a(href=`/media/recent/1?media=image`) Images
+
+
+
+
+      // TOP PAGINATION
+      nav.center-block.text-center(aria-label='Page navigation example')
+          ul.pagination
+              li.page-item
+                  a.page-link(href=`/media/recent/${previousNumber}?media=${media}`) <
+
+              each number in numbersArray
+                  li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
+                      a.page-link(href=`/media/recent/${number}?media=${media}`) #{number}
+
+              li.page-item
+                  a.page-link(href=`/media/recent/${nextNumber}?media=${media}`) >
+
+
+
+
+
+
+      br
+
+  hr
+  div.uploads(style="width:83%;margin:0 auto;")
+      each upload in uploads
+          if upload.uploader
+              // TODO: Sub out thumbnail here
+              div.col-sm-4(style="text-align:center;height:310px;")
+                  div(style="width:100%")
+                      a.title-anchor(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}` style="color:black" )
+
+                          if upload.thumbnails && upload.thumbnails.custom
+                              img.preview-image(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.custom}` style="width:inherit;max-width:302px;")
+
+                          else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.generated
+                              img.preview-image(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated}` style="width:inherit;max-width:302px;")
+
+                          else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.medium
+                              img.preview-image(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.medium}` style="width:inherit;max-width:302px;")
+
+                          else if upload.fileType == 'video' && !upload.thumbnailUrl
+                              img.preview-image(src="/no_img.png")
+
+                          else if upload.fileType == 'image'
+                              // TODO: have to fix this
+                              img.preview-image(src=`${'/uploads'}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="width:inherit;max-width:302px;")
+
+                          else if upload.fileType == 'audio'
+                              img.preview-image(src='/images/audio.svg')
+
+                          else if upload.fileType == 'unknown'
+                              img.preview-image(src='/images/no_img.png')
+
+                          div
+                              p.balance-text.upload-title-text(style="width:100%;margin:0 auto;margin-top:6px;") #{upload.title}
+                          br
+
+
+                      // byline
+                      div.upload-details
+                          div.views(style="margin:0 auto")
+                              p.upload-title-text.views-text(style="margin:0;margin-left:44px;") #{upload.legitViewAmount} views &nbsp
+                                  if upload.fileType == 'video'
+                                      i.fa.fa-video-camera(aria-hidden='true')
+                                  else if upload.fileType == 'audio'
+                                      i.fa.fa-volume-up(aria-hidden='true')
+                                  else if upload.fileType == 'image'
+                                      i.fa.fa-picture-o(aria-hidden='true')
+                              p.upload-title-text.views-text(style="margin:0") #{upload.timeAgo} &nbsp
+                                  a.upload-user-text.views-text(href=`/user/${upload.uploader.channelUrl}` style="margin:0") #{upload.uploader.channelName || upload.uploader.channelUrl}
+                                      //p(style="font-size:15px") #{upload.uploader.channelName || upload.uploader.channelUrl}
+                                      //    if upload.uploader.verified == true
+                                      //        img(src="/images/verified.jpg" width="19px" height="19px" style="margin-left:3px;margin-top:-2px;")
+                                      //    if upload.uploader.plan == 'plus'
+                                      //        span.pewtube-pro PLUS
+
+                      if user && user.role == 'admin'
+                          div.changeRating(style="margin-top:30px;")
+                              input.ratingChanged(type="checkbox" value=`${upload._id}`)
+
+
+
+                      // capitalize media type
+                      //div.uploaded-by #{upload.fileType.charAt(0).toUpperCase() + upload.fileType.slice(1)} uploaded
+                      //    | &nbsp#{upload.timeAgo} by
+                      //    a.upload-user-text(href=`/user/${upload.uploader.channelUrl}`)
+                      //        p(style="font-size:15px") #{upload.uploader.channelName || upload.uploader.channelUrl}
+                      //            if upload.uploader.verified == true
+                      //                img(src="/images/verified.jpg" width="19px" height="19px" style="margin-left:3px;margin-top:-2px;")
+                      //            if upload.uploader.plan == 'plus'
+                      //                span.pewtube-pro PLUS
+
+      if user && user.role == 'admin'
+          div.center-block.text-center.col-sm-12(style="margin-top: 20px;")
+              button.btn-lg.button-success.change-rating(rating="sensitive") Mark As Sensitive
+              button.btn-lg.button-success.change-rating(rating="mature") Mark As NSFW (Mature)
+              button.btn-lg.button-success.change-rating(rating="allAges") Mark As SFW (AllAges)
+
+  if uploads.length > 0
+
+      div.center-block.text-center.col-sm-12
+
+
+                  div.dropdown
+
+                      nav.center-block.text-center(aria-label='Page navigation example')
+                          ul.pagination
+                              li.page-item
+                                  a.page-link(href=`/media/recent/${previousNumber}?media=${media}`) <
+
+                              each number in numbersArray
+                                  li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
+                                      a.page-link(href=`/media/recent/${number}?media=${media}`) #{number}
+
+                              li.page-item
+                                  a.page-link(href=`/media/recent/${nextNumber}?media=${media}`) >
+
+
+block extra_footer_js
+  if user && user.role == 'admin'
+      script.
+          $('.change-rating').on('click', function(){
+            var checkedValues = $('input:checkbox:checked').map(function () {
+              return this.value;
+            }).get();
+
+            var rating = $(this).attr('rating');
+            var csrf = '#{_csrf}'
+
+
+            var data = {
+              rating: rating,
+              uploads: checkedValues,
+              csrf: csrf
             }
 
-            .button, .dropdown-menu {
-                margin: 10px auto
-            }
-
-            .dropdown-menu {
-                width: 200px;
-                left: 50%;
-                margin-left: -100px;
-            }
-
-            input[type=checkbox] {
-                /* Double-sized Checkboxes */
-                -ms-transform: scale(2); /* IE */
-                -moz-transform: scale(2); /* FF */
-                -webkit-transform: scale(2); /* Safari and Chrome */
-                -o-transform: scale(2); /* Opera */
-                padding: 10px;
-            }
-
-            .pewtube-pro {
-                background: #edeeee;
-                font-weight: 400;
-                font-size: 10px;
-                margin-left: 3px;
-                padding: 2px 4px;
-                display: inline-block;
-                border-radius: 3px;
-                transform: translateY(-2px);
-            }
-
-
-
-        if user && user.role == 'admin'
-            div.row
-                div.col-sm-3
-                    h3
-                        a(href="/media/recent") Recently Uploaded
-                div.col-sm-3
-                    h3
-                        a(href="/media/recentComments") Recent Comments
-                div.col-sm-2
-                    h3
-                        a(href="/media/recentViews") Recent Views
-                div.col-sm-2
-                    h3
-                        a(href="/media/recentReacts") Recent Reacts
-
-            //div.col-sm-2
-            //    h3 Sensitive
-            //    input(type='checkbox', data-toggle='toggle')
-
-            hr
-
-        br
-
-        div.center-block.text-center.col-sm-12
-
-            h1 Recently Uploaded
-            br
-
-            div.dropdown(style="display:inline;padding-right:15px;")
-                button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px;")
-                    | File Type: #{media.charAt(0).toUpperCase() + media.slice(1)} &nbsp
-                    span.caret
-
-                ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1')
-                    li(role='presentation')
-                        a(href=`/media/recent/1?media=all`) All
-                    li(role='presentation')
-                        a(href=`/media/recent/1?media=video`) Videos
-                    li(role='presentation')
-                        a(href=`/media/recent/1?media=audio`) Audio
-                    li(role='presentation')
-                        a(href=`/media/recent/1?media=image`) Images
-            //br
-
-            div.dropdown(style="display:inline")
-                button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
-                    if siteVisitor.filter == 'allAges'
-                        | Rating: SFW &nbsp
-                    else if siteVisitor.filter == 'mature'
-                        | Rating: SFW/NSWF &nbsp
-                    span.caret
-
-                ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1')
-                    li(role='presentation')
-                        if siteVisitor.filter == 'mature'
-                            a.changeFilterButton(value="allAges" href="#") SFW
-                        else if siteVisitor.filter == 'allAges'
-                            a.changeFilterButton(value="mature" href="#") SFW/NFSW
-                    //li(role='presentation')
-                    //    a(href=`/media/recent/1?media=video`) Sensitive
-                    //li(role='presentation')
-                    //    a(href=`/media/recent/1?media=audio`) Audio
-                    //li(role='presentation')
-                    //    a(href=`/media/recent/1?media=image`) Images
-
-
-
-
-            // TOP PAGINATION
-            nav.center-block.text-center(aria-label='Page navigation example')
-                ul.pagination
-                    li.page-item
-                        a.page-link(href=`/media/recent/${previousNumber}?media=${media}`) <
-
-                    each number in numbersArray
-                        li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
-                            a.page-link(href=`/media/recent/${number}?media=${media}`) #{number}
-
-                    li.page-item
-                        a.page-link(href=`/media/recent/${nextNumber}?media=${media}`) >
-
-
-
-
-
-
-            br
-
-        hr
-        div.uploads(style="width:83%;margin:0 auto;")
-            each upload in uploads
-                if upload.uploader
-                    // TODO: Sub out thumbnail here
-                    div.col-sm-4(style="text-align:center;height:310px;")
-                        div(style="width:100%")
-                            a.title-anchor(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}` style="color:black" )
-
-                                if upload.thumbnails && upload.thumbnails.custom
-                                    img.preview-image(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.custom}` style="width:inherit;max-width:302px;")
-
-                                else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.generated
-                                    img.preview-image(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated}` style="width:inherit;max-width:302px;")
-
-                                else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.medium
-                                    img.preview-image(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.medium}` style="width:inherit;max-width:302px;")
-
-                                else if upload.fileType == 'video' && !upload.thumbnailUrl
-                                    img.preview-image(src="/no_img.png")
-
-                                else if upload.fileType == 'image'
-                                    // TODO: have to fix this
-                                    img.preview-image(src=`${'/uploads'}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="width:inherit;max-width:302px;")
-
-                                else if upload.fileType == 'audio'
-                                    img.preview-image(src='/images/audio.svg')
-
-                                else if upload.fileType == 'unknown'
-                                    img.preview-image(src='/images/no_img.png')
-
-                                div
-                                    p.balance-text.upload-title-text(style="width:100%;margin:0 auto;margin-top:6px;") #{upload.title}
-                                br
-
-
-                            // byline
-                            div.upload-details
-                                div.views(style="margin:0 auto")
-                                    p.upload-title-text.views-text(style="margin:0;margin-left:44px;") #{upload.legitViewAmount} views &nbsp
-                                        if upload.fileType == 'video'
-                                            i.fa.fa-video-camera(aria-hidden='true')
-                                        else if upload.fileType == 'audio'
-                                            i.fa.fa-volume-up(aria-hidden='true')
-                                        else if upload.fileType == 'image'
-                                            i.fa.fa-picture-o(aria-hidden='true')
-                                    p.upload-title-text.views-text(style="margin:0") #{upload.timeAgo} &nbsp
-                                        a.upload-user-text.views-text(href=`/user/${upload.uploader.channelUrl}` style="margin:0") #{upload.uploader.channelName || upload.uploader.channelUrl}
-                                            //p(style="font-size:15px") #{upload.uploader.channelName || upload.uploader.channelUrl}
-                                            //    if upload.uploader.verified == true
-                                            //        img(src="/images/verified.jpg" width="19px" height="19px" style="margin-left:3px;margin-top:-2px;")
-                                            //    if upload.uploader.plan == 'plus'
-                                            //        span.pewtube-pro PLUS
-
-                            if user && user.role == 'admin'
-                                div.changeRating(style="margin-top:30px;")
-                                    input.ratingChanged(type="checkbox" value=`${upload._id}`)
-
-
-
-                            // capitalize media type
-                            //div.uploaded-by #{upload.fileType.charAt(0).toUpperCase() + upload.fileType.slice(1)} uploaded
-                            //    | &nbsp#{upload.timeAgo} by
-                            //    a.upload-user-text(href=`/user/${upload.uploader.channelUrl}`)
-                            //        p(style="font-size:15px") #{upload.uploader.channelName || upload.uploader.channelUrl}
-                            //            if upload.uploader.verified == true
-                            //                img(src="/images/verified.jpg" width="19px" height="19px" style="margin-left:3px;margin-top:-2px;")
-                            //            if upload.uploader.plan == 'plus'
-                            //                span.pewtube-pro PLUS
-
-            if user && user.role == 'admin'
-                div.center-block.text-center.col-sm-12
-                    button.btn-lg.button-success.change-rating(rating="sensitive") Mark As Sensitive
-                    button.btn-lg.button-success.change-rating(rating="mature") Mark As NSFW (Mature)
-                    button.btn-lg.button-success.change-rating(rating="allAges") Mark As SFW (AllAges)
-
-        if uploads.length > 0
-
-            div.center-block.text-center.col-sm-12
-
-
-                        div.dropdown
-
-                            nav.center-block.text-center(aria-label='Page navigation example')
-                                ul.pagination
-                                    li.page-item
-                                        a.page-link(href=`/media/recent/${previousNumber}?media=${media}`) <
-
-                                    each number in numbersArray
-                                        li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
-                                            a.page-link(href=`/media/recent/${number}?media=${media}`) #{number}
-
-                                    li.page-item
-                                        a.page-link(href=`/media/recent/${nextNumber}?media=${media}`) >
-
-
-        if user && user.role == 'admin'
-            script.
-                $('.change-rating').on('click', function(){
-                  var checkedValues = $('input:checkbox:checked').map(function () {
-                    return this.value;
-                  }).get();
-
-                  var rating = $(this).attr('rating');
-                  var csrf = '#{_csrf}'
-
-
-                  var data = {
-                    rating: rating,
-                    uploads: checkedValues,
-                    csrf: csrf
-                  }
-
-                  $.ajax({
-                    type: 'POST',
-                    url: `/admin/changeRatings`, // todo: change to user filter
-                    data,
-                    success: function (data) {
-                      if (data == 'success') {
-                        window.location.reload(true);
-                      } else {
-                        swal("Something didn't work, please contact PewTube at ceo@pew.tube or via the widget in the bottom right corner")
-                      }
-                      console.log(data);
-                    },
-                    error: function (err) {
-                      console.log(err);
-                    }
-                  });
-
-
-                  console.log(rating);
-                })
-
-
-        script.
-          $('.changeFilterButton').on('click', function(){
-
-            function changeUserRatingFilter(value){
-
-              console.log('running here')
-
-              var data = {
-                filter: value
+            $.ajax({
+              type: 'POST',
+              url: `/admin/changeRatings`, // todo: change to user filter
+              data,
+              success: function (data) {
+                if (data == 'success') {
+                  window.location.reload(true);
+                } else {
+                  swal("Something didn't work, please contact PewTube at ceo@pew.tube or via the widget in the bottom right corner")
+                }
+                console.log(data);
+              },
+              error: function (err) {
+                console.log(err);
               }
+            });
 
-              $.ajax({
-                type: 'POST',
-                url: `/api/changeUserFilter`, // todo: change to user filter
-                data,
-                success: function (data) {
-                  if (data == 'success') {
-                    window.location.reload(true);
-                  } else {
-                    swal("Something didn't work, please contact PewTube at ceo@pew.tube or via the widget in the bottom right corner")
-                  }
-                  console.log(data);
-                },
-                error: function (err) {
-                  console.log(err);
-                }
-              });
 
-            }
-
-            const value = $(this).attr('value');
-
-            if(value == 'mature'){
-
-              swal({
-                title: '',
-                text: 'Please confirm you are 18 or older and willing to see \n not safe for work content',
-                showCancelButton: true,
-                confirmButtonText: "Confirm Age",
-              }).then(function (result) {
-
-                console.log(result);
-
-                if(result.value == true){
-                  changeUserRatingFilter(value)
-                }
-              })
-
-            } else {
-              changeUserRatingFilter(value);
-            }
-
-            console.log('here')
+            console.log(rating);
           })
 
 
+  script.
+    $('.changeFilterButton').on('click', function(){
 
-        script.
-          balanceText();
+      function changeUserRatingFilter(value){
 
-        script.
-          $(document).on({
-            mouseenter: function () {
-              var width = $(this).width()
-              var height = $(this).height()
+        console.log('running here')
 
+        var data = {
+          filter: value
+        }
 
-              $(this).css("width", width * 1.10);
-              $(this).css("height", height * 1.10);
-
-            },
-            mouseleave: function () {
-              var width = $(this).width()
-              var height = $(this).height()
-
-              $(this).css("width", width / 1.10);
-              $(this).css("height", height / 1.10);
+        $.ajax({
+          type: 'POST',
+          url: `/api/changeUserFilter`, // todo: change to user filter
+          data,
+          success: function (data) {
+            if (data == 'success') {
+              window.location.reload(true);
+            } else {
+              swal("Something didn't work, please contact PewTube at ceo@pew.tube or via the widget in the bottom right corner")
             }
-          }, '.preview-image');
+            console.log(data);
+          },
+          error: function (err) {
+            console.log(err);
+          }
+        });
+
+      }
+
+      const value = $(this).attr('value');
+
+      if(value == 'mature'){
+
+        swal({
+          title: '',
+          text: 'Please confirm you are 18 or older and willing to see \n not safe for work content',
+          showCancelButton: true,
+          confirmButtonText: "Confirm Age",
+        }).then(function (result) {
+
+          console.log(result);
+
+          if(result.value == true){
+            changeUserRatingFilter(value)
+          }
+        })
+
+      } else {
+        changeUserRatingFilter(value);
+      }
+
+      console.log('here')
+    })
+
+
+
+  script
+    | balanceText();
+
+  script.
+    $(document).on({
+      mouseenter: function () {
+        var width = $(this).width()
+        var height = $(this).height()
+
+
+        $(this).css("width", width * 1.10);
+        $(this).css("height", height * 1.10);
+
+      },
+      mouseleave: function () {
+        var width = $(this).width()
+        var height = $(this).height()
+
+        $(this).css("width", width / 1.10);
+        $(this).css("height", height / 1.10);
+      }
+    }, '.preview-image');
+
