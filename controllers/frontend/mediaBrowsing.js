@@ -18,6 +18,40 @@ const getFromCache = require('../../lib/caching/getFromCache');
 
 const { getFilter, filterUploads } = require('../../lib/mediaBrowsing/helpers');
 
+
+
+// Categories;
+// - Comedy -> Pranks, Political
+// - Health/Wellness -> Yoga/Meditation
+// - Music
+// - Technology & Science
+// - How-To & Education
+// - Gaming
+// - News & Politics -> Rightwing / Leftwing
+
+const categories = [{
+  name: 'comedy',
+  subcategories: ['pranks', 'political']
+  },
+  {
+    name: 'healthAndWellness',
+    subcategories: ['yogaAndMeditation', 'fitness']
+  },
+  {
+    name: 'technologyAndScience',
+    subcategories: ['blockchain', 'internet']
+  },
+  {
+    name: 'howToAndEducation',
+    subcategories: []
+  },
+  {
+    name: 'newAndPolitics',
+    subcategories: ['rightwing', 'lefting']
+  }];
+
+
+
 // TODO: pull into its own func
 let indexResponse;
 async function setIndex(){
@@ -54,11 +88,22 @@ exports.recentUploads = async (req, res) => {
   // limit amount to list per page
   const limit = 102;
 
+  // const pages = pagination.getPaginationArray();
+
+  // const pagination = {
+  //   startingNumber: pagination.getMiddleNumber(page),
+  //   numbersArray : pagination.createArray(startingNumber),
+  //   previousNumber : pagination.getPreviousNumber(page),
+  //   nextNumber : pagination.getNextNumber(page)
+  // }
+
   // get numbers for pagination
   const startingNumber = pagination.getMiddleNumber(page);
   const numbersArray = pagination.createArray(startingNumber);
   const previousNumber = pagination.getPreviousNumber(page);
   const nextNumber = pagination.getNextNumber(page);
+
+  const skipAmount = (page * limit) - limit;
 
   // FILTER UPLOADS
   let searchQuery = {
@@ -73,6 +118,45 @@ exports.recentUploads = async (req, res) => {
     searchQuery.fileType = media;
     queryHint = "File Type List";
   }
+
+  /** **/
+
+  let allUploads = {
+
+  };
+
+  for(category of categories){
+    const categoryName = category.name;
+
+    searchQuery.category = categoryName;
+
+    console.log(category);
+
+    console.log(searchQuery);
+
+    let uploadsPerCategory = await Upload.find(searchQuery)
+      .populate('uploader')
+      .sort({ createdAt: -1 })
+      .hint(queryHint)
+      .skip(skipAmount)
+      .limit(limit);
+
+    console.log(uploadsPerCategory);
+
+    allUploads[categoryName] = uploadsPerCategory;
+
+
+
+
+  }
+
+  console.log(allUploads);
+
+
+
+
+
+
 
   // get uploads based on skipping based on createdAt time
   let uploads = await Upload.find(searchQuery)
@@ -96,7 +180,7 @@ exports.recentUploads = async (req, res) => {
   let filter = getFilter(req.user, req.siteVisitor);
   uploads = filterUploads(uploads, filter);
 
-  res.render('public/recentUploads', {
+  res.render('mediaBrowsing/recentUploads', {
     title: 'Recent Uploads',
     uploads,
     numbersArray,
@@ -105,7 +189,8 @@ exports.recentUploads = async (req, res) => {
     nextNumber,
     media,
     uploadServer,
-    siteVisitor: req.siteVisitor
+    siteVisitor: req.siteVisitor,
+    categories
   });
 };
 
@@ -123,11 +208,9 @@ setInterval(function(){
 }, 1000 * 60 * 1);
 
 
-
-
 /**
- * GET /
- * Media page.
+ * GET /media/popular
+ * Page with all popular
  */
 exports.popularUploads = async (req, res) => {
   // setup page
@@ -209,7 +292,7 @@ exports.popularUploads = async (req, res) => {
 
     const siteVisitor = req.siteVisitor;
 
-    res.render('public/popularUploads', {
+    res.render('mediaBrowsing/popularUploads', {
       title: 'Popular Uploads',
       uploads,
       numbersArray,
@@ -221,7 +304,8 @@ exports.popularUploads = async (req, res) => {
       viewAmountInPeriod,
       uploadServer,
       filter,
-      siteVisitor
+      siteVisitor,
+      categories
     });
 
   } catch (err){
