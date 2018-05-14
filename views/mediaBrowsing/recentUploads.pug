@@ -132,10 +132,10 @@ block content
             for category in categories
                 if allUploads[category.name].length > 0
                     div.category.col-sm-12
-                        if user.role == 'admin' || user.role == 'moderator'
-                             h2 #{category.name} (#{allUploads[category.name].length})
+                        if user.role == 'admin' || user.role == 'moderator' || 1 == 1
+                             h2 #{category.displayName} (#{allUploads[category.name].length})
                         else
-                            h2 #{category.name}
+                            h2 #{category.displayName}
 
 
                         // begin individual upload section

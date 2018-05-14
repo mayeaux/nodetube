@@ -29,9 +29,18 @@ const { getFilter, filterUploads } = require('../../lib/mediaBrowsing/helpers');
 // - Gaming
 // - News & Politics -> Rightwing / Leftwing
 
-const categories = [{
-  name: 'comedy',
-  subcategories: ['pranks', 'political']
+const categories = [
+  {
+    name: 'comedy',
+    displayName: 'Comedy',
+    subcategories: [
+      { name: 'pranks', displayName: 'Pranks' },
+      { name: 'political', displayName: 'Political'}
+    ],
+  },
+  {
+    name: 'gaming',
+    subcategories: []
   },
   {
     name: 'healthAndWellness',
@@ -47,8 +56,13 @@ const categories = [{
   },
   {
     name: 'newAndPolitics',
-    subcategories: ['rightwing', 'lefting']
-  }];
+    subcategories: ['rightwing', 'leftwing']
+  },
+  {
+    name: 'uncategorized',
+    displayName: 'Uncategorized'
+  },
+];
 
 
 
@@ -130,7 +144,7 @@ exports.recentUploads = async (req, res) => {
 
     console.log(category);
 
-    console.log(searchQuery);
+    // console.log(searchQuery);
 
     let uploadsPerCategory = await Upload.find(searchQuery)
       .populate('uploader')
@@ -139,9 +153,19 @@ exports.recentUploads = async (req, res) => {
       .skip(skipAmount)
       .limit(limit);
 
-    console.log(uploadsPerCategory);
+    console.log(uploadsPerCategory.length);
 
     allUploads[categoryName] = uploadsPerCategory;
+
+    //populate upload.legitViewAmount
+    allUploads[categoryName] = await Promise.all(
+      allUploads[categoryName].map(async function(upload){
+        upload = upload.toObject();
+        const checkedViews = await View.count({ upload: upload.id, validity: 'real' });
+        upload.legitViewAmount = checkedViews;
+        return upload
+      })
+    );
 
 
 
@@ -150,7 +174,7 @@ exports.recentUploads = async (req, res) => {
 
 
 
-  console.log(allUploads);
+  // console.log(allUploads);
 
 
 
