@@ -81,7 +81,10 @@ const uploadSchema = new mongoose.Schema({
 
   moderated: {
     type: Boolean
-  }
+  },
+
+  category: { type: String, enum: ['healthAndWellness', 'comedy', 'technologyAndScience'] },
+
 
 }, {
   timestamps: true,
