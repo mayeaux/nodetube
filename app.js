@@ -56,8 +56,6 @@ const amountOfProcesses = process.env.WEB_CONCURRENCY || numCPUs;
 // });
 
 
-console.log(`Running with this many processes: ${amountOfProcesses}`);
-
 if (cluster.isMaster) {
   for (let i = 0; i < amountOfProcesses; i++) {
     // Create a worker
@@ -65,6 +63,8 @@ if (cluster.isMaster) {
   }
 
 } else {
+
+  console.log(`Running with this many processes: ${amountOfProcesses}`);
 
   (async function() {
 
