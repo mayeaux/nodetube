@@ -127,6 +127,31 @@ block content
 
             br
 
+        //p= allUploads
+
+        for category in categories
+            p= category.name
+                each upload in allUploads[category.name]
+                    p= upload.title
+
+
+
+
+        //allUploads.comedy = [{'thing'}]
+
+        //each thing in allUploads
+        //    for category in categories
+        //        p= category.name
+        //        p= thing._id
+        //        if thing.category == category.name
+        //            p Thing
+        //            //p= upload.category
+        //            //for subcategory in category.subcategories
+        //            //    p= subcategory
+        //    br
+        //    br
+        //    br
+
         hr
         div.uploads(style="width:83%;margin:0 auto;")
             each upload in uploads
