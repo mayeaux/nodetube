@@ -19,6 +19,8 @@ const pagination = require('../../lib/helpers/pagination');
 
 const mongooseHelper = require('../../caching/mongooseHelpers');
 
+const categories = require('../../config/categories');
+
 
 /**
  * GET /upload
@@ -41,7 +43,8 @@ exports.getFileUpload = async (req, res) => {
 
   res.render('upload', {
     title: 'File Upload',
-    uploadUrl
+    uploadUrl,
+    categories
   });
 };
 

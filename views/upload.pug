@@ -1,6 +1,30 @@
 extends layout
 
 block content
+  style.
+    .dropdown {
+      text-align: center;
+    }
+
+    .button, .dropdown-menu {
+      margin: 10px auto
+    }
+
+    .dropdown-menu {
+      width: 200px;
+      left: 50%;
+      margin-left: -100px;
+    }
+
+    input[type=checkbox] {
+      /* Double-sized Checkboxes */
+      -ms-transform: scale(2); /* IE */
+      -moz-transform: scale(2); /* FF */
+      -webkit-transform: scale(2); /* Safari and Chrome */
+      -o-transform: scale(2); /* Opera */
+      padding: 10px;
+    }
+
   br
   div.center-block.text-center
       div.upload-information
@@ -65,6 +89,19 @@ block content
                       label.radio-inline
                         input.radio-button(type='radio', name='visibility' value="private")
                         | Private
+                    br
+
+                  div.dropdown(style="display:inline;padding-right:15px;")
+                    button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px;")
+                      | Category: &nbsp
+                      span.caret
+
+                    ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1' style="margin-top:-17px;margin-left:-81px;")
+                      each category in categories
+                        li(role='presentation')
+                          a(style="cursor:pointer;") #{category.displayName}
+
+                    br
                     br
 
                   label(for='rating') Rating
