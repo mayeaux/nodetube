@@ -13,15 +13,23 @@ async function setGlobalPopularUploads(){
   popularUploads = await redisClient.getAsync('popularUploads');
   popularUploads = JSON.parse(popularUploads);
 
-  console.log('set popular uploads cache');
+  console.log('load popular uploads redis cache in memory ');
 }
 
 setGlobalPopularUploads();
 setInterval(setGlobalPopularUploads, 1000 * 60 * 5);
 
-const c = {
-  l : console.log
-};
+let recentUploads;
+async function setGlobalRecentUploads(){
+  recentUploads = await redisClient.getAsync('recentUploads');
+  recentUploads = JSON.parse(recentUploads);
+
+  console.log('load recentUploads redis cache in memory ');
+}
+
+setGlobalRecentUploads();
+setInterval(setGlobalRecentUploads, 1000 * 60 * 5);
+
 
 // Only get needed amount of uploads
 function trimUploads(uploads, limit, offset){
@@ -93,7 +101,22 @@ async function getPopularUploads(timeRange, limit, offset) {
   return uploads;
 }
 
+// upload type = popularUploads, recentUploads
+async function getRecentUploads(limit, offset) {
+
+  // load recent uploads into memory
+  let uploads = recentUploads;
+
+  // send empty array if no globalRecentUploads set
+  if(!uploads) return [];
+
+  uploads = trimUploads(uploads, limit, offset);
+
+  return uploads;
+}
+
 module.exports = {
-  getPopularUploads
+  getPopularUploads,
+  getRecentUploads
 };
 

@@ -47,11 +47,13 @@ mongoose.connection.on('error', (err) => {
 
 console.log('Connected to ' + database);
 
-const cacheChannels = require('./cacheChannels'); // cache channels by popularity every 20 mins
-const cacheUploads = require('./cacheUploads');  // cache popular uploads
+
 const setCache = require('./setCache'); // index and daily stats
 
-const  cacheRecentUploads = require('./cacheRecentAndPopularUploads');
+const cacheRecentUploads = require('./cacheRecentUploads'); // index and daily stats
+const cachePopularUploads = require('./cachePopularUploads'); // index and daily stats
+
+// const cacheRecentUploads = require('./cacheRecentAndPopularUploads');
 
 async function main(){
 
@@ -59,7 +61,7 @@ async function main(){
 
     await cacheRecentUploads();
 
-    // await cacheUploads();
+    // await cachePopularUploads();
     //
     // await setCache.setDailyStats();
     // await setCache.setIndexValues();

@@ -130,16 +130,17 @@ block content
         hr
         div.uploads
             for category in categories
-                if allUploads[category.name].length > 0
+                //p= uploads[category.name]
+                if uploads[category.name] && uploads[category.name].length > 0
                     div.category.col-sm-12
                         if user.role == 'admin' || user.role == 'moderator' || 1 == 1
-                             h2 #{category.displayName} (#{allUploads[category.name].length})
+                             h2 #{category.displayName} (#{uploads[category.name].length})
                         else
                             h2 #{category.displayName}
 
 
                         // begin individual upload section
-                        each upload in allUploads[category.name]
+                        each upload in uploads[category.name]
                             if upload.uploader
                                 // TODO: Sub out thumbnail here
                                 div.col-sm-4(style="text-align:center;height:310px;")

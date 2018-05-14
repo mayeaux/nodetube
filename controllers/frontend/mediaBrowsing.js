@@ -16,34 +16,9 @@ const uploadServer = uploadHelpers.uploadServer;
 
 const getFromCache = require('../../caching/getFromCache');
 
-const { getFilter, filterUploads } = require('../../lib/mediaBrowsing/helpers');
-
-
-
-// Categories;
-// - Comedy -> Pranks, Political
-// - Health/Wellness -> Yoga/Meditation
-// - Music
-// - Technology & Science
-// - How-To & Education
-// - Gaming
-// - News & Politics -> Rightwing / Leftwing
+const { getSensitivityFilter, filterUploadsBySensitivity, filterUploadsByCategory, filterUploadsBySubCategory } = require('../../lib/mediaBrowsing/helpers');
 
 const categories = require('../../config/categories');
-
-// TODO: pull into its own func
-let indexResponse;
-async function setIndex(){
-  indexResponse = await redisClient.hgetallAsync('indexValues');
-  console.log('got index cache');
-}
-
-setIndex();
-setInterval(function(){
-  setIndex()
-}, 1000 * 60 * 2);
-
-
 
 console.log('UPLOAD SERVER: ' + uploadServer);
 
@@ -57,133 +32,55 @@ const mongooseHelpers = require('../../caching/mongooseHelpers');
  * Page displaying most recently uploaded content
  */
 exports.recentUploads = async (req, res) => {
-  // get media page, either video, image, audio or all
-  let media = req.query.media || 'all';
 
-  // get current page
-  let page = parseInt(req.params.page || 1);
+  try {
+
+    // get media page, either video, image, audio or all
+    let media = req.query.media || 'all';
+
+    // get current page
+    let page = parseInt(req.params.page || 1);
+
+    // limit amount to list per page
+    const limit = 102;
 
 
-  // limit amount to list per page
-  const limit = 102;
+    const skipAmount = (page * limit) - limit;
 
-  // const pages = pagination.getPaginationArray();
+    // get numbers for pagination
+    const startingNumber = pagination.getMiddleNumber(page);
+    const numbersArray = pagination.createArray(startingNumber);
+    const previousNumber = pagination.getPreviousNumber(page);
+    const nextNumber = pagination.getNextNumber(page);
 
-  // const pagination = {
-  //   startingNumber: pagination.getMiddleNumber(page),
-  //   numbersArray : pagination.createArray(startingNumber),
-  //   previousNumber : pagination.getPreviousNumber(page),
-  //   nextNumber : pagination.getNextNumber(page)
-  // }
 
-  // get numbers for pagination
-  const startingNumber = pagination.getMiddleNumber(page);
-  const numbersArray = pagination.createArray(startingNumber);
-  const previousNumber = pagination.getPreviousNumber(page);
-  const nextNumber = pagination.getNextNumber(page);
+    // gonna get like 108 documents
+    let uploads = await getFromCache.getRecentUploads(limit, skipAmount);
 
-  const skipAmount = (page * limit) - limit;
+    console.log(uploads);
 
-  // FILTER UPLOADS
-  let searchQuery = {
-    status: 'completed',
-    visibility: 'public',
-    sensitive: { $ne: true }
-  };
+    // filter uploads based on sensitivity
+    let filter = getSensitivityFilter(req.user, req.siteVisitor);
+    uploads = filterUploadsBySensitivity(uploads, filter);
 
-  // setup query hint based on media type
-  let queryHint = "All Media List";
-  if(media !== 'all'){
-    searchQuery.fileType = media;
-    queryHint = "File Type List";
+    res.render('mediaBrowsing/recentUploads', {
+      title: 'Recent Uploads',
+      uploads,
+      numbersArray,
+      highlightedNumber: page,
+      previousNumber,
+      nextNumber,
+      media,
+      uploadServer,
+      siteVisitor: req.siteVisitor,
+      categories,
+      uploads
+    });
+
+  } catch (err){
+    res.send('error')
   }
 
-  /** **/
-
-  let allUploads = {};
-
-  // loop through all categories
-  for(category of categories){
-    const categoryName = category.name;
-
-    searchQuery.category = categoryName;
-
-    // console.log(category);
-    //
-    // console.log(searchQuery);
-
-    let uploadsPerCategory = await Upload.find(searchQuery)
-      .populate('uploader')
-      .sort({ createdAt: -1 })
-      // .hint(queryHint)
-      .skip(skipAmount)
-      .limit(limit);
-
-    console.log(uploadsPerCategory.length);
-
-    allUploads[categoryName] = uploadsPerCategory;
-
-    //populate upload.legitViewAmount
-    allUploads[categoryName] = await Promise.all(
-      allUploads[categoryName].map(async function(upload){
-        upload = upload.toObject();
-        upload.legitViewAmount = await View.count({ upload: upload.id, validity: 'real' });;
-        return upload
-      })
-    );
-
-
-
-
-  }
-
-
-
-  // console.log(allUploads);
-
-
-
-
-
-
-
-  // get uploads based on skipping based on createdAt time
-  let uploads = await Upload.find(searchQuery)
-    .populate('uploader')
-    .sort({ createdAt: -1 })
-    // .hint(queryHint)
-    .skip((page * limit) - limit)
-    .limit(limit);
-
-  // populate upload.legitViewAmount
-  uploads = await Promise.all(
-    uploads.map(async function(upload){
-      upload = upload.toObject();
-      const checkedViews = await View.count({ upload: upload.id, validity: 'real' });
-      upload.legitViewAmount = checkedViews;
-      return upload
-    })
-  );
-
-
-
-  // filter uploads based on sensitivity
-  let filter = getFilter(req.user, req.siteVisitor);
-  uploads = filterUploads(uploads, filter);
-
-  res.render('mediaBrowsing/recentUploads', {
-    title: 'Recent Uploads',
-    uploads,
-    numbersArray,
-    highlightedNumber: page,
-    previousNumber,
-    nextNumber,
-    media,
-    uploadServer,
-    siteVisitor: req.siteVisitor,
-    categories,
-    allUploads
-  });
 };
 
 
@@ -198,6 +95,19 @@ getStats();
 setInterval(function(){
   getStats()
 }, 1000 * 60 * 1);
+
+// TODO: pull into its own func
+let indexResponse;
+async function setIndex(){
+  indexResponse = await redisClient.hgetallAsync('indexValues');
+  console.log('got index cache');
+}
+
+setIndex();
+setInterval(function(){
+  setIndex()
+}, 1000 * 60 * 2);
+
 
 
 /**
@@ -254,35 +164,7 @@ exports.popularUploads = async (req, res) => {
     // TODO: add upload.uploadServer
     let uploads = await getFromCache.getPopularUploads(req.query.within, limit, skipAmount);
 
-    let filter;
-    if(req.user){
-      filter = req.user.filter
-    } else {
-      filter = req.siteVisitor.filter
-    }
-
-    if(filter == 'sensitive'){
-      // nothing to do
-    } else if (filter == 'mature'){
-
-      // return ones not marked as sensitive
-      uploads = _.filter(uploads, function(upload){
-        return upload.rating !== 'sensitive'
-      });
-
-    } else if (filter == 'allAges'){
-
-      // return ones not marked as sensitive or mature
-      uploads = _.filter(uploads, function(upload){
-        return upload.rating !== 'sensitive' && upload.rating !== 'mature'
-      });
-
-    }
-
-    // const uploadServer = 'https://uploads.pew.tube/uploads';
-
-
-    const siteVisitor = req.siteVisitor;
+    // uploads = filterUploads()
 
     res.render('mediaBrowsing/popularUploads', {
       title: 'Popular Uploads',
@@ -296,7 +178,7 @@ exports.popularUploads = async (req, res) => {
       viewAmountInPeriod,
       uploadServer,
       filter,
-      siteVisitor,
+      siteVisitor : req.siteVisitor,
       categories
     });
 
