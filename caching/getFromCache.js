@@ -8,20 +8,6 @@ const sizeof = require('object-sizeof');
 
 const redisClient = require('../config/redis');
 
-let recentUploads;
-async function setGlobalRecentUploads(){
-  recentUploads = await redisClient.getAsync('recentUploads');
-  recentUploads = JSON.parse(recentUploads);
-
-  console.log(recentUploads)
-
-  console.log('set recent uploads cache');
-}
-
-setGlobalRecentUploads();
-setInterval(setGlobalRecentUploads, 1000 * 60 * 5);
-
-
 let popularUploads;
 async function setGlobalPopularUploads(){
   popularUploads = await redisClient.getAsync('popularUploads');
@@ -50,7 +36,7 @@ function trimUploads(uploads, limit, offset){
   return trimmedUploads
 };
 
-function sortUploads(uploads, timeRange) {
+function sortUploadsByViews(uploads, timeRange) {
 
   if(timeRange == '1hour'){
 
@@ -90,20 +76,14 @@ function sortUploads(uploads, timeRange) {
 }
 
 // upload type = popularUploads, recentUploads
-async function getUploads(uploadType, timeRange, limit, offset) {
+async function getPopularUploads(timeRange, limit, offset) {
+
   if(!timeRange) timeRange = 'allTime';
 
   // load recent uploads into memory
-  let uploads = recentUploads;
+  let uploads = popularUploads;
 
-  console.log('getting from cache')
-  console.log(uploads)
-
-  uploads = sortUploads(uploads, timeRange);
-
-  console.log('after sorted')
-
-  console.log(uploads);
+  uploads = sortUploadsByViews(uploads, timeRange);
 
   // send empty array if no globalRecentUploads set
   if(!uploads) return [];
@@ -114,6 +94,6 @@ async function getUploads(uploadType, timeRange, limit, offset) {
 }
 
 module.exports = {
-  getUploads
+  getPopularUploads
 };
 

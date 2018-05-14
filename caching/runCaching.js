@@ -51,7 +51,7 @@ const cacheChannels = require('./cacheChannels'); // cache channels by popularit
 const cacheUploads = require('./cacheUploads');  // cache popular uploads
 const setCache = require('./setCache'); // index and daily stats
 
-const  cacheRecentUploads = require('./cacheRecentUploads');
+const  cacheRecentUploads = require('./cacheRecentAndPopularUploads');
 
 async function main(){
 

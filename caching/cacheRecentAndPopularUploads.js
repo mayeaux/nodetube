@@ -47,9 +47,9 @@ async function calculateViewsByPeriod(upload, uploadViews){
 }
 
 
-async function getRecentUploads(){
+async function getPopularUploads(uploadType){
 
-  console.log('Getting recent uploads');
+  console.log(`Getting popular uploads`);
 
   const searchQuery = {
     $or : [ { status: 'completed' }, { uploadUrl: { $exists: true } } ],
@@ -62,15 +62,14 @@ async function getRecentUploads(){
   const selectString = 'rating title views checkedViews uploader fileType thumbnailUrl ' +
     'uploadUrl uniqueTag customThumbnailUrl fileExtension thumbnails reacts uncurated';
 
-  let recentUploads = await Upload.find(searchQuery).select(selectString).populate('uploader reacts')
-    .limit(1)
+  let popularUploads = await Upload.find(searchQuery).select(selectString).populate('uploader reacts')
     .lean();
 
   console.log('Uploads received from database');
 
-  c.l(recentUploads.length);
+  c.l(popularUploads.length);
 
-  return recentUploads
+  return popularUploads
 }
 
 function buildObjects(uploads){
@@ -112,20 +111,16 @@ function buildObjects(uploads){
   })
 }
 
-async function setRecentUploads() {
-  console.log('Caching recent uploads');
-
-  let recentUploads  = await getRecentUploads();
-
-  console.log('DB returned, calculating view amounts');
+async function setPopularUploads() {
+  let popularUploads  = await getPopularUploads();
 
   // do more stringent check for uploader
-  recentUploads =  _.filter(recentUploads, function(upload){
+  popularUploads =  _.filter(popularUploads, function(upload){
     return upload.uploader;
   });
 
   // calculate view periods for each upload
-  recentUploads = await Promise.all(recentUploads.map(async function(upload){
+  popularUploads = await Promise.all(popularUploads.map(async function(upload){
 
     // get all valid views per upload
     const uploadViews = await View.find({ upload, validity: 'real' }).select('createdAt');
@@ -134,28 +129,18 @@ async function setRecentUploads() {
     return calculateViewsByPeriod(upload, uploadViews);
   }));
 
-  console.log(recentUploads);
+  // build json objects representing uploads
+  popularUploads = buildObjects(popularUploads);
 
-  console.log('View amounts calculated, building objects');
-
-  recentUploads = buildObjects(recentUploads);
-
-  console.log('Done Setting');
-
-  console.log(recentUploads);
-
-  console.log(recentUploads.length)
-
-  const redisKey = 'recentUploads';
-
-  const response = await redisClient.setAsync(redisKey, JSON.stringify(recentUploads));
+  const redisKey = 'popularUploads';
+  const response = await redisClient.setAsync(redisKey, JSON.stringify(popularUploads));
 
   console.log(`REDIS RESPONSE FOR ${redisKey}: ${response}`);
 
   console.log(`${redisKey} cached`);
 }
 
-module.exports = setRecentUploads;
+module.exports = setPopularUploads;
 
 
 

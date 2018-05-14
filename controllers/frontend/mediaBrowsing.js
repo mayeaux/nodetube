@@ -252,10 +252,7 @@ exports.popularUploads = async (req, res) => {
     // console.log(indexResponse);
 
     // TODO: add upload.uploadServer
-    let uploads = await getFromCache.getUploads('recentUploads', req.query.within, limit, skipAmount);
-
-    console.log('hello!!')
-    console.log(uploads);
+    let uploads = await getFromCache.getPopularUploads(req.query.within, limit, skipAmount);
 
     let filter;
     if(req.user){
