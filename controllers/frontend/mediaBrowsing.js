@@ -144,12 +144,12 @@ exports.recentUploads = async (req, res) => {
 
     console.log(category);
 
-    // console.log(searchQuery);
+    console.log(searchQuery);
 
     let uploadsPerCategory = await Upload.find(searchQuery)
       .populate('uploader')
       .sort({ createdAt: -1 })
-      .hint(queryHint)
+      // .hint(queryHint)
       .skip(skipAmount)
       .limit(limit);
 
@@ -186,7 +186,7 @@ exports.recentUploads = async (req, res) => {
   let uploads = await Upload.find(searchQuery)
     .populate('uploader')
     .sort({ createdAt: -1 })
-    .hint(queryHint)
+    // .hint(queryHint)
     .skip((page * limit) - limit)
     .limit(limit);
 

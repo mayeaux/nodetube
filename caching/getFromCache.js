@@ -109,6 +109,7 @@ async function getChannels(timeRange, limit, offset, rating){
       return localChannels
 
     }
+    // get all time views
   } else {
 
     localChannels = localChannels.sort(function(a, b) {

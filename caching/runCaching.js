@@ -50,12 +50,13 @@ const setCache = require('./setCache'); // index and daily stats
 async function main(){
 
   try {
+
+    await cacheUploads();
+
     await setCache.setDailyStats();
     await setCache.setIndexValues();
 
-    // TODO: cache uploads and channels correctly crash
-    await cacheUploads();
-    await cacheChannels();
+    // await cacheChannels();
   } catch (err){
     console.log(err);
   }

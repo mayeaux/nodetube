@@ -121,7 +121,7 @@ if (cluster.isMaster) {
       reconnectTries: Number.MAX_VALUE
     });
 
-    // mongoose.set('debug', true);
+    mongoose.set('debug', true);
     mongoose.connection.on('error', (err) => {
       console.error(err);
       console.log('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'));
