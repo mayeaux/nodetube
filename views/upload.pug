@@ -105,21 +105,22 @@ block content
 
                   br
                   div.categoryName(style="display:none")
-                    br
                     h5.categoryDisplayName Category: $Thing
                     br
 
                   each category in categories
-                    //label(for='rating' style="margin-bottom:4px;") #{category.displayName}
-                    if category.subcategories
-                      each subcategory in category.subcategories
-                          div.radio-buttons(class=category.name style="display:none")
-                            label.radio-inline
-                              input.radio-button(type='radio', name='rating' value="sensitive" required)
-                              | #{subcategory.displayName}
+                    div.subcategories(class=category.name style="display:none;")
+                      label(for='rating') Subcategory
+                      if category.subcategories
+                        each subcategory in category.subcategories
+                            div.radio-buttons(class=category.name style="display:none")
+                              label.radio-inline
+                                input.radio-button(type='radio', name='rating' value="sensitive" required)
+                                | #{subcategory.displayName}
 
-                            br
-                            br
+                              br
+                              br
+                      br
 
                   label(for='rating') Rating
                   br
@@ -179,6 +180,16 @@ block content
         var value = $(this).data("value");
 
         var displayName = $(this).data("displayname");
+
+        $('.subcategories').hide();
+
+        $('.categoryDisplayName').text('Category: ' + displayName)
+
+        $('.categoryName').show();
+
+        $('.' + value).show();
+
+
 
 
         console.log(value, displayName);
