@@ -155,7 +155,9 @@ exports.postFileUpload = async (req, res, next) => {
           hostUrl,
           fileExtension,
           uniqueTag,
-          rating: req.query.rating
+          rating: req.query.rating,
+          category: req.query.category || '',
+          subcategory: req.query.subcategory || ''
           // uploadServer
         });
 
