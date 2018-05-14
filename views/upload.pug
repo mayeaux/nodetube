@@ -108,10 +108,11 @@ block content
                     h5.categoryDisplayName Category: $Thing
                     br
 
+                  // subcategories
                   each category in categories
-                    div.subcategories(class=category.name style="display:none;")
-                      label(for='rating') Subcategory
-                      if category.subcategories
+                    if category.subcategories && category.subcategories.length > 1
+                      div.subcategories(class=category.name style="display:none;")
+                        label(for='rating') Subcategory
                         each subcategory in category.subcategories
                             div.radio-buttons(class=category.name style="display:none")
                               label.radio-inline
@@ -120,7 +121,6 @@ block content
 
                               br
                               br
-                      br
 
                   label(for='rating') Rating
                   br
