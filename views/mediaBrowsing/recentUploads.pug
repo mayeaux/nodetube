@@ -127,100 +127,91 @@ block content
 
             br
 
-        //p= allUploads
-
-        for category in categories
-            p= category.name
-                each upload in allUploads[category.name]
-                    p= upload.title
-
-
-
-
-        //allUploads.comedy = [{'thing'}]
-
-        //each thing in allUploads
-        //    for category in categories
-        //        p= category.name
-        //        p= thing._id
-        //        if thing.category == category.name
-        //            p Thing
-        //            //p= upload.category
-        //            //for subcategory in category.subcategories
-        //            //    p= subcategory
-        //    br
-        //    br
-        //    br
-
         hr
         div.uploads(style="width:83%;margin:0 auto;")
-            each upload in uploads
-                if upload.uploader
-                    // TODO: Sub out thumbnail here
-                    div.col-sm-4(style="text-align:center;height:310px;")
-                        div(style="width:100%")
-                            a.title-anchor(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}` style="color:black" )
-
-                                if upload.thumbnails && upload.thumbnails.custom
-                                    img.preview-image(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.custom}` style="width:inherit;max-width:302px;")
-
-                                else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.generated
-                                    img.preview-image(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated}` style="width:inherit;max-width:302px;")
-
-                                else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.medium
-                                    img.preview-image(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.medium}` style="width:inherit;max-width:302px;")
-
-                                else if upload.fileType == 'video' && !upload.thumbnailUrl
-                                    img.preview-image(src="/no_img.png")
-
-                                else if upload.fileType == 'image'
-                                    // TODO: have to fix this
-                                    img.preview-image(src=`${'/uploads'}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="width:inherit;max-width:302px;")
-
-                                else if upload.fileType == 'audio'
-                                    img.preview-image(src='/images/audio.svg')
-
-                                else if upload.fileType == 'unknown'
-                                    img.preview-image(src='/images/no_img.png')
-
-                                div
-                                    p.balance-text.upload-title-text(style="width:100%;margin:0 auto;margin-top:6px;") #{upload.title}
-                                br
+            for category in categories
+                if allUploads[category.name].length > 0
+                    if user.role == 'admin' || user.role == 'moderator'
+                         h2 #{category.name} (#{allUploads[category.name].length})
+                    else
+                        h2 #{category.name}
 
 
-                            // byline
-                            div.upload-details
-                                div.views(style="margin:0 auto")
-                                    p.upload-title-text.views-text(style="margin:0;margin-left:44px;") #{upload.legitViewAmount} views &nbsp
-                                        if upload.fileType == 'video'
-                                            i.fa.fa-video-camera(aria-hidden='true')
-                                        else if upload.fileType == 'audio'
-                                            i.fa.fa-volume-up(aria-hidden='true')
+                    // begin individual upload section
+                    each upload in allUploads[category.name]
+                        if upload.uploader
+                            // TODO: Sub out thumbnail here
+                            div.col-sm-4(style="text-align:center;height:310px;")
+                                div(style="width:100%")
+                                    a.title-anchor(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}` style="color:black" )
+
+                                        if upload.thumbnails && upload.thumbnails.custom
+                                            img.preview-image(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.custom}` style="width:inherit;max-width:302px;")
+
+                                        else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.generated
+                                            img.preview-image(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated}` style="width:inherit;max-width:302px;")
+
+                                        else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.medium
+                                            img.preview-image(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.medium}` style="width:inherit;max-width:302px;")
+
+                                        else if upload.fileType == 'video' && !upload.thumbnailUrl
+                                            img.preview-image(src="/no_img.png")
+
                                         else if upload.fileType == 'image'
-                                            i.fa.fa-picture-o(aria-hidden='true')
-                                    p.upload-title-text.views-text(style="margin:0") #{upload.timeAgo} &nbsp
-                                        a.upload-user-text.views-text(href=`/user/${upload.uploader.channelUrl}` style="margin:0") #{upload.uploader.channelName || upload.uploader.channelUrl}
-                                            //p(style="font-size:15px") #{upload.uploader.channelName || upload.uploader.channelUrl}
-                                            //    if upload.uploader.verified == true
-                                            //        img(src="/images/verified.jpg" width="19px" height="19px" style="margin-left:3px;margin-top:-2px;")
-                                            //    if upload.uploader.plan == 'plus'
-                                            //        span.pewtube-pro PLUS
+                                            // TODO: have to fix this
+                                            img.preview-image(src=`${'/uploads'}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="width:inherit;max-width:302px;")
 
-                            if user && user.role == 'admin'
-                                div.changeRating(style="margin-top:30px;")
-                                    input.ratingChanged(type="checkbox" value=`${upload._id}`)
+                                        else if upload.fileType == 'audio'
+                                            img.preview-image(src='/images/audio.svg')
+
+                                        else if upload.fileType == 'unknown'
+                                            img.preview-image(src='/images/no_img.png')
+
+                                        div
+                                            p.balance-text.upload-title-text(style="width:100%;margin:0 auto;margin-top:6px;") #{upload.title}
+                                        br
+
+
+                                    // byline
+                                    div.upload-details
+                                        div.views(style="margin:0 auto")
+                                            p.upload-title-text.views-text(style="margin:0;margin-left:44px;") #{upload.legitViewAmount} views &nbsp
+                                                if upload.fileType == 'video'
+                                                    i.fa.fa-video-camera(aria-hidden='true')
+                                                else if upload.fileType == 'audio'
+                                                    i.fa.fa-volume-up(aria-hidden='true')
+                                                else if upload.fileType == 'image'
+                                                    i.fa.fa-picture-o(aria-hidden='true')
+                                            p.upload-title-text.views-text(style="margin:0") #{upload.timeAgo} &nbsp
+                                                a.upload-user-text.views-text(href=`/user/${upload.uploader.channelUrl}` style="margin:0") #{upload.uploader.channelName || upload.uploader.channelUrl}
+                                                    //p(style="font-size:15px") #{upload.uploader.channelName || upload.uploader.channelUrl}
+                                                    //    if upload.uploader.verified == true
+                                                    //        img(src="/images/verified.jpg" width="19px" height="19px" style="margin-left:3px;margin-top:-2px;")
+                                                    //    if upload.uploader.plan == 'plus'
+                                                    //        span.pewtube-pro PLUS
+
+                                    if user && user.role == 'admin'
+                                        div.changeRating(style="margin-top:30px;")
+                                            input.ratingChanged(type="checkbox" value=`${upload._id}`)
 
 
 
-                            // capitalize media type
-                            //div.uploaded-by #{upload.fileType.charAt(0).toUpperCase() + upload.fileType.slice(1)} uploaded
-                            //    | &nbsp#{upload.timeAgo} by
-                            //    a.upload-user-text(href=`/user/${upload.uploader.channelUrl}`)
-                            //        p(style="font-size:15px") #{upload.uploader.channelName || upload.uploader.channelUrl}
-                            //            if upload.uploader.verified == true
-                            //                img(src="/images/verified.jpg" width="19px" height="19px" style="margin-left:3px;margin-top:-2px;")
-                            //            if upload.uploader.plan == 'plus'
-                            //                span.pewtube-pro PLUS
+                                    // capitalize media type
+                                    //div.uploaded-by #{upload.fileType.charAt(0).toUpperCase() + upload.fileType.slice(1)} uploaded
+                                    //    | &nbsp#{upload.timeAgo} by
+                                    //    a.upload-user-text(href=`/user/${upload.uploader.channelUrl}`)
+                                    //        p(style="font-size:15px") #{upload.uploader.channelName || upload.uploader.channelUrl}
+                                    //            if upload.uploader.verified == true
+                                    //                img(src="/images/verified.jpg" width="19px" height="19px" style="margin-left:3px;margin-top:-2px;")
+                                    //            if upload.uploader.plan == 'plus'
+                                    //                span.pewtube-pro PLUS
+
+
+
+                    // END INDIVIDUAL UPLOAD SECTION
+
+                br
+                br
 
             if user && user.role == 'admin'
                 div.center-block.text-center.col-sm-12
@@ -228,7 +219,6 @@ block content
                     button.btn-lg.button-success.change-rating(rating="mature") Mark As NSFW (Mature)
                     button.btn-lg.button-success.change-rating(rating="allAges") Mark As SFW (AllAges)
 
-        if uploads.length > 0
 
             div.center-block.text-center.col-sm-12
 
