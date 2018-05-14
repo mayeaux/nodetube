@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const Upload = require('../../models/index.js').Upload;
-const View = require('../../models/index.js').View;
+const Upload = require('../models/index.js').Upload;
+const View = require('../models/index.js').View;
 const _ = require('lodash');
 
 //

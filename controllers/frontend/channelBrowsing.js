@@ -1,7 +1,7 @@
 const pagination = require('../../lib/helpers/pagination');
 const _ = require('lodash');
 
-const getFromCache = require('../../lib/caching/getFromCache');
+const getFromCache = require('../../caching/getFromCache');
 
 const User = require('../../models/index').User;
 

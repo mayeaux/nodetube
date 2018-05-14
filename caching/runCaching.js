@@ -14,9 +14,10 @@ process.on('unhandledRejection', (err) => {
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
  */
-dotenv.load({ path: '.env.example' });
+dotenv.load({ path: '.env.settings' });
+dotenv.load({ path: '.env.private' });
 
-const database = process.env.MONGO_URI || process.env.MONGODB_URI || process.env.MONGOLAB_URI || 'mongodb://localhost:27017/nov17pewtube';
+const database = process.env.MONGODB_DOCKER_URI || process.env.MONGO_URI || process.env.MONGODB_URI || process.env.MONGOLAB_URI || 'mongodb://localhost:27017/april15pewtube';
 
 console.log(database);
 
@@ -28,8 +29,7 @@ mongoose.Promise = global.Promise;
 mongoose.Promise = global.Promise;
 mongoose.connect(database, {
   keepAlive: true,
-  reconnectTries: Number.MAX_VALUE,
-  useMongoClient: true
+  reconnectTries: Number.MAX_VALUE
 });
 
 // mongoose.set('debug', true);
@@ -50,11 +50,12 @@ const setCache = require('./setCache'); // index and daily stats
 async function main(){
 
   try {
-    // TODO: cache uploads and channels correctly crash
-    // await cacheUploads();
     await setCache.setDailyStats();
     await setCache.setIndexValues();
-    // await cacheChannels();
+
+    // TODO: cache uploads and channels correctly crash
+    await cacheUploads();
+    await cacheChannels();
   } catch (err){
     console.log(err);
   }

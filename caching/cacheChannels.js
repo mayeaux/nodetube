@@ -1,8 +1,8 @@
 const Promise = require('bluebird');
 const _ = require('lodash');
-const User = require('../../models/index').User;
-const Upload = require('../../models/index').Upload;
-const View = require('../../models/index').View;
+const User = require('../models/index').User;
+const Upload = require('../models/index').Upload;
+const View = require('../models/index').View;
 
 
 const mongooseHelper = require('./mongooseHelpers');
@@ -13,7 +13,7 @@ const c = {
   l : console.log
 };
 
-const redisClient = require('../../config/redis');
+const redisClient = require('../config/redis');
 
 const uploadServer = process.env.UPLOAD_SERVER;
 

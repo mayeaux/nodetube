@@ -1,7 +1,7 @@
 const Promise = require('bluebird');
 const _ = require('lodash');
-const User = require('../../models/index').User;
-const Upload = require('../../models/index').Upload;
+const User = require('../models/index').User;
+const Upload = require('../models/index').Upload;
 
 const clone = require('clone');
 const sizeof = require('object-sizeof');
@@ -11,7 +11,7 @@ const c = {
   l : console.log
 };
 
-const redisClient = require('../../config/redis');
+const redisClient = require('../config/redis');
 
 async function setTimedUploads(){
 

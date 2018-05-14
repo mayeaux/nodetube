@@ -1,17 +1,17 @@
-const Upload = require('../../models/index').Upload;
-const View = require('../../models/index').View;
-const User = require('../../models/index').User;
-const Subscription = require('../../models/index').Subscription;
-const React = require('../../models/index').React;
-const Comment = require('../../models/index').Comment;
-const SiteVisit = require('../../models/index').SiteVisit;
-const SearchQuery = require('../../models/index').SearchQuery;
+const Upload = require('../models/index').Upload;
+const View = require('../models/index').View;
+const User = require('../models/index').User;
+const Subscription = require('../models/index').Subscription;
+const React = require('../models/index').React;
+const Comment = require('../models/index').Comment;
+const SiteVisit = require('../models/index').SiteVisit;
+const SearchQuery = require('../models/index').SearchQuery;
 
 const _ = require('lodash');
 
 const moment = require('moment');
 
-const redisClient = require('../../config/redis');
+const redisClient = require('../config/redis');
 
 let viewAmount, channelAmount, mediaAmount;
 async function setIndexValues(){
@@ -64,6 +64,8 @@ async function getAmountsPerPeriods(Model, objectName){
 
 
   const documents = await Model.find({}).select('createdAt');
+
+  console.log(`All ${objectName} found`);
 
   // build dates
   var monthAgo =  moment().subtract(30, 'days').toDate();
@@ -121,26 +123,46 @@ async function setDailyStats(){
     oldViewAmount = oldViewAmount + upload.views
   }
 
+  console.log('Getting uploads');
   const uploads = await getAmountsPerPeriods(Upload, 'uploads');
+  await redisClient.setAsync('dailyStatsUploads', JSON.stringify(uploads));
+  console.log('Uploads set, moving on');
+
+  console.log('Getting users');
   const users = await getAmountsPerPeriods(User, 'users');
+  await redisClient.setAsync('dailyStatsUsers', JSON.stringify(users));
+  console.log('Users set, moving on');
+
+  console.log('Getting subscriptions');
   const subscriptions = await getAmountsPerPeriods(Subscription, 'subscriptions');
+  await redisClient.setAsync('dailyStatsSubscriptions', JSON.stringify(subscriptions));
+  console.log('Subscriptions set, moving on');
+
+  console.log('Getting reacts');
   const reacts = await getAmountsPerPeriods(React, 'reacts');
+  await redisClient.setAsync('dailyStatsReacts', JSON.stringify(reacts));
+  console.log('Reacts set, moving on');
+
+  console.log('Getting searches');
   const searches = await getAmountsPerPeriods(SearchQuery, 'searches');
+  await redisClient.setAsync('dailyStatsSearches', JSON.stringify(searches));
+  console.log('Searches set, moving on');
+
+  console.log('Getting comments');
   const comments = await getAmountsPerPeriods(Comment, 'comments');
-  const siteVisits = await getAmountsPerPeriods(SiteVisit, 'siteVisits');
+  await redisClient.setAsync('dailyStatsComments', JSON.stringify(comments));
+  console.log('Comments set, moving on');
+
+  console.log('Getting views');
   const views = await getAmountsPerPeriods(View, 'views');
   views.alltime = views.alltime + oldViewAmount;
-
-
-  await redisClient.setAsync('dailyStatsReacts', JSON.stringify(reacts));
-  await redisClient.setAsync('dailyStatsSubscriptions', JSON.stringify(subscriptions));
   await redisClient.setAsync('dailyStatsViews', JSON.stringify(views));
-  await redisClient.setAsync('dailyStatsUploads', JSON.stringify(uploads));
-  await redisClient.setAsync('dailyStatsUsers', JSON.stringify(users));
-  await redisClient.setAsync('dailyStatsSearches', JSON.stringify(searches));
-  await redisClient.setAsync('dailyStatsSiteVisits', JSON.stringify(siteVisits));
-  await redisClient.setAsync('dailyStatsComments', JSON.stringify(comments));
+  console.log('Views set, moving on');
 
+  console.log('Getting siteVisits');
+  const siteVisits = await getAmountsPerPeriods(SiteVisit, 'siteVisits');
+  await redisClient.setAsync('dailyStatsSiteVisits', JSON.stringify(siteVisits));
+  console.log('SiteVisit set, moving on');
 
   console.log('set daily stats')
 

@@ -14,7 +14,7 @@ const uploadHelpers = require('../../lib/helpers/settings');
 
 const uploadServer = uploadHelpers.uploadServer;
 
-const getFromCache = require('../../lib/caching/getFromCache');
+const getFromCache = require('../../caching/getFromCache');
 
 const { getFilter, filterUploads } = require('../../lib/mediaBrowsing/helpers');
 
@@ -84,7 +84,7 @@ console.log('UPLOAD SERVER: ' + uploadServer);
 
 
 
-const mongooseHelpers = require('../../lib/caching/mongooseHelpers');
+const mongooseHelpers = require('../../caching/mongooseHelpers');
 
 
 /**

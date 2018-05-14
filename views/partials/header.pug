@@ -53,6 +53,8 @@
                   a(href=`/support/reports`) Reports
                 li(class=(title == 'Recent Uploads') ? 'active' : undefined)
                   a(href=`/media/recent`) Recent Uploads
+                li(class=(title == 'Pending') ? 'active' : undefined)
+                  a(href=`/pending`) Pending
 
           // admin dropdown
           if user.role == 'admin'
@@ -79,12 +81,6 @@
                   a(href=`/admin/createSocialPost`) Create Social Post
                 li
                   a(href=`/admin/oneOffSocialPost`) One Off Social Post
-
-
-          // pending section
-          if user.role == 'admin' || user.role == 'moderator'
-            li(class=(title == 'Pending') ? 'active' : undefined)
-              a(href=`/pending`) Pending
 
         li(class=(title == 'About') ? 'active' : undefined)
           a(href=`/about`) About

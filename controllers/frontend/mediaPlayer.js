@@ -25,7 +25,7 @@ const uploadServer = uploadHelpers.uploadServer;
 
 
 
-const mongooseHelpers = require('../../lib/caching/mongooseHelpers');
+const mongooseHelpers = require('../../caching/mongooseHelpers');
 
 
 /**

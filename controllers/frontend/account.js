@@ -17,7 +17,7 @@ const thumbnailServer = process.env.THUMBNAIL_SERVER || '';
 
 const pagination = require('../../lib/helpers/pagination');
 
-const mongooseHelper = require('../../lib/caching/mongooseHelpers');
+const mongooseHelper = require('../../caching/mongooseHelpers');
 
 
 /**
