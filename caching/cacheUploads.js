@@ -34,7 +34,7 @@ async function setTimedUploads(){
     sensitive: { $ne : true },
     uploader: { $exists: true }
   }).select('rating title views checkedViews uploader fileType thumbnailUrl uploadUrl uniqueTag customThumbnailUrl fileExtension thumbnails reacts uncurated')
-    .populate('uploader reacts').limit(250).lean();
+    .populate('uploader reacts').lean();
 
   console.log('Got all uploads');
 
@@ -42,13 +42,23 @@ async function setTimedUploads(){
 
   for(const upload of allUploads){
 
-    console.log(upload.uploader.channelUrl);
+    let uploadViews = await View.find({ upload, validity: 'real' }).select('createdAt');
+    upload.viewsAllTime = uploadViews.length;
 
-    upload.viewsWithin1hour = await View.count({ upload, validity: 'real', createdAt: { $gte: hourAgo } });
-    upload.viewsWithin24hour = await View.count({ upload, validity: 'real', createdAt: { $gte: dayAgo } });
-    upload.viewsWithin1week = await View.count({ upload, validity: 'real', createdAt: { $gte: weekAgo } });
-    upload.viewsWithin1month = await View.count({ upload, validity: 'real', createdAt: { $gte: monthAgo } });
-    upload.viewsAllTime = await View.count({ upload, validity: 'real' });
+    uploadViews = _.filter(uploadViews, function(uploadView){ return uploadView.createdAt > monthAgo });
+    upload.viewsWithin1month = uploadViews.length;
+
+    uploadViews = _.filter(uploadViews, function(uploadView){ return uploadView.createdAt > weekAgo });
+    upload.viewsWithin1week = uploadViews.length;
+
+    uploadViews = _.filter(uploadViews, function(uploadView){ return uploadView.createdAt > dayAgo });
+    upload.viewsWithin24hour = uploadViews.length;
+
+    uploadViews = _.filter(uploadViews, function(uploadView){ return uploadView.createdAt > hourAgo });
+    upload.viewsWithin1hour = uploadViews.length;
+
+    uploadViews = _.filter(uploadViews, function(uploadView){ return uploadView.createdAt > minuteAgo });
+    upload.viewsWithin1minute = uploadViews.length;
 
     // TODO: this is used to cap at 3000
     // upload.legitViewAmount = (await View.count({ upload, validity: 'real', createdAt: { $gte: hourAgo } })) + upload.views.length ;
