@@ -99,12 +99,15 @@ block content
                     ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1' style="margin-top:-17px;margin-left:-81px;")
                       each category in categories
                         li(role='presentation')
-                          a.categoryValue(style="cursor:pointer;" data-value=category.name) #{category.displayName}
+                          a.categoryValue(style="cursor:pointer;" data-value=category.name data-displayname=category.displayName) #{category.displayName}
 
                     br
+
                   br
-                  h5 Category: $Thing
-                  br
+                  div.categoryName(style="display:none")
+                    br
+                    h5.categoryDisplayName Category: $Thing
+                    br
 
                   each category in categories
                     //label(for='rating' style="margin-bottom:4px;") #{category.displayName}
@@ -175,8 +178,10 @@ block content
       $('.categoryValue').click(function(){
         var value = $(this).data("value");
 
+        var displayName = $(this).data("displayname");
 
-        console.log(value);
+
+        console.log(value, displayName);
       })
 
       // HIDE GIF
