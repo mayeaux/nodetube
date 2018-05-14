@@ -99,7 +99,7 @@ block content
                     ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1' style="margin-top:-17px;margin-left:-81px;")
                       each category in categories
                         li(role='presentation')
-                          a(style="cursor:pointer;") #{category.displayName}
+                          a.categoryValue(style="cursor:pointer;" data-value=`${category.name}`) #{category.displayName}
 
                     br
                     br
@@ -157,6 +157,13 @@ block content
   script(src='/js/lib/resumable.js')
   script.
     $(document).ready(function () {
+
+      $('.categoryValue').click(function(){
+        var value = $(this).data("value");
+
+
+        console.log(value);
+      })
 
       // HIDE GIF
        $(".upload-gif").hide();
