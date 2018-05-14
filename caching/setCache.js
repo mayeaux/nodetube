@@ -16,7 +16,9 @@ const redisClient = require('../config/redis');
 let viewAmount, channelAmount, mediaAmount;
 async function setIndexValues(){
 
-  console.log('setting index values');
+  console.log('Setting index values');
+
+  console.log('Calculating view amounts')
 
   // view amount is for the old view amount
   viewAmount = await Upload.aggregate([
@@ -33,12 +35,21 @@ async function setIndexValues(){
     viewAmount = viewAmount[0].views;
   }
 
-  channelAmount = await User.find({}).count();
-  mediaAmount = await Upload.find({}).count();
+  console.log('Old view amount calculated, calculating channel amount');
 
-  const legitCheckedViews = await View.find({ validity: 'real' });
+  channelAmount = await User.count({});
 
-  viewAmount = viewAmount + legitCheckedViews.length;
+  console.log('Channel amount calculated, calculating upload amount');
+
+  mediaAmount = await Upload.count({});
+
+  console.log('Upload amount calculated, calculating view amount');
+
+  const legitCheckedViews = await View.count({ validity: 'real' });
+
+  console.log('Legit view amount calculated, setting redis amounts');
+
+  viewAmount = viewAmount + legitCheckedViews;
 
   // set object properly
   redisClient.hmset('indexValues', {
@@ -47,7 +58,7 @@ async function setIndexValues(){
     mediaAmount
   });
 
-  console.log('set index values');
+  console.log('Set index values');
 
 
 }
@@ -59,13 +70,13 @@ async function setIndexValues(){
 // }, 1000 * 60 * 20);
 
 
-
+// TODO: refactor to do via count
 async function getAmountsPerPeriods(Model, objectName){
 
 
-  const documents = await Model.find({}).select('createdAt');
+  const totalDocumentAmount = await Model.count({});
 
-  console.log(`All ${objectName} found`);
+  console.log(`Got total ${objectName} counted`);
 
   // build dates
   var monthAgo =  moment().subtract(30, 'days').toDate();
@@ -75,20 +86,20 @@ async function getAmountsPerPeriods(Model, objectName){
   var minuteAgo = moment().subtract(1, 'minutes').toDate();
 
   // find the views
-  const lastMonthAmount = _.filter(documents, function(document){ return document.createdAt > monthAgo });
-  const lastWeekAmount = _.filter(documents, function(document){ return document.createdAt > weekAgo });
-  const lastDayAmount = _.filter(documents, function(document){ return document.createdAt > dayAgo });
-  const lastHourAmount = _.filter(documents, function(document){ return document.createdAt > hourAgo });
-  const lastMinuteAmount = _.filter(documents, function(document){ return document.createdAt > minuteAgo });
+  const lastMonthAmount= await Model.count({ createdAt: { $gte: monthAgo } });
+  const lastWeekAmount = await Model.count({ createdAt: { $gte: weekAgo } });
+  const lastDayAmount = await Model.count({ createdAt: { $gte: dayAgo } });
+  const lastHourAmount = await Model.count({ createdAt: { $gte: hourAgo } });
+  const lastMinuteAmount = await Model.count({ createdAt: { $gte: minuteAgo } });
 
   return  {
     name: objectName,
-    alltime: documents.length,
-    month: lastMonthAmount.length,
-    week: lastWeekAmount.length,
-    day: lastDayAmount.length,
-    hour: lastHourAmount.length,
-    minute: lastMinuteAmount.length
+    alltime: totalDocumentAmount,
+    month: lastMonthAmount,
+    week: lastWeekAmount,
+    day: lastDayAmount,
+    hour: lastHourAmount,
+    minute: lastMinuteAmount
   };
 }
 
@@ -114,14 +125,6 @@ async function getAmountsPerPeriods(Model, objectName){
 
 async function setDailyStats(){
   console.log('Setting daily stats');
-
-  /** SET ALLTIME VIEWS PROPERLY **/
-  const allUploads = await Upload.find({ visibility: 'public' });
-
-  let oldViewAmount = 0;
-  for(const upload of allUploads){
-    oldViewAmount = oldViewAmount + upload.views
-  }
 
   console.log('Getting uploads');
   const uploads = await getAmountsPerPeriods(Upload, 'uploads');
@@ -155,6 +158,7 @@ async function setDailyStats(){
 
   console.log('Getting views');
   const views = await getAmountsPerPeriods(View, 'views');
+  let oldViewAmount = 46498;
   views.alltime = views.alltime + oldViewAmount;
   await redisClient.setAsync('dailyStatsViews', JSON.stringify(views));
   console.log('Views set, moving on');
@@ -164,7 +168,7 @@ async function setDailyStats(){
   await redisClient.setAsync('dailyStatsSiteVisits', JSON.stringify(siteVisits));
   console.log('SiteVisit set, moving on');
 
-  console.log('set daily stats')
+  console.log('Set daily stats')
 
 
 }
