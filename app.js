@@ -131,6 +131,9 @@ if (cluster.isMaster) {
 
     console.log('Connected to ' + mongoUri);
 
+    if(process.env.EMAIL_LISTENER_ON == 'true'){
+      const emailListenerScript = require('./scripts/shared/saveUnseenEmails')
+    }
 
     /** create express app **/
     const app = express();

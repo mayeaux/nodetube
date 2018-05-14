@@ -121,9 +121,7 @@ exports.recentUploads = async (req, res) => {
 
   /** **/
 
-  let allUploads = {
-
-  };
+  let allUploads = {};
 
   for(category of categories){
     const categoryName = category.name;
@@ -149,6 +147,8 @@ exports.recentUploads = async (req, res) => {
 
 
   }
+
+
 
   console.log(allUploads);
 
@@ -176,6 +176,8 @@ exports.recentUploads = async (req, res) => {
     })
   );
 
+
+
   // filter uploads based on sensitivity
   let filter = getFilter(req.user, req.siteVisitor);
   uploads = filterUploads(uploads, filter);
@@ -190,7 +192,8 @@ exports.recentUploads = async (req, res) => {
     media,
     uploadServer,
     siteVisitor: req.siteVisitor,
-    categories
+    categories,
+    allUploads
   });
 };
 
