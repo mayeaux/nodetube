@@ -30,7 +30,7 @@ async function getRecentUploads(uploadType){
   };
 
   const selectString = 'rating title views checkedViews uploader fileType thumbnailUrl ' +
-    'uploadUrl uniqueTag customThumbnailUrl fileExtension thumbnails reacts uncurated';
+    'uploadUrl uniqueTag customThumbnailUrl fileExtension thumbnails reacts uncurated category subcategory';
 
   let recentUploads = await Upload.find(searchQuery).select(selectString).populate('uploader reacts')
     .limit(2500)

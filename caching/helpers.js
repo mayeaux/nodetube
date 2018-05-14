@@ -21,6 +21,7 @@ function buildObjects(uploads){
       viewsWithin1week: upload.viewsWithin1week,
       viewsWithin1month: upload.viewsWithin1month,
       viewsAllTime: upload.viewsAllTime,
+      category: upload.category,
 
       // TODO: no capping currently
       legitViewAmount: upload.viewsAllTime,

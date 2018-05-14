@@ -79,9 +79,11 @@ exports.recentUploads = async (req, res) => {
     } else {
       console.log('CATEGORY');
 
-      uploads = await getFromCache.getRecentUploads(limit, skipAmount);
+      uploads = await getFromCache.getRecentUploads(6, skipAmount);
 
       console.log(uploads);
+
+      uploads = filterUploadsByCategory(uploads, category);
 
       // filter uploads based on sensitivity
       let filter = getSensitivityFilter(req.user, req.siteVisitor);
