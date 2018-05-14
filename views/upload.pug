@@ -102,6 +102,7 @@ block content
                           a.categoryValue(style="cursor:pointer;" data-value=category.name) #{category.displayName}
 
                     br
+                  br
                   h5 Category: $Thing
                   br
 
@@ -109,29 +110,13 @@ block content
                     //label(for='rating' style="margin-bottom:4px;") #{category.displayName}
                     if category.subcategories
                       each subcategory in category.subcategories
-                          div.radio-buttons.rating
+                          div.radio-buttons(class=category.name style="display:none")
                             label.radio-inline
                               input.radio-button(type='radio', name='rating' value="sensitive" required)
                               | #{subcategory.displayName}
 
                             br
                             br
-
-                  label(for='rating' style="margin-bottom:4px;") Subcategory
-                    br
-                    div.radio-buttons.rating
-                      label.radio-inline
-                        input.radio-button(type='radio', name='rating' value="sensitive" required)
-                        | Sensitive (Shocking content) 18+
-
-                      br
-                      br
-                      label.radio-inline
-                        input.radio-button(type='radio', name='rating' value="mature")
-                        | Not Safe For Work
-                      br
-                      br
-                  br
 
                   label(for='rating') Rating
                   br
