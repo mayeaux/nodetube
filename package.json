@@ -65,7 +65,7 @@
     "mail-listener2": "^0.3.1",
     "mkdirp": "^0.5.1",
     "moment": "^2.20.0",
-    "mongoose": "^4.6.6",
+    "mongoose": "^5.1.0",
     "mongoose-unique-validator": "^1.0.6",
     "morgan": "^1.7.0",
     "multer": "^1.2.0",

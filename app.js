@@ -118,8 +118,7 @@ if (cluster.isMaster) {
     mongoose.Promise = global.Promise;
     mongoose.connect(mongoUri, {
       keepAlive: true,
-      reconnectTries: Number.MAX_VALUE,
-      useMongoClient: true
+      reconnectTries: Number.MAX_VALUE
     });
 
     // mongoose.set('debug', true);

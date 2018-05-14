@@ -83,8 +83,13 @@ const uploadSchema = new mongoose.Schema({
     type: Boolean
   },
 
-  category: { type: String, enum: ['healthAndWellness', 'comedy', 'technologyAndScience'] },
+  category: {
+    type: String,
+    default: 'uncategorized',
+    enum: ['healthAndWellness', 'comedy', 'technologyAndScience', 'uncategorized']
+  },
 
+  subcategory: { type: String, enum: ['pranks', 'meditation', 'yoga', 'rightwing', 'leftwing'] },
 
 }, {
   timestamps: true,
