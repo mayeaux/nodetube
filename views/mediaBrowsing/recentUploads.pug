@@ -129,8 +129,7 @@ block content
 
         hr
         div.uploads
-            if categoryOverviewPage
-                // TODO: Pull this into an include statement and import conditionally
+            if !isACategory
                 for category in categories
                     //p= uploads[category.name]
                     // if there's more than one per category

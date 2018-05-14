@@ -38,6 +38,8 @@ exports.recentUploads = async (req, res) => {
     // get media page, either video, image, audio or all
     let media = req.query.media || 'all';
 
+    let category = req.query.category || false;
+
     // get current page
     let page = parseInt(req.params.page || 1);
 
@@ -53,20 +55,41 @@ exports.recentUploads = async (req, res) => {
     const previousNumber = pagination.getPreviousNumber(page);
     const nextNumber = pagination.getNextNumber(page);
 
+    let uploads;
+    if(!category){
 
-    // gonna get like 108 documents
-    let uploads = await getFromCache.getRecentUploads(limit, skipAmount);
+      console.log('NO CATEGORY');
 
-    console.log(uploads);
+      uploads = await getFromCache.getRecentUploads(limit, skipAmount);
 
-    // filter uploads based on sensitivity
-    let filter = getSensitivityFilter(req.user, req.siteVisitor);
-    uploads = filterUploadsBySensitivity(uploads, filter);
+      // console.log(uploads);
 
-    // TODO: temp workaround
-    // uploads.comedy = uploads;
+      // filter uploads based on sensitivity
+      let filter = getSensitivityFilter(req.user, req.siteVisitor);
+      uploads = filterUploadsBySensitivity(uploads, filter);
 
-    const categoryOverviewPage = false;
+      uploads.comedy = uploads;
+
+      // get all the data then compile it like :
+      // compile as { comedy: [] }
+
+      // TODO: write this
+      // uploads = getCategoryPreviewData()
+
+    } else {
+      console.log('CATEGORY');
+
+      uploads = await getFromCache.getRecentUploads(limit, skipAmount);
+
+      console.log(uploads);
+
+      // filter uploads based on sensitivity
+      let filter = getSensitivityFilter(req.user, req.siteVisitor);
+      uploads = filterUploadsBySensitivity(uploads, filter);
+
+    }
+
+    console.log(category)
 
     res.render('mediaBrowsing/recentUploads', {
       title: 'Recent Uploads',
@@ -79,11 +102,12 @@ exports.recentUploads = async (req, res) => {
       uploadServer,
       siteVisitor: req.siteVisitor,
       categories,
-      categoryOverviewPage
+      isACategory : category
 
     });
 
   } catch (err){
+    res.status(500);
     res.send('error')
   }
 
