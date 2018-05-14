@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
+
+
+
+
 process.on('uncaughtException', (err) => {
   console.log(`Uncaught Exception: `, err);
   console.log(err.stack);
@@ -32,7 +36,7 @@ mongoose.connect(database, {
   reconnectTries: Number.MAX_VALUE
 });
 
-// mongoose.set('debug', true);
+mongoose.set('debug', true);
 
 
 mongoose.connection.on('error', (err) => {
@@ -47,14 +51,18 @@ const cacheChannels = require('./cacheChannels'); // cache channels by popularit
 const cacheUploads = require('./cacheUploads');  // cache popular uploads
 const setCache = require('./setCache'); // index and daily stats
 
+const  cacheRecentUploads = require('./cacheRecentUploads');
+
 async function main(){
 
   try {
 
-    await cacheUploads();
+    await cacheRecentUploads();
 
-    await setCache.setDailyStats();
-    await setCache.setIndexValues();
+    // await cacheUploads();
+    //
+    // await setCache.setDailyStats();
+    // await setCache.setIndexValues();
 
     // await cacheChannels();
   } catch (err){

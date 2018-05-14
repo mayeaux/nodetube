@@ -29,42 +29,7 @@ const { getFilter, filterUploads } = require('../../lib/mediaBrowsing/helpers');
 // - Gaming
 // - News & Politics -> Rightwing / Leftwing
 
-const categories = [
-  {
-    name: 'comedy',
-    displayName: 'Comedy',
-    subcategories: [
-      { name: 'pranks', displayName: 'Pranks' },
-      { name: 'political', displayName: 'Political'}
-    ],
-  },
-  {
-    name: 'gaming',
-    subcategories: []
-  },
-  {
-    name: 'healthAndWellness',
-    subcategories: ['yogaAndMeditation', 'fitness']
-  },
-  {
-    name: 'technologyAndScience',
-    subcategories: ['blockchain', 'internet']
-  },
-  {
-    name: 'howToAndEducation',
-    subcategories: []
-  },
-  {
-    name: 'newAndPolitics',
-    subcategories: ['rightwing', 'leftwing']
-  },
-  {
-    name: 'uncategorized',
-    displayName: 'Uncategorized'
-  },
-];
-
-
+const categories = require('../../config/categories');
 
 // TODO: pull into its own func
 let indexResponse;
@@ -121,7 +86,7 @@ exports.recentUploads = async (req, res) => {
 
   // FILTER UPLOADS
   let searchQuery = {
-    $or : [ { status: 'completed' }, { uploadUrl: { $exists: true } } ],
+    status: 'completed',
     visibility: 'public',
     sensitive: { $ne: true }
   };
@@ -137,14 +102,15 @@ exports.recentUploads = async (req, res) => {
 
   let allUploads = {};
 
+  // loop through all categories
   for(category of categories){
     const categoryName = category.name;
 
     searchQuery.category = categoryName;
 
-    console.log(category);
-
-    console.log(searchQuery);
+    // console.log(category);
+    //
+    // console.log(searchQuery);
 
     let uploadsPerCategory = await Upload.find(searchQuery)
       .populate('uploader')
@@ -161,8 +127,7 @@ exports.recentUploads = async (req, res) => {
     allUploads[categoryName] = await Promise.all(
       allUploads[categoryName].map(async function(upload){
         upload = upload.toObject();
-        const checkedViews = await View.count({ upload: upload.id, validity: 'real' });
-        upload.legitViewAmount = checkedViews;
+        upload.legitViewAmount = await View.count({ upload: upload.id, validity: 'real' });;
         return upload
       })
     );
@@ -287,7 +252,10 @@ exports.popularUploads = async (req, res) => {
     // console.log(indexResponse);
 
     // TODO: add upload.uploadServer
-    let uploads = await getFromCache.getUploads(req.query.within, limit, skipAmount);
+    let uploads = await getFromCache.getUploads('recentUploads', req.query.within, limit, skipAmount);
+
+    console.log('hello!!')
+    console.log(uploads);
 
     let filter;
     if(req.user){

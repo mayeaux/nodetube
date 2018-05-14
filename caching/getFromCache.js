@@ -6,17 +6,41 @@ const Upload = require('../models/index').Upload;
 const clone = require('clone');
 const sizeof = require('object-sizeof');
 
+const redisClient = require('../config/redis');
+
+let recentUploads;
+async function setGlobalRecentUploads(){
+  recentUploads = await redisClient.getAsync('recentUploads');
+  recentUploads = JSON.parse(recentUploads);
+
+  console.log(recentUploads)
+
+  console.log('set recent uploads cache');
+}
+
+setGlobalRecentUploads();
+setInterval(setGlobalRecentUploads, 1000 * 60 * 5);
+
+
+let popularUploads;
+async function setGlobalPopularUploads(){
+  popularUploads = await redisClient.getAsync('popularUploads');
+  popularUploads = JSON.parse(popularUploads);
+
+  console.log('set popular uploads cache');
+}
+
+setGlobalPopularUploads();
+setInterval(setGlobalPopularUploads, 1000 * 60 * 5);
 
 const c = {
   l : console.log
 };
 
-const redisClient = require('../config/redis');
-
 // Only get needed amount of uploads
-function trimUploads(localUploads, limit, offset){
+function trimUploads(uploads, limit, offset){
   // cut offset off from front of array
-  let trimmedUploads = localUploads.slice(offset);
+  let trimmedUploads = uploads.slice(offset);
 
   // reduce the length of array to the limit amount
   if(trimmedUploads.length > limit){
@@ -26,185 +50,70 @@ function trimUploads(localUploads, limit, offset){
   return trimmedUploads
 };
 
+function sortUploads(uploads, timeRange) {
 
+  if(timeRange == '1hour'){
 
-
-function trimChannels(localChannels, limit, offset){
-  // cut offset off from front of array
-  let trimmedChannels = localChannels.slice(offset);
-
-  // reduce the length of array to the limit amount
-  if(trimmedChannels.length > limit){
-    trimmedChannels.length = limit;
-  }
-
-  return trimmedChannels
-};
-
-let globalChannels;
-async function setGlobalChannels(){
-  globalChannels = await redisClient.getAsync('channels');
-  globalChannels = JSON.parse(globalChannels);
-
-  console.log('got channels cache');
-}
-
-let globalUploads;
-async function setGlobalUploads(){
-  globalUploads = await redisClient.getAsync('uploads');
-  globalUploads = JSON.parse(globalUploads);
-
-  console.log('got uploads cache');
-}
-
-setGlobalChannels();
-setGlobalUploads();
-
-setInterval(setGlobalChannels, 1000 * 60 * 5);
-setInterval(setGlobalUploads, 1000 * 60 * 5);
-
-async function getChannels(timeRange, limit, offset, rating){
-  let localChannels = globalChannels
-
-  if(!localChannels){
-
-    // console.log(localUploads.length);
-
-    return [];
-  }
-
-
-  if(!timeRange) timeRange = 'alltime';
-
-
-  if(timeRange !== 'alltime'){
-
-    if(timeRange == '1month'){
-      localChannels = localChannels.sort(function(a, b) {
-        return b.totalViewsWithin1month - a.totalViewsWithin1month;
-      });
-
-      localChannels = trimChannels(localChannels, limit, offset)
-
-      return localChannels
-
-    } else if (timeRange == '1week'){
-
-      localChannels = localChannels.sort(function(a, b) {
-        return b.totalViewsWithin1week - a.totalViewsWithin1week;
-      });
-
-      localChannels = trimChannels(localChannels, limit, offset);
-
-      return localChannels
-
-    } else if (timeRange == '24hour'){
-
-      localChannels = localChannels.sort(function(a, b) {
-        return b.totalViewsWithin24hour - a.totalViewsWithin24hour;
-      });
-
-      localChannels = trimChannels(localChannels, limit, offset);
-
-      return localChannels
-
-    }
-    // get all time views
-  } else {
-
-    localChannels = localChannels.sort(function(a, b) {
-      return b.totalViews - a.totalViews;
+    return uploads.sort(function(a, b) {
+      return b.viewsWithin1hour - a.viewsWithin1hour;
     });
 
-    localChannels = trimChannels(localChannels, limit, offset);
+  } else if (timeRange == '24hour'){
 
-    return localChannels
-  }
-
-
-}
-
-async function getUploads(timeRange, limit, offset){
-  if(!timeRange) timeRange = 'alltime';
-
-  // console.log(timeRange);
-
-  var localUploads = globalUploads
-
-  console.log(localUploads.length)
-  c.l('length')
-
-  if(!localUploads){
-
-    // console.log(localUploads.length);
-
-    return [];
-  }
-
-  if(timeRange !== 'alltime'){
-
-    if(timeRange == '1month'){
-      localUploads = localUploads.sort(function(a, b) {
-        return b.viewsWithin1month - a.viewsWithin1month;
-      });
-
-      localUploads = trimUploads(localUploads, limit, offset);
-
-      return localUploads
-
-    } else if (timeRange == '1week'){
-
-      localUploads = localUploads.sort(function(a, b) {
-        return b.viewsWithin1week - a.viewsWithin1week;
-      });
-
-      localUploads = trimUploads(localUploads, limit, offset);
-
-      return localUploads
-
-    } else if (timeRange == '24hour'){
-
-      localUploads = localUploads.sort(function(a, b) {
-        return b.viewsWithin24hour - a.viewsWithin24hour;
-      });
-
-      localUploads = trimUploads(localUploads, limit, offset);
-
-      return localUploads
-
-    } else if (timeRange == '1hour'){
-
-      localUploads = localUploads.sort(function(a, b) {
-        return b.viewsWithin1hour - a.viewsWithin1hour;
-      });
-
-      localUploads = trimUploads(localUploads, limit, offset);
-
-      return localUploads
-
-    }
-
-
-  } else {
-
-    localUploads = localUploads.sort(function(a, b) {
-      return b.legitViewAmount - a.legitViewAmount;
+    return uploads.sort(function(a, b) {
+      return b.viewsWithin24hour - a.viewsWithin24hour;
     });
 
-    localUploads = trimUploads(localUploads, limit, offset);
+  } else if(timeRange == '1week'){
 
-    return localUploads
+    return uploads.sort(function(a, b) {
+      return b.viewsWithin1week - a.viewsWithin1week;
+    });
+
+  } else if(timeRange == '1month'){
+
+    return uploads.sort(function(a, b) {
+      return b.viewsWithin1month - a.viewsWithin1month;
+    });
+
+  } else if(timeRange == 'allTime'){
+
+    return uploads.sort(function(a, b) {
+      // TODO: maybe switch to all-time here
+      return b.legitViewAmount - a.legitViewAmount
+    });
+
+  } else {
+    console.log('SOMETHING REALLY BAD')
+    console.log(timeRange)
   }
-
-
 }
 
+// upload type = popularUploads, recentUploads
+async function getUploads(uploadType, timeRange, limit, offset) {
+  if(!timeRange) timeRange = 'allTime';
 
+  // load recent uploads into memory
+  let uploads = recentUploads;
 
+  console.log('getting from cache')
+  console.log(uploads)
 
+  uploads = sortUploads(uploads, timeRange);
+
+  console.log('after sorted')
+
+  console.log(uploads);
+
+  // send empty array if no globalRecentUploads set
+  if(!uploads) return [];
+
+  uploads = trimUploads(uploads, limit, offset);
+
+  return uploads;
+}
 
 module.exports = {
-  getChannels,
   getUploads
 };
 

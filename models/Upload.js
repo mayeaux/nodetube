@@ -228,10 +228,10 @@ uploadSchema.virtual('legitViewAmount').get(function () {
 });
 
 
-// uploadSchema.index({sensitive: 1, visibility: 1, status: 1, createdAt: -1}, {name: "All Media List"});
-// uploadSchema.index({sensitive: 1, visibility: 1, status: 1, fileType: 1, createdAt: -1}, {name: "File Type List"});
-// uploadSchema.index({uploader: 1, visibility: 1, status: 1, createdAt: -1}, {name: "Subscription Uploads"});
-// uploadSchema.index({uploader: 1, title: 1}, {name: "Upload Check"});
+uploadSchema.index({sensitive: 1, visibility: 1, status: 1, createdAt: -1, category: 1}, {name: "All Media List"});
+uploadSchema.index({sensitive: 1, visibility: 1, status: 1, fileType: 1, createdAt: -1}, {name: "File Type List"});
+uploadSchema.index({uploader: 1, visibility: 1, status: 1, createdAt: -1}, {name: "Subscription Uploads"});
+uploadSchema.index({uploader: 1, title: 1}, {name: "Upload Check"});
 
 const Upload = mongoose.model('Upload', uploadSchema);
 
