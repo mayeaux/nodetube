@@ -112,18 +112,18 @@ block content
                   each category in categories
                     if category.subcategories && category.subcategories.length > 1
                       div.subcategories(class=category.name style="display:none;")
-                        label(for='rating') Subcategory
+                        label(for='subcategory') Subcategory
                         each subcategory in category.subcategories
-                            div.radio-buttons(class=category.name style="display:none")
+                            div.radio-buttons.subcategory(class=category.name style="display:none")
                               label.radio-inline
-                                input.radio-button(type='radio', name='rating' value="sensitive" required)
+                                input.radio-button(type='radio', name='subcategory' value=subcategory.name required)
                                 | #{subcategory.displayName}
 
                               br
                               br
                         br
 
-                  label(for='rating') Rating
+                  label(for='rating') Rating (*)
                   br
                   div.radio-buttons.rating
                     label.radio-inline
@@ -177,17 +177,25 @@ block content
   script.
     $(document).ready(function () {
 
+      var selectedCategory;
+      var selectedSubcategory;
+
+      // when a new category is selected
       $('.categoryValue').click(function(){
         var value = $(this).data("value");
 
         var displayName = $(this).data("displayname");
 
+        // hide all subcategories
         $('.subcategories').hide();
 
+        selectedCategory = value;
+
+        // display selected category
         $('.categoryDisplayName').text('Category: ' + displayName)
 
+        // show subcategories if they exist
         $('.categoryName').show();
-
         $('.' + value).show();
 
 
@@ -272,6 +280,8 @@ block content
           var visibility = $(".visilibity label input[type='radio']:checked").val();
           var rating = $(".rating label input[type='radio']:checked").val();
 
+          var subcategory = $(".subcategory label input[type='radio']:checked").val();
+
           if(!rating){
             return swal('Please select a rating')
           }
@@ -308,7 +318,9 @@ block content
             description,
             uploadToken,
             visibility,
-            rating
+            rating,
+            category: selectedCategory,
+            subcategory
           };
 
           r.upload();

@@ -15,12 +15,18 @@ const categories = [
   {
     name: 'healthAndWellness',
     displayName: 'Health And Wellness',
-    subcategories: ['yogaAndMeditation', 'fitness']
+    subcategories: [
+      { name: 'yogaAndMeditation', displayName: 'Yoga & Meditation' },
+      { name: 'fitness', displayName: 'Fitness'}
+    ]
   },
   {
     name: 'technologyAndScience',
     displayName: 'Technology & Science',
-    subcategories: ['blockchain', 'internet']
+    subcategories: [
+      { name: 'blockchain', displayName: 'Blockchain' },
+      { name: 'internet', displayName: 'Internet'}
+    ]
   },
   {
     name: 'howToAndEducation',
@@ -30,7 +36,10 @@ const categories = [
   {
     name: 'politics',
     displayName: 'Politics',
-    subcategories: ['rightwing', 'leftwing']
+    subcategories: [
+      { name: 'leftwing', displayName: 'Leftwing' },
+      { name: 'rightwing', displayName: 'Rightwing'}
+    ]
   },
   {
     name: 'news',
