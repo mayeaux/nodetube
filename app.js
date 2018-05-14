@@ -75,6 +75,8 @@ if (cluster.isMaster) {
     const customMiddleware = require('./middlewares/custom');
     const widgetMiddleware = require('./middlewares/shared/widgets');
 
+    const missedFile404Middleware = require('./middlewares/shared/missedFile404Middleware');
+
 
     //
     process.on('uncaughtException', (err) => {
@@ -173,6 +175,8 @@ if (cluster.isMaster) {
     // use local uploads directory as file host
     app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {maxAge: 31557600000}));
 
+
+    app.use(missedFile404Middleware);
 
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: true}));

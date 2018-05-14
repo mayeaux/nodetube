@@ -4,20 +4,24 @@ const imageExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.JPG', '.PNG'];
 const audioExtensions = ['.mp3', '.wav', '.ogg', '.m4a'];
 
 async function middleware(req, res, next){
-  // const path = req.path;
+  const path = req.path;
 
   var str = "/uploads/Manwe_Sulimo/cqDSPlg.png";
-  var afterPeriod = str.substr(str.indexOf("."));
+  var fileExtension = path.substr(path.indexOf("."));
 
-  // TODO:
-  // combine all arrays
-  // do a contain check
-  // load up the middleware properly
-  // res.send a 404 if it's a hit
+  const allFileExtensions = [].concat(videoExtensions, convertExtensions, imageExtensions, audioExtensions);
 
-  console.log(afterPeriod)
+  const isAFile = allFileExtensions.includes(fileExtension);
 
+  if(isAFile){
+    res.status(404);
+    res.send('miss');
+  } else {
+    next();
+  }
 
 }
 
-middleware();
+// middleware();
+
+module.exports = middleware;
