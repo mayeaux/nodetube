@@ -129,91 +129,44 @@ block content
 
         hr
         div.uploads
-            for category in categories
-                //p= uploads[category.name]
-                if uploads[category.name] && uploads[category.name].length > 0
-                    div.category.col-sm-12
-                        if user.role == 'admin' || user.role == 'moderator' || 1 == 1
-                             h2 #{category.displayName} (#{uploads[category.name].length})
-                        else
-                            h2 #{category.displayName}
+            if categoryOverviewPage
+                // TODO: Pull this into an include statement and import conditionally
+                for category in categories
+                    //p= uploads[category.name]
+                    // if there's more than one per category
+                    if uploads[category.name] && uploads[category.name].length && uploads[category.name].length > 0
+                        div.category.col-sm-12
+                            if user.role == 'admin' || user.role == 'moderator'
+                                 h2 #{category.displayName} (#{uploads[category.name].length})
+                            else
+                                h2 #{category.displayName}
 
+                            // begin individual upload section
+                            each upload in uploads[category.name]
+                                if upload.uploader
+                                    div.col-sm-4(style="text-align:center;height:310px;")
+                                        div(style="width:100%")
+                                            include ../viewPartials/uploadThumbnail
 
-                        // begin individual upload section
-                        each upload in uploads[category.name]
-                            if upload.uploader
-                                // TODO: Sub out thumbnail here
-                                div.col-sm-4(style="text-align:center;height:310px;")
-                                    div(style="width:100%")
-                                        a.title-anchor(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}` style="color:black" )
+                                            include ../viewPartials/uploadDetails
 
-                                            if upload.thumbnails && upload.thumbnails.custom
-                                                img.preview-image(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.custom}` style="width:inherit;max-width:302px;")
+                                            if user && user.role == 'admin'
+                                                div.changeRating(style="margin-top:30px;")
+                                                    input.ratingChanged(type="checkbox" value=`${upload._id}`)
 
-                                            else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.generated
-                                                img.preview-image(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated}` style="width:inherit;max-width:302px;")
+            else
+                each upload in uploads
+                    if upload.uploader
+                        div.col-sm-4(style="text-align:center;height:310px;")
+                            div(style="width:100%")
+                                include ../viewPartials/uploadThumbnail
 
-                                            else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.medium
-                                                img.preview-image(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.medium}` style="width:inherit;max-width:302px;")
+                                include ../viewPartials/uploadDetails
 
-                                            else if upload.fileType == 'video' && !upload.thumbnailUrl
-                                                img.preview-image(src="/no_img.png")
+                                if user && user.role == 'admin'
+                                    div.changeRating(style="margin-top:30px;")
+                                        input.ratingChanged(type="checkbox" value=`${upload._id}`)
 
-                                            else if upload.fileType == 'image'
-                                                // TODO: have to fix this
-                                                img.preview-image(src=`${'/uploads'}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="width:inherit;max-width:302px;")
-
-                                            else if upload.fileType == 'audio'
-                                                img.preview-image(src='/images/audio.svg')
-
-                                            else if upload.fileType == 'unknown'
-                                                img.preview-image(src='/images/no_img.png')
-
-                                            div
-                                                p.balance-text.upload-title-text(style="width:100%;margin:0 auto;margin-top:6px;") #{upload.title}
-                                            br
-
-
-                                        // byline
-                                        div.upload-details
-                                            div.views(style="margin:0 auto")
-                                                p.upload-title-text.views-text(style="margin:0;") #{upload.legitViewAmount} views &nbsp
-                                                    if upload.fileType == 'video'
-                                                        i.fa.fa-video-camera(aria-hidden='true')
-                                                    else if upload.fileType == 'audio'
-                                                        i.fa.fa-volume-up(aria-hidden='true')
-                                                    else if upload.fileType == 'image'
-                                                        i.fa.fa-picture-o(aria-hidden='true')
-                                                // upload time ago
-                                                p.upload-title-text.views-text(style="margin:0") #{upload.timeAgo} &nbsp
-                                                    a.upload-user-text.views-text(href=`/user/${upload.uploader.channelUrl}` style="margin:0") #{upload.uploader.channelName || upload.uploader.channelUrl}
-                                                if upload.subcategory
-                                                    p.upload-title-text.views-text(style="margin:0;margin-left:3px;") #{upload.subcategory}
-                                                        //p(style="font-size:15px") #{upload.uploader.channelName || upload.uploader.channelUrl}
-                                                        //    if upload.uploader.verified == true
-                                                        //        img(src="/images/verified.jpg" width="19px" height="19px" style="margin-left:3px;margin-top:-2px;")
-                                                        //    if upload.uploader.plan == 'plus'
-                                                        //        span.pewtube-pro PLUS
-
-                                        if user && user.role == 'admin'
-                                            div.changeRating(style="margin-top:30px;")
-                                                input.ratingChanged(type="checkbox" value=`${upload._id}`)
-
-
-
-                                        // capitalize media type
-                                        //div.uploaded-by #{upload.fileType.charAt(0).toUpperCase() + upload.fileType.slice(1)} uploaded
-                                        //    | &nbsp#{upload.timeAgo} by
-                                        //    a.upload-user-text(href=`/user/${upload.uploader.channelUrl}`)
-                                        //        p(style="font-size:15px") #{upload.uploader.channelName || upload.uploader.channelUrl}
-                                        //            if upload.uploader.verified == true
-                                        //                img(src="/images/verified.jpg" width="19px" height="19px" style="margin-left:3px;margin-top:-2px;")
-                                        //            if upload.uploader.plan == 'plus'
-                                        //                span.pewtube-pro PLUS
-
-
-
-                        // END INDIVIDUAL UPLOAD SECTION
 
 
             if user && user.role == 'admin'

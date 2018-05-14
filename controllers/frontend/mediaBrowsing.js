@@ -63,6 +63,11 @@ exports.recentUploads = async (req, res) => {
     let filter = getSensitivityFilter(req.user, req.siteVisitor);
     uploads = filterUploadsBySensitivity(uploads, filter);
 
+    // TODO: temp workaround
+    // uploads.comedy = uploads;
+
+    const categoryOverviewPage = false;
+
     res.render('mediaBrowsing/recentUploads', {
       title: 'Recent Uploads',
       uploads,
@@ -74,7 +79,8 @@ exports.recentUploads = async (req, res) => {
       uploadServer,
       siteVisitor: req.siteVisitor,
       categories,
-      uploads
+      categoryOverviewPage
+
     });
 
   } catch (err){

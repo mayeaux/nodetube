@@ -1,0 +1,20 @@
+// byline
+div.upload-details
+    div.views(style="margin:0 auto")
+        p.upload-title-text.views-text(style="margin:0;") #{upload.legitViewAmount} views &nbsp
+            if upload.fileType == 'video'
+                i.fa.fa-video-camera(aria-hidden='true')
+            else if upload.fileType == 'audio'
+                i.fa.fa-volume-up(aria-hidden='true')
+            else if upload.fileType == 'image'
+                i.fa.fa-picture-o(aria-hidden='true')
+        // upload time ago
+        p.upload-title-text.views-text(style="margin:0") #{upload.timeAgo} &nbsp
+            a.upload-user-text.views-text(href=`/user/${upload.uploader.channelUrl}` style="margin:0") #{upload.uploader.channelName || upload.uploader.channelUrl}
+        if upload.subcategory
+            p.upload-title-text.views-text(style="margin:0;margin-left:3px;") #{upload.subcategory}
+                //p(style="font-size:15px") #{upload.uploader.channelName || upload.uploader.channelUrl}
+                //    if upload.uploader.verified == true
+                //        img(src="/images/verified.jpg" width="19px" height="19px" style="margin-left:3px;margin-top:-2px;")
+                //    if upload.uploader.plan == 'plus'
+                //        span.pewtube-pro PLUS
