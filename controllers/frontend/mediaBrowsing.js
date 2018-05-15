@@ -40,16 +40,19 @@ exports.recentUploads = async (req, res) => {
     // get media page, either video, image, audio or all
     let media = req.query.media || 'all';
 
-    let category = req.query.category || false;
+    let category = req.query.category || '';
 
-    let subcategory = req.query.subcategory || false;
+    let subcategory = req.query.subcategory || '';
 
     // get current page
     let page = parseInt(req.params.page || 1);
 
     // limit amount to list per page
-    const limit = 102;
+    let limit = 102;
 
+    if(!category){
+      limit = 6
+    }
 
     const skipAmount = (page * limit) - limit;
 
@@ -61,17 +64,11 @@ exports.recentUploads = async (req, res) => {
 
     let filter = getSensitivityFilter(req.user, req.siteVisitor);
 
-    let uploads;
-    if(!category){
+    console.log(category);
 
-      uploads = await getFromCache.getRecentUploads(6, skipAmount, filter, category, subcategory);
+    const mediaType = media;
 
-    } else {
-
-      uploads = await getFromCache.getRecentUploads(limit, skipAmount, filter, category, subcategory);
-    }
-
-    console.log(category)
+    const uploads = await getFromCache.getRecentUploads(limit, skipAmount, mediaType, filter, category, subcategory);
 
     res.render('mediaBrowsing/recentUploads', {
       title: 'Recent Uploads',

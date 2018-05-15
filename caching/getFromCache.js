@@ -10,7 +10,7 @@ const redisClient = require('../config/redis');
 
 const categories = require('../config/categories');
 
-const { filterUploadsBySensitivity, filterUploadsByCategory, filterUploadsBySubcategory } = require('../lib/mediaBrowsing/helpers');
+const { filterUploadsBySensitivity, filterUploadsByCategory, filterUploadsBySubcategory, filterUploadsByMediaType } = require('../lib/mediaBrowsing/helpers');
 
 let popularUploads;
 async function setGlobalPopularUploads(){
@@ -106,7 +106,7 @@ async function getPopularUploads(timeRange, limit, offset) {
 }
 
 // upload type = popularUploads, recentUploads
-async function getRecentUploads(limit, offset, filter, category, subcategory) {
+async function getRecentUploads(limit, offset, mediaType, filter, category, subcategory) {
 
 
   // load recent uploads into memory
@@ -114,6 +114,8 @@ async function getRecentUploads(limit, offset, filter, category, subcategory) {
 
   // send empty array if no globalRecentUploads set
   if(!uploads) return [];
+
+  uploads = filterUploadsByMediaType(uploads, mediaType);
 
   uploads = filterUploadsBySensitivity(uploads, filter);
 
