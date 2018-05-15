@@ -9,45 +9,19 @@ const clone = require('clone');
 const sizeof = require('object-sizeof');
 const moment = require('moment');
 
-const buildObjects = require('./helpers')
-
 const c = {
   l : console.log
 };
 
 const redisClient = require('../config/redis');
 
-// build dates
-var monthAgo =  moment().subtract(30, 'days').toDate();
-var weekAgo =  moment().subtract(7, 'days').toDate();
-var dayAgo = moment().subtract(24, 'hours').toDate();
-var hourAgo = moment().subtract(1, 'hours').toDate();
-var minuteAgo = moment().subtract(1, 'minutes').toDate();
+const helpers = require('../caching/helpers');
+
+const calculateViewsByPeriod = helpers.calculateViewsByPeriod;
+
+const buildObjects = helpers.buildObjects;
 
 // find the views
-
-
-async function calculateViewsByPeriod(upload, uploadViews){
-  upload.viewsAllTime = uploadViews.length;
-
-  uploadViews = _.filter(uploadViews, function(uploadView){ return uploadView.createdAt > monthAgo });
-  upload.viewsWithin1month = uploadViews.length;
-
-  uploadViews = _.filter(uploadViews, function(uploadView){ return uploadView.createdAt > weekAgo });
-  upload.viewsWithin1week = uploadViews.length;
-
-  uploadViews = _.filter(uploadViews, function(uploadView){ return uploadView.createdAt > dayAgo });
-  upload.viewsWithin24hour = uploadViews.length;
-
-  uploadViews = _.filter(uploadViews, function(uploadView){ return uploadView.createdAt > hourAgo });
-  upload.viewsWithin1hour = uploadViews.length;
-
-  uploadViews = _.filter(uploadViews, function(uploadView){ return uploadView.createdAt > minuteAgo });
-  upload.viewsWithin1minute = uploadViews.length;
-
-  return upload
-}
-
 
 async function getPopularUploads(){
 

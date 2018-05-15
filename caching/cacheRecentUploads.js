@@ -3,8 +3,6 @@ const _ = require('lodash');
 const User = require('../models/index').User;
 const View = require('../models/index').View;
 
-const buildObjects = require('./helpers')
-
 const Upload = require('../models/index').Upload;
 
 const clone = require('clone');
@@ -14,6 +12,12 @@ const moment = require('moment');
 const c = {
   l : console.log
 };
+
+const helpers = require('../caching/helpers');
+
+const calculateViewsByPeriod = helpers.calculateViewsByPeriod;
+
+const buildObjects = helpers.buildObjects;
 
 const redisClient = require('../config/redis');
 
@@ -46,6 +50,16 @@ async function getRecentUploads(uploadType){
 
 async function setRecentUploads() {
   let recentUploads  = await getRecentUploads();
+
+  // calculate view periods for each upload
+  recentUploads = await Promise.all(recentUploads.map(async function(upload){
+
+    // get all valid views per upload
+    const uploadViews = await View.find({ upload, validity: 'real' }).select('createdAt');
+
+    // calculate their views per period (last24h, lastweek)
+    return calculateViewsByPeriod(upload, uploadViews);
+  }));
 
   // do more stringent check for uploader
   recentUploads =  _.filter(recentUploads, function(upload){
