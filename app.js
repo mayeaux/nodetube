@@ -81,7 +81,6 @@ if (cluster.isMaster) {
 
     const missedFile404Middleware = require('./middlewares/shared/missedFile404Middleware');
 
-
     //
     process.on('uncaughtException', (err) => {
       // console.log(err);
@@ -179,9 +178,6 @@ if (cluster.isMaster) {
     // use local uploads directory as file host
     app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {maxAge: 31557600000}));
 
-
-    // app.use(missedFile404Middleware);
-
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(expressValidator());
@@ -272,6 +268,10 @@ if (cluster.isMaster) {
     }
 
     app.use(express.static(path.join(__dirname, 'public'), {maxAge: 31557600000}));
+
+    app.use(express.static(path.join(__dirname, 'hls'), {}));
+
+    app.use(missedFile404Middleware);
 
     app.use(multipart());
 

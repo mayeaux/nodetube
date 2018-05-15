@@ -75,8 +75,6 @@ function livestreamRoutes(app){
     next()
   });
 
-  app.use(express.static(path.join(__dirname, '../hls'), {}));
-
   app.get('/', publicController.index);
 
   // routes for nginx-rtmp
