@@ -16,7 +16,9 @@ const uploadServer = uploadHelpers.uploadServer;
 
 const getFromCache = require('../../caching/getFromCache');
 
-const { getSensitivityFilter, filterUploadsBySensitivity, filterUploadsByCategory, filterUploadsBySubCategory } = require('../../lib/mediaBrowsing/helpers');
+const uploadFilters = require('../../lib/mediaBrowsing/helpers');
+
+const getSensitivityFilter =  uploadFilters.getSensitivityFilter;
 
 const categories = require('../../config/categories');
 
@@ -40,6 +42,8 @@ exports.recentUploads = async (req, res) => {
 
     let category = req.query.category || false;
 
+    let subcategory = req.query.subcategory || false;
+
     // get current page
     let page = parseInt(req.params.page || 1);
 
@@ -60,26 +64,16 @@ exports.recentUploads = async (req, res) => {
 
       console.log('NO CATEGORY');
 
-      uploads = await getFromCache.getRecentUploads(limit, skipAmount);
-
-      // console.log(uploads);
-
-      // filter uploads based on sensitivity
       let filter = getSensitivityFilter(req.user, req.siteVisitor);
-      uploads = filterUploadsBySensitivity(uploads, filter);
 
-      uploads.comedy = uploads;
+      console.log(filter + 'hello2');
 
-      // get all the data then compile it like :
-      // compile as { comedy: [] }
-
-      // TODO: write this
-      // uploads = getCategoryPreviewData()
+      uploads = await getFromCache.getRecentUploads(6, skipAmount, filter, category, subcategory);
 
     } else {
       console.log('CATEGORY');
 
-      uploads = await getFromCache.getRecentUploads(6, skipAmount);
+      uploads = await getFromCache.getRecentUploads(limit, skipAmount);
 
       console.log(uploads);
 
@@ -104,11 +98,13 @@ exports.recentUploads = async (req, res) => {
       uploadServer,
       siteVisitor: req.siteVisitor,
       categories,
+      category,
       isACategory : category
 
     });
 
   } catch (err){
+    console.log(err);
     res.status(500);
     res.send('error')
   }

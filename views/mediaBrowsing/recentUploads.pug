@@ -74,13 +74,13 @@ block content
 
                 ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1')
                     li(role='presentation')
-                        a(href=`/media/recent/1?media=all`) All
+                        a(href=`/media/recent/1?media=all&category=${category}`) All
                     li(role='presentation')
-                        a(href=`/media/recent/1?media=video`) Videos
+                        a(href=`/media/recent/1?media=video&category=${category}`) Videos
                     li(role='presentation')
-                        a(href=`/media/recent/1?media=audio`) Audio
+                        a(href=`/media/recent/1?media=audio&category=${category}`) Audio
                     li(role='presentation')
-                        a(href=`/media/recent/1?media=image`) Images
+                        a(href=`/media/recent/1?media=image&category=${category}`) Images
             //br
 
             div.dropdown(style="display:inline")
@@ -111,14 +111,14 @@ block content
             nav.center-block.text-center(aria-label='Page navigation example')
                 ul.pagination
                     li.page-item
-                        a.page-link(href=`/media/recent/${previousNumber}?media=${media}`) <
+                        a.page-link(href=`/media/recent/${previousNumber}?media=${media}&category${category}`) <
 
                     each number in numbersArray
                         li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
-                            a.page-link(href=`/media/recent/${number}?media=${media}`) #{number}
+                            a.page-link(href=`/media/recent/${number}?media=${media}&category=${category}`) #{number}
 
                     li.page-item
-                        a.page-link(href=`/media/recent/${nextNumber}?media=${media}`) >
+                        a.page-link(href=`/media/recent/${nextNumber}?media=${media}&category=${category}`) >
 
 
 

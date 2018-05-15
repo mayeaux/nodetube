@@ -8,6 +8,10 @@ const sizeof = require('object-sizeof');
 
 const redisClient = require('../config/redis');
 
+const categories = require('../config/categories');
+
+const { filterUploadsBySensitivity, filterUploadsByCategory, filterUploadsBySubcategory } = require('../lib/mediaBrowsing/helpers');
+
 let popularUploads;
 async function setGlobalPopularUploads(){
   popularUploads = await redisClient.getAsync('popularUploads');
@@ -102,13 +106,34 @@ async function getPopularUploads(timeRange, limit, offset) {
 }
 
 // upload type = popularUploads, recentUploads
-async function getRecentUploads(limit, offset) {
+async function getRecentUploads(limit, offset, filter, category, subcategory) {
+
 
   // load recent uploads into memory
   let uploads = recentUploads;
 
   // send empty array if no globalRecentUploads set
   if(!uploads) return [];
+
+  uploads = filterUploadsBySensitivity(uploads, filter);
+
+  if(category){
+    uploads = filterUploadsByCategory(uploads, category);
+  } else {
+    let categoryFormattedUploads = {};
+
+    for(const category of categories){
+      let categoryUploads = filterUploadsByCategory(uploads, category.name);
+      categoryUploads = trimUploads(uploads, limit, offset);
+      categoryFormattedUploads[category.name] = categoryUploads
+    }
+
+    return categoryFormattedUploads
+  }
+
+  if(subcategory){
+    uploads = filterUploadsBySubcategory(uploads, subcategory);
+  }
 
   uploads = trimUploads(uploads, limit, offset);
 
