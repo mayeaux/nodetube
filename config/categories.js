@@ -34,6 +34,11 @@ const categories = [
     subcategories: []
   },
   {
+    name: 'music',
+    displayName: 'Music',
+    subcategories: []
+  },
+  {
     name: 'politics',
     displayName: 'Politics',
     subcategories: [
