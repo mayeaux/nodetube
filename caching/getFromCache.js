@@ -113,9 +113,13 @@ async function getPopularUploads(timeRange, limit, offset,  mediaType, filter, c
 
   // if(1 == 1){
   if(category){
+    if(category == 'all'){
+      return uploads
+    }
 
     uploads = filterUploadsByCategory(uploads, category);
   } else {
+    // build and return overview object
     let categoryFormattedUploads = {};
 
     for(const category of categories){
@@ -153,6 +157,11 @@ async function getRecentUploads(limit, offset, mediaType, filter, category, subc
   uploads = filterUploadsBySensitivity(uploads, filter);
 
   if(category){
+
+    if(category == 'all'){
+      return uploads
+    }
+
     uploads = filterUploadsByCategory(uploads, category);
   } else {
     let categoryFormattedUploads = {};
