@@ -189,9 +189,9 @@ block content
                                         div(style="width:100%")
                                             include ../viewPartials/uploadThumbnail
 
-                                            include ../viewPartials/uploadDetailsPopular
+                                            include ../viewPartials/uploadDetails
 
-                                            
+                                            //include ../viewPartials/uploadDetailsPopular
 
                                             if user && user.role == 'admin'
                                                 div.changeRating(style="margin-top:30px;")
@@ -202,7 +202,10 @@ block content
 
                         include ../viewPartials/uploadThumbnail
 
-                        include ../viewPartials/uploadDetailsPopular
+                        include ../viewPartials/uploadDetails
+
+                        // include ../viewPartials/uploadDetailsPopular
+
 
 
 

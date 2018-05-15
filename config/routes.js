@@ -33,8 +33,6 @@ const supportFrontendController = require('../controllers/frontend/support');
 const passportConfig = require('../config/passport');
 const authMiddleware = require('../middlewares/shared/authentication');
 
-const missedFile404Middleware = require('../middlewares/shared/missedFile404Middleware');
-
 function fileHostRoutes(app){
   console.log('RUNNING AS FILE HOST');
 

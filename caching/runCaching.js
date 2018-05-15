@@ -61,17 +61,26 @@ async function main(){
 
     await cacheRecentUploads();
 
-    await cachePopularUploads();
-    //
-    // await setCache.setDailyStats();
-    // await setCache.setIndexValues();
-
-    // await cacheChannels();
   } catch (err){
     console.log(err);
   }
 
 }
 
+setInterval(async function(){
+
+  try {
+    await cachePopularUploads();
+    await setCache.setDailyStats();
+    await setCache.setIndexValues();
+
+    // await cacheChannels();
+  } catch (err){
+    console.log(err);
+  }
+
+}, 1000 * 60 * 5)
+
+
 main();
-setInterval(main, 1000 * 60 * 20);
+setInterval(main, 1000 * 60 * 1);

@@ -40,6 +40,10 @@ dotenv.load({path: '.env.private'});
 
 const amountOfProcesses = process.env.WEB_CONCURRENCY || numCPUs;
 
+if(process.env.CACHING_ON == 'true'){
+  const runcaching = require('./caching/runCaching')
+}
+
 
 // /** Code to find errant console logs **/
 // ['log', 'warn', 'error'].forEach(function(method) {
@@ -176,7 +180,7 @@ if (cluster.isMaster) {
     app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {maxAge: 31557600000}));
 
 
-    app.use(missedFile404Middleware);
+    // app.use(missedFile404Middleware);
 
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: true}));
