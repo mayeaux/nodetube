@@ -59,30 +59,16 @@ exports.recentUploads = async (req, res) => {
     const previousNumber = pagination.getPreviousNumber(page);
     const nextNumber = pagination.getNextNumber(page);
 
+    let filter = getSensitivityFilter(req.user, req.siteVisitor);
+
     let uploads;
     if(!category){
-
-      console.log('NO CATEGORY');
-
-      let filter = getSensitivityFilter(req.user, req.siteVisitor);
-
-      console.log(filter + 'hello2');
 
       uploads = await getFromCache.getRecentUploads(6, skipAmount, filter, category, subcategory);
 
     } else {
-      console.log('CATEGORY');
 
-      uploads = await getFromCache.getRecentUploads(limit, skipAmount);
-
-      console.log(uploads);
-
-      uploads = filterUploadsByCategory(uploads, category);
-
-      // filter uploads based on sensitivity
-      let filter = getSensitivityFilter(req.user, req.siteVisitor);
-      uploads = filterUploadsBySensitivity(uploads, filter);
-
+      uploads = await getFromCache.getRecentUploads(limit, skipAmount, filter, category, subcategory);
     }
 
     console.log(category)
