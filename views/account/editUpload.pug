@@ -210,7 +210,7 @@ block content
       var uploadSubcategory = '#{upload.subcategory}'
 
       if (uploadSubcategory) {
-
+        $("input[value=" + uploadSubcategory +  "]").click()
       }
 
       console.log(uploadCategory, uploadSubcategory)
