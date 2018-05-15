@@ -146,7 +146,7 @@ exports.getChannel = async (req, res) => {
 
     // find the user per channelUrl
     user = await User.findOne({
-      channelUrl
+      channelUrl:  new RegExp(["^", req.params.channel, "$"].join(""), "i")
     }).populate('receivedSubscriptions').lean()
       .exec();
 
@@ -345,7 +345,12 @@ exports.getChannel = async (req, res) => {
       uploadServer,
       ips,
       siteVisitor,
-      isModerator
+      isModerator,
+      numbersArray,
+      previousNumber,
+      nextNumber,
+      startingNumber,
+      highlightedNumber: page
     });
 
 

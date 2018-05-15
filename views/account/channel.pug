@@ -138,20 +138,9 @@ block content
                 li
                     a(href=`/user/${channel.channelUrl}?orderBy=oldToNew`) Old To New
 
-        div.dropdown(style="display:inline")
-            button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
-                if siteVisitor.filter == 'allAges'
-                    | Rating: SFW &nbsp
-                else if siteVisitor.filter == 'mature'
-                    | Rating: SFW/NSWF &nbsp
-                span.caret
+        include ../viewPartials/sensitivityFilterDropdown
 
-            ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1')
-                li(role='presentation')
-                    if siteVisitor.filter == 'mature'
-                        a.changeFilterButton(value="allAges" href="#") SFW
-                    else if siteVisitor.filter == 'allAges'
-                        a.changeFilterButton(value="mature" href="#") SFW/NFSW
+        include ../viewPartials/channelOverviewPagination
 
     br
     br
