@@ -46,7 +46,7 @@ block content
                 each category in categories
                     if category.subcategories && category.subcategories.length > 1
                         div.subcategories(class=category.name style="display:none;")
-                            label(for='subcategory') Subcategory
+                            label(for='subcategory') Subcategory (Optional)
                             each subcategory in category.subcategories
                                 div.radio-buttons.subcategory(class=category.name style="display:none")
                                     label.radio-inline
@@ -197,3 +197,20 @@ block content
         // prevent submitting again
         return false;
       });
+
+      var uploadCategory = '#{upload.category}'
+
+      if (uploadCategory) {
+
+        console.log('#{categories}')
+
+        $('.categoryValue').filter('[data-value=' + uploadCategory + ']').click()
+      }
+
+      var uploadSubcategory = '#{upload.subcategory}'
+
+      if (uploadSubcategory) {
+
+      }
+
+      console.log(uploadCategory, uploadSubcategory)
