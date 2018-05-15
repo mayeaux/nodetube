@@ -124,7 +124,11 @@ async function getRecentUploads(limit, offset, filter, category, subcategory) {
 
     for(const category of categories){
       let categoryUploads = filterUploadsByCategory(uploads, category.name);
-      categoryUploads = trimUploads(uploads, limit, offset);
+
+      console.log(categoryUploads.length)
+
+
+      categoryUploads = trimUploads(categoryUploads, limit, offset);
       categoryFormattedUploads[category.name] = categoryUploads
     }
 
