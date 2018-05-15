@@ -264,25 +264,16 @@ exports.results = async (req, res) => {
 
   const mediaType = req.query.mediaType;
 
+  const userSearchQuery = req.query.userSearchQuery;
+
   console.log(search);
 
-  if(!req.body.search){
+  if(!searchQuery){
     console.log('doing redirect')
 
     req.flash('errors', { msg: 'Please enter a search term' });
     return res.redirect('/search')
   }
-
-  // note the person searching
-  let searcher = req.user && req.user.id || undefined;
-
-  // create and save search query
-  const searchQuery = new SearchQuery({
-    searcher: searcher,
-    query: search
-  });
-
-  await searchQuery.save();
 
   // create a regexp for mongo
   const re = new RegExp(search, "gi");
@@ -296,7 +287,7 @@ exports.results = async (req, res) => {
       visibility: 'public',
       title : re,
       $or : [ { status: 'completed' }, { uploadUrl: { $exists: true } } ]
-    }).populate('uploader');
+    }).populate('uploader').limit(1000);
 
     // populate upload.legitViewAmount
     uploads = await Promise.all(
@@ -344,13 +335,93 @@ exports.results = async (req, res) => {
 };
 
 
+async function saveSearchQuery(user, search){
+  // note the person searching
+  let searcher = user && user.id || undefined;
+
+// create and save search query
+  const searchQuery = new SearchQuery({
+    searcher: searcher,
+    query: search
+  });
+
+  await searchQuery.save();
+
+}
+
+
 /**
  * GET /
  * Search page.
  */
-exports.search = (req, res) => {
-  res.render('public/search', {
-    title: 'Search'
+exports.search = async (req, res) => {
+
+  // TODO: url decode here
+
+  const userSearchQuery = req.query.searchQuery;
+
+  if(!userSearchQuery){
+    return res.render('public/search', {
+      title: 'Search'
+    });
+  }
+
+  await saveSearchQuery(req.user, userSearchQuery);
+
+  let searchType = req.query.searchType;
+
+  let uploads, users;
+  const re = new RegExp(userSearchQuery, "gi");
+
+  if(searchType == 'user'){
+    // channels
+    users = await User.find({
+      $or : [ { channelName: re }, { channelUrl: re  } ],
+      status: { $ne: 'restricted'}
+    }).populate('uploads');
+
+    users = _.filter(users, function(user){
+      return user.uploads.length > 0
+    });
+
+  } else if (searchType == 'upload' || !searchType) {
+    const mediaType = req.query.mediaType;
+
+    // uploads
+    uploads = await Upload.find({
+      visibility: 'public',
+      title : re,
+      $or : [ { status: 'completed' }, { uploadUrl: { $exists: true } } ]
+    }).populate('uploader').limit(1000);
+
+    // populate upload.legitViewAmount
+    uploads = await Promise.all(
+      uploads.map(async function(upload){
+        upload = upload.toObject();
+        const checkedViews = await View.count({ upload: upload.id, validity: 'real' });
+        upload.legitViewAmount = checkedViews;
+        return upload
+      })
+    );
+
+    let filter = getSensitivityFilter(req.user, req.siteVisitor);
+
+    uploads = uploadFilters.filterUploadsBySensitivity(uploads, filter);
+
+    uploads = uploadFilters.filterUploadsByMediaType(uploads, mediaType);
+
+    // filter pagination
+  } else {
+    // error
+  }
+
+  const siteVisitor = req.siteVisitor;
+
+  return res.render('public/search', {
+    title: 'Search',
+    channels: users,
+    uploads,
+    siteVisitor
   });
 };
 
