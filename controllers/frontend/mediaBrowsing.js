@@ -211,7 +211,8 @@ exports.popularUploads = async (req, res) => {
       siteVisitor : req.siteVisitor,
       categories,
       category,
-      isACategory : category
+      isACategory : category,
+      media
     });
 
     // title: 'Recent Uploads',
