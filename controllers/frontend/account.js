@@ -217,28 +217,6 @@ exports.getChannel = async (req, res) => {
 
     res.locals.meta.image = user.thumbnailUrl || uploadThumbnailUrl;
 
-    if(orderBy == 'popular'){
-      uploads = uploads.sort(function(a, b) {
-        return b.legitViewAmount - a.legitViewAmount;
-      });
-    }
-
-    if(orderBy == 'newToOld'){
-
-      console.log('new to old')
-      uploads = uploads.sort(function(a, b) {
-        return b.createdAt - a.createdAt;
-      });
-    }
-
-    if(orderBy == 'oldToNew'){
-
-      console.log('old to new')
-      uploads = uploads.sort(function(a, b) {
-        return a.createdAt - b.createdAt;
-      });
-    }
-
     // TODO: add pagination here
 
     let orderByEnglishString;
@@ -295,6 +273,22 @@ exports.getChannel = async (req, res) => {
 
     const userUploadAmount = uploads.length;
 
+    if(orderBy == 'newToOld'){
+
+      console.log('new to old')
+      uploads = uploads.sort(function(a, b) {
+        return b.createdAt - a.createdAt;
+      });
+    }
+
+    if(orderBy == 'oldToNew'){
+
+      console.log('old to new')
+      uploads = uploads.sort(function(a, b) {
+        return a.createdAt - b.createdAt;
+      });
+    }
+
     let filter = uploadFilters.getSensitivityFilter(req.user, req.siteVisitor);
 
     uploads = uploadFilters.filterUploadsBySensitivity(uploads, filter);
@@ -312,6 +306,12 @@ exports.getChannel = async (req, res) => {
         return upload
       })
     );
+
+    if(orderBy == 'popular'){
+      uploads = uploads.sort(function(a, b) {
+        return b.legitViewAmount - a.legitViewAmount;
+      });
+    }
 
     let totalViews = 0;
     for(upload of uploads){
