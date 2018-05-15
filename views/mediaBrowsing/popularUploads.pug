@@ -155,18 +155,7 @@ block content
                             a.changeFilterButton(value="mature" href="#") SFW/NFSW
 
 
-        // TOP PAGINATION
-        nav.center-block.text-center(aria-label='Page navigation example')
-            ul.pagination
-                li.page-item
-                    a.page-link(href=`/media/popular/${previousNumber}${withinString}`) <
-
-                each number in numbersArray
-                    li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
-                        a.page-link(href=`/media/popular/${number}${withinString}`) #{number}
-
-                li.page-item
-                    a.page-link(href=`/media/popular/${nextNumber}${withinString}`) >
+        include ../viewPartials/pagination
 
 
         br
