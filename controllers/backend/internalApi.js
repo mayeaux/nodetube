@@ -483,6 +483,8 @@ exports.editUpload = async (req, res, next) => {
   upload.title = req.body.title;
   upload.description = req.body.description;
   upload.rating = req.body.rating;
+  upload.category = req.body.category;
+  upload.subcategory = req.body.subcategory;
 
 
   let filename, fileType, fileExtension;

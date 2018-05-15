@@ -11,7 +11,7 @@ block content
 
 
 
-    form.form-horizontal(action=`${thumbnailServer}/api/upload/${upload.uniqueTag}/edit`, method='POST' enctype="multipart/form-data" )
+    form.form-horizontal(action=`${thumbnailServer}/api/upload/${upload.uniqueTag}/edit`, method='POST' enctype="multipart/form-data" novalidate )
         input(type='hidden', name='_csrf', value=_csrf)
         input(type='hidden', name='uploadToken', value=user.uploadToken)
         .form-group
@@ -24,19 +24,20 @@ block content
             .col-sm-7
                 textarea(id="description" name="description" maxlength='2000' rows="10" cols="70") #{upload.description}
 
-        div.dropdown(style="display:inline;padding-right:15px;")
-            button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px;")
-                | Category: &nbsp
-                span.caret
+        div(style="margin:0 auto;text-align:center;margin-bottom:15px;")
 
-            ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1' style="margin-top:-17px;margin-left:-81px;")
-                each category in categories
-                    li(role='presentation')
-                        a.categoryValue(style="cursor:pointer;" data-value=category.name data-displayname=category.displayName) #{category.displayName}
+            div.dropdown(style="display:inline;padding-right:15px;")
+                button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px;")
+                    | Category: &nbsp
+                    span.caret
 
-            br
+                ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1' style="margin-top:-17px;margin-left:-81px;")
+                    each category in categories
+                        li(role='presentation')
+                            a.categoryValue(style="cursor:pointer;" data-value=category.name data-displayname=category.displayName) #{category.displayName}
 
-        div.form-group
+                br
+
             div.categoryName(style="display:none")
                 h5.categoryDisplayName Category: $Thing
                 br
@@ -147,6 +148,9 @@ block content
         // add here
 
     script.
+
+      var category;
+
       $('.categoryValue').click(function () {
         var value = $(this).data("value");
 
@@ -155,7 +159,7 @@ block content
         // hide all subcategories
         $('.subcategories').hide();
 
-        selectedCategory = value;
+        var selectedCategory = value;
 
         // display selected category
         $('.categoryDisplayName').text('Category: ' + displayName)
@@ -165,5 +169,31 @@ block content
         $('.' + value).show();
 
 
+        category = value;
+
         console.log(value, displayName);
       })
+
+      // capture submit
+      $('form').submit(function () {
+        var $theForm = $(this);
+
+        var data = $theForm.serialize()
+
+        data = data + '&category=' + category;
+
+        console.log(data)
+
+        // send xhr request
+        $.ajax({
+          type: $theForm.attr('method'),
+          url: $theForm.attr('action'),
+          data,
+          success: function (data) {
+            console.log('Yay! Form sent.');
+          }
+        });
+
+        // prevent submitting again
+        return false;
+      });
