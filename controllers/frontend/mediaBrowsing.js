@@ -209,8 +209,23 @@ exports.popularUploads = async (req, res) => {
       uploadServer,
       filter,
       siteVisitor : req.siteVisitor,
-      categories
+      categories,
+      category,
+      isACategory : category
     });
+
+    // title: 'Recent Uploads',
+    //   uploads,
+    //   numbersArray,
+    //   highlightedNumber: page,
+    //   previousNumber,
+    //   nextNumber,
+    //   media,
+    //   uploadServer,
+    //   siteVisitor: req.siteVisitor,
+    //   categories,
+    //   category,
+    //   isACategory : category
 
   } catch (err){
     console.log('ERR:')

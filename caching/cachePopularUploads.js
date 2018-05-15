@@ -36,7 +36,7 @@ async function getPopularUploads(){
   };
 
   const selectString = 'rating title views checkedViews uploader fileType thumbnailUrl ' +
-    'uploadUrl uniqueTag customThumbnailUrl fileExtension thumbnails reacts uncurated';
+    'uploadUrl uniqueTag customThumbnailUrl fileExtension thumbnails reacts uncurated category subcategory';
 
   let popularUploads = await Upload.find(searchQuery).select(selectString).populate('uploader reacts')
     .lean();

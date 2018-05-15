@@ -111,8 +111,8 @@ async function getPopularUploads(timeRange, limit, offset,  mediaType, filter, c
 
   console.log(uploads.length)
 
-  if(1 == 1){
-  // if(category){
+  // if(1 == 1){
+  if(category){
 
     uploads = filterUploadsByCategory(uploads, category);
   } else {

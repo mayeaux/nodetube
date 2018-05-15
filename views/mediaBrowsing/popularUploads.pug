@@ -170,46 +170,71 @@ block content
 
 
         br
-        each upload in uploads
-            div.col-sm-4(style="text-align:center;height:360px;")
+        div.uploads
+            if !isACategory
+                for category in categories
+                    //p= uploads[category.name]
+                    // if there's more than one per category
+                    if uploads[category.name] && uploads[category.name].length && uploads[category.name].length > 0
+                        div.category.col-sm-12
+                            if user.role == 'admin' || user.role == 'moderator'
+                                h2 #{category.displayName} (#{uploads[category.name].length})
+                            else
+                                h2 #{category.displayName}
 
-                include ../viewPartials/uploadThumbnail
+                            // begin individual upload section
+                            each upload in uploads[category.name]
+                                if upload.uploader
+                                    div.col-sm-4(style="text-align:center;height:310px;")
+                                        div(style="width:100%")
+                                            include ../viewPartials/uploadThumbnail
 
-                div.upload-details
-                    if englishString !== 'All Time'
-                        div.views
-                            p.center-block.text-center #{upload.legitViewAmount} Total Views
-                    div.views
-                        if englishString == 'All Time'
-                            p(style="margin-top:8px").center-block.text-center #{upload.legitViewAmount} #{englishString}
-                        if englishString == 'Last Month'
-                            p.center-block.text-center #{upload.viewsWithin1month} #{englishString}
-                        if englishString == 'Last Week'
-                            p.center-block.text-center #{upload.viewsWithin1week} #{englishString}
-                        if englishString == 'Last Day'
-                            p.center-block.text-center #{upload.viewsWithin24hour} #{englishString}
-                        if englishString == 'Last Hour'
-                            p.center-block.text-center #{upload.viewsWithin1hour} #{englishString}
+                                            include ../viewPartials/uploadDetails
 
-                        // capitalize media type
-                    div.uploaded-by #{upload.fileType.charAt(0).toUpperCase() + upload.fileType.slice(1)} uploaded by
-                        a.upload-user-text(href=`/user/${upload.uploader.channelUrl}`)
-                            p(style="font-size:15px") #{upload.uploader.channelName || upload.uploader.channelUrl}
-                                if upload.uploader.verified == true
-                                    img(src="/images/verified.jpg" width="19px" height="19px" style="margin-left:3px;margin-top:-2px;")
-                                if upload.uploader.plan == 'plus'
-                                    span.pewtube-pro PLUS
+                                            if user && user.role == 'admin'
+                                                div.changeRating(style="margin-top:30px;")
+                                                    input.ratingChanged(type="checkbox" value=`${upload._id}`)
+            else
+                each upload in uploads
+                    div.col-sm-4(style="text-align:center;height:360px;")
 
-                if user && user.role == 'admin'
-                    div.changeRating(style="margin-top:12px;")
-                        input.ratingChanged(type="checkbox" value=`${upload._id}`)
+                        include ../viewPartials/uploadThumbnail
+
+                        div.upload-details
+                            if englishString !== 'All Time'
+                                div.views
+                                    p.center-block.text-center #{upload.legitViewAmount} Total Views
+                            div.views
+                                if englishString == 'All Time'
+                                    p(style="margin-top:8px").center-block.text-center #{upload.legitViewAmount} #{englishString}
+                                if englishString == 'Last Month'
+                                    p.center-block.text-center #{upload.viewsWithin1month} #{englishString}
+                                if englishString == 'Last Week'
+                                    p.center-block.text-center #{upload.viewsWithin1week} #{englishString}
+                                if englishString == 'Last Day'
+                                    p.center-block.text-center #{upload.viewsWithin24hour} #{englishString}
+                                if englishString == 'Last Hour'
+                                    p.center-block.text-center #{upload.viewsWithin1hour} #{englishString}
+
+                                // capitalize media type
+                            div.uploaded-by #{upload.fileType.charAt(0).toUpperCase() + upload.fileType.slice(1)} uploaded by
+                                a.upload-user-text(href=`/user/${upload.uploader.channelUrl}`)
+                                    p(style="font-size:15px") #{upload.uploader.channelName || upload.uploader.channelUrl}
+                                        if upload.uploader.verified == true
+                                            img(src="/images/verified.jpg" width="19px" height="19px" style="margin-left:3px;margin-top:-2px;")
+                                        if upload.uploader.plan == 'plus'
+                                            span.pewtube-pro PLUS
+
+                        if user && user.role == 'admin'
+                            div.changeRating(style="margin-top:12px;")
+                                input.ratingChanged(type="checkbox" value=`${upload._id}`)
 
 
-        if user && user.role == 'admin'
-            div.center-block.text-center.col-sm-12
-                button.btn-lg.button-success.change-rating(rating="sensitive") Mark As Sensitive
-                button.btn-lg.button-success.change-rating(rating="mature") Mark As NSFW (Mature)
-                button.btn-lg.button-success.change-rating(rating="allAges") Mark As SFW (AllAges)
+            if user && user.role == 'admin'
+                div.center-block.text-center.col-sm-12
+                    button.btn-lg.button-success.change-rating(rating="sensitive") Mark As Sensitive
+                    button.btn-lg.button-success.change-rating(rating="mature") Mark As NSFW (Mature)
+                    button.btn-lg.button-success.change-rating(rating="allAges") Mark As SFW (AllAges)
 
 
         if uploads
