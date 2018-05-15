@@ -1,4 +1,6 @@
 script.
+  var csrf = '#{_csrf}'
+
   $('.changeFilterButton').on('click', function(){
 
     function changeUserRatingFilter(value){
@@ -6,6 +8,7 @@ script.
       console.log('running here')
 
       var data = {
+        _csrf: csrf,
         filter: value
       }
 
