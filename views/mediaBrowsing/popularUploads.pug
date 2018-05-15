@@ -141,20 +141,7 @@ block content
 
             include ../viewPartials/mediaDropdown
 
-            div.dropdown(style="display:inline")
-                button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
-                    if siteVisitor.filter == 'allAges'
-                        | Rating: SFW &nbsp
-                    else if siteVisitor.filter == 'mature'
-                        | Rating: SFW/NSWF &nbsp
-                    span.caret
-
-                ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1')
-                    li(role='presentation')
-                        if siteVisitor.filter == 'mature'
-                            a.changeFilterButton(value="allAges" href="#") SFW
-                        else if siteVisitor.filter == 'allAges'
-                            a.changeFilterButton(value="mature" href="#") SFW/NFSW
+            include ../viewPartials/sensitivityFilterDropdown
 
 
         include ../viewPartials/pagination
@@ -163,30 +150,8 @@ block content
         br
         div.uploads
             if !isACategory
-                for category in categories
-                    //p= uploads[category.name]
-                    // if there's more than one per category
-                    if uploads[category.name] && uploads[category.name].length && uploads[category.name].length > 0
-                        div.category.col-sm-12
-                            if user.role == 'admin' || user.role == 'moderator'
-                                h2 #{category.displayName} (#{uploads[category.name].length})
-                            else
-                                h2 #{category.displayName}
+                include ../viewPartials/categoryOverviews
 
-                            // begin individual upload section
-                            each upload in uploads[category.name]
-                                if upload.uploader
-                                    div.col-sm-4(style="text-align:center;height:310px;")
-                                        div(style="width:100%")
-                                            include ../viewPartials/uploadThumbnail
-
-                                            include ../viewPartials/uploadDetails
-
-                                            //include ../viewPartials/uploadDetailsPopular
-
-                                            if user && user.role == 'admin'
-                                                div.changeRating(style="margin-top:30px;")
-                                                    input.ratingChanged(type="checkbox" value=`${upload._id}`)
             else
                 each upload in uploads
                     div.col-sm-4(style="text-align:center;height:360px;")
@@ -205,26 +170,12 @@ block content
                                 input.ratingChanged(type="checkbox" value=`${upload._id}`)
 
 
-            if user && user.role == 'admin'
-                div.center-block.text-center.col-sm-12
-                    button.btn-lg.button-success.change-rating(rating="sensitive") Mark As Sensitive
-                    button.btn-lg.button-success.change-rating(rating="mature") Mark As NSFW (Mature)
-                    button.btn-lg.button-success.change-rating(rating="allAges") Mark As SFW (AllAges)
+            include ../viewPartials/adminSensitivityButtons
 
 
         if uploads
             div.col-sm-12
-                nav.center-block.text-center(aria-label='Page navigation example')
-                    ul.pagination
-                        li.page-item
-                            a.page-link(href=`/media/popular/${previousNumber}${withinString}`) <
-
-                        each number in numbersArray
-                            li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
-                                a.page-link(href=`/media/popular/${number}${withinString}`) #{number}
-
-                        li.page-item
-                            a.page-link(href=`/media/popular/${nextNumber}${withinString}`) >
+                include ../viewPartials/pagination
 
 
     if user && user.role == 'admin'

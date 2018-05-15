@@ -1,0 +1,54 @@
+script.
+  $('.changeFilterButton').on('click', function(){
+
+    function changeUserRatingFilter(value){
+
+      console.log('running here')
+
+      var data = {
+        filter: value
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: `/api/changeUserFilter`, // todo: change to user filter
+        data,
+        success: function (data) {
+          if (data == 'success') {
+            window.location.reload(true);
+          } else {
+            swal("Something didn't work, please contact PewTube at ceo@pew.tube or via the widget in the bottom right corner")
+          }
+          console.log(data);
+        },
+        error: function (err) {
+          console.log(err);
+        }
+      });
+
+    }
+
+    const value = $(this).attr('value');
+
+    if(value == 'mature'){
+
+      swal({
+        title: '',
+        text: 'Please confirm you are 18 or older and willing to see \n not safe for work content',
+        showCancelButton: true,
+        confirmButtonText: "Confirm Age",
+      }).then(function (result) {
+
+        console.log(result);
+
+        if(result.value == true){
+          changeUserRatingFilter(value)
+        }
+      })
+
+    } else {
+      changeUserRatingFilter(value);
+    }
+
+    console.log('here')
+  })

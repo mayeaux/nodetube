@@ -458,7 +458,8 @@ exports.editUpload = async (req, res) => {
     thumbnailServer,
     rating: upload.rating,
     isAdminOrModerator,
-    hideRatingFrontend
+    hideRatingFrontend,
+    categories
   })
 
 

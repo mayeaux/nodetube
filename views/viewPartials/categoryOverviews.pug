@@ -1,0 +1,24 @@
+for category in categories
+    //p= uploads[category.name]
+    // if there's more than one per category
+    if uploads[category.name] && uploads[category.name].length && uploads[category.name].length > 0
+        div.category.col-sm-12
+            if user.role == 'admin' || user.role == 'moderator'
+                h2 #{category.displayName} (#{uploads[category.name].length})
+            else
+                h2 #{category.displayName}
+
+            // begin individual upload section
+            each upload in uploads[category.name]
+                if upload.uploader
+                    div.col-sm-4(style="text-align:center;height:310px;")
+                        div(style="width:100%")
+                            include ../viewPartials/uploadThumbnail
+
+                            include ../viewPartials/uploadDetails
+
+                            //include ../viewPartials/uploadDetailsPopular
+
+                            if user && user.role == 'admin'
+                                div.changeRating(style="margin-top:30px;")
+                                    input.ratingChanged(type="checkbox" value=`${upload._id}`)

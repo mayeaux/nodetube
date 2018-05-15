@@ -1,0 +1,19 @@
+script.
+  $(document).on({
+    mouseenter: function () {
+      var width = $(this).width()
+      var height = $(this).height()
+
+
+      $(this).css("width", width * 1.10);
+      $(this).css("height", height * 1.10);
+
+    },
+    mouseleave: function () {
+      var width = $(this).width()
+      var height = $(this).height()
+
+      $(this).css("width", width / 1.10);
+      $(this).css("height", height / 1.10);
+    }
+  }, '.preview-image');
