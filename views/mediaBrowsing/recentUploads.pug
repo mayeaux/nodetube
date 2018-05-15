@@ -7,16 +7,6 @@ block content
                 text-align: center;
             }
 
-            .button, .dropdown-menu {
-                margin: 10px auto
-            }
-
-            .dropdown-menu {
-                width: 200px;
-                left: 50%;
-                margin-left: -100px;
-            }
-
             input[type=checkbox] {
                 /* Double-sized Checkboxes */
                 -ms-transform: scale(2); /* IE */
@@ -25,40 +15,6 @@ block content
                 -o-transform: scale(2); /* Opera */
                 padding: 10px;
             }
-
-            .pewtube-pro {
-                background: #edeeee;
-                font-weight: 400;
-                font-size: 10px;
-                margin-left: 3px;
-                padding: 2px 4px;
-                display: inline-block;
-                border-radius: 3px;
-                transform: translateY(-2px);
-            }
-
-
-
-        if user && user.role == 'admin'
-            div.row
-                div.col-sm-3
-                    h3
-                        a(href="/media/recent") Recently Uploaded
-                div.col-sm-3
-                    h3
-                        a(href="/media/recentComments") Recent Comments
-                div.col-sm-2
-                    h3
-                        a(href="/media/recentViews") Recent Views
-                div.col-sm-2
-                    h3
-                        a(href="/media/recentReacts") Recent Reacts
-
-            //div.col-sm-2
-            //    h3 Sensitive
-            //    input(type='checkbox', data-toggle='toggle')
-
-            hr
 
         br
 
@@ -103,43 +59,7 @@ block content
 
 
         if user && user.role == 'admin'
-            script.
-                $('.change-rating').on('click', function(){
-                  var checkedValues = $('input:checkbox:checked').map(function () {
-                    return this.value;
-                  }).get();
-
-                  var rating = $(this).attr('rating');
-                  var csrf = '#{_csrf}'
-
-
-                  var data = {
-                    rating: rating,
-                    uploads: checkedValues,
-                    csrf: csrf
-                  }
-
-                  $.ajax({
-                    type: 'POST',
-                    url: `/admin/changeRatings`, // todo: change to user filter
-                    data,
-                    success: function (data) {
-                      if (data == 'success') {
-                        window.location.reload(true);
-                      } else {
-                        swal("Something didn't work, please contact PewTube at ceo@pew.tube or via the widget in the bottom right corner")
-                      }
-                      console.log(data);
-                    },
-                    error: function (err) {
-                      console.log(err);
-                    }
-                  });
-
-
-                  console.log(rating);
-                })
-
+            include ../viewPartials/adminChangeRatingsJs
 
         include ../viewPartials/changeSensitivityFilterJs
 

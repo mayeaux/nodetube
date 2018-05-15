@@ -1,130 +1,8 @@
 extends ../layout
 
 block content
-
-    style.
-        .pewtube-pro {
-            background: #edeeee;
-            font-weight: 400;
-            font-size: 10px;
-            margin-left: 3px;
-            padding: 2px 4px;
-            display: inline-block;
-            border-radius: 3px;
-            transform: translateY(-2px);
-        }
-
-        .filter-text {
-            font-size: 12px;
-        }
-
-        form {
-            width: 100%;
-            box-sizing: border-box;
-            background-color: white;
-            box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.4);
-            text-align: center;
-            position: relative;
-            border-radius: 2px;
-        }
-
-        form > div {
-            color: white;
-            padding-top: 24px;
-            display: block;
-            position: absolute;
-            top: -4px;
-            left: -4px;
-            bottom: -4px;
-            width: calc(33.33% + 8px);
-            background-color: rgba(50, 150, 255, 1);
-            border-radius: 2px;
-            box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.4);
-            z-index: 1;
-            pointer-events: none;
-            transition: transform 0.3s;
-        }
-
-        form::after {
-            content: "";
-            display: block;
-            clear: both;
-        }
-
-        form label {
-            float: left;
-            width: calc(33.333% - 1px);
-            position: relative;
-            padding: 20px 0px 40px;
-            overflow: hidden;
-            border-left: solid 1px rgba(0, 0, 0, 0.2);
-            transition: color 0.3s;
-            cursor: pointer;
-            -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
-        }
-
-        form label:first-child {
-            border-left: none;
-        }
-
-        form label input {
-            position: absolute;
-            top: -200%;
-        }
-
-        form label div {
-            z-index: 5;
-            position: absolute;
-            width: 100%;
-        }
-
-        form label.selected {
-            color: white;
-        }
-
-        input[type=checkbox] {
-            /* Double-sized Checkboxes */
-            -ms-transform: scale(2); /* IE */
-            -moz-transform: scale(2); /* FF */
-            -webkit-transform: scale(2); /* Safari and Chrome */
-            -o-transform: scale(2); /* Opera */
-            padding: 10px;
-        }
-
     div
-        div.row
-            // NAVBAR
-            div.col-sm-2
-                h3
-                    a(href=`/media/popular/1?within=1hour`) Last Hour
-            div.col-sm-2
-                h3
-                    a(href=`/media/popular/1?within=24hour`) Last Day
-            div.col-sm-2
-                h3
-                    a(href=`/media/popular/1?within=1week`) Last Week
-            div.col-sm-2
-                h3
-                    a(href=`/media/popular/1?within=1month`) Last Month
-            div.col-sm-2
-                h3
-                    a(href="/media/popular") All-Time
-            //div.col-sm-2
-            //    form#searchTypeToggle(action='')
-            //        div
-            //        label.allAges
-            //            input(type='radio', name='searchtype', data-location='0', value='one')
-            //            div.filter-text All Ages (13+)
-            //        label.mature
-            //            input(type='radio', name='searchtype', data-location='calc(100% - 8px)', value='two')
-            //            div.filter-text Mature (18+)
-            //        label.sensitive
-            //            input(type='radio', name='searchtype', data-location='calc(200% - 17px)', value='three')
-            //            div.filter-text Sensitive (18+)
-
-
-
-        hr
+        include ../viewPartials/popularUploadsNavbar
 
     h1.center-block.text-center #{englishString} (#{viewAmountInPeriod})
 
@@ -139,7 +17,7 @@ block content
 
             //br
 
-            include ../viewPartials/mediaDropdown
+            include ../viewPartials/popularUploadsMediaDropdown
 
             include ../viewPartials/sensitivityFilterDropdown
 

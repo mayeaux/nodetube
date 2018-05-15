@@ -2,6 +2,8 @@ const _ = require('lodash');
 
 const redisClient = require('../../config/redis');
 
+const Promise = require('bluebird');
+
 const pagination = require('../../lib/helpers/pagination');
 
 const User = require('../../models/index').User;
@@ -36,6 +38,8 @@ const mongooseHelpers = require('../../caching/mongooseHelpers');
 exports.recentUploads = async (req, res) => {
 
   try {
+
+    const addressPrepend = '/media/recent';
 
     // get media page, either video, image, audio or all
     let media = req.query.media || 'all';
@@ -82,7 +86,8 @@ exports.recentUploads = async (req, res) => {
       siteVisitor: req.siteVisitor,
       categories,
       category,
-      isACategory : category
+      isACategory : category,
+      addressPrepend
 
     });
 
@@ -126,6 +131,8 @@ setInterval(function(){
  * Page with all popular
  */
 exports.popularUploads = async (req, res) => {
+
+  const addressPrepend = '/media/popular';
 
   // get media page, either video, image, audio or all
   let media = req.query.media || 'all';
@@ -189,6 +196,7 @@ exports.popularUploads = async (req, res) => {
 
     let filter = getSensitivityFilter(req.user, req.siteVisitor);
 
+    // TODO: add func to get category=all
     let uploads = await getFromCache.getPopularUploads(timeRange, limit, skipAmount, mediaType, filter, category, subcategory);
 
     console.log(uploads.length + ' :length');
@@ -212,7 +220,8 @@ exports.popularUploads = async (req, res) => {
       categories,
       category,
       isACategory : category,
-      media
+      media,
+      addressPrepend
     });
 
     // title: 'Recent Uploads',
@@ -285,7 +294,19 @@ exports.results = async (req, res) => {
       visibility: 'public',
       title : re,
       $or : [ { status: 'completed' }, { uploadUrl: { $exists: true } } ]
-    }).populate('uploader checkedViews');
+    }).populate('uploader');
+
+    // populate upload.legitViewAmount
+    uploads = await Promise.all(
+      uploads.map(async function(upload){
+        upload = upload.toObject();
+        const checkedViews = await View.count({ upload: upload.id, validity: 'real' });
+        upload.legitViewAmount = checkedViews;
+        return upload
+      })
+    );
+
+    // TODO: legit checker here
 
 
 
@@ -304,6 +325,9 @@ exports.results = async (req, res) => {
   } else {
     // TODO: Throw an error
   }
+
+
+  // TODO: better search filter here
 
   let filter;
   if(req.user){
