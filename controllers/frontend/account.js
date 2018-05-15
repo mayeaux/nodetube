@@ -116,6 +116,20 @@ exports.subscriptions = async (req, res) => {
  */
 exports.getChannel = async (req, res) => {
 
+  let page = req.params.page;
+  if(!page){ page = 1 }
+  page = parseInt(page);
+
+  const channelUrl = req.params.channel;
+
+  const limit = 51;
+  const skipAmount = (page * limit) - limit;
+
+  const startingNumber = pagination.getMiddleNumber(page);
+  const numbersArray = pagination.createArray(startingNumber);
+  const previousNumber = pagination.getPreviousNumber(page);
+  const nextNumber = pagination.getNextNumber(page);
+
   let orderBy;
   if(!req.query.orderBy){
     orderBy = 'newToOld'
@@ -128,13 +142,13 @@ exports.getChannel = async (req, res) => {
     orderBy = 'newToOld'
   }
 
-  let user;
   try {
 
     // find the user per channelUrl
     user = await User.findOne({
-      channelUrl : new RegExp(["^", req.params.channel, "$"].join(""), "i")
-    }).populate('receivedSubscriptions').lean().exec();
+      channelUrl
+    }).populate('receivedSubscriptions').lean()
+      .exec();
 
     const viewerIsAdminOrMod = req.user.role == 'admin' || req.user.role == 'moderator';
 
@@ -182,6 +196,8 @@ exports.getChannel = async (req, res) => {
     };
 
     let uploads = await Upload.find(searchQuery).populate('checkedViews').sort({ createdAt : -1 })
+      .skip((page * limit) - limit)
+      .limit(limit)
 
     // console.log(uploads.length);
 

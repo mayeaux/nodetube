@@ -144,7 +144,7 @@ block content
             include ../viewPartials/sensitivityFilterDropdown
 
 
-        include ../viewPartials/pagination
+        include ../viewPartials/popularUploadsPagination
 
 
         br
@@ -175,7 +175,7 @@ block content
 
         if uploads
             div.col-sm-12
-                include ../viewPartials/pagination
+                include ../viewPartials/popularUploadsPagination
 
 
     if user && user.role == 'admin'

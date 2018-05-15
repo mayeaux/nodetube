@@ -134,19 +134,26 @@ function frontendRoutes(app){
 
   /** user channel and individual media page */
   app.get('/user/:channel', accountFrontendController.getChannel);
+  app.get('/user/:channel/:page', accountFrontendController.getChannel);
+
 
   // media page
   app.get('/user/:channel/:media', mediaPlayerController.getMedia);
 
   /** media browsing routes **/
   app.get('/media/recent', authMiddleware.plusAuth, mediaBrowsingController.recentUploads);
-  app.get('/media/popularByReacts', authMiddleware.plusAuth, mediaBrowsingController.popularByReacts);
   app.get('/media/recent/:page', authMiddleware.plusAuth, mediaBrowsingController.recentUploads);
-  app.get('/media/popular/:page', authMiddleware.plusAuth, mediaBrowsingController.popularUploads);
   app.get('/media/popular', authMiddleware.plusAuth, mediaBrowsingController.popularUploads);
+  app.get('/media/popular/:page', authMiddleware.plusAuth, mediaBrowsingController.popularUploads);
+
+
+  app.get('/media/popularByReacts', authMiddleware.plusAuth, mediaBrowsingController.popularByReacts);
+
 
   /** search functionality **/
   app.get('/search', mediaBrowsingController.search);
+  app.get('/search/:page', mediaBrowsingController.search);
+
   app.post('/search', mediaBrowsingController.results);
 
 
