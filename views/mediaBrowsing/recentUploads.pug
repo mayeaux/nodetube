@@ -20,8 +20,14 @@ block content
 
         div.center-block.text-center.col-sm-12
 
-            h1 Recently Uploaded
+
+            a.upload-user-text(href=`${addressPrepend}`)
+                h1 Recently Uploaded
+
             br
+
+            if category
+                include ../viewPartials/categoryDropdown
 
             include ../viewPartials/mediaDropdown
 

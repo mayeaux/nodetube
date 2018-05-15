@@ -68,7 +68,12 @@ exports.recentUploads = async (req, res) => {
 
     let filter = getSensitivityFilter(req.user, req.siteVisitor);
 
-    console.log(category);
+    let categoryObj;
+    for(const cat of categories) {
+      if (cat.name == category) {
+        categoryObj = cat
+      }
+    }
 
     const mediaType = media;
 
@@ -87,8 +92,8 @@ exports.recentUploads = async (req, res) => {
       categories,
       category,
       isACategory : category,
-      addressPrepend
-
+      addressPrepend,
+      categoryObj
     });
 
   } catch (err){
@@ -203,6 +208,13 @@ exports.popularUploads = async (req, res) => {
     console.log(uploads);
     console.log(uploads + ' :length');
 
+    let categoryObj;
+    for(const cat of categories) {
+      if (cat.name == category) {
+        categoryObj = cat
+      }
+    }
+
 
     res.render('mediaBrowsing/popularUploads', {
       title: 'Popular Uploads',
@@ -221,21 +233,9 @@ exports.popularUploads = async (req, res) => {
       category,
       isACategory : category,
       media,
-      addressPrepend
+      addressPrepend,
+      categoryObj
     });
-
-    // title: 'Recent Uploads',
-    //   uploads,
-    //   numbersArray,
-    //   highlightedNumber: page,
-    //   previousNumber,
-    //   nextNumber,
-    //   media,
-    //   uploadServer,
-    //   siteVisitor: req.siteVisitor,
-    //   categories,
-    //   category,
-    //   isACategory : category
 
   } catch (err){
     console.log('ERR:')
