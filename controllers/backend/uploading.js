@@ -145,6 +145,23 @@ exports.postFileUpload = async (req, res, next) => {
         // const uploadServer = process.env.UPLOAD_SERVER || 'uploads1' ;
         let responseSent = false;
 
+        console.log(req.query.category) // = politics
+
+
+
+        let category = req.query.category;
+        if(category == 'undefined' || category == undefined){
+          category = 'uncategorized'
+        }
+
+        let subcategory = req.query.subcategory;
+        if(subcategory == 'undefined' || subcategory == undefined){
+          subcategory = 'uncategorized'
+        }
+
+        console.log(category + ' category ')
+        console.log(subcategory + ' subcategory ')
+
         let upload = new Upload({
           uploader: req.user._id,
           title: req.query.title,
@@ -156,8 +173,8 @@ exports.postFileUpload = async (req, res, next) => {
           fileExtension,
           uniqueTag,
           rating: req.query.rating,
-          category: req.query.category || '',
-          subcategory: req.query.subcategory || ''
+          category,
+          subcategory
           // uploadServer
         });
 
