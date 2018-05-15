@@ -182,6 +182,12 @@ if (cluster.isMaster) {
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(expressValidator());
 
+    app.use(express.static(path.join(__dirname, 'public'), {maxAge: 31557600000}));
+
+    app.use(express.static(path.join(__dirname, 'hls'), {}));
+
+    app.use(missedFile404Middleware);
+
     app.use(function (err, req, res, next) {
       console.log('THING');
       console.log(err);
@@ -266,12 +272,6 @@ if (cluster.isMaster) {
       res.header('Pragma', 'no-cache');
       next();
     }
-
-    app.use(express.static(path.join(__dirname, 'public'), {maxAge: 31557600000}));
-
-    app.use(express.static(path.join(__dirname, 'hls'), {}));
-
-    app.use(missedFile404Middleware);
 
     app.use(multipart());
 

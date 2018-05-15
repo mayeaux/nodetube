@@ -197,13 +197,7 @@ exports.getChannel = async (req, res) => {
       // status: 'completed'
     };
 
-    let uploads = await Upload.find(searchQuery).populate('checkedViews').sort({ createdAt : -1 })
-      .skip((page * limit) - limit)
-      .limit(limit)
-
-    // console.log(uploads.length);
-
-    user.uploads = await mongooseHelper.determineLegitViewsForUploads(uploads);
+    let uploads = await Upload.find(searchQuery).populate('').sort({ createdAt : -1 })
 
     if(!viewerIsAdminOrMod){
       user.uploads = _.filter(user.uploads, function(upload){
@@ -309,9 +303,27 @@ exports.getChannel = async (req, res) => {
     //   res.locals.meta.image = user.uploads[0].customThumbnailUrl || ;
     // }
 
+    const userUploadAmount = uploads.length;
+
     let filter = uploadFilters.getSensitivityFilter(req.user, req.siteVisitor);
 
-    user.uploads = uploadFilters.filterUploadsBySensitivity(user.uploads, filter);
+    uploads = uploadFilters.filterUploadsBySensitivity(uploads, filter);
+
+    const amountToOutput = limit;
+
+    uploads = uploadFilters.trimUploads(uploads, amountToOutput, skipAmount) ;
+
+    // populate upload.legitViewAmount
+    uploads = await Promise.all(
+      uploads.map(async function(upload){
+        upload = upload.toObject();
+        const checkedViews = await View.count({ upload: upload.id, validity: 'real' });
+        upload.legitViewAmount = checkedViews;
+        return upload
+      })
+    );
+
+    user.uploads = uploads;
 
     const siteVisitor = req.siteVisitor;
 
@@ -331,7 +343,8 @@ exports.getChannel = async (req, res) => {
       previousNumber,
       nextNumber,
       startingNumber,
-      highlightedNumber: page
+      highlightedNumber: page,
+      userUploadAmount
     });
 
 
