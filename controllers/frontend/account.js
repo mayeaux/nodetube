@@ -200,35 +200,25 @@ exports.getChannel = async (req, res) => {
     let uploads = await Upload.find(searchQuery).populate('').sort({ createdAt : -1 })
 
     if(!viewerIsAdminOrMod){
-      user.uploads = _.filter(user.uploads, function(upload){
+      uploads = _.filter(uploads, function(upload){
         return upload.visibility == 'public'
       });
     }
 
-    // console.log(user.uploads.length);
-
-
-    let totalViews = 0;
-    for(upload of user.uploads){
-      totalViews = totalViews + upload.legitViewAmount;
-    }
-
-    user.totalViews = totalViews;
-
     // remove unlisted videos if its not user and is not admin
     if(!isUser && !viewerIsAdminOrMod){
-      user.uploads = _.filter(user.uploads, function(upload){return upload.visibility == 'public'})
+      uploads = _.filter(uploads, function(upload){return upload.visibility == 'public'})
     }
 
     let uploadThumbnailUrl;
-    if(user.uploads && user.uploads[0]){
+    if(uploads && uploads[0]){
       uploadThumbnailUrl =  user.uploads[0].thumbnailUrl;
     }
 
     res.locals.meta.image = user.thumbnailUrl || uploadThumbnailUrl;
 
     if(orderBy == 'popular'){
-      user.uploads = user.uploads.sort(function(a, b) {
+      uploads = uploads.sort(function(a, b) {
         return b.legitViewAmount - a.legitViewAmount;
       });
     }
@@ -236,7 +226,7 @@ exports.getChannel = async (req, res) => {
     if(orderBy == 'newToOld'){
 
       console.log('new to old')
-      user.uploads = user.uploads.sort(function(a, b) {
+      uploads = uploads.sort(function(a, b) {
         return b.createdAt - a.createdAt;
       });
     }
@@ -244,7 +234,7 @@ exports.getChannel = async (req, res) => {
     if(orderBy == 'oldToNew'){
 
       console.log('old to new')
-      user.uploads = user.uploads.sort(function(a, b) {
+      uploads = uploads.sort(function(a, b) {
         return a.createdAt - b.createdAt;
       });
     }
@@ -322,6 +312,13 @@ exports.getChannel = async (req, res) => {
         return upload
       })
     );
+
+    let totalViews = 0;
+    for(upload of uploads){
+      totalViews = totalViews + upload.legitViewAmount;
+    }
+
+    user.totalViews = totalViews;
 
     user.uploads = uploads;
 
