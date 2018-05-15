@@ -21,6 +21,8 @@ const mongooseHelper = require('../../caching/mongooseHelpers');
 
 const categories = require('../../config/categories');
 
+const uploadFilters = require('../../lib/mediaBrowsing/helpers');
+
 
 /**
  * GET /upload
@@ -307,30 +309,9 @@ exports.getChannel = async (req, res) => {
     //   res.locals.meta.image = user.uploads[0].customThumbnailUrl || ;
     // }
 
-    let filter;
-    if(req.user){
-      filter = req.user.filter
-    } else {
-      filter = req.siteVisitor.filter
-    }
+    let filter = uploadFilters.getSensitivityFilter(req.user, req.siteVisitor);
 
-    if(filter == 'sensitive'){
-      // nothing to do
-    } else if (filter == 'mature'){
-
-      // return ones not marked as sensitive
-      user.uploads = _.filter(user.uploads, function(upload){
-        return upload.rating !== 'sensitive'
-      });
-
-    } else if (filter == 'allAges'){
-
-      // return ones not marked as sensitive or mature
-      user.uploads = _.filter(user.uploads, function(upload){
-        return upload.rating !== 'sensitive' && upload.rating !== 'mature'
-      });
-
-    }
+    user.uploads = uploadFilters.filterUploadsBySensitivity(user.uploads, filter);
 
     const siteVisitor = req.siteVisitor;
 

@@ -262,6 +262,8 @@ exports.results = async (req, res) => {
   // get search term from body
   const search = req.body.search;
 
+  const mediaType = req.query.mediaType;
+
   console.log(search);
 
   if(!req.body.search){
@@ -306,9 +308,13 @@ exports.results = async (req, res) => {
       })
     );
 
-    // TODO: legit checker here
+    let filter = getSensitivityFilter(req.user, req.siteVisitor);
 
+    uploads = uploadFilters.filterUploadsBySensitivity(uploads, filter);
 
+    // TODO: how to get mediaType here?
+    // TODO: answer: refactor into using a get API
+    // uploads = uploadFilters.filterUploadsByMediaType(uploads, mediaType);
 
   } else if(req.body.type == 'user'){
 
@@ -326,37 +332,7 @@ exports.results = async (req, res) => {
     // TODO: Throw an error
   }
 
-
-  // TODO: better search filter here
-
-  let filter;
-  if(req.user){
-    filter = req.user.filter
-  } else {
-    filter = req.siteVisitor.filter
-  }
-
-  if(filter == 'sensitive'){
-    // nothing to do
-  } else if (filter == 'mature'){
-
-    // return ones not marked as sensitive
-    uploads = _.filter(uploads, function(upload){
-      return upload.rating !== 'sensitive'
-    });
-
-  } else if (filter == 'allAges'){
-
-    // return ones not marked as sensitive or mature
-    uploads = _.filter(uploads, function(upload){
-      return upload.rating !== 'sensitive' && upload.rating !== 'mature'
-    });
-
-  }
-
   const siteVisitor = req.siteVisitor;
-
-  // console.log(uploads);
 
   res.render('public/search', {
     title: 'Search',
