@@ -88,17 +88,50 @@ function sortUploadsByViews(uploads, timeRange) {
 }
 
 // upload type = popularUploads, recentUploads
-async function getPopularUploads(timeRange, limit, offset) {
-
-  if(!timeRange) timeRange = 'allTime';
-
+async function getPopularUploads(timeRange, limit, offset,  mediaType, filter, category, subcategory) {
   // load recent uploads into memory
   let uploads = popularUploads;
 
+  console.log(uploads);
+
+  if(!uploads) return [];
+
+  if(!timeRange) timeRange = 'allTime';
+
   uploads = sortUploadsByViews(uploads, timeRange);
 
+  console.log(uploads.length)
+
   // send empty array if no globalRecentUploads set
-  if(!uploads) return [];
+  uploads = filterUploadsByMediaType(uploads, mediaType);
+
+  console.log(uploads.length)
+
+  uploads = filterUploadsBySensitivity(uploads, filter);
+
+  console.log(uploads.length)
+
+  if(1 == 1){
+  // if(category){
+
+    uploads = filterUploadsByCategory(uploads, category);
+  } else {
+    let categoryFormattedUploads = {};
+
+    for(const category of categories){
+      let categoryUploads = filterUploadsByCategory(uploads, category.name);
+
+
+      categoryUploads = trimUploads(categoryUploads, limit, offset);
+      categoryFormattedUploads[category.name] = categoryUploads
+    }
+
+    return categoryFormattedUploads
+  }
+
+  if(subcategory){
+    uploads = filterUploadsBySubcategory(uploads, subcategory);
+  }
 
   uploads = trimUploads(uploads, limit, offset);
 

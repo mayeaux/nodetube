@@ -126,12 +126,27 @@ setInterval(function(){
  * Page with all popular
  */
 exports.popularUploads = async (req, res) => {
+
+  // get media page, either video, image, audio or all
+  let media = req.query.media || 'all';
+
+  let category = req.query.category || '';
+
+  let subcategory = req.query.subcategory || '';
+
   // setup page
   let page = req.params.page;
   if(!page){ page = 1 }
   page = parseInt(page);
 
-  const limit = 102;
+  let limit = 102;
+
+  if(!category){
+    limit = 6
+  };
+
+
+
   const skipAmount = (page * limit) - limit;
 
   const startingNumber = pagination.getMiddleNumber(page);
@@ -169,13 +184,17 @@ exports.popularUploads = async (req, res) => {
         break;
     }
 
-    // console.log(viewStats);
-    // console.log(indexResponse);
+    const timeRange = req.query.within;
+    const mediaType = media;
 
-    // TODO: add upload.uploadServer
-    let uploads = await getFromCache.getPopularUploads(req.query.within, limit, skipAmount);
+    let filter = getSensitivityFilter(req.user, req.siteVisitor);
 
-    // uploads = filterUploads()
+    let uploads = await getFromCache.getPopularUploads(timeRange, limit, skipAmount, mediaType, filter, category, subcategory);
+
+    console.log(uploads.length + ' :length');
+    console.log(uploads);
+    console.log(uploads + ' :length');
+
 
     res.render('mediaBrowsing/popularUploads', {
       title: 'Popular Uploads',

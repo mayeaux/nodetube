@@ -61,7 +61,7 @@ async function main(){
 
     await cacheRecentUploads();
 
-    // await cachePopularUploads();
+    await cachePopularUploads();
     //
     // await setCache.setDailyStats();
     // await setCache.setIndexValues();
