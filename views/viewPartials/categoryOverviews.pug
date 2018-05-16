@@ -8,6 +8,7 @@ for category in categories
                     h2 #{category.displayName} (#{uploads[category.name].length})
                 else
                     h2 #{category.displayName}
+                br
 
             // begin individual upload section
             each upload in uploads[category.name]

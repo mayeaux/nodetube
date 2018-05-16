@@ -322,6 +322,8 @@ exports.search = async (req, res) => {
   const previousNumber = pagination.getPreviousNumber(page);
   const nextNumber = pagination.getNextNumber(page);
 
+  const uploadNumber = page * limit;
+
 
   // TODO: url decode here
 
@@ -440,7 +442,8 @@ exports.search = async (req, res) => {
     highlightedNumber: page,
     previousNumber,
     nextNumber,
-    totalUploadsAmount
+    totalUploadsAmount,
+    uploadNumber
   });
 };
 

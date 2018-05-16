@@ -141,10 +141,10 @@ function frontendRoutes(app){
   app.get('/user/:channel/:media', mediaPlayerController.getMedia);
 
   /** media browsing routes **/
-  app.get('/media/recent', authMiddleware.plusAuth, mediaBrowsingController.recentUploads);
-  app.get('/media/recent/:page', authMiddleware.plusAuth, mediaBrowsingController.recentUploads);
-  app.get('/media/popular', authMiddleware.plusAuth, mediaBrowsingController.popularUploads);
-  app.get('/media/popular/:page', authMiddleware.plusAuth, mediaBrowsingController.popularUploads);
+  app.get('/media/recent', mediaBrowsingController.recentUploads);
+  app.get('/media/recent/:page', mediaBrowsingController.recentUploads);
+  app.get('/media/popular',  mediaBrowsingController.popularUploads);
+  app.get('/media/popular/:page', mediaBrowsingController.popularUploads);
 
 
   app.get('/media/popularByReacts', authMiddleware.plusAuth, mediaBrowsingController.popularByReacts);

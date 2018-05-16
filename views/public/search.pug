@@ -37,7 +37,7 @@ block content
 
                 include ../viewPartials/searchPagination
 
-                p(style="text-decoration:underline;font-size:20px;") #{uploads.length}/#{totalUploadsAmount} Results
+                p(style="text-decoration:underline;font-size:20px;") #{totalUploadsAmount} Results
 
                 if uploads && uploads.length > 0
                     each upload in uploads

@@ -193,11 +193,12 @@ exports.postFileUpload = async (req, res, next) => {
           let timeoutUpload = await Upload.findOne({uniqueTag});
 
           if (timeoutUpload.status !== 'completed') {
+            // note the upload is still processing
             timeoutUpload.status = 'processing';
             await timeoutUpload.save();
 
-            if (!responseSent)
-            {
+            // note that we've responded to the user and send them to processing page
+            if (!responseSent) {
               responseSent = true;
               res.send({
                 message: 'ABOUT TO PROCESS',
@@ -260,7 +261,7 @@ exports.postFileUpload = async (req, res, next) => {
           if (upload.fileType == 'convert') {
             await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, hostFilePath, bucket, upload, channelUrl, b2);
 
-            // TODO: we're stepping on the upload as we convert it, may want to convert and then step and keep both
+            // TODO: we're compressing the upload as we convert it, may want to convert and then compress and keep both (lose best quality as is)
             await ffmpegHelper.convertVideo({
               uploadedPath: fileInDirectory,
               uniqueTag,
@@ -296,12 +297,17 @@ exports.postFileUpload = async (req, res, next) => {
                   channelUrl,
                   title: upload.title
                 });
+                // mark original upload file as high quality file
                 await fs.move(fileInDirectory, `${channelUrlFolder}/${uniqueTag}-high.mp4`);
+
+                // move compressed video to original video's place
                 await fs.move(`${channelUrlFolder}/${uniqueTag}-compressed.mp4`, fileInDirectory);
 
+                // save high quality video size
                 const highQualityFileStats = fs.statSync(`${channelUrlFolder}/${uniqueTag}-high.mp4`);
                 upload.quality.high = highQualityFileStats.size;
 
+                // save compressed video quality size
                 const compressedFileStats = fs.statSync(fileInDirectory);
                 upload.fileSize = compressedFileStats.size;
 
@@ -318,7 +324,7 @@ exports.postFileUpload = async (req, res, next) => {
           }
 
           /** UPLOAD TO B2 **/
-          if (process.env.NODE_ENV == 'production') {
+          if (process.env.NODE_ENV == 'production' && process.env.UPLOAD_TO_B2 == 'true') {
             uploadHelpers.uploadToB2(upload, fileInDirectory, hostFilePath)
           }
 
