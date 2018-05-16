@@ -7,11 +7,12 @@ async function setIndex(){
   console.log('got index cache');
 }
 
-setIndex();
-setInterval(function(){
-  setIndex()
-}, 1000 * 60 * 2);
-
+if(!process.env.FILE_HOST){
+  setIndex();
+  setInterval(function(){
+    setIndex()
+  }, 1000 * 60 * 2);
+}
 
 /**
  * GET /

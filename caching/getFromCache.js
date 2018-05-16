@@ -20,8 +20,11 @@ async function setGlobalPopularUploads(){
   console.log('load popular uploads redis cache in memory ');
 }
 
-setGlobalPopularUploads();
-setInterval(setGlobalPopularUploads, 1000 * 60 * 5);
+if(!process.env.FILE_HOST){
+  setGlobalPopularUploads();
+  setInterval(setGlobalPopularUploads, 1000 * 60 * 5);
+}
+
 
 let recentUploads;
 async function setGlobalRecentUploads(){
@@ -31,9 +34,10 @@ async function setGlobalRecentUploads(){
   console.log('load recentUploads redis cache in memory ');
 }
 
-setGlobalRecentUploads();
-setInterval(setGlobalRecentUploads, 1000 * 60 * 5);
-
+if(!process.env.FILE_HOST){
+  setGlobalRecentUploads();
+  setInterval(setGlobalRecentUploads, 1000 * 60 * 5);
+}
 
 // Only get needed amount of uploads
 function trimUploads(uploads, limit, offset){

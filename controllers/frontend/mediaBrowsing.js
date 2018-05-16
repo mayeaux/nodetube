@@ -112,22 +112,26 @@ async function getStats(){
   viewStats = JSON.parse(views);
 
 }
-getStats();
-setInterval(function(){
-  getStats()
-}, 1000 * 60 * 1);
+
+if(!process.env.FILE_HOST){
+  getStats();
+  setInterval(function(){
+    getStats()
+  }, 1000 * 60 * 1);
 
 // TODO: pull into its own func
-let indexResponse;
-async function setIndex(){
-  indexResponse = await redisClient.hgetallAsync('indexValues');
-  console.log('got index cache');
+  let indexResponse;
+  async function setIndex(){
+    indexResponse = await redisClient.hgetallAsync('indexValues');
+    console.log('got index cache');
+  }
+
+  setIndex();
+  setInterval(function(){
+    setIndex()
+  }, 1000 * 60 * 2);
 }
 
-setIndex();
-setInterval(function(){
-  setIndex()
-}, 1000 * 60 * 2);
 
 
 

@@ -112,6 +112,8 @@ if (cluster.isMaster) {
 
     console.log(`FRONTEND SERVER: ${process.env.FRONTEND_SERVER}`);
 
+    console.log(`UPLOAD URL: ${process.env.UPLOAD_URL}`);
+
 
     // require('./lib/deleteUsers');
 
