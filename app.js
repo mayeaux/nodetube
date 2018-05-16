@@ -175,13 +175,16 @@ if (cluster.isMaster) {
       app.use(logger('dev'));
     }
 
-    // run from local pewtube media backups
-    if (process.env.LOCAL_BACKUP) {
-      app.use('/uploads', express.static(path.join(process.env.LOCAL_BACKUP, 'uploads'), {maxAge: 31557600000}));
+    let serveUploadsPath;
+    if(!process.env.SERVE_UPLOADS_PATH || process.env.SERVE_UPLOADS_PATH == 'false'){
+      serveUploadsPath = '/uploads'
+    } else {
+      serveUploadsPath = process.env.SERVE_UPLOADS_PATH;
     }
 
-    // use local uploads directory as file host
-    app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {maxAge: 31557600000}));
+    console.log(serveUploadsPath)
+
+    app.use('/uploads', express.static(serveUploadsPath, {maxAge: 31557600000}));
 
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: true}));
