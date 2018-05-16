@@ -185,6 +185,7 @@ exports.getChannel = async (req, res) => {
       // status: 'completed'
     };
 
+    /** DB CALL TO GET UPLOADS **/
     let uploads = await Upload.find(searchQuery).populate('').sort({ createdAt : -1 })
 
     if(!viewerIsAdminOrMod){
@@ -204,8 +205,6 @@ exports.getChannel = async (req, res) => {
     }
 
     res.locals.meta.image = user.thumbnailUrl || uploadThumbnailUrl;
-
-    // TODO: add pagination here
 
     let orderBy;
     if(!req.query.orderBy){
@@ -341,7 +340,8 @@ exports.getChannel = async (req, res) => {
       nextNumber,
       startingNumber,
       highlightedNumber: page,
-      userUploadAmount
+      userUploadAmount,
+      channelUrl: user.channelUrl
     });
 
 
