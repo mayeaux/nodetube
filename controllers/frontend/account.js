@@ -118,7 +118,7 @@ exports.subscriptions = async (req, res) => {
  */
 exports.getChannel = async (req, res) => {
 
-  let page = req.params.page;
+  let page = req.query.page;
   if(!page){ page = 1 }
   page = parseInt(page);
 

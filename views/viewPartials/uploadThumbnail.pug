@@ -6,7 +6,7 @@ a.title-anchor(href=`/user/${upload.uploader.channelUrl || channelUrl}/${upload.
         img.preview-image(src=`${uploadServer}/${channelUrl || upload.uploader.channelUrl}/${upload.thumbnails.generated}` style="width:inherit;max-width:302px;")
 
     else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.medium
-        img.preview-image(src=`${uploadServer}/${channelUrl}|| upload.uploader.channelUrl /${upload.thumbnails.medium}` style="width:inherit;max-width:302px;")
+        img.preview-image(src=`${uploadServer}/${channelUrl || upload.uploader.channelUrl}/${upload.thumbnails.medium}` style="width:inherit;max-width:302px;")
 
     else if upload.fileType == 'video' && !upload.thumbnailUrl
         img.preview-image(src="/no_img.png")

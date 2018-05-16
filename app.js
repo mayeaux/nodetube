@@ -30,6 +30,10 @@ const Promise = require('bluebird');
 const ipfilter = require('express-ipfilter').IpFilter;
 const _ = require('lodash');
 
+const settings = require('./lib/helpers/settings');
+
+const saveAndServeFilesDirectory = settings.saveAndServeFilesDirectory;
+
 /** Code for clustering, running on multiple CPUS **/
 const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
@@ -173,9 +177,9 @@ if (cluster.isMaster) {
       app.use(logger('dev'));
     }
 
-    console.log(`SERVE UPLOADS PATH: ${serveUploadsPath}`);
+    console.log(`SERVE UPLOADS PATH: ${saveAndServeFilesDirectory}`);
 
-    app.use('/uploads', express.static(serveUploadsPath, {maxAge: 31557600000}));
+    app.use('/uploads', express.static(saveAndServeFilesDirectory, {maxAge: 31557600000}));
 
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: true}));

@@ -145,13 +145,12 @@ function frontendRoutes(app){
   // behind admin auth atm, needs to use cache
   app.get('/channelsByReacts', authMiddleware.adminAuth, channelBrowsingController.channelsByReacts);
 
-  /** user channel and individual media page */
-  app.get('/user/:channel', accountFrontendController.getChannel);
-  app.get('/user/:channel/:page', accountFrontendController.getChannel);
-
-
   // media page
   app.get('/user/:channel/:media', mediaPlayerController.getMedia);
+
+  /** user channel and individual media page */
+  app.get('/user/:channel', accountFrontendController.getChannel);
+
 
   /** media browsing routes **/
   app.get('/media/recent', mediaBrowsingController.recentUploads);
