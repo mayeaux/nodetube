@@ -113,7 +113,7 @@ async function getStats(){
 
 }
 
-if(!process.env.FILE_HOST){
+if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false'){
   getStats();
   setInterval(function(){
     getStats()

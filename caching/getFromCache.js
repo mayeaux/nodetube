@@ -20,7 +20,7 @@ async function setGlobalPopularUploads(){
   console.log('load popular uploads redis cache in memory ');
 }
 
-if(!process.env.FILE_HOST){
+if(!process.env.FILE_HOST || process.env.FILE_HOST == 'false'){
   setGlobalPopularUploads();
   setInterval(setGlobalPopularUploads, 1000 * 60 * 5);
 }
@@ -34,7 +34,7 @@ async function setGlobalRecentUploads(){
   console.log('load recentUploads redis cache in memory ');
 }
 
-if(!process.env.FILE_HOST){
+if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false'){
   setGlobalRecentUploads();
   setInterval(setGlobalRecentUploads, 1000 * 60 * 5);
 }
