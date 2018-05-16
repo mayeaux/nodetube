@@ -31,20 +31,7 @@ block content
 
                     div.text-center.center-div
 
-                        div.dropdown(style="display:inline;margin-right:15px;")
-                            button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
-                                //| Order By: #{orderByEnglishString} &nbsp
-                                | Order By: thing &nbsp
-
-                                span.caret
-
-                            ul.dropdown-menu.dropdown
-                                li
-                                //    a(href=`/user/${channel.channelUrl}?orderBy=popular`) Popular
-                                //li
-                                //    a(href=`/user/${channel.channelUrl}?orderBy=newToOld`) New To Old
-                                //li
-                                //    a(href=`/user/${channel.channelUrl}?orderBy=oldToNew`) Old To New
+                        include ../viewPartials/orderByDropdown
 
                         include ../viewPartials/mediaDropdown
 

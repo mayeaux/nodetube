@@ -268,6 +268,37 @@ async function saveSearchQuery(user, search){
 
 }
 
+function getOrderByEnglishString(orderByQuery){
+  let orderBy;
+  if(!orderByQuery){
+    orderBy = 'newToOld'
+  } else {
+    orderBy = orderByQuery;
+  }
+
+  if(orderBy !== 'popular' && orderBy !== 'newToOld' && orderBy !== 'oldToNew'){
+    console.log('doesnt connect');
+    orderBy = 'newToOld'
+  }
+
+  let orderByEnglishString;
+
+  if(orderBy == 'oldToNew'){
+    orderByEnglishString = 'Old To New'
+  }
+
+  if(orderBy == 'newToOld'){
+    orderByEnglishString = 'New To Old'
+  }
+
+  if(orderBy == 'popular'){
+    orderByEnglishString = 'Popular'
+  }
+
+  return orderByEnglishString
+
+}
+
 
 /**
  * GET /
@@ -290,6 +321,8 @@ exports.search = async (req, res) => {
   await saveSearchQuery(req.user, userSearchQuery);
 
   let searchType = req.query.searchType;
+  const orderBy = req.query.orderBy;
+
 
   let uploads, users;
   const re = new RegExp(userSearchQuery, "gi");
@@ -308,12 +341,29 @@ exports.search = async (req, res) => {
   } else if (searchType == 'upload' || !searchType) {
     const mediaType = req.query.mediaType;
 
-    // uploads
-    uploads = await Upload.find({
+    let searchQuery = {
       visibility: 'public',
       title : re,
       $or : [ { status: 'completed' }, { uploadUrl: { $exists: true } } ]
-    }).populate('uploader').limit(1000);
+    };
+
+    if(mediaType){
+      searchQuery.fileType = mediaType
+    }
+
+    let sortObj = '';
+    if(orderBy == 'newToOld'){
+      sortObj = {
+        createdAt: -1
+      }
+    } else if (orderBy == 'oldToNew'){
+      sortObj = {
+        createdAt: 1
+      }
+    }
+
+    // uploads
+    uploads = await Upload.find(searchQuery).populate('uploader').sort(sortObj).limit(1000);
 
     // populate upload.legitViewAmount
     uploads = await Promise.all(
@@ -329,7 +379,11 @@ exports.search = async (req, res) => {
 
     uploads = uploadFilters.filterUploadsBySensitivity(uploads, filter);
 
-    uploads = uploadFilters.filterUploadsByMediaType(uploads, mediaType);
+    if(orderBy == 'popular'){
+      uploads = uploads.sort(function(a, b) {
+        return b.legitViewAmount - a.legitViewAmount;
+      });
+    }
 
     // filter pagination
   } else {
@@ -340,12 +394,15 @@ exports.search = async (req, res) => {
 
   const media = mediaType || 'all';
 
+  const orderByEnglishString = getOrderByEnglishString(orderBy);
+
   return res.render('public/search', {
     title: 'Search',
     channels: users,
     uploads,
     siteVisitor,
-    media
+    media,
+    orderByEnglishString
   });
 };
 

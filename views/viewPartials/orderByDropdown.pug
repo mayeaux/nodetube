@@ -1,0 +1,13 @@
+div.dropdown(style="display:inline;margin-right:15px;")
+    button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
+        | Order By: #{orderByEnglishString} &nbsp
+
+        span.caret
+
+    ul.dropdown-menu.dropdown
+        li
+            a(href=``) Popular
+        li
+            a(href=``) New To Old
+        li
+            a(href=``) Old To New

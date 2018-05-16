@@ -132,18 +132,6 @@ exports.getChannel = async (req, res) => {
   const previousNumber = pagination.getPreviousNumber(page);
   const nextNumber = pagination.getNextNumber(page);
 
-  let orderBy;
-  if(!req.query.orderBy){
-    orderBy = 'newToOld'
-  } else {
-    orderBy = req.query.orderBy;
-  }
-
-  if(orderBy !== 'popular' && orderBy !== 'newToOld' && orderBy !== 'oldToNew'){
-    console.log('doesnt connect');
-    orderBy = 'newToOld'
-  }
-
   try {
 
     // find the user per channelUrl
@@ -218,6 +206,18 @@ exports.getChannel = async (req, res) => {
     res.locals.meta.image = user.thumbnailUrl || uploadThumbnailUrl;
 
     // TODO: add pagination here
+
+    let orderBy;
+    if(!req.query.orderBy){
+      orderBy = 'newToOld'
+    } else {
+      orderBy = req.query.orderBy;
+    }
+
+    if(orderBy !== 'popular' && orderBy !== 'newToOld' && orderBy !== 'oldToNew'){
+      console.log('doesnt connect');
+      orderBy = 'newToOld'
+    }
 
     let orderByEnglishString;
 
