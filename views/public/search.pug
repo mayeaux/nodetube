@@ -31,20 +31,7 @@ block content
 
                     div.text-center.center-div
 
-                        div.dropdown(style="display:inline")
-                            button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
-                                if siteVisitor.filter == 'allAges'
-                                    | Rating: SFW &nbsp
-                                else if siteVisitor.filter == 'mature'
-                                    | Rating: SFW/NSWF &nbsp
-                                span.caret
-
-                            ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1')
-                                li(role='presentation')
-                                    if siteVisitor.filter == 'mature'
-                                        a.changeFilterButton(value="allAges" href="#") SFW
-                                    else if siteVisitor.filter == 'allAges'
-                                        a.changeFilterButton(value="mature" href="#") SFW/NFSW
+                        include ../viewPartials/sensitivityFilterDropdown
                     br
                     br
 
