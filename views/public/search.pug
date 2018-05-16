@@ -51,42 +51,9 @@ block content
                     each upload in uploads
                       if upload.uploader
                           div.col-sm-4(style="text-align:center;height:360px")
-                              a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}` style="color:black")
-                                  // TODO: Sub out thumbnail here
+                              include ../viewPartials/uploadThumbnail
 
-                                  if upload.thumbnails && upload.thumbnails.custom
-                                      img.preview-image(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.custom}` style="width:inherit;max-width:302px;")
-
-                                  else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.generated
-                                      img.preview-image(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated}` style="width:inherit;max-width:302px;")
-
-                                  else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.medium
-                                      img.preview-image(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.medium}` style="width:inherit;max-width:302px;")
-
-                                  else if upload.fileType == 'video' && !upload.thumbnailUrl
-                                      img.preview-image(src="/no_img.png")
-
-                                  else if upload.fileType == 'image'
-                                      img.preview-image(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`)
-
-                                  else if upload.fileType == 'audio'
-                                      img.preview-image(src='/images/audio.svg')
-
-                                  else if upload.fileType == 'unknown'
-                                      img.preview-image(src='/images/no_img.png')
-
-                                  div
-                                      p.upload-title-text #{upload.title}
-                                  br
-
-                              div.upload-details
-                                  div.views
-                                      p.views-text #{upload.legitViewAmount} Views
-                                      // capitalize media type
-                                  div.uploaded-by #{upload.fileType.charAt(0).toUpperCase() + upload.fileType.slice(1)} uploaded
-                                      | &nbsp#{upload.timeAgo} by
-                                      a(href=`/user/${upload.uploader.channelUrl}`)
-                                          p(style="font-size:16px") #{upload.uploader.channelName}
+                              include ../viewPartials/uploadDetails
                 else
                     div.center-block.text-center
                         br

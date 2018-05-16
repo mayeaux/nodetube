@@ -264,16 +264,6 @@ exports.results = async (req, res) => {
 
   const mediaType = req.query.mediaType;
 
-  const userSearchQuery = req.query.userSearchQuery;
-
-  console.log(search);
-
-  if(!searchQuery){
-    console.log('doing redirect')
-
-    req.flash('errors', { msg: 'Please enter a search term' });
-    return res.redirect('/search')
-  }
 
   // create a regexp for mongo
   const re = new RegExp(search, "gi");
