@@ -314,7 +314,8 @@ exports.search = async (req, res) => {
 
   if(!userSearchQuery){
     return res.render('public/search', {
-      title: 'Search'
+      title: 'Search',
+      searchQuery: ''
     });
   }
 
