@@ -345,6 +345,8 @@ exports.search = async (req, res) => {
   let uploads, users;
   const re = new RegExp(userSearchQuery, "gi");
 
+  let totalUploadsAmount;
+
   if(searchType == 'user'){
     // channels
     users = await User.find({
@@ -383,6 +385,8 @@ exports.search = async (req, res) => {
     // uploads
     uploads = await Upload.find(searchQuery).populate('uploader').sort(sortObj).limit(1000);
 
+    totalUploadsAmount = uploads.length;
+
     // populate upload.legitViewAmount
     uploads = await Promise.all(
       uploads.map(async function(upload){
@@ -413,6 +417,8 @@ exports.search = async (req, res) => {
     // error
   }
 
+  console.log(totalUploadsAmount);
+
   const siteVisitor = req.siteVisitor;
 
   const media = mediaType || 'all';
@@ -434,6 +440,7 @@ exports.search = async (req, res) => {
     highlightedNumber: page,
     previousNumber,
     nextNumber,
+    totalUploadsAmount
   });
 };
 
