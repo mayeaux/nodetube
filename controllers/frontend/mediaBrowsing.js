@@ -306,6 +306,23 @@ function getOrderByEnglishString(orderByQuery){
  */
 exports.search = async (req, res) => {
 
+  // setup page
+  let page = req.query.page;
+  if(!page){ page = 1 }
+  page = parseInt(page);
+  
+  console.log(page);
+
+  let limit = 102;
+
+  const skipAmount = (page * limit) - limit;
+
+  const startingNumber = pagination.getMiddleNumber(page);
+  const numbersArray = pagination.createArray(startingNumber);
+  const previousNumber = pagination.getPreviousNumber(page);
+  const nextNumber = pagination.getNextNumber(page);
+
+
   // TODO: url decode here
 
   const mediaType = req.query.mediaType;
@@ -386,7 +403,12 @@ exports.search = async (req, res) => {
       });
     }
 
-    // filter pagination
+    const helpers = require('../../lib/mediaBrowsing/helpers');
+
+    uploads = helpers.trimUploads(uploads, limit, skipAmount)
+
+    console.log(helpers);
+
   } else {
     // error
   }
@@ -407,7 +429,11 @@ exports.search = async (req, res) => {
     orderBy,
     mediaType,
     searchType,
-    searchQuery: userSearchQuery
+    searchQuery: userSearchQuery,
+    numbersArray,
+    highlightedNumber: page,
+    previousNumber,
+    nextNumber,
   });
 };
 
