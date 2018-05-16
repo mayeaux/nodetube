@@ -233,12 +233,15 @@ exports.postFileUpload = async (req, res, next) => {
             }
           }
 
+          // TODO: prepend with path here
           const channelUrlFolder = `./uploads/${user.channelUrl}`;
 
           const fileName = `${uniqueTag}${fileExtension}`;
 
+          // where the file will be served from
           let fileInDirectory = `${channelUrlFolder}/${fileName}`;
 
+          // make user's folder if it doesn't exist yet
           await mkdirp.mkdirpAsync(channelUrlFolder);
 
           console.log('done concatenating');
