@@ -25,31 +25,26 @@ block content
         br
         div.col-sm-12.text-center(style="margin:0 auto;margin-top:50px;")
             if uploads
-                if 1 == 1
-                    div.text-center.center-div
+                div.text-center.center-div
 
-                        include ../viewPartials/orderByDropdown
+                    include ../viewPartials/orderByDropdown
 
-                        include ../viewPartials/searchUploadsFileTypeDropdown
+                    include ../viewPartials/searchUploadsFileTypeDropdown
 
-                        include ../viewPartials/sensitivityFilterDropdown
-                    br
-                    br
+                    include ../viewPartials/sensitivityFilterDropdown
+                br
+                br
 
-                    p(style="text-decoration:underline;font-size:20px;") #{uploads.length} Results
+                p(style="text-decoration:underline;font-size:20px;") #{uploads.length} Results
 
-                    if uploads && uploads.length > 0
-                        each upload in uploads
-                          if upload.uploader
-                              div.col-sm-4(style="text-align:center;height:360px")
-                                  include ../viewPartials/uploadThumbnail
+                if uploads && uploads.length > 0
+                    each upload in uploads
+                      if upload.uploader
+                          div.col-sm-4(style="text-align:center;height:360px")
+                              include ../viewPartials/uploadThumbnail
 
-                                  include ../viewPartials/uploadDetails
-                else
-                    div.center-block.text-center
-                        br
-                        br
-                        p(style="font-size:20px") No Results Found
+                              include ../viewPartials/uploadDetails
+
 
 
         // USERS RESULTS
@@ -105,8 +100,13 @@ block content
           window.location = '/search?orderBy=' + orderBy + '&mediaType=' + mediaType + '&searchQuery=' + userSearchQuery + '&searchType=' + searchType
         });
 
+        $('.search-users-button').click(function () {
+          var userSearchQuery = $('.search-query-input').val()
 
-        $(document).keypress(function (e) {
+          window.location = `/search?searchType=user&searchQuery=${userSearchQuery}`
+        })
+
+          $(document).keypress(function (e) {
           if (e.which == 13) {
             var searchQuery = $('.search-query-input').val()
 
