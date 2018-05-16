@@ -183,6 +183,11 @@ if (cluster.isMaster) {
 
     app.use('/uploads', express.static(saveAndServeFilesDirectory, {maxAge: 31557600000}));
 
+    if(process.env.LOCAL_BACKUP_ON == 'true'){
+      console.log(`ALLOWING FILE SERVED VIA LOCAL DRIVE: ${process.env.LOCAL_BACKUP_DIRECTORY}`);
+      app.use('/uploads', express.static(process.env.LOCAL_BACKUP_DIRECTORY, {maxAge: 31557600000}));
+    }
+
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(expressValidator());
