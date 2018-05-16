@@ -201,12 +201,7 @@ exports.popularUploads = async (req, res) => {
 
     let filter = getSensitivityFilter(req.user, req.siteVisitor);
 
-    // TODO: add func to get category=all
     let uploads = await getFromCache.getPopularUploads(timeRange, limit, skipAmount, mediaType, filter, category, subcategory);
-
-    console.log(uploads.length + ' :length');
-    console.log(uploads);
-    console.log(uploads + ' :length');
 
     let categoryObj;
     for(const cat of categories) {
@@ -214,7 +209,6 @@ exports.popularUploads = async (req, res) => {
         categoryObj = cat
       }
     }
-
 
     res.render('mediaBrowsing/popularUploads', {
       title: 'Popular Uploads',
