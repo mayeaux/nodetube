@@ -36,8 +36,9 @@ mongoose.connect(database, {
   reconnectTries: Number.MAX_VALUE
 });
 
-mongoose.set('debug', true);
-
+if(process.env.MONGOOSE_DEBUG == 'true' || process.env.MONGOOSE_DEBUG == 'on'){
+  mongoose.set('debug', true);
+}
 
 mongoose.connection.on('error', (err) => {
   console.error(err);
