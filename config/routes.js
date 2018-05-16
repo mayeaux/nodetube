@@ -37,15 +37,17 @@ function fileHostRoutes(app){
   console.log('RUNNING AS FILE HOST');
 
   // set res header to upload to another server
-  app.use(function (req, res, next) {
+  if(process.env.ALLOW_COR){
+    app.use(function (req, res, next) {
 
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader("Access-Control-Allow-Headers", "X-Requested-With");
-    res.setHeader("Access-Control-Allow-Methods", "PUT, GET, POST, OPTIONS");
-    res.setHeader("Cache-Control", "no-cache");
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader("Access-Control-Allow-Headers", "X-Requested-With");
+      res.setHeader("Access-Control-Allow-Methods", "PUT, GET, POST, OPTIONS");
+      res.setHeader("Cache-Control", "no-cache");
 
-    next()
-  });
+      next()
+    });
+  }
 
   app.post('/upload', uploadingController.postFileUpload);
 // app.post('/admin/upload', authMiddleware.adminAuth, filehostController.adminUpload);
