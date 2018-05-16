@@ -8,17 +8,16 @@ block content
             br
             br
             div(style="margin: 0 auto;")
-                form(action='/search', method='POST')
-                    input(type='hidden', name='_csrf', value=_csrf)
-                    input.form-control(style="margin: 0 auto;width:400px" type='search', name='search', id='search')
-                    br
-                    button.btn-lg.btn.btn-primary(type='submit' style="margin-right:10px" name="type" value="upload")
-                        //i.fa.fa-lock
-                        | Search For Media
+                input(type='hidden', name='_csrf', value=_csrf)
+                input.form-control(style="margin: 0 auto;width:400px" type='search', name='search', id='search')
+                br
+                button.search-uploads-button.btn-lg.btn.btn-primary(type='submit' style="margin-right:10px" name="type" value="upload")
+                    //i.fa.fa-lock
+                    | Search For Media
 
-                    button.btn-lg.btn.btn-primary(type='submit' style="margin-left:10px" name="type" value="user")
-                        //i.fa.fa-lock
-                        | Search For User
+                button.search-users-button.btn-lg.btn.btn-primary(type='submit' style="margin-left:10px" name="type" value="user")
+                    //i.fa.fa-lock
+                    | Search For User
 
 
 
@@ -82,6 +81,15 @@ block content
                         br
                         br
                         p(style="font-size:20px") No Results Found
+
+
+    script.
+      $(document).ready(function () {
+        // capture submit
+        $('.search-uploads-button').click(function () {
+          console.log('hello');
+        });
+      })
 
 
     include ../viewPartials/changeSensitivityFilterJs
