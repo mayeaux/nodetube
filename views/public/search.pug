@@ -8,8 +8,8 @@ block content
             br
             br
             div(style="margin: 0 auto;")
-                input(type='hidden', name='_csrf', value=_csrf)
-                input.search-query-input.form-control(style="margin: 0 auto;width:400px" type='search', name='search', id='search')
+                input(type='hidden', name='_csrf', value=_csrf )
+                input.search-query-input.form-control(style="margin: 0 auto;width:400px" type='search', name='search', id='search' placeholder=`${searchQuery}`)
                 br
                 button.search-uploads-button.btn-lg.btn.btn-primary(type='submit' style="margin-right:10px" name="type" value="upload")
                     //i.fa.fa-lock
@@ -25,9 +25,7 @@ block content
         br
         div.col-sm-12.text-center(style="margin:0 auto;margin-top:50px;")
             if uploads
-                if uploads.length > 0
-                    p(style="text-decoration:underline;font-size:20px;") #{uploads.length} Results
-
+                if 1 == 1
                     div.text-center.center-div
 
                         include ../viewPartials/orderByDropdown
@@ -38,12 +36,15 @@ block content
                     br
                     br
 
-                    each upload in uploads
-                      if upload.uploader
-                          div.col-sm-4(style="text-align:center;height:360px")
-                              include ../viewPartials/uploadThumbnail
+                    p(style="text-decoration:underline;font-size:20px;") #{uploads.length} Results
 
-                              include ../viewPartials/uploadDetails
+                    if uploads && uploads.length > 0
+                        each upload in uploads
+                          if upload.uploader
+                              div.col-sm-4(style="text-align:center;height:360px")
+                                  include ../viewPartials/uploadThumbnail
+
+                                  include ../viewPartials/uploadDetails
                 else
                     div.center-block.text-center
                         br
@@ -99,10 +100,16 @@ block content
           var userSearchQuery = $('.search-query-input').val()
 
           window.location = '/search?orderBy=' + orderBy + '&mediaType=' + mediaType + '&searchQuery=' + userSearchQuery + '&searchType=' + searchType
+        });
 
 
+        $(document).keypress(function (e) {
+          if (e.which == 13) {
+            var searchQuery = $('.search-query-input').val()
 
-          console.log('hello');
+            window.location = '/search?orderBy=' + orderBy + '&mediaType=' + mediaType + '&searchQuery=' + searchQuery + '&searchType=' + searchType
+
+          }
         });
       })
 
