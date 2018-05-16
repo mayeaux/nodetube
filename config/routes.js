@@ -154,8 +154,6 @@ function frontendRoutes(app){
   app.get('/search', mediaBrowsingController.search);
   app.get('/search/:page', mediaBrowsingController.search);
 
-  app.post('/search', mediaBrowsingController.results);
-
 
   /** livestream routes **/
   // app.get(/\/user\/(.+)\/live/, livestreamController.getLive);

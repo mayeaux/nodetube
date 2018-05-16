@@ -158,37 +158,9 @@ block content
                             button.btn.btn-primary Edit
 
 
-            // TODO: Sub out thumbnail here
-            a(href=`/user/${channel.channelUrl}/${upload.uniqueTag}` style="text-decoration:none;color:black;")
-                if upload.thumbnails && upload.thumbnails.custom
-                    img.preview-image(src=`${uploadServer}/${channel.channelUrl}/${upload.thumbnails.custom}` style="width:inherit;max-width:302px;")
+            include ../viewPartials/uploadThumbnail
 
-                else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.generated
-                    img.preview-image(src=`${uploadServer}/${channel.channelUrl}/${upload.thumbnails.generated}` style="width:inherit;max-width:302px;")
-
-                else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.medium
-                    img.preview-image(src=`${uploadServer}/${channel.channelUrl}/${upload.thumbnails.medium}` style="width:inherit;max-width:302px;")
-
-                else if upload.fileType == 'audio'
-                    img.preview-image(src='/images/audio.svg')
-
-                else if upload.fileType == 'image'
-                    img.preview-image(src=`${uploadServer}/${channel.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="width:inherit;max-width:302px;")
-
-                else if upload.fileType == 'unknown'
-                    img.preview-image(src='/images/no_img.png')
-
-                div
-                    p.upload-title-text #{upload.title}
-
-            div.upload-details(style="width:80%;margin:0 auto")
-                div.views
-                    p.views-text #{upload.legitViewAmount} Views
-                div.uploaded-by
-                    p #{upload.fileType.charAt(0).toUpperCase() + upload.fileType.slice(1)} uploaded #{upload.timeAgo}
-                if user && (user.role == 'admin' || user.role == 'moderator') && upload.visibility == 'removed'
-                    div
-                        h4(style="margin-top:-5px;margin-bottom:-18px;") DELETED
+            include ../viewPartials/uploadDetails
 
             if user && user.role == 'admin'
                 div.changeRating(style="margin-top:30px;")

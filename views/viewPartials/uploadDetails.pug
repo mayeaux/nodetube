@@ -13,6 +13,9 @@ div.upload-details
             a.upload-user-text.views-text(href=`/user/${upload.uploader.channelUrl}` style="margin:0") #{upload.uploader.channelName || upload.uploader.channelUrl}
         if upload.subcategory
             p.upload-title-text.views-text(style="margin:0;margin-left:3px;") #{upload.subcategory}
+        if user && (user.role == 'admin' || user.role == 'moderator') && upload.visibility == 'removed'
+            div
+                h4(style="margin-top:-5px;margin-bottom:-18px;") DELETED
                 //p(style="font-size:15px") #{upload.uploader.channelName || upload.uploader.channelUrl}
                 //    if upload.uploader.verified == true
                 //        img(src="/images/verified.jpg" width="19px" height="19px" style="margin-left:3px;margin-top:-2px;")

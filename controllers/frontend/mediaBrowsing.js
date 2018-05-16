@@ -253,77 +253,6 @@ exports.popularUploads = async (req, res) => {
 
 
 
-/**
-* POST /
-* Search page.
-*/
-exports.results = async (req, res) => {
-
-  // get search term from body
-  const search = req.body.search;
-
-  const mediaType = req.query.mediaType;
-
-
-  // create a regexp for mongo
-  const re = new RegExp(search, "gi");
-
-  let uploads, users;
-
-  if(req.body.type == 'upload'){
-
-    // uploads
-    uploads = await Upload.find({
-      visibility: 'public',
-      title : re,
-      $or : [ { status: 'completed' }, { uploadUrl: { $exists: true } } ]
-    }).populate('uploader').limit(1000);
-
-    // populate upload.legitViewAmount
-    uploads = await Promise.all(
-      uploads.map(async function(upload){
-        upload = upload.toObject();
-        const checkedViews = await View.count({ upload: upload.id, validity: 'real' });
-        upload.legitViewAmount = checkedViews;
-        return upload
-      })
-    );
-
-    let filter = getSensitivityFilter(req.user, req.siteVisitor);
-
-    uploads = uploadFilters.filterUploadsBySensitivity(uploads, filter);
-
-    // TODO: how to get mediaType here?
-    // TODO: answer: refactor into using a get API
-    // uploads = uploadFilters.filterUploadsByMediaType(uploads, mediaType);
-
-  } else if(req.body.type == 'user'){
-
-    // channels
-    users = await User.find({
-      $or : [ { channelName: re }, { channelUrl: re  } ],
-      status: { $ne: 'restricted'}
-    }).populate('uploads');
-
-    users = _.filter(users, function(user){
-      return user.uploads.length > 0
-    });
-
-  } else {
-    // TODO: Throw an error
-  }
-
-  const siteVisitor = req.siteVisitor;
-
-  res.render('public/search', {
-    title: 'Search',
-    uploads,
-    channels: users,
-    uploadServer,
-    siteVisitor
-  });
-};
-
 
 async function saveSearchQuery(user, search){
   // note the person searching
@@ -347,6 +276,8 @@ async function saveSearchQuery(user, search){
 exports.search = async (req, res) => {
 
   // TODO: url decode here
+
+  const mediaType = req.query.mediaType;
 
   const userSearchQuery = req.query.searchQuery;
 
@@ -407,11 +338,14 @@ exports.search = async (req, res) => {
 
   const siteVisitor = req.siteVisitor;
 
+  const media = mediaType || 'all';
+
   return res.render('public/search', {
     title: 'Search',
     channels: users,
     uploads,
-    siteVisitor
+    siteVisitor,
+    media
   });
 };
 
