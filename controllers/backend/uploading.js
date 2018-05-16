@@ -22,13 +22,15 @@ const Notification = require('../../models/index').Notification;
 const SocialPost = require('../../models/index').SocialPost;
 const Subscription = require('../../models/index').Subscription;
 
-const { uploadServer, uploadUrl } = require('../../lib/helpers/settings');
+const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
 const getMediaType = require('../../lib/uploading/media');
 const { b2, bucket, hostUrl } = require('../../lib/uploading/backblaze');
 
 const mongooseHelpers = require('../../caching/mongooseHelpers');
 const ffmpegHelper = require('../../lib/uploading/ffmpeg');
-const uploadHelpers = require('../../lib/uploading/helpers')
+const uploadHelpers = require('../../lib/uploading/helpers');
+
+console.log(`SAVE AND SERVE FILES DIRECTORY: ${saveAndServeFilesDirectory}`)
 
 
 var resumable = require('../../lib/uploading/resumable.js')(__dirname +  '/upload');
@@ -233,8 +235,8 @@ exports.postFileUpload = async (req, res, next) => {
             }
           }
 
-          // TODO: prepend with path here
-          const channelUrlFolder = `./uploads/${user.channelUrl}`;
+          // where to save the files
+          const channelUrlFolder = `${saveAndServeFilesDirectory}/${user.channelUrl}`;
 
           const fileName = `${uniqueTag}${fileExtension}`;
 

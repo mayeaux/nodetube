@@ -34,6 +34,8 @@ const settings = require('./lib/helpers/settings');
 
 const saveAndServeFilesDirectory = settings.saveAndServeFilesDirectory;
 
+console.log(`SAVE AND SERVE FILES DIRECTORY: ${saveAndServeFilesDirectory}`);
+
 /** Code for clustering, running on multiple CPUS **/
 const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
