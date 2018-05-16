@@ -402,7 +402,11 @@ exports.search = async (req, res) => {
     uploads,
     siteVisitor,
     media,
-    orderByEnglishString
+    orderByEnglishString,
+    orderBy,
+    mediaType,
+    searchType,
+    searchQuery: userSearchQuery
   });
 };
 

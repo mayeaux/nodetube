@@ -9,7 +9,7 @@ block content
             br
             div(style="margin: 0 auto;")
                 input(type='hidden', name='_csrf', value=_csrf)
-                input.form-control(style="margin: 0 auto;width:400px" type='search', name='search', id='search')
+                input.search-query-input.form-control(style="margin: 0 auto;width:400px" type='search', name='search', id='search')
                 br
                 button.search-uploads-button.btn-lg.btn.btn-primary(type='submit' style="margin-right:10px" name="type" value="upload")
                     //i.fa.fa-lock
@@ -85,8 +85,23 @@ block content
 
     script.
       $(document).ready(function () {
+
+        var orderBy = '#{orderBy}'
+        var mediaType = '#{mediaType}'
+        var searchQuery = '#{searchQuery}'
+        var searchType = '#{searchType}' // upload or user
+
+        console.log(orderBy, mediaType, searchQuery, searchType)
+
         // capture submit
         $('.search-uploads-button').click(function () {
+
+          var userSearchQuery = $('.search-query-input').val()
+
+          window.location = '/search?orderBy=' + orderBy + '&mediaType=' + mediaType + '&searchQuery=' + userSearchQuery + '&searchType=' + searchType
+
+
+
           console.log('hello');
         });
       })
