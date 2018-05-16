@@ -1,0 +1,14 @@
+div.dropdown(style="display:inline;padding-right:15px;")
+    button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px;")
+        | File Type: #{media.charAt(0).toUpperCase() + media.slice(1)} &nbsp
+        span.caret
+
+    ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1')
+        li(role='presentation')
+            a(href=`/search?searchQuery=${searchQuery}&orderBy=oldToNew&mediaType=all&searchType=${searchType}`) All
+        li(role='presentation')
+            a(href=`/search?searchQuery=${searchQuery}&orderBy=oldToNew&mediaType=video&searchType=${searchType}`) Videos
+        li(role='presentation')
+            a(href=`/search?searchQuery=${searchQuery}&orderBy=oldToNew&mediaType=audio&searchType=${searchType}`) Audio
+        li(role='presentation')
+            a(href=`/search?searchQuery=${searchQuery}&orderBy=oldToNew&mediaType=image&searchType=${searchType}`) Image

@@ -347,7 +347,7 @@ exports.search = async (req, res) => {
       $or : [ { status: 'completed' }, { uploadUrl: { $exists: true } } ]
     };
 
-    if(mediaType){
+    if(mediaType && mediaType !== 'all'){
       searchQuery.fileType = mediaType
     }
 
