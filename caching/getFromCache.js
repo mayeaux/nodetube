@@ -92,26 +92,17 @@ async function getPopularUploads(timeRange, limit, offset,  mediaType, filter, c
   // load recent uploads into memory
   let uploads = popularUploads;
 
-  console.log(uploads);
-
   if(!uploads) return [];
 
   if(!timeRange) timeRange = 'allTime';
 
   uploads = sortUploadsByViews(uploads, timeRange);
 
-  console.log(uploads.length)
-
   // send empty array if no globalRecentUploads set
   uploads = filterUploadsByMediaType(uploads, mediaType);
 
-  console.log(uploads.length)
-
   uploads = filterUploadsBySensitivity(uploads, filter);
 
-  console.log(uploads.length)
-
-  // if(1 == 1){
   if(category){
     if(category == 'all'){
       return uploads
