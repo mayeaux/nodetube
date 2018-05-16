@@ -6,8 +6,8 @@ div.dropdown(style="display:inline;margin-right:15px;")
 
     ul.dropdown-menu.dropdown
         li
-            a(href=``) Popular
+            a(href=`/search?searchQuery=${searchQuery}&orderBy=popular&mediaType=${mediaType}&searchType=${searchType}`) Popular
         li
-            a(href=``) New To Old
+            a(href=`/search?searchQuery=${searchQuery}&orderBy=newToOld&mediaType=${mediaType}&searchType=${searchType}`) New To Old
         li
-            a(href=``) Old To New
+            a(href=`/search?searchQuery=${searchQuery}&orderBy=oldToNew&mediaType=${mediaType}&searchType=${searchType}`) Old To New
