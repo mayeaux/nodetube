@@ -45,19 +45,19 @@ if(process.env.CACHING_ON == 'true'){
 }
 
 
-// /** Code to find errant console logs **/
-// ['log', 'warn', 'error'].forEach(function(method) {
-//   var old = console[method];
-//   console[method] = function() {
-//     var stack = (new Error()).stack.split(/\n/);
-//     // Chrome includes a single "Error" line, FF doesn't.
-//     if (stack[0].indexOf('Error') === 0) {
-//       stack = stack.slice(1);
-//     }
-//     var args = [].slice.apply(arguments).concat([stack[1].trim()]);
-//     return old.apply(console, args);
-//   };
-// });
+/** Code to find errant console logs **/
+['log', 'warn', 'error'].forEach(function(method) {
+  var old = console[method];
+  console[method] = function() {
+    var stack = (new Error()).stack.split(/\n/);
+    // Chrome includes a single "Error" line, FF doesn't.
+    if (stack[0].indexOf('Error') === 0) {
+      stack = stack.slice(1);
+    }
+    var args = [].slice.apply(arguments).concat([stack[1].trim()]);
+    return old.apply(console, args);
+  };
+});
 
 
 if (cluster.isMaster) {
@@ -111,8 +111,6 @@ if (cluster.isMaster) {
     });
 
     console.log(`FRONTEND SERVER: ${process.env.FRONTEND_SERVER}`);
-
-    console.log(`UPLOAD URL: ${process.env.UPLOAD_URL}`);
 
 
     // require('./lib/deleteUsers');
@@ -175,14 +173,7 @@ if (cluster.isMaster) {
       app.use(logger('dev'));
     }
 
-    let serveUploadsPath;
-    if(!process.env.SERVE_UPLOADS_PATH || process.env.SERVE_UPLOADS_PATH == 'false'){
-      serveUploadsPath = '/uploads'
-    } else {
-      serveUploadsPath = process.env.SERVE_UPLOADS_PATH;
-    }
-
-    console.log(serveUploadsPath)
+    console.log(`SERVE UPLOADS PATH: ${serveUploadsPath}`);
 
     app.use('/uploads', express.static(serveUploadsPath, {maxAge: 31557600000}));
 
