@@ -172,7 +172,7 @@ exports.getChannel = async (req, res) => {
     // determine if its the user of the channel
     let isAdmin = false;
     let isUser = false;
-    const isModerator = req.user.role == 'isModerator';
+    const isModerator = req.user && ( req.user.role == 'isModerator' ) ;
     if(req.user){
       // its the same user
       isUser =  ( req.user._id.toString() == user._id.toString()  );
