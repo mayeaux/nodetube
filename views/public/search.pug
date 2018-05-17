@@ -89,6 +89,11 @@ block content
         var searchQuery = '#{searchQuery}'
         var searchType = '#{searchType}' // upload or user
 
+        if(!orderBy){
+          orderBy = 'newToOld'
+        }
+
+
         console.log(orderBy, mediaType, searchQuery, searchType)
 
         $('.search-query-input').focus();
