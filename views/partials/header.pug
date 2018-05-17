@@ -12,15 +12,12 @@
       ul.nav.navbar-nav.front-header
         li(class=(title == 'Home') ? 'active' : undefined)
           a(href=`/`) Home
-
-        // popular/recent/channels only visible to plus users atm
-        if user && user.plan == 'plus'
           li(class=(title == 'Popular Uploads') ? 'active' : undefined)
             a(href=`/media/popular/1?within=24hour`) Popular
           li(class=(title == 'Recent Uploads') ? 'active' : undefined)
             a(href=`/media/recent`) Recent
-          li(class=(title == 'Channels') ? 'active' : undefined)
-            a(href=`/channels?within=24hour`) Channels
+          //li(class=(title == 'Channels') ? 'active' : undefined)
+          //  a(href=`/channels?within=24hour`) Channels
 
         li(class=(title == 'Search') ? 'active' : undefined)
           a(href=`/search`) Search
@@ -53,6 +50,8 @@
                   a(href=`/support/reports`) Reports
                 li(class=(title == 'Recent Uploads') ? 'active' : undefined)
                   a(href=`/media/recent`) Recent Uploads
+                li(class=(title == 'Pending') ? 'active' : undefined)
+                  a(href=`/pending`) Pending
 
           // admin dropdown
           if user.role == 'admin'
@@ -79,12 +78,6 @@
                   a(href=`/admin/createSocialPost`) Create Social Post
                 li
                   a(href=`/admin/oneOffSocialPost`) One Off Social Post
-
-
-          // pending section
-          if user.role == 'admin' || user.role == 'moderator'
-            li(class=(title == 'Pending') ? 'active' : undefined)
-              a(href=`/pending`) Pending
 
         li(class=(title == 'About') ? 'active' : undefined)
           a(href=`/about`) About

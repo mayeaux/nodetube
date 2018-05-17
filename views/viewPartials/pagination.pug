@@ -1,0 +1,11 @@
+nav.center-block.text-center(aria-label='Page navigation example')
+    ul.pagination
+        li.page-item
+            a.page-link(href=`/media/recent/${previousNumber}?media=${media}&category${category}&page=`) <
+
+        each number in numbersArray
+            li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
+                a.page-link(href=`/media/recent/${number}?media=${media}&category=${category}&page=`) #{number}
+
+        li.page-item
+            a.page-link(href=`/media/recent/${nextNumber}?media=${media}&category=${category}&page=${nextNumber}`) >

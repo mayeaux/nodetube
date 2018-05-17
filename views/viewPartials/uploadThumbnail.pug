@@ -1,0 +1,26 @@
+a.title-anchor(href=`/user/${upload.uploader.channelUrl || channelUrl}/${upload.uniqueTag}` style="color:black" )
+    if upload.thumbnails && upload.thumbnails.custom
+        img.preview-image(src=`${uploadServer}/${channelUrl || upload.uploader.channelUrl}/${upload.thumbnails.custom}` style="width:inherit;max-width:302px;")
+
+    else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.generated
+        img.preview-image(src=`${uploadServer}/${channelUrl || upload.uploader.channelUrl}/${upload.thumbnails.generated}` style="width:inherit;max-width:302px;")
+
+    else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.medium
+        img.preview-image(src=`${uploadServer}/${channelUrl || upload.uploader.channelUrl}/${upload.thumbnails.medium}` style="width:inherit;max-width:302px;")
+
+    else if upload.fileType == 'video' && !upload.thumbnailUrl
+        img.preview-image(src="/no_img.png")
+
+    else if upload.fileType == 'image'
+        // TODO: have to fix this
+        img.preview-image(src=`${uploadServer}/${channelUrl|| upload.uploader.channelUrl }/${upload.uniqueTag}${upload.fileExtension}` style="width:inherit;max-width:302px;")
+
+    else if upload.fileType == 'audio'
+        img.preview-image(src='/images/audio.svg')
+
+    else if upload.fileType == 'unknown'
+        img.preview-image(src='/images/no_img.png')
+
+    div
+        p.balance-text.upload-title-text(style="width:100%;margin:0 auto;margin-top:6px;") #{upload.title}
+    br

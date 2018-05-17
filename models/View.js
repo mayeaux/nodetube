@@ -26,7 +26,8 @@ const viewSchema = new mongoose.Schema({
   },
   toJSON: {
     virtuals: true
-  }
+  },
+  autoIndex: true
 });
 
 viewSchema.virtual('timeAgo').get(function () {
@@ -34,6 +35,8 @@ viewSchema.virtual('timeAgo').get(function () {
 });
 
 viewSchema.index({upload: 1, validity: 1}, {name: "Real View Count"});
+
+viewSchema.index({upload: 1, validity: 1, createdAt: 1}, {name: "Real View Count Within Timeframe"});
 
 const View = mongoose.model('View', viewSchema);
 

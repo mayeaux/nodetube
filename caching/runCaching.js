@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
+
+
+
+
 process.on('uncaughtException', (err) => {
   console.log(`Uncaught Exception: `, err);
   console.log(err.stack);
@@ -14,9 +18,10 @@ process.on('unhandledRejection', (err) => {
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
  */
-dotenv.load({ path: '.env.example' });
+dotenv.load({ path: '.env.settings' });
+dotenv.load({ path: '.env.private' });
 
-const database = process.env.MONGO_URI || process.env.MONGODB_URI || process.env.MONGOLAB_URI || 'mongodb://localhost:27017/nov17pewtube';
+const database = process.env.MONGODB_DOCKER_URI || process.env.MONGO_URI || process.env.MONGODB_URI || process.env.MONGOLAB_URI || 'mongodb://localhost:27017/april15pewtube';
 
 console.log(database);
 
@@ -28,12 +33,12 @@ mongoose.Promise = global.Promise;
 mongoose.Promise = global.Promise;
 mongoose.connect(database, {
   keepAlive: true,
-  reconnectTries: Number.MAX_VALUE,
-  useMongoClient: true
+  reconnectTries: Number.MAX_VALUE
 });
 
-// mongoose.set('debug', true);
-
+if(process.env.MONGOOSE_DEBUG == 'true' || process.env.MONGOOSE_DEBUG == 'on'){
+  mongoose.set('debug', true);
+}
 
 mongoose.connection.on('error', (err) => {
   console.error(err);
@@ -43,23 +48,40 @@ mongoose.connection.on('error', (err) => {
 
 console.log('Connected to ' + database);
 
-const cacheChannels = require('./cacheChannels'); // cache channels by popularity every 20 mins
-const cacheUploads = require('./cacheUploads');  // cache popular uploads
+
 const setCache = require('./setCache'); // index and daily stats
+
+const cacheRecentUploads = require('./cacheRecentUploads'); // index and daily stats
+const cachePopularUploads = require('./cachePopularUploads'); // index and daily stats
+
+// const cacheRecentUploads = require('./cacheRecentAndPopularUploads');
 
 async function main(){
 
   try {
-    // TODO: cache uploads and channels correctly crash
-    // await cacheUploads();
-    await setCache.setDailyStats();
-    await setCache.setIndexValues();
-    // await cacheChannels();
+
+    await cacheRecentUploads();
+
   } catch (err){
     console.log(err);
   }
 
 }
 
+setInterval(async function(){
+
+  try {
+    await cachePopularUploads();
+    await setCache.setDailyStats();
+    await setCache.setIndexValues();
+
+    // await cacheChannels();
+  } catch (err){
+    console.log(err);
+  }
+
+}, 1000 * 60 * 5)
+
+
 main();
-setInterval(main, 1000 * 60 * 20);
+setInterval(main, 1000 * 60 * 1);

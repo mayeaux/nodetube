@@ -8,17 +8,16 @@ block content
             br
             br
             div(style="margin: 0 auto;")
-                form(action='/search', method='POST')
-                    input(type='hidden', name='_csrf', value=_csrf)
-                    input.form-control(style="margin: 0 auto;width:400px" type='search', name='search', id='search')
-                    br
-                    button.btn-lg.btn.btn-primary(type='submit' style="margin-right:10px" name="type" value="upload")
-                        //i.fa.fa-lock
-                        | Search For Media
+                input(type='hidden', name='_csrf', value=_csrf )
+                input.search-query-input.form-control(style="margin: 0 auto;width:400px" type='search', name='search', id='search' placeholder=`${searchQuery !== 'undefined' ? searchQuery: ''}`)
+                br
+                button.search-uploads-button.btn-lg.btn.btn-primary(type='submit' style="margin-right:10px" name="type" value="upload")
+                    //i.fa.fa-lock
+                    | Search For Media
 
-                    button.btn-lg.btn.btn-primary(type='submit' style="margin-left:10px" name="type" value="user")
-                        //i.fa.fa-lock
-                        | Search For User
+                button.search-users-button.btn-lg.btn.btn-primary(type='submit' style="margin-left:10px" name="type" value="user")
+                    //i.fa.fa-lock
+                    | Search For User
 
 
 
@@ -26,72 +25,28 @@ block content
         br
         div.col-sm-12.text-center(style="margin:0 auto;margin-top:50px;")
             if uploads
-                if uploads.length > 0
-                    p(style="text-decoration:underline;font-size:20px;") #{uploads.length} Results
+                div.text-center.center-div
 
-                    div.text-center.center-div
+                    include ../viewPartials/orderByDropdown
 
-                        div.dropdown(style="display:inline")
-                            button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
-                                if siteVisitor.filter == 'allAges'
-                                    | Rating: SFW &nbsp
-                                else if siteVisitor.filter == 'mature'
-                                    | Rating: SFW/NSWF &nbsp
-                                span.caret
+                    include ../viewPartials/searchUploadsFileTypeDropdown
 
-                            ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1')
-                                li(role='presentation')
-                                    if siteVisitor.filter == 'mature'
-                                        a.changeFilterButton(value="allAges" href="#") SFW
-                                    else if siteVisitor.filter == 'allAges'
-                                        a.changeFilterButton(value="mature" href="#") SFW/NFSW
-                    br
-                    br
+                    include ../viewPartials/sensitivityFilterDropdown
+                br
+                br
 
+                include ../viewPartials/searchPagination
+
+                p(style="text-decoration:underline;font-size:20px;") #{totalUploadsAmount} Results
+
+                if uploads && uploads.length > 0
                     each upload in uploads
                       if upload.uploader
                           div.col-sm-4(style="text-align:center;height:360px")
-                              a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}` style="color:black")
-                                  // TODO: Sub out thumbnail here
+                              include ../viewPartials/uploadThumbnail
 
-                                  if upload.thumbnails && upload.thumbnails.custom
-                                      img.preview-image(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.custom}` style="width:inherit;max-width:302px;")
+                              include ../viewPartials/uploadDetails
 
-                                  else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.generated
-                                      img.preview-image(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated}` style="width:inherit;max-width:302px;")
-
-                                  else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.medium
-                                      img.preview-image(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.medium}` style="width:inherit;max-width:302px;")
-
-                                  else if upload.fileType == 'video' && !upload.thumbnailUrl
-                                      img.preview-image(src="/no_img.png")
-
-                                  else if upload.fileType == 'image'
-                                      img.preview-image(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`)
-
-                                  else if upload.fileType == 'audio'
-                                      img.preview-image(src='/images/audio.svg')
-
-                                  else if upload.fileType == 'unknown'
-                                      img.preview-image(src='/images/no_img.png')
-
-                                  div
-                                      p.upload-title-text #{upload.title}
-                                  br
-
-                              div.upload-details
-                                  div.views
-                                      p.views-text #{upload.legitViewAmount} Views
-                                      // capitalize media type
-                                  div.uploaded-by #{upload.fileType.charAt(0).toUpperCase() + upload.fileType.slice(1)} uploaded
-                                      | &nbsp#{upload.timeAgo} by
-                                      a(href=`/user/${upload.uploader.channelUrl}`)
-                                          p(style="font-size:16px") #{upload.uploader.channelName}
-                else
-                    div.center-block.text-center
-                        br
-                        br
-                        p(style="font-size:20px") No Results Found
 
 
         // USERS RESULTS
@@ -127,56 +82,40 @@ block content
 
 
     script.
-      $('.changeFilterButton').on('click', function () {
+      $(document).ready(function () {
 
-        function changeUserRatingFilter(value) {
+        var orderBy = '#{orderBy}'
+        var mediaType = '#{mediaType}'
+        var searchQuery = '#{searchQuery}'
+        var searchType = '#{searchType}' // upload or user
 
-          console.log('running here')
+        console.log(orderBy, mediaType, searchQuery, searchType)
 
-          var data = {
-            filter: value
+        $('.search-query-input').focus();
+
+
+        // capture submit
+        $('.search-uploads-button').click(function () {
+
+          var userSearchQuery = $('.search-query-input').val()
+
+          window.location = '/search?orderBy=' + orderBy + '&mediaType=' + mediaType + '&searchQuery=' + userSearchQuery + '&searchType=' + searchType
+        });
+
+        $('.search-users-button').click(function () {
+          var userSearchQuery = $('.search-query-input').val()
+
+          window.location = `/search?searchType=user&searchQuery=${userSearchQuery}`
+        })
+
+          $(document).keypress(function (e) {
+          if (e.which == 13) {
+            var searchQuery = $('.search-query-input').val()
+
+            window.location = '/search?orderBy=' + orderBy + '&mediaType=' + mediaType + '&searchQuery=' + searchQuery + '&searchType=upload'
           }
-
-          $.ajax({
-            type: 'POST',
-            url: `/api/changeUserFilter`, // todo: change to user filter
-            data,
-            success: function (data) {
-              if (data == 'success') {
-                window.location.reload(true);
-              } else {
-                swal("Something didn't work, please contact PewTube at ceo@pew.tube or via the widget in the bottom right corner")
-              }
-              console.log(data);
-            },
-            error: function (err) {
-              console.log(err);
-            }
-          });
-
-        }
-
-        const value = $(this).attr('value');
-
-        if (value == 'mature') {
-
-          swal({
-            title: '',
-            text: 'Please confirm you are 18 or older and willing to see \n not safe for work content',
-            showCancelButton: true,
-            confirmButtonText: "Confirm Age",
-          }).then(function (result) {
-
-            console.log(result);
-
-            if (result.value == true) {
-              changeUserRatingFilter(value)
-            }
-          })
-
-        } else {
-          changeUserRatingFilter(value);
-        }
-
-        console.log('here')
+        });
       })
+
+
+    include ../viewPartials/changeSensitivityFilterJs

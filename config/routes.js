@@ -36,6 +36,19 @@ const authMiddleware = require('../middlewares/shared/authentication');
 function fileHostRoutes(app){
   console.log('RUNNING AS FILE HOST');
 
+  // set res header to upload to another server
+  if(process.env.ALLOW_COR){
+    app.use(function (req, res, next) {
+
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader("Access-Control-Allow-Headers", "X-Requested-With");
+      res.setHeader("Access-Control-Allow-Methods", "PUT, GET, POST, OPTIONS");
+      res.setHeader("Cache-Control", "no-cache");
+
+      next()
+    });
+  }
+
   app.post('/upload', uploadingController.postFileUpload);
 // app.post('/admin/upload', authMiddleware.adminAuth, filehostController.adminUpload);
 
@@ -74,8 +87,6 @@ function livestreamRoutes(app){
 
     next()
   });
-
-  app.use(express.static(path.join(__dirname, '../hls'), {}));
 
   app.get('/', publicController.index);
 
@@ -134,22 +145,26 @@ function frontendRoutes(app){
   // behind admin auth atm, needs to use cache
   app.get('/channelsByReacts', authMiddleware.adminAuth, channelBrowsingController.channelsByReacts);
 
-  /** user channel and individual media page */
-  app.get('/user/:channel', accountFrontendController.getChannel);
-
   // media page
   app.get('/user/:channel/:media', mediaPlayerController.getMedia);
 
+  /** user channel and individual media page */
+  app.get('/user/:channel', accountFrontendController.getChannel);
+
+
   /** media browsing routes **/
-  app.get('/media/recent', authMiddleware.plusAuth, mediaBrowsingController.recentUploads);
+  app.get('/media/recent', mediaBrowsingController.recentUploads);
+  app.get('/media/recent/:page', mediaBrowsingController.recentUploads);
+  app.get('/media/popular',  mediaBrowsingController.popularUploads);
+  app.get('/media/popular/:page', mediaBrowsingController.popularUploads);
+
+
   app.get('/media/popularByReacts', authMiddleware.plusAuth, mediaBrowsingController.popularByReacts);
-  app.get('/media/recent/:page', authMiddleware.plusAuth, mediaBrowsingController.recentUploads);
-  app.get('/media/popular/:page', authMiddleware.plusAuth, mediaBrowsingController.popularUploads);
-  app.get('/media/popular', authMiddleware.plusAuth, mediaBrowsingController.popularUploads);
+
 
   /** search functionality **/
   app.get('/search', mediaBrowsingController.search);
-  app.post('/search', mediaBrowsingController.results);
+  app.get('/search/:page', mediaBrowsingController.search);
 
 
   /** livestream routes **/

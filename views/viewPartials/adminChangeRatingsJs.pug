@@ -1,0 +1,36 @@
+script.
+  $('.change-rating').on('click', function(){
+    var checkedValues = $('input:checkbox:checked').map(function () {
+      return this.value;
+    }).get();
+
+    var rating = $(this).attr('rating');
+    var csrf = '#{_csrf}'
+
+
+    var data = {
+      rating: rating,
+      uploads: checkedValues,
+      csrf: csrf
+    }
+
+    $.ajax({
+      type: 'POST',
+      url: `/admin/changeRatings`, // todo: change to user filter
+      data,
+      success: function (data) {
+        if (data == 'success') {
+          window.location.reload(true);
+        } else {
+          swal("Something didn't work, please contact PewTube at ceo@pew.tube or via the widget in the bottom right corner")
+        }
+        console.log(data);
+      },
+      error: function (err) {
+        console.log(err);
+      }
+    });
+
+
+    console.log(rating);
+  })
