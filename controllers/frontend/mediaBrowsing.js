@@ -24,7 +24,7 @@ const getSensitivityFilter =  uploadFilters.getSensitivityFilter;
 
 const categories = require('../../config/categories');
 
-console.log('UPLOAD SERVER: ' + uploadServer);
+console.log('UPLOAD SERVER: ' + uploadServer + ' on: media browsing frontend controller');
 
 
 
@@ -322,9 +322,6 @@ exports.search = async (req, res) => {
 
   const uploadNumber = page * limit;
 
-
-  // TODO: url decode here
-
   const mediaType = req.query.mediaType;
 
   const userSearchQuery = req.query.searchQuery;
@@ -441,7 +438,8 @@ exports.search = async (req, res) => {
     previousNumber,
     nextNumber,
     totalUploadsAmount,
-    uploadNumber
+    uploadNumber,
+    uploadServer
   });
 };
 
