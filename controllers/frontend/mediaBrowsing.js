@@ -49,7 +49,7 @@ if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false') {
 
   async function setIndex(){
     indexResponse = await redisClient.hgetallAsync('indexValues');
-    console.log('got index cache' + indexResponse);
+    console.log('got index cache');
   }
 
   setIndex();

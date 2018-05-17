@@ -50,9 +50,9 @@ function fileHostRoutes(app){
   }
 
   app.post('/upload', uploadingController.postFileUpload);
-// app.post('/admin/upload', authMiddleware.adminAuth, filehostController.adminUpload);
+  // app.post('/admin/upload', authMiddleware.adminAuth, filehostController.adminUpload);
 
-// edit thumbnails
+  // edit upload and thumbnails thumbnails
   app.post('/api/upload/:uniqueTag/edit', internalApiController.editUpload);
   app.post('/api/upload/:uniqueTag/thumbnail/delete', internalApiController.deleteUploadThumbnail);
 

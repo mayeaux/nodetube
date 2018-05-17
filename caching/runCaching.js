@@ -75,6 +75,7 @@ setInterval(async function(){
 
   try {
     await cachePopularUploads();
+    await cacheRecentUploads();
     await setCache.setDailyStats();
     await setCache.setIndexValues();
 
