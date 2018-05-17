@@ -30,12 +30,6 @@ const Promise = require('bluebird');
 const ipfilter = require('express-ipfilter').IpFilter;
 const _ = require('lodash');
 
-const settings = require('./lib/helpers/settings');
-
-const saveAndServeFilesDirectory = settings.saveAndServeFilesDirectory;
-
-console.log(`SAVE AND SERVE FILES DIRECTORY: ${saveAndServeFilesDirectory}`);
-
 /** Code for clustering, running on multiple CPUS **/
 const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
@@ -64,6 +58,12 @@ if(process.env.CACHING_ON == 'true'){
     return old.apply(console, args);
   };
 });
+
+const settings = require('./lib/helpers/settings');
+
+const saveAndServeFilesDirectory = settings.saveAndServeFilesDirectory;
+
+console.log(`SAVE AND SERVE FILES DIRECTORY: ${saveAndServeFilesDirectory}`);
 
 
 if (cluster.isMaster) {
