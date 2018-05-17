@@ -31,6 +31,36 @@ console.log('UPLOAD SERVER: ' + uploadServer + ' on: media browsing frontend con
 const mongooseHelpers = require('../../caching/mongooseHelpers');
 
 
+// todo: get out of controller
+let viewStats;
+let indexResponse = {};
+async function getStats(){
+  let views = await redisClient.getAsync('dailyStatsViews');
+  viewStats = JSON.parse(views);
+
+}
+
+if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false') {
+  getStats();
+  setInterval(function () {
+    getStats()
+  }, 1000 * 60 * 1);
+
+
+  async function setIndex(){
+    indexResponse = await redisClient.hgetallAsync('indexValues');
+    console.log('got index cache' + indexResponse);
+  }
+
+  setIndex();
+
+  setInterval(function(){
+    setIndex()
+  }, 1000 * 60 * 2);
+}
+
+
+
 /**
  * GET /media/recent
  * Page displaying most recently uploaded content
@@ -103,34 +133,6 @@ exports.recentUploads = async (req, res) => {
   }
 
 };
-
-
-// todo: get out of controller
-let viewStats;
-async function getStats(){
-  let views = await redisClient.getAsync('dailyStatsViews');
-  viewStats = JSON.parse(views);
-
-}
-
-if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false'){
-  getStats();
-  setInterval(function(){
-    getStats()
-  }, 1000 * 60 * 1);
-
-// TODO: pull into its own func
-  let indexResponse;
-  async function setIndex(){
-    indexResponse = await redisClient.hgetallAsync('indexValues');
-    console.log('got index cache');
-  }
-
-  setIndex();
-  setInterval(function(){
-    setIndex()
-  }, 1000 * 60 * 2);
-}
 
 
 
