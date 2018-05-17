@@ -178,6 +178,8 @@ if (cluster.isMaster) {
 
     if(process.env.NODE_ENV == 'development'){
       app.use(logger('dev'));
+    } else if (process.env.NODE_ENV == 'production'){
+      app.use(logger('dev'));
     }
 
     console.log(`SERVE UPLOADS PATH: ${saveAndServeFilesDirectory}`);
