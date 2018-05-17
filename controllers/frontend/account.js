@@ -204,7 +204,7 @@ exports.getChannel = async (req, res) => {
 
     let uploadThumbnailUrl;
     if(uploads && uploads[0]){
-      uploadThumbnailUrl =  user.uploads[0].thumbnailUrl;
+      uploadThumbnailUrl =  uploads[0].thumbnailUrl;
     }
 
     res.locals.meta.image = user.thumbnailUrl || uploadThumbnailUrl;
