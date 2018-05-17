@@ -140,7 +140,10 @@ exports.getChannel = async (req, res) => {
     }).populate('receivedSubscriptions').lean()
       .exec();
 
-    const viewerIsAdminOrMod = req.user.role == 'admin' || req.user.role == 'moderator';
+    let viewerIsAdminOrMod;
+    if(req.user && (req.user.role == 'admin' || req.user.role == 'moderator')){
+      viewerIsAdminOrMod = true;
+    }
 
     // 404 if nothing found
     if(!user && !viewerIsAdminOrMod){
