@@ -308,8 +308,6 @@ exports.search = async (req, res) => {
   let page = req.query.page;
   if(!page){ page = 1 }
   page = parseInt(page);
-  
-  console.log(page);
 
   let limit = 102;
 
@@ -412,8 +410,6 @@ exports.search = async (req, res) => {
   } else {
     // error
   }
-
-  console.log(totalUploadsAmount);
 
   const siteVisitor = req.siteVisitor;
 
