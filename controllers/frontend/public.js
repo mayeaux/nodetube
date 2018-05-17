@@ -1,5 +1,7 @@
 const redisClient = require('../../config/redis');
 
+const Upload = require('../../models/index').Upload;
+
 // TODO: pull into its own func
 let indexResponse;
 async function setIndex(){
