@@ -329,6 +329,7 @@ exports.search = async (req, res) => {
   if(!userSearchQuery){
     return res.render('public/search', {
       title: 'Search',
+      orderBy: 'newToOld',
       searchQuery: ''
     });
   }
@@ -407,8 +408,6 @@ exports.search = async (req, res) => {
     const helpers = require('../../lib/mediaBrowsing/helpers');
 
     uploads = helpers.trimUploads(uploads, limit, skipAmount)
-
-    console.log(helpers);
 
   } else {
     // error
