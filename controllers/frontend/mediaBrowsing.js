@@ -24,11 +24,41 @@ const getSensitivityFilter =  uploadFilters.getSensitivityFilter;
 
 const categories = require('../../config/categories');
 
-console.log('UPLOAD SERVER: ' + uploadServer);
+console.log('UPLOAD SERVER: ' + uploadServer + ' on: media browsing frontend controller');
 
 
 
 const mongooseHelpers = require('../../caching/mongooseHelpers');
+
+
+// todo: get out of controller
+let viewStats;
+let indexResponse = {};
+async function getStats(){
+  let views = await redisClient.getAsync('dailyStatsViews');
+  viewStats = JSON.parse(views);
+
+}
+
+if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false') {
+  getStats();
+  setInterval(function () {
+    getStats()
+  }, 1000 * 60 * 1);
+
+
+  async function setIndex(){
+    indexResponse = await redisClient.hgetallAsync('indexValues');
+    console.log('got index cache');
+  }
+
+  setIndex();
+
+  setInterval(function(){
+    setIndex()
+  }, 1000 * 60 * 2);
+}
+
 
 
 /**
@@ -105,34 +135,6 @@ exports.recentUploads = async (req, res) => {
 };
 
 
-// todo: get out of controller
-let viewStats;
-async function getStats(){
-  let views = await redisClient.getAsync('dailyStatsViews');
-  viewStats = JSON.parse(views);
-
-}
-
-if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false'){
-  getStats();
-  setInterval(function(){
-    getStats()
-  }, 1000 * 60 * 1);
-
-// TODO: pull into its own func
-  let indexResponse;
-  async function setIndex(){
-    indexResponse = await redisClient.hgetallAsync('indexValues');
-    console.log('got index cache');
-  }
-
-  setIndex();
-  setInterval(function(){
-    setIndex()
-  }, 1000 * 60 * 2);
-}
-
-
 
 
 /**
@@ -149,6 +151,8 @@ exports.popularUploads = async (req, res) => {
   let category = req.query.category || '';
 
   let subcategory = req.query.subcategory || '';
+
+  const within = req.query.within;
 
   // setup page
   let page = req.params.page;
@@ -232,7 +236,8 @@ exports.popularUploads = async (req, res) => {
       isACategory : category,
       media,
       addressPrepend,
-      categoryObj
+      categoryObj,
+      within
     });
 
   } catch (err){
@@ -308,8 +313,6 @@ exports.search = async (req, res) => {
   let page = req.query.page;
   if(!page){ page = 1 }
   page = parseInt(page);
-  
-  console.log(page);
 
   let limit = 102;
 
@@ -322,9 +325,6 @@ exports.search = async (req, res) => {
 
   const uploadNumber = page * limit;
 
-
-  // TODO: url decode here
-
   const mediaType = req.query.mediaType;
 
   const userSearchQuery = req.query.searchQuery;
@@ -332,6 +332,7 @@ exports.search = async (req, res) => {
   if(!userSearchQuery){
     return res.render('public/search', {
       title: 'Search',
+      orderBy: 'newToOld',
       searchQuery: ''
     });
   }
@@ -411,13 +412,9 @@ exports.search = async (req, res) => {
 
     uploads = helpers.trimUploads(uploads, limit, skipAmount)
 
-    console.log(helpers);
-
   } else {
     // error
   }
-
-  console.log(totalUploadsAmount);
 
   const siteVisitor = req.siteVisitor;
 
@@ -441,7 +438,8 @@ exports.search = async (req, res) => {
     previousNumber,
     nextNumber,
     totalUploadsAmount,
-    uploadNumber
+    uploadNumber,
+    uploadServer
   });
 };
 

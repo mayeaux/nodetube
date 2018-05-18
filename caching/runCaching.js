@@ -68,10 +68,19 @@ async function main(){
 
 }
 
-setInterval(async function(){
+// main();
+// setInterval(main, 1000 * 60 * 1);
 
+let cacheIntervalInMinutes = parseInt(process.env.CACHE_INTERVAL_IN_MINUTES) || 5;
+
+const cacheIntervalInMs = cacheIntervalInMinutes * ( 1000 * 60 );
+
+console.log(cacheIntervalInMinutes  + ': cache interview in minutes');
+
+async function runCaching(){
   try {
     await cachePopularUploads();
+    await cacheRecentUploads();
     await setCache.setDailyStats();
     await setCache.setIndexValues();
 
@@ -79,9 +88,10 @@ setInterval(async function(){
   } catch (err){
     console.log(err);
   }
+}
 
-}, 1000 * 60 * 5)
+runCaching();
+
+setInterval(runCaching, cacheIntervalInMs);
 
 
-main();
-setInterval(main, 1000 * 60 * 1);

@@ -140,7 +140,10 @@ exports.getChannel = async (req, res) => {
     }).populate('receivedSubscriptions').lean()
       .exec();
 
-    const viewerIsAdminOrMod = req.user.role == 'admin' || req.user.role == 'moderator';
+    let viewerIsAdminOrMod;
+    if(req.user && (req.user.role == 'admin' || req.user.role == 'moderator')){
+      viewerIsAdminOrMod = true;
+    }
 
     // 404 if nothing found
     if(!user && !viewerIsAdminOrMod){
@@ -169,7 +172,7 @@ exports.getChannel = async (req, res) => {
     // determine if its the user of the channel
     let isAdmin = false;
     let isUser = false;
-    const isModerator = req.user.role == 'isModerator';
+    const isModerator = req.user && ( req.user.role == 'isModerator' ) ;
     if(req.user){
       // its the same user
       isUser =  ( req.user._id.toString() == user._id.toString()  );
@@ -201,7 +204,7 @@ exports.getChannel = async (req, res) => {
 
     let uploadThumbnailUrl;
     if(uploads && uploads[0]){
-      uploadThumbnailUrl =  user.uploads[0].thumbnailUrl;
+      uploadThumbnailUrl =  uploads[0].thumbnailUrl;
     }
 
     res.locals.meta.image = user.thumbnailUrl || uploadThumbnailUrl;

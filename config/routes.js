@@ -37,7 +37,7 @@ function fileHostRoutes(app){
   console.log('RUNNING AS FILE HOST');
 
   // set res header to upload to another server
-  if(process.env.ALLOW_COR){
+  if(process.env.ALLOW_COR == 'true'){
     app.use(function (req, res, next) {
 
       res.setHeader('Access-Control-Allow-Origin', '*');
@@ -50,9 +50,9 @@ function fileHostRoutes(app){
   }
 
   app.post('/upload', uploadingController.postFileUpload);
-// app.post('/admin/upload', authMiddleware.adminAuth, filehostController.adminUpload);
+  // app.post('/admin/upload', authMiddleware.adminAuth, filehostController.adminUpload);
 
-// edit thumbnails
+  // edit upload and thumbnails thumbnails
   app.post('/api/upload/:uniqueTag/edit', internalApiController.editUpload);
   app.post('/api/upload/:uniqueTag/thumbnail/delete', internalApiController.deleteUploadThumbnail);
 
@@ -229,6 +229,8 @@ function frontendRoutes(app){
   app.get('/account/livestreaming', passportConfig.isAuthenticated, accountFrontendController.livestreaming);
 
   app.get('/media/subscribed', passportConfig.isAuthenticated, accountFrontendController.subscriptions);
+  app.get('/media/subscribed/:page', passportConfig.isAuthenticated, accountFrontendController.subscriptions);
+
 
 
 
