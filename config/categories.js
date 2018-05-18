@@ -39,14 +39,6 @@ const categories = [
     subcategories: []
   },
   {
-    name: 'politics',
-    displayName: 'Politics',
-    subcategories: [
-      { name: 'leftwing', displayName: 'Leftwing' },
-      { name: 'rightwing', displayName: 'Rightwing'}
-    ]
-  },
-  {
     name: 'news',
     displayName: 'News',
     subcategories: []
@@ -54,6 +46,14 @@ const categories = [
   {
     name: 'uncategorized',
     displayName: 'Uncategorized'
+  },
+  {
+    name: 'politics',
+    displayName: 'Politics',
+    subcategories: [
+      { name: 'leftwing', displayName: 'Leftwing' },
+      { name: 'rightwing', displayName: 'Rightwing'}
+    ]
   },
 ];
 
