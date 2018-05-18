@@ -4,10 +4,7 @@ for category in categories
     if uploads[category.name] && uploads[category.name].length && uploads[category.name].length > 0
         div.category.col-sm-12
             a.upload-user-text(href=`${addressPrepend}/${highlightedNumber}?category=${category.name}`)
-                if user && (user.role == 'admin' || user.role == 'moderator')
-                    h2 #{category.displayName} (#{uploads[category.name].length})
-                else
-                    h2 #{category.displayName}
+                h2 #{category.displayName}
                 br
 
             // begin individual upload section
