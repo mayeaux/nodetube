@@ -1,6 +1,30 @@
 extends layout
 
 block content
+  style.
+    .dropdown {
+      text-align: center;
+    }
+
+    .button, .dropdown-menu {
+      margin: 10px auto
+    }
+
+    .dropdown-menu {
+      width: 200px;
+      left: 50%;
+      margin-left: -100px;
+    }
+
+    input[type=checkbox] {
+      /* Double-sized Checkboxes */
+      -ms-transform: scale(2); /* IE */
+      -moz-transform: scale(2); /* FF */
+      -webkit-transform: scale(2); /* Safari and Chrome */
+      -o-transform: scale(2); /* Opera */
+      padding: 10px;
+    }
+
   br
   div.center-block.text-center
       div.upload-information
@@ -67,7 +91,39 @@ block content
                         | Private
                     br
 
-                  label(for='rating') Rating
+                  div.dropdown(style="display:inline;padding-right:15px;")
+                    button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px;")
+                      | Category: &nbsp
+                      span.caret
+
+                    ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1' style="margin-top:-17px;margin-left:-81px;")
+                      each category in categories
+                        li(role='presentation')
+                          a.categoryValue(style="cursor:pointer;" data-value=category.name data-displayname=category.displayName) #{category.displayName}
+
+                    br
+
+                  br
+                  div.categoryName(style="display:none")
+                    h5.categoryDisplayName Category: $Thing
+                    br
+
+                  // subcategories
+                  each category in categories
+                    if category.subcategories && category.subcategories.length > 1
+                      div.subcategories(class=category.name style="display:none;")
+                        label(for='subcategory') Subcategory (Optional)
+                        each subcategory in category.subcategories
+                            div.radio-buttons.subcategory(class=category.name style="display:none")
+                              label.radio-inline
+                                input.radio-button(type='radio', name='subcategory' value=subcategory.name required)
+                                | #{subcategory.displayName}
+
+                              br
+                              br
+                        br
+
+                  label(for='rating') Rating (*)
                   br
                   div.radio-buttons.rating
                     label.radio-inline
@@ -120,6 +176,33 @@ block content
   script(src='/js/lib/resumable.js')
   script.
     $(document).ready(function () {
+
+      var selectedCategory;
+      var selectedSubcategory;
+
+      // when a new category is selected
+      $('.categoryValue').click(function(){
+        var value = $(this).data("value");
+
+        var displayName = $(this).data("displayname");
+
+        // hide all subcategories
+        $('.subcategories').hide();
+
+        selectedCategory = value;
+
+        // display selected category
+        $('.categoryDisplayName').text('Category: ' + displayName)
+
+        // show subcategories if they exist
+        $('.categoryName').show();
+        $('.' + value).show();
+
+
+
+
+        console.log(value, displayName);
+      })
 
       // HIDE GIF
        $(".upload-gif").hide();
@@ -197,6 +280,8 @@ block content
           var visibility = $(".visilibity label input[type='radio']:checked").val();
           var rating = $(".rating label input[type='radio']:checked").val();
 
+          var subcategory = $(".subcategory label input[type='radio']:checked").val();
+
           if(!rating){
             return swal('Please select a rating')
           }
@@ -233,7 +318,9 @@ block content
             description,
             uploadToken,
             visibility,
-            rating
+            rating,
+            category: selectedCategory,
+            subcategory
           };
 
           r.upload();

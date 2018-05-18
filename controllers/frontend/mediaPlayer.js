@@ -17,15 +17,13 @@ const Report = require('../../models/index').Report;
 
 const uploadHelpers = require('../../lib/helpers/settings');
 
-// console.log(uploadHelpers)
 
-const uploadServer = uploadHelpers.uploadServer;
+const uploadServer  = uploadHelpers.uploadServer;
 
-// console.log('UPLOAD SERVER: ' + uploadServer);
-
+console.log('UPLOAD SERVER: ' + uploadServer);
 
 
-const mongooseHelpers = require('../../lib/caching/mongooseHelpers');
+const mongooseHelpers = require('../../caching/mongooseHelpers');
 
 
 /**

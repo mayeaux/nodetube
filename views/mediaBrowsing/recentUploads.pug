@@ -1,0 +1,75 @@
+extends ../layout
+
+
+block content
+        style.
+            .dropdown {
+                text-align: center;
+            }
+
+            input[type=checkbox] {
+                /* Double-sized Checkboxes */
+                -ms-transform: scale(2); /* IE */
+                -moz-transform: scale(2); /* FF */
+                -webkit-transform: scale(2); /* Safari and Chrome */
+                -o-transform: scale(2); /* Opera */
+                padding: 10px;
+            }
+
+        br
+
+        div.center-block.text-center.col-sm-12
+
+
+            a.upload-user-text(href=`${addressPrepend}`)
+                h1 Recently Uploaded
+
+            br
+
+            if category
+                include ../viewPartials/categoryDropdown
+
+            include ../viewPartials/mediaDropdown
+
+            include ../viewPartials/sensitivityFilterDropdown
+
+            include ../viewPartials/pagination
+
+            br
+
+        hr
+        div.uploads
+            if !isACategory
+                include ../viewPartials/categoryOverviews
+
+            else
+                each upload in uploads
+                    if upload.uploader
+                        div.col-sm-4(style="text-align:center;height:310px;")
+                            div(style="width:100%")
+                                include ../viewPartials/uploadThumbnail
+
+                                include ../viewPartials/uploadDetails
+
+                                if user && user.role == 'admin'
+                                    div.changeRating(style="margin-top:30px;")
+                                        input.ratingChanged(type="checkbox" value=`${upload._id}`)
+
+            include ../viewPartials/adminSensitivityButtons
+
+            div.center-block.text-center.col-sm-12
+
+                        div.dropdown
+
+                            include ../viewPartials/pagination
+
+
+        if user && user.role == 'admin'
+            include ../viewPartials/adminChangeRatingsJs
+
+        include ../viewPartials/changeSensitivityFilterJs
+
+        script.
+          balanceText();
+
+        include ../viewPartials/mouseOverJavascript

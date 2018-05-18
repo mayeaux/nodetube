@@ -1,46 +1,17 @@
 var MailListener = require("mail-listener2");
 
 const dotenv = require('dotenv');
-const mongoose = require('mongoose');
 
 const ReceivedEmail = require('../../models').ReceivedEmail;
-
-/** connect to MongoDB **/
-const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/april15pewtube';
-
-mongoose.Promise = global.Promise;
-
-mongoose.Promise = global.Promise;
-mongoose.connect(mongoUri, {
-  keepAlive: true,
-  reconnectTries: Number.MAX_VALUE,
-  useMongoClient: true
-});
-
-// mongoose.set('debug', true);
-mongoose.connection.on('error', (err) => {
-  console.error(err);
-  console.log('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'));
-  process.exit();
-});
-
-console.log('Connected to ' + mongoUri);
 
 // have to run from project directory to work
 dotenv.load({ path: '.env.private' });
 dotenv.load({ path: '.env.settings' });
 
-const imapUsername = process.env.EMAIL_ADDRESS;
-const imapPassword = process.env.PEWTUBE_VERIFY_EMAIL_PASSWORD;
-const imapHost = process.env.EMAIL_HOST;
-const imapPort = process.env.EMAIL_PORT;
-
-console.log(imapPassword, imapUsername, imapHost);
-
-const mailListenerSettings = {
+let mailListenerSettings = {
   tls: true,
   connTimeout: 10000, // Default by node-imap
-  debug: console.log, // Or your custom function with only one incoming argument. Default: null
+  // debug: console.log, // Or your custom function with only one incoming argument. Default: null
   tlsOptions: { rejectUnauthorized: false },
   mailbox: "INBOX", // mailbox to monitor
   markSeen: true, // all fetched email will be marked as seen and not fetched next time
@@ -50,55 +21,77 @@ const mailListenerSettings = {
   attachmentOptions: { directory: "attachments/" } // specify a download directory for attachments
 };
 
+/** whether or not you should save seen as well**/
+let saveSeen = process.env.SAVE_SEEN_EMAILS || true;
+if(saveSeen){
+  mailListenerSettings.searchFilter = ['SEEN'] // the search filter being used after an IDLE notification has been retrieved
+};
+
+
 const copyrightEmailCredentials = {
-  username: imapUsername,
-  password: imapPassword,
-  host: imapHost,
-  port: imapPort,
+  username: process.env.COPYRIGHT_EMAIL_ADDRESS,
+  password: process.env.COPYRIGHT_EMAIL_PASSWORD,
+  host: process.env.COPYRIGHT_EMAIL_IMAP_HOST,
+  port: process.env.COPYRIGHT_EMAIL_IMAP_PORT,
 };
 
 const supportEmailCredentials = {
-  username: imapUsername,
-  password: imapPassword,
-  host: imapHost,
-  port: imapPort,
+  username: process.env.SUPPORT_EMAIL_ADDRESS,
+  password: process.env.SUPPORT_EMAIL_PASSWORD,
+  host: process.env.SUPPORT_EMAIL_IMAP_HOST,
+  port: process.env.SUPPORT_EMAIL_IMAP_PORT,
 };
 
-const ceoEmailCredentials = {
-  username: imapUsername,
-  password: imapPassword,
-  host: imapHost,
-  port: imapPort,
-};
-
-
-
-var mailListener = new MailListener(Object.assign(ceoEmailCredentials, mailListenerSettings));
-
-mailListener.start(); // start listening
-
-// stop listening
-//mailListener.stop();
-
-mailListener.on("server:connected", function(){
-  console.log("imapConnected");
-
-});
-
-mailListener.on("server:disconnected", function(){
-  console.log("imapDisconnected");
-});
-
-mailListener.on("error", function(err){
-  console.log(err);
-});
+let mailListeners = [];
 
 (async function(){
 
-  const existingEmails = await ReceivedEmail.find({});
+const existingEmails = await ReceivedEmail.find({});
 
-  const emailIds = existingEmails.map(function(email){
-    return email.emailId
+const emailIds = existingEmails.map(function(email){
+  return email.emailId
+});
+
+var copyrightEmailListener = new MailListener(Object.assign(copyrightEmailCredentials, mailListenerSettings));
+
+var supportEmailListener = new MailListener(Object.assign(supportEmailCredentials, mailListenerSettings));
+
+const copyrightEmailObject = {
+  email: process.env.COPYRIGHT_EMAIL_ADDRESS,
+  listener: copyrightEmailListener
+};
+
+const supportEmailObject = {
+  email: process.env.SUPPORT_EMAIL_ADDRESS,
+  listener: supportEmailListener
+};
+
+mailListeners.push(copyrightEmailObject);
+
+mailListeners.push(supportEmailObject);
+
+for(const emailObject of mailListeners){
+
+  mailListener = emailObject.listener;
+
+  const toEmailAddress = emailObject.email;
+
+  mailListener.start(); // start listening
+
+  // stop listening
+  //mailListener.stop();
+
+  mailListener.on("server:connected", function(){
+    console.log("imapConnected");
+
+  });
+
+  mailListener.on("server:disconnected", function(){
+    console.log("imapDisconnected");
+  });
+
+  mailListener.on("error", function(err){
+    console.log(err);
   });
 
   // seqno just an incrementing index
@@ -119,7 +112,7 @@ mailListener.on("error", function(err){
 
     const emailObject = {
       emailId,
-      toEmailAddress: imapUsername,
+      toEmailAddress,
       fromEmailAddress,
       subject,
       text,
@@ -133,6 +126,7 @@ mailListener.on("error", function(err){
     console.log('Email saved');
 
   });
+}
 
 }());
 

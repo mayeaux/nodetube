@@ -54,7 +54,7 @@ block content
                         span.pewtube-pro PLUS
             div.user-stats.col-sm-6(style="margin-top:14px")
                 div.col-sm-4
-                    h4 Uploads: #{channel.uploads.length} &nbsp &nbsp
+                    h4 Uploads: #{userUploadAmount} &nbsp &nbsp
                 div.col-sm-4
                     h4 Views : #{channel.totalViews}
                 if channel.receivedSubscriptions
@@ -136,27 +136,16 @@ block content
                 li
                     a(href=`/user/${channel.channelUrl}?orderBy=oldToNew`) Old To New
 
-        div.dropdown(style="display:inline")
-            button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
-                if siteVisitor.filter == 'allAges'
-                    | Rating: SFW &nbsp
-                else if siteVisitor.filter == 'mature'
-                    | Rating: SFW/NSWF &nbsp
-                span.caret
+        include ../viewPartials/sensitivityFilterDropdown
 
-            ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1')
-                li(role='presentation')
-                    if siteVisitor.filter == 'mature'
-                        a.changeFilterButton(value="allAges" href="#") SFW
-                    else if siteVisitor.filter == 'allAges'
-                        a.changeFilterButton(value="mature" href="#") SFW/NFSW
+        include ../viewPartials/channelOverviewPagination
 
     br
     br
 
     each upload in channel.uploads
         div.col-sm-4(style="text-align:center;height:360px")
-            if isUser || isAdmin || user.role == 'moderator'
+            if isUser || isAdmin || ( user && user.role == 'moderator' )
                 div.editFileButtons
                     form.editLink(action="/api/upload/delete" method="POST" style="display:inline-block")
                         input(type='hidden', name='_csrf', value=_csrf)
@@ -167,37 +156,9 @@ block content
                             button.btn.btn-primary Edit
 
 
-            // TODO: Sub out thumbnail here
-            a(href=`/user/${channel.channelUrl}/${upload.uniqueTag}` style="text-decoration:none;color:black;")
-                if upload.thumbnails && upload.thumbnails.custom
-                    img.preview-image(src=`${uploadServer}/${channel.channelUrl}/${upload.thumbnails.custom}` style="width:inherit;max-width:302px;")
+            include ../viewPartials/uploadThumbnail
 
-                else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.generated
-                    img.preview-image(src=`${uploadServer}/${channel.channelUrl}/${upload.thumbnails.generated}` style="width:inherit;max-width:302px;")
-
-                else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.medium
-                    img.preview-image(src=`${uploadServer}/${channel.channelUrl}/${upload.thumbnails.medium}` style="width:inherit;max-width:302px;")
-
-                else if upload.fileType == 'audio'
-                    img.preview-image(src='/images/audio.svg')
-
-                else if upload.fileType == 'image'
-                    img.preview-image(src=`${uploadServer}/${channel.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="width:inherit;max-width:302px;")
-
-                else if upload.fileType == 'unknown'
-                    img.preview-image(src='/images/no_img.png')
-
-                div
-                    p.upload-title-text #{upload.title}
-
-            div.upload-details(style="width:80%;margin:0 auto")
-                div.views
-                    p.views-text #{upload.legitViewAmount} Views
-                div.uploaded-by
-                    p #{upload.fileType.charAt(0).toUpperCase() + upload.fileType.slice(1)} uploaded #{upload.timeAgo}
-                if user && (user.role == 'admin' || user.role == 'moderator') && upload.visibility == 'removed'
-                    div
-                        h4(style="margin-top:-5px;margin-bottom:-18px;") DELETED
+            include ../viewPartials/uploadDetails
 
             if user && user.role == 'admin'
                 div.changeRating(style="margin-top:30px;")
@@ -285,60 +246,7 @@ block content
             console.log(rating);
           })
 
-    script.
-      $('.changeFilterButton').on('click', function () {
-
-        function changeUserRatingFilter(value) {
-
-          console.log('running here')
-
-          var data = {
-            filter: value
-          }
-
-          $.ajax({
-            type: 'POST',
-            url: `/api/changeUserFilter`, // todo: change to user filter
-            data,
-            success: function (data) {
-              if (data == 'success') {
-                window.location.reload(true);
-              } else {
-                swal("Something didn't work, please contact PewTube at ceo@pew.tube or via the widget in the bottom right corner")
-              }
-              console.log(data);
-            },
-            error: function (err) {
-              console.log(err);
-            }
-          });
-
-        }
-
-        const value = $(this).attr('value');
-
-        if (value == 'mature') {
-
-          swal({
-            title: '',
-            text: 'Please confirm you are 18 or older and willing to see \n not safe for work content',
-            showCancelButton: true,
-            confirmButtonText: "Confirm Age",
-          }).then(function (result) {
-
-            console.log(result);
-
-            if (result.value == true) {
-              changeUserRatingFilter(value)
-            }
-          })
-
-        } else {
-          changeUserRatingFilter(value);
-        }
-
-        console.log('here')
-      })
+    include ../viewPartials/changeSensitivityFilterJs
 
     script.
       $(document).on({

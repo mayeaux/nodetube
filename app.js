@@ -34,29 +34,39 @@ const _ = require('lodash');
 const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
 
+if(process.env.SHOW_LOG_LOCATION == 'true'){
+  /** Code to find errant console logs **/
+  ['log', 'warn', 'error'].forEach(function(method) {
+    var old = console[method];
+    console[method] = function() {
+      var stack = (new Error()).stack.split(/\n/);
+      // Chrome includes a single "Error" line, FF doesn't.
+      if (stack[0].indexOf('Error') === 0) {
+        stack = stack.slice(1);
+      }
+      var args = [].slice.apply(arguments).concat([stack[1].trim()]);
+      return old.apply(console, args);
+    };
+  });
+}
+
+
 /** Load environment variables from .env file, where API keys and passwords are configured. **/
 dotenv.load({path: '.env.settings'});
 dotenv.load({path: '.env.private'});
 
 const amountOfProcesses = process.env.WEB_CONCURRENCY || numCPUs;
 
+if(process.env.CACHING_ON == 'true'){
+  const runcaching = require('./caching/runCaching')
+}
 
-// /** Code to find errant console logs **/
-// ['log', 'warn', 'error'].forEach(function(method) {
-//   var old = console[method];
-//   console[method] = function() {
-//     var stack = (new Error()).stack.split(/\n/);
-//     // Chrome includes a single "Error" line, FF doesn't.
-//     if (stack[0].indexOf('Error') === 0) {
-//       stack = stack.slice(1);
-//     }
-//     var args = [].slice.apply(arguments).concat([stack[1].trim()]);
-//     return old.apply(console, args);
-//   };
-// });
+const settings = require('./lib/helpers/settings');
 
+const saveAndServeFilesDirectory = settings.saveAndServeFilesDirectory;
 
-console.log(`Running with this many processes: ${amountOfProcesses}`);
+console.log(`SAVE AND SERVE FILES DIRECTORY: ${saveAndServeFilesDirectory}`);
+
 
 if (cluster.isMaster) {
   for (let i = 0; i < amountOfProcesses; i++) {
@@ -65,6 +75,8 @@ if (cluster.isMaster) {
   }
 
 } else {
+
+  console.log(`Running with this many processes: ${amountOfProcesses}`);
 
   (async function() {
 
@@ -75,6 +87,7 @@ if (cluster.isMaster) {
     const customMiddleware = require('./middlewares/custom');
     const widgetMiddleware = require('./middlewares/shared/widgets');
 
+    const missedFile404Middleware = require('./middlewares/shared/missedFile404Middleware');
 
     //
     process.on('uncaughtException', (err) => {
@@ -118,11 +131,13 @@ if (cluster.isMaster) {
     mongoose.Promise = global.Promise;
     mongoose.connect(mongoUri, {
       keepAlive: true,
-      reconnectTries: Number.MAX_VALUE,
-      useMongoClient: true
+      reconnectTries: Number.MAX_VALUE
     });
 
-    // mongoose.set('debug', true);
+    if(process.env.MONGOOSE_DEBUG == 'true' || process.env.MONGOOSE_DEBUG == 'on'){
+      mongoose.set('debug', true);
+    }
+
     mongoose.connection.on('error', (err) => {
       console.error(err);
       console.log('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'));
@@ -131,6 +146,9 @@ if (cluster.isMaster) {
 
     console.log('Connected to ' + mongoUri);
 
+    if(process.env.EMAIL_LISTENER_ON == 'true'){
+      const emailListenerScript = require('./scripts/shared/saveUnseenEmails')
+    }
 
     /** create express app **/
     const app = express();
@@ -161,20 +179,30 @@ if (cluster.isMaster) {
 
     if(process.env.NODE_ENV == 'development'){
       app.use(logger('dev'));
+    } else if (process.env.NODE_ENV == 'production'){
+      app.use(logger('dev'));
     }
 
-    // run from local pewtube media backups
-    if (process.env.LOCAL_BACKUP) {
-      app.use('/uploads', express.static(path.join(process.env.LOCAL_BACKUP, 'uploads'), {maxAge: 31557600000}));
+    console.log(`SERVE UPLOADS PATH: ${saveAndServeFilesDirectory}`);
+
+    if(process.env.SAVE_AND_SERVE_FILES == 'true'){
+      app.use('/uploads', express.static(saveAndServeFilesDirectory, {maxAge: 31557600000}));
     }
 
-    // use local uploads directory as file host
-    app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {maxAge: 31557600000}));
-
+    if(process.env.LOCAL_BACKUP_ON == 'true'){
+      console.log(`ALLOWING FILE SERVED VIA LOCAL DRIVE: ${process.env.LOCAL_BACKUP_DIRECTORY}`);
+      app.use('/uploads', express.static(process.env.LOCAL_BACKUP_DIRECTORY, {maxAge: 31557600000}));
+    }
 
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(expressValidator());
+
+    app.use(express.static(path.join(__dirname, 'public'), {maxAge: 31557600000}));
+
+    app.use(express.static(path.join(__dirname, 'hls'), {}));
+
+    app.use(missedFile404Middleware);
 
     app.use(function (err, req, res, next) {
       console.log('THING');
@@ -260,8 +288,6 @@ if (cluster.isMaster) {
       res.header('Pragma', 'no-cache');
       next();
     }
-
-    app.use(express.static(path.join(__dirname, 'public'), {maxAge: 31557600000}));
 
     app.use(multipart());
 

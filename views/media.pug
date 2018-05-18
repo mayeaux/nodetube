@@ -70,7 +70,7 @@ block content
                         | Quality: Low
                         span.caret
 
-                    ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1')
+                    ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1' style="cursor:pointer;")
                         li(role='presentation')
                             a.low-quality Low
                         li(role='presentation')
@@ -437,53 +437,8 @@ block extra_footer_js
 
     }
 
-  if user
-    script.
-        // change video qualities
 
-        var highQualityVideo = '#{uploadServer}/#{upload.uploader.channelUrl}/#{upload.uniqueTag}-high.mp4'
-
-        var fileType = '#{upload.fileType}'
-
-        if (fileType == 'video') {
-            var media = $(fileType)[0];
-        }
-        var userDefaultQuality = '#{user.defaultQuality}'
-
-        if (userDefaultQuality == 'high') {
-          $('.video-source').attr('src', highQualityVideo)
-          media = $(fileType)[0];
-          media.load();
-
-          $('#dropdownMenu1').text('Quality: High')
-          $('#dropdownMenu1').attr('quality', 'high');
-          $("#dropdownMenu1").append("<span class='caret'></span>");
-        }
-  else
-    script.
-
-      // change video qualities
-
-      var highQualityVideo = '#{uploadServer}/#{upload.uploader.channelUrl}/#{upload.uniqueTag}-high.mp4'
-
-      var fileType = '#{upload.fileType}'
-
-      if (fileType == 'video') {
-        var media = $(fileType)[0];
-      }
-
-      var siteVisitorDefaultQuality = '#{siteVisitor.defaultQuality}'
-
-      if (siteVisitorDefaultQuality == 'high') {
-        $('.video-source').attr('src', highQualityVideo)
-        media = $(fileType)[0];
-        media.load();
-
-        $('#dropdownMenu1').text('Quality: High')
-        $('#dropdownMenu1').attr('quality', 'high');
-        $("#dropdownMenu1").append("<span class='caret'></span>");
-      }
-
+  include ./mediaPlayerPartials/changeQualityJs
 
   script.
 

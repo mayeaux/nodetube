@@ -1,5 +1,6 @@
 const ReceivedEmail = require('../../models/index').ReceivedEmail;
 const Report = require('../../models/index').Report;
+const _ = require('lodash');
 
 exports.getReceivedEmails = async (req, res) => {
 
@@ -56,9 +57,8 @@ exports.getReceivedEmail = async (req, res) => {
 
 exports.getReports = async (req, res) => {
 
-  let reports = await Report.find({
-
-  }).populate('reportingUser upload uploadingUser');
+  let reports = await Report.find({ reportingUser: { $exists: true } }).populate('reportingUser upload uploadingUser')
+    .sort({createdAt: -1});
 
   res.render('moderator/reports', {
     title: 'Reports',

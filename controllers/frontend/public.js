@@ -1,5 +1,7 @@
 const redisClient = require('../../config/redis');
 
+const Upload = require('../../models/index').Upload;
+
 // TODO: pull into its own func
 let indexResponse;
 async function setIndex(){
@@ -7,11 +9,13 @@ async function setIndex(){
   console.log('got index cache');
 }
 
-setIndex();
-setInterval(function(){
-  setIndex()
-}, 1000 * 60 * 2);
-
+// get the index if its not a filehost
+if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false'){
+  setIndex();
+  setInterval(function(){
+    setIndex()
+  }, 1000 * 60 * 2);
+}
 
 /**
  * GET /

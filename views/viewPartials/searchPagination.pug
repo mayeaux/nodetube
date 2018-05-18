@@ -1,0 +1,11 @@
+nav.center-block.text-center(aria-label='Page navigation example')
+    ul.pagination
+        li.page-item
+            a.page-link(href=`/search?searchQuery=${searchQuery}&orderBy=${orderBy}&mediaType=${mediaType}&searchType=${searchType}&page=${previousNumber}`) <
+
+        each number in numbersArray
+            li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
+                a.page-link(href=`/search?searchQuery=${searchQuery}&orderBy=${orderBy}&mediaType=${mediaType}&searchType=${searchType}&page=${number}`) #{number}
+
+        li.page-item
+            a.page-link(href=`/search?searchQuery=${searchQuery}&orderBy=${orderBy}&mediaType=${mediaType}&searchType=${searchType}&page=${nextNumber}`) >

@@ -1,0 +1,122 @@
+script.
+  // REACT FUNCTIONALITY
+  var activeEmoji = '#{currentReact}'
+
+  var upload = '#{upload._id}'
+  var csrf = '#{_csrf}'
+
+  var height = 50;
+  var width = 50;
+  var duration = 400;
+
+  var changeSize = 0.33
+
+  $('.react img').on('mouseover', function() {
+
+    $(this).animate({
+      width: width + (width * changeSize)
+    },{
+      duration, queue: false
+    });
+
+    $(this).animate({
+      height: height + (height * changeSize )
+    },{
+      duration, queue: false
+    });
+  })
+
+  $('.react img').on('mouseout', function () {
+
+    $(this).animate({
+      width
+    }, {
+      duration, queue: false
+    });
+
+    $(this).animate({
+      height
+    }, {
+      duration, queue: false
+    });
+
+  })
+
+
+  $('.react img').on('touchstart click', function (e) {
+    if(!user){
+      return swal({
+          title: "Please register to react to content",
+          type: "info",
+          showCancelButton: true,
+          confirmButtonClass: "btn-danger",
+          confirmButtonText: "Register now",
+          cancelButtonText: "Return to media",
+          closeOnConfirm: false,
+          closeOnCancel: false
+        },
+        function (isConfirm) {
+          if (isConfirm) {
+            window.location.href = "/signup";
+          } else {
+            swal.close()
+          }
+        });
+    }
+
+
+
+    // dont move browser
+    e.preventDefault();
+
+
+    // change opacities
+    $('.react img').css({
+      opacity: '0.565'
+    })
+    $(this).css({
+      opacity: 1
+    })
+
+    // note active emoji
+    var oldEmoji = activeEmoji
+    var emoji = $(this).attr('class')
+    activeEmoji = emoji;
+
+    // decrement old emoji if needed
+    if(oldEmoji){
+      var oldEmojiValue = $('p.' + oldEmoji).text()
+      console.log(oldEmojiValue)
+
+      var decrementedValue = oldEmojiValue - 1
+      var updateEmoji = $('p.' + oldEmoji).text(decrementedValue)
+
+    }
+
+    var newEmojiValue = $('p.' + emoji).text()
+    var incrementedValue = parseInt(newEmojiValue) + 1
+    console.log(newEmojiValue)
+    var updatedEmojiValue = $('p.' + emoji).text(incrementedValue)
+
+    var data = {
+      _csrf : csrf,
+      emoji
+    }
+
+    $.ajax({
+      type: 'POST',
+      url: `/api/react/${upload}/${user}`,
+      data,
+      success: function (data) {
+        console.log(data);
+      },
+      error: function (err) {
+        console.log(err);
+      }
+    });
+
+
+    // app.post('/api/react/:upload/:user', internalApiController.react);
+
+
+  })

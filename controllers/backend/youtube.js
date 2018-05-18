@@ -8,7 +8,7 @@ const path = require('path');
 const captchapng = require('captchapng');
 const _ = require('lodash');
 const reCAPTCHA = require('recaptcha2');
-const mongooseHelper = require('../../lib/caching/mongooseHelpers');
+const mongooseHelper = require('../../caching/mongooseHelpers');
 var formidable = require('formidable');
 const mv = require('mv');
 

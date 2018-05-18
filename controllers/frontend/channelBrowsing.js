@@ -1,7 +1,7 @@
 const pagination = require('../../lib/helpers/pagination');
 const _ = require('lodash');
 
-const getFromCache = require('../../lib/caching/getFromCache');
+const getFromCache = require('../../caching/getFromCache');
 
 const User = require('../../models/index').User;
 
@@ -109,7 +109,7 @@ exports.channelsBySubs = async (req, res) => {
     let allChannels = await User.find({
       status: { $ne: 'restricted' },
       'receivedSubscriptions.0': { $exists: true }
-    }).populate('uploads').exec();
+    });
 
     allChannels = allChannels.sort(function(a, b) {
       return b.receivedSubscriptions.length - a.receivedSubscriptions.length;
@@ -136,7 +136,7 @@ exports.channelsBySubs = async (req, res) => {
 
 
 /**
- * GET /channels
+ * GET /channelsBySubs
  * Channels page with ability to sort by views via query params
  */
 exports.channels = async (req, res) => {

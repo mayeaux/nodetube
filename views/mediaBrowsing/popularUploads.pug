@@ -1,0 +1,223 @@
+extends ../layout
+
+block content
+    div
+        include ../viewPartials/popularUploadsNavbar
+
+    h1.center-block.text-center #{englishString} (#{viewAmountInPeriod})
+
+    p
+
+        h2.center-block.text-center #{timeAgoEnglish}
+
+        div.center-block.text-center.col-sm-12
+
+
+            br
+
+            //br
+
+            if category
+                include ../viewPartials/categoryDropdown
+
+            include ../viewPartials/popularUploadsMediaDropdown
+
+            include ../viewPartials/sensitivityFilterDropdown
+
+
+        include ../viewPartials/popularUploadsPagination
+
+
+        br
+        div.uploads
+            if !isACategory
+                include ../viewPartials/categoryOverviews
+
+            else
+                each upload in uploads
+                    div.col-sm-4(style="text-align:center;height:360px;")
+
+                        include ../viewPartials/uploadThumbnail
+
+                        include ../viewPartials/uploadDetails
+
+                        // include ../viewPartials/uploadDetailsPopular
+
+
+
+
+                        if user && user.role == 'admin'
+                            div.changeRating(style="margin-top:12px;")
+                                input.ratingChanged(type="checkbox" value=`${upload._id}`)
+
+
+            include ../viewPartials/adminSensitivityButtons
+
+
+        if uploads
+            div.col-sm-12
+                include ../viewPartials/popularUploadsPagination
+
+
+    if user && user.role == 'admin'
+        script.
+          $('.change-rating').on('click', function () {
+            var checkedValues = $('input:checkbox:checked').map(function () {
+              return this.value;
+            }).get();
+
+            var rating = $(this).attr('rating');
+            var csrf = '#{_csrf}'
+
+
+            var data = {
+              rating: rating,
+              uploads: checkedValues,
+              csrf: csrf
+            }
+
+            $.ajax({
+              type: 'POST',
+              url: `/admin/changeRatings`, // todo: change to user filter
+              data,
+              success: function (data) {
+                if (data == 'success') {
+                  window.location.reload(true);
+                } else {
+                  swal("Something didn't work, please contact PewTube at ceo@pew.tube or via the widget in the bottom right corner")
+                }
+                console.log(data);
+              },
+              error: function (err) {
+                console.log(err);
+              }
+            });
+
+
+            console.log(rating);
+          })
+
+    script.
+      $(document).ready(function (event) {
+
+        var filter = '#{filter}';
+
+        console.log(filter)
+
+        var filterLabel = $('.' + filter);
+        filterLabel.addClass('selected');
+        $('form > div').css('transform', 'translateX(' + $(filterLabel.children(0)).data('location') + ')');
+
+
+
+        $('form input').click(function (event) {
+          $('form > div').css('transform', 'translateX(' + $(this).data('location') + ')');
+          $(this).parent().siblings().removeClass('selected');
+          $(this).parent().addClass('selected');
+
+
+          var label = $(this).parent();
+
+          var classes = label.attr('class');
+
+          console.log(classes);
+
+          var classList = classes.split(/\s+/);
+
+          console.log(classList);
+
+          var data = {}
+
+          $.each(classList, function (index, item) {
+            if (item === 'allAges') {
+              data.filter = 'allAges'
+
+              $.ajax({
+                type: 'POST',
+                url: `/api/changeUserFilter`,
+                data,
+                success: function (data) {
+                  window.location.reload(true);
+
+                  console.log(data);
+                },
+                error: function (err) {
+                  console.log(err);
+                }
+              });
+
+              console.log('all ages')
+            } else if (item == 'mature'){
+              data.filter = 'mature'
+
+
+              $.ajax({
+                type: 'POST',
+                url: `/api/changeUserFilter`,
+                data,
+                success: function (data) {
+                  window.location.reload(true);
+
+                  console.log(data);
+                },
+                error: function (err) {
+                  console.log(err);
+                }
+              });
+
+              console.log('mature')
+
+            } else if (item == 'sensitive'){
+
+              data.filter = 'sensitive'
+
+
+              $.ajax({
+                type: 'POST',
+                url: `/api/changeUserFilter`,
+                data,
+                success: function (data) {
+                  window.location.reload(true);
+
+                  console.log(data);
+                },
+                error: function (err) {
+                  console.log(err);
+                }
+              });
+
+              console.log('sensitive')
+
+            }
+          });
+
+
+
+        });
+      });
+
+
+    include ../viewPartials/changeSensitivityFilterJs
+
+    script.
+      balanceText();
+
+    script.
+      $(document).on({
+        mouseenter: function () {
+          var width = $(this).width()
+          var height = $(this).height()
+
+
+          $(this).css("width", width * 1.10);
+          $(this).css("height", height * 1.10);
+
+        },
+        mouseleave: function () {
+          var width = $(this).width()
+          var height = $(this).height()
+
+          $(this).css("width", width / 1.10);
+          $(this).css("height", height / 1.10);
+        }
+      }, '.preview-image');

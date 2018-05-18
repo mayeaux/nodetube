@@ -17,7 +17,11 @@ const thumbnailServer = process.env.THUMBNAIL_SERVER || '';
 
 const pagination = require('../../lib/helpers/pagination');
 
-const mongooseHelper = require('../../lib/caching/mongooseHelpers');
+const mongooseHelper = require('../../caching/mongooseHelpers');
+
+const categories = require('../../config/categories');
+
+const uploadFilters = require('../../lib/mediaBrowsing/helpers');
 
 
 /**
@@ -41,7 +45,8 @@ exports.getFileUpload = async (req, res) => {
 
   res.render('upload', {
     title: 'File Upload',
-    uploadUrl
+    uploadUrl,
+    categories
   });
 };
 
@@ -113,27 +118,32 @@ exports.subscriptions = async (req, res) => {
  */
 exports.getChannel = async (req, res) => {
 
-  let orderBy;
-  if(!req.query.orderBy){
-    orderBy = 'newToOld'
-  } else {
-    orderBy = req.query.orderBy;
-  }
+  let page = req.query.page;
+  if(!page){ page = 1 }
+  page = parseInt(page);
 
-  if(orderBy !== 'popular' && orderBy !== 'newToOld' && orderBy !== 'oldToNew'){
-    console.log('doesnt connect');
-    orderBy = 'newToOld'
-  }
+  const channelUrl = req.params.channel;
 
-  let user;
+  const limit = 102;
+  const skipAmount = (page * limit) - limit;
+
+  const startingNumber = pagination.getMiddleNumber(page);
+  const numbersArray = pagination.createArray(startingNumber);
+  const previousNumber = pagination.getPreviousNumber(page);
+  const nextNumber = pagination.getNextNumber(page);
+
   try {
 
     // find the user per channelUrl
     user = await User.findOne({
-      channelUrl : new RegExp(["^", req.params.channel, "$"].join(""), "i")
-    }).populate('receivedSubscriptions').lean().exec();
+      channelUrl:  new RegExp(["^", req.params.channel, "$"].join(""), "i")
+    }).populate('receivedSubscriptions').lean()
+      .exec();
 
-    const viewerIsAdminOrMod = req.user.role == 'admin' || req.user.role == 'moderator';
+    let viewerIsAdminOrMod;
+    if(req.user && (req.user.role == 'admin' || req.user.role == 'moderator')){
+      viewerIsAdminOrMod = true;
+    }
 
     // 404 if nothing found
     if(!user && !viewerIsAdminOrMod){
@@ -162,7 +172,7 @@ exports.getChannel = async (req, res) => {
     // determine if its the user of the channel
     let isAdmin = false;
     let isUser = false;
-    const isModerator = req.user.role == 'isModerator';
+    const isModerator = req.user && ( req.user.role == 'isModerator' ) ;
     if(req.user){
       // its the same user
       isUser =  ( req.user._id.toString() == user._id.toString()  );
@@ -178,63 +188,38 @@ exports.getChannel = async (req, res) => {
       // status: 'completed'
     };
 
-    let uploads = await Upload.find(searchQuery).populate('checkedViews').sort({ createdAt : -1 })
-
-    // console.log(uploads.length);
-
-    user.uploads = await mongooseHelper.determineLegitViewsForUploads(uploads);
+    /** DB CALL TO GET UPLOADS **/
+    let uploads = await Upload.find(searchQuery).populate('').sort({ createdAt : -1 })
 
     if(!viewerIsAdminOrMod){
-      user.uploads = _.filter(user.uploads, function(upload){
+      uploads = _.filter(uploads, function(upload){
         return upload.visibility == 'public'
       });
     }
 
-    // console.log(user.uploads.length);
-
-
-    let totalViews = 0;
-    for(upload of user.uploads){
-      totalViews = totalViews + upload.legitViewAmount;
-    }
-
-    user.totalViews = totalViews;
-
     // remove unlisted videos if its not user and is not admin
     if(!isUser && !viewerIsAdminOrMod){
-      user.uploads = _.filter(user.uploads, function(upload){return upload.visibility == 'public'})
+      uploads = _.filter(uploads, function(upload){return upload.visibility == 'public'})
     }
 
     let uploadThumbnailUrl;
-    if(user.uploads && user.uploads[0]){
-      uploadThumbnailUrl =  user.uploads[0].thumbnailUrl;
+    if(uploads && uploads[0]){
+      uploadThumbnailUrl =  uploads[0].thumbnailUrl;
     }
 
     res.locals.meta.image = user.thumbnailUrl || uploadThumbnailUrl;
 
-    if(orderBy == 'popular'){
-      user.uploads = user.uploads.sort(function(a, b) {
-        return b.legitViewAmount - a.legitViewAmount;
-      });
+    let orderBy;
+    if(!req.query.orderBy){
+      orderBy = 'newToOld'
+    } else {
+      orderBy = req.query.orderBy;
     }
 
-    if(orderBy == 'newToOld'){
-
-      console.log('new to old')
-      user.uploads = user.uploads.sort(function(a, b) {
-        return b.createdAt - a.createdAt;
-      });
+    if(orderBy !== 'popular' && orderBy !== 'newToOld' && orderBy !== 'oldToNew'){
+      console.log('doesnt connect');
+      orderBy = 'newToOld'
     }
-
-    if(orderBy == 'oldToNew'){
-
-      console.log('old to new')
-      user.uploads = user.uploads.sort(function(a, b) {
-        return a.createdAt - b.createdAt;
-      });
-    }
-
-    // TODO: add pagination here
 
     let orderByEnglishString;
 
@@ -288,30 +273,56 @@ exports.getChannel = async (req, res) => {
     //   res.locals.meta.image = user.uploads[0].customThumbnailUrl || ;
     // }
 
-    let filter;
-    if(req.user){
-      filter = req.user.filter
-    } else {
-      filter = req.siteVisitor.filter
+    const userUploadAmount = uploads.length;
+
+    if(orderBy == 'newToOld'){
+
+      console.log('new to old')
+      uploads = uploads.sort(function(a, b) {
+        return b.createdAt - a.createdAt;
+      });
     }
 
-    if(filter == 'sensitive'){
-      // nothing to do
-    } else if (filter == 'mature'){
+    if(orderBy == 'oldToNew'){
 
-      // return ones not marked as sensitive
-      user.uploads = _.filter(user.uploads, function(upload){
-        return upload.rating !== 'sensitive'
+      console.log('old to new')
+      uploads = uploads.sort(function(a, b) {
+        return a.createdAt - b.createdAt;
       });
-
-    } else if (filter == 'allAges'){
-
-      // return ones not marked as sensitive or mature
-      user.uploads = _.filter(user.uploads, function(upload){
-        return upload.rating !== 'sensitive' && upload.rating !== 'mature'
-      });
-
     }
+
+    let filter = uploadFilters.getSensitivityFilter(req.user, req.siteVisitor);
+
+    uploads = uploadFilters.filterUploadsBySensitivity(uploads, filter);
+
+    const amountToOutput = limit;
+
+    uploads = uploadFilters.trimUploads(uploads, amountToOutput, skipAmount) ;
+
+    // populate upload.legitViewAmount
+    uploads = await Promise.all(
+      uploads.map(async function(upload){
+        upload = upload.toObject();
+        const checkedViews = await View.count({ upload: upload.id, validity: 'real' });
+        upload.legitViewAmount = checkedViews;
+        return upload
+      })
+    );
+
+    if(orderBy == 'popular'){
+      uploads = uploads.sort(function(a, b) {
+        return b.legitViewAmount - a.legitViewAmount;
+      });
+    }
+
+    let totalViews = 0;
+    for(upload of uploads){
+      totalViews = totalViews + upload.legitViewAmount;
+    }
+
+    user.totalViews = totalViews;
+
+    user.uploads = uploads;
 
     const siteVisitor = req.siteVisitor;
 
@@ -326,7 +337,14 @@ exports.getChannel = async (req, res) => {
       uploadServer,
       ips,
       siteVisitor,
-      isModerator
+      isModerator,
+      numbersArray,
+      previousNumber,
+      nextNumber,
+      startingNumber,
+      highlightedNumber: page,
+      userUploadAmount,
+      channelUrl: user.channelUrl
     });
 
 
@@ -455,7 +473,8 @@ exports.editUpload = async (req, res) => {
     thumbnailServer,
     rating: upload.rating,
     isAdminOrModerator,
-    hideRatingFrontend
+    hideRatingFrontend,
+    categories
   })
 
 
