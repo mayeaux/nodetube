@@ -16,7 +16,7 @@
     "test": "mocha --reporter spec",
     "postinstall": "npm rebuild node-sass",
     "eslint": "eslint **/*.js",
-    "dev": "nodemon app.js",
+    "dev": "nodemon -e pug app.js",
     "memory": "node --max-old-space-size=4096 app.js",
     "cache": "node --max-old-space-size=8000 caching/runCaching.js"
   },
