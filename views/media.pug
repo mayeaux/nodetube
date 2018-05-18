@@ -73,14 +73,19 @@ block content
             br
             // uploader byline
             h3.uploader-name(style="margin-top:25px;font-size:26px;")
-                a(href=`/user/${upload.uploader.channelUrl}`)
-                    if upload.uploader.thumbnailUrl || upload.uploader.customThumbnail
-                        if upload.uploader.customThumbnail
-                            img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` width="140px" height="140px")
-                        else
-                            img(src=`${uploadServer}/${upload.uploader._id}/unique.png` width="140px" height="140px")
-                br
-                br
+                if upload.uploader.customThumbnail
+                    a(href=`/user/${upload.uploader.channelUrl}`)
+
+                        img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` width="140px" height="140px")
+                        br
+                        br
+                else if upload.thumbnailUrl
+                    a(href=`/user/${upload.uploader.channelUrl}`)
+
+                        img(src=`${uploadServer}/${upload.uploader._id}/unique.png` width="140px" height="140px")
+                        br
+                        br
+
                 a(href=`/user/${upload.uploader.channelUrl}` style="color:rgb(51, 51, 51)") #{upload.uploader.channelName || upload.uploader.channelUrl}
                     if upload.uploader.verified == true
                         img(src="/images/verified.jpg" width="25px" height="25px" style="margin-left:3px;margin-top:-2px;margin-right:5px;")
@@ -109,6 +114,14 @@ block content
             if upload.uploader.plan == 'plus' && ( upload.uploader.channelUrl == 'pewtube' || upload.uploader.channelUrl == 'anthony')
                 br
                 button.donate.btn.btn-success(style="margin-bottom:-10px") Donate
+
+            div
+                // edit button
+                if ( user && user.channelUrl == upload.uploader.channelUrl ) ||  ( user && user.role == 'admin' )
+                    br
+                    a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}/edit`)
+                        button.btn.btn-success(style="margin-bottom:-10px") Edit
+
 
             // EXTRA BUTTONS
             div
