@@ -152,6 +152,8 @@ exports.popularUploads = async (req, res) => {
 
   let subcategory = req.query.subcategory || '';
 
+  const within = req.query.within;
+
   // setup page
   let page = req.params.page;
   if(!page){ page = 1 }
@@ -234,7 +236,8 @@ exports.popularUploads = async (req, res) => {
       isACategory : category,
       media,
       addressPrepend,
-      categoryObj
+      categoryObj,
+      within
     });
 
   } catch (err){

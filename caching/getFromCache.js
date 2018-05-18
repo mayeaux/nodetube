@@ -78,7 +78,7 @@ function sortUploadsByViews(uploads, timeRange) {
       return b.viewsWithin1month - a.viewsWithin1month;
     });
 
-  } else if(timeRange == 'allTime'){
+  } else if(timeRange == 'allTime' || timeRange == 'alltime'){
 
     return uploads.sort(function(a, b) {
       // TODO: maybe switch to all-time here

@@ -25,6 +25,9 @@ const buildObjects = helpers.buildObjects;
 
 async function getPopularUploads(){
 
+  // TODO: have to have a job to update upload's view amounts
+  // TODO: have to build 4 arrays of ~1000
+
   console.log(`Getting popular uploads`);
 
   const searchQuery = {
