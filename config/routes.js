@@ -195,15 +195,13 @@ function frontendRoutes(app){
   app.post('/reset/:token', accountBackendController.postReset);
   app.post('/signup', accountBackendController.postSignup);
 
-
-  // no passport check
-  app.post('/api/channel/thumbnail/delete', internalApiController.deleteChannelThumbnail);
-
+  /** include passport here because if its a file host, route is already loaded **/
+  app.post('/api/channel/thumbnail/delete', passportConfig.isAuthenticated, internalApiController.deleteChannelThumbnail);
+  app.post('/api/upload/:uniqueTag/edit', passportConfig.isAuthenticated, internalApiController.editUpload);
+  app.post('/api/upload/:uniqueTag/thumbnail/delete', passportConfig.isAuthenticated, internalApiController.deleteUploadThumbnail);
 
   /** API ENDPOINTS **/
-  app.post('/api/upload/:uniqueTag/edit', passportConfig.isAuthenticated, internalApiController.editUpload);
   app.post('/api/react/:upload/:user', passportConfig.isAuthenticated, internalApiController.react);
-  app.post('/api/upload/:uniqueTag/thumbnail/delete', passportConfig.isAuthenticated, internalApiController.deleteUploadThumbnail);
 
   // TODO: why admin controller? (fix)
   app.post('/api/upload/delete', passportConfig.isAuthenticated, adminBackendController.deleteUpload);

@@ -178,11 +178,24 @@ block content
       $('form').submit(function () {
         var $theForm = $(this);
 
-        var data = $theForm.serialize()
+        var input = $("<input>")
+          .attr("name", "category").val(category);
 
-        data = data + '&category=' + category;
+        $theForm.append(input)
+        // var data = $theForm.serialize()
+
+        var data = new FormData($(this));
+
+         // data = data + '&category=' + category;
+
+        console.log(category);
+
+        // data.append('category', category)
 
         console.log(data)
+
+        console.log('hello')
+
 
         // send xhr request
         $.ajax({
