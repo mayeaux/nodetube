@@ -34,20 +34,21 @@ const _ = require('lodash');
 const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
 
-
-// /** Code to find errant console logs **/
-// ['log', 'warn', 'error'].forEach(function(method) {
-//   var old = console[method];
-//   console[method] = function() {
-//     var stack = (new Error()).stack.split(/\n/);
-//     // Chrome includes a single "Error" line, FF doesn't.
-//     if (stack[0].indexOf('Error') === 0) {
-//       stack = stack.slice(1);
-//     }
-//     var args = [].slice.apply(arguments).concat([stack[1].trim()]);
-//     return old.apply(console, args);
-//   };
-// });
+if(process.env.SHOW_LOG_LOCATION == 'true'){
+  /** Code to find errant console logs **/
+  ['log', 'warn', 'error'].forEach(function(method) {
+    var old = console[method];
+    console[method] = function() {
+      var stack = (new Error()).stack.split(/\n/);
+      // Chrome includes a single "Error" line, FF doesn't.
+      if (stack[0].indexOf('Error') === 0) {
+        stack = stack.slice(1);
+      }
+      var args = [].slice.apply(arguments).concat([stack[1].trim()]);
+      return old.apply(console, args);
+    };
+  });
+}
 
 
 /** Load environment variables from .env file, where API keys and passwords are configured. **/
