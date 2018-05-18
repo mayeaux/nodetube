@@ -196,11 +196,13 @@ function frontendRoutes(app){
   app.post('/signup', accountBackendController.postSignup);
 
 
+  // no passport check
+  app.post('/api/channel/thumbnail/delete', internalApiController.deleteChannelThumbnail);
+
 
   /** API ENDPOINTS **/
   app.post('/api/upload/:uniqueTag/edit', passportConfig.isAuthenticated, internalApiController.editUpload);
   app.post('/api/react/:upload/:user', passportConfig.isAuthenticated, internalApiController.react);
-  app.post('/api/channel/thumbnail/delete', passportConfig.isAuthenticated, internalApiController.deleteChannelThumbnail);
   app.post('/api/upload/:uniqueTag/thumbnail/delete', passportConfig.isAuthenticated, internalApiController.deleteUploadThumbnail);
 
   // TODO: why admin controller? (fix)
