@@ -37,8 +37,8 @@ async function getRecentUploads(uploadType){
     'uploadUrl uniqueTag customThumbnailUrl fileExtension thumbnails reacts uncurated category subcategory';
 
   let recentUploads = await Upload.find(searchQuery).select(selectString).populate('uploader reacts')
-    .limit(1000)
     .sort({ createdAt : - 1 })
+    .limit(1000)
     .lean();
 
   console.log('Uploads received from database');
