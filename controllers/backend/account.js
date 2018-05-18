@@ -230,7 +230,10 @@ exports.postUpdateProfile = async (req, res, next)  => {
     mv(req.files.filetoupload.path, `./uploads/${req.user.channelUrl}/user-thumbnail${fileExtension}`, async function (err) {
 
       // upload thumbnail to b2
-      if(process.env.UPLOAD_TO_B2){
+      if(process.env.UPLOAD_TO_B2 == 'true'){
+
+        const bucket = process.env.BACKBLAZE_BUCKET;
+
         const response = await b2.uploadFileAsync(`./uploads/${req.user.channelUrl}/user-thumbnail${fileExtension}`, {
           name : `${req.user.channelUrl}/user-thumbnail${fileExtension}`,
           bucket // Optional, defaults to first bucket

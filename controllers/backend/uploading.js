@@ -223,6 +223,9 @@ exports.postFileUpload = async (req, res, next) => {
           let bitrate;
 
           // TODO: a bit ugly
+
+
+          // calculate bitrate for video, audio and converts
           if(fileType == 'video' || fileType == 'audio' || fileType == 'convert'){
             const response = await ffmpegHelper.ffprobePromise(`${uploadPath}/convertedFile`);
 
@@ -238,13 +241,14 @@ exports.postFileUpload = async (req, res, next) => {
           // where to save the files
           const channelUrlFolder = `${saveAndServeFilesDirectory}/${user.channelUrl}`;
 
+          // make user's folder if it doesn't exist yet
+          await mkdirp.mkdirpAsync(channelUrlFolder);
+
+          // file name to save
           const fileName = `${uniqueTag}${fileExtension}`;
 
           // where the file will be served from
           let fileInDirectory = `${channelUrlFolder}/${fileName}`;
-
-          // make user's folder if it doesn't exist yet
-          await mkdirp.mkdirpAsync(channelUrlFolder);
 
           console.log('done concatenating');
 
