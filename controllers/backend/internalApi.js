@@ -525,8 +525,6 @@ exports.editUpload = async (req, res, next) => {
 
       await upload.save();
 
-      req.flash('success', {msg: 'Title and description updated.'});
-
       return res.send('success');
 
     }

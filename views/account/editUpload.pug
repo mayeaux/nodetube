@@ -151,6 +151,27 @@ block content
         // add here
 
     script.
+      function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+          results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+
+      }
+
+
+      var updateSuccess = getParameterByName('update');
+
+      if (updateSuccess) {
+        // scroll into view
+        swal('The upload has been updated')
+      }
+
+
+    script.
 
       var category;
 
@@ -197,6 +218,8 @@ block content
           contentType: false,
           processData: false,
           success: function(data){
+            // TODO: can turn into /user/anthony/tSIHmBf/edit?update=success?update=success
+            window.location = window.location + '?update=success'
             console.log(data);
           }
         })
