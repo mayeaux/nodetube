@@ -417,9 +417,9 @@ if (cluster.isMaster) {
     });
 
     app.use(function(err, req, res, next){
-      console.error(err);
+      console.log(err.stack);
       res.status(500);
-      res.render('error');
+      res.render('error/500');
     });
 
 

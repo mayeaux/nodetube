@@ -11,6 +11,10 @@ div.upload-details
         // upload time ago
         p.upload-title-text.views-text(style="margin:0") #{upload.timeAgo} &nbsp
             a.upload-user-text.views-text(href=`/user/${upload.uploader.channelUrl}` style="margin:0") #{upload.uploader.channelName || upload.uploader.channelUrl}
+
+        if user && user.role == 'admin'
+            if upload.category
+                p.upload-title-text.views-text(style="margin:0;margin-left:3px;") #{upload.category}
         if upload.subcategory
             p.upload-title-text.views-text(style="margin:0;margin-left:3px;") #{upload.subcategory}
         if upload.rating
@@ -20,7 +24,6 @@ div.upload-details
                 p.upload-title-text.views-text NSFW
             if upload.rating == 'sensitive'
                 p.upload-title-text.views-text Sensitive (18+)
-
 
 
         // denote whether upload is deleted

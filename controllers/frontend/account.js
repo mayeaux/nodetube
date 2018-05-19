@@ -347,7 +347,8 @@ exports.getChannel = async (req, res) => {
       startingNumber,
       highlightedNumber: page,
       userUploadAmount,
-      channelUrl: user.channelUrl
+      channelUrl: user.channelUrl,
+      categories
     });
 
 

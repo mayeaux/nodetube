@@ -79,7 +79,7 @@ block content
                         img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` width="140px" height="140px")
                         br
                         br
-                else if upload.uploader.thumbnailUrl
+                else if upload.thumbnailUrl
                     a(href=`/user/${upload.uploader.channelUrl}`)
 
                         img(src=`${uploadServer}/${upload.uploader._id}/unique.png` width="140px" height="140px")
@@ -162,17 +162,6 @@ block content
                     if upload.fileType == 'video' || upload.fileType == 'audio'
                         p(style="margin-top:15px") File Size: #{ ( upload.fileSize/ ( 1000 * 1000)).toFixed() } MB
 
-                    if upload.category
-                        each category in categories
-                            if category.name == upload.category
-                                p(style="margin-top:15px;font-size:12px;") Category: #{category.displayName}
-
-                                    if upload.subcategory && category.subcategories
-
-                                        each subcategory in category.subcategories
-
-                                            if upload.subcategory == subcategory.name
-                                                p(style="margin-top:15px;font-size:12px;") Subcategory: #{subcategory.displayName}
 
                     if upload.rating
                         if upload.rating == 'allAges'
@@ -184,6 +173,7 @@ block content
 
 
                     br
+
 
                 // react functionality
                 div.react(style="width:39%;background-color:white;margin:0 auto;border-radius:10px;margin-bottom:21px;padding-bottom:12px;")
