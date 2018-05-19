@@ -149,7 +149,7 @@ exports.getChannel = async (req, res) => {
     }
 
     // 404 if nothing found
-    if(!user && !viewerIsAdminOrMod){
+    if(!user){
       res.status(404);
       return res.render('error/404', {
         title: 'Not Found'
