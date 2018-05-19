@@ -226,6 +226,10 @@ exports.popularUploads = async (req, res) => {
       }
     }
 
+    const popularTimeViews = 'viewsWithin' + within;
+
+    console.log(popularTimeViews);
+
     res.render('mediaBrowsing/popularUploads', {
       title: 'Popular Uploads',
       uploads,
@@ -245,7 +249,8 @@ exports.popularUploads = async (req, res) => {
       media,
       addressPrepend,
       categoryObj,
-      within
+      within,
+      popularTimeViews
     });
 
   } catch (err){

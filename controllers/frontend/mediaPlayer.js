@@ -292,7 +292,6 @@ exports.getMedia = async (req, res) => {
         alreadyReported = false;
       }
 
-
       res.render('media', {
         title: upload.title,
         comments: commentsWithResponsesPopulated,
