@@ -11,7 +11,7 @@ const Notification = require('../../models/index').Notification;
 const SocialPost = require('../../models/index').SocialPost;
 const Subscription = require('../../models/index').Subscription;
 
-const { uploadServer, uploadUrl } = require('../../lib/helpers/settings')
+const { uploadServer, uploadUrl } = require('../../lib/helpers/settings');
 
 const thumbnailServer = process.env.THUMBNAIL_SERVER || '';
 
@@ -22,6 +22,9 @@ const mongooseHelper = require('../../caching/mongooseHelpers');
 const categories = require('../../config/categories');
 
 const uploadFilters = require('../../lib/mediaBrowsing/helpers');
+
+
+const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
 
 
 /**

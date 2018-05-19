@@ -207,6 +207,8 @@ block content
       // capture submit
       $('.edit-upload-form').submit(function (event ) {
 
+        var url = [location.protocol, '//', location.host, location.pathname].join('');
+
         event.preventDefault();
 
         var $theForm = $(this);
@@ -225,7 +227,7 @@ block content
           processData: false,
           success: function(data){
             // TODO: can turn into /user/anthony/tSIHmBf/edit?update=success?update=success
-            window.location = window.location + '?update=success'
+            window.location = url + '?update=success'
             console.log(data);
           }
         })
