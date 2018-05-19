@@ -221,10 +221,7 @@ exports.deleteChannelThumbnail = async (req, res, next) => {
   req.user.customThumbnail = undefined;
   await req.user.save();
 
-  req.flash('success', { msg: 'Thumbnail deleted.' });
-  res.redirect(`${frontendServer}/account`);
-
-  console.log(req.body);
+  return res.send('success');
 };
 
 
