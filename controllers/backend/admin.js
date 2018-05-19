@@ -95,6 +95,9 @@ exports.changeRatings = async (req, res) => {
     let rating = req.body.rating;
     let uploads = req.body.uploads;
 
+    console.log(rating);
+    console.log(uploads);
+
     for (let upload of uploads) {
       let foundUpload = await Upload.findOne({_id: upload});
       foundUpload.rating = rating;
