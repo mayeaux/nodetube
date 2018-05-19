@@ -227,9 +227,9 @@ exports.popularUploads = async (req, res) => {
     }
 
     let withinDisplayString = '';
-    if(within == '1h'){
+    if(within == '1hour'){
       withinDisplayString = 'last hour'
-    } else if (within == '24h'){
+    } else if (within == '24hour'){
       withinDisplayString = 'last 24 hours'
     } else if (within == '1week'){
       withinDisplayString = 'last week'
