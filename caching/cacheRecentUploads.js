@@ -13,6 +13,12 @@ const c = {
   l : console.log
 };
 
+const javascriptTimeAgo = require('javascript-time-ago');
+javascriptTimeAgo.locale(require('javascript-time-ago/locales/en'));
+require('javascript-time-ago/intl-messageformat-global');
+require('intl-messageformat/dist/locale-data/en');
+const timeAgoEnglish = new javascriptTimeAgo('en-US');
+
 const helpers = require('../caching/helpers');
 
 const calculateViewsByPeriod = helpers.calculateViewsByPeriod;
@@ -33,8 +39,8 @@ async function getRecentUploads(uploadType){
     category : { $exists: true }
   };
 
-  const selectString = 'rating title views checkedViews uploader fileType thumbnailUrl ' +
-    'uploadUrl uniqueTag customThumbnailUrl fileExtension thumbnails reacts uncurated category subcategory';
+  const selectString = 'rating title views uploader fileType thumbnailUrl ' +
+    'uploadUrl uniqueTag customThumbnailUrl fileExtension thumbnails reacts uncurated category subcategory createdAt';
 
   let recentUploads = await Upload.find(searchQuery).select(selectString).populate('uploader reacts')
     .sort({ createdAt : - 1 })
@@ -56,6 +62,8 @@ async function setRecentUploads() {
 
     // get all valid views per upload
     const uploadViews = await View.find({ upload, validity: 'real' }).select('createdAt');
+
+    upload.timeAgo = timeAgoEnglish.format( new Date(upload.createdAt) );
 
     // calculate their views per period (last24h, lastweek)
     return calculateViewsByPeriod(upload, uploadViews);
