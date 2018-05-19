@@ -17,13 +17,14 @@ div.upload-details
                 p.upload-title-text.views-text(style="margin:0;margin-left:3px;") #{upload.category}
         if upload.subcategory
             p.upload-title-text.views-text(style="margin:0;margin-left:3px;") #{upload.subcategory}
-        if upload.rating
-            if upload.rating == 'allAges'
-                p.upload-title-text.views-text SFW
-            if upload.rating == 'mature'
-                p.upload-title-text.views-text NSFW
-            if upload.rating == 'sensitive'
-                p.upload-title-text.views-text Sensitive (18+)
+        if user && user.role == 'admin'
+            if upload.rating
+                if upload.rating == 'allAges'
+                    p.upload-title-text.views-text SFW
+                if upload.rating == 'mature'
+                    p.upload-title-text.views-text NSFW
+                if upload.rating == 'sensitive'
+                    p.upload-title-text.views-text Sensitive (18+)
 
 
         // denote whether upload is deleted
