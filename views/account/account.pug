@@ -419,6 +419,12 @@ block content
 
       }
 
+      var updateSuccess = getParameterByName('update');
+
+      if (updateSuccess) {
+        // scroll into view
+        swal('The upload has been updated')
+      }
 
       var scrollToDiv = getParameterByName('to');
 
