@@ -17,6 +17,7 @@ const Report = require('../../models/index').Report;
 
 const uploadHelpers = require('../../lib/helpers/settings');
 
+const categories = require('../../config/categories');
 
 const uploadServer  = uploadHelpers.uploadServer;
 
@@ -298,7 +299,8 @@ exports.getMedia = async (req, res) => {
         commentCount,
         uploadServer,
         stripeToken,
-        alreadyReported
+        alreadyReported,
+        categories
       });
     }
 

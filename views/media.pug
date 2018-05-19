@@ -160,21 +160,28 @@ block content
                         h2 Upload Deleted
 
                     if upload.fileType == 'video' || upload.fileType == 'audio'
-                        h5(style="margin-top:15px") File Size: #{ ( upload.fileSize/ ( 1000 * 1000)).toFixed() } MB
+                        p(style="margin-top:15px") File Size: #{ ( upload.fileSize/ ( 1000 * 1000)).toFixed() } MB
+
+                    if upload.category
+                        each category in categories
+                            if category.name == upload.category
+                                p(style="margin-top:15px;font-size:12px;") Category: #{category.displayName}
+
+                                if upload.subcategory
+
+                                    each subcategory in category.subcategories
+
+                                        if upload.subcategory == subcategory.name
+                                            p(style="margin-top:15px;font-size:12px;") Subcategory: #{subcategory.displayName}
 
                     if upload.rating
                         if upload.rating == 'allAges'
-                            h5 Rating: Safe For Work
+                            p(style="margin-top:15px;font-size:12px;") Rating: Safe For Work
                         if upload.rating == 'mature'
-                            h5 Rating: Not Safe For Work
+                            p(style="margin-top:15px;font-size:12px;") Rating: Not Safe For Work
                         if upload.rating == 'sensitive'
-                            h5 Rating: Sensitive (18+)
+                            p(style="margin-top:15px;font-size:12px;") Rating: Sensitive (18+)
 
-                    if upload.category
-                        h5 Category: #{upload.category}
-
-                    if upload.subcategory
-                        h5 Category: #{upload.subcategory}
 
                     br
 
@@ -335,6 +342,7 @@ block content
 
     script.
       balanceText();
+
 
     script.
 
