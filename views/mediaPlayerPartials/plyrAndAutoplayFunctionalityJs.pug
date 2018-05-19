@@ -1,0 +1,87 @@
+script.
+
+  $('.no-user-comment-form').on('click touchstart', function(event){
+    event.preventDefault();
+    // swal("Please register to leave a comment")
+
+    swal({
+        title: "Please register to leave a comment",
+        type: "info",
+        showCancelButton: true,
+        confirmButtonClass: "btn-danger",
+        confirmButtonText: "Register now",
+        cancelButtonText: "Return to media",
+        closeOnConfirm: false,
+        closeOnCancel: false
+      },
+      function (isConfirm) {
+        if (isConfirm) {
+          window.location.href = "/signup";
+        } else {
+          swal.close()
+        }
+      });
+
+
+    //        swal({
+    //          title: 'Please register to leave a comment',
+    //          type: 'info',
+    //          showCancelButton: true,
+    //          confirmButtonColor: '#3085d6',
+    //          cancelButtonColor: '#d33',
+    //          confirmButtonText: 'Register now'
+    //        }).then(function () {
+    //          swal(
+    //            'Deleted!',
+    //            'Your file has been deleted.',
+    //            'success'
+    //          )
+    //        })
+
+  })
+
+  console.log(getParameterByName)
+
+  console.log('here')
+
+  var autoplay = getParameterByName('autoplay');
+
+  var sensitive = #{upload.sensitive}
+
+  var autoplay;
+  if(sensitive || autoplay == 'off'){
+    autoplay = false;
+  } else {
+    autoplay = true;
+  }
+
+  var plyr_options = {
+    autoplay: autoplay,
+    clickToPlay: true,
+    controls: ['mute', 'progress', 'play', 'fullscreen', 'volume', 'play-large', 'current-time']
+  };
+
+  // Create the plyr instances - this defines players[0] as our primary player.
+  var players = plyr.setup(plyr_options);
+
+  players[0].on('ready', function (event) {
+    $('.display-element').css('max-height', '620px')
+
+    // set video max-height to 620px
+  });
+
+  players[0].on('enterfullscreen', function (event) {
+
+    console.log('this is running');
+
+    $('.display-element').css('max-height', "")
+
+
+    // remove video max-height
+
+  });
+
+  players[0].on('exitfullscreen', function (event) {
+    // add max height
+    $('.display-element').css('max-height','620px')
+  });

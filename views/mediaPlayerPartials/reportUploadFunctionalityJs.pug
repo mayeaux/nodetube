@@ -1,0 +1,84 @@
+script.
+
+  // inputOptions can be an object or Promise
+  var inputOptions1 = new Promise(function (resolve) {
+    resolve({
+      'tos': 'Terms Of Service Violation',
+      'copyright': 'Copyrighted Content',
+      'rating': 'Incorrect Upload Rating'
+    });
+  });
+
+  var alreadyReported = '#{alreadyReported}'
+
+  console.log('already reported ' + alreadyReported)
+
+  console.log(alreadyReported)
+
+  if(alreadyReported == 'true'){
+
+    console.log('running here')
+
+    $('.report-button').on('click', function(){
+      swal({ text: 'Thank you for reporting this upload '})
+    });
+
+  } else {
+    console.log('thing here')
+
+    $('.report-button').on('click', function () {
+      swal({
+        title: 'Report Upload',
+        text: 'Select your reason for reporting upload',
+        input: 'radio',
+        showCancelButton: true,
+        confirmButtonText: "Report Upload",
+        inputOptions: inputOptions1,
+        inputValidator: function (result) {
+          return new Promise(function (resolve, reject) {
+            if (result) {
+              resolve();
+            } else {
+              reject('You need to select something!');
+            }
+          });
+        }
+      }).then(function (result) {
+
+        var csrf = '#{_csrf}'
+
+        var uploadId = '#{upload._id}'
+
+        var data = {
+          _csrf: csrf,
+          uploadId,
+          reason: result.value
+        }
+
+        $.ajax({
+          type: 'POST',
+          url: '/api/report',
+          data,
+          success: function (data) {
+            if (data == 'success') {
+              swal({ title: "Reported", text : 'Thank you for reporting the upload'})
+            } else {
+              swal("Something didn't work, please contact PewTube at ceo@pew.tube or via the widget in the bottom right corner")
+            }
+            console.log(data);
+          },
+          error: function (err) {
+            console.log(err);
+          }
+        });
+
+
+        // send via ajax
+
+        if (!result.value) return
+
+
+      })
+    })
+
+  }

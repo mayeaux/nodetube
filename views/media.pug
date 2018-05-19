@@ -345,98 +345,13 @@ block content
     script.
       balanceText();
 
+    // reportUploadFunctionalityJs
 
-    script.
-
-      // inputOptions can be an object or Promise
-      var inputOptions1 = new Promise(function (resolve) {
-        resolve({
-          'tos': 'Terms Of Service Violation',
-          'copyright': 'Copyrighted Content',
-          'rating': 'Incorrect Upload Rating'
-        });
-      });
-
-      var alreadyReported = '#{alreadyReported}'
-
-      console.log('already reported ' + alreadyReported)
-
-      console.log(alreadyReported)
-
-      if(alreadyReported == 'true'){
-
-        console.log('running here')
-
-        $('.report-button').on('click', function(){
-          swal({ text: 'Thank you for reporting this upload '})
-        });
-
-      } else {
-          console.log('thing here')
-
-          $('.report-button').on('click', function () {
-            swal({
-              title: 'Report Upload',
-              text: 'Select your reason for reporting upload',
-              input: 'radio',
-              showCancelButton: true,
-              confirmButtonText: "Report Upload",
-              inputOptions: inputOptions1,
-              inputValidator: function (result) {
-                return new Promise(function (resolve, reject) {
-                  if (result) {
-                    resolve();
-                  } else {
-                    reject('You need to select something!');
-                  }
-                });
-              }
-            }).then(function (result) {
-
-              var csrf = '#{_csrf}'
-
-              var uploadId = '#{upload._id}'
-
-              var data = {
-                _csrf: csrf,
-                uploadId,
-                reason: result.value
-              }
-
-              $.ajax({
-                type: 'POST',
-                url: '/api/report',
-                data,
-                success: function (data) {
-                  if (data == 'success') {
-                    swal({ title: "Reported", text : 'Thank you for reporting the upload'})
-                  } else {
-                    swal("Something didn't work, please contact PewTube at ceo@pew.tube or via the widget in the bottom right corner")
-                  }
-                  console.log(data);
-                },
-                error: function (err) {
-                  console.log(err);
-                }
-              });
-
-
-              // send via ajax
-
-              if (!result.value) return
-
-
-            })
-          })
-
-      }
-
+    script(src="https://cdn.plyr.io/2.0.16/plyr.js")
 
     include ./mediaPlayerPartials/changeQualityJs
 
     include ./mediaPlayerPartials/changeUserDefaultQualityJs
-
-    script(src="https://cdn.plyr.io/2.0.16/plyr.js")
 
     include mediaPlayerPartials/creditFunctionalityJs
 
@@ -444,264 +359,21 @@ block content
 
     include mediaPlayerPartials/subscribeFunctionalityJs
 
-    // delete comment functionality
+    include mediaPlayerPartials/sensitiveFunctionalityJs
 
+    include mediaPlayerPartials/plyrAndAutoplayFunctionalityJs
 
+    include mediaPlayerPartials/embedLinkFunctionalityJs
 
-    //script.
-    //  function getParameterByName(name, url) {
-    //    if (!url) url = window.location.href;
-    //    name = name.replace(/[\[\]]/g, "\\$&");
-    //    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-    //      results = regex.exec(url);
-    //    if (!results) return null;
-    //    if (!results[2]) return '';
-    //    return decodeURIComponent(results[2].replace(/\+/g, " "));
-    //  }
-    //
-    //  var autoplay = getParameterByName('autoplay');
-    //
-    //  #{recs[0].uploader}/#{recs[0].upload.uniqueTag}
-    //
-    //  console.log(autoplay); // turn autoplay button on here
-    //
-    //    //      if(autoplay){
-    //    //        markTheButtonAsOn
-    //    //      }
-    //
-    //    //      on('songfinish', function(){
-    //    //        if(this thing is true){
-    //    //          window.href = recs[0].channelUrl + '?autoplay=on'
-    //    //        }
-    //    //      })
+    include ./mediaPlayerPartials/downloadFunctionalityJs
 
+    include ./mediaPlayerPartials/repeatFunctionalityJs
 
-    script.
-      var sensitive = #{upload.sensitive}
-      if(sensitive){
-        swal({
-            title: "This content is marked as sensitive",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonText: "View Media",
-            cancelButtonText: "Return to previous page",
-            closeOnConfirm: false,
-            closeOnCancel: false,
-            customClass: 'swal-wide'
-          },
-          function (isConfirm) {
-
-            if (isConfirm) {
-              swal.close();
-            } else {
-              window.history.go(-1)
-              swal.close()
-            }
-          });
-      }
-
-      setTimeout(function(){
-        $('.swal-wide').siblings('.sweet-overlay').css({
-          'background-color': 'black',
-          'opacity' : 0.85
-        })
-      }, 200)
-
-    script.
-
-      $('.no-user-comment-form').on('click touchstart', function(event){
-        event.preventDefault();
-        // swal("Please register to leave a comment")
-
-        swal({
-            title: "Please register to leave a comment",
-            type: "info",
-            showCancelButton: true,
-            confirmButtonClass: "btn-danger",
-            confirmButtonText: "Register now",
-            cancelButtonText: "Return to media",
-            closeOnConfirm: false,
-            closeOnCancel: false
-          },
-          function (isConfirm) {
-            if (isConfirm) {
-              window.location.href = "/signup";
-            } else {
-              swal.close()
-            }
-          });
-
-
-            //        swal({
-            //          title: 'Please register to leave a comment',
-            //          type: 'info',
-            //          showCancelButton: true,
-            //          confirmButtonColor: '#3085d6',
-            //          cancelButtonColor: '#d33',
-            //          confirmButtonText: 'Register now'
-            //        }).then(function () {
-            //          swal(
-            //            'Deleted!',
-            //            'Your file has been deleted.',
-            //            'success'
-            //          )
-            //        })
-
-      })
-
-
-        console.log('here')
-
-        function getParameterByName(name, url) {
-          if (!url) url = window.location.href;
-          name = name.replace(/[\[\]]/g, "\\$&");
-          var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-          results = regex.exec(url);
-          if (!results) return null;
-          if (!results[2]) return '';
-          return decodeURIComponent(results[2].replace(/\+/g, " "));
-        }
-
-        var autoplay = getParameterByName('autoplay');
-
-        var sensitive = #{upload.sensitive}
-
-        var autoplay;
-        if(sensitive || autoplay == 'off'){
-          autoplay = false;
-        } else {
-          autoplay = true;
-        }
-
-        var plyr_options = {
-          autoplay: autoplay,
-          clickToPlay: true,
-          controls: ['mute', 'progress', 'play', 'fullscreen', 'volume', 'play-large', 'current-time']
-        };
-
-        // Create the plyr instances - this defines players[0] as our primary player.
-        var players = plyr.setup(plyr_options);
-
-        players[0].on('ready', function (event) {
-          $('.display-element').css('max-height', '620px')
-
-          // set video max-height to 620px
-        });
-
-        players[0].on('enterfullscreen', function (event) {
-
-          console.log('this is running');
-
-          $('.display-element').css('max-height', "")
-
-
-          // remove video max-height
-
-        });
-
-        players[0].on('exitfullscreen', function (event) {
-          // add max height
-          $('.display-element').css('max-height','620px')
-        });
-
-
-
-
-    script.
-        // share button to get embed link
-
-        var uniqueTag = '#{upload.uniqueTag}';
-
-        var fileType = '#{upload.fileType}';
-
-        var embedString = '<iframe width="560" height="315" src="https://pew.tube/embed/' + uniqueTag + '" frameborder="0" allowfullscreen=""></iframe>'
-
-        if(fileType == 'audio'){
-          embedString = '<iframe width="560" height="54" src="https://pew.tube/embed/' + uniqueTag + '" frameborder="0" allowfullscreen=""></iframe>'
-        }
-
-        $('.share-button').on('click', function(){
-          swal({
-            title: 'Embed',
-            text: embedString
-          });
-        })
-
-    script.
-
-      // download functionality
-
-      var downloadUrl = '#{uploadServer}/#{upload.uploader.channelUrl}/#{upload.uniqueTag}#{upload.fileExtension}'
-
-      var uploadType = '#{upload.fileType}'
-
-      if(uploadType=='video'){
-        downloadUrl = '#{uploadServer}/#{upload.uploader.channelUrl}/#{upload.uniqueTag}.mp4'
-      }
-
-      function downloadIt() {
-        var name = "#{upload.title}"
-        if (name && name !== '') {
-          var link = document.createElement('a');
-           link.download = name;
-
-          // TODO: If I'm serving from the same origin this will work
-          // link.href = '/images/twitter-share.jpg'
-          //link.href = '/user/#{upload.uploader.channelUrl}/#{upload.uniqueTag}#{upload.fileType}'
-
-          link.href = downloadUrl
-
-          link.click();
-        }
-      }
-
-      $('.download-button').click(function () {
-
-        downloadIt()
-
-      });
-
-    script.
-
-      // copy details functionality
-
-      $('button').tooltip({
-        trigger: 'click',
-        placement: 'bottom'
-      });
-
-      function setTooltip(btn, message) {
-        $(btn).tooltip('hide')
-          .attr('data-original-title', message)
-          .tooltip('show');
-      }
-
-      function hideTooltip(btn) {
-        setTimeout(function () {
-          $(btn).tooltip('hide');
-        }, 1000);
-      }
-
-      // Clipboard
-
-      var clipboard = new Clipboard('.copy-button');
-
-      clipboard.on('success', function (e) {
-        setTooltip(e.trigger, 'Copied!');
-        hideTooltip(e.trigger);
-      });
-
-      clipboard.on('error', function (e) {
-        setTooltip(e.trigger, 'Failed!');
-        hideTooltip(e.trigger);
-      });
+    include ./mediaPlayerPartials/reactFunctionalityJs
 
     script.
       var myTextEl = document.getElementById('descriptionText');
       myTextEl.innerHTML = Autolinker.link(myTextEl.innerHTML);
-
-
-    include ./mediaPlayerPartials/repeatFunctionalityJs
 
     if user
         script.
@@ -709,12 +381,6 @@ block content
     else
         script.
           var user = undefined
-
-
-
-
-
-    include ./mediaPlayerPartials/reactFunctionalityJs
 
 
 block extra_js

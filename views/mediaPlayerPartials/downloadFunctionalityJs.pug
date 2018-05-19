@@ -1,0 +1,33 @@
+script.
+
+  // downloadFunctionalityJs
+
+  var downloadUrl = '#{uploadServer}/#{upload.uploader.channelUrl}/#{upload.uniqueTag}#{upload.fileExtension}'
+
+  var uploadType = '#{upload.fileType}'
+
+  if(uploadType=='video'){
+    downloadUrl = '#{uploadServer}/#{upload.uploader.channelUrl}/#{upload.uniqueTag}.mp4'
+  }
+
+  function downloadIt() {
+    var name = "#{upload.title}"
+    if (name && name !== '') {
+      var link = document.createElement('a');
+      link.download = name;
+
+      // TODO: If I'm serving from the same origin this will work
+      // link.href = '/images/twitter-share.jpg'
+    //link.href = '/user/#{upload.uploader.channelUrl}/#{upload.uniqueTag}#{upload.fileType}'
+
+      link.href = downloadUrl
+
+      link.click();
+    }
+  }
+
+  $('.download-button').click(function () {
+
+    downloadIt()
+
+  });
