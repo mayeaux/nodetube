@@ -226,6 +226,19 @@ exports.popularUploads = async (req, res) => {
       }
     }
 
+    let withinDisplayString = '';
+    if(within == '1h'){
+      withinDisplayString = 'last hour'
+    } else if (within == '24h'){
+      withinDisplayString = 'last 24 hours'
+    } else if (within == '1week'){
+      withinDisplayString = 'last week'
+    } else if (within == '1month') {
+      withinDisplayString = 'last month'
+    }
+
+    withinDisplayString = 'views ' + withinDisplayString;
+
     const popularTimeViews = 'viewsWithin' + within;
 
     console.log(popularTimeViews);
@@ -250,6 +263,7 @@ exports.popularUploads = async (req, res) => {
       addressPrepend,
       categoryObj,
       within,
+      withinDisplayString,
       popularTimeViews
     });
 
