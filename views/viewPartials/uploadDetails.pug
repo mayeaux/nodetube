@@ -1,6 +1,6 @@
 // byline
 div.upload-details
-    div.views(style="margin:0 auto")
+    div.views(style="margin:0 auto;width:212px;")
         p.upload-title-text.views-text(style="margin:0;") #{upload.legitViewAmount} views &nbsp
             if upload.fileType == 'video'
                 i.fa.fa-video-camera(aria-hidden='true')
@@ -13,6 +13,17 @@ div.upload-details
             a.upload-user-text.views-text(href=`/user/${upload.uploader.channelUrl}` style="margin:0") #{upload.uploader.channelName || upload.uploader.channelUrl}
         if upload.subcategory
             p.upload-title-text.views-text(style="margin:0;margin-left:3px;") #{upload.subcategory}
+        if upload.rating
+            if upload.rating == 'allAges'
+                p.upload-title-text.views-text SFW
+            if upload.rating == 'mature'
+                p.upload-title-text.views-text NSFW
+            if upload.rating == 'sensitive'
+                p.upload-title-text.views-text Sensitive (18+)
+
+
+
+        // denote whether upload is deleted
         if user && (user.role == 'admin' || user.role == 'moderator') && upload.visibility == 'removed'
             div
                 h4(style="margin-top:-5px;margin-bottom:-18px;") DELETED
