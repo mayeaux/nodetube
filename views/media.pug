@@ -79,7 +79,7 @@ block content
                         img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` width="140px" height="140px")
                         br
                         br
-                else if upload.thumbnailUrl
+                else if upload.uploader.thumbnailUrl
                     a(href=`/user/${upload.uploader.channelUrl}`)
 
                         img(src=`${uploadServer}/${upload.uploader._id}/unique.png` width="140px" height="140px")
