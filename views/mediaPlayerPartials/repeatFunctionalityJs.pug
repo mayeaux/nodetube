@@ -1,0 +1,37 @@
+script.
+  // repeat functionality
+
+  /* REPEAT FUNCTIONALITY BEGIN */
+  var fileType = '#{upload.fileType}';
+
+  /* REPEAT FUNCTIONALITY START */
+  var repeat = false;
+
+  if (fileType == 'audio' || fileType == 'video') {
+    var media = $(fileType)[0];
+
+    media.onended = function (e) {
+      if (repeat) {
+        media.pause();
+        media.currentTime = '0';
+        media.play();
+      }
+    };
+  }
+
+  // anything on repeat div clicked
+  $('.repeat-div').on('click', function (e) {
+    // toggle repeat value
+    repeat = !repeat;
+
+    if (repeat) {
+      swal({text: 'Repeat functionality turned on'})
+      $('.repeat-status').text('REPEAT: ON')
+      $('.repeat-div').css('opacity', '1');
+    } else {
+      swal({text: 'Repeat functionality turned off'})
+      $('.repeat-status').text('REPEAT: OFF')
+      $('.repeat-div').css('opacity', '0.7');
+    }
+  });
+  /* REPEAT FUNCTIONALITY END */
