@@ -53,7 +53,8 @@ const categories = [
   },
   {
     name: 'uncategorized',
-    displayName: 'Uncategorized'
+    displayName: 'Uncategorized',
+    subcategories: []
   }
 ];
 
