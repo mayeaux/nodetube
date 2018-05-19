@@ -170,6 +170,11 @@ block content
                         if upload.rating == 'sensitive'
                             h5 Rating: Sensitive (18+)
 
+                    if upload.category
+                        h5 Category: #{upload.category}
+
+                    if upload.subcategory
+                        h5 Category: #{upload.subcategory}
 
                     br
 

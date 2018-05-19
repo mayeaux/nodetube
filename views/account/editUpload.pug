@@ -127,7 +127,7 @@ block content
             else
                 img(src=upload.customThumbnailUrl style="width:301.96px;height:167.969px")
 
-            form.form-horizontal(action=`${thumbnailServer}/api/upload/${upload.uniqueTag}/thumbnail/delete` method="POST")
+            form.form-horizontal.delete-thumbnail-form(action=`${thumbnailServer}/api/upload/${upload.uniqueTag}/thumbnail/delete` method="POST")
                 input(type='hidden', name='_csrf', value=_csrf)
                 input(type="hidden" name="channelUrl" value=`${user.channelUrl}`)
                 input(type="hidden" name="uploadToken" value=`${user.uploadToken}`)
@@ -162,6 +162,12 @@ block content
 
       }
 
+      var thumbnailDeleted = getParameterByName('thumbnailDeleted');
+
+      if (thumbnailDeleted) {
+        // scroll into view
+        swal('The thumbnail has been deleted')
+      }
 
       var updateSuccess = getParameterByName('update');
 
@@ -227,6 +233,37 @@ block content
         return false;
 
       });
+
+      // capture submit
+      $('.delete-thumbnail-form').submit(function (event) {
+
+        var url = [location.protocol, '//', location.host, location.pathname].join('');
+
+        event.preventDefault();
+
+        var $theForm = $(this);
+
+        var data = new FormData($theForm[0]);
+
+        // send xhr request
+        $.ajax({
+          type: $theForm.attr('method'),
+          url: $theForm.attr('action'),
+          data,
+          cache: false,
+          contentType: false,
+          processData: false,
+          success: function (data) {
+            // TODO: can turn into /user/anthony/tSIHmBf/edit?update=success?update=success
+            window.location = url + '?thumbnailDeleted=true'
+            console.log(data);
+          }
+        })
+        // prevent submitting again
+        return false;
+
+      });
+
 
       var uploadCategory = '#{upload.category}'
 

@@ -231,30 +231,34 @@ exports.deleteChannelThumbnail = async (req, res, next) => {
 /** delete upload thumbnail **/
 exports.deleteUploadThumbnail = async (req, res, next) => {
 
-  console.log(req.body.uploadToken);
+  try {
+    console.log(req.body.uploadToken);
 
-  if(!req.user && req.body.uploadToken){
-    req.user = await User.findOne({ uploadToken : req.body.uploadToken })
+    if(!req.user && req.body.uploadToken){
+      req.user = await User.findOne({ uploadToken : req.body.uploadToken })
+    }
+
+    const upload = await Upload.findOne({ uniqueTag: req.params.uniqueTag }).populate('uploader');
+
+    if(!upload){
+      res.send('no upload')
+    }
+
+    if(upload.uploader.id.toString() !== req.user.id.toString()){
+      res.send('not authenticated');
+    }
+
+    upload.customThumbnailUrl = undefined;
+    upload.thumbnails.custom = undefined;
+    await upload.save();
+
+    res.send('success');
+
+    console.log(req.body);
+  } catch (err){
+    console.log(err);
   }
 
-  const upload = await Upload.findOne({ uniqueTag: req.params.uniqueTag }).populate('uploader');
-
-  if(!upload){
-    res.send('no upload')
-  }
-
-  if(upload.uploader.id.toString() !== req.user.id.toString()){
-    res.send('not authenticated');
-  }
-
-  upload.customThumbnailUrl = undefined;
-  upload.thumbnails.custom = undefined;
-  await upload.save();
-
-  req.flash('success', { msg: 'Thumbnail deleted.' });
-  res.redirect(`${frontendServer}/user/${req.user.channelUrl}/${req.params.uniqueTag}/edit`);
-
-  console.log(req.body);
 };
 
 
