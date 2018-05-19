@@ -87,7 +87,7 @@ exports.deleteAllUsersAndBlockIps = async (req, res) => {
 
 };
 
-
+// TODO: add admin audit thing here
 exports.changeRatings = async (req, res) => {
 
   try {

@@ -5,13 +5,16 @@ block content
         h3 Edit Upload
 
     h3.center-block.text-center
+        a(href=`/user/${upload.uploader.channelUrl}`) View Channel
+        br
+        br
         a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}`) View Upload
         br
         br
 
 
 
-    form.form-horizontal(action=`${thumbnailServer}/api/upload/${upload.uniqueTag}/edit`, method='POST' enctype="multipart/form-data" novalidate )
+    form.edit-upload-form.form-horizontal(action=`${thumbnailServer}/api/upload/${upload.uniqueTag}/edit`, method='POST' enctype="multipart/form-data" novalidate )
         input(type='hidden', name='_csrf', value=_csrf)
         input(type='hidden', name='uploadToken', value=user.uploadToken)
         .form-group
@@ -84,7 +87,7 @@ block content
                 div.form-group
                     label.col-sm-3.control-label(for='filetoupload' style="") Upload Thumbnail
                     .col-sm-7
-                        input.center-block.text-center(class="upload-file" data-max-size="500000000" type="file" id="filetoupload" name="filetoupload" accept="image/*")
+                        input.center-block.text-center.upload-thumbnail-input(class="upload-file" data-max-size="500000000" type="file" id="filetoupload" name="filetoupload" accept="image/*")
 
                 div.form-group
                     div.col-sm-3.
@@ -175,47 +178,36 @@ block content
       })
 
       // capture submit
-      $('form').submit(function () {
+      $('.edit-upload-form').submit(function (event ) {
+
+        event.preventDefault();
+
         var $theForm = $(this);
 
-        var input = $("<input>")
-          .attr("name", "category").val(category);
+        var data = new FormData($theForm[0]);
 
-        $theForm.append(input)
-        // var data = $theForm.serialize()
-
-        var data = new FormData($(this));
-
-         // data = data + '&category=' + category;
-
-        console.log(category);
-
-        // data.append('category', category)
-
-        console.log(data)
-
-        console.log('hello')
-
+        data.append('category', category)
 
         // send xhr request
         $.ajax({
           type: $theForm.attr('method'),
           url: $theForm.attr('action'),
           data,
-          success: function (data) {
-            location.reload();
+          cache: false,
+          contentType: false,
+          processData: false,
+          success: function(data){
+            console.log(data);
           }
-        });
-
-        // prevent submitting again
+        })
+            // prevent submitting again
         return false;
+
       });
 
       var uploadCategory = '#{upload.category}'
 
       if (uploadCategory) {
-
-        console.log('#{categories}')
 
         $('.categoryValue').filter('[data-value=' + uploadCategory + ']').click()
       }
@@ -226,4 +218,3 @@ block content
         $("input[value=" + uploadSubcategory +  "]").click()
       }
 
-      console.log(uploadCategory, uploadSubcategory)
