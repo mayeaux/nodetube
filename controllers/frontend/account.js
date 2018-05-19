@@ -91,6 +91,7 @@ exports.subscriptions = async (req, res) => {
       subscribedToUsers.push(subscription.subscribedToUser);
     }
 
+    // TODO: change the way views calculated
     const uploads = await Upload.find({
       uploader: {$in: subscribedToUsers},
       visibility: 'public',
