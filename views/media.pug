@@ -167,12 +167,12 @@ block content
                             if category.name == upload.category
                                 p(style="margin-top:15px;font-size:12px;") Category: #{category.displayName}
 
-                                if upload.subcategory
+                                    if upload.subcategory && category.subcategories
 
-                                    each subcategory in category.subcategories
+                                        each subcategory in category.subcategories
 
-                                        if upload.subcategory == subcategory.name
-                                            p(style="margin-top:15px;font-size:12px;") Subcategory: #{subcategory.displayName}
+                                            if upload.subcategory == subcategory.name
+                                                p(style="margin-top:15px;font-size:12px;") Subcategory: #{subcategory.displayName}
 
                     if upload.rating
                         if upload.rating == 'allAges'
