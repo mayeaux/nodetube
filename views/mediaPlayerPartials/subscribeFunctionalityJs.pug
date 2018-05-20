@@ -12,22 +12,15 @@ script.
     // if user is not logged in
     if (!user) {
       return swal({
-          title: "Please register to subscribe",
-          type: "info",
-          showCancelButton: true,
-          confirmButtonClass: "btn-danger",
-          confirmButtonText: "Register now",
-          cancelButtonText: "Return to media",
-          closeOnConfirm: false,
-          closeOnCancel: false
-        },
-        function (isConfirm) {
-          if (isConfirm) {
-            window.location.href = "/signup";
-          } else {
-            swal.close()
-          }
-        });
+        text: "Please register to subscribe to content",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sign Up Now'
+      }).then(function (result) {
+        if (result.value) {
+          window.location.href = "/signup";
+        }
+      })
     }
 
     var channelUrl = '#{upload.uploader.channelUrl}'

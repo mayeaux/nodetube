@@ -4,39 +4,16 @@ script.
     event.preventDefault();
     // swal("Please register to leave a comment")
 
-    swal({
-        title: "Please register to leave a comment",
-        type: "info",
-        showCancelButton: true,
-        confirmButtonClass: "btn-danger",
-        confirmButtonText: "Register now",
-        cancelButtonText: "Return to media",
-        closeOnConfirm: false,
-        closeOnCancel: false
-      },
-      function (isConfirm) {
-        if (isConfirm) {
-          window.location.href = "/signup";
-        } else {
-          swal.close()
-        }
-      });
-
-
-    //        swal({
-    //          title: 'Please register to leave a comment',
-    //          type: 'info',
-    //          showCancelButton: true,
-    //          confirmButtonColor: '#3085d6',
-    //          cancelButtonColor: '#d33',
-    //          confirmButtonText: 'Register now'
-    //        }).then(function () {
-    //          swal(
-    //            'Deleted!',
-    //            'Your file has been deleted.',
-    //            'success'
-    //          )
-    //        })
+    return swal({
+      text: "Please register to leave a comment",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sign Up Now'
+    }).then(function (result) {
+      if (result.value) {
+        window.location.href = "/signup";
+      }
+    })
 
   })
 

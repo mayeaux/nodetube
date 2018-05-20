@@ -44,30 +44,22 @@ script.
 
 
   $('.react img').on('touchstart click', function (e) {
-    if(!user){
-      return swal({
-          title: "Please register to react to content",
-          type: "info",
-          showCancelButton: true,
-          confirmButtonClass: "btn-danger",
-          confirmButtonText: "Register now",
-          cancelButtonText: "Return to media",
-          closeOnConfirm: false,
-          closeOnCancel: false
-        },
-        function (isConfirm) {
-          if (isConfirm) {
-            window.location.href = "/signup";
-          } else {
-            swal.close()
-          }
-        });
-    }
-
-
 
     // dont move browser
     e.preventDefault();
+
+    if(!user){
+      return swal({
+        text: "Please register to react to content",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sign Up Now'
+      }).then(function (result) {
+        if (result.value) {
+          window.location.href = "/signup";
+        }
+      })
+    }
 
 
     // change opacities
