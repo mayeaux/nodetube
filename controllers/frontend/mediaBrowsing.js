@@ -77,6 +77,8 @@ exports.recentUploads = async (req, res) => {
 
   try {
 
+    console.log('getting recent uploads');
+
     const addressPrepend = '/media/recent';
 
     // get media page, either video, image, audio or all
@@ -117,6 +119,8 @@ exports.recentUploads = async (req, res) => {
 
     const uploads = await getFromCache.getRecentUploads(limit, skipAmount, mediaType, filter, category, subcategory);
 
+    console.log('rendering')
+
     res.render('mediaBrowsing/recentUploads', {
       title: 'Recent Uploads',
       uploads,
@@ -150,6 +154,8 @@ exports.recentUploads = async (req, res) => {
  * Page with all popular
  */
 exports.popularUploads = async (req, res) => {
+
+  console.log('getting popular uploads');
 
   const addressPrepend = '/media/popular';
 
@@ -242,6 +248,8 @@ exports.popularUploads = async (req, res) => {
     const popularTimeViews = 'viewsWithin' + within;
 
     console.log(popularTimeViews);
+
+    console.log('getting popular uploads');
 
     res.render('mediaBrowsing/popularUploads', {
       title: 'Popular Uploads',

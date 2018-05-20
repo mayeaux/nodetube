@@ -43,6 +43,8 @@ const mongooseHelpers = require('../../caching/mongooseHelpers');
  */
 exports.getMedia = async (req, res) => {
 
+  console.log('getting media');
+
   const stripeToken = process.env.STRIPE_FRONTEND_TOKEN || 'pk_test_iIpX39D0QKD1cXh5CYNUw69B';
 
   let emojis = ['like', 'dislike', 'laugh', 'sad', 'disgust', 'love'];
@@ -291,6 +293,8 @@ exports.getMedia = async (req, res) => {
       } else {
         alreadyReported = false;
       }
+
+      console.log('rendering');
 
       res.render('media', {
         title: upload.title,
