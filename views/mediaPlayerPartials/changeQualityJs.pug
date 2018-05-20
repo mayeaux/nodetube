@@ -32,6 +32,8 @@ else
 
       var highQualityVideo = '#{uploadServer}/#{upload.uploader.channelUrl}/#{upload.uniqueTag}-high.mp4'
 
+      var highQualityExists = '#{upload.quality && upload.quality.high}'
+
       var fileType = '#{upload.fileType}'
 
       if (fileType == 'video') {
@@ -40,7 +42,7 @@ else
 
       var siteVisitorDefaultQuality = '#{siteVisitor.defaultQuality}'
 
-      if (siteVisitorDefaultQuality == 'high') {
+      if (siteVisitorDefaultQuality == 'high' && highQualityExists) {
         $('.video-source').attr('src', highQualityVideo)
         media = $(fileType)[0];
         media.load();

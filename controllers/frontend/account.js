@@ -11,7 +11,7 @@ const Notification = require('../../models/index').Notification;
 const SocialPost = require('../../models/index').SocialPost;
 const Subscription = require('../../models/index').Subscription;
 
-const { uploadServer, uploadUrl } = require('../../lib/helpers/settings')
+const { uploadServer, uploadUrl } = require('../../lib/helpers/settings');
 
 const thumbnailServer = process.env.THUMBNAIL_SERVER || '';
 
@@ -22,6 +22,9 @@ const mongooseHelper = require('../../caching/mongooseHelpers');
 const categories = require('../../config/categories');
 
 const uploadFilters = require('../../lib/mediaBrowsing/helpers');
+
+
+const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
 
 
 /**
@@ -88,6 +91,7 @@ exports.subscriptions = async (req, res) => {
       subscribedToUsers.push(subscription.subscribedToUser);
     }
 
+    // TODO: change the way views calculated
     const uploads = await Upload.find({
       uploader: {$in: subscribedToUsers},
       visibility: 'public',
@@ -146,7 +150,7 @@ exports.getChannel = async (req, res) => {
     }
 
     // 404 if nothing found
-    if(!user && !viewerIsAdminOrMod){
+    if(!user){
       res.status(404);
       return res.render('error/404', {
         title: 'Not Found'
@@ -344,7 +348,8 @@ exports.getChannel = async (req, res) => {
       startingNumber,
       highlightedNumber: page,
       userUploadAmount,
-      channelUrl: user.channelUrl
+      channelUrl: user.channelUrl,
+      categories
     });
 
 

@@ -26,7 +26,15 @@ const categories = require('../../config/categories');
 
 console.log('UPLOAD SERVER: ' + uploadServer + ' on: media browsing frontend controller');
 
-
+function getParameterByName(name, url) {
+  if (!url) url = window.location.href;
+  name = name.replace(/[\[\]]/g, "\\$&");
+  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+    results = regex.exec(url);
+  if (!results) return null;
+  if (!results[2]) return '';
+  return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
 
 const mongooseHelpers = require('../../caching/mongooseHelpers');
 
@@ -69,6 +77,8 @@ exports.recentUploads = async (req, res) => {
 
   try {
 
+    console.log('getting recent uploads');
+
     const addressPrepend = '/media/recent';
 
     // get media page, either video, image, audio or all
@@ -109,6 +119,8 @@ exports.recentUploads = async (req, res) => {
 
     const uploads = await getFromCache.getRecentUploads(limit, skipAmount, mediaType, filter, category, subcategory);
 
+    console.log('rendering')
+
     res.render('mediaBrowsing/recentUploads', {
       title: 'Recent Uploads',
       uploads,
@@ -142,6 +154,8 @@ exports.recentUploads = async (req, res) => {
  * Page with all popular
  */
 exports.popularUploads = async (req, res) => {
+
+  console.log('getting popular uploads');
 
   const addressPrepend = '/media/popular';
 
@@ -218,6 +232,25 @@ exports.popularUploads = async (req, res) => {
       }
     }
 
+    let withinDisplayString = '';
+    if(within == '1hour'){
+      withinDisplayString = 'last hour'
+    } else if (within == '24hour'){
+      withinDisplayString = 'last 24 hours'
+    } else if (within == '1week'){
+      withinDisplayString = 'last week'
+    } else if (within == '1month') {
+      withinDisplayString = 'last month'
+    }
+
+    withinDisplayString = 'views ' + withinDisplayString;
+
+    const popularTimeViews = 'viewsWithin' + within;
+
+    console.log(popularTimeViews);
+
+    console.log('getting popular uploads');
+
     res.render('mediaBrowsing/popularUploads', {
       title: 'Popular Uploads',
       uploads,
@@ -237,7 +270,9 @@ exports.popularUploads = async (req, res) => {
       media,
       addressPrepend,
       categoryObj,
-      within
+      within,
+      withinDisplayString,
+      popularTimeViews
     });
 
   } catch (err){

@@ -1,0 +1,30 @@
+script.
+  var sensitive = #{upload.sensitive}
+  if(sensitive){
+    swal({
+        title: "This content is marked as sensitive",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonText: "View Media",
+        cancelButtonText: "Return to previous page",
+        closeOnConfirm: false,
+        closeOnCancel: false,
+        customClass: 'swal-wide'
+      },
+      function (isConfirm) {
+
+        if (isConfirm) {
+          swal.close();
+        } else {
+          window.history.go(-1)
+          swal.close()
+        }
+      });
+  }
+
+  setTimeout(function(){
+    $('.swal-wide').siblings('.sweet-overlay').css({
+      'background-color': 'black',
+      'opacity' : 0.85
+    })
+  }, 200)

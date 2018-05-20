@@ -247,7 +247,7 @@ if (cluster.isMaster) {
       if(
         requestPath === '/upload' ||
         requestPath === '/account/profile' ||
-        requestPath === 'api/channel/thumbnail/delete' ||
+        requestPath === '/api/channel/thumbnail/delete' ||
         requestPath.match(editUploadRegexp) ||
         requestPath.match(deleteUploadThumbnailRegexp) ||
         requestPath === '/livestream/on-live-auth' ||
@@ -417,9 +417,9 @@ if (cluster.isMaster) {
     });
 
     app.use(function(err, req, res, next){
-      console.error(err);
+      console.log(err.stack);
       res.status(500);
-      res.render('error');
+      res.render('error/500');
     });
 
 

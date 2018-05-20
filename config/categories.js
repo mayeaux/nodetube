@@ -39,6 +39,11 @@ const categories = [
     subcategories: []
   },
   {
+    name: 'news',
+    displayName: 'News',
+    subcategories: []
+  },
+  {
     name: 'politics',
     displayName: 'Politics',
     subcategories: [
@@ -47,14 +52,10 @@ const categories = [
     ]
   },
   {
-    name: 'news',
-    displayName: 'News',
-    subcategories: []
-  },
-  {
     name: 'uncategorized',
-    displayName: 'Uncategorized'
-  },
+    displayName: 'Uncategorized',
+    subcategories: []
+  }
 ];
 
 module.exports = categories;

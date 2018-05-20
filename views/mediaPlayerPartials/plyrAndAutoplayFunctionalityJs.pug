@@ -1,0 +1,74 @@
+script.
+
+  $('.no-user-comment-form').on('click touchstart', function(event){
+    event.preventDefault();
+    // swal("Please register to leave a comment")
+
+    return swal({
+      text: "Please register to leave a comment",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sign Up Now'
+    }).then(function (result) {
+      if (result.value) {
+        window.location.href = "/signup";
+      }
+    })
+
+  })
+
+  function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+      results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+  }
+
+  console.log(getParameterByName)
+
+  console.log('here')
+
+  var autoplay = getParameterByName('autoplay');
+
+  var sensitive = #{upload.sensitive}
+
+  var autoplay;
+  if(sensitive || autoplay == 'off'){
+    autoplay = false;
+  } else {
+    autoplay = true;
+  }
+
+  var plyr_options = {
+    autoplay: autoplay,
+    clickToPlay: true,
+    controls: ['mute', 'progress', 'play', 'fullscreen', 'volume', 'play-large', 'current-time']
+  };
+
+  // Create the plyr instances - this defines players[0] as our primary player.
+  var players = plyr.setup(plyr_options);
+
+  players[0].on('ready', function (event) {
+    $('.display-element').css('max-height', '620px')
+
+    // set video max-height to 620px
+  });
+
+  players[0].on('enterfullscreen', function (event) {
+
+    console.log('this is running');
+
+    $('.display-element').css('max-height', "")
+
+
+    // remove video max-height
+
+  });
+
+  players[0].on('exitfullscreen', function (event) {
+    // add max height
+    $('.display-element').css('max-height','620px')
+  });

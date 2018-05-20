@@ -19,6 +19,8 @@ const mkdirp = Promise.promisifyAll(require('mkdirp'));
 const mv = require('mv');
 
 const createAdminAction = require('../../lib/administration/createAdminAction');
+const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
+
 
 
 // const stripe = require('stripe')(process.env.STRIPE_SKEY);
@@ -219,40 +221,41 @@ exports.deleteChannelThumbnail = async (req, res, next) => {
   req.user.customThumbnail = undefined;
   await req.user.save();
 
-  req.flash('success', { msg: 'Thumbnail deleted.' });
-  res.redirect(`${frontendServer}/account`);
-
-  console.log(req.body);
+  return res.send('success');
 };
 
 
 /** delete upload thumbnail **/
 exports.deleteUploadThumbnail = async (req, res, next) => {
 
-  console.log(req.body.uploadToken);
+  try {
+    console.log(req.body.uploadToken);
 
-  if(!req.user && req.body.uploadToken){
-    req.user = await User.findOne({ uploadToken : req.body.uploadToken })
+    if(!req.user && req.body.uploadToken){
+      req.user = await User.findOne({ uploadToken : req.body.uploadToken })
+    }
+
+    const upload = await Upload.findOne({ uniqueTag: req.params.uniqueTag }).populate('uploader');
+
+    if(!upload){
+      res.send('no upload')
+    }
+
+    if(upload.uploader.id.toString() !== req.user.id.toString()){
+      res.send('not authenticated');
+    }
+
+    upload.customThumbnailUrl = undefined;
+    upload.thumbnails.custom = undefined;
+    await upload.save();
+
+    res.send('success');
+
+    console.log(req.body);
+  } catch (err){
+    console.log(err);
   }
 
-  const upload = await Upload.findOne({ uniqueTag: req.params.uniqueTag }).populate('uploader');
-
-  if(!upload){
-    res.send('no upload')
-  }
-
-  if(upload.uploader.id.toString() !== req.user.id.toString()){
-    res.send('not authenticated');
-  }
-
-  upload.customThumbnailUrl = undefined;
-  upload.thumbnails.custom = undefined;
-  await upload.save();
-
-  req.flash('success', { msg: 'Thumbnail deleted.' });
-  res.redirect(`${frontendServer}/user/${req.user.channelUrl}/${req.params.uniqueTag}/edit`);
-
-  console.log(req.body);
 };
 
 
@@ -432,124 +435,104 @@ exports.react = async (req, res, next)  => {
 /** POST EDIT UPLOAD **/
 exports.editUpload = async (req, res, next) => {
 
-  if(!req.user && req.body.uploadToken){
-    req.user = await User.findOne({ uploadToken : req.body.uploadToken })
-  }
+  console.log(req.body);
 
-  // TODO: Add error handling
+  try {
 
-  const uniqueTag = req.params.uniqueTag;
+    if (!req.user && req.body.uploadToken) {
+      req.user = await User.findOne({uploadToken: req.body.uploadToken})
+    }
 
-  let upload = await Upload.findOne({
-    uniqueTag
-  }).populate({path: 'uploader comments checkedViews', populate: {path: 'commenter'}}).exec();
+    // TODO: Add error handling
 
-  // determine if its the user of the channel
-  const isAdmin = req.user && req.user.role == 'admin';
-  const isModerator = req.user && req.user.role == 'moderator';
-  const isAdminOrModerator = isAdmin || isModerator;
-  const isUser = req.user && ( req.user._id.toString() == upload.uploader._id.toString() );
+    const uniqueTag = req.params.uniqueTag;
 
-  /** If it is an admin or moderator changing the rating, save as adminAction and only change rating, mark as moderated  **/
-  // TODO: pull this logic out of controller
-  if(!isUser && !isAdmin && !isAdminOrModerator){
-    return res.render('error/403');
-  }
+    let upload = await Upload.findOne({
+      uniqueTag
+    }).populate({path: 'uploader comments checkedViews', populate: {path: 'commenter'}}).exec();
 
-  const uploadRatingIsChanging = upload.rating !== req.body.rating;
-  const isModeratorOrAdmin = isModerator || isAdmin;
+    // determine if its the user of the channel
+    const isAdmin = req.user && req.user.role == 'admin';
+    const isModerator = req.user && req.user.role == 'moderator';
+    const isAdminOrModerator = isAdmin || isModerator;
+    const isUser = req.user && ( req.user._id.toString() == upload.uploader._id.toString() );
 
-  // if moderator or admin is updating rating
-  if( isModeratorOrAdmin && uploadRatingIsChanging ){
-    upload.moderated = true;
+    /** If it is an admin or moderator changing the rating, save as adminAction and only change rating, mark as moderated  **/
+    // TODO: pull this logic out of controller
+    if (!isUser && !isAdmin && !isAdminOrModerator) {
+      return res.render('error/403');
+    }
 
-    const data = {
-      originalRating: upload.rating,
-      updatedRating: req.body.rating
-    };
+    const uploadRatingIsChanging = upload.rating !== req.body.rating;
+    const isModeratorOrAdmin = isModerator || isAdmin;
 
-    // TODO: save data
-    await createAdminAction(req.user, 'changeUploadRating', upload.uploader._id, upload, [], [], data);
+    // if moderator or admin is updating rating
+    if (isModeratorOrAdmin && uploadRatingIsChanging) {
+      upload.moderated = true;
 
+      const data = {
+        originalRating: upload.rating,
+        updatedRating: req.body.rating
+      };
+
+      // save admin action for audit
+      await createAdminAction(req.user, 'changeUploadRating', upload.uploader._id, upload, [], [], data);
+    }
+
+    // load upload changes
+    upload.title = req.body.title;
+    upload.description = req.body.description;
     upload.rating = req.body.rating;
-    req.flash('success', { msg: 'Title and description updated.' });
-    await upload.save();
+    upload.category = req.body.category;
+    upload.subcategory = req.body.subcategory;
 
-    return res.redirect(`${frontendServer}/user/${req.user.channelUrl}/${uniqueTag}/edit`);
-  }
+    // check if there's a thumbnail
+    let filename, fileType, fileExtension;
+    if (req.files && req.files.filetoupload) {
+      filename = req.files.filetoupload.originalFilename;
+      fileType = getMediaType(filename);
+      fileExtension = path.extname(filename);
+    }
 
-  /** **/
+    const fileIsNotImage = req.files && req.files.filetoupload && req.files.filetoupload.size > 0 && fileType && fileType !== 'image';
 
-  upload.title = req.body.title;
-  upload.description = req.body.description;
-  upload.rating = req.body.rating;
-  upload.category = req.body.category;
-  upload.subcategory = req.body.subcategory;
+    console.log(req.files);
 
+    const fileIsImage = req.files && req.files.filetoupload && req.files.filetoupload.size > 0 && fileType == 'image';
 
-  let filename, fileType, fileExtension;
-  if(req.files && req.files.filetoupload){
-    filename = req.files.filetoupload.originalFilename;
-    fileType = getMediaType(filename);
-    fileExtension = path.extname(filename);
-  }
+    // console.log(req.files);
 
-  // console.log(req.files);
+    // TODO: would be great if this was its own endpoint
 
-  // TODO: would be great if this was its own endpoint
+    // reject the file
+    if (fileIsNotImage) {
+      return res.send('We cant accept this file');
+      // gotta save and upload image
+    } else if (fileIsImage) {
 
-  // reject the file
-  if(req.files && req.files.filetoupload && req.files.filetoupload.size > 0 && fileType && fileType !== 'image'){
-    return res.send('We cant accept this file');
-    // gotta save and upload image
-  } else if(req.files && req.files.filetoupload && req.files.filetoupload.size > 0 && fileType == 'image'){
-
-    try {
-      await fs.move(req.files.filetoupload.path, `./uploads/${req.user.channelUrl}/${upload.uniqueTag}-custom${fileExtension}`, { overwrite: true });
+      await fs.move(req.files.filetoupload.path, `${saveAndServeFilesDirectory}/${req.user.channelUrl}/${upload.uniqueTag}-custom${fileExtension}`, {overwrite: true});
 
       upload.thumbnails.custom = `${upload.uniqueTag}-custom${fileExtension}`;
 
-      // TODO: test this is working properly
-      if(process.env.NODE_ENV == 'production') {
-
-        console.log('Uploading custom file thumbnail');
-
-        /** UPLOAD THUMBNAIL **/
-
-        (async function(){
-          const response =
-            await b2.uploadFileAsync(`./uploads/${req.user.channelUrl}/${upload.uniqueTag}-custom${fileExtension}`, {
-              name: `${req.user.channelUrl}/${uniqueTag}-custom${fileExtension}`,
-              bucket // Optional, defaults to first bucket
-            });
-
-          upload.customThumbnailUrl = response;
-
-          console.log(response);
-        })()
-
-      }
+      // sendUploadThumbnailToB2(args)
 
       await upload.save();
 
-    } catch (err){
-      console.log(err);
+      return res.send('success');
+
+    } else {
+
+      console.log('no thumbnail being saved');
+
+      await upload.save();
+
+      return res.send('success');
+
     }
-
-    req.flash('success', { msg: 'Title and description updated.' });
-
-    return res.redirect(`${frontendServer}/user/${req.user.channelUrl}/${uniqueTag}/edit`);
-
-  } else {
-
-    console.log('nothing to do here');
-
-    await upload.save();
-
-    req.flash('success', { msg: 'Title and description updated.' });
-
-    return res.redirect(`${frontendServer}/user/${req.user.channelUrl}/${uniqueTag}/edit`);
-
+  } catch (err){
+    console.log(err);
+    res.status(500);
+    res.send('failure');
   }
 };
 

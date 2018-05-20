@@ -26,6 +26,9 @@ const frontendServer = process.env.FRONTEND_SERVER || '';
 
 const verifyEmailPassword = process.env.PEWTUBE_VERIFY_EMAIL_PASSWORD;
 
+const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
+
+
 // a.mayfield.contact
 const recaptcha = new reCAPTCHA({
   siteKey : process.env.RECAPTCHA_SITEKEY,
@@ -210,50 +213,50 @@ exports.postUpdateProfile = async (req, res, next)  => {
     fileExtension = path.extname(filename);
   }
 
-  if(req.body.channelName.length < 3 &&  req.body.channelName.length < 0 || req.body.channelName.length > 20){
+
+  const channelNameBetween3And20Chars = req.body.channelName.length < 3 &&  req.body.channelName.length < 0 || req.body.channelName.length > 20;
+
+  if(channelNameBetween3And20Chars){
     console.log('SHOULDNT BE POSSIBLE: Someone messing with channelName?')
   }
 
 
+  const fileIsNotImage = req.files && req.files.filetoupload && req.files.filetoupload.size > 0 && fileType && fileType !== 'image';
+
+  const fileIsImage = req.files && req.files.filetoupload && req.files.filetoupload.size > 0 && fileType == 'image';
+
   // reject the file
-  if(req.files && req.files.filetoupload && req.files.filetoupload.size > 0 && fileType && fileType !== 'image'){
+  if(fileIsNotImage){
     return res.send('We cant accept this file');
     // save and upload image if conditions met
-  } else if(req.files && req.files.filetoupload && req.files.filetoupload.size > 0 && fileType == 'image'){
+  } else if(fileIsImage){
 
-    const channelUrlFolder = `./uploads/${req.user.channelUrl}`;
+    const channelUrlFolder = `${saveAndServeFilesDirectory}/${req.user.channelUrl}`;
 
     // make the directory if it doesnt exist
     await mkdirp.mkdirpAsync(channelUrlFolder);
 
     // save the file
-    mv(req.files.filetoupload.path, `./uploads/${req.user.channelUrl}/user-thumbnail${fileExtension}`, async function (err) {
+    await fs.move(req.files.filetoupload.path, `${saveAndServeFilesDirectory}/${req.user.channelUrl}/user-thumbnail${fileExtension}`, {overwrite: true});
 
-      // upload thumbnail to b2
-      if(process.env.UPLOAD_TO_B2){
-        const response = await b2.uploadFileAsync(`./uploads/${req.user.channelUrl}/user-thumbnail${fileExtension}`, {
-          name : `${req.user.channelUrl}/user-thumbnail${fileExtension}`,
-          bucket // Optional, defaults to first bucket
-        });
-        console.log(response);
-        req.user.thumbnailUrl = response;
-      };
+    // upload thumbnail to b2
+    if(process.env.UPLOAD_TO_B2 == 'true'){
+      // await uploadToB2thing(param)
+    };
 
-      req.user.customThumbnail = `user-thumbnail${fileExtension}`;
+    req.user.customThumbnail = `user-thumbnail${fileExtension}`;
 
-      req.user.channelName = req.body.channelName ?  req.body.channelName : req.user.channelUrl;
+    // if no channel name is given, save it as the channel url
+    req.user.channelName = req.body.channelName ?  req.body.channelName : req.user.channelUrl;
 
-      req.user.channelDescription = req.body.description;
+    req.user.channelDescription = req.body.description;
 
-      await req.user.save();
+    await req.user.save();
 
-      // download if theres an image
-      req.flash('success', { msg: 'Profile information has been updated.' });
-      res.redirect(`${frontendServer}/account`);
+    // download if theres an image
+    return res.send('success');
 
-    });
   } else {
-    console.log('THIS IS RUNNING');
 
     let user = await User.findById(req.user.id);
 
@@ -266,8 +269,7 @@ exports.postUpdateProfile = async (req, res, next)  => {
     await user.save();
 
     // download if theres an image
-    req.flash('success', { msg: 'Profile information has been updated.' });
-    res.redirect(`${frontendServer}/account`);
+    return res.send('success');
   }
 
 

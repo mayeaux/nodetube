@@ -237,7 +237,7 @@ block content
 
 
   //form.upload-form(role="form" method="POST" enctype="multipart/form-data")
-  form.form-horizontal(role="form" method="POST" enctype="multipart/form-data" action=`${thumbnailServer}/account/profile`)
+  form.update-user-details-form.form-horizontal(role="form" method="POST" enctype="multipart/form-data" action=`${thumbnailServer}/account/profile`)
     input(type="hidden" name="uploadToken" value=`${user.uploadToken}`)
     .form-group
       label.col-sm-3.control-label(for='channelName') Channel Username
@@ -292,7 +292,7 @@ block content
         img.center-block.text-center(src=`${uploadServer}/${user._id}/unique.png` width="256px" height="168px")
 
 
-      form(action=`${thumbnailServer}/api/channel/thumbnail/delete` method="POST")
+      form.delete-user-thumbnail-form(action=`${thumbnailServer}/api/channel/thumbnail/delete` method="POST")
         input(type='hidden', name='_csrf', value=_csrf)
         input(type="hidden" name="channelUrl" value=`${user.channelUrl}`)
         input(type="hidden" name="uploadToken" value=`${user.uploadToken}`)
@@ -324,6 +324,81 @@ block content
           | Change Password
 
 
+
+  script.
+
+
+    //.delete-user-thumbnail-form
+
+
+    // capture submit
+    $('.update-user-details-form').submit(function (event) {
+
+      event.preventDefault()
+
+      console.log('running here')
+
+      var url = [location.protocol, '//', location.host, location.pathname].join('');
+
+      var $theForm = $(this);
+
+      var data = new FormData($theForm[0]);
+
+      // send xhr request
+      $.ajax({
+        type: $theForm.attr('method'),
+        url: $theForm.attr('action'),
+        data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (data) {
+          // TODO: can turn into /user/anthony/tSIHmBf/edit?update=success?update=success
+          window.location = url + '?update=success'
+          console.log(data);
+        }
+      })
+      // prevent submitting again
+      return false;
+
+    });
+
+    // capture submit
+    $('.delete-user-thumbnail-form').submit(function (event) {
+
+      event.preventDefault()
+
+      console.log('running here')
+
+      var url = [location.protocol, '//', location.host, location.pathname].join('');
+
+      var $theForm = $(this);
+
+      var data = new FormData($theForm[0]);
+
+      // send xhr request
+      $.ajax({
+        type: $theForm.attr('method'),
+        url: $theForm.attr('action'),
+        data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (data) {
+          // TODO: can turn into /user/anthony/tSIHmBf/edit?update=success?update=success
+          window.location = url + '?thumbnailDeleted=true'
+          console.log(data);
+        }
+      })
+      // prevent submitting again
+      return false;
+
+    });
+
+
+
+
+
   if user
     script.
       var username = '#{user.channelUrl}'
@@ -334,6 +409,7 @@ block content
       $('.livestream-button').on('click', function(){
         swal('Please stream to rtmp://broadcast.pewtube.com/live/' + username  + '?key=' + uploadToken + ' \n\n You will be live at https://live.pewtube.com/User/' + username)
       })
+
   script.
     var stripeToken = '#{stripeToken}'
 
@@ -419,6 +495,18 @@ block content
 
       }
 
+      var updateSuccess = getParameterByName('update');
+
+      var thumbnailDeleted = getParameterByName('thumbnailDeleted');
+
+      if(thumbnailDeleted){
+        swal('The thumbnail has been deleted');
+      }
+
+      if (updateSuccess) {
+        // scroll into view
+        swal('Your profile has been updated')
+      }
 
       var scrollToDiv = getParameterByName('to');
 

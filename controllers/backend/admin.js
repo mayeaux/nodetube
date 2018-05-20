@@ -87,7 +87,7 @@ exports.deleteAllUsersAndBlockIps = async (req, res) => {
 
 };
 
-
+// TODO: add admin audit thing here
 exports.changeRatings = async (req, res) => {
 
   try {
@@ -95,12 +95,36 @@ exports.changeRatings = async (req, res) => {
     let rating = req.body.rating;
     let uploads = req.body.uploads;
 
+    let category = req.body.category;
+
+    console.log(rating);
+    console.log(uploads);
+
     for (let upload of uploads) {
       let foundUpload = await Upload.findOne({_id: upload});
-      foundUpload.rating = rating;
 
-      // mark it as moderated so user can't change it
-      foundUpload.moderated = true;
+      if(rating){
+
+        const data = {
+          originalRating: foundUpload.rating,
+          updatedRating: req.body.rating
+        };
+
+        // save admin action for audit
+        await createAdminAction(req.user, 'changeUploadRating', foundUpload.uploader._id, foundUpload, [], [], data);
+
+
+        foundUpload.rating = rating;
+
+        // mark it as moderated so user can't change it
+        foundUpload.moderated = true;
+      }
+
+      if(category){
+        foundUpload.category = category;
+      }
+
+
       await foundUpload.save();
     }
 

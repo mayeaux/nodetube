@@ -1,0 +1,82 @@
+script.
+
+  // change video qualities
+
+  var lowQualityVideo = '#{uploadServer}/#{upload.uploader.channelUrl}/#{upload.uniqueTag}.mp4'
+  var highQualityVideo = '#{uploadServer}/#{upload.uploader.channelUrl}/#{upload.uniqueTag}-high.mp4'
+
+  var fileType = '#{upload.fileType}'
+
+  if (fileType == 'video') {
+    var media = $(fileType)[0];
+  }
+
+  $('.low-quality').on('click', function(){
+
+    var data = {
+      _csrf: csrf,
+    }
+
+    $.ajax({
+      type: 'POST',
+      url: '/api/changeUserDefaultQuality/low',
+      data,
+      success: function (data) {
+        console.log(data);
+      },
+      error: function (err) {
+        console.log(err);
+      }
+    });
+
+    var quality = $('#dropdownMenu1').attr('quality');
+    if(quality == 'low') return
+
+    $('#dropdownMenu1').text('Quality: Low')
+    $('#dropdownMenu1').attr('quality', 'low');
+    $("#dropdownMenu1").append("<span class='caret'></span>");
+
+    var currentTime = media.currentTime;
+
+    $('.video-source').attr('src', lowQualityVideo)
+    media = $(fileType)[0];
+    media.load();
+    media.play();
+
+    media.currentTime = currentTime;
+  })
+
+  $('.high-quality').on('click', function () {
+
+    var data = {
+      _csrf: csrf,
+    }
+
+    $.ajax({
+      type: 'POST',
+      url: '/api/changeUserDefaultQuality/high',
+      data,
+      success: function (data) {
+        console.log(data);
+      },
+      error: function (err) {
+        console.log(err);
+      }
+    });
+
+    var quality = $('#dropdownMenu1').attr('quality');
+    if (quality == 'high') return
+
+    $('#dropdownMenu1').text('Quality: High')
+    $('#dropdownMenu1').attr('quality', 'high');
+    $("#dropdownMenu1").append("<span class='caret'></span>");
+
+    var currentTime = media.currentTime;
+
+    $('.video-source').attr('src', highQualityVideo)
+    media = $(fileType)[0];
+    media.load();
+    media.play();
+
+    media.currentTime = currentTime;
+  })

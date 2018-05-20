@@ -5,13 +5,16 @@ block content
         h3 Edit Upload
 
     h3.center-block.text-center
+        a(href=`/user/${upload.uploader.channelUrl}`) View Channel
+        br
+        br
         a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}`) View Upload
         br
         br
 
 
 
-    form.form-horizontal(action=`${thumbnailServer}/api/upload/${upload.uniqueTag}/edit`, method='POST' enctype="multipart/form-data" novalidate )
+    form.edit-upload-form.form-horizontal(action=`${thumbnailServer}/api/upload/${upload.uniqueTag}/edit`, method='POST' enctype="multipart/form-data" novalidate )
         input(type='hidden', name='_csrf', value=_csrf)
         input(type='hidden', name='uploadToken', value=user.uploadToken)
         .form-group
@@ -84,7 +87,7 @@ block content
                 div.form-group
                     label.col-sm-3.control-label(for='filetoupload' style="") Upload Thumbnail
                     .col-sm-7
-                        input.center-block.text-center(class="upload-file" data-max-size="500000000" type="file" id="filetoupload" name="filetoupload" accept="image/*")
+                        input.center-block.text-center.upload-thumbnail-input(class="upload-file" data-max-size="500000000" type="file" id="filetoupload" name="filetoupload" accept="image/*")
 
                 div.form-group
                     div.col-sm-3.
@@ -124,7 +127,7 @@ block content
             else
                 img(src=upload.customThumbnailUrl style="width:301.96px;height:167.969px")
 
-            form.form-horizontal(action=`${thumbnailServer}/api/upload/${upload.uniqueTag}/thumbnail/delete` method="POST")
+            form.form-horizontal.delete-thumbnail-form(action=`${thumbnailServer}/api/upload/${upload.uniqueTag}/thumbnail/delete` method="POST")
                 input(type='hidden', name='_csrf', value=_csrf)
                 input(type="hidden" name="channelUrl" value=`${user.channelUrl}`)
                 input(type="hidden" name="uploadToken" value=`${user.uploadToken}`)
@@ -146,6 +149,33 @@ block content
 
 
         // add here
+
+    script.
+      function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+          results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+
+      }
+
+      var thumbnailDeleted = getParameterByName('thumbnailDeleted');
+
+      if (thumbnailDeleted) {
+        // scroll into view
+        swal('The thumbnail has been deleted')
+      }
+
+      var updateSuccess = getParameterByName('update');
+
+      if (updateSuccess) {
+        // scroll into view
+        swal('The upload has been updated')
+      }
+
 
     script.
 
@@ -175,34 +205,71 @@ block content
       })
 
       // capture submit
-      $('form').submit(function () {
+      $('.edit-upload-form').submit(function (event ) {
+
+        var url = [location.protocol, '//', location.host, location.pathname].join('');
+
+        event.preventDefault();
+
         var $theForm = $(this);
 
-        var data = $theForm.serialize()
+        var data = new FormData($theForm[0]);
 
-        data = data + '&category=' + category;
-
-        console.log(data)
+        data.append('category', category)
 
         // send xhr request
         $.ajax({
           type: $theForm.attr('method'),
           url: $theForm.attr('action'),
           data,
-          success: function (data) {
-            location.reload();
+          cache: false,
+          contentType: false,
+          processData: false,
+          success: function(data){
+            // TODO: can turn into /user/anthony/tSIHmBf/edit?update=success?update=success
+            window.location = url + '?update=success'
+            console.log(data);
           }
-        });
+        })
+            // prevent submitting again
+        return false;
 
+      });
+
+      // capture submit
+      $('.delete-thumbnail-form').submit(function (event) {
+
+        var url = [location.protocol, '//', location.host, location.pathname].join('');
+
+        event.preventDefault();
+
+        var $theForm = $(this);
+
+        var data = new FormData($theForm[0]);
+
+        // send xhr request
+        $.ajax({
+          type: $theForm.attr('method'),
+          url: $theForm.attr('action'),
+          data,
+          cache: false,
+          contentType: false,
+          processData: false,
+          success: function (data) {
+            // TODO: can turn into /user/anthony/tSIHmBf/edit?update=success?update=success
+            window.location = url + '?thumbnailDeleted=true'
+            console.log(data);
+          }
+        })
         // prevent submitting again
         return false;
+
       });
+
 
       var uploadCategory = '#{upload.category}'
 
       if (uploadCategory) {
-
-        console.log('#{categories}')
 
         $('.categoryValue').filter('[data-value=' + uploadCategory + ']').click()
       }
@@ -213,4 +280,3 @@ block content
         $("input[value=" + uploadSubcategory +  "]").click()
       }
 
-      console.log(uploadCategory, uploadSubcategory)
