@@ -1,3 +1,13 @@
+style.
+    input[type=checkbox] {
+        /* Double-sized Checkboxes */
+        -ms-transform: scale(2); /* IE */
+        -moz-transform: scale(2); /* FF */
+        -webkit-transform: scale(2); /* Safari and Chrome */
+        -o-transform: scale(2); /* Opera */
+        padding: 10px;
+    }
+
 div.random-thing
     p.upload-title-text.views-text(style="margin:0 auto;text-align:center;display:inline;") #{upload.legitViewAmount} views &nbsp
         if upload.fileType == 'video'
@@ -21,7 +31,7 @@ div.upload-thing
         p.upload-title-text.views-text #{upload[popularTimeViews]} #{withinDisplayString}
 
 if user && user.role == 'admin'
-    div.admin-div(style="margin-bottom:15px")
+    div.admin-div(style="margin-bottom:15px;margin-top:-4px;")
         if upload.category
             p.upload-title-text.views-text(style="margin:0;margin-left:3px;text-align:center;display:inline;") #{upload.category}
         if upload.subcategory
@@ -34,8 +44,8 @@ if user && user.role == 'admin'
             if upload.rating == 'sensitive'
                 p.upload-title-text.views-text(style="display:inline") Sensitive (18+)
 
-    div.thing(style="margin-top:-15px")
-        input.ratingChanged(type="checkbox" value=`${upload._id}`)
+        div.thing(style="margin-top:-33px;margin-left:44px;display:block")
+             input.ratingChanged(style="display:block" type="checkbox" value=`${upload._id}`)
 
 // denote whether upload is deleted
 if user && (user.role == 'admin' || user.role == 'moderator') && upload.visibility == 'removed'
