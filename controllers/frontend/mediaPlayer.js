@@ -169,6 +169,8 @@ exports.getMedia = async (req, res) => {
       isAdmin = req.user.role == 'admin';
     }
 
+    const isUserOrAdmin = isAdmin || isUser;
+
     const legitViews = _.filter(upload.checkedViews, function(view){
       return view.validity == 'real'
     });
@@ -314,6 +316,7 @@ exports.getMedia = async (req, res) => {
         stripeToken,
         alreadyReported,
         categories,
+        isUserOrAdmin,
         getParameterByName
       });
     }

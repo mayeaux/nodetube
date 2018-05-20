@@ -296,7 +296,8 @@ block content
                                                 p(style="display:inline-block;") - #{comment.timeAgo} &nbsp
                                                     a.reply-link Reply
                                                     // delete button
-                                                    if user && ( user.channelUrl == upload.uploader.channelUrl || user.channelUrl == comment.commenter.channelUrl)
+                                                    // TODO: replace with is user or admin
+                                                    if isUserOrAdmin
                                                         a.delete-comment-button(style="margin-left:9px;" commentId=comment._id) Delete
                                             p(style="text-align:left;") #{comment.text}
 
