@@ -187,6 +187,8 @@ exports.postSignup = async (req, res, next) => {
 
 exports.postUpdateProfile = async (req, res, next)  => {
 
+  console.log(`UPDATING PROFILE FOR ${'hello'}`)
+
   if(!req.user && req.body.uploadToken){
     req.user = await User.findOne({ uploadToken : req.body.uploadToken })
   }
@@ -211,6 +213,8 @@ exports.postUpdateProfile = async (req, res, next)  => {
     filename = req.files.filetoupload.originalFilename;
     fileType = getMediaType(filename);
     fileExtension = path.extname(filename);
+
+    console.log('FILE EXTENSION: ' + fileExtension)
   }
 
 
@@ -386,6 +390,10 @@ exports.postReset = (req, res, next) => {
 exports.postForgot = async (req, res, next) => {
 
   try {
+
+    if(process.env.FORGOT_PASSWORD_EMAIL_FUNCTIONALITY_ON !== 'true'){
+      return res.send('forgot email functionality not on')
+    }
 
     req.assert('email', 'Please enter a valid email address.').isEmail();
     req.sanitize('email').normalizeEmail({gmail_remove_dots: false});
