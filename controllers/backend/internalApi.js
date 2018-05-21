@@ -123,11 +123,7 @@ exports.blockUser = async (req, res) => {
 
     const blockedUsername = req.body.blockedUsername;
 
-    console.log(blockedUsername + ' thing');
-
     const blockedUser = await User.findOne({channelUrl: blockedUsername}).select('id _id');
-
-    console.log(blockedUser)
 
     // is this the right API?
     req.user.blockedUsers.push(blockedUser._id);

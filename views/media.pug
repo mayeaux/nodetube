@@ -245,16 +245,17 @@ block content
                 br
                 div.col-sm-12
                 if user
-                    // comment form
-                    div.comment-form.form-group
-                        form.form-horizontal.overall-comment-form(class="comment-form" action='/api/comment', method='post')
-                            input(type='hidden', name='_csrf', value=_csrf)
-                            label(for="comment" style="font-size:17px;") Enter Comment
-                            br
-                            input(type="hidden" name="upload" id="upload" value=upload._id)
-                            textarea(name="comment" id="comment" minlength="2" style="width:400px;max-width:100%")
-                            br
-                            input.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
+                    if !viewingUserIsBlocked
+                        // comment form
+                        div.comment-form.form-group
+                            form.form-horizontal.overall-comment-form(class="comment-form" action='/api/comment', method='post')
+                                input(type='hidden', name='_csrf', value=_csrf)
+                                label(for="comment" style="font-size:17px;") Enter Comment
+                                br
+                                input(type="hidden" name="upload" id="upload" value=upload._id)
+                                textarea(name="comment" id="comment" minlength="2" style="width:400px;max-width:100%")
+                                br
+                                input.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
                 else
                     div.comment-form.form-group.no-user-comment-form
                         form.form-horizontal.overall-comment-form(class="comment-form")
@@ -294,13 +295,14 @@ block content
                                                 p(style="text-align:left;display:inline-block;")
                                                     a(href=`/user/${comment.commenter.channelUrl}` style="color:black;margin-right:5px;") #{comment.commenter.channelName || comment.commenter.channelUrl}
                                                 p(style="display:inline-block;") - #{comment.timeAgo} &nbsp
-                                                    a.reply-link(style="cursor:pointer") Reply
+                                                    if !viewingUserIsBlocked
+                                                        a.reply-link(style="cursor:pointer") Reply
                                                     // delete button
                                                     // if uploader or admin or commenter, let them delete comment
                                                     if isUploaderOrAdmin || ( comment.commenter._id == user._id )
                                                         a.delete-comment-button(style="margin-left:9px;cursor:pointer;" commentId=comment._id) Delete
 
-                                                    if isUploaderOrAdmin
+                                                    if isUploaderOrAdmin && !viewingUserIsBlocked
                                                         a.block-user-button(style="margin-left:9px;cursor:pointer;" blockedusername=comment.commenter.channelUrl) Block User
 
 
