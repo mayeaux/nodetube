@@ -1,8 +1,12 @@
 if user && user.role == 'admin'
-    div.center-block.text-center.col-sm-12(style="margin-top: 20px;")
+    div.center-block.text-center.col-sm-12(style="margin-top:30px")
         button.btn-lg.button-success.change-rating(rating="sensitive") Mark As Sensitive
         button.btn-lg.button-success.change-rating(rating="mature") Mark As NSFW (Mature)
         button.btn-lg.button-success.change-rating(rating="allAges") Mark As SFW (AllAges)
+
+        br
+        each category in categories
+          button.btn-md.button-success.change-rating(category=`${category.name}`) #{category.displayName}
         br
         //each category in categories
         //  button.btn-md.button-success.change-category(category=`${category.name}`) #{category.displayName}

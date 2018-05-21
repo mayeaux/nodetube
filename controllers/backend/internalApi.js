@@ -117,6 +117,29 @@ exports.changeDefaultUserQuality = async (req, res) => {
 };
 
 
+exports.blockUser = async (req, res) => {
+
+  try {
+
+    const blockedUsername = req.body.blockedUsername;
+
+    const blockedUser = await User.findOne({channelUrl: blockedUsername}).select('id _id');
+
+    // is this the right API?
+    req.user.blockedUsers.push(blockedUser._id);
+
+    await req.user.save();
+
+    res.send('success')
+
+  } catch (err){
+    console.log(err);
+    res.status(500);
+    res.send('error');
+  }
+
+};
+
 /**
  * POST /api/report
  * Report an upload
@@ -605,6 +628,24 @@ exports.postComment = async (req, res) => {
       return res.send('Comment already exists');
     }
 
+    let upload = await Upload.findOne({_id: req.body.upload}).populate('uploader');
+
+    const blockedUsers = upload.uploader.blockedUsers;
+
+    let viewingUserIsBlocked = false;
+    if(req.user){
+      const viewingUserId = req.user._id;
+
+      for(const blockedUser of blockedUsers){
+        if(blockedUser.toString() == viewingUserId) viewingUserIsBlocked = true;
+      }
+    }
+
+    if(viewingUserIsBlocked){
+      res.status(500);
+      return res.send('user is blocked from sending comment');
+    }
+
     // create and save comment
     let comment = new Comment({
       text: req.body.comment,
@@ -636,8 +677,6 @@ exports.postComment = async (req, res) => {
     user.comments.push(comment._id);
 
     user = await user.save();
-
-    let upload = await Upload.findOne({_id: req.body.upload}).populate('uploader');
 
     upload.comments.push(comment._id);
 

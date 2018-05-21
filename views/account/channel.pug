@@ -162,10 +162,6 @@ block content
 
             include ../viewPartials/uploadDetails
 
-            if user && user.role == 'admin'
-                div.changeRating(style="margin-top:30px;")
-                    input.ratingChanged(type="checkbox" value=`${upload._id}`)
-
     include ../viewPartials/adminSensitivityButtons
 
     include ../viewPartials/changeSensitivityFilterJs

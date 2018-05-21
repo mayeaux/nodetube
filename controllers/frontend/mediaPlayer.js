@@ -58,7 +58,7 @@ exports.getMedia = async (req, res) => {
 
     let upload = await Upload.findOne({
       uniqueTag: media,
-    }).populate({path: 'uploader comments checkedViews', populate: {path: 'commenter'}}).exec();
+    }).populate({path: 'uploader comments checkedViews blockedUsers', populate: {path: 'commenter'}}).exec();
 
     const userIsAdmin = req.user && req.user.role == 'admin';
 
@@ -168,6 +168,12 @@ exports.getMedia = async (req, res) => {
       // the requesting user is an adming
       isAdmin = req.user.role == 'admin';
     }
+
+    const isUploader =  req.user._id.toString() == upload.uploader._id.toString();
+
+
+    const isUserOrAdmin = isAdmin || isUser;
+    const isUploaderOrAdmin = isUploader || isAdmin;
 
     const legitViews = _.filter(upload.checkedViews, function(view){
       return view.validity == 'real'
@@ -294,7 +300,19 @@ exports.getMedia = async (req, res) => {
         alreadyReported = false;
       }
 
-      console.log('rendering');
+      const blockedUsers = upload.uploader.blockedUsers;
+
+      let viewingUserIsBlocked = false;
+      if(req.user){
+        const viewingUserId = req.user._id;
+
+        for(const blockedUser of blockedUsers){
+          if(blockedUser.toString() == viewingUserId) viewingUserIsBlocked = true;
+        }
+      }
+
+      console.log(viewingUserIsBlocked + ' is blocked')
+
 
       res.render('media', {
         title: upload.title,
@@ -314,7 +332,10 @@ exports.getMedia = async (req, res) => {
         stripeToken,
         alreadyReported,
         categories,
-        getParameterByName
+        isUserOrAdmin,
+        isUploaderOrAdmin,
+        getParameterByName,
+        viewingUserIsBlocked
       });
     }
 

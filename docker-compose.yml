@@ -19,7 +19,7 @@ services:
 
   mongo:
     container_name: mongodb
-    image: mongo:2.2
+    image: mongo:3.6
     volumes:
       - /data/db
     ports:
