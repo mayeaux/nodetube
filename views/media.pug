@@ -294,13 +294,16 @@ block content
                                                 p(style="text-align:left;display:inline-block;")
                                                     a(href=`/user/${comment.commenter.channelUrl}` style="color:black;margin-right:5px;") #{comment.commenter.channelName || comment.commenter.channelUrl}
                                                 p(style="display:inline-block;") - #{comment.timeAgo} &nbsp
-                                                    a.reply-link Reply
+                                                    a.reply-link(style="cursor:pointer") Reply
                                                     // delete button
-                                                    if isUserOrAdmin
-                                                        a.delete-comment-button(style="margin-left:9px;" commentId=comment._id) Delete
+                                                    // if uploader or admin or commenter, let them delete comment
+                                                    if isUploaderOrAdmin || ( comment.commenter._id == user._id )
+                                                        a.delete-comment-button(style="margin-left:9px;cursor:pointer;" commentId=comment._id) Delete
 
-                                                    if isUserOrAdmin
-                                                        a.block-user-button(style="margin-left:9px;" commentId=comment._id) Block User
+                                                    if isUploaderOrAdmin
+                                                        a.block-user-button(style="margin-left:9px;cursor:pointer;" commentId=comment._id) Block User
+
+
                                             p(style="text-align:left;") #{comment.text}
 
                                             // container that appears after you hit Reply

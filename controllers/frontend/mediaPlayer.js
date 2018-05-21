@@ -169,7 +169,11 @@ exports.getMedia = async (req, res) => {
       isAdmin = req.user.role == 'admin';
     }
 
+    const isUploader =  req.user._id.toString() == upload.uploader._id.toString();
+
+
     const isUserOrAdmin = isAdmin || isUser;
+    const isUploaderOrAdmin = isUploader || isAdmin;
 
     const legitViews = _.filter(upload.checkedViews, function(view){
       return view.validity == 'real'
@@ -317,6 +321,7 @@ exports.getMedia = async (req, res) => {
         alreadyReported,
         categories,
         isUserOrAdmin,
+        isUploaderOrAdmin,
         getParameterByName
       });
     }

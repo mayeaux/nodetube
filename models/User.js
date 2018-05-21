@@ -176,7 +176,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['high', 'low'],
     default: 'low'
-  }
+  },
+
+  blockedUsers: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
 
 }, { timestamps: true, minimize: false });
 
