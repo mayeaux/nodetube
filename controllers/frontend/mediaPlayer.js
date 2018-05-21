@@ -303,7 +303,6 @@ exports.getMedia = async (req, res) => {
       const blockedUsers = upload.uploader.blockedUsers;
 
       let viewingUserIsBlocked = false;
-
       if(req.user){
         const viewingUserId = req.user._id;
 

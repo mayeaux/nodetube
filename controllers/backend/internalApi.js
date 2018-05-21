@@ -628,6 +628,24 @@ exports.postComment = async (req, res) => {
       return res.send('Comment already exists');
     }
 
+    let upload = await Upload.findOne({_id: req.body.upload}).populate('uploader');
+
+    const blockedUsers = upload.uploader.blockedUsers;
+
+    let viewingUserIsBlocked = false;
+    if(req.user){
+      const viewingUserId = req.user._id;
+
+      for(const blockedUser of blockedUsers){
+        if(blockedUser.toString() == viewingUserId) viewingUserIsBlocked = true;
+      }
+    }
+
+    if(viewingUserIsBlocked){
+      res.status(500);
+      return res.send('user is blocked from sending comment');
+    }
+
     // create and save comment
     let comment = new Comment({
       text: req.body.comment,
@@ -659,8 +677,6 @@ exports.postComment = async (req, res) => {
     user.comments.push(comment._id);
 
     user = await user.save();
-
-    let upload = await Upload.findOne({_id: req.body.upload}).populate('uploader');
 
     upload.comments.push(comment._id);
 
