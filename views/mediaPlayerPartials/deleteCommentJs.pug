@@ -1,66 +1,63 @@
 script.
-  function deleteComment(commentId, commentThread){
+  $(function(){
+    function deleteComment(commentId, commentThread) {
 
-    var upload = '#{upload._id}';
+      var upload = '#{upload._id}';
 
-    var csrf = '#{_csrf}'
+      var csrf = '#{_csrf}'
 
-    var data = {
-      _csrf: csrf,
-      upload,
-      commentId,
-      uniqueTag: mediaUniqueTag
-    }
-
-    $.ajax({
-      type: 'POST',
-      url: `/api/comment/delete`,
-      data,
-      success: function (data) {
-
-        swal('Comment deleted!');
-
-        commentThread.hide();
-
-
-
-        // remove comment
-        console.log(data);
-      },
-      error: function (err) {
-
-        swal('Unable to delete comment please contact administrator')
-        console.log(err);
+      var data = {
+        _csrf: csrf,
+        upload,
+        commentId,
+        uniqueTag: mediaUniqueTag
       }
-    });
 
-  }
+      $.ajax({
+        type: 'POST',
+        url: `/api/comment/delete`,
+        data,
+        success: function (data) {
 
-  $('.delete-comment-button').on('touchstart click', function (e) {
+          swal('Comment deleted!');
 
-    var commentThread = $(this).parent().parent().parent().parent();
+          commentThread.hide();
 
-    var commentId = $(this).attr('commentId');
 
-    // dont move browser
-    e.preventDefault();
+          // remove comment
+          console.log(data);
+        },
+        error: function (err) {
 
-    swal({
-        title: "Delete Comment",
-        text: "Are you sure you want to delete the comment? \n The entire comment thread will be deleted.",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonClass: "btn-danger",
-        confirmButtonText: "Delete Comment",
-        cancelButtonText: "Cancel",
-        closeOnConfirm: false,
-        closeOnCancel: false
-      },
-      function (isConfirm) {
-        if (isConfirm) {
-          deleteComment(commentId, commentThread)
-        } else {
-          swal.close()
+          swal('Unable to delete comment please contact administrator')
+          console.log(err);
         }
       });
+
+    }
+
+    $('.delete-comment-button').on('touchstart click', function (e) {
+
+      var commentThread = $(this).parent().parent().parent().parent();
+
+      var commentId = $(this).attr('commentId');
+
+      // dont move browser
+      e.preventDefault();
+
+      swal({
+        title: "Delete Comment",
+        text: "Are you sure you want to delete the comment? \n The entire comment thread will be deleted.",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Delete Comment'
+      }).then(function (result) {
+        if (result.value) {
+          deleteComment(commentId, commentThread)
+        } else {
+          swal.close();
+        }
+      })
+
+    })
   })
