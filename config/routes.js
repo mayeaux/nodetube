@@ -211,6 +211,8 @@ function frontendRoutes(app){
   app.post(`/api/subscribe`, passportConfig.isAuthenticated, internalApiController.subscribeEndpoint);
   app.post('/api/credit', passportConfig.isAuthenticated, internalApiController.sendUserCredit);
   app.post('/api/report', passportConfig.isAuthenticated, internalApiController.reportUpload);
+  app.post('/api/user/block', passportConfig.isAuthenticated, internalApiController.blockUser);
+
 
   // for users or siteVisitors
   app.post(`/api/changeUserFilter`, internalApiController.changeUserFilter);

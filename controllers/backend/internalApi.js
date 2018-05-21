@@ -117,6 +117,33 @@ exports.changeDefaultUserQuality = async (req, res) => {
 };
 
 
+exports.blockUser = async (req, res) => {
+
+  try {
+
+    const blockedUsername = req.body.blockedUsername;
+
+    console.log(blockedUsername + ' thing');
+
+    const blockedUser = await User.findOne({channelUrl: blockedUsername}).select('id _id');
+
+    console.log(blockedUser)
+
+    // is this the right API?
+    req.user.blockedUsers.push(blockedUser._id);
+
+    await req.user.save();
+
+    res.send('success')
+
+  } catch (err){
+    console.log(err);
+    res.status(500);
+    res.send('error');
+  }
+
+};
+
 /**
  * POST /api/report
  * Report an upload
