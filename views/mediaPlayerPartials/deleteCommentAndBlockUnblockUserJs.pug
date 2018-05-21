@@ -134,11 +134,11 @@ script.
 
       $.ajax({
         type: 'POST',
-        url: `/api/user/block`,
+        url: `/api/user/unblock`,
         data,
         success: function (data) {
 
-          swal('User was blocked successfully');
+          swal('User was unblocked successfully');
 
           // remove comment
           console.log(data);
@@ -163,10 +163,10 @@ script.
 
       swal({
         title: "Block User",
-        text: `Are you sure you want to unblock user ${blockedUsername}? They will no longer be able to comment on your content`,
+        text: `Are you sure you want to unblock user ${blockedUsername}? They will be able to comment on your content again`,
         type: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Block User'
+        confirmButtonText: 'Unblock User'
       }).then(function (result) {
         if (result.value) {
           unblockUser(blockedUsername)

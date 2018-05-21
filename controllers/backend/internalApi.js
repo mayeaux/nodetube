@@ -123,9 +123,23 @@ exports.blockUser = async (req, res) => {
 
     const blockedUsername = req.body.blockedUsername;
 
+    console.log(`blocking ${blockedUsername} for ${req.user.channelUrl}`)
+
     const blockedUser = await User.findOne({channelUrl: blockedUsername}).select('id _id');
 
-    // is this the right API?
+    let userAlreadyBlocked;
+    for(let [index, alreadyBlockedUser] of req.user.blockedUsers.entries()){
+
+      if(alreadyBlockedUser == blockedUser._id.toString()){
+        userAlreadyBlocked = true;
+      }
+    }
+
+    if(userAlreadyBlocked){
+      console.log('user already blocked')
+      return res.send('success');
+    }
+
     req.user.blockedUsers.push(blockedUser._id);
 
     await req.user.save();
@@ -139,6 +153,38 @@ exports.blockUser = async (req, res) => {
   }
 
 };
+
+
+exports.unblockUser = async (req, res) => {
+
+  try {
+
+    const blockedUsername = req.body.blockedUsername;
+
+    const blockedUser = await User.findOne({channelUrl: blockedUsername}).select('id _id');
+
+    let blockedUserIndex;
+    for(let [index, alreadyBlockedUser] of req.user.blockedUsers.entries()){
+
+      if(alreadyBlockedUser == blockedUser._id.toString()){
+        blockedUserIndex = index;
+      }
+    }
+
+    req.user.blockedUsers.splice(blockedUserIndex, 1);
+
+    await req.user.save();
+
+    res.send('success')
+
+  } catch (err){
+    console.log(err);
+    res.status(500);
+    res.send('error');
+  }
+
+};
+
 
 /**
  * POST /api/report
