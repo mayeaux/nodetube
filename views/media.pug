@@ -296,9 +296,11 @@ block content
                                                 p(style="display:inline-block;") - #{comment.timeAgo} &nbsp
                                                     a.reply-link Reply
                                                     // delete button
-                                                    // TODO: replace with is user or admin
                                                     if isUserOrAdmin
                                                         a.delete-comment-button(style="margin-left:9px;" commentId=comment._id) Delete
+
+                                                    if isUserOrAdmin
+                                                        a.block-user-button(style="margin-left:9px;" commentId=comment._id) Block User
                                             p(style="text-align:left;") #{comment.text}
 
                                             // container that appears after you hit Reply

@@ -58,6 +58,70 @@ script.
           swal.close();
         }
       })
-
     })
+
+    function blockUser(blockingUserName, blockedUserName) {
+
+      var upload = '#{upload._id}';
+
+      var csrf = '#{_csrf}'
+
+      var data = {
+        _csrf: csrf,
+        upload,
+        commentId,
+        uniqueTag: mediaUniqueTag
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: `/api/comment/delete`,
+        data,
+        success: function (data) {
+
+          swal('Comment deleted!');
+
+          commentThread.hide();
+
+
+          // remove comment
+          console.log(data);
+        },
+        error: function (err) {
+
+          swal('Unable to delete comment please contact administrator')
+          console.log(err);
+        }
+      });
+
+    }
+
+    $('.block-user-button').on('touchstart click', function (e) {
+
+      // GET USER
+      // POST TO USER
+      //
+
+      var blockedUserName = '';
+      var blockingUserName = '';
+
+      // dont move browser
+      e.preventDefault();
+
+      swal({
+        title: "Block User",
+        text: `Are you sure you want to block user ${username}? They will no longer be able to comment on your content`,
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Block User'
+      }).then(function (result) {
+        if (result.value) {
+          blockUser(blockingUserName, blockedUserName)
+        } else {
+          swal.close();
+        }
+      })
+    })
+
+
   })
