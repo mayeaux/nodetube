@@ -14,7 +14,8 @@ block content
                     p.countdown-timer Countdown to send new message : 10 seconds
                     .messages
                         h1 Messages:
-                        ul.message-list
+                        #messages-scrollview(style='max-height: 80vh; overflow-y: auto;')
+                            ul.message-list
         script.
           var channelUrl = '#{channelUrl}'
 
