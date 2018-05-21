@@ -48,10 +48,12 @@ block content
                         a.title-anchor(href=`/user/${react.upload.uploader.channelUrl}/${react.upload.uniqueTag}`)
                             // TODO: Sub out thumbnail here
 
-                            if react.upload.fileType == 'video' && react.upload.thumbnailUrl
-                                img.preview-image(src=react.upload.thumbnailUrl)
-                            else if react.upload.fileType == 'video' && !react.upload.thumbnailUrl
-                                img.preview-image(src="/no_img.png")
+                            if react.upload.fileType == 'video' && react.upload.thumbnails.generated
+                                img.preview-image(src=`${uploadServer}/${react.upload.uploader.channelUrl}/${react.upload.thumbnails.generated}`)
+                            else if react.upload.fileType == 'video' && react.upload.thumbnails.custom
+                                img.preview-image(src=`${uploadServer}/${react.upload.uploader.channelUrl}/${react.upload.thumbnails.custom}`)
+                            else if react.upload.fileType == 'video'
+                                img.preview-image(src="/images/no_img.png")
                             else if react.upload.fileType == 'image'
                                 img.preview-image(src=react.upload.uploadUrl)
                             else if react.upload.fileType == 'audio'
@@ -64,7 +66,7 @@ block content
                                 br
 
                         p(style="font-size:16px") by &nbsp
-                            a.upload-user-text(href=`/user/${react.upload.uploader.channelUrl}`) #{react.upload.uploader.channelName}
+                            a.upload-user-text(href=`/user/${react.upload.uploader.channelUrl}`) #{react.upload.uploader.channelName || react.upload.uploader.channelUrl}
 
                         div.upload-details
                             p A user reacted with a #{react.react} react #{react.timeAgo}
@@ -72,7 +74,7 @@ block content
 
             if reacts
                 if reacts.length > 0
-                    nav.center-block.text-center(aria-label='Page navigation example')
+                    nav.center-block.col-sm-12.text-center(aria-label='Page navigation example')
                         ul.pagination
                             li.page-item
                                 a.page-link(href=`/media/recentReacts/${previousNumber}`) <
@@ -84,6 +86,8 @@ block content
                             li.page-item
                                 a.page-link(href=`/media/recentReacts/${nextNumber}`) >
 
+
+block extra_footer_js
     script.
       $(document).on({
         mouseenter: function () {
@@ -103,3 +107,4 @@ block content
           $(this).css("height", height / 1.10);
         }
       }, '.preview-image');
+
