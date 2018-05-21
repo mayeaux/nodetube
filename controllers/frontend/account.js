@@ -27,6 +27,12 @@ const uploadFilters = require('../../lib/mediaBrowsing/helpers');
 const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
 
 
+const javascriptTimeAgo = require('javascript-time-ago');
+javascriptTimeAgo.locale(require('javascript-time-ago/locales/en'));
+require('javascript-time-ago/intl-messageformat-global');
+require('intl-messageformat/dist/locale-data/en');
+const timeAgoEnglish = new javascriptTimeAgo('en-US');
+
 /**
  * GET /upload
  * Page to facilitate user uploads
@@ -330,6 +336,8 @@ exports.getChannel = async (req, res) => {
 
     const siteVisitor = req.siteVisitor;
 
+    const joinedTimeAgo = timeAgoEnglish.format(user.createdAt);
+
     res.render('account/channel', {
       channel : user,
       title: user.channelName || user.channelUrl,
@@ -349,7 +357,8 @@ exports.getChannel = async (req, res) => {
       highlightedNumber: page,
       userUploadAmount,
       channelUrl: user.channelUrl,
-      categories
+      categories,
+      joinedTimeAgo
     });
 
 
