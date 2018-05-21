@@ -118,5 +118,63 @@ script.
       })
     })
 
+    function unblockUser(blockedUsername) {
+
+      var csrf = '#{_csrf}'
+
+      const blockingUsername = '#{user.channelUrl}'
+
+      $()
+
+      var data = {
+        _csrf: csrf,
+        blockingUsername,
+        blockedUsername
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: `/api/user/block`,
+        data,
+        success: function (data) {
+
+          swal('User was blocked successfully');
+
+          // remove comment
+          console.log(data);
+        },
+        error: function (err) {
+
+          swal('Unable to block user please contact administrator')
+          console.log(err);
+        }
+      });
+
+    }
+
+    $('.unblock-user-button').on('touchstart click', function (e) {
+
+      // dont move browser
+      e.preventDefault();
+
+      var blockedUsername = $(this).attr('blockedusername');
+
+      console.log(blockedUsername + ' blocked')
+
+      swal({
+        title: "Block User",
+        text: `Are you sure you want to unblock user ${blockedUsername}? They will no longer be able to comment on your content`,
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Block User'
+      }).then(function (result) {
+        if (result.value) {
+          unblockUser(blockedUsername)
+        } else {
+          swal.close();
+        }
+      })
+    })
+
 
   })

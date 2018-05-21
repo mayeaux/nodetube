@@ -169,7 +169,7 @@ exports.getMedia = async (req, res) => {
       isAdmin = req.user.role == 'admin';
     }
 
-    const isUploader =  req.user._id.toString() == upload.uploader._id.toString();
+    const isUploader =  req.user && req.user._id.toString() == upload.uploader._id.toString();
 
 
     const isUserOrAdmin = isAdmin || isUser;
