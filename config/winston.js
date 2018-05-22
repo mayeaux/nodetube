@@ -21,7 +21,6 @@ winston.loggers.add('uploadEndpoint', {
     format.json(),
     // label({ label: 'custom label!' }),
     // timestamp(),
-    // prettyPrint()
   ),
   transports: [
     //
