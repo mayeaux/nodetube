@@ -35,14 +35,26 @@ console.log(`SAVE AND SERVE FILES DIRECTORY: ${saveAndServeFilesDirectory}`)
 
 var resumable = require('../../lib/uploading/resumable.js')(__dirname +  '/upload');
 
+
+const winston = require('winston');
+
+//
+// Grab your preconfigured logger
+//
+const uploadLogger = winston.loggers.get('uploadEndpoint');
+
 /**
  * POST /api/upload
  * File Upload API example.
  */
 exports.postFileUpload = async (req, res, next) => {
 
-
   try {
+
+    let logObject = {
+      user: req.user.channelUrl,
+      upload: req.query.title
+    };
 
     // res.setHeader('Access-Control-Allow-Origin', '*');
 
@@ -56,6 +68,8 @@ exports.postFileUpload = async (req, res, next) => {
     // console.log(`REQUESTED BY : ${req.user.channelName}`);
 
     if (req.user.status == 'uploadRestricted') {
+      uploadLogger.info('User upload status restricted', logObject);
+
       res.status(403);
       return res.send('Sorry your account is restricted')
     }
@@ -63,6 +77,7 @@ exports.postFileUpload = async (req, res, next) => {
     // TODO: File size check
 
     if (req.user.status == 'restricted') {
+      uploadLogger.info('User status restricted', logObject);
       res.status(403);
       return res.send('Sorry uploads are halted');
     }
@@ -87,7 +102,7 @@ exports.postFileUpload = async (req, res, next) => {
     });
 
     if (alreadyUploaded) {
-      console.log('already uploaded!');
+      uploadLogger.info('Upload title already uploaded', logObject);
       res.status(500);
       return res.send({message: 'ALREADY-UPLOADED'});
     }
@@ -100,9 +115,7 @@ exports.postFileUpload = async (req, res, next) => {
       const chunkNumber = req.query.resumableChunkNumber;
       const totalChunks = req.query.resumableTotalChunks;
 
-      console.log(`Processing chunk number ${chunkNumber} of ${totalChunks} for ${req.user.channelUrl}, upload: ${req.query.title}`);
-
-      // console.log(status);
+      uploadLogger.info(`Processing chunk number ${chunkNumber} of ${totalChunks} `, logObject);
 
       const fileSize = req.body.resumableTotalSize;
       const fileName = filename;
@@ -131,8 +144,11 @@ exports.postFileUpload = async (req, res, next) => {
 
         await upload.save();
 
-        console.log('unknown file type: ' + fileName);
-        return res.send({message: 'UNKNOWN FILE'});
+        logObject.uploadExtension = fileExtension;
+        uploadLogger.info(`Unknown file type`, logObject);
+
+        res.status(500);
+        return res.send({message: 'UNKNOWN FILETYPE'});
       }
 
       let uploadPath = `./upload/${identifier}`;
