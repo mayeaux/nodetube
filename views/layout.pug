@@ -1,33 +1,33 @@
 doctype html
 html
   head
-    meta(charset='utf-8')/
-    meta(http-equiv='X-UA-Compatible', content='IE=edge')/
-    meta(name='viewport', content='width=device-width, initial-scale=1.0')/
-    meta(name='theme-color' content='#4DA5F4')/
-    meta(name='csrf-token', content=_csrf)/
-    meta(name="description", content=meta.description)/
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    meta(name='theme-color' content='#4DA5F4')
+    meta(name='csrf-token', content=_csrf)
+    meta(name="description", content=meta.description)
 
-    meta(property='og:title', content=meta.title || title + ' - PewTube')/
-    meta(property='og:image', content=meta.image)/
-    meta(property='og:description', content=meta.description)/
-    meta(property='og:video', content=meta.video)/
+    meta(property='og:title', content=meta.title || title + ' - PewTube')
+    meta(property='og:image', content=meta.image)
+    meta(property='og:description', content=meta.description)
+    meta(property='og:video', content=meta.video)
 
 
-    meta(name='twitter:card', content='summary')/
-    meta(name='twitter:site', content='@alt_tech_')/
-    meta(name='twitter:title', content=meta.title || title + ' - PewTube')/
-    meta(name='twitter:description', content=meta.description || "PewTube - A free speech YouTube alternative for video, audio and images, which won't censor you for wrongthink.")/
-    meta(name='twitter:image', content=meta.image)/
+    meta(name='twitter:card', content='summary')
+    meta(name='twitter:site', content='@alt_tech_')
+    meta(name='twitter:title', content=meta.title || title + ' - PewTube')
+    meta(name='twitter:description', content=meta.description || "PewTube - A free speech YouTube alternative for video, audio and images, which won't censor you for wrongthink.")
+    meta(name='twitter:image', content=meta.image)
 
 
     title #{title} - PewTube
 
-    link(rel="stylesheet" href="/bower_components/sweetalert2/dist/sweetalert2.css")/
-    link(rel='stylesheet', href='/css/main.css')/
-    link(rel='stylesheet', href='/css/pewtube.css')/
-    link(rel='shortcut icon', href='/favicon.ico')/
-    link(href='https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css', rel='stylesheet')/
+    link(rel="stylesheet" href="/bower_components/sweetalert2/dist/sweetalert2.css")
+    link(rel='stylesheet', href='/css/main.css')
+    link(rel='stylesheet', href='/css/pewtube.css')
+    link(rel='shortcut icon', href='/favicon.ico')
+    link(href='https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css', rel='stylesheet')
     block extra_css
 
     script(src='/js/lib/jquery-3.1.1.min.js')
