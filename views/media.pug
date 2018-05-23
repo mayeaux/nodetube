@@ -2,40 +2,11 @@ extends layout
 
 block content
 
-    script(src='https://checkout.stripe.com/checkout.js')
-
-    style.
-        .pewtube-pro {
-            background: #edeeee;
-            font-weight: 400;
-            font-size: 13px;
-            margin-left: 3px;
-            padding: 8px 9px;
-            display: inline-block;
-            border-radius: 3px;
-            transform: translateY(-2px);
-        }
-
-        .dropdown {
-            text-align: center;
-        }
-
-        .button, .dropdown-menu {
-            margin: 10px auto
-        }
-
-        .dropdown-menu {
-            width: 200px;
-            left: 50%;
-            margin-left: -100px;
-            margin-top: 0px;
-        }
-
 
     br
     div.center-block.text-center.col-sm-12
         if upload.status == 'processing'
-            h2 Your upload #{upload.title } is processing. Check back in a couple minutes.
+            h2 Your upload #{upload.title} is processing. Check back in a couple minutes.
             br
             br
 
@@ -350,56 +321,84 @@ block content
                                     p No commenter
 
 
-    script.
-      balanceText();
-
-    // reportUploadFunctionalityJs
-
-    script(src="https://cdn.plyr.io/2.0.16/plyr.js")
-
-    include ./mediaPlayerPartials/changeQualityJs
-
-    include ./mediaPlayerPartials/changeUserDefaultQualityJs
-
-    include mediaPlayerPartials/creditFunctionalityJs
-
-    include mediaPlayerPartials/deleteCommentJs
-
-    include mediaPlayerPartials/subscribeFunctionalityJs
-
-    include mediaPlayerPartials/sensitiveFunctionalityJs
-
-    include mediaPlayerPartials/plyrAndAutoplayFunctionalityJs
-
-    include mediaPlayerPartials/embedLinkFunctionalityJs
-
-    include ./mediaPlayerPartials/downloadFunctionalityJs
-
-    include ./mediaPlayerPartials/repeatFunctionalityJs
-
-    include ./mediaPlayerPartials/reactFunctionalityJs
-
-    script.
-      var myTextEl = document.getElementById('descriptionText');
-      myTextEl.innerHTML = Autolinker.link(myTextEl.innerHTML);
-
-    if user
-        script.
-          var user = '#{user.id}'
-    else
-        script.
-          var user = undefined
-
-
 block extra_js
+  script(src='https://checkout.stripe.com/checkout.js')
   script(src="https://cdnjs.cloudflare.com/ajax/libs/autolinker/1.4.4/Autolinker.js")
 
 
 block extra_css
   link(rel="stylesheet" href="https://cdn.plyr.io/2.0.16/plyr.css")
+  style.
+    .pewtube-pro {
+        background: #edeeee;
+        font-weight: 400;
+        font-size: 13px;
+        margin-left: 3px;
+        padding: 8px 9px;
+        display: inline-block;
+        border-radius: 3px;
+        transform: translateY(-2px);
+    }
+
+    .dropdown {
+        text-align: center;
+    }
+
+    .button, .dropdown-menu {
+        margin: 10px auto
+    }
+
+    .dropdown-menu {
+        width: 200px;
+        left: 50%;
+        margin-left: -100px;
+        margin-top: 0px;
+    }
 
 
 block extra_footer_js
-  script(src="/js/media.js")
   script(src="https://cdn.plyr.io/2.0.16/plyr.js")
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js")
+  script(src="/js/media.js")
+
+  script.
+    balanceText();
+
+  // reportUploadFunctionalityJs
+
+  include ./mediaPlayerPartials/changeQualityJs
+
+  include ./mediaPlayerPartials/changeUserDefaultQualityJs
+
+  include mediaPlayerPartials/creditFunctionalityJs
+
+  include mediaPlayerPartials/deleteCommentJs
+
+  include mediaPlayerPartials/subscribeFunctionalityJs
+
+  include mediaPlayerPartials/sensitiveFunctionalityJs
+
+  include mediaPlayerPartials/plyrAndAutoplayFunctionalityJs
+
+  include mediaPlayerPartials/embedLinkFunctionalityJs
+
+  include ./mediaPlayerPartials/downloadFunctionalityJs
+
+  include ./mediaPlayerPartials/repeatFunctionalityJs
+
+  include ./mediaPlayerPartials/reactFunctionalityJs
+
+  script.
+    var myTextEl = document.getElementById('descriptionText');
+    if (myTextEl)
+    {
+      myTextEl.innerHTML = Autolinker.link(myTextEl.innerHTML);
+    }
+
+  if user
+      script.
+        var user = '#{user.id}'
+  else
+      script.
+        var user = undefined
 

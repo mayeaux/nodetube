@@ -11,6 +11,9 @@ const Notification = require('../../models/index').Notification;
 const SocialPost = require('../../models/index').SocialPost;
 const Subscription = require('../../models/index').Subscription;
 
+const uploadHelpers = require('../../lib/helpers/settings');
+const uploadServer = uploadHelpers.uploadServer;
+
 /**
  * GET /media/recentComments
  * Recent comments
@@ -54,7 +57,8 @@ exports.recentComments = async (req, res) => {
       numbersArray,
       highlightedNumber: page,
       previousNumber,
-      nextNumber
+      nextNumber,
+      uploadServer
     });
 
   } catch (err){
@@ -108,7 +112,8 @@ exports.recentReacts = async (req, res) => {
     numbersArray,
     highlightedNumber: page,
     previousNumber,
-    nextNumber
+    nextNumber,
+    uploadServer
   });
 
 };
