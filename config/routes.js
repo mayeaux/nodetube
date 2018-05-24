@@ -187,6 +187,8 @@ function frontendRoutes(app){
   app.get('/logout', accountFrontendController.logout);
   app.get('/forgot', accountFrontendController.getForgot);
   app.get('/reset/:token', accountFrontendController.getReset);
+  app.get('/confirmEmail/:token', accountFrontendController.getConfirm);
+
   app.get('/signup', accountFrontendController.getSignup);
 
   /** account api endpoints **/

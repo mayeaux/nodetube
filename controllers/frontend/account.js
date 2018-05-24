@@ -612,6 +612,30 @@ exports.getReset = (req, res, next) => {
     });
 };
 
+/**
+ * GET /confirm/:token
+ * Confirm email page
+ */
+exports.getConfirm = async (req, res, next) => {
+  try {
+    let user = await User.findOne({ emailConfirmationToken: req.params.token }).where('emailConfirmationExpires').gt(Date.now());
+
+    if (!user) {
+      req.flash('errors', { msg: 'Confirm email token is invalid or has expired.' });
+      return res.redirect('/account');
+    }
+
+    user.emailConfirmed = true;
+    await user.save();
+    req.flash('success', { msg: 'Your email has been confirmed' });
+    res.redirect('/account')
+
+  } catch (err){
+    console.log(err);
+    return next(err);
+  }
+};
+
 
 /**
  * GET /forgot
