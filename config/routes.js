@@ -249,6 +249,7 @@ function frontendRoutes(app){
   app.post('/account/password', passportConfig.isAuthenticated, accountBackendController.postUpdatePassword);
   app.post('/account/delete', passportConfig.isAuthenticated, accountBackendController.postDeleteAccount);
   app.post('/account/profile', passportConfig.isAuthenticated, accountBackendController.postUpdateProfile);
+  app.post('/account/email', passportConfig.isAuthenticated, accountBackendController.postConfirmEmail);
 
   // save user's youtube channel id
   app.post('/account/backup', passportConfig.isAuthenticated, youtubeController.saveYouTubeChannelId);

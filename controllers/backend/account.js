@@ -413,3 +413,56 @@ exports.postForgot = async (req, res, next) => {
     res.render('error/500')
   }
 };
+
+
+
+/**
+ * POST /account/email
+ * Create a random token, then the send user an email with a confirmation link
+ */
+exports.postConfirmEmail = async (req, res, next) => {
+
+  try {
+
+    if(process.env.CONFIRM_USER_EMAIL_FUNCTIONALITY_ON !== 'true'){
+      return res.send('forgot email functionality not on')
+    }
+
+    req.assert('email', 'Please enter a valid email address.').isEmail();
+    req.sanitize('email').normalizeEmail({gmail_remove_dots: false});
+
+    const errors = req.validationErrors();
+
+    const token = await crypto.randomBytes(16).toString('hex');
+
+    let user = req.user;
+
+    user.emailConfirmationToken = token;
+    user.emailConfirmationExpires = Date.now() + 3600000; // 1 hour
+    user = await user.save();
+
+    console.log(user.email, process.env.CONFIRM_USER_EMAIL_ADDRESS);
+
+    const mailOptions = {
+      to: user.email,
+      from: process.env.CONFIRM_USER_EMAIL_ADDRESS,
+      subject: 'Confirm your email on PewTube',
+      text: `You are receiving this email because you (or someone else) has attempted to link this email to their account.\n\n
+      Please click on the following link, or paste this into your browser to complete the process:\n\n
+      http://${req.headers.host}/confirmEmail/${token}\n\n
+      If you did not request this, please ignore this email and no further steps will be needed.\n`
+    };
+
+    const response = await mailgunTransport.sendMail(mailOptions);
+
+    console.log(response);
+
+    req.flash('info', {msg: `An email has been sent to your address to confirm your email`});
+
+    return res.redirect('/account')
+
+  } catch (err){
+    console.log(err);
+    res.render('error/500')
+  }
+};

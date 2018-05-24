@@ -301,20 +301,45 @@ block content
           i.fa.fa-pencil
           | Delete
 
+  if user.email && user.emailConfirmed
+    h3.text-center Confirmed Email
+      br
+    form.form-horizontal(action='/account/email', method='POST')
+      input(type='hidden', name='_csrf', value=_csrf)
+      .form-group
+        label.col-sm-3.control-label(for='email') Email Address
+        .col-sm-7
+          h5 #{user.email}
 
-  h3.text-center Save Email
-    br
-  form.form-horizontal(action='/account/email', method='POST')
-    input(type='hidden', name='_csrf', value=_csrf)
-    .form-group
-      label.col-sm-3.control-label(for='email') Email Address
-      .col-sm-7
-        input.form-control(type='email', name='email', id='email')
-    .form-group
-      .col-sm-offset-3.col-sm-4
-        button.btn.btn-primary(type='submit')
-          i.fa.fa-envelope
-          | Save Email
+  if user.email && !user.emailConfirmed
+    h3.text-center Save Email
+      br
+    form.form-horizontal(action='/account/email', method='POST')
+      input(type='hidden', name='_csrf', value=_csrf)
+      .form-group
+        label.col-sm-3.control-label(for='email') Email Address
+        .col-sm-7
+          input.form-control(type='email', name='email', id='email' value=`${user.email}`)
+      .form-group
+        .col-sm-offset-3.col-sm-4
+          button.btn.btn-primary(type='submit')
+            i.fa.fa-envelope
+            | Resend Confirmation Email
+
+  if !user.email
+    h3.text-center Save Email
+      br
+    form.form-horizontal(action='/account/email', method='POST')
+      input(type='hidden', name='_csrf', value=_csrf)
+      .form-group
+        label.col-sm-3.control-label(for='email') Email Address
+        .col-sm-7
+          input.form-control(type='email', name='email', id='email')
+      .form-group
+        .col-sm-offset-3.col-sm-4
+          button.btn.btn-primary(type='submit')
+            i.fa.fa-envelope
+            | Send Confirmation Email
   br
   h3.text-center Change Password
   br
