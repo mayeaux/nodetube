@@ -400,8 +400,6 @@ exports.postForgot = async (req, res, next) => {
 
     const errors = req.validationErrors();
 
-    console.log(req.body.email);
-
     const token = await crypto.randomBytesAsync(16).toString('hex');
 
     let user = await User.findOne({email: req.body.email});
@@ -412,12 +410,12 @@ exports.postForgot = async (req, res, next) => {
     } else {
       user.passwordResetToken = token;
       user.passwordResetExpires = Date.now() + 3600000; // 1 hour
-      user = user.save();
+      user = await user.save();
     }
 
     const mailOptions = {
       to: user.email,
-      from: process.env.EMAIL_ADDRESS,
+      from: process.env.FORGOT_PASSWORD_EMAIL_ADDRESS,
       subject: 'Reset your password on PewTube',
       text: `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
       Please click on the following link, or paste this into your browser to complete the process:\n\n
@@ -427,7 +425,7 @@ exports.postForgot = async (req, res, next) => {
 
     const response = await mailgunTransport.sendMail(mailOptions);
 
-    console.log(response);
+    // console.log(response);
 
     req.flash('info', {msg: `If the email address exists you will receive further instructions on resetting your password there.`});
 
