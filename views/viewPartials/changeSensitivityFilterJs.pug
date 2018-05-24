@@ -49,6 +49,21 @@ script.
         }
       })
 
+    } else if (value == 'mature'){
+      swal({
+        title: '',
+        text: 'Please confirm you are 18 or older and willing to see \n sensitive (not-safe-for-life) content',
+        showCancelButton: true,
+        confirmButtonText: "Confirm Age",
+      }).then(function (result) {
+
+        console.log(result);
+
+        if (result.value == true) {
+          changeUserRatingFilter(value)
+        }
+      })
+
     } else {
       changeUserRatingFilter(value);
     }
