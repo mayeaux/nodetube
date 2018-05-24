@@ -344,60 +344,20 @@ exports.postReset = async (req, res, next) => {
 
   req.flash('success', { msg: 'Success! Your password has been changed.' });
 
-  res.redirect('/login');
+  const mailOptions = {
+    to: user.email,
+    from: process.env.FORGOT_PASSWORD_EMAIL_ADDRESS,
+    subject: 'Your PewTube password has been reset',
+    text: `Hello,\n\nThis is a confirmation that the password for your account ${user.email} has just been changed.\n`
+  };
+
+  const response = await mailgunTransport.sendMail(mailOptions);
+
+  // console.log(response);
+
+  return res.redirect('/login');
 
 
-
-  // req.logIn(user);
-
-
-  // const resetPassword = () =>
-  //   User
-  //     .findOne({ passwordResetToken: req.params.token })
-  //     .where('passwordResetExpires').gt(Date.now())
-  //     .then((user) => {
-  //       if (!user) {
-  //         req.flash('errors', { msg: 'Password reset token is invalid or has expired.' });
-  //         return res.redirect('back');
-  //       }
-  //       user.password = req.body.password;
-  //       user.passwordResetToken = undefined;
-  //       user.passwordResetExpires = undefined;
-  //       return user.save().then(() => new Promise((resolve, reject) => {
-  //         req.logIn(user, (err) => {
-  //           if (err) { return reject(err); }
-  //           resolve(user);
-  //         });
-  //       }));
-  //     });
-  //
-  // const sendResetPasswordEmail = (user) => {
-  //   if (!user) { return; }
-  //   var transporter = nodemailer.createTransport({
-  //     host: 'smtp.zoho.com',
-  //     port: 465,
-  //     secure: true, // use SSL
-  //     auth: {
-  //       user: 'verify@pew.tube',
-  //       pass: verifyEmailPassword
-  //     }
-  //   });
-  //   const mailOptions = {
-  //     to: user.email,
-  //     from: 'verify@pew.tube',
-  //     subject: 'Your PewTube password has been changed',
-  //     text: `Hello,\n\nThis is a confirmation that the password for your account ${user.email} has just been changed.\n`
-  //   };
-  //   return transporter.sendMail(mailOptions)
-  //     .then(() => {
-  //       req.flash('success', { msg: 'Success! Your password has been changed.' });
-  //     });
-  // };
-  //
-  // resetPassword()
-  //   .then(sendResetPasswordEmail)
-  //   .then(() => { if (!res.finished) res.redirect('/'); })
-  //   .catch(err => next(err));
 };
 
 /**
