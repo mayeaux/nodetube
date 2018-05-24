@@ -228,12 +228,16 @@ exports.getChannel = async (req, res) => {
       orderBy = req.query.orderBy;
     }
 
-    if(orderBy !== 'popular' && orderBy !== 'newToOld' && orderBy !== 'oldToNew'){
+    if(orderBy !== 'popular' && orderBy !== 'newToOld' && orderBy !== 'oldToNew' && orderBy !== 'alphabetical'){
       console.log('doesnt connect');
       orderBy = 'newToOld'
     }
 
     let orderByEnglishString;
+
+    if(orderBy == 'alphabetical'){
+      orderByEnglishString = 'Alphabetical'
+    }
 
     if(orderBy == 'oldToNew'){
       orderByEnglishString = 'Old To New'
@@ -302,6 +306,16 @@ exports.getChannel = async (req, res) => {
         return a.createdAt - b.createdAt;
       });
     }
+
+    if(orderBy == 'alphabetical'){
+
+      console.log('alphabetical');
+
+      uploads = uploads.sort(function (a, b) {
+        return a.title.localeCompare(b.title)
+      });
+    }
+
 
     let filter = uploadFilters.getSensitivityFilter(req.user, req.siteVisitor);
 
