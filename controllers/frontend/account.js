@@ -26,6 +26,8 @@ const uploadFilters = require('../../lib/mediaBrowsing/helpers');
 
 const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
 
+const validator = require('email-validator');
+
 
 const javascriptTimeAgo = require('javascript-time-ago');
 javascriptTimeAgo.locale(require('javascript-time-ago/locales/en'));
@@ -535,7 +537,10 @@ exports.getAccount = async (req, res) => {
     await req.user.save();
   }
 
-  console.log(thumbnailServer)
+  // delete email if it a standin number
+  if(req.user.email && !validator.validate(req.user.email)){
+    req.user.email = undefined
+  }
 
   res.render('account/account', {
     title: 'Account Management',
