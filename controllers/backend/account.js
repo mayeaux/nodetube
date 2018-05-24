@@ -437,6 +437,7 @@ exports.postConfirmEmail = async (req, res, next) => {
 
     let user = req.user;
 
+    user.email = req.body.email;
     user.emailConfirmationToken = token;
     user.emailConfirmationExpires = Date.now() + 3600000; // 1 hour
     user = await user.save();
@@ -462,7 +463,12 @@ exports.postConfirmEmail = async (req, res, next) => {
     return res.redirect('/account')
 
   } catch (err){
-    console.log(err);
-    res.render('error/500')
+    // if the email is already in use
+    if(err && err.errors && err.errors.email && err.errors.email.kind && ( err.errors.email.kind == 'unique')){
+      req.flash('errors', { msg: 'That email is already in use, please try another' });
+      res.redirect('/account');
+    } else {
+      res.render('error/500')
+    }
   }
 };
