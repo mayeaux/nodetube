@@ -70,8 +70,12 @@ async function setPopularUploads() {
     return calculateViewsByPeriod(upload, uploadViews);
   }));
 
+  console.log('Popular uploads have been calculated according to view periods');
+
   // build json objects representing uploads
   popularUploads = buildObjects(popularUploads);
+
+  console.log('Popular uploads objects have been built');
 
   const redisKey = 'popularUploads';
   const response = await redisClient.setAsync(redisKey, JSON.stringify(popularUploads));

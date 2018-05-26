@@ -34,7 +34,9 @@ const _ = require('lodash');
 const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
 
-if(process.env.SHOW_LOG_LOCATION == 'true' || 1 == 1){
+const winston = require('./config/winston');
+
+if(process.env.SHOW_LOG_LOCATION == 'true' || 1 == 2){
   /** Code to find errant console logs **/
   ['log', 'warn', 'error'].forEach(function(method) {
     var old = console[method];

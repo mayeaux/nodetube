@@ -55,16 +55,18 @@ block content
                     if channel.plan == 'plus'
                         span.pewtube-pro PLUS
             div.user-stats.col-sm-6(style="margin-top:14px")
-                div.col-sm-4
-                    h4 Uploads: #{userUploadAmount} &nbsp &nbsp
-                div.col-sm-4
-                    h4 Views : #{channel.totalViews}
+                div.col-sm-3
+                    h5 Uploads: #{userUploadAmount} &nbsp &nbsp
+                div.col-sm-3
+                    h5 Views : #{channel.totalViews}
+                div.col-sm-3
+                    h5 Joined: #{joinedTimeAgo}
                 if channel.receivedSubscriptions
-                    div.col-sm-4
-                        h4 Subscribers : #{channel.receivedSubscriptions.length}
+                    div.col-sm-3
+                        h5 Subscribers : #{channel.receivedSubscriptions.length}
                 else
-                    div.col-sm-4
-                        h4 Subscribers : 0
+                    div.col-sm-3
+                        h5 Subscribers : 0
             br
             br
             br
@@ -137,6 +139,8 @@ block content
                     a(href=`/user/${channel.channelUrl}?orderBy=newToOld`) New To Old
                 li
                     a(href=`/user/${channel.channelUrl}?orderBy=oldToNew`) Old To New
+                li
+                    a(href=`/user/${channel.channelUrl}?orderBy=alphabetical`) Alphabetical
 
         include ../viewPartials/sensitivityFilterDropdown
 

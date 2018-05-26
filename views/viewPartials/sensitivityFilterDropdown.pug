@@ -1,14 +1,75 @@
 div.dropdown(style="display:inline")
-    button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
-        if siteVisitor.filter == 'allAges'
-            | Rating: SFW &nbsp
-        else if siteVisitor.filter == 'mature'
-            | Rating: SFW/NSWF &nbsp
-        span.caret
+    if !user
+        // show current loaded filter
+        button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
+            if siteVisitor.filter == 'allAges'
+                | Rating: SFW &nbsp
+                span.caret
+            else if siteVisitor.filter == 'mature'
+                | Rating: SFW/NSWF &nbsp
+                span.caret
 
-    ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1')
-        li(role='presentation')
-            if siteVisitor.filter == 'mature'
-                a.changeFilterButton(value="allAges" href="#") SFW
-            else if siteVisitor.filter == 'allAges'
-                a.changeFilterButton(value="mature" href="#") SFW/NFSW
+        // show available options to change filter
+        ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1')
+            li(role='presentation')
+                if siteVisitor.filter == 'mature'
+                    a.changeFilterButton(value="allAges" href="#") SFW
+                else if siteVisitor.filter == 'allAges'
+                    a.changeFilterButton(value="mature" href="#") SFW/NFSW
+
+    else
+        button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
+            if user.filter == 'allAges'
+                | Rating: SFW &nbsp
+                span.caret
+            else if user.filter == 'mature'
+                | Rating: SFW/NSWF &nbsp
+                span.caret
+            else if user.filter == 'sensitive'
+                | Rating: SFW/NSFW/Sensitive &nbsp
+                span.caret
+
+
+        ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1')
+            li(role='presentation')
+                if siteVisitor.filter == 'allAges'
+                    a.changeFilterButton(value="mature" href="#") SFW/NSFW
+                    a.changeFilterButton(value="sensitive" href="#") SFW/NSFW/Sensitive
+                else if siteVisitor.filter == 'mature'
+                    a.changeFilterButton(value="allAges" href="#") SFW
+                    a.changeFilterButton(value="sensitive" href="#") SFW/NSFW/Sensitive
+                else if siteVisitor.filter == 'sensitive'
+                    a.changeFilterButton(value="allAges" href="#") SFW
+                    a.changeFilterButton(value="mature" href="#") SFW/NSFW
+
+
+
+//div.dropdown(style="display:inline")
+//    button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
+//        if !user
+//            if siteVisitor.filter == 'allAges'
+//                | Rating: SFW &nbsp
+//            else if siteVisitor.filter == 'mature'
+//                | Rating: SFW/NSWF &nbsp
+//            span.caret
+//        if !user
+//            ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1')
+//                li(role='presentation')
+//                    if siteVisitor.filter == 'mature'
+//                        a.changeFilterButton(value="allAges" href="#") SFW
+//                    else if siteVisitor.filter == 'allAges'
+//                        a.changeFilterButton(value="mature" href="#") SFW/NFSW
+//
+//        if user
+//            if siteVisitor.filter == 'allAges'
+//                | Rating: SFW &nbsp
+//            else if siteVisitor.filter == 'mature'
+//                | Rating: SFW/NSWF &nbsp
+//            span.caret
+//        if user
+//            ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1')
+//                li(role='presentation')
+//                    if siteVisitor.filter == 'mature'
+//                        a.changeFilterButton(value="allAges" href="#") SFW
+//                    else if siteVisitor.filter == 'allAges'
+//                        a.changeFilterButton(value="mature" href="#") SFW/NFSW

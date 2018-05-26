@@ -187,6 +187,8 @@ function frontendRoutes(app){
   app.get('/logout', accountFrontendController.logout);
   app.get('/forgot', accountFrontendController.getForgot);
   app.get('/reset/:token', accountFrontendController.getReset);
+  app.get('/confirmEmail/:token', accountFrontendController.getConfirm);
+
   app.get('/signup', accountFrontendController.getSignup);
 
   /** account api endpoints **/
@@ -212,6 +214,7 @@ function frontendRoutes(app){
   app.post('/api/credit', passportConfig.isAuthenticated, internalApiController.sendUserCredit);
   app.post('/api/report', passportConfig.isAuthenticated, internalApiController.reportUpload);
   app.post('/api/user/block', passportConfig.isAuthenticated, internalApiController.blockUser);
+  app.post('/api/user/unblock', passportConfig.isAuthenticated, internalApiController.unblockUser);
 
 
   // for users or siteVisitors
@@ -248,6 +251,7 @@ function frontendRoutes(app){
   app.post('/account/password', passportConfig.isAuthenticated, accountBackendController.postUpdatePassword);
   app.post('/account/delete', passportConfig.isAuthenticated, accountBackendController.postDeleteAccount);
   app.post('/account/profile', passportConfig.isAuthenticated, accountBackendController.postUpdateProfile);
+  app.post('/account/email', passportConfig.isAuthenticated, accountBackendController.postConfirmEmail);
 
   // save user's youtube channel id
   app.post('/account/backup', passportConfig.isAuthenticated, youtubeController.saveYouTubeChannelId);

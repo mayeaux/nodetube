@@ -75,12 +75,12 @@ let cacheIntervalInMinutes = parseInt(process.env.CACHE_INTERVAL_IN_MINUTES) || 
 
 const cacheIntervalInMs = cacheIntervalInMinutes * ( 1000 * 60 );
 
-console.log(cacheIntervalInMinutes  + ': cache interview in minutes');
+console.log(cacheIntervalInMinutes  + ': cache interval in minutes');
 
 async function runCaching(){
   try {
-    await cachePopularUploads();
     await cacheRecentUploads();
+    await cachePopularUploads();
     await setCache.setDailyStats();
     await setCache.setIndexValues();
 

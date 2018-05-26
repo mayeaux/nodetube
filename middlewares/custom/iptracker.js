@@ -22,7 +22,7 @@ async function iptracker (req, res, next) {
   // console.log('ip: ' + ip);
   // console.log('header: ' + header);
   // console.log('req url: ' + reqUrl + '
-  // console.log('           ip: ' + ip + '    req url: ' + reqUrl + ',   header: ' + header);
+  console.log('ip: ' + ip + '      req url: ' + reqUrl + '    header: ' + header);
 
 
   let previousVisits;

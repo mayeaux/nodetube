@@ -266,15 +266,17 @@ block content
                                                 p(style="text-align:left;display:inline-block;")
                                                     a(href=`/user/${comment.commenter.channelUrl}` style="color:black;margin-right:5px;") #{comment.commenter.channelName || comment.commenter.channelUrl}
                                                 p(style="display:inline-block;") - #{comment.timeAgo} &nbsp
-                                                    if !viewingUserIsBlocked
+                                                    if user && !viewingUserIsBlocked
                                                         a.reply-link(style="cursor:pointer") Reply
                                                     // delete button
                                                     // if uploader or admin or commenter, let them delete comment
-                                                    if isUploaderOrAdmin || ( comment.commenter._id == user._id )
+                                                    if isUploaderOrAdmin || ( user && comment.commenter._id == user._id )
                                                         a.delete-comment-button(style="margin-left:9px;cursor:pointer;" commentId=comment._id) Delete
 
-                                                    if isUploaderOrAdmin && !viewingUserIsBlocked
+                                                    if isUploader && !comment.commenter.isBlocked
                                                         a.block-user-button(style="margin-left:9px;cursor:pointer;" blockedusername=comment.commenter.channelUrl) Block User
+                                                    if isUploader && comment.commenter.isBlocked
+                                                        a.unblock-user-button(style="margin-left:9px;cursor:pointer;" blockedusername=comment.commenter.channelUrl) Unblock User
 
 
                                             p(style="text-align:left;") #{comment.text}
@@ -372,7 +374,7 @@ block extra_footer_js
 
   include mediaPlayerPartials/creditFunctionalityJs
 
-  include mediaPlayerPartials/deleteCommentJs
+  include mediaPlayerPartials/deleteCommentAndBlockUnblockUserJs
 
   include mediaPlayerPartials/subscribeFunctionalityJs
 

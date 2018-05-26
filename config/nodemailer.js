@@ -13,10 +13,8 @@ const zohoTransport = nodemailer.createTransport({
   }
 });
 
-// console.log(process.env.MAILGUN_API_KEY)
-
 let mailgunTransport;
-if (process.env.FORGOT_PASSWORD_EMAIL_FUNCTIONALITY_ON){
+if (process.env.FORGOT_PASSWORD_EMAIL_FUNCTIONALITY_ON == 'true'){
   mailgunTransport = nodemailer.createTransport(mg({
     auth: {
       api_key: process.env.MAILGUN_API_KEY,

@@ -323,7 +323,7 @@ exports.postDeleteAccount = (req, res, next) => {
  * POST /reset/:token
  * Process the reset password request.
  */
-exports.postReset = (req, res, next) => {
+exports.postReset = async (req, res, next) => {
   req.assert('password', 'Password must be at least 4 characters long.').len(4);
   req.assert('confirm', 'Passwords must match.').equals(req.body.password);
 
@@ -334,53 +334,30 @@ exports.postReset = (req, res, next) => {
     return res.redirect('back');
   }
 
-  const resetPassword = () =>
-    User
-      .findOne({ passwordResetToken: req.params.token })
-      .where('passwordResetExpires').gt(Date.now())
-      .then((user) => {
-        if (!user) {
-          req.flash('errors', { msg: 'Password reset token is invalid or has expired.' });
-          return res.redirect('back');
-        }
-        user.password = req.body.password;
-        user.passwordResetToken = undefined;
-        user.passwordResetExpires = undefined;
-        return user.save().then(() => new Promise((resolve, reject) => {
-          req.logIn(user, (err) => {
-            if (err) { return reject(err); }
-            resolve(user);
-          });
-        }));
-      });
+  let user =  await User.findOne({ passwordResetToken: req.params.token }).where('passwordResetExpires').gt(Date.now());
 
-  const sendResetPasswordEmail = (user) => {
-    if (!user) { return; }
-    var transporter = nodemailer.createTransport({
-      host: 'smtp.zoho.com',
-      port: 465,
-      secure: true, // use SSL
-      auth: {
-        user: 'verify@pew.tube',
-        pass: verifyEmailPassword
-      }
-    });
-    const mailOptions = {
-      to: user.email,
-      from: 'verify@pew.tube',
-      subject: 'Your PewTube password has been changed',
-      text: `Hello,\n\nThis is a confirmation that the password for your account ${user.email} has just been changed.\n`
-    };
-    return transporter.sendMail(mailOptions)
-      .then(() => {
-        req.flash('success', { msg: 'Success! Your password has been changed.' });
-      });
+  user.password = req.body.password;
+  user.passwordResetToken = undefined;
+  user.passwordResetExpires = undefined;
+
+  await user.save();
+
+  req.flash('success', { msg: 'Success! Your password has been changed.' });
+
+  const mailOptions = {
+    to: user.email,
+    from: process.env.FORGOT_PASSWORD_EMAIL_ADDRESS,
+    subject: 'Your PewTube password has been reset',
+    text: `Hello,\n\nThis is a confirmation that the password for your account ${user.email} has just been changed.\n`
   };
 
-  resetPassword()
-    .then(sendResetPasswordEmail)
-    .then(() => { if (!res.finished) res.redirect('/'); })
-    .catch(err => next(err));
+  const response = await mailgunTransport.sendMail(mailOptions);
+
+  // console.log(response);
+
+  return res.redirect('/login');
+
+
 };
 
 /**
@@ -400,9 +377,7 @@ exports.postForgot = async (req, res, next) => {
 
     const errors = req.validationErrors();
 
-    console.log(req.body.email);
-
-    const token = await crypto.randomBytesAsync(16).toString('hex');
+    const token = await crypto.randomBytes(16).toString('hex');
 
     let user = await User.findOne({email: req.body.email});
 
@@ -412,12 +387,12 @@ exports.postForgot = async (req, res, next) => {
     } else {
       user.passwordResetToken = token;
       user.passwordResetExpires = Date.now() + 3600000; // 1 hour
-      user = user.save();
+      user = await user.save();
     }
 
     const mailOptions = {
       to: user.email,
-      from: process.env.EMAIL_ADDRESS,
+      from: process.env.FORGOT_PASSWORD_EMAIL_ADDRESS,
       subject: 'Reset your password on PewTube',
       text: `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
       Please click on the following link, or paste this into your browser to complete the process:\n\n
@@ -427,7 +402,7 @@ exports.postForgot = async (req, res, next) => {
 
     const response = await mailgunTransport.sendMail(mailOptions);
 
-    console.log(response);
+    // console.log(response);
 
     req.flash('info', {msg: `If the email address exists you will receive further instructions on resetting your password there.`});
 
@@ -436,5 +411,64 @@ exports.postForgot = async (req, res, next) => {
   } catch (err){
     console.log(err);
     res.render('error/500')
+  }
+};
+
+
+
+/**
+ * POST /account/email
+ * Create a random token, then the send user an email with a confirmation link
+ */
+exports.postConfirmEmail = async (req, res, next) => {
+
+  try {
+
+    if(process.env.CONFIRM_USER_EMAIL_FUNCTIONALITY_ON !== 'true'){
+      return res.send('forgot email functionality not on')
+    }
+
+    req.assert('email', 'Please enter a valid email address.').isEmail();
+    req.sanitize('email').normalizeEmail({gmail_remove_dots: false});
+
+    const errors = req.validationErrors();
+
+    const token = await crypto.randomBytes(16).toString('hex');
+
+    let user = req.user;
+
+    user.email = req.body.email;
+    user.emailConfirmationToken = token;
+    user.emailConfirmationExpires = Date.now() + 3600000; // 1 hour
+    user = await user.save();
+
+    console.log(user.email, process.env.CONFIRM_USER_EMAIL_ADDRESS);
+
+    const mailOptions = {
+      to: user.email,
+      from: process.env.CONFIRM_USER_EMAIL_ADDRESS,
+      subject: 'Confirm your email on PewTube',
+      text: `You are receiving this email because you (or someone else) has attempted to link this email to their account.\n\n
+      Please click on the following link, or paste this into your browser to complete the process:\n\n
+      http://${req.headers.host}/confirmEmail/${token}\n\n
+      If you did not request this, please ignore this email and no further steps will be needed.\n`
+    };
+
+    const response = await mailgunTransport.sendMail(mailOptions);
+
+    console.log(response);
+
+    req.flash('info', {msg: `An email has been sent to your address to confirm your email`});
+
+    return res.redirect('/account')
+
+  } catch (err){
+    // if the email is already in use
+    if(err && err.errors && err.errors.email && err.errors.email.kind && ( err.errors.email.kind == 'unique')){
+      req.flash('errors', { msg: 'That email is already in use, please try another' });
+      res.redirect('/account');
+    } else {
+      res.render('error/500')
+    }
   }
 };

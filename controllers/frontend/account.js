@@ -26,6 +26,14 @@ const uploadFilters = require('../../lib/mediaBrowsing/helpers');
 
 const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
 
+const validator = require('email-validator');
+
+
+const javascriptTimeAgo = require('javascript-time-ago');
+javascriptTimeAgo.locale(require('javascript-time-ago/locales/en'));
+require('javascript-time-ago/intl-messageformat-global');
+require('intl-messageformat/dist/locale-data/en');
+const timeAgoEnglish = new javascriptTimeAgo('en-US');
 
 /**
  * GET /upload
@@ -220,12 +228,16 @@ exports.getChannel = async (req, res) => {
       orderBy = req.query.orderBy;
     }
 
-    if(orderBy !== 'popular' && orderBy !== 'newToOld' && orderBy !== 'oldToNew'){
+    if(orderBy !== 'popular' && orderBy !== 'newToOld' && orderBy !== 'oldToNew' && orderBy !== 'alphabetical'){
       console.log('doesnt connect');
       orderBy = 'newToOld'
     }
 
     let orderByEnglishString;
+
+    if(orderBy == 'alphabetical'){
+      orderByEnglishString = 'Alphabetical'
+    }
 
     if(orderBy == 'oldToNew'){
       orderByEnglishString = 'Old To New'
@@ -295,6 +307,16 @@ exports.getChannel = async (req, res) => {
       });
     }
 
+    if(orderBy == 'alphabetical'){
+
+      console.log('alphabetical');
+
+      uploads = uploads.sort(function (a, b) {
+        return a.title.localeCompare(b.title)
+      });
+    }
+
+
     let filter = uploadFilters.getSensitivityFilter(req.user, req.siteVisitor);
 
     uploads = uploadFilters.filterUploadsBySensitivity(uploads, filter);
@@ -330,6 +352,8 @@ exports.getChannel = async (req, res) => {
 
     const siteVisitor = req.siteVisitor;
 
+    const joinedTimeAgo = timeAgoEnglish.format(user.createdAt);
+
     res.render('account/channel', {
       channel : user,
       title: user.channelName || user.channelUrl,
@@ -349,7 +373,8 @@ exports.getChannel = async (req, res) => {
       highlightedNumber: page,
       userUploadAmount,
       channelUrl: user.channelUrl,
-      categories
+      categories,
+      joinedTimeAgo
     });
 
 
@@ -526,7 +551,10 @@ exports.getAccount = async (req, res) => {
     await req.user.save();
   }
 
-  console.log(thumbnailServer)
+  // delete email if it a standin number
+  if(req.user.email && !validator.validate(req.user.email)){
+    req.user.email = undefined
+  }
 
   res.render('account/account', {
     title: 'Account Management',
@@ -601,6 +629,30 @@ exports.getReset = (req, res, next) => {
         title: 'Password Reset'
       });
     });
+};
+
+/**
+ * GET /confirm/:token
+ * Confirm email page
+ */
+exports.getConfirm = async (req, res, next) => {
+  try {
+    let user = await User.findOne({ emailConfirmationToken: req.params.token }).where('emailConfirmationExpires').gt(Date.now());
+
+    if (!user) {
+      req.flash('errors', { msg: 'Confirm email token is invalid or has expired.' });
+      return res.redirect('/account');
+    }
+
+    user.emailConfirmed = true;
+    await user.save();
+    req.flash('success', { msg: 'Your email has been confirmed' });
+    res.redirect('/account')
+
+  } catch (err){
+    console.log(err);
+    return next(err);
+  }
 };
 
 
