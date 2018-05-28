@@ -19,92 +19,21 @@ block content
         hr
 
         div.center-block.text-center.col-sm-12
-            h1 Recent Reacts
-            // TOP PAGINATION
-            nav.center-block.text-center(aria-label='Page navigation example')
-                ul.pagination
-                    li.page-item
-                        a.page-link(href=`/media/recentReacts/${previousNumber}`) <
+            h1= recentActionDisplayName
+            include ../viewPartials/recentActionPagination
 
-                    each number in numbersArray
-                        li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
-                            a.page-link(href=`/media/recentReacts/${number}`) #{number}
-
-                    li.page-item
-                        a.page-link(href=`/media/recentReacts/${nextNumber}`) >
-
-
-
-
-
-
-            br
-
-            each react in reacts
-                if react.upload.uploader
+            each document in documents
+                if document.upload.uploader
                     div.col-sm-4(style="text-align:center;height:380px")
                         // NEW CHANNEL UPLOAD FORMAT
-
-                        a.title-anchor(href=`/user/${react.upload.uploader.channelUrl}/${react.upload.uniqueTag}`)
+                        a.title-anchor(href=`/user/${document.upload.uploader.channelUrl}/${document.upload.uniqueTag}`)
                             // TODO: Sub out thumbnail here
+                            include ../viewPartials/recentActionThumbnail
 
-                            if react.upload.fileType == 'video' && react.upload.thumbnails.generated
-                                img.preview-image(src=`${uploadServer}/${react.upload.uploader.channelUrl}/${react.upload.thumbnails.generated}`)
-                            else if react.upload.fileType == 'video' && react.upload.thumbnails.custom
-                                img.preview-image(src=`${uploadServer}/${react.upload.uploader.channelUrl}/${react.upload.thumbnails.custom}`)
-                            else if react.upload.fileType == 'video'
-                                img.preview-image(src="/images/no_img.png")
-                            else if react.upload.fileType == 'image'
-                                img.preview-image(src=react.upload.uploadUrl)
-                            else if react.upload.fileType == 'audio'
-                                img.preview-image(src='/images/audio.svg')
-                            else if react.upload.fileType == 'unknown'
-                                img.preview-image(src='/images/no_img.png')
-
-                            div
-                                p.upload-title-text #{react.upload.title}
-                                br
-
-                        p(style="font-size:16px") by &nbsp
-                            a.upload-user-text(href=`/user/${react.upload.uploader.channelUrl}`) #{react.upload.uploader.channelName || react.upload.uploader.channelUrl}
-
-                        div.upload-details
-                            p A user reacted with a #{react.react} react #{react.timeAgo}
+                        include ../viewPartials/recentActionUploadDetails
 
 
-            if reacts
-                if reacts.length > 0
-                    nav.center-block.col-sm-12.text-center(aria-label='Page navigation example')
-                        ul.pagination
-                            li.page-item
-                                a.page-link(href=`/media/recentReacts/${previousNumber}`) <
+            if documents && documents.length > 0
+                include ../viewPartials/recentActionPagination
 
-                            each number in numbersArray
-                                li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
-                                    a.page-link(href=`/media/recentReacts/${number}`) #{number}
-
-                            li.page-item
-                                a.page-link(href=`/media/recentReacts/${nextNumber}`) >
-
-
-block extra_footer_js
-    script.
-      $(document).on({
-        mouseenter: function () {
-          var width = $(this).width()
-          var height = $(this).height()
-
-
-          $(this).css("width", width * 1.10);
-          $(this).css("height", height * 1.10);
-
-        },
-        mouseleave: function () {
-          var width = $(this).width()
-          var height = $(this).height()
-
-          $(this).css("width", width / 1.10);
-          $(this).css("height", height / 1.10);
-        }
-      }, '.preview-image');
-
+    include ../viewPartials/mouseOverJavascript

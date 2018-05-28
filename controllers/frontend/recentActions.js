@@ -93,7 +93,7 @@ exports.recentReacts = async (req, res) => {
 
   const nextNumber = pagination.getNextNumber(page);
 
-
+  const recentAction = 'recentReacts';
 
   let reacts = await React.find({
 
@@ -113,7 +113,10 @@ exports.recentReacts = async (req, res) => {
     highlightedNumber: page,
     previousNumber,
     nextNumber,
-    uploadServer
+    recentAction,
+    uploadServer,
+    documents: reacts,
+    recentActionDisplayName: 'Recent Reacts'
   });
 
 };
