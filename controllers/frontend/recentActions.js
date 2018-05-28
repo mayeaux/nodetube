@@ -48,17 +48,19 @@ exports.recentComments = async (req, res) => {
 
     // delete comments from videos that arent public
     comments = _.filter(comments, function(comment){
-      return comment.upload && comment.upload.visibility == 'public' && comment.upload.sensitive !== true
+      return comment.upload && comment.upload.visibility == 'public'
     });
 
-    res.render('public/recentComments', {
+    res.render('public/recentReacts', {
       title: 'Recent Comments',
       comments,
       numbersArray,
       highlightedNumber: page,
       previousNumber,
       nextNumber,
-      uploadServer
+      uploadServer,
+      documents: comments,
+      recentActionDisplayName: 'Recent Comments'
     });
 
   } catch (err){
@@ -103,7 +105,7 @@ exports.recentReacts = async (req, res) => {
     .limit(limit);
 
   reacts = _.filter(reacts, function(react){
-    return react.upload.visibility == 'public' && react.upload.status !== 'processing' && react.upload.sensitive !== true
+    return react.upload.visibility == 'public' && react.upload.status !== 'processing'
   });
 
   res.render('public/recentReacts', {
@@ -155,24 +157,20 @@ exports.recentViews = async (req, res) => {
     .skip((page * limit) - limit)
     .limit(limit);
 
-  views = _.filter(views, function(view){return view.upload.visibility == 'public'});
-
-  views = _.filter(views, function(view){return view.upload.status !== 'processing'});
-
-  views = _.filter(views, function(view){return view.upload.uploadUrl });
-
-
-  views = views.map(function (view) {
-    return view.toObject();
+  views = _.filter(views, function(view){
+    return view.upload.visibility == 'public' && view.upload.status !== 'processing'
   });
 
-  res.render('public/recentViews', {
+  res.render('public/recentReacts', {
     title: 'Recent Views',
     views,
     numbersArray,
     highlightedNumber: page,
     previousNumber,
-    nextNumber
+    nextNumber,
+    uploadServer,
+    documents: views,
+    recentActionDisplayName: 'Recent Views'
   });
 
 };
