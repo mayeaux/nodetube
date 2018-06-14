@@ -157,8 +157,10 @@ exports.getChannel = async (req, res) => {
       viewerIsAdminOrMod = true;
     }
 
+    const channelIsRestrictedAndNotAMod = user.status == 'restricted' && !viewerIsAdminOrMod
+
     // 404 if nothing found
-    if(!user){
+    if(!user || channelIsRestrictedAndNotAMod ){
       res.status(404);
       return res.render('error/404', {
         title: 'Not Found'
