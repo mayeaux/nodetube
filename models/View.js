@@ -34,7 +34,7 @@ viewSchema.virtual('timeAgo').get(function () {
   return timeAgoEnglish.format( new Date(this.createdAt) )
 });
 
-viewSchema.index({ validity: 1}, {name: "Valid Views"});
+viewSchema.index({ validity: 1, createdAt: 1}, {name: "Valid Views"});
 
 viewSchema.index({upload: 1, validity: 1}, {name: "Real View Count"});
 

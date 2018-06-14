@@ -374,7 +374,8 @@ block extra_footer_js
 
   include mediaPlayerPartials/creditFunctionalityJs
 
-  include mediaPlayerPartials/deleteCommentAndBlockUnblockUserJs
+  if user
+    include mediaPlayerPartials/deleteCommentAndBlockUnblockUserJs
 
   include mediaPlayerPartials/subscribeFunctionalityJs
 
