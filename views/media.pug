@@ -24,7 +24,15 @@ block content
         else if upload.fileType === 'audio'
             div
                 audio.my_audio(style="width:80%;" controls='', preload='none')
-                    source(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`, type='audio/mp3')
+
+                    if upload.fileExtension == '.m4a'
+                        source(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`, type='audio/mp4')
+                    if upload.fileExtension == '.oga' || upload.fileExtension == '.ogg'
+                        source(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`, type='audio/ogg')
+                    else
+                        source(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`, type='audio/mp3')
+
+
                     //source(src=upload.uploadUrl, type='audio/mp3')
 
         else if upload.fileType === 'image'
