@@ -373,7 +373,7 @@ block extra_footer_js
     var clipboard = new ClipboardJS('.copy-button');
 
     clipboard.on('success', function (e) {
-      
+      swal('The text has been copied to your clipboard')
     });
 
 
@@ -383,6 +383,8 @@ block extra_footer_js
     balanceText();
 
   // reportUploadFunctionalityJs
+
+  include ./mediaPlayerPartials/reportUploadFunctionalityJs
 
   include ./mediaPlayerPartials/changeQualityJs
 
