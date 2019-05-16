@@ -367,8 +367,16 @@ block extra_css
 
 
 block extra_footer_js
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js")
   script(src="https://cdn.plyr.io/2.0.16/plyr.js")
-  script(src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js")
+  script.
+    var clipboard = new ClipboardJS('.copy-button');
+
+    clipboard.on('success', function (e) {
+      
+    });
+
+
   script(src="/js/media.js")
 
   script.
