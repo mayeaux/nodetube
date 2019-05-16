@@ -57,6 +57,7 @@
     "github": "^9.2.0",
     "heroku-ssl-redirect": "0.0.4",
     "intl-messageformat": "^1.3.0",
+    "ipstack": "^0.1.1",
     "javascript-time-ago": "^0.4.9",
     "kurento-client": "^6.6.0",
     "lastfm": "^0.9.2",
