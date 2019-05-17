@@ -139,38 +139,38 @@ block content
   h2.text-center Channel Overview
   hr
 
-  h3.text-center(style="margin-bottom:16px") PewTube Plus
-  div.pt-plus.center-div.text-center
-    if user.plan == 'plus'
-      p Thank you so much for subscribing!
-      p This area is currently being expanded
-      p In the meantime enjoy your new features:
-      h4 Automatic YouTube backup functionality, unlisted uploads, private uploads, 2GB upload size
-    else
-      p(style="white-space:pre-line;margin-bottom:19px;").
-        - Upload file-size limit raised to 2GB
+  // TODO: export a variable plus_enabled if user enables payments
+  if plus_enabled
+    h3.text-center(style="margin-bottom:16px") NodeTube Plus
+    div.pt-plus.center-div.text-center
+      if user.plan == 'plus'
+        p Thank you so much for subscribing!
+        p This area is currently being expanded
+        p In the meantime enjoy your new features:
+        h4 Automatic YouTube backup functionality, unlisted uploads, private uploads, 2GB upload size
+      else
+        p(style="white-space:pre-line;margin-bottom:19px;").
+          - Upload file-size limit raised to 2GB
 
-        - Unlisted, private and scheduled uploads
+          - Unlisted, private and scheduled uploads
 
-        - Livestream video, audio or screensharing
+          - Livestream video, audio or screensharing
 
-        - Built in monetization via direct payments (COMING SOON)
+          - Built in monetization via direct payments (COMING SOON)
 
-        - Access to PewTube Recording Studio (COMING SOON)
+          - Access to NodeTube Recording Studio (COMING SOON)
 
-        - One-click complete YouTube backup (including future uploads)
+          - One-click complete YouTube backup (including future uploads)
 
-        - Early access to all beta features
+          - Early access to all beta features
 
-        - $4.95/month, cancel at any time
+          - $4.95/month, cancel at any time
 
-        Support #AltTech that values your privacy and free speech!
+        button.stripe-button-el#customButton(type="submit" class="stripe-button-el" style="visibility: visible;")
+          span(style="display: block; min-height: 30px;") Buy Now
 
-      button.stripe-button-el#customButton(type="submit" class="stripe-button-el" style="visibility: visible;")
-        span(style="display: block; min-height: 30px;") Buy Now
-
-    br
-    br
+      br
+      br
 
 
 
@@ -487,8 +487,8 @@ block content
     document.getElementById('customButton').addEventListener('click', function (e) {
       // Open Checkout with further options:
       handler.open({
-        name: 'PewTube, Inc.',
-        description: 'One Month Of PewTube Plus',
+        name: 'NodeTube, Inc.',
+        description: 'One Month Of NodeTube Plus',
         amount: 495,
         allowRememberMe: false
         // email: "customer@email.com"

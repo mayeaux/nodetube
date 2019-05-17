@@ -18,7 +18,8 @@
     "eslint": "eslint **/*.js",
     "dev": "nodemon -e pug,js app.js",
     "memory": "node --max-old-space-size=4096 app.js",
-    "cache": "node --max-old-space-size=8000 caching/runCaching.js"
+    "cache": "node --max-old-space-size=8000 caching/runCaching.js",
+    "both": "node --max-old-space-size=4096 app.js & node --max-old-space-size=8000 caching/runCaching.js"
   },
   "dependencies": {
     "apicache": "^1.1.0",

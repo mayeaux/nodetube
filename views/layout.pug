@@ -8,20 +8,19 @@ html
     meta(name='csrf-token', content=_csrf)
     meta(name="description", content=meta.description)
 
-    meta(property='og:title', content=meta.title || title + ' - PewTube')
+    meta(property='og:title', content=meta.title || title + ' - NodeTube')
     meta(property='og:image', content=meta.image)
     meta(property='og:description', content=meta.description)
     meta(property='og:video', content=meta.video)
 
 
     meta(name='twitter:card', content='summary')
-    meta(name='twitter:site', content='@alt_tech_')
-    meta(name='twitter:title', content=meta.title || title + ' - PewTube')
-    meta(name='twitter:description', content=meta.description || "PewTube - A free speech YouTube alternative for video, audio and images, which won't censor you for wrongthink.")
+    meta(name='twitter:title', content=meta.title || title + ' - NodeTube')
+    meta(name='twitter:description', content=meta.description || "An open-source file hosting platform")
     meta(name='twitter:image', content=meta.image)
 
 
-    title #{title} - PewTube
+    title #{title} - NodeTube
 
     link(rel="stylesheet" href="/bower_components/sweetalert2/dist/sweetalert2.css")
     link(rel='stylesheet', href='/css/main.css')
@@ -36,6 +35,12 @@ html
     script(src='https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js')
     script(src='https://cdnjs.cloudflare.com/ajax/libs/balance-text/3.2.0/balancetext.min.js')
     script(src='/bower_components/sweetalert2/dist/sweetalert2.js')
+
+    link(rel='stylesheet', href='/css/loading-bar.css')
+    script(src='/js/loading-bar.js')
+
+
+
     if recaptchaOn
       script(src='https://www.google.com/recaptcha/api.js')
       include widgets/recaptcha

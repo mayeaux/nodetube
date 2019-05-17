@@ -25,6 +25,15 @@ block content
       padding: 10px;
     }
 
+    .ldBar-label {
+      font-size: 2.1em;
+      font-weight: 900;
+    }
+
+    .ldBar {
+      margin: 0 auto;
+    }
+
   br
   div.center-block.text-center
       div.upload-information
@@ -33,7 +42,7 @@ block content
           | File Upload
 
         br
-        h3 PewTube supports video, audio and image files.
+        h3 NodeTube supports video, audio and image files
 
         br
         br
@@ -45,9 +54,9 @@ block content
         br
 
         p Your current upload file size limit is #{user.privs.uploadSize} MB (#{user.privs.uploadSize / 1000} GB)
-        if user.plan == 'free'
+        if user.plan == 'free' && plus_enabled
           p You can raise this limit to 2000 MB by subscribing for&nbsp
-            a(href="/account?to=pt-plus") PewTube Plus
+            a(href="/account?to=pt-plus") NodeTube Plus
 
         br
         p Graphic violence, content that uses racial epithets, and overtly sexual content must be marked as Not Safe For Work
@@ -162,10 +171,10 @@ block content
           div.upload-gif
               h3.upload-title-name Your file is uploading
               br
-              h1 Uploading...
-              img(src='/images/uploading.gif' style="max-width:75px")
+              h1(style="margin-bottom:19px;") Uploading...
 
-              h2.file-progress
+              div#myItem1.ldBar(data-preset="circle")
+
 
 
 
@@ -176,6 +185,10 @@ block content
   script(src='/js/lib/resumable.js')
   script.
     $(document).ready(function () {
+
+      // progress bar stuff
+      var bar1 = new ldBar("#myItem1");
+
 
       var selectedCategory;
       var selectedSubcategory;
@@ -405,6 +418,8 @@ block content
           } else {
 
             $('.file-progress').html('PROGRESS: ' + progress + '%');
+
+            bar1.set(progress);
           }
 
 
