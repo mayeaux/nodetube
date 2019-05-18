@@ -35,14 +35,26 @@ console.log(`SAVE AND SERVE FILES DIRECTORY: ${saveAndServeFilesDirectory}`)
 
 var resumable = require('../../lib/uploading/resumable.js')(__dirname +  '/upload');
 
+
+const winston = require('winston');
+
+//
+// Grab your preconfigured logger
+//
+const uploadLogger = winston.loggers.get('uploadEndpoint');
+
 /**
  * POST /api/upload
  * File Upload API example.
  */
 exports.postFileUpload = async (req, res, next) => {
 
-
   try {
+
+    let logObject = {
+      user: req.user.channelUrl,
+      upload: req.query.title
+    };
 
     // res.setHeader('Access-Control-Allow-Origin', '*');
 
@@ -56,6 +68,8 @@ exports.postFileUpload = async (req, res, next) => {
     // console.log(`REQUESTED BY : ${req.user.channelName}`);
 
     if (req.user.status == 'uploadRestricted') {
+      uploadLogger.info('User upload status restricted', logObject);
+
       res.status(403);
       return res.send('Sorry your account is restricted')
     }
@@ -63,6 +77,7 @@ exports.postFileUpload = async (req, res, next) => {
     // TODO: File size check
 
     if (req.user.status == 'restricted') {
+      uploadLogger.info('User status restricted', logObject);
       res.status(403);
       return res.send('Sorry uploads are halted');
     }
@@ -87,7 +102,7 @@ exports.postFileUpload = async (req, res, next) => {
     });
 
     if (alreadyUploaded) {
-      console.log('already uploaded!');
+      uploadLogger.info('Upload title already uploaded', logObject);
       res.status(500);
       return res.send({message: 'ALREADY-UPLOADED'});
     }
@@ -100,9 +115,7 @@ exports.postFileUpload = async (req, res, next) => {
       const chunkNumber = req.query.resumableChunkNumber;
       const totalChunks = req.query.resumableTotalChunks;
 
-      console.log(`Processing chunk number ${chunkNumber} of ${totalChunks} for ${req.user.channelUrl}, upload: ${req.query.title}`);
-
-      // console.log(status);
+      uploadLogger.info(`Processing chunk number ${chunkNumber} of ${totalChunks} `, logObject);
 
       const fileSize = req.body.resumableTotalSize;
       const fileName = filename;
@@ -131,8 +144,11 @@ exports.postFileUpload = async (req, res, next) => {
 
         await upload.save();
 
-        console.log('unknown file type: ' + fileName);
-        return res.send({message: 'UNKNOWN FILE'});
+        logObject.uploadExtension = fileExtension;
+        uploadLogger.info(`Unknown file type`, logObject);
+
+        res.status(500);
+        return res.send({message: 'UNKNOWN FILETYPE'});
       }
 
       let uploadPath = `./upload/${identifier}`;
@@ -147,9 +163,6 @@ exports.postFileUpload = async (req, res, next) => {
         // const uploadServer = process.env.UPLOAD_SERVER || 'uploads1' ;
         let responseSent = false;
 
-        console.log(req.query.category) // = politics
-
-
 
         let category = req.query.category;
         if(category == 'undefined' || category == undefined){
@@ -161,10 +174,7 @@ exports.postFileUpload = async (req, res, next) => {
           subcategory = 'uncategorized'
         }
 
-        console.log(category + ' category ')
-        console.log(subcategory + ' subcategory ')
-
-        let upload = new Upload({
+        let uploadObject = {
           uploader: req.user._id,
           title: req.query.title,
           description: req.query.description,
@@ -178,13 +188,17 @@ exports.postFileUpload = async (req, res, next) => {
           category,
           subcategory
           // uploadServer
-        });
+        }
+
+        let upload = new Upload(uploadObject);
 
         if (requireModeration) {
           upload.visibility = 'pending';
         }
 
         await upload.save();
+
+        uploadLogger.info(`Upload document added to db`, Object.assign({}, logObject, uploadObject));
 
         /** FILE PROCESSING */
 
@@ -198,6 +212,8 @@ exports.postFileUpload = async (req, res, next) => {
             // note the upload is still processing
             timeoutUpload.status = 'processing';
             await timeoutUpload.save();
+
+            uploadLogger.info(`Still processing after 25s`, logObject);
 
             // note that we've responded to the user and send them to processing page
             if (!responseSent) {
@@ -222,7 +238,7 @@ exports.postFileUpload = async (req, res, next) => {
 
           let bitrate;
 
-          // TODO: a bit ugly
+          uploadLogger.info(`Concat done`, logObject);
 
 
           // calculate bitrate for video, audio and converts
@@ -231,7 +247,7 @@ exports.postFileUpload = async (req, res, next) => {
 
             bitrate = response.format.bit_rate / 1000;
 
-            console.log(`BITRATE: ${response.format.bit_rate / 1000}`);
+            uploadLogger.info(`BITRATE: ${response.format.bit_rate / 1000}`, logObject);
 
             if (bitrate > 2500) {
               // console.log('need to convert here')
@@ -250,13 +266,15 @@ exports.postFileUpload = async (req, res, next) => {
           // where the file will be served from
           let fileInDirectory = `${channelUrlFolder}/${fileName}`;
 
-          console.log('done concatenating');
-
           /** MOVE CONVERTED FILE TO PROPER DIRECTORY **/
           await fs.move(`./${uploadPath}/convertedFile`, fileInDirectory);
 
+          uploadLogger.info(`Moved file to user's directory`, logObject);
+
           /** DELETE RESUMABLE PARTS **/
           await fs.remove(`./${uploadPath}`);
+
+          uploadLogger.info(`Removed original file parts`, logObject);
 
           // save filesize
           const convertedFileStats = fs.statSync(fileInDirectory);
@@ -270,6 +288,8 @@ exports.postFileUpload = async (req, res, next) => {
           if (upload.fileType == 'convert') {
             await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, hostFilePath, bucket, upload, channelUrl, b2);
 
+            uploadLogger.info(`Captured thumbnail`, logObject);
+
             // TODO: we're compressing the upload as we convert it, may want to convert and then compress and keep both (lose best quality as is)
             await ffmpegHelper.convertVideo({
               uploadedPath: fileInDirectory,
@@ -279,8 +299,12 @@ exports.postFileUpload = async (req, res, next) => {
               bitrate
             });
 
+            uploadLogger.info(`Finished converting file`, logObject);
+
             // assuming an mp4 is created at this point
             await fs.remove(`${fileInDirectory}`);
+
+            uploadLogger.info(`Deleted unconverted file`, logObject);
 
             // for upload to b2
             fileInDirectory = `${channelUrlFolder}/${uniqueTag}.mp4`;
@@ -289,6 +313,9 @@ exports.postFileUpload = async (req, res, next) => {
             upload.fileType = 'video';
 
             upload = await upload.save();
+
+            uploadLogger.info(`Completed video conversion`, logObject);
+
           }
 
           /** UPLOAD VIDEO AND CONVERT IF NEEDED **/
@@ -296,7 +323,8 @@ exports.postFileUpload = async (req, res, next) => {
             await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, hostFilePath, bucket, upload, channelUrl, b2);
 
             if (bitrate > 2500) {
-              console.log('have to convert here');
+
+              uploadLogger.info(`About to compress file since bitrate is over 2500`, logObject);
 
               (async function () {
 
@@ -306,11 +334,18 @@ exports.postFileUpload = async (req, res, next) => {
                   channelUrl,
                   title: upload.title
                 });
+
+                uploadLogger.info(`Video file is compressed`, logObject);
+
                 // mark original upload file as high quality file
                 await fs.move(fileInDirectory, `${channelUrlFolder}/${uniqueTag}-high.mp4`);
 
+                uploadLogger.info(`Moved original filename to uniqueTag-high.mp4`, logObject);
+
                 // move compressed video to original video's place
                 await fs.move(`${channelUrlFolder}/${uniqueTag}-compressed.mp4`, fileInDirectory);
+
+                uploadLogger.info(`Moved compressed file to default uniqueTag.mp4 location`, logObject);
 
                 // save high quality video size
                 const highQualityFileStats = fs.statSync(`${channelUrlFolder}/${uniqueTag}-high.mp4`);
@@ -320,7 +355,11 @@ exports.postFileUpload = async (req, res, next) => {
                 const compressedFileStats = fs.statSync(fileInDirectory);
                 upload.fileSize = compressedFileStats.size;
 
+                // uploadLogger.info(`Moved file to user's directory`, logObject);
+
                 await upload.save();
+
+                uploadLogger.info(`Upload document saved after compression and moving files`, logObject);
 
               })();
             }
@@ -339,7 +378,11 @@ exports.postFileUpload = async (req, res, next) => {
 
           await uploadHelpers.markUploadAsComplete(uniqueTag, channelUrl, user);
 
+          uploadLogger.info(`Upload marked as complete`, logObject);
+
           uploadHelpers.updateUsersUnreadSubscriptions(user);
+
+          uploadLogger.info(`Updated subscribed users subscriptions`, logObject);
 
           if (!responseSent)
           {

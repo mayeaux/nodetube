@@ -57,12 +57,10 @@ block content
                     each channel in channels
                         div.col-sm-4(style="text-align:center;height:360px")
                             a(href=`/user/${channel.channelUrl}` style="color:black")
-                                if channel.thumbnailUrl
-                                    img.preview-image(src=channel.thumbnailUrl)
-                                else if channel.uploads && channel.uploads[0]
-                                    img.preview-image(src=channel.uploads[0].thumbnailUrl)
+                                if channel.customThumbnail
+                                    img.center-block.text-center(src=`${uploadServer}/${channel.channelUrl}/${channel.customThumbnail}` width="256px" height="168px")
                                 else
-                                    img.preview-image(src='/no_img.png')
+                                    img.center-block.text-center(src='/images/no_img.png' width="256px" height="168px")
 
 
                                 div

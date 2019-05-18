@@ -68,6 +68,7 @@ block content
                                 div.uploaded-by #{view.upload.fileType.charAt(0).toUpperCase() + view.upload.fileType.slice(1)}&nbsp
                                     |uploaded by #{view.upload.uploader.channelName}
 
+block extra_footer_js
     script.
       $(document).on({
         mouseenter: function () {
@@ -87,3 +88,4 @@ block content
           $(this).css("height", height / 1.10);
         }
       }, '.preview-image');
+

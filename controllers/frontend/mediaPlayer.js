@@ -21,6 +21,10 @@ const categories = require('../../config/categories');
 
 const uploadServer  = uploadHelpers.uploadServer;
 
+const generateComments = require('../../lib/mediaPlayer/generateCommentsObjects');
+const generateReactInfo = require('../../lib/mediaPlayer/generateReactInfo');
+
+
 console.log('UPLOAD SERVER: ' + uploadServer);
 
 function getParameterByName(name, url) {
@@ -73,27 +77,6 @@ exports.getMedia = async (req, res) => {
     // console.log(subscriberAmount);
 
 
-    /** COMMENTS **/
-
-    let commentsWithResponsesPopulated = [];
-
-    // populating the comments' responses
-    for(comment of upload.comments){
-      let newThing = await Comment.findOne({ _id : comment.id }).populate({path: 'responses commenter', populate: {path: 'commenter'}});
-      // console.log(newThing);
-      commentsWithResponsesPopulated.push(newThing)
-    }
-
-    // remove removed comments
-    commentsWithResponsesPopulated = _.filter(commentsWithResponsesPopulated, function(comment){
-      return comment.visibility == 'public'
-    });
-
-    // remove comments that are responses (they will already be listed)
-    commentsWithResponsesPopulated = _.filter(commentsWithResponsesPopulated, function(comment){
-      return !comment.inResponseTo
-    });
-
     let subscriptions = req.user ? await Subscription.count({subscribedToUser: upload.uploader._id, subscribingUser: req.user._id, active: true}) : 0
     let alreadySubbed = (subscriptions > 0) ? true : false;
     /*let subscriptions = await Subscription.find({ subscribedToUser: upload.uploader._id, active: true });
@@ -110,54 +93,6 @@ exports.getMedia = async (req, res) => {
     */
 
 
-    // TODO: A better implementation is in branches 'server-down' and 'nov-25'
-    let userReact;
-    if(req.user){
-      userReact = await React.findOne({ upload: upload._id, user: req.user._id });
-    }
-
-    let likeAmount = await React.count({ react: 'like', upload: upload._id });
-    let dislikeAmount = await React.count({ react: 'dislike', upload: upload._id });
-    let laughAmount = await React.count({ react: 'laugh', upload: upload._id });
-    let sadAmount  = await React.count({ react: 'sad', upload: upload._id });
-    let disgustAmount  = await React.count({ react: 'disgust', upload: upload._id });
-    let loveAmount = await React.count({ react: 'love', upload: upload._id });
-
-    let currentReact;
-    if(userReact){
-      currentReact = userReact.react
-    } else {
-      currentReact = undefined;
-    }
-
-    emojis = {
-      like: {
-        name: 'like',
-        amount: likeAmount
-      },
-      dislike: {
-        name: 'dislike',
-        amount: dislikeAmount
-
-      },
-      laugh: {
-        name: 'laugh',
-        amount: laughAmount
-      },
-      sad: {
-        name: 'sad',
-        amount: sadAmount
-      },
-      disgust: {
-        name: 'disgust',
-        amount: disgustAmount
-      },
-      love: {
-        name: 'love',
-        amount: loveAmount
-      },
-    }
-
     // determine if its the user of the channel
     let isAdmin = false;
     let isUser = false;
@@ -169,7 +104,7 @@ exports.getMedia = async (req, res) => {
       isAdmin = req.user.role == 'admin';
     }
 
-    const isUploader =  req.user._id.toString() == upload.uploader._id.toString();
+    const isUploader =  req.user && req.user._id.toString() == upload.uploader._id.toString();
 
 
     const isUserOrAdmin = isAdmin || isUser;
@@ -227,14 +162,24 @@ exports.getMedia = async (req, res) => {
       await upload.save();
     }
 
+    const comments = await generateComments(upload);
 
+    let commentCount = 0;
+    for(const comment of comments){
+      commentCount++;
+      for(const response of comment.responses){
+        commentCount++;
+      }
+    }
+
+    const reactInfo = await generateReactInfo(upload, req.user);
+
+    const emojis = reactInfo.emojis;
+
+    const currentReact = reactInfo.currentReact;
 
     upload.views = upload.views + legitViews.length + userFakeViews.length;
 
-    // filter out removed comments *AND* comments that are responses
-    upload.comments = _.filter(upload.comments, function(comment){
-      return comment.visibility !== 'removed' && !comment.inResponseTo
-    });
 
     // if upload should only be visible to logged in user
     if (upload.visibility == 'pending' || upload.visibility == 'private'){
@@ -257,10 +202,11 @@ exports.getMedia = async (req, res) => {
       if(isUsersDocument || req.user.role == 'admin'){
         res.render('media', {
           title: upload.title,
-          comments: upload.comments,
+          comments,
           upload,
           channel,
-          media
+          media,
+          commentCount
         });
       }
 
@@ -280,14 +226,6 @@ exports.getMedia = async (req, res) => {
       }
 
       const url = req.protocol + '://' + req.get('host') + req.originalUrl;
-
-      let commentCount = 0;
-      for(const comment of commentsWithResponsesPopulated){
-        commentCount++;
-        for(const response of comment.responses){
-          commentCount++;
-        }
-      }
 
       let alreadyReported;
       // need to add the upload
@@ -311,12 +249,9 @@ exports.getMedia = async (req, res) => {
         }
       }
 
-      console.log(viewingUserIsBlocked + ' is blocked')
-
-
       res.render('media', {
         title: upload.title,
-        comments: commentsWithResponsesPopulated,
+        comments,
         upload,
         channel,
         media,
@@ -334,6 +269,7 @@ exports.getMedia = async (req, res) => {
         categories,
         isUserOrAdmin,
         isUploaderOrAdmin,
+        isUploader,
         getParameterByName,
         viewingUserIsBlocked
       });

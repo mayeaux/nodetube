@@ -5,6 +5,8 @@ const View = require('../models/index').View;
 
 const Upload = require('../models/index').Upload;
 
+const categories = require('../config/categories');
+
 const clone = require('clone');
 const sizeof = require('object-sizeof');
 const moment = require('moment');
@@ -27,43 +29,52 @@ const buildObjects = helpers.buildObjects;
 
 const redisClient = require('../config/redis');
 
-async function getRecentUploads(uploadType){
+async function getRecentUploads(){
 
-  console.log(`Getting recent uploads`);
+  let recentUploadsAllCategories = [];
 
-  const searchQuery = {
-    $or : [ { status: 'completed' }, { uploadUrl: { $exists: true } } ],
-    visibility: 'public',
-    sensitive: { $ne : true },
-    uploader: { $exists: true },
-    category : { $exists: true }
-  };
+  for(const category of categories){
 
-  const selectString = 'rating title views uploader fileType thumbnailUrl ' +
-    'uploadUrl uniqueTag customThumbnailUrl fileExtension thumbnails reacts uncurated category subcategory createdAt';
+    console.log(`Getting uploads for category: ${category.name}`);
 
-  let recentUploads = await Upload.find(searchQuery).select(selectString).populate('uploader reacts')
-    .sort({ createdAt : - 1 })
-    .limit(1000)
-    .lean();
+    const searchQuery = {
+      $or : [ { status: 'completed' }, { uploadUrl: { $exists: true } } ],
+      visibility: 'public',
+      sensitive: { $ne : true },
+      uploader: { $exists: true },
+      category : category.name
+    };
 
-  console.log('Uploads received from database');
+    const selectString = 'rating title views uploader fileType thumbnailUrl ' +
+      'uploadUrl uniqueTag customThumbnailUrl fileExtension thumbnails reacts uncurated category subcategory createdAt';
 
-  c.l(recentUploads.length);
+    let recentUploads = await Upload.find(searchQuery).select(selectString).populate('uploader reacts')
+      .sort({ createdAt : - 1 })
+      .limit(1000)
+      .lean();
 
-  return recentUploads
+    console.log(`${recentUploads.length} uploads found for ${category.name}`);
+
+    recentUploadsAllCategories = recentUploadsAllCategories.concat(recentUploads)
+  }
+
+  c.l(`Totalling an amount of ${recentUploadsAllCategories.length} for all recent uploads`);
+
+  return recentUploadsAllCategories
 }
 
 async function setRecentUploads() {
   let recentUploads  = await getRecentUploads();
 
   // calculate view periods for each upload
-  recentUploads = await Promise.all(recentUploads.map(async function(upload){
+  recentUploads = await Promise.all(recentUploads.map(async function(upload, index){
 
     // get all valid views per upload
     const uploadViews = await View.find({ upload, validity: 'real' }).select('createdAt');
 
     upload.timeAgo = timeAgoEnglish.format( new Date(upload.createdAt) );
+
+    // console.log(index + ' done')
 
     // calculate their views per period (last24h, lastweek)
     return calculateViewsByPeriod(upload, uploadViews);

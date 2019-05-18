@@ -33,6 +33,15 @@ script.
 
     var unsubbing = alreadySubbed
 
+    // switch value of alreadySubbed
+    if (alreadySubbed) {
+      amountOfSubs = amountOfSubs - 1
+      alreadySubbed = false;
+    } else {
+      amountOfSubs = amountOfSubs + 1
+      alreadySubbed = true;
+    }
+
     // the user is unsubbing
     if(unsubbing){
       $('.subscribe').html(`Subscribe (${amountOfSubs})`)
@@ -58,14 +67,6 @@ script.
       swal({ text: 'You have subscribed to ' + userName })
     }
 
-    // switch value of alreadySubbed
-    if (alreadySubbed) {
-      amountOfSubs = amountOfSubs - 1
-      alreadySubbed = false;
-    } else {
-      amountOfSubs = amountOfSubs + 1
-      alreadySubbed = true;
-    }
 
     //
     var data = {

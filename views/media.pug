@@ -2,40 +2,11 @@ extends layout
 
 block content
 
-    script(src='https://checkout.stripe.com/checkout.js')
-
-    style.
-        .pewtube-pro {
-            background: #edeeee;
-            font-weight: 400;
-            font-size: 13px;
-            margin-left: 3px;
-            padding: 8px 9px;
-            display: inline-block;
-            border-radius: 3px;
-            transform: translateY(-2px);
-        }
-
-        .dropdown {
-            text-align: center;
-        }
-
-        .button, .dropdown-menu {
-            margin: 10px auto
-        }
-
-        .dropdown-menu {
-            width: 200px;
-            left: 50%;
-            margin-left: -100px;
-            margin-top: 0px;
-        }
-
 
     br
     div.center-block.text-center.col-sm-12
         if upload.status == 'processing'
-            h2 Your upload #{upload.title } is processing. Check back in a couple minutes.
+            h2 Your upload #{upload.title} is processing. Check back in a couple minutes.
             br
             br
 
@@ -53,7 +24,15 @@ block content
         else if upload.fileType === 'audio'
             div
                 audio.my_audio(style="width:80%;" controls='', preload='none')
-                    source(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`, type='audio/mp3')
+
+                    if upload.fileExtension == '.m4a'
+                        source(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`, type='audio/mp4')
+                    if upload.fileExtension == '.oga' || upload.fileExtension == '.ogg'
+                        source(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`, type='audio/ogg')
+                    else
+                        source(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`, type='audio/mp3')
+
+
                     //source(src=upload.uploadUrl, type='audio/mp3')
 
         else if upload.fileType === 'image'
@@ -295,15 +274,17 @@ block content
                                                 p(style="text-align:left;display:inline-block;")
                                                     a(href=`/user/${comment.commenter.channelUrl}` style="color:black;margin-right:5px;") #{comment.commenter.channelName || comment.commenter.channelUrl}
                                                 p(style="display:inline-block;") - #{comment.timeAgo} &nbsp
-                                                    if !viewingUserIsBlocked
+                                                    if user && !viewingUserIsBlocked
                                                         a.reply-link(style="cursor:pointer") Reply
                                                     // delete button
                                                     // if uploader or admin or commenter, let them delete comment
-                                                    if isUploaderOrAdmin || ( comment.commenter._id == user._id )
+                                                    if isUploaderOrAdmin || ( user && comment.commenter._id == user._id )
                                                         a.delete-comment-button(style="margin-left:9px;cursor:pointer;" commentId=comment._id) Delete
 
-                                                    if isUploaderOrAdmin && !viewingUserIsBlocked
+                                                    if isUploader && !comment.commenter.isBlocked
                                                         a.block-user-button(style="margin-left:9px;cursor:pointer;" blockedusername=comment.commenter.channelUrl) Block User
+                                                    if isUploader && comment.commenter.isBlocked
+                                                        a.unblock-user-button(style="margin-left:9px;cursor:pointer;" blockedusername=comment.commenter.channelUrl) Unblock User
 
 
                                             p(style="text-align:left;") #{comment.text}
@@ -350,56 +331,95 @@ block content
                                     p No commenter
 
 
-    script.
-      balanceText();
-
-    // reportUploadFunctionalityJs
-
-    script(src="https://cdn.plyr.io/2.0.16/plyr.js")
-
-    include ./mediaPlayerPartials/changeQualityJs
-
-    include ./mediaPlayerPartials/changeUserDefaultQualityJs
-
-    include mediaPlayerPartials/creditFunctionalityJs
-
-    include mediaPlayerPartials/deleteCommentJs
-
-    include mediaPlayerPartials/subscribeFunctionalityJs
-
-    include mediaPlayerPartials/sensitiveFunctionalityJs
-
-    include mediaPlayerPartials/plyrAndAutoplayFunctionalityJs
-
-    include mediaPlayerPartials/embedLinkFunctionalityJs
-
-    include ./mediaPlayerPartials/downloadFunctionalityJs
-
-    include ./mediaPlayerPartials/repeatFunctionalityJs
-
-    include ./mediaPlayerPartials/reactFunctionalityJs
-
-    script.
-      var myTextEl = document.getElementById('descriptionText');
-      myTextEl.innerHTML = Autolinker.link(myTextEl.innerHTML);
-
-    if user
-        script.
-          var user = '#{user.id}'
-    else
-        script.
-          var user = undefined
-
-
 block extra_js
+  script(src='https://checkout.stripe.com/checkout.js')
   script(src="https://cdnjs.cloudflare.com/ajax/libs/autolinker/1.4.4/Autolinker.js")
 
 
 block extra_css
   link(rel="stylesheet" href="https://cdn.plyr.io/2.0.16/plyr.css")
+  style.
+    .pewtube-pro {
+        background: #edeeee;
+        font-weight: 400;
+        font-size: 13px;
+        margin-left: 3px;
+        padding: 8px 9px;
+        display: inline-block;
+        border-radius: 3px;
+        transform: translateY(-2px);
+    }
+
+    .dropdown {
+        text-align: center;
+    }
+
+    .button, .dropdown-menu {
+        margin: 10px auto
+    }
+
+    .dropdown-menu {
+        width: 200px;
+        left: 50%;
+        margin-left: -100px;
+        margin-top: 0px;
+    }
 
 
 block extra_footer_js
-  script(src="/js/media.js")
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js")
   script(src="https://cdn.plyr.io/2.0.16/plyr.js")
+  script.
+    var clipboard = new ClipboardJS('.copy-button');
+
+    clipboard.on('success', function (e) {
+      swal('The text has been copied to your clipboard')
+    });
+
+
+  script(src="/js/media.js")
+
+  script.
+    balanceText();
+
+  // reportUploadFunctionalityJs
+
+  include ./mediaPlayerPartials/reportUploadFunctionalityJs
+
+  include ./mediaPlayerPartials/changeQualityJs
+
+  include ./mediaPlayerPartials/changeUserDefaultQualityJs
+
+  include mediaPlayerPartials/creditFunctionalityJs
+
+  if user
+    include mediaPlayerPartials/deleteCommentAndBlockUnblockUserJs
+
+  include mediaPlayerPartials/subscribeFunctionalityJs
+
+  include mediaPlayerPartials/sensitiveFunctionalityJs
+
+  include mediaPlayerPartials/plyrAndAutoplayFunctionalityJs
+
+  include mediaPlayerPartials/embedLinkFunctionalityJs
+
+  include ./mediaPlayerPartials/downloadFunctionalityJs
+
+  include ./mediaPlayerPartials/repeatFunctionalityJs
+
+  include ./mediaPlayerPartials/reactFunctionalityJs
+
+  script.
+    var myTextEl = document.getElementById('descriptionText');
+    if (myTextEl)
+    {
+      myTextEl.innerHTML = Autolinker.link(myTextEl.innerHTML);
+    }
+
+  if user
+      script.
+        var user = '#{user.id}'
+  else
+      script.
+        var user = undefined
 

@@ -1,0 +1,15 @@
+p(style="font-size:16px") by &nbsp
+    a.upload-user-text(href=`/user/${document.upload.uploader.channelUrl}`) #{document.upload.uploader.channelName}
+
+div.upload-details
+// upload details per action type
+if recentActionDisplayName == 'Recent Reacts'
+    p A user reacted with a #{document.react} react #{document.timeAgo}
+
+else if recentActionDisplayName == 'Recent Views'
+    p Viewed #{document.timeAgo}
+
+else if recentActionDisplayName == 'Recent Comments'
+    // comment text
+    div(style="height:93px;overflow:hidden;")
+        p(style="width:80%;margin:0 auto;margin-top:10px;") #{document.text} &nbsp  -#{document.commenter.channelName || document.commenter.channelUrl}

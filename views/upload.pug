@@ -25,6 +25,15 @@ block content
       padding: 10px;
     }
 
+    .ldBar-label {
+      font-size: 2.1em;
+      font-weight: 900;
+    }
+
+    .ldBar {
+      margin: 0 auto;
+    }
+
   br
   div.center-block.text-center
       div.upload-information
@@ -33,7 +42,7 @@ block content
           | File Upload
 
         br
-        h3 PewTube supports video, audio and image files.
+        h3 NodeTube supports video, audio and image files
 
         br
         br
@@ -45,14 +54,16 @@ block content
         br
 
         p Your current upload file size limit is #{user.privs.uploadSize} MB (#{user.privs.uploadSize / 1000} GB)
-        if user.plan == 'free'
+        if user.plan == 'free' && plus_enabled
           p You can raise this limit to 2000 MB by subscribing for&nbsp
-            a(href="/account?to=pt-plus") PewTube Plus
+            a(href="/account?to=pt-plus") NodeTube Plus
 
-        br
-        p Graphic violence, content that uses racial epithets, and overtly sexual content must be marked as Not Safe For Work
-        p Shocking content must be marked as sensitive.
-        p Not properly marking content as mature may result in a restriction of rating content as Safe For Work
+        if site_rating
+
+          br
+          p Graphic violence, content that uses racial epithets, and overtly sexual content must be marked as Not Safe For Work
+          p Shocking content must be marked as sensitive.
+          p Not properly marking content as mature may result in a restriction of rating content as Safe For Work
 
 
       .row
@@ -74,6 +85,7 @@ block content
 
                   label(for='title') Title (*)
                   input.form-group.center-block.text-center(style="width:400px;" type="text" name="title" id="title" minlength=3, maxlength=100 required)
+                  br
 
                   // add endpoint for visibility
                   if user.plan == 'plus'
@@ -100,10 +112,10 @@ block content
                       each category in categories
                         li(role='presentation')
                           a.categoryValue(style="cursor:pointer;" data-value=category.name data-displayname=category.displayName) #{category.displayName}
+                    br
 
                     br
 
-                  br
                   div.categoryName(style="display:none")
                     h5.categoryDisplayName Category: $Thing
                     br
@@ -122,29 +134,29 @@ block content
                               br
                               br
                         br
-
-                  label(for='rating') Rating (*)
-                  br
-                  div.radio-buttons.rating
-                    label.radio-inline
-                      input.radio-button(type='radio', name='rating' value="sensitive" required)
-                      | Sensitive (Shocking content) 18+
-
+                  // todo: actually add site rating as passed variable
+                  if site_rating || 1 == 1
+                    label(for='rating') Rating (*)
                     br
-                    br
-                    label.radio-inline
-                      input.radio-button(type='radio', name='rating' value="mature")
-                      | Not Safe For Work
-                    br
-                    br
-                    if user.privs.safeForWorkUpload
+                    div.radio-buttons.rating
                       label.radio-inline
-                        input.radio-button(type='radio', name='rating' value="allAges")
-                        | Safe For Work
-                        br
-                        br
-                        br
-                        br
+                        input.radio-button(type='radio', name='rating' value="sensitive" required)
+                        | Sensitive (Shocking content) 18+
+
+                      br
+                      br
+                      label.radio-inline
+                        input.radio-button(type='radio', name='rating' value="mature")
+                        | Not Safe For Work
+                      br
+                      br
+                      if user.privs.safeForWorkUpload
+                        label.radio-inline
+                          input.radio-button(type='radio', name='rating' value="allAges")
+                          | Safe For Work
+                          br
+                          br
+                          br
                   label(for="description") Description
                   br
                   textarea.form-group(style="width:400px;" type="text" name="description" id="description" maxlength='2000' rows="10" cols="70")
@@ -162,10 +174,10 @@ block content
           div.upload-gif
               h3.upload-title-name Your file is uploading
               br
-              h1 Uploading...
-              img(src='/images/uploading.gif' style="max-width:75px")
+              h1(style="margin-bottom:19px;") Uploading...
 
-              h2.file-progress
+              div#myItem1.ldBar(data-preset="circle")
+
 
 
 
@@ -176,6 +188,10 @@ block content
   script(src='/js/lib/resumable.js')
   script.
     $(document).ready(function () {
+
+      // progress bar stuff
+      var bar1 = new ldBar("#myItem1");
+
 
       var selectedCategory;
       var selectedSubcategory;
@@ -405,6 +421,8 @@ block content
           } else {
 
             $('.file-progress').html('PROGRESS: ' + progress + '%');
+
+            bar1.set(progress);
           }
 
 
