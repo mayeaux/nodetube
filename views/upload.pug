@@ -58,10 +58,12 @@ block content
           p You can raise this limit to 2000 MB by subscribing for&nbsp
             a(href="/account?to=pt-plus") NodeTube Plus
 
-        br
-        p Graphic violence, content that uses racial epithets, and overtly sexual content must be marked as Not Safe For Work
-        p Shocking content must be marked as sensitive.
-        p Not properly marking content as mature may result in a restriction of rating content as Safe For Work
+        if site_rating
+
+          br
+          p Graphic violence, content that uses racial epithets, and overtly sexual content must be marked as Not Safe For Work
+          p Shocking content must be marked as sensitive.
+          p Not properly marking content as mature may result in a restriction of rating content as Safe For Work
 
 
       .row
@@ -83,6 +85,7 @@ block content
 
                   label(for='title') Title (*)
                   input.form-group.center-block.text-center(style="width:400px;" type="text" name="title" id="title" minlength=3, maxlength=100 required)
+                  br
 
                   // add endpoint for visibility
                   if user.plan == 'plus'
@@ -109,10 +112,10 @@ block content
                       each category in categories
                         li(role='presentation')
                           a.categoryValue(style="cursor:pointer;" data-value=category.name data-displayname=category.displayName) #{category.displayName}
+                    br
 
                     br
 
-                  br
                   div.categoryName(style="display:none")
                     h5.categoryDisplayName Category: $Thing
                     br
@@ -131,29 +134,29 @@ block content
                               br
                               br
                         br
-
-                  label(for='rating') Rating (*)
-                  br
-                  div.radio-buttons.rating
-                    label.radio-inline
-                      input.radio-button(type='radio', name='rating' value="sensitive" required)
-                      | Sensitive (Shocking content) 18+
-
+                  // todo: actually add site rating as passed variable
+                  if site_rating || 1 == 1
+                    label(for='rating') Rating (*)
                     br
-                    br
-                    label.radio-inline
-                      input.radio-button(type='radio', name='rating' value="mature")
-                      | Not Safe For Work
-                    br
-                    br
-                    if user.privs.safeForWorkUpload
+                    div.radio-buttons.rating
                       label.radio-inline
-                        input.radio-button(type='radio', name='rating' value="allAges")
-                        | Safe For Work
-                        br
-                        br
-                        br
-                        br
+                        input.radio-button(type='radio', name='rating' value="sensitive" required)
+                        | Sensitive (Shocking content) 18+
+
+                      br
+                      br
+                      label.radio-inline
+                        input.radio-button(type='radio', name='rating' value="mature")
+                        | Not Safe For Work
+                      br
+                      br
+                      if user.privs.safeForWorkUpload
+                        label.radio-inline
+                          input.radio-button(type='radio', name='rating' value="allAges")
+                          | Safe For Work
+                          br
+                          br
+                          br
                   label(for="description") Description
                   br
                   textarea.form-group(style="width:400px;" type="text" name="description" id="description" maxlength='2000' rows="10" cols="70")
