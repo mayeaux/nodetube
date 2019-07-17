@@ -12,26 +12,26 @@ const { combine, timestamp, label, prettyPrint } = format;
 //   }));
 // }
 
-winston.loggers.add('uploadEndpoint', {
-  level: 'info',
-  // format: winston.format.json(),
-  format: combine(
-    format.splat(),
-    format.simple(),
-    format.json(),
-    // label({ label: 'custom label!' }),
-    // timestamp(),
-  ),
-  transports: [
-    //
-    // - Write to all logs with level `info` and below to `combined.log`
-    // - Write all logs error (and below) to `error.log`.
-    //
-    new transports.Console(),
-    new transports.File({ filename: 'error.log', level: 'error' }),
-    new transports.File({ filename: 'logs/uploads.log' })
-  ]
-});
+// winston.loggers.add('uploadEndpoint', {
+//   level: 'info',
+//   // format: winston.format.json(),
+//   format: combine(
+//     format.splat(),
+//     format.simple(),
+//     format.json(),
+//     // label({ label: 'custom label!' }),
+//     // timestamp(),
+//   ),
+//   transports: [
+//     //
+//     // - Write to all logs with level `info` and below to `combined.log`
+//     // - Write all logs error (and below) to `error.log`.
+//     //
+//     new transports.Console(),
+//     new transports.File({ filename: 'error.log', level: 'error' }),
+//     new transports.File({ filename: 'logs/uploads.log' })
+//   ]
+// });
 
 
 winston.loggers.add('category2', {
