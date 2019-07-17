@@ -19,7 +19,8 @@
     "dev": "nodemon -e pug,js app.js",
     "memory": "node --max-old-space-size=4096 app.js",
     "cache": "node --max-old-space-size=8000 caching/runCaching.js",
-    "both": "node --max-old-space-size=4096 app.js & node --max-old-space-size=8000 caching/runCaching.js"
+    "both": "node --max-old-space-size=4096 app.js & node --max-old-space-size=8000 caching/runCaching.js",
+    "nodemonboth" : "nodemon --exec npm run both"
   },
   "dependencies": {
     "apicache": "^1.4.0",

@@ -462,7 +462,6 @@ if (cluster.isMaster) {
     if(process.env.NGROK_SUBDOMAIN && process.env.NGROK_AUTHTOKEN){
       ngrokOptions.authtoken = process.env.NGROK_AUTHTOKEN
       ngrokOptions.subdomain = process.env.NGROK_SUBDOMAIN
-      console.log(ngrokOptions)
     }
 
     const url = await ngrok.connect(ngrokOptions);
@@ -470,6 +469,7 @@ if (cluster.isMaster) {
     const api = ngrok.getApi();
     const tunnels = JSON.parse(await api.get('api/tunnels'));
 
+    // TODO: replace with https
     const publicUrlAsHttp = tunnels.tunnels[0].public_url;
 
     console.log(`Access NodeTube on the public web via ${publicUrlAsHttp}`);
