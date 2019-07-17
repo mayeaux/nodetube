@@ -95,3 +95,6 @@ runCaching();
 setInterval(runCaching, cacheIntervalInMs);
 
 
+setInterval(async function(){
+  await cacheRecentUploads();
+}, 1000 * 30);
