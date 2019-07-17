@@ -459,9 +459,10 @@ if (cluster.isMaster) {
       addr: 3000
     };
 
-    if(process.env.NGROK_SUBDOMAIN && process.env.NGROK__AUTHTOKEN){
+    if(process.env.NGROK_SUBDOMAIN && process.env.NGROK_AUTHTOKEN){
       ngrokOptions.authtoken = process.env.NGROK_AUTHTOKEN
       ngrokOptions.subdomain = process.env.NGROK_SUBDOMAIN
+      console.log(ngrokOptions)
     }
 
     const url = await ngrok.connect(ngrokOptions);
