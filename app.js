@@ -454,24 +454,28 @@ if (cluster.isMaster) {
   })();
 
   async function runNgrok(){
-    const url = await ngrok.connect({
+
+    let ngrokOptions = {
       addr: 3000
-    });
+    };
+
+    if(process.env.NGROK_SUBDOMAIN && process.env.NGROK__AUTHTOKEN){
+      ngrokOptions.authtoken = process.env.NGROK_AUTHTOKEN
+      ngrokOptions.subdomain = process.env.NGROK_SUBDOMAIN
+    }
+
+    const url = await ngrok.connect(ngrokOptions);
 
     const api = ngrok.getApi();
     const tunnels = JSON.parse(await api.get('api/tunnels'));
 
     const publicUrlAsHttp = tunnels.tunnels[0].public_url;
 
-    console.log(`Access NodeTube on the public web via ${tunnels.tunnels[0].public_url}`);
+    console.log(`Access NodeTube on the public web via ${publicUrlAsHttp}`);
   }
 
   if(process.env.RUN_NGROK){
     runNgrok()
   }
-
-
-
-
 
 }
