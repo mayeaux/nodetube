@@ -79,6 +79,9 @@ block content
                   br
                   a.resumable-browse
                       button.btn.btn-success.resumable-brwoser Select File
+
+
+                  div#dropTarget(style="width:500px;height:100px;background-color:black") HEY SUP
                   br
                   br
                   br
@@ -139,24 +142,28 @@ block content
                     label(for='rating') Rating (*)
                     br
                     div.radio-buttons.rating
-                      label.radio-inline
-                        input.radio-button(type='radio', name='rating' value="sensitive" required)
-                        | Sensitive (Shocking content) 18+
-
-                      br
-                      br
-                      label.radio-inline
-                        input.radio-button(type='radio', name='rating' value="mature")
-                        | Not Safe For Work
-                      br
-                      br
                       if user.privs.safeForWorkUpload
                         label.radio-inline
                           input.radio-button(type='radio', name='rating' value="allAges")
                           | Safe For Work
                           br
                           br
-                          br
+                      br
+
+                      label.radio-inline
+                        input.radio-button(type='radio', name='rating' value="mature")
+                        | Not Safe For Work
+                      br
+                      br
+
+                      label.radio-inline
+                        input.radio-button(type='radio', name='rating' value="sensitive" required)
+                        | Sensitive (Shocking content) 18+
+
+                      br
+                      br
+
+                  br
                   label(for="description") Description
                   br
                   textarea.form-group(style="width:400px;" type="text" name="description" id="description" maxlength='2000' rows="10" cols="70")
@@ -265,6 +272,10 @@ block content
       } else {
 
         r.assignBrowse($('.resumable-browse')[0]);
+
+        r.assignDrop(document.getElementById('dropTarget'));
+
+
         // Handle file add event
 
         r.on('fileAdded', function (file) {

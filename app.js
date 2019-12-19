@@ -29,6 +29,7 @@ var cors = require('cors');
 const Promise = require('bluebird');
 const ipfilter = require('express-ipfilter').IpFilter;
 const _ = require('lodash');
+const ngrok = require('ngrok');
 
 /** Code for clustering, running on multiple CPUS **/
 const cluster = require('cluster');
@@ -451,5 +452,31 @@ if (cluster.isMaster) {
     module.exports = app;
 
   })();
+
+  async function runNgrok(){
+
+    let ngrokOptions = {
+      addr: 3000
+    };
+
+    if(process.env.NGROK_SUBDOMAIN && process.env.NGROK_AUTHTOKEN){
+      ngrokOptions.authtoken = process.env.NGROK_AUTHTOKEN
+      ngrokOptions.subdomain = process.env.NGROK_SUBDOMAIN
+    }
+
+    const url = await ngrok.connect(ngrokOptions);
+
+    const api = ngrok.getApi();
+    const tunnels = JSON.parse(await api.get('api/tunnels'));
+
+    // TODO: replace with https
+    const publicUrlAsHttp = tunnels.tunnels[0].public_url;
+
+    console.log(`Access NodeTube on the public web via ${publicUrlAsHttp}`);
+  }
+
+  if(process.env.RUN_NGROK){
+    runNgrok()
+  }
 
 }

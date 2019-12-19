@@ -34,9 +34,12 @@ async function setGlobalRecentUploads(){
   console.log('load recentUploads redis cache in memory ');
 }
 
+
+// set global uploads if the service is not a FILE_HOST
 if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false'){
   setGlobalRecentUploads();
   setInterval(setGlobalRecentUploads, 1000 * 60 * 5);
+  setInterval(setGlobalRecentUploads, 1000 * 30);
 }
 
 // Only get needed amount of uploads
