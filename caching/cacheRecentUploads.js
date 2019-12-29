@@ -35,7 +35,7 @@ async function getRecentUploads(){
 
   for(const category of categories){
 
-    console.log(`Getting uploads for category: ${category.name}`);
+    // console.log(`Getting uploads for category: ${category.name}`);
 
     const searchQuery = {
       $or : [ { status: 'completed' }, { uploadUrl: { $exists: true } } ],
@@ -53,7 +53,7 @@ async function getRecentUploads(){
       .limit(1000)
       .lean();
 
-    console.log(`${recentUploads.length} uploads found for ${category.name}`);
+    // console.log(`${recentUploads.length} uploads found for ${category.name}`);
 
     recentUploadsAllCategories = recentUploadsAllCategories.concat(recentUploads)
   }
