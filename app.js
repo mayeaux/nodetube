@@ -482,7 +482,7 @@ if (cluster.isMaster) {
     use Ngrok with a permanent subdomain please purchase a token and update the settings in .env.private (see runNgrok function in app.js)`);
   }
 
-  if(process.env.RUN_NGROK){
+  if(process.env.RUN_NGROK == 'true'){
     runNgrok()
   }
 
