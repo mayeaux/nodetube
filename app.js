@@ -70,6 +70,7 @@ const saveAndServeFilesDirectory = settings.saveAndServeFilesDirectory;
 
 console.log(`SAVE AND SERVE FILES DIRECTORY: ${saveAndServeFilesDirectory}`);
 
+const portNumber =  process.env.PORT || 3000;
 
 if (cluster.isMaster) {
   for (let i = 0; i < amountOfProcesses; i++) {
@@ -163,7 +164,8 @@ if (cluster.isMaster) {
     /*
      * Express configuration.
      */
-    app.set('port', process.env.PORT || 3000);
+
+    app.set('port', portNumber);
     app.set('views', path.join(__dirname, 'views'));
     app.set('view engine', 'pug');
 
@@ -456,7 +458,7 @@ if (cluster.isMaster) {
   async function runNgrok(){
 
     let ngrokOptions = {
-      addr: 3000
+      addr: portNumber
     };
 
     if(process.env.NGROK_SUBDOMAIN && process.env.NGROK_AUTHTOKEN){
@@ -466,13 +468,16 @@ if (cluster.isMaster) {
 
     const url = await ngrok.connect(ngrokOptions);
 
-    const api = ngrok.getApi();
-    const tunnels = JSON.parse(await api.get('api/tunnels'));
-
-    // TODO: replace with https
-    const publicUrlAsHttp = tunnels.tunnels[0].public_url;
-
-    console.log(`Access NodeTube on the public web via ${publicUrlAsHttp}`);
+    console.log(url);
+    // const api = ngrok.getApi();
+    // const tunnels = JSON.parse(await api.get('api/tunnels'));
+    //
+    //
+    // console.log(tunnels.tunnels[0]);
+    //
+    // const publicUrlAsHttp = tunnels.tunnels[0].public_url;
+    //
+    console.log(`Access NodeTube on the public web via ${url}`);
   }
 
   if(process.env.RUN_NGROK){
