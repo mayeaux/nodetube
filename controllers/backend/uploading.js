@@ -377,7 +377,7 @@ exports.postFileUpload = async (req, res, next) => {
 
           /** UPLOAD TO B2 **/
           if (process.env.NODE_ENV == 'production' && process.env.UPLOAD_TO_B2 == 'true') {
-            backblaze.uploadToB2(upload, fileInDirectory, hostFilePath)
+            await backblaze.uploadToB2(upload, fileInDirectory, hostFilePath)
           }
 
           await uploadHelpers.markUploadAsComplete(uniqueTag, channelUrl, user);
