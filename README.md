@@ -34,14 +34,8 @@ git clone https://github.com/mayeaux/nodetube
 # Change directory
 cd nodetube
 
-# Install NPM dependencies
-npm install
-
-# Or, if you prefer to use `yarn` instead of `npm`
-yarn install
-
-# Then, install frontend deps via bower 
-cd public && bower install && cd ..
+# Install backend and frontend dependencies
+npm run installDeps
 
 # Then simply start your app
 npm start
