@@ -9,7 +9,7 @@ async function setRecentUploads(){
 }
 
 setRecentUploads();
-setInterval(setRecentUploads, 1000 * 60 * 5);
+setInterval(setRecentUploads, 1000 * 60 * 1);
 
 module.exports = {
   globalRecentUploads
