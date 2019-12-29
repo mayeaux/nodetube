@@ -8,7 +8,6 @@ const https = require('https');
 const ws = require('ws');
 const path = require('path');
 const minimist = require('minimist');
-const kurento = Promise.promisifyAll(require('kurento-client'));
 
 const User = require('../../models/index').User;
 
