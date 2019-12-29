@@ -257,6 +257,8 @@ exports.postFileUpload = async (req, res, next) => {
           // where to save the files
           const channelUrlFolder = `${saveAndServeFilesDirectory}/${user.channelUrl}`;
 
+          console.log(channelUrlFolder + ' channel url folder');
+
           // make user's folder if it doesn't exist yet
           await mkdirp.mkdirpAsync(channelUrlFolder);
 

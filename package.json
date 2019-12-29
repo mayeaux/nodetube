@@ -20,7 +20,8 @@
     "memory": "node --max-old-space-size=4096 app.js",
     "cache": "node --max-old-space-size=8000 caching/runCaching.js",
     "both": "node --max-old-space-size=4096 app.js & node --max-old-space-size=8000 caching/runCaching.js",
-    "nodemonboth": "nodemon --exec npm run both"
+    "nodemonboth": "nodemon --exec npm run both",
+    "installDeps": "npm install && cd public && bower install && cd .."
   },
   "dependencies": {
     "apicache": "^1.4.0",
@@ -61,7 +62,6 @@
     "intl-messageformat": "^1.3.0",
     "ipstack": "^0.1.1",
     "javascript-time-ago": "^0.4.15",
-    "kurento-client": "^6.10.0",
     "lastfm": "^0.9.3",
     "lob": "^3.9.0",
     "lodash": "^4.17.11",
