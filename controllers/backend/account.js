@@ -108,7 +108,7 @@ exports.postLogin = async (req, res, next) => {
 exports.postSignup = async (req, res, next) => {
 
   // CAPTCHA VALIDATION
-  if(process.env.NODE_ENV == 'production' && RECAPTCHA_ON == 'true'){
+  if(process.env.NODE_ENV == 'production' && process.env.RECAPTCHA_ON == 'true'){
     try {
       const response = await recaptcha.validate(req.body['g-recaptcha-response']);
     } catch (err){
