@@ -68,8 +68,8 @@ async function main(){
 
 }
 
-// main();
-// setInterval(main, 1000 * 60 * 1);
+main();
+setInterval(main, 1000 * 60 * 1);
 
 let cacheIntervalInMinutes = parseInt(process.env.CACHE_INTERVAL_IN_MINUTES) || 5;
 
