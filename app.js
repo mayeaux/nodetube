@@ -64,6 +64,7 @@ if(process.env.CACHING_ON == 'true'){
   const runcaching = require('./caching/runCaching')
 }
 
+// set upload server, upload url and save files directory
 const settings = require('./lib/helpers/settings');
 
 const saveAndServeFilesDirectory = settings.saveAndServeFilesDirectory;
@@ -128,7 +129,7 @@ if (cluster.isMaster) {
     // require('./lib/deleteUsers');
 
     /** connect to MongoDB **/
-    const mongoUri = process.env.MONGODB_DOCKER_URI || process.env.MONGO_URI || process.env.MONGODB_URI || process.env.MONGOLAB_URI || 'mongodb://localhost:27017/april15pewtube';
+    const mongoUri = process.env.MONGODB_URI || process.env.MONGODB_DOCKER_URI || process.env.MONGO_URI || process.env.MONGOLAB_URI || 'mongodb://localhost:27017/april15pewtube';
 
     mongoose.Promise = global.Promise;
 
