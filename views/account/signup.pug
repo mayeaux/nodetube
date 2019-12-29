@@ -23,7 +23,7 @@ block content
       .col-sm-7
         input.form-control(type='password', name='confirmPassword', id='confirmPassword', placeholder='Please confirm your password', required)
 
-    if nodeEnv == 'production'
+    if nodeEnv == 'production' && captchaOn == 'true'
       .form-group
         label.col-sm-3.control-label(for='captcha') Captcha
         //.col-sm-offset-3.col-sm-7

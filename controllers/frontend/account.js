@@ -530,12 +530,15 @@ exports.getSignup = (req, res) => {
 
   const recaptchaPublicKey = process.env.RECAPTCHA_SITEKEY;
 
+  const captchaOn = process.env.RECAPTCHA_ON == 'true'
+
   if (req.user) {
     return res.redirect('/');
   }
   res.render('account/signup', {
     title: 'Create Account',
-    recaptchaPublicKey
+    recaptchaPublicKey,
+    captchaOn
   });
 };
 
