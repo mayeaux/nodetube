@@ -29,6 +29,8 @@ const { b2, bucket, hostUrl } = require('../../lib/uploading/backblaze');
 const mongooseHelpers = require('../../caching/mongooseHelpers');
 const ffmpegHelper = require('../../lib/uploading/ffmpeg');
 const uploadHelpers = require('../../lib/uploading/helpers');
+const backblaze = require('../../lib/uploading/backblaze');
+
 
 console.log(`SAVE AND SERVE FILES DIRECTORY: ${saveAndServeFilesDirectory}`)
 
@@ -375,7 +377,7 @@ exports.postFileUpload = async (req, res, next) => {
 
           /** UPLOAD TO B2 **/
           if (process.env.NODE_ENV == 'production' && process.env.UPLOAD_TO_B2 == 'true') {
-            uploadHelpers.uploadToB2(upload, fileInDirectory, hostFilePath)
+            backblaze.uploadToB2(upload, fileInDirectory, hostFilePath)
           }
 
           await uploadHelpers.markUploadAsComplete(uniqueTag, channelUrl, user);

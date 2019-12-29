@@ -21,7 +21,7 @@
     "cache": "node --max-old-space-size=8000 caching/runCaching.js",
     "both": "node --max-old-space-size=4096 app.js & node --max-old-space-size=8000 caching/runCaching.js",
     "nodemonboth": "nodemon --exec npm run both",
-    "installDeps": "npm install && cd public && bower install && cd .. && git update-index --skip-worktree .env.private"
+    "installDeps": "npm install && cd public && bower install && cd .. && git update-index --skip-worktree .env.private && && git update-index --skip-worktree .env.settings"
   },
   "dependencies": {
     "apicache": "^1.4.0",
