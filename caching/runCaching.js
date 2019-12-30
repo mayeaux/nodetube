@@ -67,7 +67,7 @@ async function main(){
   }
 
 }
-
+// cache recent uploads every minute
 main();
 setInterval(main, 1000 * 60 * 1);
 
@@ -79,7 +79,6 @@ console.log(cacheIntervalInMinutes  + ': cache interval in minutes');
 
 async function runCaching(){
   try {
-    await cacheRecentUploads();
     await cachePopularUploads();
     await setCache.setDailyStats();
     await setCache.setIndexValues();
@@ -95,6 +94,6 @@ runCaching();
 setInterval(runCaching, cacheIntervalInMs);
 
 
-setInterval(async function(){
-  await cacheRecentUploads();
-}, 1000 * 30);
+// setInterval(async function(){
+//   await cacheRecentUploads();
+// }, 1000 * 30);
