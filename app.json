@@ -23,15 +23,13 @@
       "description": "The number of processes to run.",
       "value": "5"
     },
-    "env": {
-      "SECRET_TOKEN1": {
-        "description": "A secret key for verifying the integrity of signed cookies.",
-        "generator": "secret"
-      },
-      "WEB_CONCURRENCY2": {
-        "description": "The number of processes to run.",
-        "value": "5"
-      }
+    "SECRET_TOKEN1": {
+      "description": "A secret key for verifying the integrity of signed cookies.",
+      "generator": "secret"
+    },
+    "WEB_CONCURRENCY2": {
+      "description": "The number of processes to run.",
+      "value": "5"
     }
   },
   "buildpacks": [
