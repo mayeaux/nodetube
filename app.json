@@ -14,5 +14,33 @@
     "heroku-redis",
     "mongolab"
   ],
+  "env": {
+    "SECRET_TOKEN": {
+      "description": "A secret key for verifying the integrity of signed cookies.",
+      "required": "false"
+    },
+    "WEB_CONCURRENCY": {
+      "description": "The number of processes to run.",
+      "value": "5"
+    },
+    "env": {
+      "SECRET_TOKEN1": {
+        "description": "A secret key for verifying the integrity of signed cookies.",
+        "generator": "secret"
+      },
+      "WEB_CONCURRENCY2": {
+        "description": "The number of processes to run.",
+        "value": "5"
+      }
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git"
+    },
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-nodejs"
+    }
+  ],
   "generator": "https://www.expeditedssl.com/heroku-button-maker"
 }
