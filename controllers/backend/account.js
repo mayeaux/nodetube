@@ -142,12 +142,19 @@ exports.postSignup = async (req, res, next) => {
     return res.redirect('/signup');
   }
 
-  const user = new User({
+  let user = new User({
     email: '' + Math.random() + Math.random(),
     password: req.body.password,
     channelUrl: req.body.channelUrl,
     // channelName: req.body.channelName,
   });
+
+  // make sure first user is admin, can refactor later
+  const numberOfUsers = await User.count();
+
+  if(numberOfUsers == 0){
+    user.role = 'admin'
+  }
 
   User.findOne({ channelUrl : req.body.channelUrl }, (err, existingUser) => {
     if (err) { return next(err); }
