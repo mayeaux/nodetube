@@ -17,7 +17,7 @@
   "env": {
     "SECRET_TOKEN": {
       "description": "A secret key for verifying the integrity of signed cookies.",
-      "required": "false"
+      "required": false
     },
     "WEB_CONCURRENCY": {
       "description": "The number of processes to run.",
