@@ -23,12 +23,16 @@ const buildObjects = helpers.buildObjects;
 
 // find the views
 
+const logCaching = process.env.LOG_CACHING;
+
 async function getPopularUploads(){
+
+  if(logCaching == 'true'){
+    c.l(`Getting popular uploads`);
+  }
 
   // TODO: have to have a job to update upload's view amounts
   // TODO: have to build 4 arrays of ~1000
-
-  console.log(`Getting popular uploads`);
 
   const searchQuery = {
     $or : [ { status: 'completed' }, { uploadUrl: { $exists: true } } ],
@@ -44,9 +48,11 @@ async function getPopularUploads(){
   let popularUploads = await Upload.find(searchQuery).select(selectString).populate('uploader reacts')
     .lean();
 
-  console.log('Uploads received from database');
+  if(logCaching == 'true'){
+    c.l(`Uploads received from database`);
 
-  c.l(popularUploads.length);
+    c.l(popularUploads.length);
+  }
 
   return popularUploads
 }
@@ -70,19 +76,26 @@ async function setPopularUploads() {
     return calculateViewsByPeriod(upload, uploadViews);
   }));
 
-  console.log('Popular uploads have been calculated according to view periods');
+  if(logCaching == 'true'){
+    c.l('Popular uploads have been calculated according to view periods');
+  }
 
   // build json objects representing uploads
   popularUploads = buildObjects(popularUploads);
 
-  console.log('Popular uploads objects have been built');
+  if(logCaching == 'true'){
+    c.l('Popular uploads objects have been built');
+  }
 
   const redisKey = 'popularUploads';
   const response = await redisClient.setAsync(redisKey, JSON.stringify(popularUploads));
 
-  console.log(`REDIS RESPONSE FOR ${redisKey}: ${response}`);
+  if(logCaching == 'true'){
+    c.l(`REDIS RESPONSE FOR ${redisKey}: ${response}`);
 
-  console.log(`${redisKey} cached`);
+    c.l(`${redisKey} cached`);
+
+  }
 }
 
 module.exports = setPopularUploads;
