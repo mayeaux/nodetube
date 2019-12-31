@@ -39,6 +39,9 @@ var resumable = require('../../lib/uploading/resumable.js')(__dirname +  '/uploa
 
 
 const winston = require('winston');
+const uploadsOn = process.env.UPLOADS_ON;
+
+console.log(uploadsOn + ' uploads on')
 
 //
 // Grab your preconfigured logger
@@ -52,6 +55,13 @@ const uploadLogger = winston.loggers.get('uploadEndpoint');
 exports.postFileUpload = async (req, res, next) => {
 
   try {
+
+    // if uploads are off and user not auto allowed
+    if(uploadsOn == 'false' && !req.user.privs.autoVisibleUpload){
+      console.log("HERE")
+      res.status(500);
+      return res.send({ message: 'UPLOADS_OFF'})
+    }
 
     let logObject = {
       user: req.user.channelUrl,
