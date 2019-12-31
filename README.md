@@ -6,7 +6,7 @@ One-Click Install For Heroku
 
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/mayeaux/nodetube)
 
-Join us for collaboration here on [Discord](https://discord.gg/ejGah8H) 
+Join us for collaboration on, [Discord](https://discord.gg/ejGah8H), [Riot.Im](https://riot.im/app/#/room/#nodetube:matrix.org) and [Reddit](https://reddit.com/r/nodetube)
 
 Prerequisites
 -------------
