@@ -310,6 +310,7 @@ if (cluster.isMaster) {
       app.use(customMiddleware[middleware])
     }
 
+    // run all the widget middleware software which adds credentials to res.local
     for(const middleware in widgetMiddleware){
       app.use(widgetMiddleware[middleware])
     }
