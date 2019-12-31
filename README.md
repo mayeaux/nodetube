@@ -52,8 +52,16 @@ The project has an experimental [Docker](https://www.docker.com/what-docker) set
 
 If you have Docker installed, there's a non-zero chance that running `docker-compose up` is all you need to do to build and start 3 docker containers (one each for the app itself, Redis, and MongoDB). From there, you should be able to connect to http://localhost:49160 and see the app running.
 
-Project Structure
+Features
 -----------------
+Nodetube is packed with great features to help you get an instance up and running instantly. This includes:
+
+- [ngrok](https://www.https://ngrok.com) ngrok is a utility that allows you to serve NodeTube via your local machine using ngrok's http tunnels. NodeTube is setup to run with ngrok automatically, to turn it off you can change the `NGROK_ON` flag to `false` in `.env.settings`. When you fire up the app for the first time, take a look at the boot logs and you will see a URL come through which will allow you to access your instance on the public internet. The URL will be impermanent and change if you reboot your application, to get around this you can either use ngrok as a command line tool or purchase a permanent subdomain from `ngrok`, but this will allow you to get your app to the public internet in seconds with no effort.
+
+
+
+
+
 
 
 
