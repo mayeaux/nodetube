@@ -13,12 +13,21 @@ const moment = require('moment');
 
 const redisClient = require('../config/redis');
 
+const c = {
+  l : console.log
+};
+
+const logCaching = process.env.LOG_CACHING;
+
 let viewAmount, channelAmount, mediaAmount;
 async function setIndexValues(){
 
-  console.log('Setting index values');
+  if(logCaching == 'true'){
+    console.log('Setting index values');
 
-  console.log('Calculating view amounts')
+    console.log('Calculating view amounts')
+  }
+
 
   // view amount is for the old view amount
   viewAmount = await Upload.aggregate([
@@ -35,19 +44,27 @@ async function setIndexValues(){
     viewAmount = viewAmount[0].views;
   }
 
-  console.log('Old view amount calculated, calculating channel amount');
+  if(logCaching == 'true'){
+    console.log('Old view amount calculated, calculating channel amount');
+  }
 
   channelAmount = await User.count({});
 
-  console.log('Channel amount calculated, calculating upload amount');
+  if(logCaching == 'true') {
+    console.log('Channel amount calculated, calculating upload amount');
+  }
 
   mediaAmount = await Upload.count({});
 
-  console.log('Upload amount calculated, calculating view amount');
+  if(logCaching == 'true') {
+    console.log('Upload amount calculated, calculating view amount');
+  }
 
   const legitCheckedViews = await View.count({ validity: 'real' });
 
-  console.log('Legit view amount calculated, setting redis amounts');
+  if(logCaching == 'true') {
+    console.log('Legit view amount calculated, setting redis amounts');
+  }
 
   viewAmount = viewAmount + legitCheckedViews;
 
@@ -58,8 +75,9 @@ async function setIndexValues(){
     mediaAmount
   });
 
-  console.log('Set index values');
-
+  if(logCaching == 'true') {
+    console.log('Set index values');
+  }
 
 }
 
