@@ -1,3 +1,13 @@
+## NodeTube
+An open-source YouTube alternative that also supports image and audio uploads. Powered by NodeJS 
+
+A live NodeTube instance is available to test functionality at [https://nodetube-1.herokuapp.com](https://nodetube-1.herokuapp.com)
+
+Join us for collaboration on, [Discord](https://discord.gg/ejGah8H), [Riot.Im](https://riot.im/app/#/room/#nodetube:matrix.org) and [Reddit](https://reddit.com/r/nodetube)
+
+<br>
+<br>
+
 <img src="https://user-images.githubusercontent.com/7200471/71605820-40db7880-2b29-11ea-8fa0-b8628cfd55ad.png" width="800" >
 
 ***Deployment Options***
@@ -5,8 +15,6 @@
 One-Click Install For Heroku
 
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/mayeaux/nodetube)
-
-Join us for collaboration on, [Discord](https://discord.gg/ejGah8H), [Riot.Im](https://riot.im/app/#/room/#nodetube:matrix.org) and [Reddit](https://reddit.com/r/nodetube)
 
 Prerequisites
 -------------
@@ -60,6 +68,7 @@ Nodetube is packed with great features to help you get an instance up and runnin
 
 
 
+Join us for collaboration on, [Discord](https://discord.gg/ejGah8H), [Riot.Im](https://riot.im/app/#/room/#nodetube:matrix.org) and [Reddit](https://reddit.com/r/nodetube)
 
 
 
