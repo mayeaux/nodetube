@@ -10,13 +10,17 @@ Join us for collaboration on, [Discord](https://discord.gg/ejGah8H), [Riot.Im](h
 
 <img src="https://user-images.githubusercontent.com/7200471/71605820-40db7880-2b29-11ea-8fa0-b8628cfd55ad.png" width="800" >
 
-***Deployment Options***
+### Get Your Instance Running:
 
-One-Click Install For Heroku
+You can get an instance up instantly using one-click deployment with Heroku below:
 
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/mayeaux/nodetube)
 
-Prerequisites
+### Installing Locally
+
+There are installation instructions for [OS X](https://github.com/mayeaux/nodetube/wiki/Installation-Instructions---OS-X) and [Linux](https://github.com/mayeaux/nodetube/wiki/Installation-Instructions---Linux) featured in the [Wiki](https://github.com/mayeaux/nodetube/wiki).
+
+Required Software
 -------------
 
 - [MongoDB](https://www.mongodb.org/downloads)
@@ -25,9 +29,7 @@ Prerequisites
 - [ffmpeg](https://www.ffmpeg.org/download.html)
 - [bower](https://bower.io/#install-bower)
 
-Please also check the [Wiki](https://github.com/mayeaux/nodetube/wiki) for additional information on getting site functionality running
-
-Getting Started
+How To Install NodeTube
 ---------------
 
 The easiest way to get started is to clone the repository:
@@ -50,8 +52,6 @@ npm run dev
 ```
 
 For local development I recommend to use [Nodemon](https://github.com/remy/nodemon) to automatically restart the app.
-
-
 
 Docker
 ------
