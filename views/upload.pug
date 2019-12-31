@@ -420,6 +420,21 @@ block content
             })
           }
 
+          if (response.message == 'UPLOADS_OFF') {
+            //  HIDE FORM SHOW GIF
+            $(".upload-form").show();
+            $(".upload-gif").hide();
+
+            // auto fill in title
+            $('#title').val('');
+            return swal({
+              title: 'Uploads Temporarily Off',
+              text: 'Sorry uploads are temporarily turned off (only app moderator is offline)'
+            }, function () {
+              window.location.href = '/upload'
+            })
+          }
+
           // Reflect that the file upload has resulted in error
           $('.file-progress').html('File could not be uploaded: (' + response.message + ')');
         });
