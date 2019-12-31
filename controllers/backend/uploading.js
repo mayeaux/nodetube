@@ -56,7 +56,8 @@ exports.postFileUpload = async (req, res, next) => {
 
   try {
 
-    if(uploadsOn == 'false'){
+    // if uploads are off and user not auto allowed
+    if(uploadsOn == 'false' && !req.user.privs.autoVisibleUpload){
       console.log("HERE")
       res.status(500);
       return res.send({ message: 'UPLOADS_OFF'})
