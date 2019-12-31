@@ -1,4 +1,4 @@
-## NodeTube
+# NodeTube
 An open-source YouTube alternative that also supports image and audio uploads. Powered by NodeJS 
 
 A live NodeTube instance is available to test functionality at [https://nodetube-1.herokuapp.com](https://nodetube-1.herokuapp.com)
@@ -10,7 +10,7 @@ Join us for collaboration on, [Discord](https://discord.gg/ejGah8H), [Riot.Im](h
 
 <img src="https://user-images.githubusercontent.com/7200471/71605820-40db7880-2b29-11ea-8fa0-b8628cfd55ad.png" width="800" >
 
-### Get Your Instance Running:
+## Get Your Instance Running:
 
 You can get an instance up instantly using one-click deployment with Heroku below:
 
@@ -22,12 +22,10 @@ There are installation instructions for [OS X](https://github.com/mayeaux/nodetu
 
 Required Software
 -------------
-
-- [MongoDB](https://www.mongodb.org/downloads)
 - [Node.js 8.0+](https://nodejs.org/en/download/)
+- [MongoDB](https://www.mongodb.org/downloads)
 - [Redis](https://redis.io/download)
 - [ffmpeg](https://www.ffmpeg.org/download.html)
-- [bower](https://bower.io/#install-bower)
 
 How To Install NodeTube
 ---------------
