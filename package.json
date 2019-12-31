@@ -12,7 +12,7 @@
   "author": "Anthony Mayfield",
   "license": "MIT",
   "scripts": {
-    "start": "node --max-old-space-size=4096 app.js",
+    "start": "node --max-old-space-size=1024 app.js",
     "test": "mocha --reporter spec",
     "postinstall": "npm rebuild node-sass && cd public && bower install",
     "eslint": "eslint **/*.js",
