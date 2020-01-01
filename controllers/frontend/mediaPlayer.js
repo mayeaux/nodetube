@@ -130,6 +130,7 @@ exports.getMedia = async (req, res) => {
       doingFraud = false
     }
 
+    /** FRAUDULENT VIEW CHECK **/
     // do a legitimacy check here
     if(!doingFraud){
 
@@ -162,6 +163,8 @@ exports.getMedia = async (req, res) => {
       await upload.save();
     }
 
+
+
     const comments = await generateComments(upload);
 
     let commentCount = 0;
@@ -184,10 +187,13 @@ exports.getMedia = async (req, res) => {
     // if upload should only be visible to logged in user
     if (upload.visibility == 'pending' || upload.visibility == 'private'){
 
+      // if no user automatically don't show
       if(!req.user){
         res.status(404);
         return res.render('error/404')
       }
+
+
 
       // if the requesting user id matches upload's uploader id
       const isUsersDocument = req.user._id.toString() == upload.uploader._id.toString();
@@ -206,7 +212,10 @@ exports.getMedia = async (req, res) => {
           upload,
           channel,
           media,
-          commentCount
+          commentCount,
+          categories,
+          emojis,
+          uploadServer
         });
       }
 
