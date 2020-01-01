@@ -14,6 +14,13 @@
     "heroku-redis",
     "mongolab"
   ],
+  "env": {
+    "NODE_ENV": {
+      "description": "production",
+      "value": "production",
+      "required": "true"
+    }
+  },
   "buildpacks": [
     {
       "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git"
