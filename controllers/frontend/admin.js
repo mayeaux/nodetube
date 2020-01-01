@@ -184,6 +184,8 @@ exports.reacts = async (req, res) => {
 
   const reacts = await React.find({}).populate({path: 'user upload', populate: {path: 'uploader'}});
 
+  console.log(reacts);
+
   return res.render('admin/reacts', {
     title : 'Admin Reacts',
     reacts
