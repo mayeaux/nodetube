@@ -83,7 +83,6 @@ exports.getPending = async (req, res) => {
 
   // exclude uploads without an uploadUrl
   let uploads = await Upload.find({
-    uploadUrl: {$exists: true },
     visibility: 'pending'
   }).populate('uploader').lean();
 
