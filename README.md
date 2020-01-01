@@ -3,7 +3,7 @@ An open-source YouTube alternative that also supports image and audio uploads. P
 
 A live NodeTube instance is available to test functionality at [https://nodetube-1.herokuapp.com](https://nodetube-1.herokuapp.com)
 
-Join us for collaboration on, [Discord](https://discord.gg/ejGah8H), [Riot.Im](https://riot.im/app/#/room/#nodetube:matrix.org) and [Reddit](https://reddit.com/r/nodetube)
+Join us for collaboration on, [Discord](https://discord.gg/ejGah8H), [Riot.im](https://riot.im/app/#/room/#nodetube:matrix.org) (Matrix) and [Reddit](https://reddit.com/r/nodetube)
 
 <br>
 <br>
