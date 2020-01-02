@@ -15,23 +15,23 @@ You can get an instance up instantly using one-click deployment with Heroku belo
 
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/mayeaux/nodetube)
 
-### Installing Locally
+### Using ngrok
+NodeTube comes with [ngrok](https://www.https://ngrok.com) preinstalled with the setting in `.env.settings` to run for new instances automatically. This means that when you boot the app you will see a log come through with a link where you can access the app from the ngrok subdomain. Great you're live on the internet, that was simple!
 
-There are installation instructions for [OS X](https://github.com/mayeaux/nodetube/wiki/Installation-Instructions---OS-X) and [Linux](https://github.com/mayeaux/nodetube/wiki/Installation-Instructions---Linux) featured in the [Wiki](https://github.com/mayeaux/nodetube/wiki).
+## Running On Your Local Computer
 
-There are installation instructions for [OS X](https://github.com/mayeaux/nodetube/wiki/Installation-Instructions---OS-X) and [Linux](https://github.com/mayeaux/nodetube/wiki/Installation-Instructions---Linux) featured in the [Wiki](https://github.com/mayeaux/nodetube/wiki).
-
-Required Software
--------------
+### Required Software
 - [Node.js 8.0+](https://nodejs.org/en/download/)
 - [MongoDB](https://www.mongodb.org/downloads)
 - [Redis](https://redis.io/download)
 - [ffmpeg](https://www.ffmpeg.org/download.html)
 
-How To Install NodeTube
+There are commands that can be run to install all the prerequisites easily for both [OS X](https://github.com/mayeaux/nodetube/wiki/Installation-Instructions---OS-X) and [Linux](https://github.com/mayeaux/nodetube/wiki/Installation-Instructions---Linux).
+
+Once Prerequisites Are Installed
 ---------------
 
-The easiest way to get started is to clone the repository:
+Now that the prerequisites are solved it's a few simple commands to have your instance running.
 
 ```bash
 # Get the latest snapshot
@@ -50,7 +50,9 @@ npm start
 npm run dev
 ```
 
-For local development I recommend to use [Nodemon](https://github.com/remy/nodemon) to automatically restart the app.
+And that's it! Your first user registered will automatically be an admin user and you will be able to see the admin and moderation functionality. Each additional user will be a regular user and will be able to upload video, audio or images up to 500MB.
+
+For ease of local development I recommend to use [Nodemon](https://github.com/remy/nodemon) to automatically restart the app.
 
 Docker
 ------
