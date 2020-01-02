@@ -15,7 +15,7 @@
     "start": "node --max-old-space-size=4096 app.js",
     "test": "mocha --reporter spec",
     "rebuild:sass": "npm rebuild node-sass",
-    "postinstall": "bower install && && cp .env.settings.sample .env.settings && cp .env.private.sample .env.private",
+    "postinstall": "bower install && cp .env.settings.sample .env.settings && cp .env.private.sample .env.private",
     "eslint": "eslint **/*.js",
     "dev": "nodemon -e pug,js app.js",
     "memory": "node --max-old-space-size=4096 app.js",
