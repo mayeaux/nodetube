@@ -11,20 +11,13 @@ script.
 
   var alreadyReported = '#{alreadyReported}'
 
-  console.log('already reported ' + alreadyReported)
-
-  console.log(alreadyReported)
-
   if(alreadyReported == 'true'){
-
-    console.log('running here')
 
     $('.report-button').on('click', function(){
       swal({ text: 'Thank you for reporting this upload '})
     });
 
   } else {
-    console.log('thing here')
 
     $('.report-button').on('click', function () {
       swal({

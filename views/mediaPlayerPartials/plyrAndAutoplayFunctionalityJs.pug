@@ -27,10 +27,6 @@ script.
     return decodeURIComponent(results[2].replace(/\+/g, " "));
   }
 
-  console.log(getParameterByName)
-
-  console.log('here')
-
   var autoplay = getParameterByName('autoplay');
 
   var sensitive = #{upload.sensitive}
@@ -58,8 +54,6 @@ script.
   });
 
   players[0].on('enterfullscreen', function (event) {
-
-    console.log('this is running');
 
     $('.display-element').css('max-height', "")
 
