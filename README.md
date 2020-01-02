@@ -15,9 +15,6 @@ You can get an instance up instantly using one-click deployment with Heroku belo
 
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/mayeaux/nodetube)
 
-### Using ngrok
-NodeTube comes with [ngrok](https://www.https://ngrok.com) preinstalled with the setting in `.env.settings` to run for new instances automatically. This means that when you boot the app you will see a log come through with a link where you can access the app from the ngrok subdomain. Great you're live on the internet, that was simple!
-
 ## Running On Your Local Computer
 
 ### Required Software
@@ -26,7 +23,7 @@ NodeTube comes with [ngrok](https://www.https://ngrok.com) preinstalled with the
 - [Redis](https://redis.io/download)
 - [ffmpeg](https://www.ffmpeg.org/download.html)
 
-There are commands that can be run to install all the prerequisites easily for both [OS X](https://github.com/mayeaux/nodetube/wiki/Installation-Instructions---OS-X) and [Linux](https://github.com/mayeaux/nodetube/wiki/Installation-Instructions---Linux).
+See instructions on installing these prerequisities for both [OS X](https://github.com/mayeaux/nodetube/wiki/Installation-Instructions---OS-X) and [Linux](https://github.com/mayeaux/nodetube/wiki/Installation-Instructions---Linux). There are also [Docker](https://test.com) instructions if that's your thing.
 
 Once Prerequisites Are Installed
 ---------------
@@ -52,14 +49,10 @@ npm run dev
 
 And that's it! Your first user registered will automatically be an admin user and you will be able to see the admin and moderation functionality. Each additional user will be a regular user and will be able to upload video, audio or images up to 500MB.
 
-For ease of local development I recommend to use [Nodemon](https://github.com/remy/nodemon) to automatically restart the app.
+For ease of local development I recommend using [Nodemon](https://github.com/remy/nodemon) to automatically restart the app while working on backend code.
 
-Docker
-------
-
-The project has an experimental [Docker](https://www.docker.com/what-docker) setup, using [Docker Compose](https://docs.docker.com/compose/overview/).  It is entirely optional, so if you don't want to use Docker, feel free to ignore it.
-
-If you have Docker installed, there's a non-zero chance that running `docker-compose up` is all you need to do to build and start 3 docker containers (one each for the app itself, Redis, and MongoDB). From there, you should be able to connect to http://localhost:49160 and see the app running.
+### Using ngrok
+NodeTube comes with [ngrok](https://www.https://ngrok.com) preinstalled with the setting in `.env.settings` to run for new instances automatically. This means that when you boot the app you will see a log come through with a link where you can access the app from the ngrok subdomain. Great you're live on the internet, that was simple!
 
 Features
 -----------------
