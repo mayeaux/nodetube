@@ -5,17 +5,19 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "49160:3000"
+      - "49161:3000"
     volumes:
       - .:/app/
       - /app/node_modules
     environment:
       - REDIS_HOST=redis
-      - MONGODB_DOCKER_URI=mongodb://mongodb:27017/april15pewtube
+      - MONGODB_DOCKER_URI=mongodb://mongo:27017/nodetube
     depends_on:
       - redis
       - mongo
     command: npm start
+    networks:
+      - nodetube-network
 
   mongo:
     container_name: mongodb
@@ -23,7 +25,14 @@ services:
     volumes:
       - /data/db
     ports:
-      - "27017:27017"
+      - "27011:27017"
+    networks:
+      - nodetube-network
 
   redis:
     image: redis
+    networks:
+      - nodetube-network
+networks:
+  nodetube-network:
+    driver: bridge
