@@ -14,7 +14,8 @@
   "scripts": {
     "start": "node --max-old-space-size=512 app.js",
     "test": "mocha --reporter spec",
-    "postinstall": "npm rebuild node-sass && cd public && bower install",
+		"rebuild:sass": "npm rebuild node-sass",
+    "postinstall": "cd public && bower install",
     "eslint": "eslint **/*.js",
     "dev": "nodemon -e pug,js app.js",
     "memory": "node --max-old-space-size=4096 app.js",
