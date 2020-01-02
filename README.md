@@ -23,7 +23,7 @@ You can get an instance up instantly using one-click deployment with Heroku belo
 - [Redis](https://redis.io/download)
 - [ffmpeg](https://www.ffmpeg.org/download.html)
 
-See instructions on installing these prerequisities for both [OS X](https://github.com/mayeaux/nodetube/wiki/Installation-Instructions---OS-X) and [Linux](https://github.com/mayeaux/nodetube/wiki/Installation-Instructions---Linux). There are also [Docker](https://test.com) instructions if that's your thing.
+See instructions on installing these prerequisities for both [OS X](https://github.com/mayeaux/nodetube/wiki/Installation-Instructions---OS-X) and [Linux](https://github.com/mayeaux/nodetube/wiki/Installation-Instructions---Linux). There are also [Docker](https://github.com/mayeaux/nodetube/wiki/Docker) instructions if that's your thing.
 
 Once Prerequisites Are Installed
 ---------------
