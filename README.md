@@ -40,11 +40,6 @@ cd nodetube
 # Install backend and frontend dependencies
 npm run installDeps
 
-# Configuration
-
-	cp .env.settings.sample .env.settings
-	cp .env.private.sample .env.private
-
 # Then simply start your app
 npm start
 
