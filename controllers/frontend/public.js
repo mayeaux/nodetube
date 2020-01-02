@@ -2,11 +2,15 @@ const redisClient = require('../../config/redis');
 
 const Upload = require('../../models/index').Upload;
 
+const logCaching = process.env.LOG_CACHING;
+
 // TODO: pull into its own func
 let indexResponse;
 async function setIndex(){
   indexResponse = await redisClient.hgetallAsync('indexValues');
-  console.log('got index cache');
+  if(logCaching == 'true'){
+    console.log('got index cache');
+  }
 }
 
 // get the index if its not a filehost

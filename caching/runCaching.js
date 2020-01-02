@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
 
+const logCaching = process.env.LOG_CACHING;
 
 
 
@@ -75,7 +76,9 @@ let cacheIntervalInMinutes = parseInt(process.env.CACHE_INTERVAL_IN_MINUTES) || 
 
 const cacheIntervalInMs = cacheIntervalInMinutes * ( 1000 * 60 );
 
-console.log(cacheIntervalInMinutes  + ': cache interval in minutes');
+if(logCaching == 'true'){
+  console.log(cacheIntervalInMinutes  + ': cache interval in minutes');
+}
 
 async function runCaching(){
   try {

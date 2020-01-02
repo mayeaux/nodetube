@@ -10,6 +10,8 @@ const redisClient = require('../config/redis');
 
 const categories = require('../config/categories');
 
+const logCaching = process.env.LOG_CACHING;
+
 const { filterUploadsBySensitivity, filterUploadsByCategory, filterUploadsBySubcategory, filterUploadsByMediaType } = require('../lib/mediaBrowsing/helpers');
 
 let popularUploads;
@@ -17,7 +19,10 @@ async function setGlobalPopularUploads(){
   popularUploads = await redisClient.getAsync('popularUploads');
   popularUploads = JSON.parse(popularUploads);
 
-  console.log('load popular uploads redis cache in memory ');
+  if(logCaching == 'true'){
+    console.log('load popular uploads redis cache in memory ');
+  }
+
 }
 
 if(!process.env.FILE_HOST || process.env.FILE_HOST == 'false'){
@@ -31,7 +36,9 @@ async function setGlobalRecentUploads(){
   recentUploads = await redisClient.getAsync('recentUploads');
   recentUploads = JSON.parse(recentUploads);
 
-  console.log('load recentUploads redis cache in memory ');
+  if(logCaching == 'true'){
+    console.log('load recentUploads redis cache in memory ');
+  }
 }
 
 
