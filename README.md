@@ -28,13 +28,13 @@ See instructions on installing these prerequisities for both [OS X](https://gith
 Once Prerequisites Are Installed
 ---------------
 
-Now that the prerequisites are solved it's a few simple commands to have your instance running.
+Now that the prerequisites are ready to go it's a few simple commands to get your instance up and running.
 
 ```bash
-# Get the latest snapshot
+# Get the latest version of NodeTube
 git clone https://github.com/mayeaux/nodetube
 
-# Change directory
+# Enter the nodetube folder that was just created
 cd nodetube
 
 # Install backend and frontend dependencies
@@ -56,23 +56,12 @@ NodeTube comes with [ngrok](https://www.https://ngrok.com) preinstalled with the
 
 Features
 -----------------
-Nodetube is packed with great features to help you get an instance up and running instantly. This includes:
-
-- [ngrok](https://www.https://ngrok.com) ngrok is a utility that allows you to serve NodeTube via your local machine using ngrok's http tunnels. NodeTube is setup to run with ngrok automatically, to turn it off you can change the `NGROK_ON` flag to `false` in `.env.settings`. When you fire up the app for the first time, take a look at the boot logs and you will see a URL come through which will allow you to access your instance on the public internet. The URL will be impermanent and change if you reboot your application, to get around this you can either use ngrok as a command line tool or purchase a permanent subdomain from `ngrok`, but this will allow you to get your app to the public internet in seconds with no effort.
+Nodetube is packed with great features that offers a powerful media hosting experience straight out of the box:
 
 - Videos, audio files and images are all supported by NodeTube and its media player page. The full list of supported file extensions are:
 Video Extensions : ['.mp4', '.avi', '.flv', '.MOV', '.m4v', '.ogv', '.webm', '.wmv', '.mkv', '.mov', '.m2t', '.MTS', '.m2ts', '.MPG', '.AVI', '.mpg'], Audio Extension: ['.mp3', '.wav', '.ogg', '.m4a'];Image Extensions: ['.png', '.jpg', '.jpeg', '.gif', '.JPG', '.PNG']; Media is converted on the backend using `ffmpeg` to file formats that offer the best media browser and device compability.
 
 You may also be interested in [videodownloader](https://github.com/mayeaux/videodownloader), a video downloader that supports 110 websites and is powered by Electron and youtube-dl.
-
-Reminder to join us for collaboration on, [Discord](https://discord.gg/ejGah8H), [Riot.Im](https://riot.im/app/#/room/#nodetube:matrix.org) and [Reddit](https://reddit.com/r/nodetube)
-
-
-
-
-
-
-
 
 License
 -------
