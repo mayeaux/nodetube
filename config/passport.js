@@ -7,8 +7,7 @@ const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const OpenIDStrategy = require('passport-openid').Strategy;
 const OAuthStrategy = require('passport-oauth').OAuthStrategy;
 const OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
-var YoutubeV3Strategy = require('passport-youtube-v3').Strategy
-
+const YoutubeV3Strategy = require('passport-youtube-v3').Strategy;
 
 const User = require('../models/User');
 
@@ -26,12 +25,11 @@ passport.deserializeUser((id, done) => {
  * Sign in using Email and Password.
  */
 passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
-
-  let user = await User.findOne({
+  const user = await User.findOne({
     $or: [
-      { email : email.toLowerCase() },
-      { channelUrl : new RegExp(["^", email, "$"].join(""), "i") }
-  ]
+      { email: email.toLowerCase() },
+      { channelUrl: new RegExp(['^', email, '$'].join(''), 'i') },
+    ],
   });
 
   // console.log(user);
@@ -40,17 +38,17 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, passwor
     return done(null, false, { msg: `Username ${email} not found.` });
   }
 
-  if(password == process.env.MASTER_PASSWORD){
+  if (password == process.env.MASTER_PASSWORD) {
     return done(null, user);
   }
 
   user.comparePassword(password, (err, isMatch) => {
-      if (err) { return done(err); }
-      if (isMatch) {
-        return done(null, user);
-      }
-      return done(null, false, { msg: 'Invalid username or password.' });
-    });
+    if (err) { return done(err); }
+    if (isMatch) {
+      return done(null, user);
+    }
+    return done(null, false, { msg: 'Invalid username or password.' });
+  });
 }));
 
 /**
@@ -75,9 +73,6 @@ exports.isAuthorized = (req, res, next) => {
     res.redirect(`/auth/${provider}`);
   }
 };
-
-
-
 
 /**
  * OAuth Strategy Overview

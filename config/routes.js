@@ -4,7 +4,7 @@ const path = require('path');
 /**
  * Controllers (route handlers).
  */
-/** BACKEND API CONTROLLERS **/
+/** BACKEND API CONTROLLERS * */
 const accountBackendController = require('../controllers/backend/account');
 const adminBackendController = require('../controllers/backend/admin');
 const internalApiController = require('../controllers/backend/internalApi');
@@ -15,8 +15,7 @@ const uploadingController = require('../controllers/backend/uploading');
 const youtubeController = require('../controllers/backend/youtube');
 const supportBackendController = require('../controllers/backend/support');
 
-
-/** FRONTEND PAGE CONTROLLERS **/
+/** FRONTEND PAGE CONTROLLERS * */
 const accountFrontendController = require('../controllers/frontend/account');
 const adminFrontendController = require('../controllers/frontend/admin');
 const channelBrowsingController = require('../controllers/frontend/channelBrowsing');
@@ -28,24 +27,22 @@ const recentActionsController = require('../controllers/frontend/recentActions')
 const socialMediaFrontendController = require('../controllers/frontend/socialMedia');
 const supportFrontendController = require('../controllers/frontend/support');
 
-
-/** passport config **/
+/** passport config * */
 const passportConfig = require('../config/passport');
 const authMiddleware = require('../middlewares/shared/authentication');
 
-function fileHostRoutes(app){
+function fileHostRoutes(app) {
   console.log('RUNNING AS FILE HOST');
 
   // set res header to upload to another server
-  if(process.env.ALLOW_COR == 'true'){
-    app.use(function (req, res, next) {
-
+  if (process.env.ALLOW_COR == 'true') {
+    app.use((req, res, next) => {
       res.setHeader('Access-Control-Allow-Origin', '*');
-      res.setHeader("Access-Control-Allow-Headers", "X-Requested-With");
-      res.setHeader("Access-Control-Allow-Methods", "PUT, GET, POST, OPTIONS");
-      res.setHeader("Cache-Control", "no-cache");
+      res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With');
+      res.setHeader('Access-Control-Allow-Methods', 'PUT, GET, POST, OPTIONS');
+      res.setHeader('Cache-Control', 'no-cache');
 
-      next()
+      next();
     });
   }
 
@@ -63,29 +60,26 @@ function fileHostRoutes(app){
   app.post('/api/channel/thumbnail/delete', internalApiController.deleteChannelThumbnail);
 
 // anything that misses, return a 404
-  app.get('*', function (req, res, next) {
-
+  app.get('*', (req, res, next) => {
     res.status(404);
 
     return res.render('error/404noheader', {
-      title: 'Not Found'
+      title: 'Not Found',
     });
   });
-
 }
 
-function livestreamRoutes(app){
+function livestreamRoutes(app) {
   console.log('Running as livestream app');
 
   // set res header to upload to another server
-  app.use(function (req, res, next) {
-
+  app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader("Access-Control-Allow-Headers", "X-Requested-With");
-    res.setHeader("Access-Control-Allow-Methods", "PUT, GET, POST, OPTIONS");
-    res.setHeader("Cache-Control", "no-cache");
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With');
+    res.setHeader('Access-Control-Allow-Methods', 'PUT, GET, POST, OPTIONS');
+    res.setHeader('Cache-Control', 'no-cache');
 
-    next()
+    next();
   });
 
   app.get('/', publicController.index);
@@ -104,24 +98,22 @@ function livestreamRoutes(app){
 
   app.post('/login', accountBackendController.postLogin);
 
-
   // kurento routes
   // app.get(/\/user\/(.+)\/live\/staging/, livestreamController.getStaging);
   // app.get(/\/user\/(.+)\/live/, livestreamController.getLive);
 
-  /** redirect all routes to the pewtube.com equivalent **/
-  app.get('*', function (req, res, next) {
-
+  /** redirect all routes to the pewtube.com equivalent * */
+  app.get('*', (req, res, next) => {
     const frontendAppUrl = 'https://pewtube.com';
 
-    return res.redirect(frontendAppUrl + req.path)
+    return res.redirect(frontendAppUrl + req.path);
   });
 }
 
-function frontendRoutes(app){
-  console.log('RUNNING AS FRONTEND')
+function frontendRoutes(app) {
+  console.log('RUNNING AS FRONTEND');
 
-  /** publicly available routes **/
+  /** publicly available routes * */
   app.get('/', publicController.index);
   app.get('/about', publicController.about);
   app.get('/termsofservice', publicController.tos);
@@ -130,12 +122,12 @@ function frontendRoutes(app){
   // app.get('/contact', contactController.getContact);
   // app.post('/contact', contactController.postContact);
 
-  /** upload APIS **/
+  /** upload APIS * */
   app.post('/upload', uploadingController.postFileUpload);
   // TODO: load properly
   // app.post('/admin/upload', authMiddleware.adminAuth, filehostController.adminUpload);
 
-  /** channel browsing routes **/
+  /** channel browsing routes * */
   app.get('/channels/:page', channelBrowsingController.channels);
   app.get('/channels', channelBrowsingController.channels);
 
@@ -151,29 +143,25 @@ function frontendRoutes(app){
   /** user channel and individual media page */
   app.get('/user/:channel', accountFrontendController.getChannel);
 
-
-  /** media browsing routes **/
+  /** media browsing routes * */
   app.get('/media/recent', mediaBrowsingController.recentUploads);
   app.get('/media/recent/:page', mediaBrowsingController.recentUploads);
-  app.get('/media/popular',  mediaBrowsingController.popularUploads);
+  app.get('/media/popular', mediaBrowsingController.popularUploads);
   app.get('/media/popular/:page', mediaBrowsingController.popularUploads);
-
 
   app.get('/media/popularByReacts', authMiddleware.plusAuth, mediaBrowsingController.popularByReacts);
 
-
-  /** search functionality **/
+  /** search functionality * */
   app.get('/search', mediaBrowsingController.search);
   app.get('/search/:page', mediaBrowsingController.search);
 
-
-  /** livestream routes **/
+  /** livestream routes * */
   // app.get(/\/user\/(.+)\/live/, livestreamController.getLive);
   // app.get(/\/user\/(.+)\/live\/staging/, livestreamController.getStaging)
   // app.get('/live', livestreamController.getLive);
   // app.get('/staging', livestreamController.getStaging);
 
-  /** recent action routes **/
+  /** recent action routes * */
   app.get('/media/recentComments/:page', authMiddleware.adminAuth, recentActionsController.recentComments);
   app.get('/media/recentComments', authMiddleware.adminAuth, recentActionsController.recentComments);
   app.get('/media/recentViews/:page', authMiddleware.adminAuth, recentActionsController.recentViews);
@@ -181,7 +169,7 @@ function frontendRoutes(app){
   app.get('/media/recentReacts/:page', authMiddleware.adminAuth, recentActionsController.recentReacts);
   app.get('/media/recentReacts', authMiddleware.adminAuth, recentActionsController.recentReacts);
 
-  /** account pages **/
+  /** account pages * */
   app.get('/notifications', accountFrontendController.notification);
   app.get('/login', accountFrontendController.getLogin);
   app.get('/logout', accountFrontendController.logout);
@@ -191,18 +179,18 @@ function frontendRoutes(app){
 
   app.get('/signup', accountFrontendController.getSignup);
 
-  /** account api endpoints **/
+  /** account api endpoints * */
   app.post('/login', accountBackendController.postLogin);
   app.post('/forgot', accountBackendController.postForgot);
   app.post('/reset/:token', accountBackendController.postReset);
   app.post('/signup', accountBackendController.postSignup);
 
-  /** include passport here because if its a file host, route is already loaded **/
+  /** include passport here because if its a file host, route is already loaded * */
   app.post('/api/channel/thumbnail/delete', passportConfig.isAuthenticated, internalApiController.deleteChannelThumbnail);
   app.post('/api/upload/:uniqueTag/edit', passportConfig.isAuthenticated, internalApiController.editUpload);
   app.post('/api/upload/:uniqueTag/thumbnail/delete', passportConfig.isAuthenticated, internalApiController.deleteUploadThumbnail);
 
-  /** API ENDPOINTS **/
+  /** API ENDPOINTS * */
   app.post('/api/react/:upload/:user', passportConfig.isAuthenticated, internalApiController.react);
 
   // TODO: why admin controller? (fix)
@@ -210,24 +198,21 @@ function frontendRoutes(app){
 
   app.post('/api/comment', passportConfig.isAuthenticated, internalApiController.postComment);
   app.post('/api/comment/delete', passportConfig.isAuthenticated, internalApiController.deleteComment);
-  app.post(`/api/subscribe`, passportConfig.isAuthenticated, internalApiController.subscribeEndpoint);
+  app.post('/api/subscribe', passportConfig.isAuthenticated, internalApiController.subscribeEndpoint);
   app.post('/api/credit', passportConfig.isAuthenticated, internalApiController.sendUserCredit);
   app.post('/api/report', passportConfig.isAuthenticated, internalApiController.reportUpload);
   app.post('/api/user/block', passportConfig.isAuthenticated, internalApiController.blockUser);
   app.post('/api/user/unblock', passportConfig.isAuthenticated, internalApiController.unblockUser);
 
-
   // for users or siteVisitors
-  app.post(`/api/changeUserFilter`, internalApiController.changeUserFilter);
-  app.post('/api/changeUserDefaultQuality/:quality/',  internalApiController.changeDefaultUserQuality);
-
+  app.post('/api/changeUserFilter', internalApiController.changeUserFilter);
+  app.post('/api/changeUserDefaultQuality/:quality/', internalApiController.changeDefaultUserQuality);
 
   // purchase endpoints
   app.post('/api/purchase/plus', passportConfig.isAuthenticated, purchaseController.purchasePlus);
-  app.post('/api/purchase/credit',passportConfig.isAuthenticated,  purchaseController.purchaseCredits);
+  app.post('/api/purchase/credit', passportConfig.isAuthenticated, purchaseController.purchaseCredits);
 
-
-  /** Account Pages **/
+  /** Account Pages * */
   app.get('/account', passportConfig.isAuthenticated, accountFrontendController.getAccount);
   app.get('/account/viewHistory', passportConfig.isAuthenticated, accountFrontendController.getViewHistory);
   app.get('/account/reactHistory', passportConfig.isAuthenticated, accountFrontendController.getReactHistory);
@@ -235,9 +220,6 @@ function frontendRoutes(app){
 
   app.get('/media/subscribed', passportConfig.isAuthenticated, accountFrontendController.subscriptions);
   app.get('/media/subscribed/:page', passportConfig.isAuthenticated, accountFrontendController.subscriptions);
-
-
-
 
   // upload page
   app.get('/upload', passportConfig.isAuthenticated, accountFrontendController.getFileUpload);
@@ -247,7 +229,7 @@ function frontendRoutes(app){
   // ??
   app.get('/account/unlink/:provider', passportConfig.isAuthenticated, accountFrontendController.getOauthUnlink);
 
-  /** ACCOUNT APIS **/
+  /** ACCOUNT APIS * */
   app.post('/account/password', passportConfig.isAuthenticated, accountBackendController.postUpdatePassword);
   app.post('/account/delete', passportConfig.isAuthenticated, accountBackendController.postDeleteAccount);
   app.post('/account/profile', passportConfig.isAuthenticated, accountBackendController.postUpdateProfile);
@@ -256,8 +238,7 @@ function frontendRoutes(app){
   // save user's youtube channel id
   app.post('/account/backup', passportConfig.isAuthenticated, youtubeController.saveYouTubeChannelId);
 
-
-  /** ROUTE TO MODERATE PENDING VIDEOS **/
+  /** ROUTE TO MODERATE PENDING VIDEOS * */
   app.get('/pending', authMiddleware.moderatorAuth, adminFrontendController.getPending);
 
   app.post('/pending', authMiddleware.moderatorAuth, adminBackendController.postPending);
@@ -271,9 +252,7 @@ function frontendRoutes(app){
 
   app.get('/support/reports', authMiddleware.moderatorAuth, supportFrontendController.getReports);
 
-
-
-  /** ADMIN PAGES **/
+  /** ADMIN PAGES * */
   app.get('/admin/users', authMiddleware.adminAuth, adminFrontendController.getUsers);
   app.get('/admin/comments', authMiddleware.adminAuth, adminFrontendController.getComments);
   app.get('/admin/uploads', authMiddleware.adminAuth, adminFrontendController.getUploads);
@@ -284,18 +263,14 @@ function frontendRoutes(app){
   app.get('/admin/notifications', authMiddleware.adminAuth, adminFrontendController.getNotificationPage);
   app.get('/admin/adminAudit', authMiddleware.adminAuth, adminFrontendController.getAdminAudit);
 
-
-
-
-  /** SOCIAL MEDIA ENDPOINTS **/
+  /** SOCIAL MEDIA ENDPOINTS * */
   app.get('/admin/createSocialPost', authMiddleware.adminAuth, socialMediaFrontendController.getCreateSocialPost);
   app.get('/admin/oneOffSocialPost', authMiddleware.adminAuth, socialMediaFrontendController.getOneOffSocialPost);
 
   app.post('/admin/createSocialPost', authMiddleware.adminAuth, socialMediaBackendController.postCreateSocialPost);
   app.post('/admin/oneOffSocialPost', authMiddleware.adminAuth, socialMediaBackendController.postOneOffSocialPost);
 
-
-  /** ADMIN API ROUTES **/
+  /** ADMIN API ROUTES * */
   app.post('/admin/comments', authMiddleware.adminAuth, adminBackendController.postComments);
   app.post('/admin/users', authMiddleware.adminAuth, adminBackendController.postUsers);
   app.post('/admin/deleteAccount', authMiddleware.moderatorAuth, adminBackendController.deleteAccount);
@@ -309,23 +284,20 @@ function frontendRoutes(app){
   app.post('/admin/siteVisitors', authMiddleware.adminAuth, adminBackendController.postSiteVisitors);
   app.post('/admin/notifications', authMiddleware.adminAuth, adminBackendController.sendNotification);
 
-  app.get('/debug', async function (req, res, next) {
-    return res.render('error/debug', {
-      title: 'Debug'
-    })
-  });
+  app.get('/debug', async (req, res, next) => res.render('error/debug', {
+    title: 'Debug',
+  }));
 
   // anything that misses, return a 404
-  app.get('*', function (req, res, next) {
-
+  app.get('*', (req, res, next) => {
     res.status(404);
 
     return res.render('error/404', {
-      title: 'Not Found'
+      title: 'Not Found',
     });
   });
 
-  /** Oauth/API stuff that isn't being used **/
+  /** Oauth/API stuff that isn't being used * */
   // /**
   //  * API examples routes.
   //  */
@@ -361,5 +333,5 @@ function frontendRoutes(app){
 module.exports = {
   fileHostRoutes,
   livestreamRoutes,
-  frontendRoutes
+  frontendRoutes,
 };

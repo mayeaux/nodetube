@@ -3,13 +3,11 @@ const oneOffSocialPost = require('../../lib/socialMedia/oneOffSocialPost');
 const Upload = require('../../models/index').Upload;
 const SocialPost = require('../../models/index').SocialPost;
 
-
 const gab = require('../../lib/socialMedia/gab');
 const twitter = require('../../lib/socialMedia/twitter');
 const facebook = require('../../lib/socialMedia/facebook');
 
 exports.postCreateSocialPost = async (req, res) => {
-
   let uniqueTag = req.body.uniqueTag;
 
   // match everything after last / character
@@ -20,7 +18,7 @@ exports.postCreateSocialPost = async (req, res) => {
   const distance = req.body.distance;
 
   const upload = await Upload.findOne({
-    uniqueTag
+    uniqueTag,
   });
 
   console.log(req.body);
@@ -31,41 +29,41 @@ exports.postCreateSocialPost = async (req, res) => {
 
   const facebookOn = req.body.facebook;
 
-  let networks = [];
+  const networks = [];
 
-  if(gabOn == 'on'){
+  if (gabOn == 'on') {
     networks.push('gab');
   }
 
-  if(twitterOn == 'on'){
+  if (twitterOn == 'on') {
     networks.push('twitter');
   }
 
-  if(facebookOn == 'on'){
+  if (facebookOn == 'on') {
     networks.push('facebook');
   }
 
-  let socialpost = new SocialPost({
+  const socialpost = new SocialPost({
     postData: [],
-    upload
+    upload,
   });
 
-  for(const network of networks){
+  for (const network of networks) {
     let message;
 
-    if(network == 'gab'){
+    if (network == 'gab') {
       message = await gab.buildMessage(uniqueTag, distance);
-    } else if (network == 'twitter'){
+    } else if (network == 'twitter') {
       message = await twitter.buildMessage(uniqueTag, distance);
-    } else if (network == 'facebook'){
+    } else if (network == 'facebook') {
       message = await facebook.buildMessage(uniqueTag, distance);
     }
 
     const obj = {
-      network : network,
+      network,
       postedCorrectly: false,
-      distance: distance,
-      message
+      distance,
+      message,
     };
 
     socialpost.postData.push(obj);
@@ -73,12 +71,10 @@ exports.postCreateSocialPost = async (req, res) => {
 
   await socialpost.save();
 
-  res.redirect('/admin/createSocialPost')
-
+  res.redirect('/admin/createSocialPost');
 };
 
 exports.postOneOffSocialPost = async (req, res) => {
-
   const message = req.body.message;
 
   const gabOn = req.body.gab;
@@ -88,15 +84,14 @@ exports.postOneOffSocialPost = async (req, res) => {
   const facebookOn = req.body.facebook;
 
   const networks = {
-    gab : gabOn,
+    gab: gabOn,
     facebook: facebookOn,
-    twitter: twitterOn
+    twitter: twitterOn,
   };
 
   await oneOffSocialPost(message, networks);
 
-  req.flash('success', {msg: `One off message sent`});
+  req.flash('success', { msg: 'One off message sent' });
 
-  res.redirect('/admin/oneOffSocialPost')
-
+  res.redirect('/admin/oneOffSocialPost');
 };

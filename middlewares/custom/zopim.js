@@ -7,7 +7,7 @@ async function zopimRedirect(req, res, next) {
 
   res.locals.zopimOn = zopimOn;
 
-  next()
+  next();
 }
 
 module.exports = zopimRedirect;

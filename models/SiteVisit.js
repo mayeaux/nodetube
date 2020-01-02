@@ -4,12 +4,12 @@ const siteVisitSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    index: true
+    index: true,
   },
   ip: {
     type: String,
     required: true,
-    index: true
+    index: true,
   },
   siteUserData: mongoose.Schema.Types.Mixed,
 
@@ -19,27 +19,27 @@ const siteVisitSchema = new mongoose.Schema({
   visits: {
     type: Number,
     required: true,
-    default: 1
+    default: 1,
   },
 
-  doneFraud : {
+  doneFraud: {
     type: Boolean,
-    default: false
+    default: false,
   },
 
-  filter : {
+  filter: {
     type: String,
-    default: 'allAges'
+    default: 'allAges',
   },
 
-  blocked : {
-    type: Boolean
+  blocked: {
+    type: Boolean,
   },
   defaultQuality: {
     type: String,
     enum: ['high', 'low'],
-    default: 'low'
-  }
+    default: 'low',
+  },
 
 }, { timestamps: true });
 
@@ -63,12 +63,6 @@ module.exports = SiteVisit;
 //   trueStatements
 // };
 
-
 // https://github.com/bluesmoon/node-geoip
 // optionally : block tor
-
-
-
-
-
 

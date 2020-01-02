@@ -14,71 +14,70 @@ const moment = require('moment');
 const redisClient = require('../config/redis');
 
 const c = {
-  l : console.log
+  l: console.log,
 };
 
 const logCaching = process.env.LOG_CACHING;
 
-let viewAmount, channelAmount, mediaAmount;
-async function setIndexValues(){
-
-  if(logCaching == 'true'){
+let viewAmount,
+  channelAmount,
+  mediaAmount;
+async function setIndexValues() {
+  if (logCaching == 'true') {
     console.log('Setting index values');
 
-    console.log('Calculating view amounts')
+    console.log('Calculating view amounts');
   }
-
 
   // view amount is for the old view amount
   viewAmount = await Upload.aggregate([
-    { $match:  {visibility: { $ne: 'removed' } }},
+    { $match: { visibility: { $ne: 'removed' } } },
     { $group: {
       _id: '',
-      views: { $sum: '$views' }
-    }
+      views: { $sum: '$views' },
+    },
     }]);
 
-  if(!viewAmount[0]){
+  if (!viewAmount[0]) {
     viewAmount = 0;
   } else {
     viewAmount = viewAmount[0].views;
   }
 
-  if(logCaching == 'true'){
+  if (logCaching == 'true') {
     console.log('Old view amount calculated, calculating channel amount');
   }
 
   channelAmount = await User.count({});
 
-  if(logCaching == 'true') {
+  if (logCaching == 'true') {
     console.log('Channel amount calculated, calculating upload amount');
   }
 
   mediaAmount = await Upload.count({});
 
-  if(logCaching == 'true') {
+  if (logCaching == 'true') {
     console.log('Upload amount calculated, calculating view amount');
   }
 
   const legitCheckedViews = await View.count({ validity: 'real' });
 
-  if(logCaching == 'true') {
+  if (logCaching == 'true') {
     console.log('Legit view amount calculated, setting redis amounts');
   }
 
-  viewAmount = viewAmount + legitCheckedViews;
+  viewAmount += legitCheckedViews;
 
   // set object properly
   redisClient.hmset('indexValues', {
     viewAmount,
     channelAmount,
-    mediaAmount
+    mediaAmount,
   });
 
-  if(logCaching == 'true') {
+  if (logCaching == 'true') {
     console.log('Set index values');
   }
-
 }
 
 // setTimeout(setIndexValues, 1000 * 60 * 2);
@@ -87,40 +86,36 @@ async function setIndexValues(){
 //   setIndexValues()
 // }, 1000 * 60 * 20);
 
-
 // TODO: refactor to do via count
-async function getAmountsPerPeriods(Model, objectName){
-
-
+async function getAmountsPerPeriods(Model, objectName) {
   const totalDocumentAmount = await Model.count({});
 
   console.log(`Got total ${objectName} counted`);
 
   // build dates
-  var monthAgo =  moment().subtract(30, 'days').toDate();
-  var weekAgo =  moment().subtract(7, 'days').toDate();
-  var dayAgo = moment().subtract(24, 'hours').toDate();
-  var hourAgo = moment().subtract(1, 'hours').toDate();
-  var minuteAgo = moment().subtract(1, 'minutes').toDate();
+  const monthAgo = moment().subtract(30, 'days').toDate();
+  const weekAgo = moment().subtract(7, 'days').toDate();
+  const dayAgo = moment().subtract(24, 'hours').toDate();
+  const hourAgo = moment().subtract(1, 'hours').toDate();
+  const minuteAgo = moment().subtract(1, 'minutes').toDate();
 
   // find the views
-  const lastMonthAmount= await Model.count({ createdAt: { $gte: monthAgo } });
+  const lastMonthAmount = await Model.count({ createdAt: { $gte: monthAgo } });
   const lastWeekAmount = await Model.count({ createdAt: { $gte: weekAgo } });
   const lastDayAmount = await Model.count({ createdAt: { $gte: dayAgo } });
   const lastHourAmount = await Model.count({ createdAt: { $gte: hourAgo } });
   const lastMinuteAmount = await Model.count({ createdAt: { $gte: minuteAgo } });
 
-  return  {
+  return {
     name: objectName,
     alltime: totalDocumentAmount,
     month: lastMonthAmount,
     week: lastWeekAmount,
     day: lastDayAmount,
     hour: lastHourAmount,
-    minute: lastMinuteAmount
+    minute: lastMinuteAmount,
   };
 }
-
 
 // async function testThing(){
 //   const uploads = await Upload.find({}).select('createdAt');
@@ -141,7 +136,7 @@ async function getAmountsPerPeriods(Model, objectName){
 //
 // testThing();
 
-async function setDailyStats(){
+async function setDailyStats() {
   console.log('Setting daily stats');
 
   console.log('Getting uploads');
@@ -176,8 +171,8 @@ async function setDailyStats(){
 
   console.log('Getting views');
   const views = await getAmountsPerPeriods(View, 'views');
-  let oldViewAmount = 46498;
-  views.alltime = views.alltime + oldViewAmount;
+  const oldViewAmount = 46498;
+  views.alltime += oldViewAmount;
   await redisClient.setAsync('dailyStatsViews', JSON.stringify(views));
   console.log('Views set, moving on');
 
@@ -186,16 +181,13 @@ async function setDailyStats(){
   await redisClient.setAsync('dailyStatsSiteVisits', JSON.stringify(siteVisits));
   console.log('SiteVisit set, moving on');
 
-  console.log('Set daily stats')
-
-
+  console.log('Set daily stats');
 }
 
 module.exports = {
   setDailyStats,
-  setIndexValues
+  setIndexValues,
 };
-
 
 // setDailyStats();
 // setInterval(function(){

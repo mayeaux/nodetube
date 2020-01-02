@@ -3,25 +3,21 @@ const arraysEqual = require('../../lib/helpers/js-helpers').arraysEqual;
 const ipstack = require('ipstack');
 const dotenv = require('dotenv');
 
-
-/** Load environment variables from .env file, where API keys and passwords are configured. **/
-dotenv.load({path: '../.env.settings'});
-dotenv.load({path: '../.env.private'});
+/** Load environment variables from .env file, where API keys and passwords are configured. * */
+dotenv.load({ path: '../.env.settings' });
+dotenv.load({ path: '../.env.private' });
 
 function getIpDataAsync(ip) {
-  return new Promise(function(resolve, reject) {
-    ipstack(ip, process.env.IPSTACK_API_KEY, function(err, data) {
+  return new Promise((resolve, reject) => {
+    ipstack(ip, process.env.IPSTACK_API_KEY, (err, data) => {
       if (err !== null) reject(err);
       else resolve(data);
     });
   });
 }
 
-async function iptracker (req, res, next) {
-
-  const trueStatements = Object.keys(req.useragent).filter(function (x) {
-    return req.useragent[x] == true;
-  });
+async function iptracker(req, res, next) {
+  const trueStatements = Object.keys(req.useragent).filter(x => req.useragent[x] == true);
 
   let ip = req.headers['x-forwarded-for'] ||
     req.connection.remoteAddress ||
@@ -37,22 +33,21 @@ async function iptracker (req, res, next) {
   // console.log(response);
 
   const header = req.headers.referer;
-  const reqUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+  const reqUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
 
   // console.log('ip: ' + ip);
   // console.log('header: ' + header);
   // console.log('req url: ' + reqUrl + '
-  console.log('ip: ' + ip + '      req url: ' + reqUrl + '    header: ' + header);
-
+  console.log(`ip: ${ip}      req url: ${reqUrl}    header: ${header}`);
 
   let previousVisits;
   let matched = false;
 
   // grab user if it exists
-  let user = undefined;
+  let user;
   if (req.user) {
     user = req.user;
-    previousVisits = await SiteVisit.find({user: req.user._id});
+    previousVisits = await SiteVisit.find({ user: req.user._id });
 
     // if user has previously visited, see if they're using a matching setup
     if (previousVisits.length > 0) {
@@ -64,7 +59,7 @@ async function iptracker (req, res, next) {
           // save ref url and increment visit
           previousVisit.refs.push(header);
           previousVisit.history.push(reqUrl);
-          previousVisit.visits = previousVisit.visits + 1;
+          previousVisit.visits += 1;
           await previousVisit.save();
 
           // only allow one matching
@@ -80,7 +75,7 @@ async function iptracker (req, res, next) {
       }
     }
   } else {
-    previousVisits = await SiteVisit.find({ip});
+    previousVisits = await SiteVisit.find({ ip });
     if (previousVisits.length > 0) {
       // console.log("Found by ip");
       for (const previousVisit of previousVisits) {
@@ -88,7 +83,7 @@ async function iptracker (req, res, next) {
           // console.log('matched old visit setup of ip');
           previousVisit.refs.push(header);
           previousVisit.history.push(reqUrl);
-          previousVisit.visits = previousVisit.visits + 1;
+          previousVisit.visits += 1;
           await previousVisit.save();
           matched = true;
 
@@ -96,10 +91,8 @@ async function iptracker (req, res, next) {
 
           // console.log('next:ip ');
           next();
-
         }
       }
-
     }
   }
 
@@ -112,7 +105,7 @@ async function iptracker (req, res, next) {
       ip,
       siteUserData: trueStatements,
       history: [reqUrl],
-      refs: [header]
+      refs: [header],
     });
 
     await visit.save();

@@ -1,5 +1,5 @@
 const nodemailer = require('nodemailer');
-var mg = require('nodemailer-mailgun-transport');
+const mg = require('nodemailer-mailgun-transport');
 
 process.on('unhandledRejection', console.log);
 
@@ -9,22 +9,21 @@ const zohoTransport = nodemailer.createTransport({
   secure: true, // use SSL
   auth: {
     user: process.env.EMAIL_ADDRESS,
-    pass: process.env.PEWTUBE_VERIFY_EMAIL_PASSWORD
-  }
+    pass: process.env.PEWTUBE_VERIFY_EMAIL_PASSWORD,
+  },
 });
 
 let mailgunTransport;
-if (process.env.FORGOT_PASSWORD_EMAIL_FUNCTIONALITY_ON == 'true'){
+if (process.env.FORGOT_PASSWORD_EMAIL_FUNCTIONALITY_ON == 'true') {
   mailgunTransport = nodemailer.createTransport(mg({
     auth: {
       api_key: process.env.MAILGUN_API_KEY,
-      domain: process.env.MAILGUN_DOMAIN
-    }
+      domain: process.env.MAILGUN_DOMAIN,
+    },
   }));
 }
 
-
 module.exports = {
   mailgunTransport,
-  zohoTransport
+  zohoTransport,
 };

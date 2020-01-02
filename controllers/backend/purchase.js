@@ -2,8 +2,7 @@
 const stripe = require('../../lib/payments/stripe');
 const subscriptions = require('../../lib/helpers/subscriptions');
 
-exports.purchasePlus = async function(req, res){
-
+exports.purchasePlus = async function (req, res) {
   console.log(req.body);
 
   try {
@@ -16,7 +15,7 @@ exports.purchasePlus = async function(req, res){
     console.log(`Subsription created: ${subscription.id}`);
 
     const updatedUser = await subscriptions.grantUserPlus(req.user);
-    console.log(`UPDATED ${req.user.channelUrl} TO PLUS`)
+    console.log(`UPDATED ${req.user.channelUrl} TO PLUS`);
     console.log(updatedUser.privs);
 
     res.send('success');
@@ -24,11 +23,9 @@ exports.purchasePlus = async function(req, res){
     console.log(err);
     res.send('failure');
   }
-
 };
 
-exports.purchaseCredits = async function(req, res){
-
+exports.purchaseCredits = async function (req, res) {
   try {
     console.log(req.body);
 
@@ -54,18 +51,16 @@ exports.purchaseCredits = async function(req, res){
     req.user.credit = req.user.credit + amount;
     await req.user.save();
 
-    console.log('user amount updated to : ' + amount);
+    console.log(`user amount updated to : ${amount}`);
 
     res.send('success');
   } catch (err) {
     console.log(err);
     res.send('failure');
   }
-
 };
 
-exports.purchaseCreditsExistingCustomer = async function(req, res){
-
+exports.purchaseCreditsExistingCustomer = async function (req, res) {
   try {
     const userDescriptor = req.user.channelName || req.user.channelUrl;
 
@@ -86,12 +81,11 @@ exports.purchaseCreditsExistingCustomer = async function(req, res){
     req.user.credit = req.user.credit + amount;
     await req.user.save();
 
-    console.log('user amount updated to : ' + amount);
+    console.log(`user amount updated to : ${amount}`);
 
     res.send('success');
   } catch (err) {
     console.log(err);
     res.send('failure');
   }
-
 };

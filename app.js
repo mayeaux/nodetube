@@ -53,7 +53,6 @@ if(process.env.SHOW_LOG_LOCATION == 'true' || 1 == 2){
   });
 }
 
-
 /** Load environment variables from .env file, where API keys and passwords are configured. **/
 dotenv.load({path: '.env.settings'});
 dotenv.load({path: '.env.private'});
@@ -61,7 +60,7 @@ dotenv.load({path: '.env.private'});
 const amountOfProcesses = process.env.WEB_CONCURRENCY || numCPUs;
 
 if(process.env.CACHING_ON == 'true'){
-  const runcaching = require('./caching/runCaching')
+  const runcaching = require('./caching/runCaching');
 }
 
 // set upload server, upload url and save files directory
@@ -98,7 +97,7 @@ if (cluster.isMaster) {
     process.on('uncaughtException', (err) => {
       // console.log(err);
       // console.log(err.code);
-      console.log(`Uncaught Exception: `, err);
+      console.log('Uncaught Exception: ', err);
       console.log(err.stack);
     });
     //
@@ -124,7 +123,6 @@ if (cluster.isMaster) {
     });
 
     console.log(`FRONTEND SERVER: ${process.env.FRONTEND_SERVER}`);
-
 
     // require('./lib/deleteUsers');
 
@@ -152,13 +150,11 @@ if (cluster.isMaster) {
     console.log('Connected to ' + mongoUri);
 
     if(process.env.EMAIL_LISTENER_ON == 'true'){
-      const emailListenerScript = require('./scripts/shared/saveUnseenEmails')
+      const emailListenerScript = require('./scripts/shared/saveUnseenEmails');
     }
 
     /** create express app **/
     const app = express();
-
-
 
     app.use(favicon(path.join(__dirname, 'public', 'images/favicon.ico')));
 
@@ -175,7 +171,6 @@ if (cluster.isMaster) {
     app.use(expressStatusMonitor({
       path: '/hiddenStatus'
     }));
-
 
     app.use(compression());
     app.use(sass({
@@ -231,14 +226,10 @@ if (cluster.isMaster) {
     app.use(passport.session());
     app.use(flash());
 
-
-
     app.use(function (req, res, next) {
       req.headers.origin = req.headers.origin || req.headers.host;
       next();
     });
-
-
 
     // exclude paths for csrf
     app.use((req, res, next) => {
@@ -276,7 +267,6 @@ if (cluster.isMaster) {
 
     app.use(useragent.express());
 
-
     // TODO: where is this being used?
     app.use((req, res, next) => {
       if (process.env.NODE_ENV == 'production') {
@@ -302,22 +292,17 @@ if (cluster.isMaster) {
 
       res.locals.nodeEnv = process.env.NODE_ENV;
 
-      next()
+      next();
     });
 
-
     for(const middleware in customMiddleware){
-      app.use(customMiddleware[middleware])
+      app.use(customMiddleware[middleware]);
     }
 
     // run all the widget middleware software which adds credentials to res.local
     for(const middleware in widgetMiddleware){
-      app.use(widgetMiddleware[middleware])
+      app.use(widgetMiddleware[middleware]);
     }
-
-
-
-
 
     /** META TRACKER **/
     app.use(async function (req, res, next) {
@@ -326,10 +311,9 @@ if (cluster.isMaster) {
         image: process.env.META_IMAGE
       };
 
-      next()
+      next();
 
     });
-
 
     /** HOW MANY UNREAD NOTIFS **/
 
@@ -342,7 +326,6 @@ if (cluster.isMaster) {
 
       }
 
-
       next();
     });
 
@@ -353,16 +336,13 @@ if (cluster.isMaster) {
       //
       // console.log(req.siteVisitor.blocked);
 
-
       if(req.siteVisitor.blocked == true){
         await Promise.delay(1000 * 15);
         res.send('Something went wrong, please try again');
       } else {
-        next()
+        next();
       }
     });
-
-
 
     // TODO: not sure what this code achieves
     app.use((req, res, next) => {
@@ -379,7 +359,6 @@ if (cluster.isMaster) {
       next();
     });
 
-
     /** Automatically timeout after 30s (for Heroku) **/
     app.use(timeout('3000s'));
 
@@ -395,26 +374,26 @@ if (cluster.isMaster) {
     /** ROUTES PER APP TYPE **/
     if (process.env.FILE_HOST == 'true') {
 
-     routes.fileHostRoutes(app)
+      routes.fileHostRoutes(app);
 
     } else if (process.env.LIVESTREAM_APP == 'true') {
 
-      routes.livestreamRoutes(app)
+      routes.livestreamRoutes(app);
 
     } else {
 
-      routes.frontendRoutes(app)
+      routes.frontendRoutes(app);
 
     }
 
     // handle robots.txt
     app.get('/robots.txt', function (req, res) {
       res.type('text/plain');
-      res.send("User-agent: *\nAllow: /");
+      res.send('User-agent: *\nAllow: /');
     });
 
     // catch requests that didn't hit a path and 404
-    app.get('*', function (res, res, next) {
+    app.get('*', function (req, res, next) {
 
       res.status(404);
 
@@ -429,7 +408,6 @@ if (cluster.isMaster) {
       res.render('error/500');
     });
 
-
     /** ip block error handler **/
     app.use(async function (err, req, res, next) {
       // console.log(err);
@@ -438,7 +416,7 @@ if (cluster.isMaster) {
         await Promise.delay(1000 * 15);
         return res.send('The server returned an error, please try again');
       } else {
-        next()
+        next();
       }
     });
 
@@ -457,34 +435,34 @@ if (cluster.isMaster) {
 
   })();
 
-  async function runNgrok(){
-
-    let ngrokOptions = {
-      addr: portNumber
-    };
-
-    if(process.env.NGROK_SUBDOMAIN && process.env.NGROK_AUTHTOKEN){
-      ngrokOptions.authtoken = process.env.NGROK_AUTHTOKEN
-      ngrokOptions.subdomain = process.env.NGROK_SUBDOMAIN
-    }
-
-    const url = await ngrok.connect(ngrokOptions);
-
-    console.log(url);
-    // const api = ngrok.getApi();
-    // const tunnels = JSON.parse(await api.get('api/tunnels'));
-    //
-    //
-    // console.log(tunnels.tunnels[0]);
-    //
-    // const publicUrlAsHttp = tunnels.tunnels[0].public_url;
-    //
-    console.log(`Access NodeTube on the public web via ${url}. This link will be changed if you restart the app, to
-    use Ngrok with a permanent subdomain please purchase a token and update the settings in .env.private (see runNgrok function in app.js)`);
-  }
-
   if(process.env.RUN_NGROK == 'true'){
-    runNgrok()
+    runNgrok();
   }
 
+}
+
+async function runNgrok(){
+
+  let ngrokOptions = {
+    addr: portNumber
+  };
+
+  if(process.env.NGROK_SUBDOMAIN && process.env.NGROK_AUTHTOKEN){
+    ngrokOptions.authtoken = process.env.NGROK_AUTHTOKEN;
+    ngrokOptions.subdomain = process.env.NGROK_SUBDOMAIN;
+  }
+
+  const url = await ngrok.connect(ngrokOptions);
+
+  console.log(url);
+  // const api = ngrok.getApi();
+  // const tunnels = JSON.parse(await api.get('api/tunnels'));
+  //
+  //
+  // console.log(tunnels.tunnels[0]);
+  //
+  // const publicUrlAsHttp = tunnels.tunnels[0].public_url;
+  //
+  console.log(`Access NodeTube on the public web via ${url}. This link will be changed if you restart the app, to
+  use Ngrok with a permanent subdomain please purchase a token and update the settings in .env.private (see runNgrok function in app.js)`);
 }

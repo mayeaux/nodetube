@@ -3,23 +3,22 @@ const convertExtensions = ['.avi', '.flv', '.MOV', '.m4v', '.ogv', '.webm', '.wm
 const imageExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.JPG', '.PNG'];
 const audioExtensions = ['.mp3', '.wav', '.ogg', '.m4a'];
 
-async function middleware(req, res, next){
+async function middleware(req, res, next) {
   const path = req.path;
 
-  var str = "/uploads/Manwe_Sulimo/cqDSPlg.png";
-  var fileExtension = path.substr(path.indexOf("."));
+  const str = '/uploads/Manwe_Sulimo/cqDSPlg.png';
+  const fileExtension = path.substr(path.indexOf('.'));
 
   const allFileExtensions = [].concat(videoExtensions, convertExtensions, imageExtensions, audioExtensions);
 
   const isAFile = allFileExtensions.includes(fileExtension);
 
-  if(isAFile){
+  if (isAFile) {
     res.status(404);
     res.send('miss');
   } else {
     next();
   }
-
 }
 
 // middleware();

@@ -5,5 +5,5 @@ const zopim = require('./zopim');
 module.exports = {
   iptracker,
   redirect,
-  zopim
+  zopim,
 };

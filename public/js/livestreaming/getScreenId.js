@@ -22,17 +22,17 @@
  });
  */
 
-(function() {
-  window.getScreenId = function(callback) {
+(function () {
+  window.getScreenId = function (callback) {
     // for Firefox:
     // sourceId == 'firefox'
     // screen_constraints = {...}
-    if (!!navigator.mozGetUserMedia) {
+    if (navigator.mozGetUserMedia) {
       callback(null, 'firefox', {
         video: {
           mozMediaSource: 'window',
-          mediaSource: 'window'
-        }
+          mediaSource: 'window',
+        },
       });
       return;
     }
@@ -65,16 +65,16 @@
   };
 
   function getScreenConstraints(error, sourceId) {
-    var screen_constraints = {
+    const screen_constraints = {
       audio: false,
       video: {
         mandatory: {
           chromeMediaSource: error ? 'screen' : 'desktop',
           maxWidth: window.screen.width > 1920 ? window.screen.width : 1920,
-          maxHeight: window.screen.height > 1080 ? window.screen.height : 1080
+          maxHeight: window.screen.height > 1080 ? window.screen.height : 1080,
         },
-        optional: []
-      }
+        optional: [],
+      },
     };
 
     if (sourceId) {
@@ -96,16 +96,16 @@
     }
 
     iframe.contentWindow.postMessage({
-      captureSourceId: true
+      captureSourceId: true,
     }, '*');
   }
 
-  var iframe;
+  let iframe;
 
   // this function is used in RTCMultiConnection v3
-  window.getScreenConstraints = function(callback) {
-    loadIFrame(function() {
-      getScreenId(function(error, sourceId, screen_constraints) {
+  window.getScreenConstraints = function (callback) {
+    loadIFrame(() => {
+      getScreenId((error, sourceId, screen_constraints) => {
         callback(error, screen_constraints.video);
       });
     });
@@ -118,7 +118,7 @@
     }
 
     iframe = document.createElement('iframe');
-    iframe.onload = function() {
+    iframe.onload = function () {
       iframe.isLoaded = true;
 
       loadCallback();
@@ -128,9 +128,9 @@
     (document.body || document.documentElement).appendChild(iframe);
   }
 
-  window.getChromeExtensionStatus = function(callback) {
+  window.getChromeExtensionStatus = function (callback) {
     // for Firefox:
-    if (!!navigator.mozGetUserMedia) {
+    if (navigator.mozGetUserMedia) {
       callback('installed-enabled');
       return;
     }
@@ -163,7 +163,7 @@
     }
 
     iframe.contentWindow.postMessage({
-      getChromeExtensionStatus: true
+      getChromeExtensionStatus: true,
     }, '*');
   }
-})();
+}());

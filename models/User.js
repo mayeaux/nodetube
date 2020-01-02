@@ -2,12 +2,13 @@ const bcrypt = require('bcrypt-nodejs');
 const crypto = require('crypto');
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
-var Schema = mongoose.Schema;
+
+const Schema = mongoose.Schema;
 
 const userSchema = new mongoose.Schema({
   email: { type: String, unique: true },
   emailConfirmed: { type: Boolean, default: false },
-  emailConfirmationToken : String,
+  emailConfirmationToken: String,
   emailConfirmationExpires: String,
 
   password: String,
@@ -17,36 +18,36 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     enum: ['user', 'admin', 'moderator', 'support'],
-    default: 'user'
+    default: 'user',
   },
 
   channelUrl: { type: String, unique: true, required: true, uniqueCaseInsensitive: true },
 
   verified: {
     type: Boolean,
-    default: false
+    default: false,
   },
 
-  userUploadServer: { type: String, enum: ['uploads1', 'uploads3' ] },
+  userUploadServer: { type: String, enum: ['uploads1', 'uploads3'] },
 
   usedUploadServers: Array,
 
-  channelName: { type: String  },
+  channelName: { type: String },
   channelDescription: { type: String },
 
-  channelLocation : { type: String },
+  channelLocation: { type: String },
 
   youtubeChannelId: String,
   youtubeUsername: String,
 
   receivedSubscriptions: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Subscription'
+    ref: 'Subscription',
   }],
 
   subscriptions: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Subscription'
+    ref: 'Subscription',
   }],
 
   facebook: String,
@@ -56,59 +57,59 @@ const userSchema = new mongoose.Schema({
 
   uploads: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Upload'
+    ref: 'Upload',
   }],
 
   // privileges
-  privs : {
+  privs: {
     autoVisibleUpload: {
       type: Boolean,
-      default: false
+      default: false,
     },
     mirrorFunctionality: {
       type: Boolean,
-      default: false
+      default: false,
     },
     unlistedUpload: {
       type: Boolean,
-      default: false
+      default: false,
     },
     privateUpload: {
       type: Boolean,
-      default: false
+      default: false,
     },
     youtubeBackup: {
       type: Boolean,
-      default: false
+      default: false,
     },
-    uploadSize : {
+    uploadSize: {
       type: Number,
-      default: 500
+      default: 500,
     },
     safeForWorkUpload: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
 
-  userSettings : {
+  userSettings: {
     mirrorOn: {
       type: Boolean,
-      default: false
+      default: false,
     },
     backupOn: {
       type: Boolean,
-      default: false
+      default: false,
     },
     monetizationOn: {
       type: Boolean,
-      default: false
+      default: false,
     },
   },
 
   comments: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Comment'
+    ref: 'Comment',
   }],
 
   userData: {
@@ -119,7 +120,6 @@ const userSchema = new mongoose.Schema({
   status: String,
 
   filter: { type: String, enum: ['allAges', 'mature', 'sensitive'], default: 'allAges' },
-
 
   // profile: {
   //   name: String,
@@ -132,13 +132,13 @@ const userSchema = new mongoose.Schema({
   socialMedia: {
     gab: String,
     twitter: String,
-    facebook: String
+    facebook: String,
   },
 
   // TODO: horrific name, should rename to indicate its the backblaze response
   thumbnailUrl: String,
 
-  /** such as `user-thumbnail${fileExtension}`; **/
+  /** such as `user-thumbnail${fileExtension}`; * */
   customThumbnail: String,
 
   uploadToken: String,
@@ -148,43 +148,43 @@ const userSchema = new mongoose.Schema({
   plan: {
     type: String,
     enum: ['free', 'plus'],
-    default: 'free'
+    default: 'free',
   },
 
-  unseenSubscriptionUploads : {
+  unseenSubscriptionUploads: {
     type: Number,
-    default: 0
+    default: 0,
   },
 
-  curated : {
+  curated: {
     type: Boolean,
-    default: false
+    default: false,
   },
 
   stripeCustomerId: {
-    type: String
+    type: String,
   },
 
   // amount of usd credits in cents
-  credit : {
+  credit: {
     type: Number,
-    default: 0
+    default: 0,
   },
 
   receivedCredit: {
     type: Number,
-    default: 0
+    default: 0,
   },
 
   defaultQuality: {
     type: String,
     enum: ['high', 'low'],
-    default: 'low'
+    default: 'low',
   },
 
   blockedUsers: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
   }],
 
 }, { timestamps: true, minimize: false });
@@ -231,6 +231,5 @@ userSchema.methods.gravatar = function gravatar(size) {
 const User = mongoose.model('User', userSchema);
 
 userSchema.plugin(uniqueValidator);
-
 
 module.exports = User;

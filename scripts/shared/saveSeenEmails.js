@@ -1,11 +1,11 @@
-var MailListener = require("mail-listener2");
+const MailListener = require('mail-listener2');
 
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 
 const ReceivedEmail = require('../../models').ReceivedEmail;
 
-/** connect to MongoDB **/
+/** connect to MongoDB * */
 const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/april15pewtube';
 
 mongoose.Promise = global.Promise;
@@ -14,7 +14,7 @@ mongoose.Promise = global.Promise;
 mongoose.connect(mongoUri, {
   keepAlive: true,
   reconnectTries: Number.MAX_VALUE,
-  useMongoClient: true
+  useMongoClient: true,
 });
 
 // mongoose.set('debug', true);
@@ -24,7 +24,7 @@ mongoose.connection.on('error', (err) => {
   process.exit();
 });
 
-console.log('Connected to ' + mongoUri);
+console.log(`Connected to ${mongoUri}`);
 
 // have to run from project directory to work
 dotenv.load({ path: '.env.private' });
@@ -37,7 +37,7 @@ const imapPort = process.env.EMAIL_PORT;
 
 console.log(imapPassword, imapUsername, imapHost);
 
-var mailListener = new MailListener({
+const mailListener = new MailListener({
   username: imapUsername,
   password: imapPassword,
   host: imapHost,
@@ -46,48 +46,40 @@ var mailListener = new MailListener({
   connTimeout: 10000, // Default by node-imap
   // debug: console.log, // Or your custom function with only one incoming argument. Default: null
   tlsOptions: { rejectUnauthorized: false },
-  mailbox: "INBOX", // mailbox to monitor
+  mailbox: 'INBOX', // mailbox to monitor
   searchFilter: ['SEEN'], // the search filter being used after an IDLE notification has been retrieved
   // markSeen: true, // all fetched email will be marked as seen and not fetched next time
   fetchUnreadOnStart: true, // use it only if you want to get all unread email on lib start. Default is `false`,
-  mailParserOptions: {streamAttachments: true}, // options to be passed to mailParser lib.
+  mailParserOptions: { streamAttachments: true }, // options to be passed to mailParser lib.
   attachments: true, // download attachments as they are encountered to the project directory
-  attachmentOptions: { directory: "attachments/" } // specify a download directory for attachments
+  attachmentOptions: { directory: 'attachments/' }, // specify a download directory for attachments
 });
 
 mailListener.start(); // start listening
 
 // stop listening
-//mailListener.stop();
+// mailListener.stop();
 
-mailListener.on("server:connected", function(){
-  console.log("imapConnected");
-
+mailListener.on('server:connected', () => {
+  console.log('imapConnected');
 });
 
-mailListener.on("server:disconnected", function(){
-  console.log("imapDisconnected");
+mailListener.on('server:disconnected', () => {
+  console.log('imapDisconnected');
 });
 
-mailListener.on("error", function(err){
+mailListener.on('error', (err) => {
   console.log(err);
 });
 
-(async function(){
-
+(async function () {
   const existingEmails = await ReceivedEmail.find({});
 
-  const emailIds = existingEmails.map(function(email){
-    return email.emailId
-  });
+  const emailIds = existingEmails.map(email => email.emailId);
 
   // seqno just an incrementing index
-  mailListener.on("mail", async function(mail, seqno, attributes){
-
+  mailListener.on('mail', async (mail, seqno, attributes) => {
     // console.log(attributes);
-
-
-
 
     // /** data collected **/
     // console.log('from: ' + mail.from[0].address);
@@ -103,12 +95,11 @@ mailListener.on("error", function(err){
     const text = mail.text;
     const sentDate = mail.date;
 
-    if(emailIds.includes(emailId)){
-      console.log('Already done, skipping ' + sentDate);
-      return
-    } else {
-      console.log('Not downloaded yet, saving now');
+    if (emailIds.includes(emailId)) {
+      console.log(`Already done, skipping ${sentDate}`);
+      return;
     }
+    console.log('Not downloaded yet, saving now');
 
     const emailObject = {
       emailId,
@@ -116,7 +107,7 @@ mailListener.on("error", function(err){
       fromEmailAddress,
       subject,
       text,
-      sentDate
+      sentDate,
     };
 
     const email = new ReceivedEmail(emailObject);
@@ -124,8 +115,6 @@ mailListener.on("error", function(err){
     await email.save();
 
     console.log('Email saved');
-
-
 
     // toEmailAddress: String,
     //   fromEmailAddress: String,
@@ -135,14 +124,9 @@ mailListener.on("error", function(err){
     //   emailId: String,
     //   response: String
 
-
-
     // console.log(mail.priority);
     // console.log(mail.eml);
     // console.log(mail.text)
-
-
-
 
     // console.log(mail.headers['message-id']);
 
@@ -151,7 +135,7 @@ mailListener.on("error", function(err){
     // console.log(keys);
     // console.log(mail.eml)
 
-    /** MAIL KEYS **/
+    /** MAIL KEYS * */
     // 'text',
     // 'headers',
     // 'subject',
@@ -163,7 +147,7 @@ mailListener.on("error", function(err){
     // 'receivedDate',
     // 'eml' ]
 
-    /** HEADERS **/
+    /** HEADERS * */
     // [ 'from',
     // 'message-id',
     // 'subject',
@@ -178,13 +162,11 @@ mailListener.on("error", function(err){
     // 'in-reply-to',
     // 'x-zohomail-sender' ]
 
-    /** EXAMPLE ATTRIBUTE **/
+    /** EXAMPLE ATTRIBUTE * */
     // { date: 2017-09-22T17:03:05.000Z,
     //   flags: [ '\\Recent', '\\Seen', 'NONJUNK' ],
     //   uid: 7,
     //   modseq: '1000000000000000000' }
-
-
 
     // do something with mail object including attachments
     // console.log("emailParsed", mail);
@@ -192,8 +174,5 @@ mailListener.on("error", function(err){
   });
 
 // mailListener.imap.move(:msguids, :mailboxes, function(){})
-
-
-
-})();
+}());
 

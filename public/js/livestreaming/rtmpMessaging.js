@@ -7,7 +7,7 @@ var regexp = /\/live\/(.*)/;
 
 var username = pathName.match(regexp)[1];
 
-var env = '#{env || 'production'}'
+var env = '#{env || '+production+'}';
 
 var websocketUrl;
 var messageUrl;
@@ -22,17 +22,13 @@ if(env == 'production'){
   messageUrl = 'wss://' + 'localhost:8080' + '/messages/' + username;
 }
 
-
-
 var messageUrl = 'ws://' + location.host + '/messages';
 
 messageUrl = 'wss://' + 'localhost:8080' + '/messages/' + username;
 
-
 console.log(messageUrl);
 
 var messageSocket = new WebSocket(messageUrl);
-
 
 var onUserConnection = {
   username: username,
@@ -43,14 +39,12 @@ messageSocket.onopen = function (event) {
   messageSocket.send(JSON.stringify(onUserConnection));
 };
 
-
-
 var entityMap = {
   '&': '&amp;',
   '<': '&lt;',
   '>': '&gt;',
   '"': '&quot;',
-  "'": '&#39;',
+  '\'': '&#39;',
   '/': '&#x2F;',
   '`': '&#x60;',
   '=': '&#x3D;'
@@ -74,38 +68,37 @@ $( document ).ready(function() {
 
     if(usernamePicked == false){
       swal({
-          title: "Pick Username",
-          text: "Please write your username below",
-          type: "input",
-          showCancelButton: true,
-          closeOnConfirm: false,
-          animation: "slide-from-top",
-          inputPlaceholder: "Username"
-        },
+        title: 'Pick Username',
+        text: 'Please write your username below',
+        type: 'input',
+        showCancelButton: true,
+        closeOnConfirm: false,
+        animation: 'slide-from-top',
+        inputPlaceholder: 'Username'
+      },
         function(inputValue){
           if (inputValue === false) return false;
 
-          if (inputValue === "") {
-            swal.showInputError("You need to write something!");
-            return false
+          if (inputValue === '') {
+            swal.showInputError('You need to write something!');
+            return false;
           }
 
           messagingUsername = inputValue;
           usernamePicked = true;
 
           swal({
-              title: "Nice",
-              text: "You selected the username: " + inputValue,
-              type: "success"
-            },
+            title: 'Nice',
+            text: 'You selected the username: ' + inputValue,
+            type: 'success'
+          },
 
             function(){
               setTimeout(function(){
                 $('.message-text').focus();
-              }, 500)
+              }, 500);
 
             });
-
 
         });
 
@@ -118,7 +111,7 @@ $( document ).ready(function() {
     var messageText = $('.message-text').val();
 
     if(messageText == ''){
-      return
+      return;
     }
 
     messageText = messagingUsername + ': ' + messageText;
@@ -134,18 +127,17 @@ $( document ).ready(function() {
     messageText = $('.message-text').val('');
   }
 
-
   // when send message button clicked
   $('.send-text').on('click', function(e){
     e.preventDefault();
 
-    sendChatMessage()
+    sendChatMessage();
   });
 
   // when enter button clicked
   $(document).keypress(function(e) {
     if(e.which == 13) {
-      sendChatMessage()
+      sendChatMessage();
     }
   });
 });
@@ -179,7 +171,6 @@ messageSocket.onmessage = function(message) {
 
 };
 
-
 // close socket on page reload
 window.onbeforeunload = function(event)
 {
@@ -194,7 +185,6 @@ window.onbeforeunload = function(event)
   messageSocket.close();
   ws.close();
 };
-
 
 // keep socket open for messages
 setInterval(function(){
