@@ -9,6 +9,8 @@ services:
     volumes:
       - .:/app/
       - /app/node_modules
+      - ./upload:/app/upload
+      - ./uploads:/app/uploads
     environment:
       - REDIS_HOST=redis
       - MONGODB_DOCKER_URI=mongodb://mongo:27017/nodetube
@@ -23,7 +25,7 @@ services:
     container_name: mongodb
     image: mongo:3.6
     volumes:
-      - /data/db
+      - ./data/db:/data/db
     ports:
       - "27011:27017"
     networks:
