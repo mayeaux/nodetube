@@ -9,7 +9,15 @@ Join us for collaboration on, [Discord](https://discord.gg/ejGah8H), [Riot.Im](h
 
 <img src="https://user-images.githubusercontent.com/7200471/71605820-40db7880-2b29-11ea-8fa0-b8628cfd55ad.png" width="800" >
 
-## Installing Locally
+## Get Your Instance Running:
+
+You can get an instance up instantly using one-click deployment with Heroku below:
+
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/mayeaux/nodetube)
+
+### Installing Locally
+
+There are installation instructions for [OS X](https://github.com/mayeaux/nodetube/wiki/Installation-Instructions---OS-X) and [Linux](https://github.com/mayeaux/nodetube/wiki/Installation-Instructions---Linux) featured in the [Wiki](https://github.com/mayeaux/nodetube/wiki).
 
 There are installation instructions for [OS X](https://github.com/mayeaux/nodetube/wiki/Installation-Instructions---OS-X) and [Linux](https://github.com/mayeaux/nodetube/wiki/Installation-Instructions---Linux) featured in the [Wiki](https://github.com/mayeaux/nodetube/wiki).
 
