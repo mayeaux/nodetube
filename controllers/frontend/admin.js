@@ -144,14 +144,14 @@ exports.getUsers = async (req, res) => {
 };
 
 exports.reacts = async (req, res) => {
-  if (!req.user) {
+  if(!req.user) {
     res.status(404);
     return res.render('error/404', {
       title: 'Not Found',
     });
   }
 
-  if (req.user.role !== 'admin') {
+  if(req.user.role !== 'admin') {
     res.status(404);
     return res.render('error/404', {
       title: 'Not Found',

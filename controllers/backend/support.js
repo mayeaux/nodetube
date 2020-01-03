@@ -2,7 +2,7 @@ const ReceivedEmail = require('../../models/index').ReceivedEmail;
 const supportLib = require('../../lib/support/email.js');
 
 exports.sendResponse = async (req, res) => {
-  try {
+  try{
     const response = req.body.response;
 
     const id = req.params.id;
@@ -10,7 +10,7 @@ exports.sendResponse = async (req, res) => {
     // exclude uploads without an uploadUrl
     const receivedEmail = await ReceivedEmail.findById(id);
 
-    if (receivedEmail.response) {
+    if(receivedEmail.response) {
       throw new Error('Already has a response');
     }
 
@@ -21,14 +21,14 @@ exports.sendResponse = async (req, res) => {
     console.log(receivedEmail);
 
     res.send('success');
-  } catch (err) {
+  }catch(err) {
     console.log(err);
     res.send('err');
   }
 };
 
 exports.sendEmail = async (req, res) => {
-  try {
+  try{
     const emailId = req.params.id;
 
     // console.log(req.params.id);
@@ -37,7 +37,7 @@ exports.sendEmail = async (req, res) => {
 
     const receivedEmail = await ReceivedEmail.findById(emailId);
 
-    if (!receivedEmail.response) {
+    if(!receivedEmail.response) {
       throw new Error('No response written yet');
     }
 
@@ -52,7 +52,7 @@ exports.sendEmail = async (req, res) => {
     await receivedEmail.save();
 
     res.send('success');
-  } catch (err) {
+  }catch(err) {
     console.log(err);
     res.send('err');
   }

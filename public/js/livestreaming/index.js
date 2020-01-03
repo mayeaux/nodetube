@@ -72,21 +72,21 @@ ws.onmessage = function (message) {
   const parsedMessage = JSON.parse(message.data);
   // console.info('Received message: ' + message.data);
 
-  switch (parsedMessage.id) {
-  case 'presenterResponse':
+  switch(parsedMessage.id) {
+  case'presenterResponse':
     presenterResponse(parsedMessage);
     break;
-  case 'viewerResponse':
+  case'viewerResponse':
     viewerResponse(parsedMessage);
     break;
-  case 'stopCommunication':
+  case'stopCommunication':
     dispose();
     break;
-  case 'iceCandidate':
+  case'iceCandidate':
     webRtcPeer.addIceCandidate(parsedMessage.candidate);
     break;
   default:
-    if (parsedMessage.message !== 'Invalid message keep-alive') {
+    if(parsedMessage.message !== 'Invalid message keep-alive') {
       console.error('Unrecognized message', parsedMessage);
     }
   }
@@ -95,12 +95,12 @@ ws.onmessage = function (message) {
 function presenterResponse(message) {
   console.log(message);
 
-  if (message.response != 'accepted') {
+  if(message.response != 'accepted') {
     const errorMsg = message.message ? message.message : 'Unknown error';
     console.warn(`Call not accepted for the following reason: ${errorMsg}`);
     dispose();
     swal(`Call not accepted for the following reason: ${errorMsg}`);
-  } else {
+  }else{
     webRtcPeer.processAnswer(message.sdpAnswer);
     swal('Your stream has begun, please click "Watch As Viewer"');
   }
@@ -109,26 +109,26 @@ function presenterResponse(message) {
 function viewerResponse(message) {
   console.log(message);
 
-  if (message.response != 'accepted') {
+  if(message.response != 'accepted') {
     const errorMsg = message.message ? message.message : 'Unknown error';
     console.warn(`Call not accepted for the following reason: ${errorMsg}`);
     dispose();
 
-    if (message.message == 'No active presenter. Try again later...') {
+    if(message.message == 'No active presenter. Try again later...') {
       swal('The presenter is not currently presenting, try again later');
     }
-  } else {
+  }else{
     webRtcPeer.processAnswer(message.sdpAnswer);
   }
 }
 
 function presenter() {
-  if (!webRtcPeer) {
+  if(!webRtcPeer) {
     showSpinner(video);
 
     let options;
 
-    if (streamType == 'screenshare') {
+    if(streamType == 'screenshare') {
       options = {
         audioStream,
         videoStream: desktopStream,
@@ -136,20 +136,20 @@ function presenter() {
         onicecandidate: onIceCandidate,
         sendSource: 'screen',
       };
-    } else if (streamType == 'video') {
+    }else if(streamType == 'video') {
       options = {
         videoStream,
         localVideo: video,
         onicecandidate: onIceCandidate,
       };
-    } else {
+    }else{
       throw new Error('Not a video share or a screen share');
     }
 
     webRtcPeer = kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options, function (error) {
       console.log(`error${error}`);
 
-      if (error) return onError(error); // You'll need to use whatever you use for handling errors
+      if(error)return onError(error); // You'll need to use whatever you use for handling errors
 
       console.log('running here');
 
@@ -161,7 +161,7 @@ function presenter() {
 function onOfferPresenter(error, offerSdp) {
   console.log(error);
 
-  if (error) return onError(error);
+  if(error)return onError(error);
 
   // console.log(offerSdp);
 
@@ -176,7 +176,7 @@ function onOfferPresenter(error, offerSdp) {
 }
 
 function viewer() {
-  if (!webRtcPeer) {
+  if(!webRtcPeer) {
     showSpinner(video);
 
     // TODO: send the username here
@@ -187,7 +187,7 @@ function viewer() {
     };
 
     webRtcPeer = kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(options, function (error) {
-      if (error) return onError(error);
+      if(error)return onError(error);
 
       this.generateOffer(onOfferViewer);
     });
@@ -195,7 +195,7 @@ function viewer() {
 }
 
 function onOfferViewer(error, offerSdp) {
-  if (error) return onError(error);
+  if(error)return onError(error);
 
   const message = {
     presenter: username,
@@ -216,7 +216,7 @@ function onIceCandidate(candidate) {
 }
 
 function stop() {
-  if (webRtcPeer) {
+  if(webRtcPeer) {
     const message = {
       id: 'stop',
     };
@@ -226,7 +226,7 @@ function stop() {
 }
 
 function dispose() {
-  if (webRtcPeer) {
+  if(webRtcPeer) {
     webRtcPeer.dispose();
     webRtcPeer = null;
   }
@@ -240,14 +240,14 @@ function sendMessage(message) {
 }
 
 function showSpinner() {
-  for (let i = 0; i < arguments.length; i++) {
+  for(let i = 0; i < arguments.length; i++) {
     arguments[i].poster = '/images/livestreaming/transparent-1px.png';
     arguments[i].style.background = 'center transparent url("./images/livestreaming/spinner.gif") no-repeat';
   }
 }
 
 function hideSpinner() {
-  for (let i = 0; i < arguments.length; i++) {
+  for(let i = 0; i < arguments.length; i++) {
     arguments[i].src = '';
     arguments[i].poster = '/images/livestreaming/webrtc.png';
     arguments[i].style.background = '';
@@ -299,7 +299,7 @@ let messagingUsername;
 $(document).ready(() => {
   // username selection functionality
   $('.message-text').on('focus', () => {
-    if (usernamePicked == false) {
+    if(usernamePicked == false) {
       swal({
         title: 'Pick Username',
         text: 'Please write your username below',
@@ -310,9 +310,9 @@ $(document).ready(() => {
         inputPlaceholder: 'Username',
       },
         (inputValue) => {
-          if (inputValue === false) return false;
+          if(inputValue === false)return false;
 
-          if (inputValue === '') {
+          if(inputValue === '') {
             swal.showInputError('You need to write something!');
             return false;
           }
@@ -339,7 +339,7 @@ $(document).ready(() => {
   function sendChatMessage() {
     let messageText = $('.message-text').val();
 
-    if (messageText == '') {
+    if(messageText == '') {
       return;
     }
 
@@ -365,7 +365,7 @@ $(document).ready(() => {
 
   // when enter button clicked
   $(document).keypress((e) => {
-    if (e.which == 13) {
+    if(e.which == 13) {
       sendChatMessage();
     }
   });
@@ -380,14 +380,14 @@ messageSocket.onmessage = function (message) {
   console.log(data);
 
   // if message, prepend it to messages list
-  if (data.message && data.message !== 'undefined: undefined') {
+  if(data.message && data.message !== 'undefined: undefined') {
     const escapedMessage = escapeHtml(data.message);
 
     $('.message-list').prepend(`<li>${escapedMessage}</li>`).html();
   }
 
   // if its to do with connected users, append
-  if (data.connectedUsersAmount) {
+  if(data.connectedUsersAmount) {
     connectedUsersAmount = data.connectedUsersAmount;
 
     $('.userAmount').text(`Users In Room: ${connectedUsersAmount}`);

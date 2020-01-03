@@ -17,7 +17,7 @@ var messageUrl;
 if(env == 'production'){
   webSocketUrl = 'wss://' + 'live.pewtube.com' + '/stream/' + username;
   messageUrl = 'wss://' + 'live.pewtube.com' + '/messages/' + username;
-} else {
+}else{
   webSocketUrl = 'wss://' + 'localhost:8080' + '/stream/' + username;
   messageUrl = 'wss://' + 'localhost:8080' + '/messages/' + username;
 }
@@ -77,9 +77,9 @@ $( document ).ready(function() {
         inputPlaceholder: 'Username'
       },
         function(inputValue){
-          if (inputValue === false) return false;
+          if(inputValue === false)return false;
 
-          if (inputValue === '') {
+          if(inputValue === '') {
             swal.showInputError('You need to write something!');
             return false;
           }
@@ -161,7 +161,7 @@ messageSocket.onmessage = function(message) {
   }
 
   // if its to do with connected users, append
-  if (data.connectedUsersAmount){
+  if(data.connectedUsersAmount){
     connectedUsersAmount = data.connectedUsersAmount;
 
     $('.userAmount').text('Users In Room: ' + connectedUsersAmount);

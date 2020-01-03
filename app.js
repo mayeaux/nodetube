@@ -56,13 +56,13 @@ console.log(`SAVE AND SERVE FILES DIRECTORY: ${saveAndServeFilesDirectory}`);
 
 const portNumber =  process.env.PORT || 3000;
 
-if (cluster.isMaster) {
-  for (let i = 0; i < amountOfProcesses; i++) {
+if(cluster.isMaster) {
+  for(let i = 0; i < amountOfProcesses; i++) {
     // Create a worker
     cluster.fork();
   }
 
-} else {
+}else{
 
   console.log(`Running with this many processes: ${amountOfProcesses}`);
 
@@ -151,7 +151,7 @@ if (cluster.isMaster) {
 
     if(process.env.NODE_ENV == 'development'){
       app.use(logger('dev'));
-    } else if (process.env.NODE_ENV == 'production'){
+    }else if(process.env.NODE_ENV == 'production'){
       app.use(logger('dev'));
     }
 
@@ -222,7 +222,7 @@ if (cluster.isMaster) {
         requestPath === '/livestream/on-live-done'
       ){
         next();
-      } else {
+      }else{
         lusca.csrf()(req, res, next);
       }
     });
@@ -270,7 +270,7 @@ if (cluster.isMaster) {
 
     /** HOW MANY UNREAD NOTIFS **/
     app.use(async function (req, res, next) {
-      if (req.user) {
+      if(req.user) {
         let unreadNotifs = await Notification.count({read: false, user: req.user._id});
         res.locals.unreadNotifAmount = unreadNotifs;
         // console.log(unreadNotifs + ' unreadnotifs')
@@ -285,7 +285,7 @@ if (cluster.isMaster) {
       if(req.siteVisitor.blocked == true){
         await Promise.delay(1000 * 15);
         res.send('Something went wrong, please try again');
-      } else {
+      }else{
         next();
       }
     });
@@ -293,13 +293,13 @@ if (cluster.isMaster) {
     /** Setting up returnTo path for user login **/
     app.use((req, res, next) => {
       // After successful login, redirect back to the intended page
-      if (!req.user &&
+      if(!req.user &&
         req.path !== '/login' &&
         req.path !== '/signup' && !req.path.match(/^\/auth/) && !req.path.match(/\./)
       ){
         req.session.returnTo = req.path;
         // if the req user is coming back to account let them go there
-      } else if (req.user && req.path == '/account') {
+      }else if(req.user && req.path == '/account') {
         req.session.returnTo = req.path;
       }
       next();
@@ -309,7 +309,7 @@ if (cluster.isMaster) {
     app.use(timeout('3000s'));
 
     // take site down for maintenance
-    if (process.env.DOING_MAINTENANCE == 'true') {
+    if(process.env.DOING_MAINTENANCE == 'true') {
       app.use('*', function (req, res, next) {
         return res.render('maintain', {
           title: 'Maintenance'
@@ -318,15 +318,15 @@ if (cluster.isMaster) {
     }
 
     /** ROUTES PER APP TYPE **/
-    if (process.env.FILE_HOST == 'true') {
+    if(process.env.FILE_HOST == 'true') {
 
       routes.fileHostRoutes(app);
 
-    } else if (process.env.LIVESTREAM_APP == 'true') {
+    }else if(process.env.LIVESTREAM_APP == 'true') {
 
       routes.livestreamRoutes(app);
 
-    } else {
+    }else{
 
       routes.frontendRoutes(app);
 
@@ -357,11 +357,11 @@ if (cluster.isMaster) {
     /** ip block error handler **/
     app.use(async function (err, req, res, next) {
       // console.log(err);
-      if (err.name == 'IpDeniedError') {
+      if(err.name == 'IpDeniedError') {
 
         await Promise.delay(1000 * 15);
         return res.send('The server returned an error, please try again');
-      } else {
+      }else{
         next();
       }
     });
@@ -405,7 +405,7 @@ async function runNgrok(){
       console[method] = function() {
         var stack = (new Error()).stack.split(/\n/);
         // Chrome includes a single "Error" line, FF doesn't.
-        if (stack[0].indexOf('Error') === 0) {
+        if(stack[0].indexOf('Error') === 0) {
           stack = stack.slice(1);
         }
         var args = [].slice.apply(arguments).concat([stack[1].trim()]);

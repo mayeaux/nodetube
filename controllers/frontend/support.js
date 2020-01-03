@@ -10,15 +10,15 @@ exports.getReceivedEmails = async (req, res) => {
   let respondedTo = req.query.respondedTo;
 
   // if not true or false
-  if (respondedTo !== 'false' && respondedTo !== 'true') {
+  if(respondedTo !== 'false' && respondedTo !== 'true') {
     respondedTo = 'false';
   }
 
   // console.log(respondedTo); // true
 
   // dont let users access ceo emails unless
-  if (receivingEmailAddress == 'ceo@pew.tube' && req.user.role !== 'admin') {
-    return [];
+  if(receivingEmailAddress == 'ceo@pew.tube' && req.user.role !== 'admin') {
+    return[];
   }
 
   // exclude uploads without an uploadUrl

@@ -28,12 +28,12 @@ const logCaching = process.env.LOG_CACHING;
 console.log('UPLOAD SERVER: ' + uploadServer + ' on: media browsing frontend controller');
 
 function getParameterByName(name, url) {
-  if (!url) url = window.location.href;
+  if(!url) url = window.location.href;
   name = name.replace(/[\[\]]/g, '\\$&');
   let regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`),
     results = regex.exec(url);
-  if (!results) return null;
-  if (!results[2]) return '';
+  if(!results)return null;
+  if(!results[2])return'';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
@@ -42,6 +42,7 @@ const mongooseHelpers = require('../../caching/mongooseHelpers');
 // todo: get out of controller
 let viewStats;
 let indexResponse = {};
+
 async function getStats() {
   const views = await redisClient.getAsync('dailyStatsViews');
   viewStats = JSON.parse(views);
@@ -54,7 +55,7 @@ async function setIndex(){
   }
 }
 
-if (!process.env.FILE_HOST || process.env.FILE_HOST == 'false') {
+if(!process.env.FILE_HOST || process.env.FILE_HOST == 'false') {
   getStats();
   setInterval(() => {
     getStats();
@@ -72,7 +73,7 @@ if (!process.env.FILE_HOST || process.env.FILE_HOST == 'false') {
  * Page displaying most recently uploaded content
  */
 exports.recentUploads = async (req, res) => {
-  try {
+  try{
     console.log('getting recent uploads');
 
     const addressPrepend = '/media/recent';
@@ -90,7 +91,7 @@ exports.recentUploads = async (req, res) => {
     // limit amount to list per page
     let limit = 102;
 
-    if (!category) {
+    if(!category) {
       limit = 6;
     }
 
@@ -105,8 +106,8 @@ exports.recentUploads = async (req, res) => {
     const filter = getSensitivityFilter(req.user, req.siteVisitor);
 
     let categoryObj;
-    for (const cat of categories) {
-      if (cat.name == category) {
+    for(const cat of categories) {
+      if(cat.name == category) {
         categoryObj = cat;
       }
     }
@@ -133,7 +134,7 @@ exports.recentUploads = async (req, res) => {
       addressPrepend,
       categoryObj,
     });
-  } catch (err) {
+  }catch(err) {
     console.log(err);
     res.status(500);
     res.send('error');
@@ -160,12 +161,12 @@ exports.popularUploads = async (req, res) => {
 
   // setup page
   let page = req.params.page;
-  if (!page) { page = 1; }
+  if(!page) { page = 1; }
   page = parseInt(page);
 
   let limit = 102;
 
-  if (!category) {
+  if(!category) {
     limit = 6;
   }
 
@@ -185,21 +186,21 @@ exports.popularUploads = async (req, res) => {
   //  amount to show in brackets that equals view amount in time period
   let viewAmountInPeriod;
 
-  try {
-    switch (englishString) {
-    case 'Last Hour':
+  try{
+    switch(englishString) {
+    case'Last Hour':
       viewAmountInPeriod = viewStats.hour;
       break;
-    case 'Last Day':
+    case'Last Day':
       viewAmountInPeriod = viewStats.day;
       break;
-    case 'Last Week':
+    case'Last Week':
       viewAmountInPeriod = viewStats.week;
       break;
-    case 'Last Month':
+    case'Last Month':
       viewAmountInPeriod = viewStats.month;
       break;
-    case 'All Time':
+    case'All Time':
       viewAmountInPeriod = indexResponse.viewAmount;
       break;
     }
@@ -212,20 +213,20 @@ exports.popularUploads = async (req, res) => {
     const uploads = await getFromCache.getPopularUploads(timeRange, limit, skipAmount, mediaType, filter, category, subcategory);
 
     let categoryObj;
-    for (const cat of categories) {
-      if (cat.name == category) {
+    for(const cat of categories) {
+      if(cat.name == category) {
         categoryObj = cat;
       }
     }
 
     let withinDisplayString = '';
-    if (within == '1hour') {
+    if(within == '1hour') {
       withinDisplayString = 'last hour';
-    } else if (within == '24hour') {
+    }else if(within == '24hour') {
       withinDisplayString = 'last 24 hours';
-    } else if (within == '1week') {
+    }else if(within == '1week') {
       withinDisplayString = 'last week';
-    } else if (within == '1month') {
+    }else if(within == '1month') {
       withinDisplayString = 'last month';
     }
 
@@ -260,7 +261,7 @@ exports.popularUploads = async (req, res) => {
       withinDisplayString,
       popularTimeViews,
     });
-  } catch (err) {
+  }catch(err) {
     console.log('ERR:');
     console.log(err);
 
@@ -286,28 +287,28 @@ async function saveSearchQuery(user, search) {
 
 function getOrderByEnglishString(orderByQuery) {
   let orderBy;
-  if (!orderByQuery) {
+  if(!orderByQuery) {
     orderBy = 'newToOld';
-  } else {
+  }else{
     orderBy = orderByQuery;
   }
 
-  if (orderBy !== 'popular' && orderBy !== 'newToOld' && orderBy !== 'oldToNew') {
+  if(orderBy !== 'popular' && orderBy !== 'newToOld' && orderBy !== 'oldToNew') {
     console.log('doesnt connect');
     orderBy = 'newToOld';
   }
 
   let orderByEnglishString;
 
-  if (orderBy == 'oldToNew') {
+  if(orderBy == 'oldToNew') {
     orderByEnglishString = 'Old To New';
   }
 
-  if (orderBy == 'newToOld') {
+  if(orderBy == 'newToOld') {
     orderByEnglishString = 'New To Old';
   }
 
-  if (orderBy == 'popular') {
+  if(orderBy == 'popular') {
     orderByEnglishString = 'Popular';
   }
 
@@ -321,7 +322,7 @@ function getOrderByEnglishString(orderByQuery) {
 exports.search = async (req, res) => {
   // setup page
   let page = req.query.page;
-  if (!page) { page = 1; }
+  if(!page) { page = 1; }
   page = parseInt(page);
 
   const limit = 102;
@@ -339,7 +340,7 @@ exports.search = async (req, res) => {
 
   const userSearchQuery = req.query.searchQuery;
 
-  if (!userSearchQuery) {
+  if(!userSearchQuery) {
     return res.render('public/search', {
       title: 'Search',
       orderBy: 'newToOld',
@@ -358,7 +359,7 @@ exports.search = async (req, res) => {
 
   let totalUploadsAmount;
 
-  if (searchType == 'user') {
+  if(searchType == 'user') {
     // channels
     users = await User.find({
       $or: [{ channelName: re }, { channelUrl: re }],
@@ -366,7 +367,7 @@ exports.search = async (req, res) => {
     }).populate('uploads');
 
     users = _.filter(users, user => user.uploads.length > 0);
-  } else if (searchType == 'upload' || !searchType) {
+  }else if(searchType == 'upload' || !searchType) {
     const mediaType = req.query.mediaType;
 
     const searchQuery = {
@@ -375,16 +376,16 @@ exports.search = async (req, res) => {
       $or: [{ status: 'completed' }, { uploadUrl: { $exists: true } }],
     };
 
-    if (mediaType && mediaType !== 'all') {
+    if(mediaType && mediaType !== 'all') {
       searchQuery.fileType = mediaType;
     }
 
     let sortObj = '';
-    if (orderBy == 'newToOld') {
+    if(orderBy == 'newToOld') {
       sortObj = {
         createdAt: -1,
       };
-    } else if (orderBy == 'oldToNew') {
+    }else if(orderBy == 'oldToNew') {
       sortObj = {
         createdAt: 1,
       };
@@ -409,14 +410,14 @@ exports.search = async (req, res) => {
 
     uploads = uploadFilters.filterUploadsBySensitivity(uploads, filter);
 
-    if (orderBy == 'popular') {
+    if(orderBy == 'popular') {
       uploads = uploads.sort((a, b) => b.legitViewAmount - a.legitViewAmount);
     }
 
     const helpers = require('../../lib/mediaBrowsing/helpers');
 
     uploads = helpers.trimUploads(uploads, limit, skipAmount);
-  } else {
+  }else{
     // error
   }
 
@@ -457,7 +458,7 @@ exports.popularByReacts = async function (req, res) {
 
   // console.log(uploads);
 
-  for (upload of uploads) {
+  for(upload of uploads) {
     upload.checkedViews = [];
   }
 
@@ -468,8 +469,3 @@ exports.popularByReacts = async function (req, res) {
     uploads,
   });
 };
-
-async function setIndex() {
-  indexResponse = await redisClient.hgetallAsync('indexValues');
-  console.log('got index cache');
-}

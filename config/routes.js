@@ -35,7 +35,7 @@ function fileHostRoutes(app) {
   console.log('RUNNING AS FILE HOST');
 
   // set res header to upload to another server
-  if (process.env.ALLOW_COR == 'true') {
+  if(process.env.ALLOW_COR == 'true') {
     app.use((req, res, next) => {
       res.setHeader('Access-Control-Allow-Origin', '*');
       res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With');

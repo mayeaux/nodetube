@@ -22,7 +22,7 @@ const uploadServer = uploadHelpers.uploadServer;
 exports.recentComments = async (req, res) => {
   let page = req.params.page;
 
-  if (!page) {
+  if(!page) {
     page = 1;
   }
 
@@ -38,7 +38,7 @@ exports.recentComments = async (req, res) => {
 
   const nextNumber = pagination.getNextNumber(page);
 
-  try {
+  try{
     let comments = await Comment.find({
       visibility: { $ne: 'removed' },
     }).populate({ path: 'upload commenter', populate: { path: 'uploader' } })
@@ -60,7 +60,7 @@ exports.recentComments = async (req, res) => {
       documents: comments,
       recentActionDisplayName: 'Recent Comments',
     });
-  } catch (err) {
+  }catch(err) {
     console.log(err);
     res.send('ERR');
   }
@@ -73,7 +73,7 @@ exports.recentComments = async (req, res) => {
 exports.recentReacts = async (req, res) => {
   let page = req.params.page;
 
-  if (!page) {
+  if(!page) {
     page = 1;
   }
   page = parseInt(page);
@@ -120,7 +120,7 @@ exports.recentReacts = async (req, res) => {
 exports.recentViews = async (req, res) => {
   let page = req.params.page;
 
-  if (!page) {
+  if(!page) {
     page = 1;
   }
 

@@ -36,6 +36,7 @@ module.exports = {
           "error", 
           { "max": 1, "maxEOF": 1}
       ],
+      "keyword-spacing": ["error", { "before": false, "after": false }],
       "no-useless-escape": 0,
       "no-console": 0,
       "no-unused-vars": 0,

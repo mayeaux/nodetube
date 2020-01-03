@@ -41,39 +41,39 @@ async function socialPostQueue() {
   // console.log(socialPost);
   // console.log('\n');
 
-  if (!socialPost) {
+  if(!socialPost) {
     console.log('No unsent socialPost');
     return;
   }
 
   console.log('Sending off socialPost');
 
-  for (const postData of socialPost.postData) {
+  for(const postData of socialPost.postData) {
     // console.log(postData);
 
     // gab post
-    if (postData.network == 'gab') {
-      try {
+    if(postData.network == 'gab') {
+      try{
         const response = await gab.gabPost(postData.message);
         console.log(response);
         postData.postedCorrectly = true;
-      } catch (err) {
+      }catch(err) {
         console.log(err);
       }
-    } else if (postData.network == 'twitter') {
-      try {
+    }else if(postData.network == 'twitter') {
+      try{
         const response = await twitter.twitterPost(postData.message);
         console.log(response);
         postData.postedCorrectly = true;
-      } catch (err) {
+      }catch(err) {
         console.log(err);
       }
-    } else if (postData.network == 'facebook') {
-      try {
+    }else if(postData.network == 'facebook') {
+      try{
         const response = await facebook.facebookPost(postData.message, socialPost.upload);
         console.log(response);
         postData.postedCorrectly = true;
-      } catch (err) {
+      }catch(err) {
         console.log(err);
       }
     }
@@ -87,12 +87,12 @@ async function socialPostQueue() {
   console.log('Done with socialPost');
 }
 
-if (process.env.SHILLBOT_ON == 'true') {
+if(process.env.SHILLBOT_ON == 'true') {
   socialPostQueue();
   const shillInterval = process.env.SHILL_INTERVAL || 30;
 
   setInterval(socialPostQueue, 1000 * 60 * shillInterval);
-} else {
+}else{
   console.log('Shillbot not turned on');
 }
 

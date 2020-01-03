@@ -110,9 +110,9 @@ const oneDayAmount = 1000 * 60 * 60 * 24;
 uploadSchema.virtual('uploadServerUrl').get(function () {
   let uploadServerUrl;
 
-  if (process.env.NODE_ENV == 'development') {
+  if(process.env.NODE_ENV == 'development') {
     uploadServerUrl = '/uploads';
-  } else {
+  }else{
     uploadServerUrl = `https://${this.uploadServer}.pew.tube`;
   }
 
@@ -191,7 +191,7 @@ uploadSchema.virtual('legitViewAmount').get(function () {
   const timeDiffInH = timeDiff / (1000 * 60 * 60);
 
   // cap views to 300
-  if (timeDiffInH < 24 && legitViews > 300) {
+  if(timeDiffInH < 24 && legitViews > 300) {
     return 300;
   }
 

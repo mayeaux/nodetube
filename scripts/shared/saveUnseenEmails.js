@@ -23,7 +23,7 @@ const mailListenerSettings = {
 
 /** whether or not you should save seen as well* */
 const saveSeen = process.env.SAVE_SEEN_EMAILS || true;
-if (saveSeen) {
+if(saveSeen) {
   mailListenerSettings.searchFilter = ['SEEN']; // the search filter being used after an IDLE notification has been retrieved
 }
 
@@ -66,7 +66,7 @@ const mailListeners = [];
 
   mailListeners.push(supportEmailObject);
 
-  for (const emailObject of mailListeners) {
+  for(const emailObject of mailListeners) {
     mailListener = emailObject.listener;
 
     const toEmailAddress = emailObject.email;
@@ -96,7 +96,7 @@ const mailListeners = [];
       const text = mail.text;
       const sentDate = mail.date;
 
-      if (emailIds.includes(emailId)) {
+      if(emailIds.includes(emailId)) {
         console.log('Already done, skipping');
         return;
       }

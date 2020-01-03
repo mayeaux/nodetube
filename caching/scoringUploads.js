@@ -1,18 +1,18 @@
 function scoreReacts(upload) {
   let totalScore = 0;
 
-  if (!upload.reacts) {
+  if(!upload.reacts) {
     return totalScore;
   }
 
-  for (const react of upload.reacts) {
+  for(const react of upload.reacts) {
     const didOwnReact = react.user.toString() == upload.uploader._id.toString();
 
-    if ((react.react == 'like' || react.react == 'laugh' || react.react == 'love') && !didOwnReact) {
+    if((react.react == 'like' || react.react == 'laugh' || react.react == 'love') && !didOwnReact) {
       totalScore += 1;
-    } else if (react.react == 'dislike' && !didOwnReact) {
+    }else if(react.react == 'dislike' && !didOwnReact) {
       totalScore += 0.5;
-    } else if ((react.react == 'sad' || react.react == 'disgust') && !didOwnReact) {
+    }else if((react.react == 'sad' || react.react == 'disgust') && !didOwnReact) {
       totalScore += 0.1;
     }
   }
@@ -40,7 +40,7 @@ function calculateMultiplier(upload) {
   const reactScore = scoreReacts(upload);
   // console.log(`react score: ${reactScore}`);
 
-  if (reactScore == 0) {
+  if(reactScore == 0) {
     return 0.1;
   }
   const allTimeViews = upload.viewsAllTime;
@@ -85,7 +85,7 @@ function scoreUpload(upload) {
 function scoreUploads(uploads) {
   const scoredUploads = [];
 
-  for (let upload of uploads) {
+  for(let upload of uploads) {
     // console.log('scoring upload');
 
     upload = scoreUpload(upload);

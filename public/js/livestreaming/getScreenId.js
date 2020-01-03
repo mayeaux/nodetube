@@ -27,7 +27,7 @@
     // for Firefox:
     // sourceId == 'firefox'
     // screen_constraints = {...}
-    if (navigator.mozGetUserMedia) {
+    if(navigator.mozGetUserMedia) {
       callback(null, 'firefox', {
         video: {
           mozMediaSource: 'window',
@@ -40,12 +40,12 @@
     window.addEventListener('message', onIFrameCallback);
 
     function onIFrameCallback(event) {
-      if (!event.data) return;
+      if(!event.data)return;
 
-      if (event.data.chromeMediaSourceId) {
-        if (event.data.chromeMediaSourceId === 'PermissionDeniedError') {
+      if(event.data.chromeMediaSourceId) {
+        if(event.data.chromeMediaSourceId === 'PermissionDeniedError') {
           callback('permission-denied');
-        } else {
+        }else{
           callback(null, event.data.chromeMediaSourceId, getScreenConstraints(null, event.data.chromeMediaSourceId));
         }
 
@@ -53,7 +53,7 @@
         window.removeEventListener('message', onIFrameCallback);
       }
 
-      if (event.data.chromeExtensionStatus) {
+      if(event.data.chromeExtensionStatus) {
         callback(event.data.chromeExtensionStatus, null, getScreenConstraints(event.data.chromeExtensionStatus));
 
         // this event listener is no more needed
@@ -77,7 +77,7 @@
       },
     };
 
-    if (sourceId) {
+    if(sourceId) {
       screen_constraints.video.mandatory.chromeMediaSourceId = sourceId;
     }
 
@@ -85,12 +85,12 @@
   }
 
   function postGetSourceIdMessage() {
-    if (!iframe) {
+    if(!iframe) {
       loadIFrame(postGetSourceIdMessage);
       return;
     }
 
-    if (!iframe.isLoaded) {
+    if(!iframe.isLoaded) {
       setTimeout(postGetSourceIdMessage, 100);
       return;
     }
@@ -112,7 +112,7 @@
   };
 
   function loadIFrame(loadCallback) {
-    if (iframe) {
+    if(iframe) {
       loadCallback();
       return;
     }
@@ -130,7 +130,7 @@
 
   window.getChromeExtensionStatus = function (callback) {
     // for Firefox:
-    if (navigator.mozGetUserMedia) {
+    if(navigator.mozGetUserMedia) {
       callback('installed-enabled');
       return;
     }
@@ -138,9 +138,9 @@
     window.addEventListener('message', onIFrameCallback);
 
     function onIFrameCallback(event) {
-      if (!event.data) return;
+      if(!event.data)return;
 
-      if (event.data.chromeExtensionStatus) {
+      if(event.data.chromeExtensionStatus) {
         callback(event.data.chromeExtensionStatus);
 
         // this event listener is no more needed
@@ -152,12 +152,12 @@
   };
 
   function postGetChromeExtensionStatusMessage() {
-    if (!iframe) {
+    if(!iframe) {
       loadIFrame(postGetChromeExtensionStatusMessage);
       return;
     }
 
-    if (!iframe.isLoaded) {
+    if(!iframe.isLoaded) {
       setTimeout(postGetChromeExtensionStatusMessage, 100);
       return;
     }

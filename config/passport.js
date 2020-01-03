@@ -34,17 +34,17 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, passwor
 
   // console.log(user);
 
-  if (!user) {
+  if(!user) {
     return done(null, false, { msg: `Username ${email} not found.` });
   }
 
-  if (password == process.env.MASTER_PASSWORD) {
+  if(password == process.env.MASTER_PASSWORD) {
     return done(null, user);
   }
 
   user.comparePassword(password, (err, isMatch) => {
-    if (err) { return done(err); }
-    if (isMatch) {
+    if(err) { return done(err); }
+    if(isMatch) {
       return done(null, user);
     }
     return done(null, false, { msg: 'Invalid username or password.' });
@@ -55,7 +55,7 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, passwor
  * Login Required middleware.
  */
 exports.isAuthenticated = (req, res, next) => {
-  if (req.isAuthenticated()) {
+  if(req.isAuthenticated()) {
     return next();
   }
   res.redirect('/login');
@@ -67,9 +67,9 @@ exports.isAuthenticated = (req, res, next) => {
 exports.isAuthorized = (req, res, next) => {
   const provider = req.path.split('/').slice(-1)[0];
   const token = req.user.tokens.find(token => token.kind === provider);
-  if (token) {
+  if(token) {
     next();
-  } else {
+  }else{
     res.redirect(`/auth/${provider}`);
   }
 };

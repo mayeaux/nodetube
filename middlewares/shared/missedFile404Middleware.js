@@ -13,10 +13,10 @@ async function middleware(req, res, next) {
 
   const isAFile = allFileExtensions.includes(fileExtension);
 
-  if (isAFile) {
+  if(isAFile) {
     res.status(404);
     res.send('miss');
-  } else {
+  }else{
     next();
   }
 }

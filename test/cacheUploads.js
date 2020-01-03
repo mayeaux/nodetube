@@ -3,7 +3,7 @@ const chai = require('chai');
 
 const should = chai.should();
 
-const { expect } = require('chai');
+const{ expect } = require('chai');
 const sinon = require('sinon');
 // require('sinon-mongoose');
 
@@ -78,10 +78,10 @@ describe('getTimeAgoValue function', () => {
 
     let error;
 
-    try {
+    try{
       const timeRange = '24h';
       const timeAgoValue = getTimeAgoValue(timeRange);
-    } catch (err) {
+    }catch(err) {
       error = err;
     }
 

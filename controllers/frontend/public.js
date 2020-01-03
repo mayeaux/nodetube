@@ -14,7 +14,7 @@ async function setIndex() {
 }
 
 // get the index if its not a filehost
-if (!process.env.FILE_HOST || process.env.FILE_HOST == 'false') {
+if(!process.env.FILE_HOST || process.env.FILE_HOST == 'false') {
   setIndex();
   setInterval(() => {
     setIndex();
@@ -31,11 +31,11 @@ exports.index = async (req, res) => {
     channelAmount,
     viewAmount;
 
-  if (!response) {
+  if(!response) {
     mediaAmount = 0;
     channelAmount = 0;
     viewAmount = 0;
-  } else {
+  }else{
     mediaAmount = response.mediaAmount;
     channelAmount = response.channelAmount;
     viewAmount = response.viewAmount;
@@ -96,7 +96,7 @@ exports.getEmbed = async function (req, res) {
     visibility: { $ne: 'removed' },
   }).populate({ path: 'uploader comments checkedViews reacts', populate: { path: 'commenter receivedSubscriptions' } }).exec();
 
-  if (!upload) {
+  if(!upload) {
     console.log('Visible upload not found');
     res.status(404);
     return res.render('error/404');

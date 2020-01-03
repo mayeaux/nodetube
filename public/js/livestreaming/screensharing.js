@@ -127,7 +127,7 @@ function initiateScreenSharing(audioStream) {
       };
 
       localParticipant.rtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendrecv(options, function (error) {
-        if (error) {
+        if(error) {
           return console.error(error);
         }
 

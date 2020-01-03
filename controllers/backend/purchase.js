@@ -5,7 +5,7 @@ const subscriptions = require('../../lib/helpers/subscriptions');
 exports.purchasePlus = async function (req, res) {
   console.log(req.body);
 
-  try {
+  try{
     const userDescriptor = req.user.channelName || req.user.channelUrl;
 
     const customer = await stripe.createCustomerWithToken(req.body.token.id, userDescriptor);
@@ -19,14 +19,14 @@ exports.purchasePlus = async function (req, res) {
     console.log(updatedUser.privs);
 
     res.send('success');
-  } catch (err) {
+  }catch(err) {
     console.log(err);
     res.send('failure');
   }
 };
 
 exports.purchaseCredits = async function (req, res) {
-  try {
+  try{
     console.log(req.body);
 
     const userDescriptor = req.user.channelName || req.user.channelUrl;
@@ -54,14 +54,14 @@ exports.purchaseCredits = async function (req, res) {
     console.log(`user amount updated to : ${amount}`);
 
     res.send('success');
-  } catch (err) {
+  }catch(err) {
     console.log(err);
     res.send('failure');
   }
 };
 
 exports.purchaseCreditsExistingCustomer = async function (req, res) {
-  try {
+  try{
     const userDescriptor = req.user.channelName || req.user.channelUrl;
 
     const customer = await stripe.createCustomerWithToken(req.body.token.id, userDescriptor);
@@ -84,7 +84,7 @@ exports.purchaseCreditsExistingCustomer = async function (req, res) {
     console.log(`user amount updated to : ${amount}`);
 
     res.send('success');
-  } catch (err) {
+  }catch(err) {
     console.log(err);
     res.send('failure');
   }

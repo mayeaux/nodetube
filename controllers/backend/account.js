@@ -26,7 +26,7 @@ const frontendServer = process.env.FRONTEND_SERVER || '';
 
 const verifyEmailPassword = process.env.PEWTUBE_VERIFY_EMAIL_PASSWORD;
 
-const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
+const{ saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
 
 // a.mayfield.contact
 const recaptcha = new reCAPTCHA({
@@ -34,7 +34,7 @@ const recaptcha = new reCAPTCHA({
   secretKey: process.env.RECAPTCHA_SECRETKEY,
 });
 
-const { b2 } = require('../../lib/uploading/backblaze');
+const{ b2 } = require('../../lib/uploading/backblaze');
 const pagination = require('../../lib/helpers/pagination');
 
 // where to send users to after login
@@ -52,7 +52,7 @@ exports.postLogin = async (req, res, next) => {
 
   const errors = req.validationErrors();
 
-  if (errors) {
+  if(errors) {
     req.flash('errors', errors);
     return res.redirect('/login');
   }
@@ -61,31 +61,31 @@ exports.postLogin = async (req, res, next) => {
 
   /** login with passport * */
   passport.authenticate('local', (err, user, info) => {
-    if (err) { return next(err); }
+    if(err) { return next(err); }
 
     // redirect to login if no user
-    if (!user) {
+    if(!user) {
       req.flash('errors', info);
       return res.redirect('/login');
     }
 
     // don't let restricted users login
-    if (user.status == 'restricted') {
+    if(user.status == 'restricted') {
       req.flash('errors', { msg: 'There was an error logging, in please try again' });
       console.log('FAILED LOGIN ATTEMPT');
       return res.redirect('/login');
     }
 
     req.logIn(user, (err) => {
-      if (err) { return next(err); }
+      if(err) { return next(err); }
       req.flash('success', { msg: 'Success! You are logged in.' });
 
       // ?? i dont get this
-      if (process.env.LIVESTREAM_APP == 'true') {
+      if(process.env.LIVESTREAM_APP == 'true') {
         // always redirect to sign-in url to see plus
         res.redirect(req.session.returnTo || redirectUrl);
         // res.redirect(`/user/${user.channelUrl}/live/staging`);
-      } else {
+      }else{
         res.redirect(redirectUrl);
       }
     });
@@ -98,10 +98,10 @@ exports.postLogin = async (req, res, next) => {
  */
 exports.postSignup = async (req, res, next) => {
   // CAPTCHA VALIDATION
-  if (process.env.NODE_ENV == 'production' && process.env.RECAPTCHA_ON == 'true') {
-    try {
+  if(process.env.NODE_ENV == 'production' && process.env.RECAPTCHA_ON == 'true') {
+    try{
       const response = await recaptcha.validate(req.body['g-recaptcha-response']);
-    } catch (err) {
+    }catch(err) {
       req.flash('errors', { msg: 'Captcha failed, please try again' });
       return res.redirect('/signup');
     }
@@ -118,7 +118,7 @@ exports.postSignup = async (req, res, next) => {
   console.log(`${req.body.channelUrl} <--- inputted channelUrl for${req.body.email}`);
   // console.log(req.body.grecaptcha.getResponse('captcha'));
 
-  if (!/^\w+$/.test(req.body.channelUrl)) {
+  if(!/^\w+$/.test(req.body.channelUrl)) {
     req.flash('errors', { msg: 'Please only use letters, numbers and underscores for your username.' });
     return res.redirect('/signup');
   }
@@ -127,7 +127,7 @@ exports.postSignup = async (req, res, next) => {
 
   const errors = req.validationErrors();
 
-  if (errors) {
+  if(errors) {
     req.flash('errors', errors);
     return res.redirect('/signup');
   }
@@ -142,27 +142,27 @@ exports.postSignup = async (req, res, next) => {
   // make sure first user is admin, can refactor later
   const numberOfUsers = await User.count();
 
-  if (numberOfUsers == 0) {
+  if(numberOfUsers == 0) {
     user.role = 'admin';
   }
 
   User.findOne({ channelUrl: req.body.channelUrl }, (err, existingUser) => {
-    if (err) { return next(err); }
-    if (existingUser) {
+    if(err) { return next(err); }
+    if(existingUser) {
       req.flash('errors', { msg: 'That channel username is taken, please choose another one.' });
       return res.redirect('/signup');
     }
     user.save((err) => {
       console.log(err);
 
-      if (err && err.errors && err.errors.channelUrl && err.errors.channelUrl.kind == 'unique') {
+      if(err && err.errors && err.errors.channelUrl && err.errors.channelUrl.kind == 'unique') {
         req.flash('errors', { msg: 'That channel username is taken, please choose another one' });
         return res.redirect('/signup');
       }
 
-      if (err) { return next(err); }
+      if(err) { return next(err); }
       req.logIn(user, (err) => {
-        if (err) {
+        if(err) {
           return next(err);
         }
 
@@ -182,7 +182,7 @@ exports.postSignup = async (req, res, next) => {
 exports.postUpdateProfile = async (req, res, next) => {
   console.log(`UPDATING PROFILE FOR ${'hello'}`);
 
-  if (!req.user && req.body.uploadToken) {
+  if(!req.user && req.body.uploadToken) {
     req.user = await User.findOne({ uploadToken: req.body.uploadToken });
   }
 
@@ -193,7 +193,7 @@ exports.postUpdateProfile = async (req, res, next) => {
 
   const errors = req.validationErrors();
 
-  if (errors) {
+  if(errors) {
     req.flash('errors', errors);
     return res.redirect('/account');
   }
@@ -202,7 +202,7 @@ exports.postUpdateProfile = async (req, res, next) => {
   let filename,
     fileType,
     fileExtension;
-  if (req.files && req.files.filetoupload) {
+  if(req.files && req.files.filetoupload) {
     filename = req.files.filetoupload.originalFilename;
     fileType = getMediaType(filename);
     fileExtension = path.extname(filename);
@@ -212,7 +212,7 @@ exports.postUpdateProfile = async (req, res, next) => {
 
   const channelNameBetween3And20Chars = req.body.channelName.length < 3 && req.body.channelName.length < 0 || req.body.channelName.length > 20;
 
-  if (channelNameBetween3And20Chars) {
+  if(channelNameBetween3And20Chars) {
     console.log('SHOULDNT BE POSSIBLE: Someone messing with channelName?');
   }
 
@@ -221,10 +221,10 @@ exports.postUpdateProfile = async (req, res, next) => {
   const fileIsImage = req.files && req.files.filetoupload && req.files.filetoupload.size > 0 && fileType == 'image';
 
   // reject the file
-  if (fileIsNotImage) {
+  if(fileIsNotImage) {
     return res.send('We cant accept this file');
     // save and upload image if conditions met
-  } else if (fileIsImage) {
+  }else if(fileIsImage) {
     const channelUrlFolder = `${saveAndServeFilesDirectory}/${req.user.channelUrl}`;
 
     // make the directory if it doesnt exist
@@ -234,7 +234,7 @@ exports.postUpdateProfile = async (req, res, next) => {
     await fs.move(req.files.filetoupload.path, `${saveAndServeFilesDirectory}/${req.user.channelUrl}/user-thumbnail${fileExtension}`, { overwrite: true });
 
     // upload thumbnail to b2
-    if (process.env.UPLOAD_TO_B2 == 'true') {
+    if(process.env.UPLOAD_TO_B2 == 'true') {
       // await uploadToB2thing(param)
     }
 
@@ -275,16 +275,16 @@ exports.postUpdatePassword = (req, res, next) => {
 
   const errors = req.validationErrors();
 
-  if (errors) {
+  if(errors) {
     req.flash('errors', errors);
     return res.redirect('/account');
   }
 
   User.findById(req.user.id, (err, user) => {
-    if (err) { return next(err); }
+    if(err) { return next(err); }
     user.password = req.body.password;
     user.save((err) => {
-      if (err) { return next(err); }
+      if(err) { return next(err); }
       req.flash('success', { msg: 'Password has been changed.' });
       res.redirect('/account');
     });
@@ -297,7 +297,7 @@ exports.postUpdatePassword = (req, res, next) => {
  */
 exports.postDeleteAccount = (req, res, next) => {
   User.remove({ _id: req.user.id }, (err) => {
-    if (err) { return next(err); }
+    if(err) { return next(err); }
     req.logout();
     req.flash('info', { msg: 'Your account has been deleted.' });
     res.redirect('/');
@@ -314,7 +314,7 @@ exports.postReset = async (req, res, next) => {
 
   const errors = req.validationErrors();
 
-  if (errors) {
+  if(errors) {
     req.flash('errors', errors);
     return res.redirect('back');
   }
@@ -348,8 +348,8 @@ exports.postReset = async (req, res, next) => {
  * Create a random token, then the send user an email with a reset link.
  */
 exports.postForgot = async (req, res, next) => {
-  try {
-    if (process.env.FORGOT_PASSWORD_EMAIL_FUNCTIONALITY_ON !== 'true') {
+  try{
+    if(process.env.FORGOT_PASSWORD_EMAIL_FUNCTIONALITY_ON !== 'true') {
       return res.send('forgot email functionality not on');
     }
 
@@ -362,7 +362,7 @@ exports.postForgot = async (req, res, next) => {
 
     let user = await User.findOne({ email: req.body.email });
 
-    if (!user) {
+    if(!user) {
       req.flash('info', { msg: 'If the email address exists you will receive further instructions on resetting your password there.' });
       return res.redirect('/forgot');
     }
@@ -387,7 +387,7 @@ exports.postForgot = async (req, res, next) => {
     req.flash('info', { msg: 'If the email address exists you will receive further instructions on resetting your password there.' });
 
     return res.redirect('/forgot');
-  } catch (err) {
+  }catch(err) {
     console.log(err);
     res.render('error/500');
   }
@@ -398,8 +398,8 @@ exports.postForgot = async (req, res, next) => {
  * Create a random token, then the send user an email with a confirmation link
  */
 exports.postConfirmEmail = async (req, res, next) => {
-  try {
-    if (process.env.CONFIRM_USER_EMAIL_FUNCTIONALITY_ON !== 'true') {
+  try{
+    if(process.env.CONFIRM_USER_EMAIL_FUNCTIONALITY_ON !== 'true') {
       return res.send('forgot email functionality not on');
     }
 
@@ -436,12 +436,12 @@ exports.postConfirmEmail = async (req, res, next) => {
     req.flash('info', { msg: 'An email has been sent to your address to confirm your email' });
 
     return res.redirect('/account');
-  } catch (err) {
+  }catch(err) {
     // if the email is already in use
-    if (err && err.errors && err.errors.email && err.errors.email.kind && (err.errors.email.kind == 'unique')) {
+    if(err && err.errors && err.errors.email && err.errors.email.kind && (err.errors.email.kind == 'unique')) {
       req.flash('errors', { msg: 'That email is already in use, please try another' });
       res.redirect('/account');
-    } else {
+    }else{
       res.render('error/500');
     }
   }

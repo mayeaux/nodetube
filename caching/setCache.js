@@ -23,7 +23,7 @@ let viewAmount,
   channelAmount,
   mediaAmount;
 async function setIndexValues() {
-  if (logCaching == 'true') {
+  if(logCaching == 'true') {
     console.log('Setting index values');
 
     console.log('Calculating view amounts');
@@ -38,31 +38,31 @@ async function setIndexValues() {
     },
     }]);
 
-  if (!viewAmount[0]) {
+  if(!viewAmount[0]) {
     viewAmount = 0;
-  } else {
+  }else{
     viewAmount = viewAmount[0].views;
   }
 
-  if (logCaching == 'true') {
+  if(logCaching == 'true') {
     console.log('Old view amount calculated, calculating channel amount');
   }
 
   channelAmount = await User.count({});
 
-  if (logCaching == 'true') {
+  if(logCaching == 'true') {
     console.log('Channel amount calculated, calculating upload amount');
   }
 
   mediaAmount = await Upload.count({});
 
-  if (logCaching == 'true') {
+  if(logCaching == 'true') {
     console.log('Upload amount calculated, calculating view amount');
   }
 
   const legitCheckedViews = await View.count({ validity: 'real' });
 
-  if (logCaching == 'true') {
+  if(logCaching == 'true') {
     console.log('Legit view amount calculated, setting redis amounts');
   }
 
@@ -75,7 +75,7 @@ async function setIndexValues() {
     mediaAmount,
   });
 
-  if (logCaching == 'true') {
+  if(logCaching == 'true') {
     console.log('Set index values');
   }
 }
@@ -108,7 +108,7 @@ async function getAmountsPerPeriods(Model, objectName) {
   const lastHourAmount = await Model.count({ createdAt: { $gte: hourAgo } });
   const lastMinuteAmount = await Model.count({ createdAt: { $gte: minuteAgo } });
 
-  return {
+  return{
     name: objectName,
     alltime: totalDocumentAmount,
     month: lastMonthAmount,

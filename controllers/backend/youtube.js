@@ -104,14 +104,14 @@ exports.saveYouTubeChannelId = async (req, res, next) => {
 
     res.send('backup on');
 
-  } else if(req.body.backupOn == 'false'){
+  }else if(req.body.backupOn == 'false'){
     req.user.userSettings.backupOn = req.body.backupOn;
     let savedUser = await req.user.save();
     console.log(savedUser);
 
     res.send('backup off ');
 
-  } else {
+  }else{
     res.send('miss');
   }
 

@@ -31,15 +31,15 @@ exports.postCreateSocialPost = async (req, res) => {
 
   const networks = [];
 
-  if (gabOn == 'on') {
+  if(gabOn == 'on') {
     networks.push('gab');
   }
 
-  if (twitterOn == 'on') {
+  if(twitterOn == 'on') {
     networks.push('twitter');
   }
 
-  if (facebookOn == 'on') {
+  if(facebookOn == 'on') {
     networks.push('facebook');
   }
 
@@ -48,14 +48,14 @@ exports.postCreateSocialPost = async (req, res) => {
     upload,
   });
 
-  for (const network of networks) {
+  for(const network of networks) {
     let message;
 
-    if (network == 'gab') {
+    if(network == 'gab') {
       message = await gab.buildMessage(uniqueTag, distance);
-    } else if (network == 'twitter') {
+    }else if(network == 'twitter') {
       message = await twitter.buildMessage(uniqueTag, distance);
-    } else if (network == 'facebook') {
+    }else if(network == 'facebook') {
       message = await facebook.buildMessage(uniqueTag, distance);
     }
 

@@ -34,7 +34,7 @@ mongoose.connect(database, {
   reconnectTries: Number.MAX_VALUE,
 });
 
-if (process.env.MONGOOSE_DEBUG == 'true' || process.env.MONGOOSE_DEBUG == 'on') {
+if(process.env.MONGOOSE_DEBUG == 'true' || process.env.MONGOOSE_DEBUG == 'on') {
   mongoose.set('debug', true);
 }
 
@@ -54,9 +54,9 @@ const cachePopularUploads = require('./cachePopularUploads'); // index and daily
 // const cacheRecentUploads = require('./cacheRecentAndPopularUploads');
 
 async function main() {
-  try {
+  try{
     await cacheRecentUploads();
-  } catch (err) {
+  }catch(err) {
     console.log(err);
   }
 }
@@ -73,13 +73,13 @@ if(logCaching == 'true'){
 }
 
 async function runCaching() {
-  try {
+  try{
     await cachePopularUploads();
     await setCache.setDailyStats();
     await setCache.setIndexValues();
 
     // await cacheChannels();
-  } catch (err) {
+  }catch(err) {
     console.log(err);
   }
 }
