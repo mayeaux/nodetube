@@ -47,23 +47,19 @@ async function getStats() {
   viewStats = JSON.parse(views);
 }
 
+async function setIndex(){
+  indexResponse = await redisClient.hgetallAsync('indexValues');
+  if(logCaching == 'true'){
+    console.log('got index cache');
+  }
+}
+
 if (!process.env.FILE_HOST || process.env.FILE_HOST == 'false') {
   getStats();
   setInterval(() => {
     getStats();
   }, 1000 * 60 * 1);
 
-<<<<<<< HEAD
-=======
-
-  async function setIndex(){
-    indexResponse = await redisClient.hgetallAsync('indexValues');
-    if(logCaching == 'true'){
-      console.log('got index cache');
-    }
-  }
-
->>>>>>> master
   setIndex();
 
   setInterval(() => {
