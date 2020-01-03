@@ -15,14 +15,14 @@
     "start": "node --max-old-space-size=4096 app.js",
     "test": "mocha --reporter spec",
     "rebuild:sass": "npm rebuild node-sass",
-    "postinstall": "bower install && cp -n .env.settings.sample .env.settings && cp .env.private.sample .env.private",
+    "postinstall": "bower install && cp .env.settings.sample .env.settings && cp .env.private.sample .env.private",
     "eslint": "eslint **/*.js",
     "dev": "nodemon -e pug,js app.js",
     "memory": "node --max-old-space-size=4096 app.js",
     "cache": "node --max-old-space-size=8000 caching/runCaching.js",
     "both": "node --max-old-space-size=4096 app.js & node --max-old-space-size=8000 caching/runCaching.js",
     "nodemonboth": "nodemon --exec npm run both",
-    "installDeps": "npm install && bower install && cp -n .env.settings.sample .env.settings && cp .env.private.sample .env.private"
+    "installDeps": "npm install && bower install && cp .env.settings.sample .env.settings && cp .env.private.sample .env.private"
   },
   "dependencies": {
     "apicache": "^1.4.0",
