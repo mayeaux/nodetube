@@ -57,8 +57,9 @@ NodeTube comes with [ngrok](https://www.https://ngrok.com) preinstalled with the
 ## Reasons To Use NodeTube
 ### Reasons to use NodeTube as an instance host:
 - Built in monetization for instance administrators: Users can optionally pay a monthly fee through Stripe to retain certain privileges which are able to be adjusted by the administrator, but by default allow private and unlisted uploads, increased maximum file-size upgrade from 500MB to 2GB, and livestreaming capabilities 
-- Get setup on top of cloud providers and run for pennies a day with build in Heroku and BackBlaze integrations
-- Own your own data (data is happier when it's not in the hands of a multibillion dollar corporation)
+- You can run an instance either with a cloud provider, via a VPS or dedicated or even locally using a built-in ngrok integration.
+- Follow a few short steps and get setup on top of cloud providers and run for pennies a day with build in Heroku and BackBlaze integrations, even with little technical knowledge
+- Own your own data: data is happier when it's not in the hands of a multi-billion dollar corporation and Google knows enough about us already 
 - Built in features to get you started on Day 1 including moderation abilities, built-in analytics, administration interface, CAPTCHA 
 - Support open-source software, help decentralize and open the internet.
 - Improve your software and server administration skills.
@@ -76,7 +77,7 @@ NodeTube comes with [ngrok](https://www.https://ngrok.com) preinstalled with the
 -Engage with and help grow a community
 
 ### Reasons To Use NodeTube as a paid User:
--Ability to monetize your account and be paid directly by the instance users [Note: This functionality exists in the Node source tube but finding a payment processor to support this/legal implications are more difficult to pull off in practice.]
+- Ability to monetize your account and be paid directly by the instance users [Note: This functionality exists in the Node source tube but finding a payment processor to support this/legal implications are more difficult to pull off in practice.]
 - Larger upload size, up to 2GB
 - Private and unlisted uploads
 - Livestreaming
