@@ -3,7 +3,7 @@ An open-source YouTube alternative that also supports image and audio uploads. P
 
 A live NodeTube instance is available to interact with at [https://nodetube.live](https://nodetube.live)
 
-You can join the open-source community actively developing NodeTube on [Discord](https://discord.gg/ejGah8H), [Riot.Im](https://riot.im/app/#/room/#nodetube:matrix.org) and [Reddit](https://reddit.com/r/nodetube)
+You can join the open-source community actively developing NodeTube on [Discord](https://discord.gg/ejGah8H), [Riot.im](https://riot.im/app/#/room/#nodetube:matrix.org) and [Reddit](https://reddit.com/r/nodetube)
 
 <br>
 
