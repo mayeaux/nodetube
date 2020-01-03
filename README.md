@@ -52,13 +52,13 @@ And that's it! Your first user registered will automatically be an admin user an
 For ease of local development I recommend using [Nodemon](https://github.com/remy/nodemon) to automatically restart the app while working on backend code.
 
 ### Using ngrok
-NodeTube comes with [ngrok](https://www.https://ngrok.com) preinstalled with the setting in `.env.settings` to run for new instances automatically. This means that when you boot the app you will see a log come through with a link where you can access the app from the ngrok subdomain. Great you're live on the internet, that was simple!
+NodeTube comes with [ngrok](https://ngrok.com) preinstalled with the setting in `.env.settings` to run for new instances automatically. This means that when you boot the app you will see a log come through with a link where you can access the app from the ngrok subdomain. Great you're live on the internet, that was simple!
 
 ## Technical Details
 
-NodeTube is an Express application powered by NodeJS, with MongoDB as a database, with `redis` for caching and `ffmpeg` for converting and compressing video content. It uses Pug as a templating engine and loads process variables through the .env.settings and .env.private files.
+NodeTube is an Express application powered by NodeJS, with MongoDB as a database, with Redis for caching and `ffmpeg` for converting and compressing video content. It uses Pug as a templating engine and loads process variables through the .env.settings and .env.private files.
 
-NodeTube uses resumable.js on the frontend as a library to allow stable and resumable uploads allowing for the upload process to not be broken during a system reboot.
+NodeTube uses `resumable.js` on the frontend as a library to allow stable and resumable uploads allowing for the upload process to not be broken during a system reboot.
 
 NodeTube has the functionality to act as an authentication app for an nginx-rtmp server which allows NodeTube to facilitate livestreaming. NodeTube also has a built in livestreaming frontend with a live chat, live viewer count and which uses HL.js to stream the files being created by nginx-rtmp.
 
@@ -83,12 +83,12 @@ NodeTube has the functionality to act as an authentication app for an nginx-rtmp
 - Public IP stays private, unlike some other YouTube alts
 - Upload all forms of content (video, audio, image)
 - 500 MB max upload size
--Able to load your account with credit and support creators directly [Note: This functionality exists in the Node source tube but finding a payment processor to support this/legal implications are more difficult to pull off in practice.]
+-Able to load your account with credit and support creators directly [Note: This functionality exists in the NodeTube source tube but finding a payment processor to support this/legal implications are more difficult to pull off in practice.]
 - Support open-source software, help decentralize and open the internet.
 -Engage with and help grow a community
 
 ### Reasons To Use NodeTube as a Paid User:
-- Ability to monetize your account and be paid directly by the instance users [Note: This functionality exists in the Node source tube but finding a payment processor to support this/legal implications are more difficult to pull off in practice.]
+- Ability to monetize your account and be paid directly by the instance users [Note: This functionality exists in the NodeTube source tube but finding a payment processor to support this/legal implications are more difficult to pull off in practice.]
 - Larger upload size, up to 2GB
 - Private and unlisted uploads
 - Livestreaming
