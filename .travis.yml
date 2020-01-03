@@ -6,6 +6,5 @@ cache:
     - "node_modules"
 services:
   - mongodb
-env:
-  - NODE_ENV=production
-script: echo "npm test temporarily disabled"
+script:
+  - npm run eslint
