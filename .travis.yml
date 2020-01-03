@@ -6,7 +6,5 @@ cache:
     - "node_modules"
 services:
   - mongodb
-env:
-  - NODE_ENV=production
 script: 
   - npm run eslint
