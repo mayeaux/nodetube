@@ -14,14 +14,9 @@
   "scripts": {
     "start": "node --max-old-space-size=4096 app.js",
     "test": "mocha --reporter spec",
-<<<<<<< HEAD
-    "postinstall": "npm rebuild node-sass && cd public && bower install",
     "eslint": "eslint ./",
-=======
     "rebuild:sass": "npm rebuild node-sass",
     "postinstall": "bower install && cp .env.settings.sample .env.settings && cp .env.private.sample .env.private",
-    "eslint": "eslint **/*.js",
->>>>>>> 55d2d82e5907a19a01fcd274eb6130c30209e3e7
     "dev": "nodemon -e pug,js app.js",
     "memory": "node --max-old-space-size=4096 app.js",
     "cache": "node --max-old-space-size=8000 caching/runCaching.js",
