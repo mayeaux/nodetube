@@ -1,5 +1,6 @@
 const winston = require('winston');
 const { createLogger, format, transports } = require('winston');
+
 const { combine, timestamp, label, prettyPrint } = format;
 
 // //
@@ -33,14 +34,13 @@ const { combine, timestamp, label, prettyPrint } = format;
 //   ]
 // });
 
-
 winston.loggers.add('category2', {
   level: 'info',
   // format: winston.format.json(),
   format: combine(
     label({ label: 'custom label!' }),
     timestamp(),
-    prettyPrint()
+    prettyPrint(),
   ),
   transports: [
     //
@@ -52,7 +52,6 @@ winston.loggers.add('category2', {
     new transports.File({ filename: 'combined.log' })
   ]
 });
-
 
 // logger.info('hey something')
 //

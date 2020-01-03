@@ -1,18 +1,15 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
-
 const logCaching = process.env.LOG_CACHING;
 
-
-
 process.on('uncaughtException', (err) => {
-  console.log(`Uncaught Exception: `, err);
+  console.log('Uncaught Exception: ', err);
   console.log(err.stack);
 });
 
 process.on('unhandledRejection', (err) => {
-  console.log(`Unhandled Rejection: `, err);
+  console.log('Unhandled Rejection: ', err);
   console.log(err.stack);
 });
 
@@ -47,8 +44,7 @@ mongoose.connection.on('error', (err) => {
   process.exit();
 });
 
-console.log('Connected to ' + database);
-
+console.log(`Connected to ${database}`);
 
 const setCache = require('./setCache'); // index and daily stats
 
@@ -58,23 +54,19 @@ const cachePopularUploads = require('./cachePopularUploads'); // index and daily
 // const cacheRecentUploads = require('./cacheRecentAndPopularUploads');
 
 async function main(){
-
   try {
-
     await cacheRecentUploads();
-
-  } catch (err){
+  } catch(err){
     console.log(err);
   }
-
 }
 // cache recent uploads every minute
 main();
 setInterval(main, 1000 * 60 * 1);
 
-let cacheIntervalInMinutes = parseInt(process.env.CACHE_INTERVAL_IN_MINUTES) || 5;
+const cacheIntervalInMinutes = parseInt(process.env.CACHE_INTERVAL_IN_MINUTES) || 5;
 
-const cacheIntervalInMs = cacheIntervalInMinutes * ( 1000 * 60 );
+const cacheIntervalInMs = cacheIntervalInMinutes * (1000 * 60);
 
 if(logCaching == 'true'){
   console.log(cacheIntervalInMinutes  + ': cache interval in minutes');
@@ -87,7 +79,7 @@ async function runCaching(){
     await setCache.setIndexValues();
 
     // await cacheChannels();
-  } catch (err){
+  } catch(err){
     console.log(err);
   }
 }
@@ -95,7 +87,6 @@ async function runCaching(){
 runCaching();
 
 setInterval(runCaching, cacheIntervalInMs);
-
 
 // setInterval(async function(){
 //   await cacheRecentUploads();

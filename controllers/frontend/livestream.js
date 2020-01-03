@@ -3,12 +3,9 @@
  * Get staging page.
  */
 exports.getLiveRTMP = (req, res) => {
-
-
   const channelUrl = req.params.user;
 
   console.log(channelUrl);
-
 
   res.render('livestream/rtmp', {
     channelUrl,
@@ -22,7 +19,6 @@ exports.getLiveRTMP = (req, res) => {
  * Get viewing page.
  */
 exports.getLive = (req, res) => {
-
   console.log('here');
 
   // ?

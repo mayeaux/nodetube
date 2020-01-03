@@ -2,9 +2,9 @@ const _ = require('lodash');
 const moment = require('moment');
 
 function buildObjects(uploads){
-  return uploads.map(function(upload){
+  return uploads.map((upload) => {
     upload = {
-      uploader : {
+      uploader: {
         channelName: upload.uploader.channelName,
         channelUrl: upload.uploader.channelUrl,
         verified: upload.uploader.verified,
@@ -37,39 +37,37 @@ function buildObjects(uploads){
 
     };
 
-    return upload
-  })
+    return upload;
+  });
 }
 
 // build dates
-var monthAgo =  moment().subtract(30, 'days').toDate();
-var weekAgo =  moment().subtract(7, 'days').toDate();
-var dayAgo = moment().subtract(24, 'hours').toDate();
-var hourAgo = moment().subtract(1, 'hours').toDate();
-var minuteAgo = moment().subtract(1, 'minutes').toDate();
+const monthAgo = moment().subtract(30, 'days').toDate();
+const weekAgo = moment().subtract(7, 'days').toDate();
+const dayAgo = moment().subtract(24, 'hours').toDate();
+const hourAgo = moment().subtract(1, 'hours').toDate();
+const minuteAgo = moment().subtract(1, 'minutes').toDate();
 
 async function calculateViewsByPeriod(upload, uploadViews){
   upload.viewsAllTime = uploadViews.length;
 
-  uploadViews = _.filter(uploadViews, function(uploadView){ return uploadView.createdAt > monthAgo });
+  uploadViews = _.filter(uploadViews, uploadView => uploadView.createdAt > monthAgo);
   upload.viewsWithin1month = uploadViews.length;
 
-  uploadViews = _.filter(uploadViews, function(uploadView){ return uploadView.createdAt > weekAgo });
+  uploadViews = _.filter(uploadViews, uploadView => uploadView.createdAt > weekAgo);
   upload.viewsWithin1week = uploadViews.length;
 
-  uploadViews = _.filter(uploadViews, function(uploadView){ return uploadView.createdAt > dayAgo });
+  uploadViews = _.filter(uploadViews, uploadView => uploadView.createdAt > dayAgo);
   upload.viewsWithin24hour = uploadViews.length;
 
-  uploadViews = _.filter(uploadViews, function(uploadView){ return uploadView.createdAt > hourAgo });
+  uploadViews = _.filter(uploadViews, uploadView => uploadView.createdAt > hourAgo);
   upload.viewsWithin1hour = uploadViews.length;
 
-  uploadViews = _.filter(uploadViews, function(uploadView){ return uploadView.createdAt > minuteAgo });
+  uploadViews = _.filter(uploadViews, uploadView => uploadView.createdAt > minuteAgo);
   upload.viewsWithin1minute = uploadViews.length;
 
-  return upload
+  return upload;
 }
-
-
 
 module.exports = {
   calculateViewsByPeriod,
