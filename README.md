@@ -54,6 +54,12 @@ For ease of local development I recommend using [Nodemon](https://github.com/rem
 ### Using ngrok
 NodeTube comes with [ngrok](https://www.https://ngrok.com) preinstalled with the setting in `.env.settings` to run for new instances automatically. This means that when you boot the app you will see a log come through with a link where you can access the app from the ngrok subdomain. Great you're live on the internet, that was simple!
 
+## Technical Details
+
+NodeTube is an Express application powered by NodeJS, with MongoDB as a database, with `redis` for caching and `ffmpeg` for converting and compressing video content. It uses Pug as a templating engine and loads process variables through the .env.settings and .env.private files. 
+
+[This section is being expanded rapidly so please Watch this repo so you can easily see when more documentation is available]
+
 ## Reasons To Use NodeTube
 ### Reasons to use NodeTube as an Instance Host:
 - Built in monetization for instance administrators: Users can optionally pay a monthly fee through Stripe to gain certain privileges which are able to be adjusted by the administrator but by default allow private and unlisted uploads, an increased maximum file-size limit from 500MB to 2GB, and livestreaming capabilities 
@@ -84,13 +90,6 @@ NodeTube comes with [ngrok](https://www.https://ngrok.com) preinstalled with the
 - Plus Badge to show your support
 - Support open-source software with your hard earned money, helping out in a big way to decentralize and open the internet 
 - Allow others to receive the benefits of using NodeTube as a free user including not being tracked by a multibillion dollar corporation and receiving their media ad free
-
-
-## Technical Details
-
-NodeTube is an Express application powered by NodeJS, with MongoDB as a database, with `redis` for caching and `ffmpeg` for converting and compressing video content. It uses Pug as a templating engine and loads process variables through the .env.settings and .env.private files.
-
-[This section is being expanded rapidly so please Watch this repo so you can easily see when more documentation has been added]
 
 ## Additional Info
 
