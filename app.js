@@ -37,22 +37,6 @@ const numCPUs = require('os').cpus().length;
 
 const winston = require('./config/winston');
 
-if(process.env.SHOW_LOG_LOCATION == 'true' || 1 == 2){
-  /** Code to find errant console logs **/
-  ['log', 'warn', 'error'].forEach(function(method) {
-    var old = console[method];
-    console[method] = function() {
-      var stack = (new Error()).stack.split(/\n/);
-      // Chrome includes a single "Error" line, FF doesn't.
-      if (stack[0].indexOf('Error') === 0) {
-        stack = stack.slice(1);
-      }
-      var args = [].slice.apply(arguments).concat([stack[1].trim()]);
-      return old.apply(console, args);
-    };
-  });
-}
-
 /** Load environment variables from .env file, where API keys and passwords are configured. **/
 dotenv.load({path: '.env.settings'});
 dotenv.load({path: '.env.private'});
@@ -93,10 +77,7 @@ if (cluster.isMaster) {
 
     const missedFile404Middleware = require('./middlewares/shared/missedFile404Middleware');
 
-    //
     process.on('uncaughtException', (err) => {
-      // console.log(err);
-      // console.log(err.code);
       console.log('Uncaught Exception: ', err);
       console.log(err.stack);
     });
@@ -107,24 +88,14 @@ if (cluster.isMaster) {
     });
 
     process.on('rejectionHandled', (err) => {
-
-      // console.log('ugh')
       console.log(err.code);
-      // console.log(`Unhandled Rejection: `, err);
-      // console.log(err.stack);
     });
 
-    process.on('message', (err) => {
-
-      // console.log('ugh')
-      // console.log(err.code);
-      // console.log(`Unhandled Rejection: `, err);
-      // console.log(err.stack);
+    process.on('message', (message) => {
+      // console.log(`Process message: `, message);
     });
 
     console.log(`FRONTEND SERVER: ${process.env.FRONTEND_SERVER}`);
-
-    // require('./lib/deleteUsers');
 
     /** connect to MongoDB **/
     const mongoUri = process.env.MONGODB_URI || process.env.MONGODB_DOCKER_URI || process.env.MONGO_URI || process.env.MONGOLAB_URI || 'mongodb://localhost:27017/april15pewtube';
@@ -267,24 +238,6 @@ if (cluster.isMaster) {
 
     app.use(useragent.express());
 
-    // TODO: where is this being used?
-    app.use((req, res, next) => {
-      if (process.env.NODE_ENV == 'production') {
-        res.locals.linkPrepend = 'https://pew.tube';
-      } else {
-        res.locals.linkPrepend = '';
-      }
-      next();
-    });
-
-    // not being used currently
-    function nocache(req, res, next) {
-      res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-      res.header('Expires', '-1');
-      res.header('Pragma', 'no-cache');
-      next();
-    }
-
     app.use(multipart());
 
     /** PASS NODE ENV TO VIEWS **/
@@ -304,7 +257,7 @@ if (cluster.isMaster) {
       app.use(widgetMiddleware[middleware]);
     }
 
-    /** META TRACKER **/
+    /** META TAGS FOR SOCIAL **/
     app.use(async function (req, res, next) {
       res.locals.meta = {
         description: process.env.META_DESCRIPTION,
@@ -316,25 +269,18 @@ if (cluster.isMaster) {
     });
 
     /** HOW MANY UNREAD NOTIFS **/
-
     app.use(async function (req, res, next) {
       if (req.user) {
         let unreadNotifs = await Notification.count({read: false, user: req.user._id});
         res.locals.unreadNotifAmount = unreadNotifs;
-
         // console.log(unreadNotifs + ' unreadnotifs')
 
       }
-
       next();
     });
 
     /** Prevent blocked sitevisitors from accessing site **/
     app.use(async (req, res, next) => {
-
-      // console.log(req.siteVisitor.ip);
-      //
-      // console.log(req.siteVisitor.blocked);
 
       if(req.siteVisitor.blocked == true){
         await Promise.delay(1000 * 15);
@@ -344,7 +290,7 @@ if (cluster.isMaster) {
       }
     });
 
-    // TODO: not sure what this code achieves
+    /** Setting up returnTo path for user login **/
     app.use((req, res, next) => {
       // After successful login, redirect back to the intended page
       if (!req.user &&
@@ -443,26 +389,29 @@ if (cluster.isMaster) {
 
 async function runNgrok(){
 
-  let ngrokOptions = {
-    addr: portNumber
-  };
+  console.log(`Access NodeTube on the public web via ${url}. This link will be changed if you restart the app, to
+    use Ngrok with a permanent subdomain please purchase a token and update the settings in .env.private (see runNgrok function in app.js)`);
 
   if(process.env.NGROK_SUBDOMAIN && process.env.NGROK_AUTHTOKEN){
     ngrokOptions.authtoken = process.env.NGROK_AUTHTOKEN;
     ngrokOptions.subdomain = process.env.NGROK_SUBDOMAIN;
   }
 
-  const url = await ngrok.connect(ngrokOptions);
-
-  console.log(url);
-  // const api = ngrok.getApi();
-  // const tunnels = JSON.parse(await api.get('api/tunnels'));
-  //
-  //
-  // console.log(tunnels.tunnels[0]);
-  //
-  // const publicUrlAsHttp = tunnels.tunnels[0].public_url;
-  //
-  console.log(`Access NodeTube on the public web via ${url}. This link will be changed if you restart the app, to
-  use Ngrok with a permanent subdomain please purchase a token and update the settings in .env.private (see runNgrok function in app.js)`);
+  /** FOR FINDING ERRANT LOGS **/
+  if(process.env.SHOW_LOG_LOCATION == 'true' || 1 == 2){
+    /** Code to find errant console logs **/
+    ['log', 'warn', 'error'].forEach(function(method) {
+      var old = console[method];
+      console[method] = function() {
+        var stack = (new Error()).stack.split(/\n/);
+        // Chrome includes a single "Error" line, FF doesn't.
+        if (stack[0].indexOf('Error') === 0) {
+          stack = stack.slice(1);
+        }
+        var args = [].slice.apply(arguments).concat([stack[1].trim()]);
+        return old.apply(console, args);
+      };
+    });
+  }
 }
+

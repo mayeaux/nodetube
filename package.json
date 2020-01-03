@@ -12,7 +12,7 @@
   "author": "Anthony Mayfield",
   "license": "MIT",
   "scripts": {
-    "start": "node --max-old-space-size=512 app.js",
+    "start": "node --max-old-space-size=4096 app.js",
     "test": "mocha --reporter spec",
     "postinstall": "npm rebuild node-sass && cd public && bower install",
     "eslint": "eslint ./",
@@ -21,7 +21,7 @@
     "cache": "node --max-old-space-size=8000 caching/runCaching.js",
     "both": "node --max-old-space-size=4096 app.js & node --max-old-space-size=8000 caching/runCaching.js",
     "nodemonboth": "nodemon --exec npm run both",
-    "installDeps": "npm install && cd public && bower install && cd .. && git update-index --skip-worktree .env.private && git update-index --skip-worktree .env.settings"
+    "installDeps": "npm install && bower install && cp -n .env.settings.sample .env.settings && cp -n .env.private.sample .env.private"
   },
   "dependencies": {
     "apicache": "^1.4.0",
@@ -65,12 +65,12 @@
     "javascript-time-ago": "^0.4.15",
     "lastfm": "^0.9.3",
     "lob": "^3.9.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.13",
     "lusca": "^1.6.1",
     "mail-listener2": "^0.3.1",
     "mkdirp": "^0.5.1",
     "moment": "^2.24.0",
-    "mongoose": "^5.5.9",
+    "mongoose": "^5.7.5",
     "mongoose-unique-validator": "^1.0.6",
     "morgan": "^1.9.1",
     "multer": "^1.4.1",

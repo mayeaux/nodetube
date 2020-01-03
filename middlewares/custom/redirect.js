@@ -9,8 +9,8 @@ async function redirectDomainsMiddleware(req, res, next) {
     return res.redirect(`https://pew.tube${req.path}`);
   }
 
-  if (req.hostname == 'pew-tube.herokuapp.com') {
-    return res.redirect(`https://pew.tube${req.path}`);
+  if (req.hostname == 'nodetube-1.herokuapp.com') {
+    return res.redirect('https://nodetube.live' + req.path);
   }
 
   // if(req.hostname == 'uploads.pew.tube'){

@@ -23,7 +23,9 @@ const getSensitivityFilter = uploadFilters.getSensitivityFilter;
 
 const categories = require('../../config/categories');
 
-console.log(`UPLOAD SERVER: ${uploadServer} on: media browsing frontend controller`);
+const logCaching = process.env.LOG_CACHING;
+
+console.log('UPLOAD SERVER: ' + uploadServer + ' on: media browsing frontend controller');
 
 function getParameterByName(name, url) {
   if (!url) url = window.location.href;
@@ -51,6 +53,17 @@ if (!process.env.FILE_HOST || process.env.FILE_HOST == 'false') {
     getStats();
   }, 1000 * 60 * 1);
 
+<<<<<<< HEAD
+=======
+
+  async function setIndex(){
+    indexResponse = await redisClient.hgetallAsync('indexValues');
+    if(logCaching == 'true'){
+      console.log('got index cache');
+    }
+  }
+
+>>>>>>> master
   setIndex();
 
   setInterval(() => {
