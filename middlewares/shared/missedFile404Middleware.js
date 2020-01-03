@@ -3,7 +3,7 @@ const convertExtensions = ['.avi', '.flv', '.MOV', '.m4v', '.ogv', '.webm', '.wm
 const imageExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.JPG', '.PNG'];
 const audioExtensions = ['.mp3', '.wav', '.ogg', '.m4a'];
 
-async function middleware (req, res, next){
+async function middleware(req, res, next){
   const path = req.path;
 
   const str = '/uploads/Manwe_Sulimo/cqDSPlg.png';

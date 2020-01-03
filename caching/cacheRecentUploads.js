@@ -32,7 +32,7 @@ const redisClient = require('../config/redis');
 
 const logCaching = process.env.LOG_CACHING;
 
-async function getRecentUploads (){
+async function getRecentUploads(){
   let recentUploadsAllCategories = [];
 
   for(const category of categories){
@@ -68,7 +68,7 @@ async function getRecentUploads (){
   return recentUploadsAllCategories;
 }
 
-async function setRecentUploads (){
+async function setRecentUploads(){
   let recentUploads = await getRecentUploads();
 
   // calculate view periods for each upload

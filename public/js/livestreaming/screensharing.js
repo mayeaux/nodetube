@@ -20,7 +20,7 @@
 //   console.log(screen_constraints);
 // });
 
-window.getVideoStream = function (){
+window.getVideoStream = function(){
   const audioConstraints = {
     audio: true,
     video: true,
@@ -40,7 +40,7 @@ window.getVideoStream = function (){
   });
 };
 
-window.getAudioStream = function (){
+window.getAudioStream = function(){
   const audioConstraints = {
     audio: true,
     video: false,
@@ -56,7 +56,7 @@ window.getAudioStream = function (){
   });
 };
 
-window.getDesktopStream = function (){
+window.getDesktopStream = function(){
   getScreenId((error, sourceId, screen_constraints) => {
     window.screen_constraints = screen_constraints;
 
@@ -64,7 +64,7 @@ window.getDesktopStream = function (){
       console.log(err);
     });
 
-    function successCallbackVideo (stream){
+    function successCallbackVideo(stream){
       window.desktopStream = stream;
 
       window.streamType = 'screenshare';
@@ -76,7 +76,7 @@ window.getDesktopStream = function (){
   });
 };
 
-window.getScreenConstraints = function (screen, callback){
+window.getScreenConstraints = function(screen, callback){
   console.log('running here!');
 
   getScreenId((error, sourceId, screen_constraints) => {
@@ -90,7 +90,7 @@ window.getScreenConstraints = function (screen, callback){
   });
 };
 
-function initiateScreenSharing (audioStream){
+function initiateScreenSharing(audioStream){
   getScreenId((error, sourceId, screen_constraints) => {
     console.log('screen_constraints');
     console.log(screen_constraints);
@@ -126,7 +126,7 @@ function initiateScreenSharing (audioStream){
         sendSource: 'desktop',
       };
 
-      localParticipant.rtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendrecv(options, function (error){
+      localParticipant.rtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendrecv(options, function(error){
         if(error){
           return console.error(error);
         }

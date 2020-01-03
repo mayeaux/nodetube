@@ -41,7 +41,7 @@ module.exports = {
         "else": { "before": true, "after": true },
         "catch": { "before": true, "after": true }
       } }],
-      "space-before-function-paren": 2,
+      "space-before-function-paren": ["error", "never"],
       "space-before-blocks": ["error", "never"],
       "no-useless-escape": 0,
       "no-console": 0,

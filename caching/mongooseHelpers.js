@@ -24,7 +24,7 @@ const _ = require('lodash');
 //
 //
 
-async function determineLegitViewsForUploads (uploads, timeRange){
+async function determineLegitViewsForUploads(uploads, timeRange){
   // grab the date object for how long ago a certain time is
   // TODO: Could probably be improved with moment, in meantime cover 1h, 1d, 1w, 1m, (all-time can be run by default)
   let timeAgoDate;
@@ -74,7 +74,7 @@ async function determineLegitViewsForUploads (uploads, timeRange){
   return updatedUploads;
 }
 
-async function test (){
+async function test(){
   let uploads = await Upload.find({
     uploadUrl: { $exists: true },
     visibility: 'public',

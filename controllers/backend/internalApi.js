@@ -77,7 +77,7 @@ if(process.env.NODE_ENV !== 'production' && !process.env.UPLOAD_SERVER){
   uploadServer = `https://${process.env.UPLOAD_SERVER}.pew.tube/uploads`;
 }
 
-async function updateUsersUnreadSubscriptions (user){
+async function updateUsersUnreadSubscriptions(user){
   const subscriptions = await Subscription.find({ subscribedToUser: user._id, active: true });
 
   for(const subscription of subscriptions){
@@ -223,7 +223,7 @@ exports.changeUserFilter = async (req, res) => {
   return res.send('success');
 };
 
-async function markUploadAsComplete (uniqueTag, channelUrl, user, res){
+async function markUploadAsComplete(uniqueTag, channelUrl, user, res){
   upload = await Upload.findOne({ uniqueTag });
   upload.status = 'completed';
   await upload.save();
@@ -234,7 +234,7 @@ async function markUploadAsComplete (uniqueTag, channelUrl, user, res){
   return'success';
 }
 
-async function uploadToB2 (upload, uploadPath, hostFilePath){
+async function uploadToB2(upload, uploadPath, hostFilePath){
   console.log('upload to b2');
 
   if(upload.fileType == 'video'){
@@ -299,7 +299,7 @@ exports.deleteUploadThumbnail = async (req, res, next) => {
   }
 };
 
-exports.subscribeEndpoint = async function (req, res, next){
+exports.subscribeEndpoint = async function(req, res, next){
   // get receiving user
   let receivingUser = req.body.channelUrl;
   const subscribingUser = req.user;

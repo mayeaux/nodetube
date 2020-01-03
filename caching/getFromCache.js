@@ -15,7 +15,7 @@ const logCaching = process.env.LOG_CACHING;
 const{ filterUploadsBySensitivity, filterUploadsByCategory, filterUploadsBySubcategory, filterUploadsByMediaType } = require('../lib/mediaBrowsing/helpers');
 
 let popularUploads;
-async function setGlobalPopularUploads (){
+async function setGlobalPopularUploads(){
   popularUploads = await redisClient.getAsync('popularUploads');
   popularUploads = JSON.parse(popularUploads);
 
@@ -31,7 +31,7 @@ if(!process.env.FILE_HOST || process.env.FILE_HOST == 'false'){
 }
 
 let recentUploads;
-async function setGlobalRecentUploads (){
+async function setGlobalRecentUploads(){
   recentUploads = await redisClient.getAsync('recentUploads');
   recentUploads = JSON.parse(recentUploads);
 
@@ -48,7 +48,7 @@ if(!process.env.FILE_HOST || process.env.FILE_HOST == 'false'){
 }
 
 // Only get needed amount of uploads
-function trimUploads (uploads, limit, offset){
+function trimUploads(uploads, limit, offset){
   // cut offset off from front of array
   const trimmedUploads = uploads.slice(offset);
 
@@ -60,7 +60,7 @@ function trimUploads (uploads, limit, offset){
   return trimmedUploads;
 }
 
-function sortUploadsByViews (uploads, timeRange){
+function sortUploadsByViews(uploads, timeRange){
   if(timeRange == '1hour'){
     return uploads.sort((a, b) => b.viewsWithin1hour - a.viewsWithin1hour);
   } else if(timeRange == '24hour'){
@@ -79,7 +79,7 @@ function sortUploadsByViews (uploads, timeRange){
 }
 
 // upload type = popularUploads, recentUploads
-async function getPopularUploads (timeRange, limit, offset, mediaType, filter, category, subcategory){
+async function getPopularUploads(timeRange, limit, offset, mediaType, filter, category, subcategory){
   // load recent uploads into memory
   let uploads = popularUploads;
 
@@ -124,7 +124,7 @@ async function getPopularUploads (timeRange, limit, offset, mediaType, filter, c
 }
 
 // upload type = popularUploads, recentUploads
-async function getRecentUploads (limit, offset, mediaType, filter, category, subcategory){
+async function getRecentUploads(limit, offset, mediaType, filter, category, subcategory){
   // load recent uploads into memory
   let uploads = recentUploads;
 

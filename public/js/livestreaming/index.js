@@ -39,13 +39,13 @@ const onUserConnection = {
   message: 'CONNECTING',
 };
 
-messageSocket.onopen = function (event){
+messageSocket.onopen = function(event){
   messageSocket.send(JSON.stringify(onUserConnection));
 };
 
 console.log(messageSocket);
 
-function onError (error){
+function onError(error){
   console.log(error);
 }
 
@@ -53,7 +53,7 @@ let video;
 let webRtcPeer;
 let webRtcPeerScreencast;
 
-window.onload = function (){
+window.onload = function(){
   // console = new Console();
   video = document.getElementById('video');
 
@@ -62,11 +62,11 @@ window.onload = function (){
   document.getElementById('terminate').addEventListener('click', () => { stop(); });
 };
 
-window.onbeforeunload = function (){
+window.onbeforeunload = function(){
   ws.close();
 };
 
-ws.onmessage = function (message){
+ws.onmessage = function(message){
   // console.log(message);
 
   const parsedMessage = JSON.parse(message.data);
@@ -92,7 +92,7 @@ ws.onmessage = function (message){
   }
 };
 
-function presenterResponse (message){
+function presenterResponse(message){
   console.log(message);
 
   if(message.response != 'accepted'){
@@ -106,7 +106,7 @@ function presenterResponse (message){
   }
 }
 
-function viewerResponse (message){
+function viewerResponse(message){
   console.log(message);
 
   if(message.response != 'accepted'){
@@ -122,7 +122,7 @@ function viewerResponse (message){
   }
 }
 
-function presenter (){
+function presenter(){
   if(!webRtcPeer){
     showSpinner(video);
 
@@ -146,7 +146,7 @@ function presenter (){
       throw new Error('Not a video share or a screen share');
     }
 
-    webRtcPeer = kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options, function (error){
+    webRtcPeer = kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options, function(error){
       console.log(`error${error}`);
 
       if(error)return onError(error); // You'll need to use whatever you use for handling errors
@@ -158,7 +158,7 @@ function presenter (){
   }
 }
 
-function onOfferPresenter (error, offerSdp){
+function onOfferPresenter(error, offerSdp){
   console.log(error);
 
   if(error)return onError(error);
@@ -175,7 +175,7 @@ function onOfferPresenter (error, offerSdp){
   sendMessage(message);
 }
 
-function viewer (){
+function viewer(){
   if(!webRtcPeer){
     showSpinner(video);
 
@@ -186,7 +186,7 @@ function viewer (){
       onicecandidate: onIceCandidate,
     };
 
-    webRtcPeer = kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(options, function (error){
+    webRtcPeer = kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(options, function(error){
       if(error)return onError(error);
 
       this.generateOffer(onOfferViewer);
@@ -194,7 +194,7 @@ function viewer (){
   }
 }
 
-function onOfferViewer (error, offerSdp){
+function onOfferViewer(error, offerSdp){
   if(error)return onError(error);
 
   const message = {
@@ -205,7 +205,7 @@ function onOfferViewer (error, offerSdp){
   sendMessage(message);
 }
 
-function onIceCandidate (candidate){
+function onIceCandidate(candidate){
   // console.log('Local candidate' + JSON.stringify(candidate));
 
   const message = {
@@ -215,7 +215,7 @@ function onIceCandidate (candidate){
   sendMessage(message);
 }
 
-function stop (){
+function stop(){
   if(webRtcPeer){
     const message = {
       id: 'stop',
@@ -225,7 +225,7 @@ function stop (){
   }
 }
 
-function dispose (){
+function dispose(){
   if(webRtcPeer){
     webRtcPeer.dispose();
     webRtcPeer = null;
@@ -233,20 +233,20 @@ function dispose (){
   hideSpinner(video);
 }
 
-function sendMessage (message){
+function sendMessage(message){
   const jsonMessage = JSON.stringify(message);
   // console.log('Sending message: ' + jsonMessage);
   ws.send(jsonMessage);
 }
 
-function showSpinner (){
+function showSpinner(){
   for(let i = 0; i < arguments.length; i++){
     arguments[i].poster = '/images/livestreaming/transparent-1px.png';
     arguments[i].style.background = 'center transparent url("./images/livestreaming/spinner.gif") no-repeat';
   }
 }
 
-function hideSpinner (){
+function hideSpinner(){
   for(let i = 0; i < arguments.length; i++){
     arguments[i].src = '';
     arguments[i].poster = '/images/livestreaming/webrtc.png';
@@ -257,18 +257,18 @@ function hideSpinner (){
 /**
  * Lightbox utility (to display media pipeline image in a modal dialog)
  */
-$(document).delegate('*[data-toggle="lightbox"]', 'click', function (event){
+$(document).delegate('*[data-toggle="lightbox"]', 'click', function(event){
   event.preventDefault();
   $(this).ekkoLightbox();
 });
 
-ws.onclose = function (one, two, three){
+ws.onclose = function(one, two, three){
   console.log(one);
   console.log(two);
   console.log(three);
 };
 
-ws.onerror = function (one, two, three){
+ws.onerror = function(one, two, three){
   console.log(one);
   console.log(two);
   console.log(three);
@@ -287,7 +287,7 @@ const entityMap = {
   '=': '&#x3D;',
 };
 
-function escapeHtml (string){
+function escapeHtml(string){
   return String(string).replace(/[&<>"'`=\/]/g, s => entityMap[s]);
 }
 
@@ -336,7 +336,7 @@ $(document).ready(() => {
   });
 
   // send message via websocket
-  function sendChatMessage (){
+  function sendChatMessage(){
     let messageText = $('.message-text').val();
 
     if(messageText == ''){
@@ -374,7 +374,7 @@ $(document).ready(() => {
 let connectedUsersAmount = 0;
 
 // receive connected user amounts and new messages
-messageSocket.onmessage = function (message){
+messageSocket.onmessage = function(message){
   data = JSON.parse(message.data);
 
   console.log(data);
@@ -397,7 +397,7 @@ messageSocket.onmessage = function (message){
 };
 
 // close socket on page reload
-window.onbeforeunload = function (event){
+window.onbeforeunload = function(event){
   console.log('closing!');
 
   const onUserDisconnection = {

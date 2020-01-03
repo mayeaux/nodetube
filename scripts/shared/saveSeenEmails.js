@@ -72,7 +72,7 @@ mailListener.on('error', (err) => {
   console.log(err);
 });
 
-(async function (){
+(async function(){
   const existingEmails = await ReceivedEmail.find({});
 
   const emailIds = existingEmails.map(email => email.emailId);

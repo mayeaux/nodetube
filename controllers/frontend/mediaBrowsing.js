@@ -27,7 +27,7 @@ const logCaching = process.env.LOG_CACHING;
 
 console.log('UPLOAD SERVER: ' + uploadServer + ' on: media browsing frontend controller');
 
-function getParameterByName (name, url){
+function getParameterByName(name, url){
   if(!url) url = window.location.href;
   name = name.replace(/[\[\]]/g, '\\$&');
   let regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`),
@@ -43,12 +43,12 @@ const mongooseHelpers = require('../../caching/mongooseHelpers');
 let viewStats;
 let indexResponse = {};
 
-async function getStats (){
+async function getStats(){
   const views = await redisClient.getAsync('dailyStatsViews');
   viewStats = JSON.parse(views);
 }
 
-async function setIndex (){
+async function setIndex(){
   indexResponse = await redisClient.hgetallAsync('indexValues');
   if(logCaching == 'true'){
     console.log('got index cache');
@@ -272,7 +272,7 @@ exports.popularUploads = async (req, res) => {
   }
 };
 
-async function saveSearchQuery (user, search){
+async function saveSearchQuery(user, search){
   // note the person searching
   const searcher = user && user.id || undefined;
 
@@ -285,7 +285,7 @@ async function saveSearchQuery (user, search){
   await searchQuery.save();
 }
 
-function getOrderByEnglishString (orderByQuery){
+function getOrderByEnglishString(orderByQuery){
   let orderBy;
   if(!orderByQuery){
     orderBy = 'newToOld';
@@ -449,7 +449,7 @@ exports.search = async (req, res) => {
 };
 
 /** TOTALLY UNFINISHED Organize uploads by the amount of the reacts they've received * */
-exports.popularByReacts = async function (req, res){
+exports.popularByReacts = async function(req, res){
   let uploads = await Upload.find({ reacts: { $exists: true } }).populate('reacts uploader');
 
   uploads = _.filter(uploads, upload => upload.reacts.length !== 0);

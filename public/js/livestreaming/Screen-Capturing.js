@@ -37,7 +37,7 @@ window.addEventListener('message', (event) => {
 
 // and the function that handles received messages
 
-function onMessageCallback (data){
+function onMessageCallback(data){
   // "cancel" button is clicked
   if(data == 'PermissionDeniedError'){
     chromeMediaSource = 'PermissionDeniedError';
@@ -62,7 +62,7 @@ let sourceId;
 let screenCallback;
 
 // this method can be used to check if chrome extension is installed & enabled.
-function isChromeExtensionAvailable (callback){
+function isChromeExtensionAvailable(callback){
   if(!callback)return;
 
   if(chromeMediaSource == 'desktop')return callback(true);
@@ -78,7 +78,7 @@ function isChromeExtensionAvailable (callback){
 }
 
 // this function can be used to get "source-id" from the extension
-function getSourceId (callback){
+function getSourceId(callback){
   if(!callback)throw'"callback" parameter is mandatory.';
   if(sourceId)return callback(sourceId);
 
@@ -90,7 +90,7 @@ const isFirefox = typeof window.InstallTrigger !== 'undefined';
 const isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
 const isChrome = !!window.chrome && !isOpera;
 
-function getChromeExtensionStatus (extensionid, callback){
+function getChromeExtensionStatus(extensionid, callback){
   if(isFirefox)return callback('not-chrome');
 
   if(arguments.length != 2){
@@ -100,7 +100,7 @@ function getChromeExtensionStatus (extensionid, callback){
 
   const image = document.createElement('img');
   image.src = `chrome-extension://${extensionid}/icon.png`;
-  image.onload = function (){
+  image.onload = function(){
     chromeMediaSource = 'screen';
     window.postMessage('are-you-there', '*');
     setTimeout(() => {
@@ -109,13 +109,13 @@ function getChromeExtensionStatus (extensionid, callback){
       } else callback('installed-enabled');
     }, 2000);
   };
-  image.onerror = function (){
+  image.onerror = function(){
     callback('not-installed');
   };
 }
 
 // this function explains how to use above methods/objects
-function getScreenConstraints (callback){
+function getScreenConstraints(callback){
   const firefoxScreenConstraints = {
     mozMediaSource: 'window',
     mediaSource: 'window',

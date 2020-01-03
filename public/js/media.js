@@ -22,7 +22,7 @@ $(() => {
   /*  INCREASE MEDIA PLAYER FUNCTIONALITY END */
 
   // SHOW REPLY BOX
-  $('.reply-link').on('click', function (){
+  $('.reply-link').on('click', function(){
     const replyLinkContainingDiv = $(this).parent().parent().parent();
 
     // make reply form visible
@@ -34,7 +34,7 @@ $(() => {
   $('.comment-posted').hide();
 
   // submit AJAX but don't refresh the page
-  $('.comment-form').submit(function (e){
+  $('.comment-form').submit(function(e){
     const commentForm = $(this);
 
     commentForm.hide();
@@ -45,7 +45,7 @@ $(() => {
       type: 'POST',
       url: '/api/comment',
       data: $(this).serialize(),
-      success (data){
+      success(data){
         console.log(data);
 
         if(data == 'Comment already exists'){
@@ -82,7 +82,7 @@ $(() => {
 
         // console.log(data);
       },
-      error (err){
+      error(err){
         console.log(err);
       },
     });

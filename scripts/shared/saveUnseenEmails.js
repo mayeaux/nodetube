@@ -43,7 +43,7 @@ const supportEmailCredentials = {
 
 const mailListeners = [];
 
-(async function (){
+(async function(){
   const existingEmails = await ReceivedEmail.find({});
 
   const emailIds = existingEmails.map(email => email.emailId);

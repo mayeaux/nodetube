@@ -2,7 +2,7 @@
 const stripe = require('../../lib/payments/stripe');
 const subscriptions = require('../../lib/helpers/subscriptions');
 
-exports.purchasePlus = async function (req, res){
+exports.purchasePlus = async function(req, res){
   console.log(req.body);
 
   try{
@@ -25,7 +25,7 @@ exports.purchasePlus = async function (req, res){
   }
 };
 
-exports.purchaseCredits = async function (req, res){
+exports.purchaseCredits = async function(req, res){
   try{
     console.log(req.body);
 
@@ -60,7 +60,7 @@ exports.purchaseCredits = async function (req, res){
   }
 };
 
-exports.purchaseCreditsExistingCustomer = async function (req, res){
+exports.purchaseCreditsExistingCustomer = async function(req, res){
   try{
     const userDescriptor = req.user.channelName || req.user.channelUrl;
 

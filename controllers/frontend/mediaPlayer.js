@@ -26,7 +26,7 @@ const generateReactInfo = require('../../lib/mediaPlayer/generateReactInfo');
 
 console.log(`UPLOAD SERVER: ${uploadServer}`);
 
-function getParameterByName (name, url){
+function getParameterByName(name, url){
   if(!url) url = window.location.href;
   name = name.replace(/[\[\]]/g, '\\$&');
   let regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`),

@@ -1,4 +1,4 @@
-async function zopimWidget (req, res, next){
+async function zopimWidget(req, res, next){
   let zopimOn;
 
   if(process.env.ZOPIM_ON == 'true'){
@@ -12,7 +12,7 @@ async function zopimWidget (req, res, next){
   next();
 }
 
-async function googleAnalyticsWidget (req, res, next){
+async function googleAnalyticsWidget(req, res, next){
   let googleAnalyticsOn = false;
 
   if(process.env.GOOGLE_ANALYTICS_ON == 'true'){
@@ -25,7 +25,7 @@ async function googleAnalyticsWidget (req, res, next){
   next();
 }
 
-async function recaptchaWidget (req, res, next){
+async function recaptchaWidget(req, res, next){
   let recaptchaOn = false;
 
   if(process.env.RECAPTCHA_ON == 'true'){
@@ -37,7 +37,7 @@ async function recaptchaWidget (req, res, next){
   next();
 }
 
-async function coinhiveWidget (req, res, next){
+async function coinhiveWidget(req, res, next){
   let coinhiveOn = false;
 
   if(process.env.COINHIVE_ON == 'true'){

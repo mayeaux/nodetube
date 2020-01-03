@@ -1,4 +1,4 @@
-function scoreReacts (upload){
+function scoreReacts(upload){
   let totalScore = 0;
 
   if(!upload.reacts){
@@ -20,7 +20,7 @@ function scoreReacts (upload){
   return totalScore;
 }
 
-async function scoreFreshness (upload){
+async function scoreFreshness(upload){
   const now = moment(new Date()); // todays date
   const end = moment('2015-12-1'); // another date
   const duration = moment.duration(now.diff(end));
@@ -36,7 +36,7 @@ async function scoreFreshness (upload){
   // aka, one hour away from turning 24 scores a 23/24, aka 1/24, aka 4.16%
 }
 
-function calculateMultiplier (upload){
+function calculateMultiplier(upload){
   const reactScore = scoreReacts(upload);
   // console.log(`react score: ${reactScore}`);
 
@@ -60,7 +60,7 @@ function calculateMultiplier (upload){
   return multiplier;
 }
 
-function scoreUpload (upload){
+function scoreUpload(upload){
   const multiplier = calculateMultiplier(upload);
   // console.log(`multiplier: ${multiplier}`);
 
@@ -82,7 +82,7 @@ function scoreUpload (upload){
   return upload;
 }
 
-function scoreUploads (uploads){
+function scoreUploads(uploads){
   const scoredUploads = [];
 
   for(let upload of uploads){

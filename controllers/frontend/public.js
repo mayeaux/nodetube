@@ -6,7 +6,7 @@ const logCaching = process.env.LOG_CACHING;
 
 // TODO: pull into its own func
 let indexResponse;
-async function setIndex (){
+async function setIndex(){
   indexResponse = await redisClient.hgetallAsync('indexValues');
   if(logCaching == 'true'){
     console.log('got index cache');
@@ -86,7 +86,7 @@ exports.privacy = async (req, res, next) => {
  * GET /embed/$uploadUniqueTag
  * Embed page
  */
-exports.getEmbed = async function (req, res){
+exports.getEmbed = async function(req, res){
   res.setHeader('X-Frame-Options', `ALLOW-FROM ${req.query.domain}`);
 
   const uniqueTag = req.params.uniqueTag;

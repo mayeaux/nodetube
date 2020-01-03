@@ -7,7 +7,7 @@ const dotenv = require('dotenv');
 dotenv.load({ path: '../.env.settings' });
 dotenv.load({ path: '../.env.private' });
 
-function getIpDataAsync (ip){
+function getIpDataAsync(ip){
   return new Promise((resolve, reject) => {
     ipstack(ip, process.env.IPSTACK_API_KEY, (err, data) => {
       if(err !== null) reject(err);
@@ -16,7 +16,7 @@ function getIpDataAsync (ip){
   });
 }
 
-async function iptracker (req, res, next){
+async function iptracker(req, res, next){
   const trueStatements = Object.keys(req.useragent).filter(x => req.useragent[x] == true);
 
   let ip = req.headers['x-forwarded-for'] ||

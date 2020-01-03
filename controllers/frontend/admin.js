@@ -18,7 +18,7 @@ let viewStats,
   searchStats,
   commentStats,
   siteVisitStats;
-async function getStats (){
+async function getStats(){
   const views = await redisClient.getAsync('dailyStatsViews');
   const uploads = await redisClient.getAsync('dailyStatsUploads');
   const users = await redisClient.getAsync('dailyStatsUsers');
@@ -82,7 +82,7 @@ exports.getPending = async (req, res) => {
     visibility: 'pending',
   }).populate('uploader').lean();
 
-  uploads = _.sortBy(uploads, [function (c){ return c.createdAt; }]).reverse();
+  uploads = _.sortBy(uploads, [function(c){ return c.createdAt; }]).reverse();
 
   res.render('moderator/pending', {
     title: 'Pending',

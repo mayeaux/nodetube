@@ -41,7 +41,7 @@ const creditActionSchema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
-creditActionSchema.virtual('timeAgo').get(function (){
+creditActionSchema.virtual('timeAgo').get(function(){
   return timeAgoEnglish.format(new Date(this.createdAt));
 });
 

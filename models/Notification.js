@@ -60,7 +60,7 @@ const notificationSchema = new mongoose.Schema({
   },
 });
 
-notificationSchema.virtual('timeAgo').get(function (){
+notificationSchema.virtual('timeAgo').get(function(){
   return timeAgoEnglish.format(new Date(this.createdAt));
 });
 

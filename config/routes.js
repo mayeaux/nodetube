@@ -31,7 +31,7 @@ const supportFrontendController = require('../controllers/frontend/support');
 const passportConfig = require('../config/passport');
 const authMiddleware = require('../middlewares/shared/authentication');
 
-function fileHostRoutes (app){
+function fileHostRoutes(app){
   console.log('RUNNING AS FILE HOST');
 
   // set res header to upload to another server
@@ -69,7 +69,7 @@ function fileHostRoutes (app){
   });
 }
 
-function livestreamRoutes (app){
+function livestreamRoutes(app){
   console.log('Running as livestream app');
 
   // set res header to upload to another server
@@ -110,7 +110,7 @@ function livestreamRoutes (app){
   });
 }
 
-function frontendRoutes (app){
+function frontendRoutes(app){
   console.log('RUNNING AS FRONTEND');
 
   /** publicly available routes * */

@@ -22,8 +22,8 @@
  });
  */
 
-(function (){
-  window.getScreenId = function (callback){
+(function(){
+  window.getScreenId = function(callback){
     // for Firefox:
     // sourceId == 'firefox'
     // screen_constraints = {...}
@@ -39,7 +39,7 @@
 
     window.addEventListener('message', onIFrameCallback);
 
-    function onIFrameCallback (event){
+    function onIFrameCallback(event){
       if(!event.data)return;
 
       if(event.data.chromeMediaSourceId){
@@ -64,7 +64,7 @@
     setTimeout(postGetSourceIdMessage, 100);
   };
 
-  function getScreenConstraints (error, sourceId){
+  function getScreenConstraints(error, sourceId){
     const screen_constraints = {
       audio: false,
       video: {
@@ -84,7 +84,7 @@
     return screen_constraints;
   }
 
-  function postGetSourceIdMessage (){
+  function postGetSourceIdMessage(){
     if(!iframe){
       loadIFrame(postGetSourceIdMessage);
       return;
@@ -103,7 +103,7 @@
   let iframe;
 
   // this function is used in RTCMultiConnection v3
-  window.getScreenConstraints = function (callback){
+  window.getScreenConstraints = function(callback){
     loadIFrame(() => {
       getScreenId((error, sourceId, screen_constraints) => {
         callback(error, screen_constraints.video);
@@ -111,14 +111,14 @@
     });
   };
 
-  function loadIFrame (loadCallback){
+  function loadIFrame(loadCallback){
     if(iframe){
       loadCallback();
       return;
     }
 
     iframe = document.createElement('iframe');
-    iframe.onload = function (){
+    iframe.onload = function(){
       iframe.isLoaded = true;
 
       loadCallback();
@@ -128,7 +128,7 @@
     (document.body || document.documentElement).appendChild(iframe);
   }
 
-  window.getChromeExtensionStatus = function (callback){
+  window.getChromeExtensionStatus = function(callback){
     // for Firefox:
     if(navigator.mozGetUserMedia){
       callback('installed-enabled');
@@ -137,7 +137,7 @@
 
     window.addEventListener('message', onIFrameCallback);
 
-    function onIFrameCallback (event){
+    function onIFrameCallback(event){
       if(!event.data)return;
 
       if(event.data.chromeExtensionStatus){
@@ -151,7 +151,7 @@
     setTimeout(postGetChromeExtensionStatusMessage, 100);
   };
 
-  function postGetChromeExtensionStatusMessage (){
+  function postGetChromeExtensionStatusMessage(){
     if(!iframe){
       loadIFrame(postGetChromeExtensionStatusMessage);
       return;

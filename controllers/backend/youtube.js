@@ -28,7 +28,7 @@ const request = Promise.promisifyAll(requestModule);
 
 // pewdie = UC-lHJZR3Gqxm24_Vd_AJ5Yw
 
-async function testId (channelId){
+async function testId(channelId){
 
   // test if it was a username
   const testUrl = `https://www.googleapis.com/youtube/v3/channels?key=${apiKey}&forUsername=${channelId}&part=id`;

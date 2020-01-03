@@ -206,7 +206,7 @@ exports.postFileUpload = async (req, res, next) => {
         /** FILE PROCESSING */
 
         // say it's processing if it's 25+ seconds
-        (async function (){
+        (async function(){
           await Promise.delay(1000 * 25);
 
           const timeoutUpload = await Upload.findOne({ uniqueTag });
@@ -328,7 +328,7 @@ exports.postFileUpload = async (req, res, next) => {
             if(bitrate > 2500){
               uploadLogger.info('About to compress file since bitrate is over 2500', logObject);
 
-              (async function (){
+              (async function(){
                 await ffmpegHelper.compressVideo({
                   uploadedPath: fileInDirectory,
                   uniqueTag,

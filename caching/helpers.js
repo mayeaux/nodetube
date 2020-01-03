@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const moment = require('moment');
 
-function buildObjects (uploads){
+function buildObjects(uploads){
   return uploads.map((upload) => {
     upload = {
       uploader: {
@@ -48,7 +48,7 @@ const dayAgo = moment().subtract(24, 'hours').toDate();
 const hourAgo = moment().subtract(1, 'hours').toDate();
 const minuteAgo = moment().subtract(1, 'minutes').toDate();
 
-async function calculateViewsByPeriod (upload, uploadViews){
+async function calculateViewsByPeriod(upload, uploadViews){
   upload.viewsAllTime = uploadViews.length;
 
   uploadViews = _.filter(uploadViews, uploadView => uploadView.createdAt > monthAgo);

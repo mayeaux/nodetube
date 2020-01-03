@@ -33,7 +33,7 @@ mongoose.connection.on('error', (err) => {
 
 const SocialPost = require('../../models').SocialPost;
 
-async function socialPostQueue (){
+async function socialPostQueue(){
   const socialPost = await SocialPost.findOne({
     finished: false,
   }).populate('upload').sort({ createdAt: 1 });

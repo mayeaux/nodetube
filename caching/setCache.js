@@ -22,7 +22,7 @@ const logCaching = process.env.LOG_CACHING;
 let viewAmount,
   channelAmount,
   mediaAmount;
-async function setIndexValues (){
+async function setIndexValues(){
   if(logCaching == 'true'){
     console.log('Setting index values');
 
@@ -87,7 +87,7 @@ async function setIndexValues (){
 // }, 1000 * 60 * 20);
 
 // TODO: refactor to do via count
-async function getAmountsPerPeriods (Model, objectName){
+async function getAmountsPerPeriods(Model, objectName){
   const totalDocumentAmount = await Model.count({});
 
   if(logCaching == 'true'){
@@ -138,7 +138,7 @@ async function getAmountsPerPeriods (Model, objectName){
 //
 // testThing();
 
-async function setDailyStats (){
+async function setDailyStats(){
   if(logCaching == 'true'){
     console.log('Setting daily stats');
 

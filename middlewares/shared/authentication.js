@@ -1,4 +1,4 @@
-function adminAuth (req, res, next){
+function adminAuth(req, res, next){
   if(!req.user){
     res.status(404);
     return res.render('error/404', {
@@ -20,7 +20,7 @@ function adminAuth (req, res, next){
   return next();
 }
 
-function moderatorAuth (req, res, next){
+function moderatorAuth(req, res, next){
   if(!req.user){
     res.status(404);
     return res.render('error/404', {
@@ -40,7 +40,7 @@ function moderatorAuth (req, res, next){
   return next();
 }
 
-function plusAuth (req, res, next){
+function plusAuth(req, res, next){
   // redirect to login if it's not there already
   if(!req.user){
     return res.redirect('/login');

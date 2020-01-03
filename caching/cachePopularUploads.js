@@ -25,7 +25,7 @@ const buildObjects = helpers.buildObjects;
 
 const logCaching = process.env.LOG_CACHING;
 
-async function getPopularUploads (){
+async function getPopularUploads(){
   if(logCaching == 'true'){
     c.l('Getting popular uploads');
   }
@@ -56,7 +56,7 @@ async function getPopularUploads (){
   return popularUploads;
 }
 
-async function setPopularUploads (){
+async function setPopularUploads(){
   let popularUploads = await getPopularUploads();
 
   // do more stringent check for uploader

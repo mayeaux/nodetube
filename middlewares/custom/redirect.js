@@ -1,4 +1,4 @@
-async function redirectDomainsMiddleware (req, res, next){
+async function redirectDomainsMiddleware(req, res, next){
   // console.log(req.hostname);
 
   // if(req.hostname == 'pewtube-staging.herokuapp.com'){

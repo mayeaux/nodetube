@@ -35,7 +35,7 @@ var onUserConnection = {
   message: 'CONNECTING'
 };
 
-messageSocket.onopen = function (event){
+messageSocket.onopen = function(event){
   messageSocket.send(JSON.stringify(onUserConnection));
 };
 
@@ -50,8 +50,8 @@ var entityMap = {
   '=': '&#x3D;'
 };
 
-function escapeHtml (string){
-  return String(string).replace(/[&<>"'`=\/]/g, function (s){
+function escapeHtml(string){
+  return String(string).replace(/[&<>"'`=\/]/g, function(s){
     return entityMap[s];
   });
 }
@@ -61,10 +61,10 @@ var usernamePicked = false;
 // var usernamePicked = true;
 var messagingUsername;
 
-$( document ).ready(function (){
+$( document ).ready(function(){
 
   // username selection functionality
-  $('.message-text').on('focus', function (){
+  $('.message-text').on('focus', function(){
 
     if(usernamePicked == false){
       swal({
@@ -76,7 +76,7 @@ $( document ).ready(function (){
         animation: 'slide-from-top',
         inputPlaceholder: 'Username'
       },
-        function (inputValue){
+        function(inputValue){
           if(inputValue === false)return false;
 
           if(inputValue === ''){
@@ -93,8 +93,8 @@ $( document ).ready(function (){
             type: 'success'
           },
 
-            function (){
-              setTimeout(function (){
+            function(){
+              setTimeout(function(){
                 $('.message-text').focus();
               }, 500);
 
@@ -107,7 +107,7 @@ $( document ).ready(function (){
   });
 
   // send message via websocket
-  function sendChatMessage (){
+  function sendChatMessage(){
     var messageText = $('.message-text').val();
 
     if(messageText == ''){
@@ -128,14 +128,14 @@ $( document ).ready(function (){
   }
 
   // when send message button clicked
-  $('.send-text').on('click', function (e){
+  $('.send-text').on('click', function(e){
     e.preventDefault();
 
     sendChatMessage();
   });
 
   // when enter button clicked
-  $(document).keypress(function (e){
+  $(document).keypress(function(e){
     if(e.which == 13){
       sendChatMessage();
     }
@@ -145,7 +145,7 @@ $( document ).ready(function (){
 var connectedUsersAmount = 0;
 
 // receive connected user amounts and new messages
-messageSocket.onmessage = function (message){
+messageSocket.onmessage = function(message){
 
   data = JSON.parse(message.data);
 
@@ -172,7 +172,7 @@ messageSocket.onmessage = function (message){
 };
 
 // close socket on page reload
-window.onbeforeunload = function (event)
+window.onbeforeunload = function(event)
 {
   console.log('closing!');
 
@@ -187,7 +187,7 @@ window.onbeforeunload = function (event)
 };
 
 // keep socket open for messages
-setInterval(function (){
+setInterval(function(){
 
   messageSocket.send(JSON.stringify({ message: 'KEEP-ALIVE'}));
 

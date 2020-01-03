@@ -140,12 +140,12 @@ if(process.env.LIVESTREAM_APP == 'true'){
 }
 
 // stringifies message objects
-function stringifyAndSend (webSocketConnection, objectToSend){
+function stringifyAndSend(webSocketConnection, objectToSend){
   webSocketConnection.send(JSON.stringify(objectToSend));
 }
 
 /** CALLBACK TO SEND A MESSAGE * */
-function messageSocketCallback (ws){
+function messageSocketCallback(ws){
   ws.on('message', (_message) => {
     // console.log(_message);
 
