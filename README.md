@@ -58,6 +58,11 @@ NodeTube comes with [ngrok](https://www.https://ngrok.com) preinstalled with the
 
 NodeTube is an Express application powered by NodeJS, with MongoDB as a database, with `redis` for caching and `ffmpeg` for converting and compressing video content. It uses Pug as a templating engine and loads process variables through the .env.settings and .env.private files. 
 
+NodeTube uses resumable.js on the frontend as a library to allow stable and resumable uploads allowing for the upload process to not be broken during a system reboot. 
+
+NodeTube has the functionality to act as an authentication app for an nginx-rtmp server which allows NodeTube to facilitate livestreaming. NodeTube also has a built in livestreaming frontend with a live chat, live viewer count and which uses HL.js to stream the files being created by nginx-rtmp.
+
+
 [This section is being expanded rapidly so please Watch this repo so you can easily see when more documentation is available]
 
 ## Reasons To Use NodeTube
