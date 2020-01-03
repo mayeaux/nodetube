@@ -66,7 +66,7 @@ async function setIndexValues(){
     console.log('Legit view amount calculated, setting redis amounts');
   }
 
-  viewAmount += legitCheckedViews;
+  viewAmount = viewAmount + legitCheckedViews;
 
   // set object properly
   redisClient.hmset('indexValues', {

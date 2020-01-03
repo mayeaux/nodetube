@@ -1,5 +1,5 @@
 
-/** MESSAGING FUNCTIONALITY**/
+/** MESSAGING FUNCTIONALITY **/ 
 
 var pathName = window.location.pathname;
 

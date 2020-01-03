@@ -73,7 +73,7 @@ if(!process.env.FILE_HOST || process.env.FILE_HOST == 'false'){
  * Page displaying most recently uploaded content
  */
 exports.recentUploads = async (req, res) => {
-  try{
+  try {
     console.log('getting recent uploads');
 
     const addressPrepend = '/media/recent';
@@ -134,7 +134,7 @@ exports.recentUploads = async (req, res) => {
       addressPrepend,
       categoryObj,
     });
-  } catch (err){
+  } catch(err){
     console.log(err);
     res.status(500);
     res.send('error');
@@ -186,7 +186,7 @@ exports.popularUploads = async (req, res) => {
   //  amount to show in brackets that equals view amount in time period
   let viewAmountInPeriod;
 
-  try{
+  try {
     switch(englishString){
     case'Last Hour':
       viewAmountInPeriod = viewStats.hour;
@@ -261,7 +261,7 @@ exports.popularUploads = async (req, res) => {
       withinDisplayString,
       popularTimeViews,
     });
-  } catch (err){
+  } catch(err){
     console.log('ERR:');
     console.log(err);
 

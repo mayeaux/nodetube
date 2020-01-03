@@ -59,7 +59,7 @@ async function iptracker(req, res, next){
           // save ref url and increment visit
           previousVisit.refs.push(header);
           previousVisit.history.push(reqUrl);
-          previousVisit.visits += 1;
+          previousVisit.visits = previousVisit.visits + 1;
           await previousVisit.save();
 
           // only allow one matching
@@ -83,7 +83,7 @@ async function iptracker(req, res, next){
           // console.log('matched old visit setup of ip');
           previousVisit.refs.push(header);
           previousVisit.history.push(reqUrl);
-          previousVisit.visits += 1;
+          previousVisit.visits = previousVisit.visits + 1;
           await previousVisit.save();
           matched = true;
 

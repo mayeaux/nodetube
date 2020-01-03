@@ -62,11 +62,11 @@ exports.postUsers = async (req, res) => {
 exports.deleteAllUsersAndBlockIps = async (req, res) => {
   console.log(req.body);
 
-  try{
+  try {
     const response = await deleteUsers.deleteAllUsersAndBlockIps(req.body.channelUrl);
 
     res.send(response);
-  } catch (err){
+  } catch(err){
     res.status(500);
     res.send('fail');
   }
@@ -76,7 +76,7 @@ exports.deleteAllUsersAndBlockIps = async (req, res) => {
 
 // TODO: add admin audit thing here
 exports.changeRatings = async (req, res) => {
-  try{
+  try {
     const rating = req.body.rating;
     const uploads = req.body.uploads;
 
@@ -111,7 +111,7 @@ exports.changeRatings = async (req, res) => {
     }
 
     res.send('success');
-  } catch (err){
+  } catch(err){
     res.status(500);
     res.send('fail');
   }
@@ -328,11 +328,11 @@ exports.sendNotification = async (req, res) => {
 };
 
 exports.getUserAccounts = async (req, res) => {
-  try{
+  try {
     const response = await deleteUsers.getUsersAndSiteVisitAmount(req.body.channelUrl);
 
     res.send(response);
-  } catch (err){
+  } catch(err){
     res.status(500);
     res.send('fail');
   }

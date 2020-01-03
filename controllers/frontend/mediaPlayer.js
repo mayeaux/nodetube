@@ -49,7 +49,7 @@ exports.getMedia = async (req, res) => {
 
   const emojis = ['like', 'dislike', 'laugh', 'sad', 'disgust', 'love'];
 
-  try{
+  try {
     // channel id and file name
     const channel = req.params.channel;
     const media = req.params.media;
@@ -258,7 +258,7 @@ exports.getMedia = async (req, res) => {
         viewingUserIsBlocked,
       });
     }
-  } catch (err){
+  } catch(err){
     console.log(err);
 
     res.status(500);

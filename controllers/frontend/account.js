@@ -11,7 +11,7 @@ const Notification = require('../../models/index').Notification;
 const SocialPost = require('../../models/index').SocialPost;
 const Subscription = require('../../models/index').Subscription;
 
-const{ uploadServer, uploadUrl } = require('../../lib/helpers/settings');
+const { uploadServer, uploadUrl } = require('../../lib/helpers/settings');
 
 const thumbnailServer = process.env.THUMBNAIL_SERVER || '';
 
@@ -23,7 +23,7 @@ const categories = require('../../config/categories');
 
 const uploadFilters = require('../../lib/mediaBrowsing/helpers');
 
-const{ saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
+const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
 
 const validator = require('email-validator');
 
@@ -64,7 +64,7 @@ exports.getFileUpload = async (req, res) => {
  * Get user's individual subscriptions page
  */
 exports.subscriptions = async (req, res) => {
-  try{
+  try {
     if(!req.user){
       req.flash('errors', { msg: 'Please register to see your subscriptions' });
 
@@ -113,7 +113,7 @@ exports.subscriptions = async (req, res) => {
       nextNumber,
       uploadServer,
     });
-  } catch (err){
+  } catch(err){
     console.log(err);
   }
 };
@@ -138,7 +138,7 @@ exports.getChannel = async (req, res) => {
   const previousNumber = pagination.getPreviousNumber(page);
   const nextNumber = pagination.getNextNumber(page);
 
-  try{
+  try {
     // find the user per channelUrl
     user = await User.findOne({
       channelUrl: new RegExp(['^', req.params.channel, '$'].join(''), 'i'),
@@ -318,7 +318,7 @@ exports.getChannel = async (req, res) => {
 
     let totalViews = 0;
     for(upload of uploads){
-      totalViews += upload.legitViewAmount;
+      totalViews = totalViews + upload.legitViewAmount;
     }
 
     user.totalViews = totalViews;
@@ -351,7 +351,7 @@ exports.getChannel = async (req, res) => {
       categories,
       joinedTimeAgo,
     });
-  } catch (err){
+  } catch(err){
     console.log(err);
 
     res.status(500);
@@ -366,7 +366,7 @@ exports.getChannel = async (req, res) => {
  * User's specific notifications page
  */
 exports.notification = async (req, res) => {
-  try{
+  try {
     const notifications = await Notification.find({
       user: req.user._id,
     }).populate('user sender upload react comment').sort({ createdAt: -1 });
@@ -390,7 +390,7 @@ exports.notification = async (req, res) => {
         await notif.save();
       }
     }
-  } catch (err){
+  } catch(err){
     console.log(err);
     return res.render('error/500');
   }
@@ -596,7 +596,7 @@ exports.getReset = (req, res, next) => {
  * Confirm email page
  */
 exports.getConfirm = async (req, res, next) => {
-  try{
+  try {
     const user = await User.findOne({ emailConfirmationToken: req.params.token }).where('emailConfirmationExpires').gt(Date.now());
 
     if(!user){
@@ -608,7 +608,7 @@ exports.getConfirm = async (req, res, next) => {
     await user.save();
     req.flash('success', { msg: 'Your email has been confirmed' });
     res.redirect('/account');
-  } catch (err){
+  } catch(err){
     console.log(err);
     return next(err);
   }

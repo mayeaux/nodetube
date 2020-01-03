@@ -12,7 +12,7 @@ const categories = require('../config/categories');
 
 const logCaching = process.env.LOG_CACHING;
 
-const{ filterUploadsBySensitivity, filterUploadsByCategory, filterUploadsBySubcategory, filterUploadsByMediaType } = require('../lib/mediaBrowsing/helpers');
+const { filterUploadsBySensitivity, filterUploadsByCategory, filterUploadsBySubcategory, filterUploadsByMediaType } = require('../lib/mediaBrowsing/helpers');
 
 let popularUploads;
 async function setGlobalPopularUploads(){

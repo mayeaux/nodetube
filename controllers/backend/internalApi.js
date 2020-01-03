@@ -19,7 +19,7 @@ const mkdirp = Promise.promisifyAll(require('mkdirp'));
 const mv = require('mv');
 
 const createAdminAction = require('../../lib/administration/createAdminAction');
-const{ saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
+const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
 
 // const stripe = require('stripe')(process.env.STRIPE_SKEY);
 // const twilio = require('twilio')(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
@@ -83,7 +83,7 @@ async function updateUsersUnreadSubscriptions(user){
   for(const subscription of subscriptions){
     const subscribingUser = await User.findOne({ _id: subscription.subscribingUser });
 
-    subscribingUser.unseenSubscriptionUploads += 1;
+    subscribingUser.unseenSubscriptionUploads = subscribingUser.unseenSubscriptionUploads + 1;
     await subscribingUser.save();
   }
 }
@@ -112,7 +112,7 @@ exports.changeDefaultUserQuality = async (req, res) => {
 };
 
 exports.blockUser = async (req, res) => {
-  try{
+  try {
     const blockedUsername = req.body.blockedUsername;
 
     console.log(`blocking ${blockedUsername} for ${req.user.channelUrl}`);
@@ -120,7 +120,7 @@ exports.blockUser = async (req, res) => {
     const blockedUser = await User.findOne({ channelUrl: blockedUsername }).select('id _id');
 
     let userAlreadyBlocked;
-    for(const[index, alreadyBlockedUser]of req.user.blockedUsers.entries()){
+    for(const [index, alreadyBlockedUser]of req.user.blockedUsers.entries()){
       if(alreadyBlockedUser == blockedUser._id.toString()){
         userAlreadyBlocked = true;
       }
@@ -136,7 +136,7 @@ exports.blockUser = async (req, res) => {
     await req.user.save();
 
     res.send('success');
-  } catch (err){
+  } catch(err){
     console.log(err);
     res.status(500);
     res.send('error');
@@ -144,13 +144,13 @@ exports.blockUser = async (req, res) => {
 };
 
 exports.unblockUser = async (req, res) => {
-  try{
+  try {
     const blockedUsername = req.body.blockedUsername;
 
     const blockedUser = await User.findOne({ channelUrl: blockedUsername }).select('id _id');
 
     let blockedUserIndex;
-    for(const[index, alreadyBlockedUser]of req.user.blockedUsers.entries()){
+    for(const [index, alreadyBlockedUser]of req.user.blockedUsers.entries()){
       if(alreadyBlockedUser == blockedUser._id.toString()){
         blockedUserIndex = index;
       }
@@ -161,7 +161,7 @@ exports.unblockUser = async (req, res) => {
     await req.user.save();
 
     res.send('success');
-  } catch (err){
+  } catch(err){
     console.log(err);
     res.status(500);
     res.send('error');
@@ -270,7 +270,7 @@ exports.deleteChannelThumbnail = async (req, res, next) => {
 
 /** delete upload thumbnail * */
 exports.deleteUploadThumbnail = async (req, res, next) => {
-  try{
+  try {
     console.log(req.body.uploadToken);
 
     if(!req.user && req.body.uploadToken){
@@ -294,7 +294,7 @@ exports.deleteUploadThumbnail = async (req, res, next) => {
     res.send('success');
 
     console.log(req.body);
-  } catch (err){
+  } catch(err){
     console.log(err);
   }
 };
@@ -454,7 +454,7 @@ exports.react = async (req, res, next) => {
 exports.editUpload = async (req, res, next) => {
   console.log(req.body);
 
-  try{
+  try {
     if(!req.user && req.body.uploadToken){
       req.user = await User.findOne({ uploadToken: req.body.uploadToken });
     }
@@ -543,7 +543,7 @@ exports.editUpload = async (req, res, next) => {
     await upload.save();
 
     return res.send('success');
-  } catch (err){
+  } catch(err){
     console.log(err);
     res.status(500);
     res.send('failure');
@@ -555,7 +555,7 @@ exports.editUpload = async (req, res, next) => {
  * List of API examples.
  */
 exports.deleteComment = async (req, res) => {
-  try{
+  try {
     // double check this comment doesn't already exist
     const existingComment = await Comment.findOne({ _id: req.body.commentId }).populate('commenter');
 
@@ -583,7 +583,7 @@ exports.deleteComment = async (req, res) => {
     await existingComment.save();
 
     res.send('success');
-  } catch (err){
+  } catch(err){
     console.log(err);
 
     res.status(500);
@@ -605,7 +605,7 @@ exports.postComment = async (req, res) => {
     return res.send('failed to post comment');
   }
 
-  try{
+  try {
     // double check this comment doesn't already exist
     const oldComment = await Comment.findOne({ text: req.body.comment, upload: req.body.upload });
 
@@ -697,7 +697,7 @@ exports.postComment = async (req, res) => {
     res.json(responseObject);
 
     // res.send('success')
-  } catch (err){
+  } catch(err){
     console.log(err);
 
     res.status(500);
@@ -764,14 +764,14 @@ exports.sendUserCredit = async (req, res) => {
   const receivingUserInitialCredit = receivingUser.receivedCredit;
   const sendingUserInitialCredit = sendingUser.credit;
 
-  sendingUser.credit -= amount;
+  sendingUser.credit = sendingUser.credit - amount;
   console.log(sendingUser.credit);
 
   await sendingUser.save();
 
   console.log(receivingUser.credit);
 
-  receivingUser.receivedCredit += amount;
+  receivingUser.receivedCredit = receivingUser.receivedCredit + amount;
 
   console.log(receivingUser.credit);
 

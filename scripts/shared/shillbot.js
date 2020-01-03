@@ -53,27 +53,27 @@ async function socialPostQueue(){
 
     // gab post
     if(postData.network == 'gab'){
-      try{
+      try {
         const response = await gab.gabPost(postData.message);
         console.log(response);
         postData.postedCorrectly = true;
-      } catch (err){
+      } catch(err){
         console.log(err);
       }
     } else if(postData.network == 'twitter'){
-      try{
+      try {
         const response = await twitter.twitterPost(postData.message);
         console.log(response);
         postData.postedCorrectly = true;
-      } catch (err){
+      } catch(err){
         console.log(err);
       }
     } else if(postData.network == 'facebook'){
-      try{
+      try {
         const response = await facebook.facebookPost(postData.message, socialPost.upload);
         console.log(response);
         postData.postedCorrectly = true;
-      } catch (err){
+      } catch(err){
         console.log(err);
       }
     }

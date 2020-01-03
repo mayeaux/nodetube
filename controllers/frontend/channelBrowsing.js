@@ -20,7 +20,7 @@ exports.channelsByReacts = async (req, res) => {
   const nextNumber = pagination.getNextNumber(page);
 
   // get and render
-  try{
+  try {
     let allChannels = await User.find({
       status: { $ne: 'restricted' },
     }).populate('subscribers uploads').lean().exec();
@@ -34,7 +34,7 @@ exports.channelsByReacts = async (req, res) => {
         if(upload.reacts){
           if(upload.reacts.length > 0){
             const amountOfReacts = upload.reacts.length;
-            reactAmount += amountOfReacts;
+            reactAmount = reactAmount + amountOfReacts;
           }
         }
       }
@@ -60,7 +60,7 @@ exports.channelsByReacts = async (req, res) => {
       previousNumber,
       nextNumber,
     });
-  } catch (err){
+  } catch(err){
     console.log(err);
 
     res.status(500);
@@ -85,7 +85,7 @@ exports.channelsBySubs = async (req, res) => {
   const nextNumber = pagination.getNextNumber(page);
 
   // get and render
-  try{
+  try {
     let allChannels = await User.find({
       status: { $ne: 'restricted' },
       'receivedSubscriptions.0': { $exists: true },
@@ -101,7 +101,7 @@ exports.channelsBySubs = async (req, res) => {
       previousNumber,
       nextNumber,
     });
-  } catch (err){
+  } catch(err){
     console.log(err);
 
     res.status(500);
@@ -137,7 +137,7 @@ exports.channels = async (req, res) => {
   // console.log(withinString, englishString);
 
   // get and render
-  try{
+  try {
     const channels = await getFromCache.getChannels(req.query.within, limit, skipAmount);
 
     // let uploads = await getUploads.getUploads(req.query.within, limit, skipAmount);
@@ -153,7 +153,7 @@ exports.channels = async (req, res) => {
       previousNumber,
       nextNumber,
     });
-  } catch (err){
+  } catch(err){
     console.log(err);
 
     res.status(500);

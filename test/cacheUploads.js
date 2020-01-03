@@ -3,7 +3,7 @@ const chai = require('chai');
 
 const should = chai.should();
 
-const{ expect } = require('chai');
+const { expect } = require('chai');
 const sinon = require('sinon');
 // require('sinon-mongoose');
 
@@ -13,7 +13,7 @@ const mongoUri = 'mongodb://localhost:27017/prodpewd';
 
 /**
  * Connect to MongoDB.
- */
+*/
 mongoose.Promise = global.Promise;
 
 mongoose.Promise = global.Promise;
@@ -78,10 +78,10 @@ describe('getTimeAgoValue function', () => {
 
     let error;
 
-    try{
+    try {
       const timeRange = '24h';
       const timeAgoValue = getTimeAgoValue(timeRange);
-    } catch (err){
+    } catch(err){
       error = err;
     }
 
@@ -94,8 +94,8 @@ describe('buildUploadData function', () => {
 
   // known issue with chai
   // it('should be a function', function(done) {
-  //   buildUploadData.should.be.a('function');
-  //   done();
+  // buildUploadData.should.be.a('function');
+  // done();
   // });
 
 });

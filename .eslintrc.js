@@ -36,13 +36,17 @@ module.exports = {
           "error", 
           { "max": 1, "maxEOF": 1}
       ],
-    //   "keyword-spacing": ["error", { "before": false, "after": false }],
       "keyword-spacing": ["error", { "before": false, "after": false , "overrides": {
         "else": { "before": true, "after": true },
-        "catch": { "before": true, "after": true }
+        "try": { "before": true, "after": true },
+        "catch": { "before": true, "after": false },
+        "const": { "before": true, "after": true }
       } }],
       "space-before-function-paren": ["error", "never"],
       "space-before-blocks": ["error", "never"],
+      "operator-assignment": ["error", "never"],
+      //"spaced-comment": ["error", "always", { "exceptions": ["*"] }],
+     "spaced-comment": ["error", "always", { "exceptions": ["*"], "block": { "balanced": true } }],
       "no-useless-escape": 0,
       "no-console": 0,
       "no-unused-vars": 0,

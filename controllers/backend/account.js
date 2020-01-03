@@ -26,7 +26,7 @@ const frontendServer = process.env.FRONTEND_SERVER || '';
 
 const verifyEmailPassword = process.env.PEWTUBE_VERIFY_EMAIL_PASSWORD;
 
-const{ saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
+const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
 
 // a.mayfield.contact
 const recaptcha = new reCAPTCHA({
@@ -34,7 +34,7 @@ const recaptcha = new reCAPTCHA({
   secretKey: process.env.RECAPTCHA_SECRETKEY,
 });
 
-const{ b2 } = require('../../lib/uploading/backblaze');
+const { b2 } = require('../../lib/uploading/backblaze');
 const pagination = require('../../lib/helpers/pagination');
 
 // where to send users to after login
@@ -99,9 +99,9 @@ exports.postLogin = async (req, res, next) => {
 exports.postSignup = async (req, res, next) => {
   // CAPTCHA VALIDATION
   if(process.env.NODE_ENV == 'production' && process.env.RECAPTCHA_ON == 'true'){
-    try{
+    try {
       const response = await recaptcha.validate(req.body['g-recaptcha-response']);
-    } catch (err){
+    } catch(err){
       req.flash('errors', { msg: 'Captcha failed, please try again' });
       return res.redirect('/signup');
     }
@@ -348,7 +348,7 @@ exports.postReset = async (req, res, next) => {
  * Create a random token, then the send user an email with a reset link.
  */
 exports.postForgot = async (req, res, next) => {
-  try{
+  try {
     if(process.env.FORGOT_PASSWORD_EMAIL_FUNCTIONALITY_ON !== 'true'){
       return res.send('forgot email functionality not on');
     }
@@ -387,7 +387,7 @@ exports.postForgot = async (req, res, next) => {
     req.flash('info', { msg: 'If the email address exists you will receive further instructions on resetting your password there.' });
 
     return res.redirect('/forgot');
-  } catch (err){
+  } catch(err){
     console.log(err);
     res.render('error/500');
   }
@@ -398,7 +398,7 @@ exports.postForgot = async (req, res, next) => {
  * Create a random token, then the send user an email with a confirmation link
  */
 exports.postConfirmEmail = async (req, res, next) => {
-  try{
+  try {
     if(process.env.CONFIRM_USER_EMAIL_FUNCTIONALITY_ON !== 'true'){
       return res.send('forgot email functionality not on');
     }
@@ -436,7 +436,7 @@ exports.postConfirmEmail = async (req, res, next) => {
     req.flash('info', { msg: 'An email has been sent to your address to confirm your email' });
 
     return res.redirect('/account');
-  } catch (err){
+  } catch(err){
     // if the email is already in use
     if(err && err.errors && err.errors.email && err.errors.email.kind && (err.errors.email.kind == 'unique')){
       req.flash('errors', { msg: 'That email is already in use, please try another' });

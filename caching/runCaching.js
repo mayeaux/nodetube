@@ -54,9 +54,9 @@ const cachePopularUploads = require('./cachePopularUploads'); // index and daily
 // const cacheRecentUploads = require('./cacheRecentAndPopularUploads');
 
 async function main(){
-  try{
+  try {
     await cacheRecentUploads();
-  } catch (err){
+  } catch(err){
     console.log(err);
   }
 }
@@ -73,13 +73,13 @@ if(logCaching == 'true'){
 }
 
 async function runCaching(){
-  try{
+  try {
     await cachePopularUploads();
     await setCache.setDailyStats();
     await setCache.setIndexValues();
 
     // await cacheChannels();
-  } catch (err){
+  } catch(err){
     console.log(err);
   }
 }

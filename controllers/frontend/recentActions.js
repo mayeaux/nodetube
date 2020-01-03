@@ -38,7 +38,7 @@ exports.recentComments = async (req, res) => {
 
   const nextNumber = pagination.getNextNumber(page);
 
-  try{
+  try {
     let comments = await Comment.find({
       visibility: { $ne: 'removed' },
     }).populate({ path: 'upload commenter', populate: { path: 'uploader' } })
@@ -60,7 +60,7 @@ exports.recentComments = async (req, res) => {
       documents: comments,
       recentActionDisplayName: 'Recent Comments',
     });
-  } catch (err){
+  } catch(err){
     console.log(err);
     res.send('ERR');
   }

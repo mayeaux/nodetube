@@ -21,9 +21,9 @@ const Notification = require('../../models/index').Notification;
 const SocialPost = require('../../models/index').SocialPost;
 const Subscription = require('../../models/index').Subscription;
 
-const{ saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
+const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
 const getMediaType = require('../../lib/uploading/media');
-const{ b2, bucket, hostUrl } = require('../../lib/uploading/backblaze');
+const { b2, bucket, hostUrl } = require('../../lib/uploading/backblaze');
 
 const mongooseHelpers = require('../../caching/mongooseHelpers');
 const ffmpegHelper = require('../../lib/uploading/ffmpeg');
@@ -50,7 +50,7 @@ const uploadLogger = winston.loggers.get('uploadEndpoint');
  * File Upload API example.
  */
 exports.postFileUpload = async (req, res, next) => {
-  try{
+  try {
     // if uploads are off and user not auto allowed
     if(uploadsOn == 'false' && !req.user.privs.autoVisibleUpload){
       console.log('HERE');
@@ -395,7 +395,7 @@ exports.postFileUpload = async (req, res, next) => {
         res.send(status);
       }
     });
-  } catch (err){
+  } catch(err){
     console.log(err);
   }
 };
