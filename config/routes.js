@@ -3,7 +3,7 @@ const path = require('path');
 
 /**
  * Controllers (route handlers).
-*/
+ */
 /** BACKEND API CONTROLLERS **/
 const accountBackendController = require('../controllers/backend/account');
 const adminBackendController = require('../controllers/backend/admin');
@@ -14,6 +14,7 @@ const socialMediaBackendController = require('../controllers/backend/socialMedia
 const uploadingController = require('../controllers/backend/uploading');
 const youtubeController = require('../controllers/backend/youtube');
 const supportBackendController = require('../controllers/backend/support');
+
 
 /** FRONTEND PAGE CONTROLLERS **/
 const accountFrontendController = require('../controllers/frontend/account');
@@ -27,6 +28,7 @@ const recentActionsController = require('../controllers/frontend/recentActions')
 const socialMediaFrontendController = require('../controllers/frontend/socialMedia');
 const supportFrontendController = require('../controllers/frontend/support');
 
+
 /** passport config **/
 const passportConfig = require('../config/passport');
 const authMiddleware = require('../middlewares/shared/authentication');
@@ -36,13 +38,14 @@ function fileHostRoutes(app){
 
   // set res header to upload to another server
   if(process.env.ALLOW_COR == 'true'){
-    app.use((req, res, next) => {
-      res.setHeader('Access-Control-Allow-Origin', '*');
-      res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With');
-      res.setHeader('Access-Control-Allow-Methods', 'PUT, GET, POST, OPTIONS');
-      res.setHeader('Cache-Control', 'no-cache');
+    app.use(function (req, res, next) {
 
-      next();
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader("Access-Control-Allow-Headers", "X-Requested-With");
+      res.setHeader("Access-Control-Allow-Methods", "PUT, GET, POST, OPTIONS");
+      res.setHeader("Cache-Control", "no-cache");
+
+      next()
     });
   }
 
@@ -60,26 +63,29 @@ function fileHostRoutes(app){
   app.post('/api/channel/thumbnail/delete', internalApiController.deleteChannelThumbnail);
 
 // anything that misses, return a 404
-  app.get('*', (req, res, next) => {
+  app.get('*', function (req, res, next) {
+
     res.status(404);
 
     return res.render('error/404noheader', {
       title: 'Not Found'
     });
   });
+
 }
 
 function livestreamRoutes(app){
   console.log('Running as livestream app');
 
   // set res header to upload to another server
-  app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With');
-    res.setHeader('Access-Control-Allow-Methods', 'PUT, GET, POST, OPTIONS');
-    res.setHeader('Cache-Control', 'no-cache');
+  app.use(function (req, res, next) {
 
-    next();
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader("Access-Control-Allow-Headers", "X-Requested-With");
+    res.setHeader("Access-Control-Allow-Methods", "PUT, GET, POST, OPTIONS");
+    res.setHeader("Cache-Control", "no-cache");
+
+    next()
   });
 
   app.get('/', publicController.index);
@@ -98,20 +104,22 @@ function livestreamRoutes(app){
 
   app.post('/login', accountBackendController.postLogin);
 
+
   // kurento routes
   // app.get(/\/user\/(.+)\/live\/staging/, livestreamController.getStaging);
   // app.get(/\/user\/(.+)\/live/, livestreamController.getLive);
 
   /** redirect all routes to the pewtube.com equivalent **/
-  app.get('*', (req, res, next) => {
+  app.get('*', function (req, res, next) {
+
     const frontendAppUrl = 'https://pewtube.com';
 
-    return res.redirect(frontendAppUrl + req.path);
+    return res.redirect(frontendAppUrl + req.path)
   });
 }
 
 function frontendRoutes(app){
-  console.log('RUNNING AS FRONTEND');
+  console.log('RUNNING AS FRONTEND')
 
   /** publicly available routes **/
   app.get('/', publicController.index);
@@ -143,17 +151,21 @@ function frontendRoutes(app){
   /** user channel and individual media page */
   app.get('/user/:channel', accountFrontendController.getChannel);
 
+
   /** media browsing routes **/
   app.get('/media/recent', mediaBrowsingController.recentUploads);
   app.get('/media/recent/:page', mediaBrowsingController.recentUploads);
-  app.get('/media/popular', mediaBrowsingController.popularUploads);
+  app.get('/media/popular',  mediaBrowsingController.popularUploads);
   app.get('/media/popular/:page', mediaBrowsingController.popularUploads);
 
+
   app.get('/media/popularByReacts', authMiddleware.plusAuth, mediaBrowsingController.popularByReacts);
+
 
   /** search functionality **/
   app.get('/search', mediaBrowsingController.search);
   app.get('/search/:page', mediaBrowsingController.search);
+
 
   /** livestream routes **/
   // app.get(/\/user\/(.+)\/live/, livestreamController.getLive);
@@ -198,19 +210,22 @@ function frontendRoutes(app){
 
   app.post('/api/comment', passportConfig.isAuthenticated, internalApiController.postComment);
   app.post('/api/comment/delete', passportConfig.isAuthenticated, internalApiController.deleteComment);
-  app.post('/api/subscribe', passportConfig.isAuthenticated, internalApiController.subscribeEndpoint);
+  app.post(`/api/subscribe`, passportConfig.isAuthenticated, internalApiController.subscribeEndpoint);
   app.post('/api/credit', passportConfig.isAuthenticated, internalApiController.sendUserCredit);
   app.post('/api/report', passportConfig.isAuthenticated, internalApiController.reportUpload);
   app.post('/api/user/block', passportConfig.isAuthenticated, internalApiController.blockUser);
   app.post('/api/user/unblock', passportConfig.isAuthenticated, internalApiController.unblockUser);
 
+
   // for users or siteVisitors
-  app.post('/api/changeUserFilter', internalApiController.changeUserFilter);
-  app.post('/api/changeUserDefaultQuality/:quality/', internalApiController.changeDefaultUserQuality);
+  app.post(`/api/changeUserFilter`, internalApiController.changeUserFilter);
+  app.post('/api/changeUserDefaultQuality/:quality/',  internalApiController.changeDefaultUserQuality);
+
 
   // purchase endpoints
   app.post('/api/purchase/plus', passportConfig.isAuthenticated, purchaseController.purchasePlus);
-  app.post('/api/purchase/credit', passportConfig.isAuthenticated, purchaseController.purchaseCredits);
+  app.post('/api/purchase/credit',passportConfig.isAuthenticated,  purchaseController.purchaseCredits);
+
 
   /** Account Pages **/
   app.get('/account', passportConfig.isAuthenticated, accountFrontendController.getAccount);
@@ -220,6 +235,9 @@ function frontendRoutes(app){
 
   app.get('/media/subscribed', passportConfig.isAuthenticated, accountFrontendController.subscriptions);
   app.get('/media/subscribed/:page', passportConfig.isAuthenticated, accountFrontendController.subscriptions);
+
+
+
 
   // upload page
   app.get('/upload', passportConfig.isAuthenticated, accountFrontendController.getFileUpload);
@@ -238,6 +256,7 @@ function frontendRoutes(app){
   // save user's youtube channel id
   app.post('/account/backup', passportConfig.isAuthenticated, youtubeController.saveYouTubeChannelId);
 
+
   /** ROUTE TO MODERATE PENDING VIDEOS **/
   app.get('/pending', authMiddleware.moderatorAuth, adminFrontendController.getPending);
 
@@ -252,6 +271,8 @@ function frontendRoutes(app){
 
   app.get('/support/reports', authMiddleware.moderatorAuth, supportFrontendController.getReports);
 
+
+
   /** ADMIN PAGES **/
   app.get('/admin/users', authMiddleware.adminAuth, adminFrontendController.getUsers);
   app.get('/admin/comments', authMiddleware.adminAuth, adminFrontendController.getComments);
@@ -263,12 +284,16 @@ function frontendRoutes(app){
   app.get('/admin/notifications', authMiddleware.adminAuth, adminFrontendController.getNotificationPage);
   app.get('/admin/adminAudit', authMiddleware.adminAuth, adminFrontendController.getAdminAudit);
 
+
+
+
   /** SOCIAL MEDIA ENDPOINTS **/
   app.get('/admin/createSocialPost', authMiddleware.adminAuth, socialMediaFrontendController.getCreateSocialPost);
   app.get('/admin/oneOffSocialPost', authMiddleware.adminAuth, socialMediaFrontendController.getOneOffSocialPost);
 
   app.post('/admin/createSocialPost', authMiddleware.adminAuth, socialMediaBackendController.postCreateSocialPost);
   app.post('/admin/oneOffSocialPost', authMiddleware.adminAuth, socialMediaBackendController.postOneOffSocialPost);
+
 
   /** ADMIN API ROUTES **/
   app.post('/admin/comments', authMiddleware.adminAuth, adminBackendController.postComments);
@@ -284,12 +309,15 @@ function frontendRoutes(app){
   app.post('/admin/siteVisitors', authMiddleware.adminAuth, adminBackendController.postSiteVisitors);
   app.post('/admin/notifications', authMiddleware.adminAuth, adminBackendController.sendNotification);
 
-  app.get('/debug', async (req, res, next) => res.render('error/debug', {
-    title: 'Debug'
-  }));
+  app.get('/debug', async function (req, res, next) {
+    return res.render('error/debug', {
+      title: 'Debug'
+    })
+  });
 
   // anything that misses, return a 404
-  app.get('*', (req, res, next) => {
+  app.get('*', function (req, res, next) {
+
     res.status(404);
 
     return res.render('error/404', {
@@ -299,8 +327,8 @@ function frontendRoutes(app){
 
   /** Oauth/API stuff that isn't being used **/
   // /**
-  //* API examples routes.
-  //* /
+  //  * API examples routes.
+  //  */
   // app.get('/api', internalApiController.getApi);
   // app.get('/api/stripe', internalApiController.getStripe);
   // app.post('/api/stripe', internalApiController.postStripe);
@@ -313,20 +341,20 @@ function frontendRoutes(app){
   // app.get('/auth/youtube', passport.authenticate('youtube'));
   // app.get('/auth/youtube/callback', passport.authenticate('youtube', {failureRedirect: '/account'}), (req, res) => {
   //
-  // console.log('success');
+  //   console.log('success');
   //
-  // res.redirect('/account');
+  //   res.redirect('/account');
   // });
   //
   // app.get('/auth/facebook', passport.authenticate('facebook', {scope: ['email', 'public_profile']}));
   // app.get('/auth/twitter/callback', passport.authenticate('facebook', {failureRedirect: '/login'}), (req, res) => {
-  // res.redirect(req.session.returnTo || '/');
+  //   res.redirect(req.session.returnTo || '/');
   // });
   //
   //
   // app.get('/auth/twitter', passport.authenticate('twitter'));
   // app.get('/auth/twitter/callback', passport.authenticate('twitter', {failureRedirect: '/login'}), (req, res) => {
-  // res.redirect(req.session.returnTo || '/');
+  //   res.redirect(req.session.returnTo || '/');
   // });
 }
 

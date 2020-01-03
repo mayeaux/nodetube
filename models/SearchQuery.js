@@ -5,7 +5,7 @@ const SearchQuerySchema = new mongoose.Schema({
   searcher: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
-  }
+  },
 
 }, { timestamps: true });
 

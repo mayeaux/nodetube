@@ -7,7 +7,8 @@ const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const OpenIDStrategy = require('passport-openid').Strategy;
 const OAuthStrategy = require('passport-oauth').OAuthStrategy;
 const OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
-const YoutubeV3Strategy = require('passport-youtube-v3').Strategy;
+var YoutubeV3Strategy = require('passport-youtube-v3').Strategy
+
 
 const User = require('../models/User');
 
@@ -25,16 +26,17 @@ passport.deserializeUser((id, done) => {
  * Sign in using Email and Password.
  */
 passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
-  const user = await User.findOne({
+
+  let user = await User.findOne({
     $or: [
-      { email: email.toLowerCase() },
-      { channelUrl: new RegExp(['^', email, '$'].join(''), 'i') }
-    ]
+      { email : email.toLowerCase() },
+      { channelUrl : new RegExp(["^", email, "$"].join(""), "i") }
+  ]
   });
 
   // console.log(user);
 
-  if(!user){
+  if (!user) {
     return done(null, false, { msg: `Username ${email} not found.` });
   }
 
@@ -43,19 +45,19 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, passwor
   }
 
   user.comparePassword(password, (err, isMatch) => {
-    if(err){ return done(err); }
-    if(isMatch){
-      return done(null, user);
-    }
-    return done(null, false, { msg: 'Invalid username or password.' });
-  });
+      if (err) { return done(err); }
+      if (isMatch) {
+        return done(null, user);
+      }
+      return done(null, false, { msg: 'Invalid username or password.' });
+    });
 }));
 
 /**
  * Login Required middleware.
  */
 exports.isAuthenticated = (req, res, next) => {
-  if(req.isAuthenticated()){
+  if (req.isAuthenticated()) {
     return next();
   }
   res.redirect('/login');
@@ -67,12 +69,15 @@ exports.isAuthenticated = (req, res, next) => {
 exports.isAuthorized = (req, res, next) => {
   const provider = req.path.split('/').slice(-1)[0];
   const token = req.user.tokens.find(token => token.kind === provider);
-  if(token){
+  if (token) {
     next();
   } else {
     res.redirect(`/auth/${provider}`);
   }
 };
+
+
+
 
 /**
  * OAuth Strategy Overview

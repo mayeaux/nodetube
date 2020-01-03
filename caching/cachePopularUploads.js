@@ -10,7 +10,7 @@ const sizeof = require('object-sizeof');
 const moment = require('moment');
 
 const c = {
-  l: console.log
+  l : console.log
 };
 
 const redisClient = require('../config/redis');
@@ -26,44 +26,49 @@ const buildObjects = helpers.buildObjects;
 const logCaching = process.env.LOG_CACHING;
 
 async function getPopularUploads(){
+
   if(logCaching == 'true'){
-    c.l('Getting popular uploads');
+    c.l(`Getting popular uploads`);
   }
 
   // TODO: have to have a job to update upload's view amounts
   // TODO: have to build 4 arrays of ~1000
 
   const searchQuery = {
-    $or: [{ status: 'completed' }, { uploadUrl: { $exists: true } }],
+    $or : [ { status: 'completed' }, { uploadUrl: { $exists: true } } ],
     visibility: 'public',
-    sensitive: { $ne: true },
+    sensitive: { $ne : true },
     uploader: { $exists: true },
-    category: { $exists: true }
+    category : { $exists: true }
   };
 
   const selectString = 'rating title views checkedViews uploader fileType thumbnailUrl ' +
     'uploadUrl uniqueTag customThumbnailUrl fileExtension thumbnails reacts uncurated category subcategory';
 
-  const popularUploads = await Upload.find(searchQuery).select(selectString).populate('uploader reacts')
+  let popularUploads = await Upload.find(searchQuery).select(selectString).populate('uploader reacts')
     .lean();
 
   if(logCaching == 'true'){
-    c.l('Uploads received from database');
+    c.l(`Uploads received from database`);
 
     c.l(popularUploads.length);
   }
 
-  return popularUploads;
+  return popularUploads
 }
 
-async function setPopularUploads(){
-  let popularUploads = await getPopularUploads();
+
+async function setPopularUploads() {
+  let popularUploads  = await getPopularUploads();
 
   // do more stringent check for uploader
-  popularUploads = _.filter(popularUploads, upload => upload.uploader);
+  popularUploads =  _.filter(popularUploads, function(upload){
+    return upload.uploader;
+  });
 
   // calculate view periods for each upload
-  popularUploads = await Promise.all(popularUploads.map(async (upload) => {
+  popularUploads = await Promise.all(popularUploads.map(async function(upload){
+
     // get all valid views per upload
     const uploadViews = await View.find({ upload, validity: 'real' }).select('createdAt');
 
@@ -89,8 +94,12 @@ async function setPopularUploads(){
     c.l(`REDIS RESPONSE FOR ${redisKey}: ${response}`);
 
     c.l(`${redisKey} cached`);
+
   }
 }
 
 module.exports = setPopularUploads;
+
+
+
 

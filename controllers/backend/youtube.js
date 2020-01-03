@@ -9,7 +9,7 @@ const captchapng = require('captchapng');
 const _ = require('lodash');
 const reCAPTCHA = require('recaptcha2');
 const mongooseHelper = require('../../caching/mongooseHelpers');
-let formidable = require('formidable');
+var formidable = require('formidable');
 const mv = require('mv');
 
 const Upload = require('../../models/index').Upload;
@@ -23,12 +23,13 @@ const Subscription = require('../../models/index').Subscription;
 
 const apiKey = 'AIzaSyByk-KTWDqwVejYLHUwKa6VFBTMe0lnQNk';
 const requestModule = require('request');
-
 const request = Promise.promisifyAll(requestModule);
+
 
 // pewdie = UC-lHJZR3Gqxm24_Vd_AJ5Yw
 
 async function testId(channelId){
+
 
   // test if it was a username
   const testUrl = `https://www.googleapis.com/youtube/v3/channels?key=${apiKey}&forUsername=${channelId}&part=id`;
@@ -36,7 +37,7 @@ async function testId(channelId){
   // get request to api
   let response =  await request.getAsync(testUrl);
 
-  let body = JSON.parse(response[0].body);
+  const body = JSON.parse(response[0].body);
 
   console.log(body.items);
 
@@ -44,28 +45,32 @@ async function testId(channelId){
   if(body.items && body.items[0]){
     console.log(`'username, returning id:  ( ${body.items[0].id} )` );
     return body.items[0].id;
-  } 
+  } else {
 
     // if there are no items try by id
-  let channelAPI = `https://www.googleapis.com/youtube/v3/search?key=${apiKey}` +
+    let channelAPI = `https://www.googleapis.com/youtube/v3/search?key=${apiKey}` +
       `&channelId=${channelId}&part=snippet,id&order=date&maxResults=50`;
 
-  const nextResponse =  await request.getAsync(channelAPI);
+    const nextResponse =  await request.getAsync(channelAPI);
 
     // parse json
-  body = JSON.parse(nextResponse[0].body);
+    const body = JSON.parse(nextResponse[0].body);
 
-  // return channelId if exists
-  if(body.items && body.items[0]){
-    console.log(`'username, returning id:  ( ${channelId} )` );
-    return channelId;
+    // return channelId if exists
+    if(body.items && body.items[0]){
+      console.log(`'username, returning id:  ( ${channelId} )` );
+      return channelId
+    }
+
+    // returning false as default
+    console.log('returning false');
+
+    return false
+
   }
 
-  // returning false as default
-  console.log('returning false');
-
-  return false;
 }
+
 
 /**
  * POST /account/backup
@@ -88,10 +93,13 @@ exports.saveYouTubeChannelId = async (req, res, next) => {
         channelId: legitId
       });
 
-    } 
-    return res.send('not legit');
-    
+    } else {
+      return res.send('not legit');
+    }
   }
+
+
+
 
   // TURN BACKUP BUTTON ON AND OFF
   if(req.body.backupOn == 'true'){

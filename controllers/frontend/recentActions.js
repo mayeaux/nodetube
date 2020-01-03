@@ -12,7 +12,6 @@ const SocialPost = require('../../models/index').SocialPost;
 const Subscription = require('../../models/index').Subscription;
 
 const uploadHelpers = require('../../lib/helpers/settings');
-
 const uploadServer = uploadHelpers.uploadServer;
 
 /**
@@ -23,7 +22,7 @@ exports.recentComments = async (req, res) => {
   let page = req.params.page;
 
   if(!page){
-    page = 1;
+    page = 1
   }
 
   page = parseInt(page);
@@ -39,15 +38,18 @@ exports.recentComments = async (req, res) => {
   const nextNumber = pagination.getNextNumber(page);
 
   try {
+
     let comments = await Comment.find({
-      visibility: { $ne: 'removed' }
-    }).populate({ path: 'upload commenter', populate: { path: 'uploader' } })
+      visibility : { $ne: 'removed'}
+    }).populate({path: 'upload commenter', populate: {path: 'uploader'}})
       .sort({ createdAt: -1 })
       .skip((page * limit) - limit)
       .limit(limit);
 
     // delete comments from videos that arent public
-    comments = _.filter(comments, comment => comment.upload && comment.upload.visibility == 'public');
+    comments = _.filter(comments, function(comment){
+      return comment.upload && comment.upload.visibility == 'public'
+    });
 
     res.render('public/recentReacts', {
       title: 'Recent Comments',
@@ -60,21 +62,26 @@ exports.recentComments = async (req, res) => {
       documents: comments,
       recentActionDisplayName: 'Recent Comments'
     });
-  } catch(err){
-    console.log(err);
+
+  } catch (err){
+    console.log(err)
     res.send('ERR');
   }
+
+
 };
+
 
 /**
  * GET /media/recentComments
  * Recent reacts
  */
 exports.recentReacts = async (req, res) => {
+
   let page = req.params.page;
 
   if(!page){
-    page = 1;
+    page = 1
   }
   page = parseInt(page);
 
@@ -92,12 +99,14 @@ exports.recentReacts = async (req, res) => {
 
   let reacts = await React.find({
 
-  }).populate({ path: 'upload user', populate: { path: 'uploader' } })
+  }).populate({path: 'upload user', populate: {path: 'uploader'}})
     .sort({ createdAt: -1 })
     .skip((page * limit) - limit)
     .limit(limit);
 
-  reacts = _.filter(reacts, react => react.upload.visibility == 'public' && react.upload.status !== 'processing');
+  reacts = _.filter(reacts, function(react){
+    return react.upload.visibility == 'public' && react.upload.status !== 'processing'
+  });
 
   res.render('public/recentReacts', {
     title: 'Recent Reacts',
@@ -111,17 +120,21 @@ exports.recentReacts = async (req, res) => {
     documents: reacts,
     recentActionDisplayName: 'Recent Reacts'
   });
+
 };
+
+
 
 /**
  * GET /media/recentViews
  * Organize uploads by most recently viewed
  */
 exports.recentViews = async (req, res) => {
+
   let page = req.params.page;
 
   if(!page){
-    page = 1;
+    page = 1
   }
 
   page = parseInt(page);
@@ -136,14 +149,17 @@ exports.recentViews = async (req, res) => {
 
   const nextNumber = pagination.getNextNumber(page);
 
+
   let views = await View.find({
     validity: 'real'
-  }).populate({ path: 'upload', populate: { path: 'uploader' } })
+  }).populate({path: 'upload', populate: {path: 'uploader'}})
     .sort({ createdAt: -1 })
     .skip((page * limit) - limit)
     .limit(limit);
 
-  views = _.filter(views, view => view.upload.visibility == 'public' && view.upload.status !== 'processing');
+  views = _.filter(views, function(view){
+    return view.upload.visibility == 'public' && view.upload.status !== 'processing'
+  });
 
   res.render('public/recentReacts', {
     title: 'Recent Views',
@@ -156,4 +172,5 @@ exports.recentViews = async (req, res) => {
     documents: views,
     recentActionDisplayName: 'Recent Views'
   });
+
 };

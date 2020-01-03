@@ -1,4 +1,4 @@
-const rp = require('request-promise');
+var rp = require('request-promise');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
@@ -7,6 +7,7 @@ const twitter = require('../../lib/socialMedia/twitter');
 // const facebook = require('./facebook');
 const facebook = require('../../lib/socialMedia/facebook');
 
+
 process.on('unhandledRejection', console.log);
 
 dotenv.load({ path: '../.env.private' });
@@ -14,7 +15,7 @@ dotenv.load({ path: '../.env.settings' });
 
 const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/nov28pewtube';
 
-console.log(`Connected to ${mongoUri}`);
+console.log('Connected to ' + mongoUri);
 
 mongoose.Promise = global.Promise;
 
@@ -43,12 +44,13 @@ async function socialPostQueue(){
 
   if(!socialPost){
     console.log('No unsent socialPost');
-    return;
+    return
   }
 
   console.log('Sending off socialPost');
 
   for(const postData of socialPost.postData){
+
     // console.log(postData);
 
     // gab post
@@ -57,23 +59,23 @@ async function socialPostQueue(){
         const response = await gab.gabPost(postData.message);
         console.log(response);
         postData.postedCorrectly = true;
-      } catch(err){
+      } catch (err){
         console.log(err);
       }
-    } else if(postData.network == 'twitter'){
+    } else if (postData.network == 'twitter'){
       try {
         const response = await twitter.twitterPost(postData.message);
         console.log(response);
         postData.postedCorrectly = true;
-      } catch(err){
+      } catch (err){
         console.log(err);
       }
-    } else if(postData.network == 'facebook'){
+    } else if (postData.network == 'facebook'){
       try {
         const response = await facebook.facebookPost(postData.message, socialPost.upload);
         console.log(response);
         postData.postedCorrectly = true;
-      } catch(err){
+      } catch (err){
         console.log(err);
       }
     }
@@ -93,6 +95,6 @@ if(process.env.SHILLBOT_ON == 'true'){
 
   setInterval(socialPostQueue, 1000 * 60 * shillInterval);
 } else {
-  console.log('Shillbot not turned on');
+  console.log('Shillbot not turned on')
 }
 

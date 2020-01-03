@@ -4,7 +4,6 @@ const javascriptTimeAgo = require('javascript-time-ago');
 javascriptTimeAgo.locale(require('javascript-time-ago/locales/en'));
 require('javascript-time-ago/intl-messageformat-global');
 require('intl-messageformat/dist/locale-data/en');
-
 const timeAgoEnglish = new javascriptTimeAgo('en-US');
 
 const receivedEmailSchema = new mongoose.Schema({
@@ -20,14 +19,16 @@ const receivedEmailSchema = new mongoose.Schema({
     default: false
   }
 }, {
-  timestamps: true
+    timestamps: true
+  });
+
+receivedEmailSchema.virtual('timeAgo').get(function () {
+  return timeAgoEnglish.format( new Date(this.createdAt) )
 });
 
-receivedEmailSchema.virtual('timeAgo').get(function(){
-  return timeAgoEnglish.format(new Date(this.createdAt));
-});
 
 const ReceivedEmail = mongoose.model('ReceivedEmail', receivedEmailSchema);
 
 module.exports = ReceivedEmail;
+
 

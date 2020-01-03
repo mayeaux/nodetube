@@ -4,7 +4,6 @@ const javascriptTimeAgo = require('javascript-time-ago');
 javascriptTimeAgo.locale(require('javascript-time-ago/locales/en'));
 require('javascript-time-ago/intl-messageformat-global');
 require('intl-messageformat/dist/locale-data/en');
-
 const timeAgoEnglish = new javascriptTimeAgo('en-US');
 
 const notificationSchema = new mongoose.Schema({
@@ -41,17 +40,19 @@ const notificationSchema = new mongoose.Schema({
     ref: 'React'
   },
   // comment document for notification
-  comment: {
+  comment : {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Comment'
   },
   // subscription document for notification
-  subscription: {
+  subscription : {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Subscription'
   }
 
-}, { timestamps: true,
+
+
+},{ timestamps: true,
   toObject: {
     virtuals: true
   },
@@ -60,14 +61,15 @@ const notificationSchema = new mongoose.Schema({
   }
 });
 
-notificationSchema.virtual('timeAgo').get(function(){
-  return timeAgoEnglish.format(new Date(this.createdAt));
+notificationSchema.virtual('timeAgo').get(function () {
+  return timeAgoEnglish.format( new Date(this.createdAt) )
 });
 
-notificationSchema.index({ user: 1, createdAt: -1 }, { name: 'User Notifications' });
-notificationSchema.index({ user: 1, read: 1, createdAt: -1 }, { name: 'Read User Notifications' });
+notificationSchema.index({user: 1, createdAt: -1}, {name: "User Notifications"});
+notificationSchema.index({user: 1, read: 1, createdAt: -1}, {name: "Read User Notifications"});
 
 const Notification = mongoose.model('Notification', notificationSchema);
 
 module.exports = Notification;
+
 

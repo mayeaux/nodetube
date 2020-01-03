@@ -22,12 +22,12 @@
  });
  */
 
-(function(){
-  window.getScreenId = function(callback){
+(function() {
+  window.getScreenId = function(callback) {
     // for Firefox:
     // sourceId == 'firefox'
     // screen_constraints = {...}
-    if(navigator.mozGetUserMedia){
+    if (!!navigator.mozGetUserMedia) {
       callback(null, 'firefox', {
         video: {
           mozMediaSource: 'window',
@@ -39,11 +39,11 @@
 
     window.addEventListener('message', onIFrameCallback);
 
-    function onIFrameCallback(event){
-      if(!event.data)return;
+    function onIFrameCallback(event) {
+      if (!event.data) return;
 
-      if(event.data.chromeMediaSourceId){
-        if(event.data.chromeMediaSourceId === 'PermissionDeniedError'){
+      if (event.data.chromeMediaSourceId) {
+        if (event.data.chromeMediaSourceId === 'PermissionDeniedError') {
           callback('permission-denied');
         } else {
           callback(null, event.data.chromeMediaSourceId, getScreenConstraints(null, event.data.chromeMediaSourceId));
@@ -53,7 +53,7 @@
         window.removeEventListener('message', onIFrameCallback);
       }
 
-      if(event.data.chromeExtensionStatus){
+      if (event.data.chromeExtensionStatus) {
         callback(event.data.chromeExtensionStatus, null, getScreenConstraints(event.data.chromeExtensionStatus));
 
         // this event listener is no more needed
@@ -64,8 +64,8 @@
     setTimeout(postGetSourceIdMessage, 100);
   };
 
-  function getScreenConstraints(error, sourceId){
-    const screen_constraints = {
+  function getScreenConstraints(error, sourceId) {
+    var screen_constraints = {
       audio: false,
       video: {
         mandatory: {
@@ -77,20 +77,20 @@
       }
     };
 
-    if(sourceId){
+    if (sourceId) {
       screen_constraints.video.mandatory.chromeMediaSourceId = sourceId;
     }
 
     return screen_constraints;
   }
 
-  function postGetSourceIdMessage(){
-    if(!iframe){
+  function postGetSourceIdMessage() {
+    if (!iframe) {
       loadIFrame(postGetSourceIdMessage);
       return;
     }
 
-    if(!iframe.isLoaded){
+    if (!iframe.isLoaded) {
       setTimeout(postGetSourceIdMessage, 100);
       return;
     }
@@ -100,25 +100,25 @@
     }, '*');
   }
 
-  let iframe;
+  var iframe;
 
   // this function is used in RTCMultiConnection v3
-  window.getScreenConstraints = function(callback){
-    loadIFrame(() => {
-      getScreenId((error, sourceId, screen_constraints) => {
+  window.getScreenConstraints = function(callback) {
+    loadIFrame(function() {
+      getScreenId(function(error, sourceId, screen_constraints) {
         callback(error, screen_constraints.video);
       });
     });
   };
 
-  function loadIFrame(loadCallback){
-    if(iframe){
+  function loadIFrame(loadCallback) {
+    if (iframe) {
       loadCallback();
       return;
     }
 
     iframe = document.createElement('iframe');
-    iframe.onload = function(){
+    iframe.onload = function() {
       iframe.isLoaded = true;
 
       loadCallback();
@@ -128,19 +128,19 @@
     (document.body || document.documentElement).appendChild(iframe);
   }
 
-  window.getChromeExtensionStatus = function(callback){
+  window.getChromeExtensionStatus = function(callback) {
     // for Firefox:
-    if(navigator.mozGetUserMedia){
+    if (!!navigator.mozGetUserMedia) {
       callback('installed-enabled');
       return;
     }
 
     window.addEventListener('message', onIFrameCallback);
 
-    function onIFrameCallback(event){
-      if(!event.data)return;
+    function onIFrameCallback(event) {
+      if (!event.data) return;
 
-      if(event.data.chromeExtensionStatus){
+      if (event.data.chromeExtensionStatus) {
         callback(event.data.chromeExtensionStatus);
 
         // this event listener is no more needed
@@ -151,13 +151,13 @@
     setTimeout(postGetChromeExtensionStatusMessage, 100);
   };
 
-  function postGetChromeExtensionStatusMessage(){
-    if(!iframe){
+  function postGetChromeExtensionStatusMessage() {
+    if (!iframe) {
       loadIFrame(postGetChromeExtensionStatusMessage);
       return;
     }
 
-    if(!iframe.isLoaded){
+    if (!iframe.isLoaded) {
       setTimeout(postGetChromeExtensionStatusMessage, 100);
       return;
     }
@@ -166,4 +166,4 @@
       getChromeExtensionStatus: true
     }, '*');
   }
-}());
+})();
