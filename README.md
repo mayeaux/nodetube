@@ -100,7 +100,7 @@ NodeTube has the functionality to act as an authentication app for an nginx-rtmp
 
 You may also be interested in [videodownloader](https://github.com/mayeaux/videodownloader), a video downloader that supports 110 websites and is powered by Electron and youtube-dl.
 
-Don't forget to join the open-source community developing NodeTube on [Discord](https://discord.gg/ejGah8H), [Riot.Im](https://riot.im/app/#/room/#nodetube:matrix.org) and [Reddit](https://reddit.com/r/nodetube)
+Don't forget to join the open-source community developing NodeTube on [Discord](https://discord.gg/ejGah8H), [Riot.im](https://riot.im/app/#/room/#nodetube:matrix.org) and [Reddit](https://reddit.com/r/nodetube)
 
 
 License
