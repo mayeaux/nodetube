@@ -2,18 +2,12 @@ extends layout
 
 block content
 
-
-    br
-    div.center-block.text-center.col-sm-12
+    div.center-block.text-center.col-sm-12(style="padding-right: 0; padding-left: 0")
         if upload.status == 'processing'
             h2 Your upload #{upload.title} is processing. Check back in a couple minutes.
-            br
-            br
 
-        br
-        br
         if upload.fileType === 'video'
-            div.display-div(style="min-width:50%;min-height:50%;margin:0 auto;")
+            div.display-div.container(style="min-width:50%;min-height:50%;margin:0 auto; background-color: #0d0d0d")
                 // TODO: Sub out thumbnail here
 
                 video.display-element(poster=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;")
@@ -36,45 +30,61 @@ block content
                     //source(src=upload.uploadUrl, type='audio/mp3')
 
         else if upload.fileType === 'image'
-            div.display-div(style="")
+            div.display-div(style="background-color: #0d0d0d")
                 a(href=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`)
-                    img.display-element(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="max-width:80%;min-width:50%;min-height:50%;max-height:620px;")
+                    img.display-element(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` class="img-responsive" style="margin-left: auto; margin-right: auto")
 
 
         div.non-player-content(style="position:relative;")
 
-            br
-            br
-            // Upload Title
-            //h2(class="upload-title-value" style="align-content:center;justify-content:normal;width:60%;margin: 0 auto;")=upload.title
-            h2.balance-text(class="upload-title-value" style="text-wrap:balance;width:80%;margin:0 auto;")=upload.title
+            div.row(style="margin-top:10px; margin-left: 150px;")
+                div.col-md-6(class="text-left")
+                    h3(class="upload-title-value")=upload.title    
+                    p(class="text-muted float-left") #{upload.views} Views | Uploaded #{upload.timeAgo} 
+                div.col-md-6(class="float-right")
+                    if upload.fileType == 'image' || upload.fileType == 'video'
+                        div.change-size-button.increase-size
+                            h1(style="cursor:pointer") +
+                        div.change-size-button.decrease-size
+                            h1(style="cursor:pointer") -
+                    div.change-size-button
+                        h2.download-button
+                            i.download-icon.fa.fa-download(aria-hidden="true" style="cursor:pointer")
+                    div.change-size-button
+                        h2.share-button
+                            i.share-icon.fa.fa-share(aria-hidden="true" style="cursor:pointer")
+                    if upload.fileType == 'video' || upload.fileType == 'audio'
+                        div.change-size-button(style="margin-left:0px")
+                            h2.repeat-div(style="opacity:0.4")
+                                i.repeat-icon.fa.fa-repeat(aria-hidden="true" style="cursor:pointer")
+                    div.change-size-button(style="cursor:pointer")
+                        h2.report-button(style="")
+                            i.share-icon.fa.fa-exclamation-triangle(aria-hidden="true" style="cursor:pointer;font-size:19px;")
 
-            br
-            // uploader byline
-            h3.uploader-name(style="margin-top:25px;font-size:26px;")
-                if upload.uploader.customThumbnail
-                    a(href=`/user/${upload.uploader.channelUrl}`)
+            hr
 
-                        img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` width="140px" height="140px")
-                        br
-                        br
-                else if upload.uploader.thumbnailUrl
-                    a(href=`/user/${upload.uploader.channelUrl}`)
+            div.row(style="margin-left: 150px;")
+                div.col-md-6(class="text-left")
+                    div.uploader-name(style="font-size:26px;")
+                        if upload.uploader.customThumbnail
+                            a(href=`/user/${upload.uploader.channelUrl}`)
+                                img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` width="80px" height="80px" class="img-circle mb-3")
+                        else 
+                            a(href=`/user/${upload.uploader.channelUrl}`)
+                                img(src=`${uploadServer}/defaultUser.png` width="80px" height="80px" class="img-circle mb-3")
+                                
+                        a(href=`/user/${upload.uploader.channelUrl}` style="color:rgb(51, 51, 51); margin-left: 10px;") #{upload.uploader.channelUrl}
+                            if upload.uploader.verified == true
+                                img(src="/images/verified.jpg" width="25px" height="25px" style="margin-left:3px;margin-top:-2px;margin-right:5px;")
+                            if upload.uploader.plan == 'plus'
+                                span.pewtube-pro PLUS
 
-                        img(src=`${uploadServer}/${upload.uploader._id}/unique.png` width="140px" height="140px")
-                        br
-                        br
+                div.col-md-6(class="float-right")
+                    if alreadySubbed
+                        button.subscribe.btn.btn-danger(style="border-radius:4px; margin-top: 20px;") Unsubscribe 
+                    else
+                        button.subscribe.btn.btn-lg.btn-success(style="border-radius:4px; margin-top: 20px;") Subscribe #{upload.uploader.receivedSubscriptions.length}
 
-                a(href=`/user/${upload.uploader.channelUrl}` style="color:rgb(51, 51, 51)") #{upload.uploader.channelName || upload.uploader.channelUrl}
-                    if upload.uploader.verified == true
-                        img(src="/images/verified.jpg" width="25px" height="25px" style="margin-left:3px;margin-top:-2px;margin-right:5px;")
-                    if upload.uploader.plan == 'plus'
-                        span.pewtube-pro PLUS
-
-            if alreadySubbed
-                button.subscribe.btn.btn-danger(style="border-radius:4px") Unsubscribe (#{subscriberAmount})
-            else
-                button.subscribe.btn.btn-success(style="border-radius:4px") Subscribe (#{subscriberAmount})
             br
             br
 
@@ -102,38 +112,12 @@ block content
                         button.btn.btn-success(style="margin-bottom:-10px") Edit
 
 
-            // EXTRA BUTTONS
-            div
-                if upload.fileType == 'image' || upload.fileType == 'video'
-                    div.change-size-button.increase-size
-                        h1(style="cursor:pointer") +
-                    div.change-size-button.decrease-size
-                        h1(style="cursor:pointer") -
-                div.change-size-button
-                    h2.download-button
-                        i.download-icon.fa.fa-download(aria-hidden="true" style="cursor:pointer")
-                div.change-size-button
-                    h2.share-button
-                        i.share-icon.fa.fa-share(aria-hidden="true" style="cursor:pointer")
-                if upload.fileType == 'video' || upload.fileType == 'audio'
-                    div.change-size-button(style="margin-left:0px")
-                        h2.repeat-div(style="opacity:0.4")
-                            i.repeat-icon.fa.fa-repeat(aria-hidden="true" style="cursor:pointer")
-                div.change-size-button(style="cursor:pointer")
-                    h2.report-button(style="")
-                        i.share-icon.fa.fa-exclamation-triangle(aria-hidden="true" style="cursor:pointer;font-size:19px;")
-
-
-
             // More Upload Details
             div.col-sm-12
                 // Upload View Amount
-                h3 #{upload.views} Views
 
                 // Upload time ago and uploader
                 if upload.uploader
-                    h4
-                        | Uploaded #{upload.timeAgo} &nbsp
 
                     if upload.visibility == 'removed'
                         h2 Upload Deleted
