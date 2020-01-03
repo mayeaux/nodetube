@@ -17,10 +17,10 @@ const receivedEmailSchema = new mongoose.Schema({
   response: String,
   respondedTo: {
     type: Boolean,
-    default: false,
-  },
+    default: false
+  }
 }, {
-  timestamps: true,
+  timestamps: true
 });
 
 receivedEmailSchema.virtual('timeAgo').get(function(){

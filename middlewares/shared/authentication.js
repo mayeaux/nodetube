@@ -2,7 +2,7 @@ function adminAuth(req, res, next){
   if(!req.user){
     res.status(404);
     return res.render('error/404', {
-      title: 'Not Found',
+      title: 'Not Found'
     });
   }
 
@@ -13,7 +13,7 @@ function adminAuth(req, res, next){
 
     res.status(404);
     return res.render('error/404', {
-      title: 'Not Found',
+      title: 'Not Found'
     });
   }
 
@@ -24,7 +24,7 @@ function moderatorAuth(req, res, next){
   if(!req.user){
     res.status(404);
     return res.render('error/404', {
-      title: 'Not Found',
+      title: 'Not Found'
     });
   }
 
@@ -33,7 +33,7 @@ function moderatorAuth(req, res, next){
   if(!(userRole == 'admin' || userRole == 'moderator')){
     res.status(404);
     return res.render('error/404', {
-      title: 'Not Found',
+      title: 'Not Found'
     });
   }
 
@@ -55,7 +55,7 @@ function plusAuth(req, res, next){
   if(userPlan !== 'plus' && !userIsModOrAdmin){
     res.status(404);
     return res.render('error/plus', {
-      title: 'Not Authorized',
+      title: 'Not Authorized'
     });
   }
 
@@ -65,5 +65,5 @@ function plusAuth(req, res, next){
 module.exports = {
   adminAuth,
   moderatorAuth,
-  plusAuth,
+  plusAuth
 };

@@ -28,8 +28,8 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, passwor
   const user = await User.findOne({
     $or: [
       { email: email.toLowerCase() },
-      { channelUrl: new RegExp(['^', email, '$'].join(''), 'i') },
-    ],
+      { channelUrl: new RegExp(['^', email, '$'].join(''), 'i') }
+    ]
   });
 
   // console.log(user);

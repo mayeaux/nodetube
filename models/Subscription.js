@@ -11,28 +11,28 @@ const subscriptionSchema = new mongoose.Schema({
   subscribingUser: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    index: true,
+    index: true
   },
   subscribedToUser: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    index: true,
+    index: true
   },
   drivingUpload: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Upload',
+    ref: 'Upload'
   },
   active: {
-    type: Boolean,
-  },
+    type: Boolean
+  }
   // RATHER THAN USE VIEWED-AT TIME WE WILL USE CREATED AT TIME AS A STAND-IN
 }, { timestamps: true,
   toObject: {
-    virtuals: true,
+    virtuals: true
   },
   toJSON: {
-    virtuals: true,
-  },
+    virtuals: true
+  }
 });
 
 subscriptionSchema.virtual('timeAgo').get(function(){

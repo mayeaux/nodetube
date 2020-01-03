@@ -12,7 +12,7 @@ const sizeof = require('object-sizeof');
 const moment = require('moment');
 
 const c = {
-  l: console.log,
+  l: console.log
 };
 
 const javascriptTimeAgo = require('javascript-time-ago');
@@ -45,7 +45,7 @@ async function getRecentUploads(){
       visibility: 'public',
       sensitive: { $ne: true },
       uploader: { $exists: true },
-      category: category.name,
+      category: category.name
     };
 
     const selectString = 'rating title views uploader fileType thumbnailUrl ' +

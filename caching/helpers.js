@@ -10,7 +10,7 @@ function buildObjects(uploads){
         verified: upload.uploader.verified,
         plan: upload.uploader.plan,
         _id: upload.uploader._id,
-        curated: upload.uploader.curated,
+        curated: upload.uploader.curated
       },
       _id: upload._id,
       title: upload.title,
@@ -33,7 +33,7 @@ function buildObjects(uploads){
       customThumbnailUrl: upload.customThumbnailUrl,
       thumbnails: upload.thumbnails,
       rating: upload.rating,
-      reacts: upload.reacts,
+      reacts: upload.reacts
 
     };
 
@@ -71,5 +71,5 @@ async function calculateViewsByPeriod(upload, uploadViews){
 
 module.exports = {
   calculateViewsByPeriod,
-  buildObjects,
+  buildObjects
 };

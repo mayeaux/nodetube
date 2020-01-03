@@ -13,26 +13,26 @@ const timeAgoEnglish = new javascriptTimeAgo('en-US');
 const commentSchema = new mongoose.Schema({
   commenter: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'User'
   },
   upload: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Upload',
+    ref: 'Upload'
   },
   inResponseTo: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Comment',
+    ref: 'Comment'
   },
   responses: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Comment',
+    ref: 'Comment'
   }],
   text: String,
   visibility: {
     type: String,
     enum: ['public', 'removed'],
-    default: 'public',
-  },
+    default: 'public'
+  }
 }, { timestamps: true });
 
 commentSchema.virtual('timeAgo').get(function(){

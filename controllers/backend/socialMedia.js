@@ -18,7 +18,7 @@ exports.postCreateSocialPost = async (req, res) => {
   const distance = req.body.distance;
 
   const upload = await Upload.findOne({
-    uniqueTag,
+    uniqueTag
   });
 
   console.log(req.body);
@@ -45,7 +45,7 @@ exports.postCreateSocialPost = async (req, res) => {
 
   const socialpost = new SocialPost({
     postData: [],
-    upload,
+    upload
   });
 
   for(const network of networks){
@@ -63,7 +63,7 @@ exports.postCreateSocialPost = async (req, res) => {
       network,
       postedCorrectly: false,
       distance,
-      message,
+      message
     };
 
     socialpost.postData.push(obj);
@@ -86,7 +86,7 @@ exports.postOneOffSocialPost = async (req, res) => {
   const networks = {
     gab: gabOn,
     facebook: facebookOn,
-    twitter: twitterOn,
+    twitter: twitterOn
   };
 
   await oneOffSocialPost(message, networks);

@@ -91,7 +91,7 @@ exports.changeRatings = async (req, res) => {
       if(rating){
         const data = {
           originalRating: foundUpload.rating,
-          updatedRating: req.body.rating,
+          updatedRating: req.body.rating
         };
 
         // save admin action for audit
@@ -125,7 +125,7 @@ exports.deleteAccount = async (req, res) => {
   const channelUrl = req.body.channelUrl;
 
   const user = await User.findOne({
-    channelUrl,
+    channelUrl
   });
 
   const uploads = await Upload.find({ uploader: user._id });
@@ -172,7 +172,7 @@ exports.undeleteAccount = async (req, res) => {
   const channelUrl = req.body.channelUrl;
 
   const user = await User.findOne({
-    channelUrl,
+    channelUrl
   });
 
   user.status = '';
@@ -222,7 +222,7 @@ exports.deleteUpload = async (req, res) => {
   } else {
     res.status(403);
     return res.render('error/500', {
-      title: 'Server Error',
+      title: 'Server Error'
     });
   }
 };
@@ -312,14 +312,14 @@ exports.sendNotification = async (req, res) => {
   const channelUrl = req.body.channelUrl;
 
   const user = await User.findOne({
-    channelUrl,
+    channelUrl
   });
 
   const notification = new Notification({
     user,
     sender: req.user,
     action: 'message',
-    text: message,
+    text: message
   });
 
   await notification.save();

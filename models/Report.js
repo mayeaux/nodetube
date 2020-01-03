@@ -10,32 +10,32 @@ const timeAgoEnglish = new javascriptTimeAgo('en-US');
 const reportSchema = new mongoose.Schema({
   reportingSiteVisitor: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'SiteVisit',
+    ref: 'SiteVisit'
   },
   reportingUser: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'User'
   },
   uploadingUser: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'User'
   },
   upload: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Upload',
+    ref: 'Upload'
   },
   reason: {
     type: String,
-    enum: ['copyright', 'rating', 'tos'],
-  },
+    enum: ['copyright', 'rating', 'tos']
+  }
   // RATHER THAN USE VIEWED-AT TIME WE WILL USE CREATED AT TIME AS A STAND-IN
 }, { timestamps: true,
   toObject: {
-    virtuals: true,
+    virtuals: true
   },
   toJSON: {
-    virtuals: true,
-  },
+    virtuals: true
+  }
 });
 
 reportSchema.virtual('timeAgo').get(function(){

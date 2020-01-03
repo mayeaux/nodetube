@@ -13,25 +13,25 @@ const socialPostSchema = new mongoose.Schema({
     network: String,
     postedCorrectly: Boolean,
     postedTime: Date,
-    distance: String,
+    distance: String
   }],
   upload: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Upload',
+    ref: 'Upload'
   },
   message: String,
   finished: {
     type: Boolean,
-    default: false,
-  },
+    default: false
+  }
   // RATHER THAN USE VIEWED-AT TIME WE WILL USE CREATED AT TIME AS A STAND-IN
 }, { timestamps: true,
   toObject: {
-    virtuals: true,
+    virtuals: true
   },
   toJSON: {
-    virtuals: true,
-  },
+    virtuals: true
+  }
 });
 
 socialPostSchema.virtual('timeAgo').get(function(){

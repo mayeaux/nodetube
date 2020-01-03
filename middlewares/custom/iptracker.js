@@ -105,7 +105,7 @@ async function iptracker(req, res, next){
       ip,
       siteUserData: trueStatements,
       history: [reqUrl],
-      refs: [header],
+      refs: [header]
     });
 
     await visit.save();

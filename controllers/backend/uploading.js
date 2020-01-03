@@ -60,7 +60,7 @@ exports.postFileUpload = async (req, res, next) => {
 
     const logObject = {
       user: req.user.channelUrl,
-      upload: req.query.title,
+      upload: req.query.title
     };
 
     // res.setHeader('Access-Control-Allow-Origin', '*');
@@ -104,7 +104,7 @@ exports.postFileUpload = async (req, res, next) => {
       uploader: req.user._id,
       title: req.query.title,
       visibility: 'public',
-      $or: [{ status: 'completed' }, { uploadUrl: { $exists: true } }],
+      $or: [{ status: 'completed' }, { uploadUrl: { $exists: true } }]
     });
 
     if(alreadyUploaded){
@@ -144,7 +144,7 @@ exports.postFileUpload = async (req, res, next) => {
           hostUrl,
           fileExtension,
           fileSize,
-          status: 'rejected',
+          status: 'rejected'
         });
 
         await upload.save();
@@ -189,7 +189,7 @@ exports.postFileUpload = async (req, res, next) => {
           uniqueTag,
           rating: req.query.rating,
           category,
-          subcategory,
+          subcategory
           // uploadServer
         };
 
@@ -223,7 +223,7 @@ exports.postFileUpload = async (req, res, next) => {
               responseSent = true;
               res.send({
                 message: 'ABOUT TO PROCESS',
-                url: `/user/${channelUrl}/${uniqueTag}`,
+                url: `/user/${channelUrl}/${uniqueTag}`
               });
             }
           }
@@ -300,7 +300,7 @@ exports.postFileUpload = async (req, res, next) => {
               uniqueTag,
               channelUrl,
               title: upload.title,
-              bitrate,
+              bitrate
             });
 
             uploadLogger.info('Finished converting file', logObject);
@@ -333,7 +333,7 @@ exports.postFileUpload = async (req, res, next) => {
                   uploadedPath: fileInDirectory,
                   uniqueTag,
                   channelUrl,
-                  title: upload.title,
+                  title: upload.title
                 });
 
                 uploadLogger.info('Video file is compressed', logObject);
@@ -387,7 +387,7 @@ exports.postFileUpload = async (req, res, next) => {
             responseSent = true;
             res.send({
               message: 'DONE PROCESSING',
-              url: `/user/${channelUrl}/${uniqueTag}?autoplay=off`,
+              url: `/user/${channelUrl}/${uniqueTag}?autoplay=off`
             });
           }
         });
@@ -443,7 +443,7 @@ exports.adminUpload = async (req, res) => {
     uniqueTag,
     rating: 'allAges',
     status: 'processing',
-    livestreamDate: date,
+    livestreamDate: date
     // uploadServer
   });
 
@@ -470,7 +470,7 @@ exports.adminUpload = async (req, res) => {
       uploadedPath: realFileInDirectory,
       uniqueTag,
       channelUrl,
-      title: upload.title,
+      title: upload.title
     });
 
     const response = await ffmpegHelper.ffprobePromise(realFileInDirectory);

@@ -10,25 +10,25 @@ const timeAgoEnglish = new javascriptTimeAgo('en-US');
 const viewSchema = new mongoose.Schema({
   siteVisitor: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'SiteVisitor',
+    ref: 'SiteVisitor'
   },
   upload: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Upload',
+    ref: 'Upload'
   },
   validity: {
     type: String,
-    enum: ['real', 'fake'],
-  },
+    enum: ['real', 'fake']
+  }
   // RATHER THAN USE VIEWED-AT TIME WE WILL USE CREATED AT TIME AS A STAND-IN
 }, { timestamps: true,
   toObject: {
-    virtuals: true,
+    virtuals: true
   },
   toJSON: {
-    virtuals: true,
+    virtuals: true
   },
-  autoIndex: true,
+  autoIndex: true
 });
 
 viewSchema.virtual('timeAgo').get(function(){

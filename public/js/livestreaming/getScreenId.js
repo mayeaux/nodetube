@@ -31,8 +31,8 @@
       callback(null, 'firefox', {
         video: {
           mozMediaSource: 'window',
-          mediaSource: 'window',
-        },
+          mediaSource: 'window'
+        }
       });
       return;
     }
@@ -71,10 +71,10 @@
         mandatory: {
           chromeMediaSource: error ? 'screen' : 'desktop',
           maxWidth: window.screen.width > 1920 ? window.screen.width : 1920,
-          maxHeight: window.screen.height > 1080 ? window.screen.height : 1080,
+          maxHeight: window.screen.height > 1080 ? window.screen.height : 1080
         },
-        optional: [],
-      },
+        optional: []
+      }
     };
 
     if(sourceId){
@@ -96,7 +96,7 @@
     }
 
     iframe.contentWindow.postMessage({
-      captureSourceId: true,
+      captureSourceId: true
     }, '*');
   }
 
@@ -163,7 +163,7 @@
     }
 
     iframe.contentWindow.postMessage({
-      getChromeExtensionStatus: true,
+      getChromeExtensionStatus: true
     }, '*');
   }
 }());

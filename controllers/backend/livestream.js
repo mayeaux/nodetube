@@ -37,7 +37,7 @@ exports.onLiveDone = (req, res) => {
   res.render('livestream/rtmp', {
     user,
     title: 'Livestream ',
-    env: process.env.NODE_ENV,
+    env: process.env.NODE_ENV
   });
 };
 
@@ -83,7 +83,7 @@ if(process.env.LIVESTREAM_APP == 'true'){
   const options =
     {
       key: fs.readFileSync('keys/server.key'),
-      cert: fs.readFileSync('keys/server.crt'),
+      cert: fs.readFileSync('keys/server.crt')
     };
 
   // boot up express server to handle websocket connections

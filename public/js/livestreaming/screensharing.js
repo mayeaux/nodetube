@@ -23,7 +23,7 @@
 window.getVideoStream = function(){
   const audioConstraints = {
     audio: true,
-    video: true,
+    video: true
   };
   navigator.getUserMedia(audioConstraints, (stream) => {
     console.log('got audio!');
@@ -43,7 +43,7 @@ window.getVideoStream = function(){
 window.getAudioStream = function(){
   const audioConstraints = {
     audio: true,
-    video: false,
+    video: false
   };
   navigator.getUserMedia(audioConstraints, (stream) => {
     console.log('got audio!');
@@ -102,15 +102,15 @@ function initiateScreenSharing(audioStream){
         audio: true,
         video: {
           frameRate: {
-            min: 1, ideal: 15, max: 30,
+            min: 1, ideal: 15, max: 30
           },
           width: {
-            min: 32, ideal: 50, max: 320,
+            min: 32, ideal: 50, max: 320
           },
           height: {
-            min: 32, ideal: 50, max: 320,
-          },
-        },
+            min: 32, ideal: 50, max: 320
+          }
+        }
       };
 
       const localParticipant = new Participant(sessionId);
@@ -123,7 +123,7 @@ function initiateScreenSharing(audioStream){
         videoStream: stream,
         mediaConstraints: constraints,
         onicecandidate: localParticipant.onIceCandidate.bind(localParticipant),
-        sendSource: 'desktop',
+        sendSource: 'desktop'
       };
 
       localParticipant.rtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendrecv(options, function(error){

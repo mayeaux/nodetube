@@ -118,7 +118,7 @@ function getChromeExtensionStatus(extensionid, callback){
 function getScreenConstraints(callback){
   const firefoxScreenConstraints = {
     mozMediaSource: 'window',
-    mediaSource: 'window',
+    mediaSource: 'window'
   };
 
   if(isFirefox)return callback(null, firefoxScreenConstraints);
@@ -129,9 +129,9 @@ function getScreenConstraints(callback){
     mandatory: {
       chromeMediaSource,
       maxWidth: screen.width > 1920 ? screen.width : 1920,
-      maxHeight: screen.height > 1080 ? screen.height : 1080,
+      maxHeight: screen.height > 1080 ? screen.height : 1080
     },
-    optional: [],
+    optional: []
   };
 
   // this statement verifies chrome extension availability

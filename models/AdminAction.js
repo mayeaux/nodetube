@@ -14,32 +14,32 @@ const adminActionSchema = new mongoose.Schema({
   actionType: {
     type: String,
     enum: ['userDeleted', 'userUndeleted', 'uploadDeleted', 'fullIpDeletion', 'banUser', 'unbanUser', 'fullUserDeletion',
-      'fullUserUndeletion', 'changeUploadRating'],
+      'fullUserUndeletion', 'changeUploadRating']
   },
   adminOrModerator: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'User'
   },
   usersAffected: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'User'
   }],
   uploadsAffected: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Upload',
+    ref: 'Upload'
   }],
   siteVisitorsAffected: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'SiteVisitor',
+    ref: 'SiteVisitor'
   }],
   commentsAffected: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Comment',
+    ref: 'Comment'
   }],
   note: String,
   data: {
-    type: mongoose.Schema.Types.Mixed,
-  },
+    type: mongoose.Schema.Types.Mixed
+  }
 }, { timestamps: true });
 
 adminActionSchema.virtual('timeAgo').get(function(){

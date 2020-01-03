@@ -77,7 +77,7 @@ async function determineLegitViewsForUploads(uploads, timeRange){
 async function test(){
   let uploads = await Upload.find({
     uploadUrl: { $exists: true },
-    visibility: 'public',
+    visibility: 'public'
   }).populate('uploader').sort({ createdAt: -1 });
 
   uploads = await determineLegitViewsForUploads(uploads);
@@ -88,5 +88,5 @@ async function test(){
 // test();
 
 module.exports = {
-  determineLegitViewsForUploads,
+  determineLegitViewsForUploads
 };

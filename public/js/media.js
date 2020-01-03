@@ -84,7 +84,7 @@ $(() => {
       },
       error(err){
         console.log(err);
-      },
+      }
     });
 
     return false;

@@ -18,7 +18,7 @@ const mailListenerSettings = {
   fetchUnreadOnStart: true, // use it only if you want to get all unread email on lib start. Default is `false`,
   mailParserOptions: { streamAttachments: true }, // options to be passed to mailParser lib.
   attachments: true, // download attachments as they are encountered to the project directory
-  attachmentOptions: { directory: 'attachments/' }, // specify a download directory for attachments
+  attachmentOptions: { directory: 'attachments/' } // specify a download directory for attachments
 };
 
 /** whether or not you should save seen as well* */
@@ -31,14 +31,14 @@ const copyrightEmailCredentials = {
   username: process.env.COPYRIGHT_EMAIL_ADDRESS,
   password: process.env.COPYRIGHT_EMAIL_PASSWORD,
   host: process.env.COPYRIGHT_EMAIL_IMAP_HOST,
-  port: process.env.COPYRIGHT_EMAIL_IMAP_PORT,
+  port: process.env.COPYRIGHT_EMAIL_IMAP_PORT
 };
 
 const supportEmailCredentials = {
   username: process.env.SUPPORT_EMAIL_ADDRESS,
   password: process.env.SUPPORT_EMAIL_PASSWORD,
   host: process.env.SUPPORT_EMAIL_IMAP_HOST,
-  port: process.env.SUPPORT_EMAIL_IMAP_PORT,
+  port: process.env.SUPPORT_EMAIL_IMAP_PORT
 };
 
 const mailListeners = [];
@@ -54,12 +54,12 @@ const mailListeners = [];
 
   const copyrightEmailObject = {
     email: process.env.COPYRIGHT_EMAIL_ADDRESS,
-    listener: copyrightEmailListener,
+    listener: copyrightEmailListener
   };
 
   const supportEmailObject = {
     email: process.env.SUPPORT_EMAIL_ADDRESS,
-    listener: supportEmailListener,
+    listener: supportEmailListener
   };
 
   mailListeners.push(copyrightEmailObject);
@@ -108,7 +108,7 @@ const mailListeners = [];
         fromEmailAddress,
         subject,
         text,
-        sentDate,
+        sentDate
       };
 
       const email = new ReceivedEmail(emailObject);

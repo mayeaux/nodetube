@@ -10,7 +10,7 @@ exports.getLiveRTMP = (req, res) => {
   res.render('livestream/rtmp', {
     channelUrl,
     title: 'Livestream ',
-    env: process.env.NODE_ENV,
+    env: process.env.NODE_ENV
   });
 };
 
@@ -30,7 +30,7 @@ exports.getLive = (req, res) => {
 
   res.render('livestream/view', {
     title: 'Livestream',
-    env: process.env.NODE_ENV,
+    env: process.env.NODE_ENV
   });
 };
 

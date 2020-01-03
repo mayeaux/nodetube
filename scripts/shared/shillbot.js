@@ -22,7 +22,7 @@ mongoose.Promise = global.Promise;
 mongoose.connect(mongoUri, {
   keepAlive: true,
   reconnectTries: Number.MAX_VALUE,
-  useMongoClient: true,
+  useMongoClient: true
 });
 
 mongoose.connection.on('error', (err) => {
@@ -35,7 +35,7 @@ const SocialPost = require('../../models').SocialPost;
 
 async function socialPostQueue(){
   const socialPost = await SocialPost.findOne({
-    finished: false,
+    finished: false
   }).populate('upload').sort({ createdAt: 1 });
 
   // console.log(socialPost);

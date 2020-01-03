@@ -132,7 +132,7 @@ exports.recentUploads = async (req, res) => {
       category,
       isACategory: category,
       addressPrepend,
-      categoryObj,
+      categoryObj
     });
   } catch(err){
     console.log(err);
@@ -259,7 +259,7 @@ exports.popularUploads = async (req, res) => {
       categoryObj,
       within,
       withinDisplayString,
-      popularTimeViews,
+      popularTimeViews
     });
   } catch(err){
     console.log('ERR:');
@@ -267,7 +267,7 @@ exports.popularUploads = async (req, res) => {
 
     res.status(500);
     return res.render('error/500', {
-      title: 'Server Error',
+      title: 'Server Error'
     });
   }
 };
@@ -279,7 +279,7 @@ async function saveSearchQuery(user, search){
 // create and save search query
   const searchQuery = new SearchQuery({
     searcher,
-    query: search,
+    query: search
   });
 
   await searchQuery.save();
@@ -344,7 +344,7 @@ exports.search = async (req, res) => {
     return res.render('public/search', {
       title: 'Search',
       orderBy: 'newToOld',
-      searchQuery: '',
+      searchQuery: ''
     });
   }
 
@@ -363,7 +363,7 @@ exports.search = async (req, res) => {
     // channels
     users = await User.find({
       $or: [{ channelName: re }, { channelUrl: re }],
-      status: { $ne: 'restricted' },
+      status: { $ne: 'restricted' }
     }).populate('uploads');
 
     users = _.filter(users, user => user.uploads.length > 0);
@@ -373,7 +373,7 @@ exports.search = async (req, res) => {
     const searchQuery = {
       visibility: 'public',
       title: re,
-      $or: [{ status: 'completed' }, { uploadUrl: { $exists: true } }],
+      $or: [{ status: 'completed' }, { uploadUrl: { $exists: true } }]
     };
 
     if(mediaType && mediaType !== 'all'){
@@ -383,11 +383,11 @@ exports.search = async (req, res) => {
     let sortObj = '';
     if(orderBy == 'newToOld'){
       sortObj = {
-        createdAt: -1,
+        createdAt: -1
       };
     } else if(orderBy == 'oldToNew'){
       sortObj = {
-        createdAt: 1,
+        createdAt: 1
       };
     }
 
@@ -444,7 +444,7 @@ exports.search = async (req, res) => {
     nextNumber,
     totalUploadsAmount,
     uploadNumber,
-    uploadServer,
+    uploadServer
   });
 };
 
@@ -466,6 +466,6 @@ exports.popularByReacts = async function(req, res){
 
   res.render('public/popularByReacts', {
     title: 'Popular By Reacts',
-    uploads,
+    uploads
   });
 };

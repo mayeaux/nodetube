@@ -27,6 +27,6 @@ module.exports = {
   SocialPost,
   CreditAction,
   AdminAction,
-  ReceivedEmail,
+  ReceivedEmail
 };
 

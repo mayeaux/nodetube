@@ -22,7 +22,7 @@ const uploadSchema = new mongoose.Schema({
   fileSize: Number,
   views: {
     type: Number,
-    default: 0,
+    default: 0
   },
   visibility: { type: String, enum: ['public', 'unlisted', 'private', 'removed', 'pending'], default: 'public' },
   thumbnailUrl: 'String',  // TODO: can eventually delete this
@@ -30,24 +30,24 @@ const uploadSchema = new mongoose.Schema({
   uploadUrl: 'String',
   uploader: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'User'
   },
 
   checkedViews: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'View',
-    default: [],
+    default: []
   }],
 
   reacts: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'React',
-    default: [],
+    default: []
   }],
 
   comments: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Comment',
+    ref: 'Comment'
   }],
 
   youTubeData: mongoose.Schema.Types.Mixed,
@@ -55,7 +55,7 @@ const uploadSchema = new mongoose.Schema({
   status: String,
   sensitive: {
     type: Boolean,
-    default: false,
+    default: false
   },
 
   rating: { type: String, enum: ['allAges', 'mature', 'sensitive'] },
@@ -64,44 +64,44 @@ const uploadSchema = new mongoose.Schema({
     generated: 'String',
     custom: 'String',
     medium: 'String',
-    large: 'String',
+    large: 'String'
   },
 
   quality: {
-    high: Number,
+    high: Number
   },
 
   livestreamDate: {
-    type: String,
+    type: String
   },
 
   uncurated: {
-    type: Boolean,
+    type: Boolean
   },
 
   moderated: {
-    type: Boolean,
+    type: Boolean
   },
 
   category: {
     type: String,
     default: 'uncategorized',
-    enum: ['uncategorized', 'healthAndWellness', 'comedy', 'technologyAndScience', 'news', 'politics', 'music', 'gaming', 'howToAndEducation'],
+    enum: ['uncategorized', 'healthAndWellness', 'comedy', 'technologyAndScience', 'news', 'politics', 'music', 'gaming', 'howToAndEducation']
   },
 
   subcategory: { type: String,
     enum: ['pranks', 'meditation', 'yoga', 'rightwing', 'leftwing', 'uncategorized', 'fitness',
-      'yogaAndMeditation', 'blockchain', 'internet', 'political'] },
+      'yogaAndMeditation', 'blockchain', 'internet', 'political'] }
 
 }, {
   timestamps: true,
   toObject: {
-    virtuals: true,
+    virtuals: true
   },
   toJSON: {
-    virtuals: true,
+    virtuals: true
   },
-  autoIndex: false,
+  autoIndex: false
 });
 
 const oneHourAmount = 1000 * 60 * 60;

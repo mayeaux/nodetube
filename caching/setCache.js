@@ -14,7 +14,7 @@ const moment = require('moment');
 const redisClient = require('../config/redis');
 
 const c = {
-  l: console.log,
+  l: console.log
 };
 
 const logCaching = process.env.LOG_CACHING;
@@ -34,8 +34,8 @@ async function setIndexValues(){
     { $match: { visibility: { $ne: 'removed' } } },
     { $group: {
       _id: '',
-      views: { $sum: '$views' },
-    },
+      views: { $sum: '$views' }
+    }
     }]);
 
   if(!viewAmount[0]){
@@ -72,7 +72,7 @@ async function setIndexValues(){
   redisClient.hmset('indexValues', {
     viewAmount,
     channelAmount,
-    mediaAmount,
+    mediaAmount
   });
 
   if(logCaching == 'true'){
@@ -115,7 +115,7 @@ async function getAmountsPerPeriods(Model, objectName){
     week: lastWeekAmount,
     day: lastDayAmount,
     hour: lastHourAmount,
-    minute: lastMinuteAmount,
+    minute: lastMinuteAmount
   };
 }
 
@@ -220,7 +220,7 @@ async function setDailyStats(){
 
 module.exports = {
   setDailyStats,
-  setIndexValues,
+  setIndexValues
 };
 
 // setDailyStats();

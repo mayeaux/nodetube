@@ -4,58 +4,58 @@ const categories = [
     displayName: 'Comedy',
     subcategories: [
       { name: 'pranks', displayName: 'Pranks' },
-      { name: 'political', displayName: 'Political' },
-    ],
+      { name: 'political', displayName: 'Political' }
+    ]
   },
   {
     name: 'gaming',
     displayName: 'Gaming',
-    subcategories: [],
+    subcategories: []
   },
   {
     name: 'healthAndWellness',
     displayName: 'Health And Wellness',
     subcategories: [
       { name: 'yogaAndMeditation', displayName: 'Yoga & Meditation' },
-      { name: 'fitness', displayName: 'Fitness' },
-    ],
+      { name: 'fitness', displayName: 'Fitness' }
+    ]
   },
   {
     name: 'technologyAndScience',
     displayName: 'Technology & Science',
     subcategories: [
       { name: 'blockchain', displayName: 'Blockchain' },
-      { name: 'internet', displayName: 'Internet' },
-    ],
+      { name: 'internet', displayName: 'Internet' }
+    ]
   },
   {
     name: 'howToAndEducation',
     displayName: 'How To & Education',
-    subcategories: [],
+    subcategories: []
   },
   {
     name: 'music',
     displayName: 'Music',
-    subcategories: [],
+    subcategories: []
   },
   {
     name: 'news',
     displayName: 'News',
-    subcategories: [],
+    subcategories: []
   },
   {
     name: 'politics',
     displayName: 'Politics',
     subcategories: [
       { name: 'leftwing', displayName: 'Leftwing' },
-      { name: 'rightwing', displayName: 'Rightwing' },
-    ],
+      { name: 'rightwing', displayName: 'Rightwing' }
+    ]
   },
   {
     name: 'uncategorized',
     displayName: 'Uncategorized',
-    subcategories: [],
-  },
+    subcategories: []
+  }
 ];
 
 module.exports = categories;

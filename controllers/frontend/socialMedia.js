@@ -1,7 +1,7 @@
 const SocialPost = require('../../models/index').SocialPost;
 
 exports.getOneOffSocialPost = async (req, res) => res.render('socialMedia/oneOffSocialPost', {
-  title: 'Create Social Post',
+  title: 'Create Social Post'
 });
 
 exports.getCreateSocialPost = async (req, res) => {
@@ -11,6 +11,6 @@ exports.getCreateSocialPost = async (req, res) => {
 
   return res.render('socialMedia/createSocialPost', {
     title: 'Create Social Post',
-    socialposts,
+    socialposts
   });
 };

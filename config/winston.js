@@ -49,8 +49,8 @@ winston.loggers.add('category2', {
     //
     new transports.Console(),
     new transports.File({ filename: 'error.log', level: 'error' }),
-    new transports.File({ filename: 'combined.log' }),
-  ],
+    new transports.File({ filename: 'combined.log' })
+  ]
 });
 
 // logger.info('hey something')
@@ -79,7 +79,7 @@ const options = {
   limit: 10,
   start: 0,
   order: 'desc',
-  fields: ['message'],
+  fields: ['message']
 };
 
 //

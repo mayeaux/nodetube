@@ -11,21 +11,21 @@ const notificationSchema = new mongoose.Schema({
   // TODO: Would prefer 'notifiedUser'
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'User'
   },
   // TODO: Would prefer 'sendingUser'
   sender: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'User'
   },
   // TODO: Would prefer 'type'
   action: {
     type: String,
-    enum: ['comment', 'react', 'subscription', 'message'],
+    enum: ['comment', 'react', 'subscription', 'message']
   },
   read: {
     type: Boolean,
-    default: false,
+    default: false
   },
 
   text: String,
@@ -33,31 +33,31 @@ const notificationSchema = new mongoose.Schema({
   // upload document for notification
   upload: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Upload',
+    ref: 'Upload'
   },
   // react document for notification
   react: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'React',
+    ref: 'React'
   },
   // comment document for notification
   comment: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Comment',
+    ref: 'Comment'
   },
   // subscription document for notification
   subscription: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Subscription',
-  },
+    ref: 'Subscription'
+  }
 
 }, { timestamps: true,
   toObject: {
-    virtuals: true,
+    virtuals: true
   },
   toJSON: {
-    virtuals: true,
-  },
+    virtuals: true
+  }
 });
 
 notificationSchema.virtual('timeAgo').get(function(){

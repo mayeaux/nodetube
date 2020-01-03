@@ -20,7 +20,7 @@ mongoose.Promise = global.Promise;
 mongoose.connect(mongoUri, {
   keepAlive: true,
   reconnectTries: Number.MAX_VALUE,
-  useMongoClient: true,
+  useMongoClient: true
 });
 
 mongoose.connection.on('error', (err) => {
@@ -108,7 +108,7 @@ describe('filterViewsForTimeRange function', () => {
       _id: '599201507b38b1001000baff',
       uploadUrl: { $exists: true },
       visibility: 'public',
-      'checkedViews.1': { $exists: true },
+      'checkedViews.1': { $exists: true }
     }).populate('checkedViews uploader').exec();
 
     upload.should.be.an('object');

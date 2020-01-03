@@ -30,7 +30,7 @@ exports.getReceivedEmails = async (req, res) => {
 
   res.render('moderator/receivedEmails', {
     title: 'Received Emails',
-    receivedEmails,
+    receivedEmails
   });
 };
 
@@ -45,7 +45,7 @@ exports.getReceivedEmail = async (req, res) => {
   res.render('moderator/receivedEmail', {
     title: 'Received Email',
     receivedEmail,
-    email: receivedEmail,
+    email: receivedEmail
   });
 };
 
@@ -55,6 +55,6 @@ exports.getReports = async (req, res) => {
 
   res.render('moderator/reports', {
     title: 'Reports',
-    reports,
+    reports
   });
 };

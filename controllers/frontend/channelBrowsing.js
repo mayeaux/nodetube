@@ -22,7 +22,7 @@ exports.channelsByReacts = async (req, res) => {
   // get and render
   try {
     let allChannels = await User.find({
-      status: { $ne: 'restricted' },
+      status: { $ne: 'restricted' }
     }).populate('subscribers uploads').lean().exec();
 
     const updatedArray = [];
@@ -58,14 +58,14 @@ exports.channelsByReacts = async (req, res) => {
       numbersArray,
       highlightedNumber: page,
       previousNumber,
-      nextNumber,
+      nextNumber
     });
   } catch(err){
     console.log(err);
 
     res.status(500);
     return res.render('error/500', {
-      title: 'Server Error',
+      title: 'Server Error'
     });
   }
 };
@@ -88,7 +88,7 @@ exports.channelsBySubs = async (req, res) => {
   try {
     let allChannels = await User.find({
       status: { $ne: 'restricted' },
-      'receivedSubscriptions.0': { $exists: true },
+      'receivedSubscriptions.0': { $exists: true }
     });
 
     allChannels = allChannels.sort((a, b) => b.receivedSubscriptions.length - a.receivedSubscriptions.length);
@@ -99,14 +99,14 @@ exports.channelsBySubs = async (req, res) => {
       numbersArray,
       highlightedNumber: page,
       previousNumber,
-      nextNumber,
+      nextNumber
     });
   } catch(err){
     console.log(err);
 
     res.status(500);
     return res.render('error/500', {
-      title: 'Server Error',
+      title: 'Server Error'
     });
   }
 };
@@ -151,14 +151,14 @@ exports.channels = async (req, res) => {
       numbersArray,
       highlightedNumber: page,
       previousNumber,
-      nextNumber,
+      nextNumber
     });
   } catch(err){
     console.log(err);
 
     res.status(500);
     return res.render('error/500', {
-      title: 'Server Error',
+      title: 'Server Error'
     });
   }
 };

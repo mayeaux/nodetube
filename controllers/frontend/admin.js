@@ -57,7 +57,7 @@ exports.dailyStats = async (req, res) => {
 
   res.render('admin/dailyStats', {
     title: 'Daily Stats',
-    array,
+    array
   });
 };
 
@@ -72,21 +72,21 @@ exports.getAdminAudit = async (req, res) => {
 
   res.render('admin/adminAudit', {
     title: 'Admin Audit',
-    adminActions,
+    adminActions
   });
 };
 
 exports.getPending = async (req, res) => {
   // exclude uploads without an uploadUrl
   let uploads = await Upload.find({
-    visibility: 'pending',
+    visibility: 'pending'
   }).populate('uploader').lean();
 
   uploads = _.sortBy(uploads, [function(c){ return c.createdAt; }]).reverse();
 
   res.render('moderator/pending', {
     title: 'Pending',
-    uploads,
+    uploads
   });
 };
 
@@ -101,7 +101,7 @@ exports.getSiteVisitorHistory = async (req, res) => {
 
   res.render('admin/siteVisitorHistory', {
     title: 'Site Visitor History',
-    visitor,
+    visitor
   });
 };
 
@@ -110,7 +110,7 @@ exports.getSiteVisitors = async (req, res) => {
 
   res.render('admin/siteVisitors', {
     title: 'Site Visitors',
-    visitors,
+    visitors
   });
 };
 
@@ -119,7 +119,7 @@ exports.getUploads = async (req, res) => {
 
   res.render('admin/uploads', {
     title: 'Uploads',
-    uploads,
+    uploads
   });
 };
 
@@ -128,7 +128,7 @@ exports.getComments = async (req, res) => {
 
   res.render('admin/comments', {
     title: 'Comments',
-    comments,
+    comments
   });
 };
 
@@ -139,7 +139,7 @@ exports.getUsers = async (req, res) => {
 
   res.render('admin/users', {
     title: 'Users',
-    users,
+    users
   });
 };
 
@@ -147,14 +147,14 @@ exports.reacts = async (req, res) => {
   if(!req.user){
     res.status(404);
     return res.render('error/404', {
-      title: 'Not Found',
+      title: 'Not Found'
     });
   }
 
   if(req.user.role !== 'admin'){
     res.status(404);
     return res.render('error/404', {
-      title: 'Not Found',
+      title: 'Not Found'
     });
   }
 
@@ -164,6 +164,6 @@ exports.reacts = async (req, res) => {
 
   return res.render('admin/reacts', {
     title: 'Admin Reacts',
-    reacts,
+    reacts
   });
 };

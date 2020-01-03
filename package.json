@@ -15,6 +15,7 @@
     "start": "node --max-old-space-size=4096 app.js",
     "test": "mocha --reporter spec",
     "eslint": "eslint ./",
+    "fixSyntax": "./node_modules/.bin/eslint --fix .",
     "rebuild:sass": "npm rebuild node-sass",
     "postinstall": "bower install && cp .env.settings.sample .env.settings && cp .env.private.sample .env.private",
     "dev": "nodemon -e pug,js app.js",

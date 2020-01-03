@@ -165,6 +165,6 @@ async function getRecentUploads(limit, offset, mediaType, filter, category, subc
 
 module.exports = {
   getPopularUploads,
-  getRecentUploads,
+  getRecentUploads
 };
 

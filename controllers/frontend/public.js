@@ -47,7 +47,7 @@ exports.index = async (req, res) => {
     title: 'Home',
     mediaAmount,
     channelAmount,
-    viewAmount,
+    viewAmount
   });
 };
 
@@ -57,7 +57,7 @@ exports.index = async (req, res) => {
  */
 exports.about = (req, res) => {
   res.render('public/about', {
-    title: 'About',
+    title: 'About'
   });
 };
 
@@ -67,7 +67,7 @@ exports.about = (req, res) => {
  */
 exports.tos = async (req, res, next) => {
   res.render('public/tos', {
-    title: 'Terms Of Service',
+    title: 'Terms Of Service'
   });
 };
 
@@ -93,7 +93,7 @@ exports.getEmbed = async function(req, res){
 
   const upload = await Upload.findOne({
     uniqueTag,
-    visibility: { $ne: 'removed' },
+    visibility: { $ne: 'removed' }
   }).populate({ path: 'uploader comments checkedViews reacts', populate: { path: 'commenter receivedSubscriptions' } }).exec();
 
   if(!upload){
@@ -104,7 +104,7 @@ exports.getEmbed = async function(req, res){
 
   res.render('public/embed', {
     title: 'Embed',
-    upload,
+    upload
   });
 };
 

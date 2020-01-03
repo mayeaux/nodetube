@@ -31,7 +31,7 @@ const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
 // a.mayfield.contact
 const recaptcha = new reCAPTCHA({
   siteKey: process.env.RECAPTCHA_SITEKEY,
-  secretKey: process.env.RECAPTCHA_SECRETKEY,
+  secretKey: process.env.RECAPTCHA_SECRETKEY
 });
 
 const { b2 } = require('../../lib/uploading/backblaze');
@@ -135,7 +135,7 @@ exports.postSignup = async (req, res, next) => {
   const user = new User({
     email: `${Math.random()}${Math.random()}`,
     password: req.body.password,
-    channelUrl: req.body.channelUrl,
+    channelUrl: req.body.channelUrl
     // channelName: req.body.channelName,
   });
 
@@ -333,7 +333,7 @@ exports.postReset = async (req, res, next) => {
     to: user.email,
     from: process.env.FORGOT_PASSWORD_EMAIL_ADDRESS,
     subject: 'Your PewTube password has been reset',
-    text: `Hello,\n\nThis is a confirmation that the password for your account ${user.email} has just been changed.\n`,
+    text: `Hello,\n\nThis is a confirmation that the password for your account ${user.email} has just been changed.\n`
   };
 
   const response = await mailgunTransport.sendMail(mailOptions);
@@ -377,7 +377,7 @@ exports.postForgot = async (req, res, next) => {
       text: `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
       Please click on the following link, or paste this into your browser to complete the process:\n\n
       http://${req.headers.host}/reset/${token}\n\n
-      If you did not request this, please ignore this email and your password will remain unchanged.\n`,
+      If you did not request this, please ignore this email and your password will remain unchanged.\n`
     };
 
     const response = await mailgunTransport.sendMail(mailOptions);
@@ -426,7 +426,7 @@ exports.postConfirmEmail = async (req, res, next) => {
       text: `You are receiving this email because you (or someone else) has attempted to link this email to their account.\n\n
       Please click on the following link, or paste this into your browser to complete the process:\n\n
       http://${req.headers.host}/confirmEmail/${token}\n\n
-      If you did not request this, please ignore this email and no further steps will be needed.\n`,
+      If you did not request this, please ignore this email and no further steps will be needed.\n`
     };
 
     const response = await mailgunTransport.sendMail(mailOptions);

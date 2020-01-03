@@ -31,7 +31,7 @@ mongoose.Promise = global.Promise;
 mongoose.Promise = global.Promise;
 mongoose.connect(database, {
   keepAlive: true,
-  reconnectTries: Number.MAX_VALUE,
+  reconnectTries: Number.MAX_VALUE
 });
 
 if(process.env.MONGOOSE_DEBUG == 'true' || process.env.MONGOOSE_DEBUG == 'on'){

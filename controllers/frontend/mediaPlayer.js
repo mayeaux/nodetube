@@ -55,7 +55,7 @@ exports.getMedia = async (req, res) => {
     const media = req.params.media;
 
     const upload = await Upload.findOne({
-      uniqueTag: media,
+      uniqueTag: media
     }).populate({ path: 'uploader comments checkedViews blockedUsers', populate: { path: 'commenter' } }).exec();
 
     const userIsAdmin = req.user && req.user.role == 'admin';
@@ -122,7 +122,7 @@ exports.getMedia = async (req, res) => {
       const view = new View({
         siteVisitor: req.siteVisitor._id,
         upload: upload._id,
-        validity: 'real',
+        validity: 'real'
       });
 
       await view.save();
@@ -134,7 +134,7 @@ exports.getMedia = async (req, res) => {
       const view = new View({
         siteVisitor: req.siteVisitor._id,
         upload: upload._id,
-        validity: 'fake',
+        validity: 'fake'
       });
 
       await view.save();
@@ -193,7 +193,7 @@ exports.getMedia = async (req, res) => {
           commentCount,
           categories,
           emojis,
-          uploadServer,
+          uploadServer
         });
       }
     } else {
@@ -255,7 +255,7 @@ exports.getMedia = async (req, res) => {
         isUploaderOrAdmin,
         isUploader,
         getParameterByName,
-        viewingUserIsBlocked,
+        viewingUserIsBlocked
       });
     }
   } catch(err){

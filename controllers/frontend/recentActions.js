@@ -40,7 +40,7 @@ exports.recentComments = async (req, res) => {
 
   try {
     let comments = await Comment.find({
-      visibility: { $ne: 'removed' },
+      visibility: { $ne: 'removed' }
     }).populate({ path: 'upload commenter', populate: { path: 'uploader' } })
       .sort({ createdAt: -1 })
       .skip((page * limit) - limit)
@@ -58,7 +58,7 @@ exports.recentComments = async (req, res) => {
       nextNumber,
       uploadServer,
       documents: comments,
-      recentActionDisplayName: 'Recent Comments',
+      recentActionDisplayName: 'Recent Comments'
     });
   } catch(err){
     console.log(err);
@@ -109,7 +109,7 @@ exports.recentReacts = async (req, res) => {
     recentAction,
     uploadServer,
     documents: reacts,
-    recentActionDisplayName: 'Recent Reacts',
+    recentActionDisplayName: 'Recent Reacts'
   });
 };
 
@@ -137,7 +137,7 @@ exports.recentViews = async (req, res) => {
   const nextNumber = pagination.getNextNumber(page);
 
   let views = await View.find({
-    validity: 'real',
+    validity: 'real'
   }).populate({ path: 'upload', populate: { path: 'uploader' } })
     .sort({ createdAt: -1 })
     .skip((page * limit) - limit)
@@ -154,6 +154,6 @@ exports.recentViews = async (req, res) => {
     nextNumber,
     uploadServer,
     documents: views,
-    recentActionDisplayName: 'Recent Views',
+    recentActionDisplayName: 'Recent Views'
   });
 };

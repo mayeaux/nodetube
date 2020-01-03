@@ -13,32 +13,32 @@ const timeAgoEnglish = new javascriptTimeAgo('en-US');
 const creditActionSchema = new mongoose.Schema({
   sendingUser: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'User'
   },
   receivingUser: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'User'
   },
   receivingUserInitialCredit: {
-    type: Number,
+    type: Number
   },
   sendingUserInitialCredit: {
-    type: Number,
+    type: Number
   },
   receivingUserFinalCredit: {
-    type: Number,
+    type: Number
   },
   sendingUserFinalCredit: {
-    type: Number,
+    type: Number
   },
   // amount in cents
   amount: {
-    type: Number,
+    type: Number
   },
   upload: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Upload',
-  },
+    ref: 'Upload'
+  }
 }, { timestamps: true });
 
 creditActionSchema.virtual('timeAgo').get(function(){

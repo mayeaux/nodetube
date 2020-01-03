@@ -64,7 +64,7 @@ function fileHostRoutes(app){
     res.status(404);
 
     return res.render('error/404noheader', {
-      title: 'Not Found',
+      title: 'Not Found'
     });
   });
 }
@@ -285,7 +285,7 @@ function frontendRoutes(app){
   app.post('/admin/notifications', authMiddleware.adminAuth, adminBackendController.sendNotification);
 
   app.get('/debug', async (req, res, next) => res.render('error/debug', {
-    title: 'Debug',
+    title: 'Debug'
   }));
 
   // anything that misses, return a 404
@@ -293,7 +293,7 @@ function frontendRoutes(app){
     res.status(404);
 
     return res.render('error/404', {
-      title: 'Not Found',
+      title: 'Not Found'
     });
   });
 
@@ -333,5 +333,5 @@ function frontendRoutes(app){
 module.exports = {
   fileHostRoutes,
   livestreamRoutes,
-  frontendRoutes,
+  frontendRoutes
 };

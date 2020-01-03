@@ -18,14 +18,14 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     enum: ['user', 'admin', 'moderator', 'support'],
-    default: 'user',
+    default: 'user'
   },
 
   channelUrl: { type: String, unique: true, required: true, uniqueCaseInsensitive: true },
 
   verified: {
     type: Boolean,
-    default: false,
+    default: false
   },
 
   userUploadServer: { type: String, enum: ['uploads1', 'uploads3'] },
@@ -42,12 +42,12 @@ const userSchema = new mongoose.Schema({
 
   receivedSubscriptions: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Subscription',
+    ref: 'Subscription'
   }],
 
   subscriptions: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Subscription',
+    ref: 'Subscription'
   }],
 
   facebook: String,
@@ -57,63 +57,63 @@ const userSchema = new mongoose.Schema({
 
   uploads: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Upload',
+    ref: 'Upload'
   }],
 
   // privileges
   privs: {
     autoVisibleUpload: {
       type: Boolean,
-      default: false,
+      default: false
     },
     mirrorFunctionality: {
       type: Boolean,
-      default: false,
+      default: false
     },
     unlistedUpload: {
       type: Boolean,
-      default: false,
+      default: false
     },
     privateUpload: {
       type: Boolean,
-      default: false,
+      default: false
     },
     youtubeBackup: {
       type: Boolean,
-      default: false,
+      default: false
     },
     uploadSize: {
       type: Number,
-      default: 500,
+      default: 500
     },
     safeForWorkUpload: {
       type: Boolean,
-      default: true,
-    },
+      default: true
+    }
   },
 
   userSettings: {
     mirrorOn: {
       type: Boolean,
-      default: false,
+      default: false
     },
     backupOn: {
       type: Boolean,
-      default: false,
+      default: false
     },
     monetizationOn: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
 
   comments: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Comment',
+    ref: 'Comment'
   }],
 
   userData: {
-    ips: Array,
+    ips: Array
   },
 
   // restricted = deleted
@@ -132,7 +132,7 @@ const userSchema = new mongoose.Schema({
   socialMedia: {
     gab: String,
     twitter: String,
-    facebook: String,
+    facebook: String
   },
 
   // TODO: horrific name, should rename to indicate its the backblaze response
@@ -148,44 +148,44 @@ const userSchema = new mongoose.Schema({
   plan: {
     type: String,
     enum: ['free', 'plus'],
-    default: 'free',
+    default: 'free'
   },
 
   unseenSubscriptionUploads: {
     type: Number,
-    default: 0,
+    default: 0
   },
 
   curated: {
     type: Boolean,
-    default: false,
+    default: false
   },
 
   stripeCustomerId: {
-    type: String,
+    type: String
   },
 
   // amount of usd credits in cents
   credit: {
     type: Number,
-    default: 0,
+    default: 0
   },
 
   receivedCredit: {
     type: Number,
-    default: 0,
+    default: 0
   },
 
   defaultQuality: {
     type: String,
     enum: ['high', 'low'],
-    default: 'low',
+    default: 'low'
   },
 
   blockedUsers: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-  }],
+    ref: 'User'
+  }]
 
 }, { timestamps: true, minimize: false });
 

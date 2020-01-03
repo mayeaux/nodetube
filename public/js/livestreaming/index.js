@@ -36,7 +36,7 @@ const messageSocket = new WebSocket(messageUrl);
 
 const onUserConnection = {
   username,
-  message: 'CONNECTING',
+  message: 'CONNECTING'
 };
 
 messageSocket.onopen = function(event){
@@ -134,13 +134,13 @@ function presenter(){
         videoStream: desktopStream,
         localVideo: video,
         onicecandidate: onIceCandidate,
-        sendSource: 'screen',
+        sendSource: 'screen'
       };
     } else if(streamType == 'video'){
       options = {
         videoStream,
         localVideo: video,
-        onicecandidate: onIceCandidate,
+        onicecandidate: onIceCandidate
       };
     } else {
       throw new Error('Not a video share or a screen share');
@@ -170,7 +170,7 @@ function onOfferPresenter(error, offerSdp){
   const message = {
     presenter: username,
     id: 'presenter',
-    sdpOffer: offerSdp,
+    sdpOffer: offerSdp
   };
   sendMessage(message);
 }
@@ -183,7 +183,7 @@ function viewer(){
 
     const options = {
       remoteVideo: video,
-      onicecandidate: onIceCandidate,
+      onicecandidate: onIceCandidate
     };
 
     webRtcPeer = kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(options, function(error){
@@ -200,7 +200,7 @@ function onOfferViewer(error, offerSdp){
   const message = {
     presenter: username,
     id: 'viewer',
-    sdpOffer: offerSdp,
+    sdpOffer: offerSdp
   };
   sendMessage(message);
 }
@@ -210,7 +210,7 @@ function onIceCandidate(candidate){
 
   const message = {
     id: 'onIceCandidate',
-    candidate,
+    candidate
   };
   sendMessage(message);
 }
@@ -218,7 +218,7 @@ function onIceCandidate(candidate){
 function stop(){
   if(webRtcPeer){
     const message = {
-      id: 'stop',
+      id: 'stop'
     };
     sendMessage(message);
     dispose();
@@ -284,7 +284,7 @@ const entityMap = {
   '\'': '&#39;',
   '/': '&#x2F;',
   '`': '&#x60;',
-  '=': '&#x3D;',
+  '=': '&#x3D;'
 };
 
 function escapeHtml(string){
@@ -307,7 +307,7 @@ $(document).ready(() => {
         showCancelButton: true,
         closeOnConfirm: false,
         animation: 'slide-from-top',
-        inputPlaceholder: 'Username',
+        inputPlaceholder: 'Username'
       },
         (inputValue) => {
           if(inputValue === false)return false;
@@ -323,7 +323,7 @@ $(document).ready(() => {
           swal({
             title: 'Nice',
             text: `You selected the username: ${inputValue}`,
-            type: 'success',
+            type: 'success'
           },
 
             () => {
@@ -348,7 +348,7 @@ $(document).ready(() => {
     // make sure this username is the username of the streamer
     const onSendMessage = {
       username,
-      message: messageText,
+      message: messageText
     };
 
     messageSocket.send(JSON.stringify(onSendMessage));
@@ -402,7 +402,7 @@ window.onbeforeunload = function(event){
 
   const onUserDisconnection = {
     username,
-    message: 'DISCONNECTING',
+    message: 'DISCONNECTING'
   };
 
   messageSocket.send(JSON.stringify(onUserDisconnection));

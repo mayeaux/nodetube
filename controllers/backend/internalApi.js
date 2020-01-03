@@ -184,7 +184,7 @@ exports.reportUpload = async (req, res) => {
     upload,
     reason,
     reportingingSiteVisitor: siteVisitor,
-    uploadingUser: upload.uploader,
+    uploadingUser: upload.uploader
   });
 
   if(user){
@@ -243,7 +243,7 @@ async function uploadToB2(upload, uploadPath, hostFilePath){
 
   const response = await b2.uploadFileAsync(uploadPath, {
     name: hostFilePath + upload.fileExtension,
-    bucket, // Optional, defaults to first bucket
+    bucket // Optional, defaults to first bucket
   });
 
   upload.uploadUrl = response;
@@ -347,7 +347,7 @@ exports.subscribeEndpoint = async function(req, res, next){
       subscribingUser: subscribingUser._id,
       subscribedToUser: receivingUser._id,
       active: true,
-      drivingUpload: uploadId,
+      drivingUpload: uploadId
     });
 
     await subscription.save();
@@ -371,7 +371,7 @@ exports.subscribeEndpoint = async function(req, res, next){
         sender: subscribingUser._id,
         action: 'subscription',
         upload: uploadId,
-        subscription: subscription._id,
+        subscription: subscription._id
       });
 
       await notification.save();
@@ -406,11 +406,11 @@ exports.react = async (req, res, next) => {
 
   const existingReact = await React.findOne({
     upload: req.params.upload,
-    user: req.params.user,
+    user: req.params.user
   }).populate('upload user');
 
   const upload = await Upload.findOne({
-    _id: req.params.upload,
+    _id: req.params.upload
   }).populate('uploader');
 
   if(!upload){
@@ -432,7 +432,7 @@ exports.react = async (req, res, next) => {
   const newReact = new React({
     upload: req.params.upload,
     user: req.params.user,
-    react: req.body.emoji,
+    react: req.body.emoji
   });
 
   await newReact.save();
@@ -464,7 +464,7 @@ exports.editUpload = async (req, res, next) => {
     const uniqueTag = req.params.uniqueTag;
 
     const upload = await Upload.findOne({
-      uniqueTag,
+      uniqueTag
     }).populate({ path: 'uploader comments checkedViews', populate: { path: 'commenter' } }).exec();
 
     // determine if its the user of the channel
@@ -488,7 +488,7 @@ exports.editUpload = async (req, res, next) => {
 
       const data = {
         originalRating: upload.rating,
-        updatedRating: req.body.rating,
+        updatedRating: req.body.rating
       };
 
       // save admin action for audit
@@ -636,7 +636,7 @@ exports.postComment = async (req, res) => {
       text: req.body.comment,
       upload: req.body.upload,
       commenter: req.user._id,
-      inResponseTo: req.body.commentId,
+      inResponseTo: req.body.commentId
     });
 
     await comment.save();
@@ -676,7 +676,7 @@ exports.postComment = async (req, res) => {
     if(req.body.commentId){
       // find replied to comment and get commenter
       const repliedToComment = await Comment.findOne({
-        _id: req.body.commentId,
+        _id: req.body.commentId
       }).populate('commenter');
 
       const user = repliedToComment.commenter;
@@ -691,7 +691,7 @@ exports.postComment = async (req, res) => {
     const responseObject = {
       text: comment.text,
       user: req.user.channelName || req.user.channelUrl,
-      timeAgo,
+      timeAgo
     };
 
     res.json(responseObject);
@@ -785,7 +785,7 @@ exports.sendUserCredit = async (req, res) => {
     receivingUserFinalCredit: receivingUser.receivedCredit,
     sendingUserInitialCredit,
     sendingUserFinalCredit: sendingUser.credit,
-    upload,
+    upload
   });
 
   console.log('credit action');

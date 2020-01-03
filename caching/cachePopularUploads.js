@@ -10,7 +10,7 @@ const sizeof = require('object-sizeof');
 const moment = require('moment');
 
 const c = {
-  l: console.log,
+  l: console.log
 };
 
 const redisClient = require('../config/redis');
@@ -38,7 +38,7 @@ async function getPopularUploads(){
     visibility: 'public',
     sensitive: { $ne: true },
     uploader: { $exists: true },
-    category: { $exists: true },
+    category: { $exists: true }
   };
 
   const selectString = 'rating title views checkedViews uploader fileType thumbnailUrl ' +

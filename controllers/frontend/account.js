@@ -41,7 +41,7 @@ const timeAgoEnglish = new javascriptTimeAgo('en-US');
 exports.getFileUpload = async (req, res) => {
   if(process.env.UPLOADS_DISABLED == 'true'){
     return res.render('api/disabledUploads', {
-      title: 'File Upload',
+      title: 'File Upload'
     });
   }
 
@@ -55,7 +55,7 @@ exports.getFileUpload = async (req, res) => {
   res.render('upload', {
     title: 'File Upload',
     uploadUrl,
-    categories,
+    categories
   });
 };
 
@@ -99,7 +99,7 @@ exports.subscriptions = async (req, res) => {
     const uploads = await Upload.find({
       uploader: { $in: subscribedToUsers },
       visibility: 'public',
-      status: 'completed',
+      status: 'completed'
     }).populate('uploader checkedViews')
       .skip((page * limit) - limit)
       .limit(limit).sort({ createdAt: -1 });
@@ -111,7 +111,7 @@ exports.subscriptions = async (req, res) => {
       highlightedNumber: page,
       previousNumber,
       nextNumber,
-      uploadServer,
+      uploadServer
     });
   } catch(err){
     console.log(err);
@@ -141,7 +141,7 @@ exports.getChannel = async (req, res) => {
   try {
     // find the user per channelUrl
     user = await User.findOne({
-      channelUrl: new RegExp(['^', req.params.channel, '$'].join(''), 'i'),
+      channelUrl: new RegExp(['^', req.params.channel, '$'].join(''), 'i')
     }).populate('receivedSubscriptions').lean()
       .exec();
 
@@ -156,7 +156,7 @@ exports.getChannel = async (req, res) => {
     if(!user || channelIsRestrictedAndNotAMod){
       res.status(404);
       return res.render('error/404', {
-        title: 'Not Found',
+        title: 'Not Found'
       });
     }
 
@@ -189,7 +189,7 @@ exports.getChannel = async (req, res) => {
 
     const searchQuery = {
       uploader: user._id,
-      $or: [{ status: 'completed' }, { uploadUrl: { $exists: true } }],
+      $or: [{ status: 'completed' }, { uploadUrl: { $exists: true } }]
       // uploadUrl: {$exists: true }
       // status: 'completed'
     };
@@ -349,14 +349,14 @@ exports.getChannel = async (req, res) => {
       userUploadAmount,
       channelUrl: user.channelUrl,
       categories,
-      joinedTimeAgo,
+      joinedTimeAgo
     });
   } catch(err){
     console.log(err);
 
     res.status(500);
     return res.render('error/500', {
-      title: 'Server Error',
+      title: 'Server Error'
     });
   }
 };
@@ -368,7 +368,7 @@ exports.getChannel = async (req, res) => {
 exports.notification = async (req, res) => {
   try {
     const notifications = await Notification.find({
-      user: req.user._id,
+      user: req.user._id
     }).populate('user sender upload react comment').sort({ createdAt: -1 });
 
     // // console.log(notifications);
@@ -380,7 +380,7 @@ exports.notification = async (req, res) => {
 
     res.render('account/notifications', {
       title: 'Notifications',
-      notifications,
+      notifications
     });
 
     // mark notifs as read
@@ -417,14 +417,14 @@ exports.subscriptionsByViews = async (req, res) => {
   let uploads = await Upload.find({
     uploader: { $in: subscribedToUsers },
     visibility: 'public',
-    uploadUrl: { $exists: true },
+    uploadUrl: { $exists: true }
   }).populate('uploader checkedViews');
 
   uploads = _.orderBy(uploads, upload => upload.checkedViews.length);
 
   res.render('account/subscriptionsByViews', {
     title: 'Subscriptions',
-    uploads,
+    uploads
   });
 };
 
@@ -438,7 +438,7 @@ exports.editUpload = async (req, res) => {
   const media = req.params.media;
 
   const upload = await Upload.findOne({
-    uniqueTag: media,
+    uniqueTag: media
   }).populate({ path: 'uploader comments checkedViews', populate: { path: 'commenter' } }).exec();
 
   console.log(upload.rating);
@@ -467,7 +467,7 @@ exports.editUpload = async (req, res) => {
     rating: upload.rating,
     isAdminOrModerator,
     hideRatingFrontend,
-    categories,
+    categories
   });
 };
 
@@ -495,7 +495,7 @@ exports.getSignup = (req, res) => {
   res.render('account/signup', {
     title: 'Create Account',
     recaptchaPublicKey,
-    captchaOn,
+    captchaOn
   });
 };
 
@@ -522,7 +522,7 @@ exports.getAccount = async (req, res) => {
     title: 'Account Management',
     stripeToken,
     uploadServer,
-    thumbnailServer,
+    thumbnailServer
   });
 };
 
@@ -532,12 +532,12 @@ exports.getAccount = async (req, res) => {
  */
 exports.getReactHistory = async (req, res) => {
   const reacts = await React.find({
-    user: req.user._id,
+    user: req.user._id
   }).populate({ path: 'upload', populate: { path: 'uploader' } }).sort({ createdAt: -1 });
 
   res.render('account/reactHistory', {
     title: 'React History',
-    reacts,
+    reacts
   });
 };
 
@@ -547,7 +547,7 @@ exports.getReactHistory = async (req, res) => {
  */
 exports.getViewHistory = async (req, res) => {
   const siteVisits = await SiteVisit.find({
-    user: req.user._id,
+    user: req.user._id
   }).select('_id');
 
   const ids = [];
@@ -557,14 +557,14 @@ exports.getViewHistory = async (req, res) => {
 
   const views = await View.find({
     validity: 'real',
-    siteVisitor: { $in: ids },
+    siteVisitor: { $in: ids }
   }).populate({ path: 'upload', populate: { path: 'uploader' } }).sort({ createdAt: -1 });
 
   console.log(views.length);
 
   res.render('account/viewHistory', {
     title: 'View History',
-    views,
+    views
   });
 };
 
@@ -586,7 +586,7 @@ exports.getReset = (req, res, next) => {
         return res.redirect('/forgot');
       }
       res.render('account/reset', {
-        title: 'Password Reset',
+        title: 'Password Reset'
       });
     });
 };
@@ -623,7 +623,7 @@ exports.getForgot = (req, res) => {
     return res.redirect('/');
   }
   res.render('account/forgot', {
-    title: 'Forgot Password',
+    title: 'Forgot Password'
   });
 };
 
@@ -654,7 +654,7 @@ exports.getLogin = (req, res) => {
     return res.redirect('/');
   }
   res.render('account/login', {
-    title: 'Login',
+    title: 'Login'
   });
 };
 
@@ -664,6 +664,6 @@ exports.getLogin = (req, res) => {
  */
 exports.livestreaming = async (req, res) => {
   res.render('livestream/livestreaming', {
-    title: 'Livestreaming',
+    title: 'Livestreaming'
   });
 };

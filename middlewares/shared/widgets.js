@@ -55,5 +55,5 @@ module.exports = {
   zopimWidget,
   googleAnalyticsWidget,
   recaptchaWidget,
-  coinhiveWidget,
+  coinhiveWidget
 };
