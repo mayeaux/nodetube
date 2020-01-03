@@ -56,7 +56,7 @@ NodeTube comes with [ngrok](https://www.https://ngrok.com) preinstalled with the
 
 ## Reasons To Use NodeTube
 ### Reasons to use NodeTube as an Instance Host:
-- Built in monetization for instance administrators: Users can optionally pay a monthly fee through Stripe to retain certain privileges which are able to be adjusted by the administrator but by default allow private and unlisted uploads, an increased maximum file-size limit from 500MB to 2GB, and livestreaming capabilities 
+- Built in monetization for instance administrators: Users can optionally pay a monthly fee through Stripe to gain certain privileges which are able to be adjusted by the administrator but by default allow private and unlisted uploads, an increased maximum file-size limit from 500MB to 2GB, and livestreaming capabilities 
 - You can run an instance either with a cloud provider, a VPS or dedicated server or even locally using a built-in `ngrok` integration.
 - Follow a few short steps and get setup on top of cloud providers and run for pennies a day with built-in Heroku and BackBlaze integrations, even with little technical knowledge
 - Own your own data: data is happier when it's not in the hands of a multi-billion dollar corporation and plus Google knows enough about us already 
@@ -86,12 +86,11 @@ NodeTube comes with [ngrok](https://www.https://ngrok.com) preinstalled with the
 - Allow others to receive the benefits of using NodeTube as a free user including not being tracked by a multibillion dollar corporation and receiving their media ad free
 
 
-Features
------------------
-Nodetube is packed with great features that offers a powerful media hosting experience straight out of the box:
+## Technical Details
 
-- Videos, audio files and images are all supported by NodeTube and its media player page. The full list of supported file extensions are:
-Video Extensions : ['.mp4', '.avi', '.flv', '.MOV', '.m4v', '.ogv', '.webm', '.wmv', '.mkv', '.mov', '.m2t', '.MTS', '.m2ts', '.MPG', '.AVI', '.mpg'], Audio Extension: ['.mp3', '.wav', '.ogg', '.m4a'];Image Extensions: ['.png', '.jpg', '.jpeg', '.gif', '.JPG', '.PNG']; Media is converted on the backend using `ffmpeg` to file formats that offer the best media browser and device compability.
+NodeTube is an Express application powered by NodeJS, with MongoDB as a database, with `redis` for caching and `ffmpeg` for converting and compressing video content. It uses Pug as a templating engine and loads process variables through the .env.settings and .env.private files.
+
+[This section is being expanded rapidly so please Watch this repo so you can easily see when more documentation has been added]
 
 You may also be interested in [videodownloader](https://github.com/mayeaux/videodownloader), a video downloader that supports 110 websites and is powered by Electron and youtube-dl.
 
