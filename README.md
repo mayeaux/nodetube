@@ -3,7 +3,7 @@ An open-source YouTube alternative that also supports image and audio uploads. P
 
 A live NodeTube instance is available to interact with at [https://nodetube.live](https://nodetube.live)
 
-You can join the OS community actively developing NodeTube on [Discord](https://discord.gg/ejGah8H), [Riot.Im](https://riot.im/app/#/room/#nodetube:matrix.org) and [Reddit](https://reddit.com/r/nodetube)
+You can join the open-source community actively developing NodeTube on [Discord](https://discord.gg/ejGah8H), [Riot.Im](https://riot.im/app/#/room/#nodetube:matrix.org) and [Reddit](https://reddit.com/r/nodetube)
 
 <br>
 
@@ -96,7 +96,7 @@ NodeTube is an Express application powered by NodeJS, with MongoDB as a database
 
 You may also be interested in [videodownloader](https://github.com/mayeaux/videodownloader), a video downloader that supports 110 websites and is powered by Electron and youtube-dl.
 
-Don't forget to join the OS community developing NodeTube on [Discord](https://discord.gg/ejGah8H), [Riot.Im](https://riot.im/app/#/room/#nodetube:matrix.org) and [Reddit](https://reddit.com/r/nodetube)
+Don't forget to join the open-source community developing NodeTube on [Discord](https://discord.gg/ejGah8H), [Riot.Im](https://riot.im/app/#/room/#nodetube:matrix.org) and [Reddit](https://reddit.com/r/nodetube)
 
 
 License
