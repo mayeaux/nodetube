@@ -45,7 +45,6 @@ module.exports = {
       "space-before-function-paren": ["error", "never"],
       "space-before-blocks": ["error", "never"],
       "operator-assignment": ["error", "never"],
-      //"spaced-comment": ["error", "always", { "exceptions": ["*"] }],
      "spaced-comment": ["error", "always", { "exceptions": ["*"], "block": { "balanced": true } }],
       "no-useless-escape": 0,
       "no-console": 0,
