@@ -23,7 +23,7 @@ const receivedEmailSchema = new mongoose.Schema({
   timestamps: true,
 });
 
-receivedEmailSchema.virtual('timeAgo').get(function () {
+receivedEmailSchema.virtual('timeAgo').get(function (){
   return timeAgoEnglish.format(new Date(this.createdAt));
 });
 

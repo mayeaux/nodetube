@@ -1,7 +1,7 @@
 const redisClient = require('../config/redis');
 
 let globalRecentUploads;
-async function setRecentUploads() {
+async function setRecentUploads (){
   globalRecentUploads = await redisClient.getAsync('recentUploads');
   globalRecentUploads = JSON.parse(globalRecentUploads);
 

@@ -8,7 +8,7 @@ const User = require('../../models/index').User;
 exports.channelsByReacts = async (req, res) => {
   // setup page
   let page = req.params.page;
-  if(!page) { page = 1; }
+  if(!page){ page = 1; }
   page = parseInt(page);
 
   const limit = 51;
@@ -27,12 +27,12 @@ exports.channelsByReacts = async (req, res) => {
 
     const updatedArray = [];
 
-    for(const channel of allChannels) {
+    for(const channel of allChannels){
       let reactAmount = 0;
 
-      for(const upload in channel.uploads) {
-        if(upload.reacts) {
-          if(upload.reacts.length > 0) {
+      for(const upload in channel.uploads){
+        if(upload.reacts){
+          if(upload.reacts.length > 0){
             const amountOfReacts = upload.reacts.length;
             reactAmount += amountOfReacts;
           }
@@ -42,7 +42,7 @@ exports.channelsByReacts = async (req, res) => {
       channel.reactAmount = reactAmount || 0;
     }
 
-    for(channel of allChannels) {
+    for(channel of allChannels){
       console.log(channel.reactAmount);
     }
 
@@ -60,7 +60,7 @@ exports.channelsByReacts = async (req, res) => {
       previousNumber,
       nextNumber,
     });
-  }catch(err) {
+  } catch (err){
     console.log(err);
 
     res.status(500);
@@ -73,7 +73,7 @@ exports.channelsByReacts = async (req, res) => {
 exports.channelsBySubs = async (req, res) => {
   // setup page
   let page = req.params.page;
-  if(!page) { page = 1; }
+  if(!page){ page = 1; }
   page = parseInt(page);
 
   const limit = 51;
@@ -101,7 +101,7 @@ exports.channelsBySubs = async (req, res) => {
       previousNumber,
       nextNumber,
     });
-  }catch(err) {
+  } catch (err){
     console.log(err);
 
     res.status(500);
@@ -120,7 +120,7 @@ exports.channels = async (req, res) => {
 
   // setup page
   let page = req.params.page;
-  if(!page) { page = 1; }
+  if(!page){ page = 1; }
   page = parseInt(page);
 
   const limit = 51;
@@ -153,7 +153,7 @@ exports.channels = async (req, res) => {
       previousNumber,
       nextNumber,
     });
-  }catch(err) {
+  } catch (err){
     console.log(err);
 
     res.status(500);

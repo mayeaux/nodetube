@@ -22,8 +22,8 @@ const logCaching = process.env.LOG_CACHING;
 let viewAmount,
   channelAmount,
   mediaAmount;
-async function setIndexValues() {
-  if(logCaching == 'true') {
+async function setIndexValues (){
+  if(logCaching == 'true'){
     console.log('Setting index values');
 
     console.log('Calculating view amounts');
@@ -38,31 +38,31 @@ async function setIndexValues() {
     },
     }]);
 
-  if(!viewAmount[0]) {
+  if(!viewAmount[0]){
     viewAmount = 0;
-  }else{
+  } else {
     viewAmount = viewAmount[0].views;
   }
 
-  if(logCaching == 'true') {
+  if(logCaching == 'true'){
     console.log('Old view amount calculated, calculating channel amount');
   }
 
   channelAmount = await User.count({});
 
-  if(logCaching == 'true') {
+  if(logCaching == 'true'){
     console.log('Channel amount calculated, calculating upload amount');
   }
 
   mediaAmount = await Upload.count({});
 
-  if(logCaching == 'true') {
+  if(logCaching == 'true'){
     console.log('Upload amount calculated, calculating view amount');
   }
 
   const legitCheckedViews = await View.count({ validity: 'real' });
 
-  if(logCaching == 'true') {
+  if(logCaching == 'true'){
     console.log('Legit view amount calculated, setting redis amounts');
   }
 
@@ -75,7 +75,7 @@ async function setIndexValues() {
     mediaAmount,
   });
 
-  if(logCaching == 'true') {
+  if(logCaching == 'true'){
     console.log('Set index values');
   }
 }
@@ -87,10 +87,10 @@ async function setIndexValues() {
 // }, 1000 * 60 * 20);
 
 // TODO: refactor to do via count
-async function getAmountsPerPeriods(Model, objectName) {
+async function getAmountsPerPeriods (Model, objectName){
   const totalDocumentAmount = await Model.count({});
 
-  if(logCaching == 'true') {
+  if(logCaching == 'true'){
     console.log(`Got total ${objectName} counted`);
   }
 
@@ -138,8 +138,8 @@ async function getAmountsPerPeriods(Model, objectName) {
 //
 // testThing();
 
-async function setDailyStats(){
-  if(logCaching == 'true') {
+async function setDailyStats (){
+  if(logCaching == 'true'){
     console.log('Setting daily stats');
 
     console.log('Getting uploads');
@@ -148,7 +148,7 @@ async function setDailyStats(){
   const uploads = await getAmountsPerPeriods(Upload, 'uploads');
   await redisClient.setAsync('dailyStatsUploads', JSON.stringify(uploads));
 
-  if(logCaching == 'true') {
+  if(logCaching == 'true'){
     console.log('Uploads set, moving on');
 
     console.log('Getting users');
@@ -157,7 +157,7 @@ async function setDailyStats(){
   const users = await getAmountsPerPeriods(User, 'users');
   await redisClient.setAsync('dailyStatsUsers', JSON.stringify(users));
 
-  if(logCaching == 'true') {
+  if(logCaching == 'true'){
     console.log('Users set, moving on');
 
     console.log('Getting subscriptions');
@@ -166,7 +166,7 @@ async function setDailyStats(){
   const subscriptions = await getAmountsPerPeriods(Subscription, 'subscriptions');
   await redisClient.setAsync('dailyStatsSubscriptions', JSON.stringify(subscriptions));
 
-  if(logCaching == 'true') {
+  if(logCaching == 'true'){
     console.log('Subscriptions set, moving on');
 
     console.log('Getting reacts');
@@ -175,7 +175,7 @@ async function setDailyStats(){
   const reacts = await getAmountsPerPeriods(React, 'reacts');
   await redisClient.setAsync('dailyStatsReacts', JSON.stringify(reacts));
 
-  if(logCaching == 'true') {
+  if(logCaching == 'true'){
     console.log('Reacts set, moving on');
 
     console.log('Getting searches');
@@ -184,7 +184,7 @@ async function setDailyStats(){
   const searches = await getAmountsPerPeriods(SearchQuery, 'searches');
   await redisClient.setAsync('dailyStatsSearches', JSON.stringify(searches));
 
-  if(logCaching == 'true') {
+  if(logCaching == 'true'){
     console.log('Searches set, moving on');
 
     console.log('Getting comments');
@@ -193,7 +193,7 @@ async function setDailyStats(){
   const comments = await getAmountsPerPeriods(Comment, 'comments');
   await redisClient.setAsync('dailyStatsComments', JSON.stringify(comments));
 
-  if(logCaching == 'true') {
+  if(logCaching == 'true'){
     console.log('Comments set, moving on');
 
     console.log('Getting views');
@@ -202,7 +202,7 @@ async function setDailyStats(){
   const views = await getAmountsPerPeriods(View, 'views');
   await redisClient.setAsync('dailyStatsViews', JSON.stringify(views));
 
-  if(logCaching == 'true') {
+  if(logCaching == 'true'){
     console.log('Views set, moving on');
 
     console.log('Getting siteVisits');
@@ -211,7 +211,7 @@ async function setDailyStats(){
   const siteVisits = await getAmountsPerPeriods(SiteVisit, 'siteVisits');
   await redisClient.setAsync('dailyStatsSiteVisits', JSON.stringify(siteVisits));
 
-  if(logCaching == 'true') {
+  if(logCaching == 'true'){
     console.log('SiteVisit set, moving on');
 
     console.log('Set daily stats');

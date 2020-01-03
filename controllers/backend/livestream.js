@@ -52,7 +52,7 @@ exports.onLiveAuth = async (req, res) => {
 
   const user = await User.findOne({ uploadToken });
 
-  if(user && user.plan == 'plus') {
+  if(user && user.plan == 'plus'){
     console.log('authentication passed');
     console.log(`found user: ${user.channelUrl}`);
 
@@ -61,7 +61,7 @@ exports.onLiveAuth = async (req, res) => {
 
   console.log('having to blow up');
 
-  if(user) {
+  if(user){
     console.log(`user ${user.channelUrl}`);
   }
 
@@ -76,7 +76,7 @@ let connectedUsers;
 let connectedUsersAmount;
 let messagesObject;
 
-if(process.env.LIVESTREAM_APP == 'true') {
+if(process.env.LIVESTREAM_APP == 'true'){
   app = express();
 
   // default certs that came with I believe Kurento
@@ -102,17 +102,17 @@ if(process.env.LIVESTREAM_APP == 'true') {
     // if the user is hitting a messages endpoint ie: (wss://localhost:8080/messages/anthony)
     const regexp1 = /\/messages\/(.*)/;
 
-    if(pathname.match(regexp1)) {
+    if(pathname.match(regexp1)){
       // username succeeds :8080/messages/__
       const username = pathname.match(regexp1)[1];
 
       // instantiate the username for the websockets object if it doesn't exist yet
-      if(!webSockets[username]) {
+      if(!webSockets[username]){
         webSockets[username] = {};
       }
 
       // setup a new websocket server for the messages if one doesn't exist already
-      if(!webSockets[username].messages) {
+      if(!webSockets[username].messages){
         webSockets[username].messages = new WebSocket.Server({ noServer: true });
 
         // when someone connects to this websocket server, run them through callback
@@ -124,7 +124,7 @@ if(process.env.LIVESTREAM_APP == 'true') {
 
         webSockets[username].messages.emit('connection', ws);
       });
-    }else{
+    } else {
       socket.destroy();
     }
   });
@@ -140,12 +140,12 @@ if(process.env.LIVESTREAM_APP == 'true') {
 }
 
 // stringifies message objects
-function stringifyAndSend(webSocketConnection, objectToSend) {
+function stringifyAndSend (webSocketConnection, objectToSend){
   webSocketConnection.send(JSON.stringify(objectToSend));
 }
 
 /** CALLBACK TO SEND A MESSAGE * */
-function messageSocketCallback(ws) {
+function messageSocketCallback (ws){
   ws.on('message', (_message) => {
     // console.log(_message);
 
@@ -156,7 +156,7 @@ function messageSocketCallback(ws) {
     const streamingUser = message.username;
 
     // code to run when a new user connects
-    if(streamingUser && !messagesObject[streamingUser]) {
+    if(streamingUser && !messagesObject[streamingUser]){
       messagesObject[streamingUser] = {};
       messagesObject[streamingUser].messages = [];
       messagesObject[streamingUser].connectedUsers = [];
@@ -167,17 +167,17 @@ function messageSocketCallback(ws) {
 
     // TODO: need to add a close message here
     // this is sent right before changing href location of client
-    if(message == 'DISCONNECTING') {
+    if(message == 'DISCONNECTING'){
       messagesObject[streamingUser].connectedUsersCount--;
 
       return'do something here';
     }
 
     // code to run when a new user connects
-    if(message == 'CONNECTING') {
+    if(message == 'CONNECTING'){
       // send all existing messages
       // TODO: limit it to latest 200
-      for(const message of messagesObject[streamingUser].messages) {
+      for(const message of messagesObject[streamingUser].messages){
         stringifyAndSend(ws, { message });
       }
 
@@ -190,9 +190,9 @@ function messageSocketCallback(ws) {
       messagesObject[streamingUser].connectedUsers.push(ws);
 
       // send new message to already connected users
-      for(const user of messagesObject[streamingUser].connectedUsers) {
+      for(const user of messagesObject[streamingUser].connectedUsers){
         // if the user is still connected
-        if(user.readyState == 1) {
+        if(user.readyState == 1){
           // update how many users are connected
           stringifyAndSend(user, { connectedUsersAmount: messagesObject[streamingUser].connectedUsersCount });
         }
@@ -204,14 +204,14 @@ function messageSocketCallback(ws) {
 
     // sending keep alive as a hack to keep the socket open
     // this conditional means that a new message has been sent
-    if(message !== 'KEEP-ALIVE' && message !== 'undefined') {
+    if(message !== 'KEEP-ALIVE' && message !== 'undefined'){
       // save message to existing sent messages
       messagesObject[streamingUser].messages.push(message);
 
       // push new message down to all still connected clients
-      for(const user of messagesObject[streamingUser].connectedUsers) {
+      for(const user of messagesObject[streamingUser].connectedUsers){
         // check if connection is still running
-        if(user.readyState == 1) {
+        if(user.readyState == 1){
           stringifyAndSend(user, { message });
         }
       }
@@ -225,8 +225,8 @@ function messageSocketCallback(ws) {
 
     connectedUsersAmount--;
 
-    for(const user of connectedUsers) {
-      if(user.readyState == 1) {
+    for(const user of connectedUsers){
+      if(user.readyState == 1){
         stringifyAndSend(user, { connectedUsersAmount });
       }
     }

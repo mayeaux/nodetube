@@ -6,7 +6,7 @@ const logCaching = process.env.LOG_CACHING;
 
 // TODO: pull into its own func
 let indexResponse;
-async function setIndex() {
+async function setIndex (){
   indexResponse = await redisClient.hgetallAsync('indexValues');
   if(logCaching == 'true'){
     console.log('got index cache');
@@ -14,7 +14,7 @@ async function setIndex() {
 }
 
 // get the index if its not a filehost
-if(!process.env.FILE_HOST || process.env.FILE_HOST == 'false') {
+if(!process.env.FILE_HOST || process.env.FILE_HOST == 'false'){
   setIndex();
   setInterval(() => {
     setIndex();
@@ -31,11 +31,11 @@ exports.index = async (req, res) => {
     channelAmount,
     viewAmount;
 
-  if(!response) {
+  if(!response){
     mediaAmount = 0;
     channelAmount = 0;
     viewAmount = 0;
-  }else{
+  } else {
     mediaAmount = response.mediaAmount;
     channelAmount = response.channelAmount;
     viewAmount = response.viewAmount;
@@ -86,7 +86,7 @@ exports.privacy = async (req, res, next) => {
  * GET /embed/$uploadUniqueTag
  * Embed page
  */
-exports.getEmbed = async function (req, res) {
+exports.getEmbed = async function (req, res){
   res.setHeader('X-Frame-Options', `ALLOW-FROM ${req.query.domain}`);
 
   const uniqueTag = req.params.uniqueTag;
@@ -96,7 +96,7 @@ exports.getEmbed = async function (req, res) {
     visibility: { $ne: 'removed' },
   }).populate({ path: 'uploader comments checkedViews reacts', populate: { path: 'commenter receivedSubscriptions' } }).exec();
 
-  if(!upload) {
+  if(!upload){
     console.log('Visible upload not found');
     res.status(404);
     return res.render('error/404');

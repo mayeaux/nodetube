@@ -42,7 +42,7 @@ const adminActionSchema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
-adminActionSchema.virtual('timeAgo').get(function () {
+adminActionSchema.virtual('timeAgo').get(function (){
   return timeAgoEnglish.format(new Date(this.createdAt));
 });
 

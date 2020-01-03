@@ -56,17 +56,17 @@ console.log(`SAVE AND SERVE FILES DIRECTORY: ${saveAndServeFilesDirectory}`);
 
 const portNumber =  process.env.PORT || 3000;
 
-if(cluster.isMaster) {
-  for(let i = 0; i < amountOfProcesses; i++) {
+if(cluster.isMaster){
+  for(let i = 0; i < amountOfProcesses; i++){
     // Create a worker
     cluster.fork();
   }
 
-}else{
+} else {
 
   console.log(`Running with this many processes: ${amountOfProcesses}`);
 
-  (async function() {
+  (async function (){
 
     // site visit
     const Notification = require('./models').Notification;
@@ -151,7 +151,7 @@ if(cluster.isMaster) {
 
     if(process.env.NODE_ENV == 'development'){
       app.use(logger('dev'));
-    }else if(process.env.NODE_ENV == 'production'){
+    } else if(process.env.NODE_ENV == 'production'){
       app.use(logger('dev'));
     }
 
@@ -176,7 +176,7 @@ if(cluster.isMaster) {
 
     app.use(missedFile404Middleware);
 
-    app.use(function (err, req, res, next) {
+    app.use(function (err, req, res, next){
       console.log('THING');
       console.log(err);
       // logic
@@ -197,7 +197,7 @@ if(cluster.isMaster) {
     app.use(passport.session());
     app.use(flash());
 
-    app.use(function (req, res, next) {
+    app.use(function (req, res, next){
       req.headers.origin = req.headers.origin || req.headers.host;
       next();
     });
@@ -222,7 +222,7 @@ if(cluster.isMaster) {
         requestPath === '/livestream/on-live-done'
       ){
         next();
-      }else{
+      } else {
         lusca.csrf()(req, res, next);
       }
     });
@@ -241,7 +241,7 @@ if(cluster.isMaster) {
     app.use(multipart());
 
     /** PASS NODE ENV TO VIEWS **/
-    app.use(async function (req, res, next) {
+    app.use(async function (req, res, next){
 
       res.locals.nodeEnv = process.env.NODE_ENV;
 
@@ -258,7 +258,7 @@ if(cluster.isMaster) {
     }
 
     /** META TAGS FOR SOCIAL **/
-    app.use(async function (req, res, next) {
+    app.use(async function (req, res, next){
       res.locals.meta = {
         description: process.env.META_DESCRIPTION,
         image: process.env.META_IMAGE
@@ -269,8 +269,8 @@ if(cluster.isMaster) {
     });
 
     /** HOW MANY UNREAD NOTIFS **/
-    app.use(async function (req, res, next) {
-      if(req.user) {
+    app.use(async function (req, res, next){
+      if(req.user){
         let unreadNotifs = await Notification.count({read: false, user: req.user._id});
         res.locals.unreadNotifAmount = unreadNotifs;
         // console.log(unreadNotifs + ' unreadnotifs')
@@ -285,7 +285,7 @@ if(cluster.isMaster) {
       if(req.siteVisitor.blocked == true){
         await Promise.delay(1000 * 15);
         res.send('Something went wrong, please try again');
-      }else{
+      } else {
         next();
       }
     });
@@ -299,7 +299,7 @@ if(cluster.isMaster) {
       ){
         req.session.returnTo = req.path;
         // if the req user is coming back to account let them go there
-      }else if(req.user && req.path == '/account') {
+      } else if(req.user && req.path == '/account'){
         req.session.returnTo = req.path;
       }
       next();
@@ -309,8 +309,8 @@ if(cluster.isMaster) {
     app.use(timeout('3000s'));
 
     // take site down for maintenance
-    if(process.env.DOING_MAINTENANCE == 'true') {
-      app.use('*', function (req, res, next) {
+    if(process.env.DOING_MAINTENANCE == 'true'){
+      app.use('*', function (req, res, next){
         return res.render('maintain', {
           title: 'Maintenance'
         });
@@ -318,28 +318,28 @@ if(cluster.isMaster) {
     }
 
     /** ROUTES PER APP TYPE **/
-    if(process.env.FILE_HOST == 'true') {
+    if(process.env.FILE_HOST == 'true'){
 
       routes.fileHostRoutes(app);
 
-    }else if(process.env.LIVESTREAM_APP == 'true') {
+    } else if(process.env.LIVESTREAM_APP == 'true'){
 
       routes.livestreamRoutes(app);
 
-    }else{
+    } else {
 
       routes.frontendRoutes(app);
 
     }
 
     // handle robots.txt
-    app.get('/robots.txt', function (req, res) {
+    app.get('/robots.txt', function (req, res){
       res.type('text/plain');
       res.send('User-agent: *\nAllow: /');
     });
 
     // catch requests that didn't hit a path and 404
-    app.get('*', function (req, res, next) {
+    app.get('*', function (req, res, next){
 
       res.status(404);
 
@@ -348,20 +348,20 @@ if(cluster.isMaster) {
       });
     });
 
-    app.use(function(err, req, res, next){
+    app.use(function (err, req, res, next){
       console.log(err.stack);
       res.status(500);
       res.render('error/500');
     });
 
     /** ip block error handler **/
-    app.use(async function (err, req, res, next) {
+    app.use(async function (err, req, res, next){
       // console.log(err);
-      if(err.name == 'IpDeniedError') {
+      if(err.name == 'IpDeniedError'){
 
         await Promise.delay(1000 * 15);
         return res.send('The server returned an error, please try again');
-      }else{
+      } else {
         next();
       }
     });
@@ -387,7 +387,7 @@ if(cluster.isMaster) {
 
 }
 
-async function runNgrok(){
+async function runNgrok (){
 
   console.log(`Access NodeTube on the public web via ${url}. This link will be changed if you restart the app, to
     use Ngrok with a permanent subdomain please purchase a token and update the settings in .env.private (see runNgrok function in app.js)`);
@@ -400,12 +400,12 @@ async function runNgrok(){
   /** FOR FINDING ERRANT LOGS **/
   if(process.env.SHOW_LOG_LOCATION == 'true' || 1 == 2){
     /** Code to find errant console logs **/
-    ['log', 'warn', 'error'].forEach(function(method) {
+    ['log', 'warn', 'error'].forEach(function (method){
       var old = console[method];
-      console[method] = function() {
+      console[method] = function (){
         var stack = (new Error()).stack.split(/\n/);
         // Chrome includes a single "Error" line, FF doesn't.
-        if(stack[0].indexOf('Error') === 0) {
+        if(stack[0].indexOf('Error') === 0){
           stack = stack.slice(1);
         }
         var args = [].slice.apply(arguments).concat([stack[1].trim()]);

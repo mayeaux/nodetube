@@ -32,11 +32,11 @@ const redisClient = require('../config/redis');
 
 const logCaching = process.env.LOG_CACHING;
 
-async function getRecentUploads() {
+async function getRecentUploads (){
   let recentUploadsAllCategories = [];
 
-  for(const category of categories) {
-    if(logCaching == 'true') {
+  for(const category of categories){
+    if(logCaching == 'true'){
       c.l(`Getting uploads for category: ${category.name}`);
     }
 
@@ -61,14 +61,14 @@ async function getRecentUploads() {
     recentUploadsAllCategories = recentUploadsAllCategories.concat(recentUploads);
   }
 
-  if(logCaching == 'true') {
+  if(logCaching == 'true'){
     c.l(`Totalling an amount of ${recentUploadsAllCategories.length} for all recent uploads`);
   }
 
   return recentUploadsAllCategories;
 }
 
-async function setRecentUploads() {
+async function setRecentUploads (){
   let recentUploads = await getRecentUploads();
 
   // calculate view periods for each upload
@@ -93,7 +93,7 @@ async function setRecentUploads() {
   const redisKey = 'recentUploads';
   const response = await redisClient.setAsync(redisKey, JSON.stringify(recentUploads));
 
-  if(logCaching == 'true') {
+  if(logCaching == 'true'){
     c.l(`REDIS RESPONSE FOR ${redisKey}: ${response}`);
     c.l(`${redisKey} cached`);
   }

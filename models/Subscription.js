@@ -35,7 +35,7 @@ const subscriptionSchema = new mongoose.Schema({
   },
 });
 
-subscriptionSchema.virtual('timeAgo').get(function () {
+subscriptionSchema.virtual('timeAgo').get(function (){
   return timeAgoEnglish.format(new Date(this.createdAt));
 });
 

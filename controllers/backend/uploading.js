@@ -52,7 +52,7 @@ const uploadLogger = winston.loggers.get('uploadEndpoint');
 exports.postFileUpload = async (req, res, next) => {
   try{
     // if uploads are off and user not auto allowed
-    if(uploadsOn == 'false' && !req.user.privs.autoVisibleUpload) {
+    if(uploadsOn == 'false' && !req.user.privs.autoVisibleUpload){
       console.log('HERE');
       res.status(500);
       return res.send({ message: 'UPLOADS_OFF' });
@@ -68,13 +68,13 @@ exports.postFileUpload = async (req, res, next) => {
     // console.log(req.query.uploadToken);
 
     // if there is no user on the request, get it from the req query
-    if(!req.user && req.query.uploadToken) {
+    if(!req.user && req.query.uploadToken){
       req.user = await User.findOne({ uploadToken: req.query.uploadToken });
     }
 
     // console.log(`REQUESTED BY : ${req.user.channelName}`);
 
-    if(req.user.status == 'uploadRestricted') {
+    if(req.user.status == 'uploadRestricted'){
       uploadLogger.info('User upload status restricted', logObject);
 
       res.status(403);
@@ -83,7 +83,7 @@ exports.postFileUpload = async (req, res, next) => {
 
     // TODO: File size check
 
-    if(req.user.status == 'restricted') {
+    if(req.user.status == 'restricted'){
       uploadLogger.info('User status restricted', logObject);
       res.status(403);
       return res.send('Sorry uploads are halted');
@@ -107,7 +107,7 @@ exports.postFileUpload = async (req, res, next) => {
       $or: [{ status: 'completed' }, { uploadUrl: { $exists: true } }],
     });
 
-    if(alreadyUploaded) {
+    if(alreadyUploaded){
       uploadLogger.info('Upload title already uploaded', logObject);
       res.status(500);
       return res.send({ message: 'ALREADY-UPLOADED' });
@@ -128,12 +128,12 @@ exports.postFileUpload = async (req, res, next) => {
       const fileType = getMediaType(filename);
       let fileExtension = path.extname(filename);
 
-      if(fileExtension == '.MP4') {
+      if(fileExtension == '.MP4'){
         fileExtension = '.mp4';
       }
 
       /** RESPOND EARLY IF ITS AN UNKNOWN FILE TYPE * */
-      if(fileType == 'unknown') {
+      if(fileType == 'unknown'){
         const upload = new Upload({
           uploader: req.user._id,
           title: req.query.title,
@@ -159,7 +159,7 @@ exports.postFileUpload = async (req, res, next) => {
       const uploadPath = `./upload/${identifier}`;
 
       /** FINISHED DOWNLOADING EVERYTHING * */
-      if(req.body.resumableChunkNumber == req.body.resumableTotalChunks) {
+      if(req.body.resumableChunkNumber == req.body.resumableTotalChunks){
         const channelUrl = req.user.channelUrl;
         const uniqueTag = randomstring.generate(7);
 
@@ -168,12 +168,12 @@ exports.postFileUpload = async (req, res, next) => {
         let responseSent = false;
 
         let category = req.query.category;
-        if(category == 'undefined' || category == undefined) {
+        if(category == 'undefined' || category == undefined){
           category = 'uncategorized';
         }
 
         let subcategory = req.query.subcategory;
-        if(subcategory == 'undefined' || subcategory == undefined) {
+        if(subcategory == 'undefined' || subcategory == undefined){
           subcategory = 'uncategorized';
         }
 
@@ -195,7 +195,7 @@ exports.postFileUpload = async (req, res, next) => {
 
         let upload = new Upload(uploadObject);
 
-        if(requireModeration) {
+        if(requireModeration){
           upload.visibility = 'pending';
         }
 
@@ -206,12 +206,12 @@ exports.postFileUpload = async (req, res, next) => {
         /** FILE PROCESSING */
 
         // say it's processing if it's 25+ seconds
-        (async function () {
+        (async function (){
           await Promise.delay(1000 * 25);
 
           const timeoutUpload = await Upload.findOne({ uniqueTag });
 
-          if(timeoutUpload.status !== 'completed') {
+          if(timeoutUpload.status !== 'completed'){
             // note the upload is still processing
             timeoutUpload.status = 'processing';
             await timeoutUpload.save();
@@ -219,7 +219,7 @@ exports.postFileUpload = async (req, res, next) => {
             uploadLogger.info('Still processing after 25s', logObject);
 
             // note that we've responded to the user and send them to processing page
-            if(!responseSent) {
+            if(!responseSent){
               responseSent = true;
               res.send({
                 message: 'ABOUT TO PROCESS',
@@ -231,7 +231,7 @@ exports.postFileUpload = async (req, res, next) => {
 
         // turn filenames into an array for concatenation
         const fileNameArray = [];
-        for(let x = 1; x < parseInt(req.body.resumableTotalChunks, 10) + 1; x++) {
+        for(let x = 1; x < parseInt(req.body.resumableTotalChunks, 10) + 1; x++){
           fileNameArray.push(`${uploadPath}/${x}`);
         }
 
@@ -244,14 +244,14 @@ exports.postFileUpload = async (req, res, next) => {
           uploadLogger.info('Concat done', logObject);
 
           // calculate bitrate for video, audio and converts
-          if(fileType == 'video' || fileType == 'audio' || fileType == 'convert') {
+          if(fileType == 'video' || fileType == 'audio' || fileType == 'convert'){
             const response = await ffmpegHelper.ffprobePromise(`${uploadPath}/convertedFile`);
 
             bitrate = response.format.bit_rate / 1000;
 
             uploadLogger.info(`BITRATE: ${response.format.bit_rate / 1000}`, logObject);
 
-            if(bitrate > 2500) {
+            if(bitrate > 2500){
               // console.log('need to convert here')
             }
           }
@@ -289,7 +289,7 @@ exports.postFileUpload = async (req, res, next) => {
           console.log('done moving file');
 
           /** CONVERT AND UPLOAD VIDEO * */
-          if(upload.fileType == 'convert') {
+          if(upload.fileType == 'convert'){
             await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, hostFilePath, bucket, upload, channelUrl, b2);
 
             uploadLogger.info('Captured thumbnail', logObject);
@@ -322,13 +322,13 @@ exports.postFileUpload = async (req, res, next) => {
           }
 
           /** UPLOAD VIDEO AND CONVERT IF NEEDED * */
-          if(upload.fileExtension == '.mp4' || upload.fileExtension == '.MP4') {
+          if(upload.fileExtension == '.mp4' || upload.fileExtension == '.MP4'){
             await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, hostFilePath, bucket, upload, channelUrl, b2);
 
-            if(bitrate > 2500) {
+            if(bitrate > 2500){
               uploadLogger.info('About to compress file since bitrate is over 2500', logObject);
 
-              (async function () {
+              (async function (){
                 await ffmpegHelper.compressVideo({
                   uploadedPath: fileInDirectory,
                   uniqueTag,
@@ -366,12 +366,12 @@ exports.postFileUpload = async (req, res, next) => {
           }
 
           /** UPLOAD IMAGE OR AUDIO * */
-          if(upload.fileType == 'image' || upload.fileType == 'audio') {
+          if(upload.fileType == 'image' || upload.fileType == 'audio'){
             // everything is already done
           }
 
           /** UPLOAD TO B2 * */
-          if(process.env.NODE_ENV == 'production' && process.env.UPLOAD_TO_B2 == 'true') {
+          if(process.env.NODE_ENV == 'production' && process.env.UPLOAD_TO_B2 == 'true'){
             await backblaze.uploadToB2(upload, fileInDirectory, hostFilePath);
           }
 
@@ -383,7 +383,7 @@ exports.postFileUpload = async (req, res, next) => {
 
           uploadLogger.info('Updated subscribed users subscriptions', logObject);
 
-          if(!responseSent) {
+          if(!responseSent){
             responseSent = true;
             res.send({
               message: 'DONE PROCESSING',
@@ -391,11 +391,11 @@ exports.postFileUpload = async (req, res, next) => {
             });
           }
         });
-      }else{
+      } else {
         res.send(status);
       }
     });
-  }catch(err) {
+  } catch (err){
     console.log(err);
   }
 };
@@ -406,7 +406,7 @@ exports.adminUpload = async (req, res) => {
 
   console.log('hit');
 
-  if(req.headers.token !== 'token') {
+  if(req.headers.token !== 'token'){
     res.status = 403;
     return res.send('wrong');
   }
@@ -419,7 +419,7 @@ exports.adminUpload = async (req, res) => {
   const user = await User.findOne({ channelUrl: username });
 
   // if you cant find the user
-  if(!user) {
+  if(!user){
     console.log('NOT EXPECTED: NO USER');
     res.status(500);
     return res.send('wrong');
@@ -495,7 +495,7 @@ exports.adminUpload = async (req, res) => {
     updateUsersUnreadSubscriptions(user);
 
     /** UPLOAD TO B2 * */
-    if(process.env.NODE_ENV == 'production') {
+    if(process.env.NODE_ENV == 'production'){
       uploadToB2(upload, realFileInDirectory, hostFilePath);
     }
   });

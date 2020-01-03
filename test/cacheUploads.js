@@ -81,7 +81,7 @@ describe('getTimeAgoValue function', () => {
     try{
       const timeRange = '24h';
       const timeAgoValue = getTimeAgoValue(timeRange);
-    }catch(err) {
+    } catch (err){
       error = err;
     }
 

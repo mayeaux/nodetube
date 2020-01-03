@@ -22,7 +22,7 @@ exports.getLive = (req, res) => {
   console.log('here');
 
   // ?
-  if(process.env.LIVESTREAM_APP !== 'true' && process.env.NODE_ENV == 'production') {
+  if(process.env.LIVESTREAM_APP !== 'true' && process.env.NODE_ENV == 'production'){
     const livestreamApp = 'https://live.pewtube.com';
 
     return res.redirect(livestreamApp + req.path);

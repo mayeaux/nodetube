@@ -34,7 +34,7 @@ const socialPostSchema = new mongoose.Schema({
   },
 });
 
-socialPostSchema.virtual('timeAgo').get(function () {
+socialPostSchema.virtual('timeAgo').get(function (){
   return timeAgoEnglish.format(new Date(this.createdAt));
 });
 

@@ -31,7 +31,7 @@ const viewSchema = new mongoose.Schema({
   autoIndex: true,
 });
 
-viewSchema.virtual('timeAgo').get(function () {
+viewSchema.virtual('timeAgo').get(function (){
   return timeAgoEnglish.format(new Date(this.createdAt));
 });
 

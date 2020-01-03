@@ -25,8 +25,8 @@ const buildObjects = helpers.buildObjects;
 
 const logCaching = process.env.LOG_CACHING;
 
-async function getPopularUploads() {
-  if(logCaching == 'true') {
+async function getPopularUploads (){
+  if(logCaching == 'true'){
     c.l('Getting popular uploads');
   }
 
@@ -47,7 +47,7 @@ async function getPopularUploads() {
   const popularUploads = await Upload.find(searchQuery).select(selectString).populate('uploader reacts')
     .lean();
 
-  if(logCaching == 'true') {
+  if(logCaching == 'true'){
     c.l('Uploads received from database');
 
     c.l(popularUploads.length);
@@ -56,7 +56,7 @@ async function getPopularUploads() {
   return popularUploads;
 }
 
-async function setPopularUploads() {
+async function setPopularUploads (){
   let popularUploads = await getPopularUploads();
 
   // do more stringent check for uploader
@@ -71,21 +71,21 @@ async function setPopularUploads() {
     return calculateViewsByPeriod(upload, uploadViews);
   }));
 
-  if(logCaching == 'true') {
+  if(logCaching == 'true'){
     c.l('Popular uploads have been calculated according to view periods');
   }
 
   // build json objects representing uploads
   popularUploads = buildObjects(popularUploads);
 
-  if(logCaching == 'true') {
+  if(logCaching == 'true'){
     c.l('Popular uploads objects have been built');
   }
 
   const redisKey = 'popularUploads';
   const response = await redisClient.setAsync(redisKey, JSON.stringify(popularUploads));
 
-  if(logCaching == 'true') {
+  if(logCaching == 'true'){
     c.l(`REDIS RESPONSE FOR ${redisKey}: ${response}`);
 
     c.l(`${redisKey} cached`);

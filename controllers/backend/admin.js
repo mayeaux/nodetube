@@ -30,22 +30,22 @@ exports.postUsers = async (req, res) => {
 
   const user = await User.findOne({ _id: userId });
 
-  if(userChangeValue == 'trustUser') {
+  if(userChangeValue == 'trustUser'){
     user.privs.autoVisibleUpload = true;
     await user.save();
   }
 
-  if(userChangeValue == 'untrustUser') {
+  if(userChangeValue == 'untrustUser'){
     user.privs.autoVisibleUpload = false;
     await user.save();
   }
 
-  if(userChangeValue == 'banUser') {
+  if(userChangeValue == 'banUser'){
     user.status = 'restricted';
     await user.save();
   }
 
-  if(userChangeValue == 'unbanUser') {
+  if(userChangeValue == 'unbanUser'){
     user.status = '';
     await user.save();
   }
@@ -66,7 +66,7 @@ exports.deleteAllUsersAndBlockIps = async (req, res) => {
     const response = await deleteUsers.deleteAllUsersAndBlockIps(req.body.channelUrl);
 
     res.send(response);
-  }catch(err) {
+  } catch (err){
     res.status(500);
     res.send('fail');
   }
@@ -85,10 +85,10 @@ exports.changeRatings = async (req, res) => {
     console.log(rating);
     console.log(uploads);
 
-    for(const upload of uploads) {
+    for(const upload of uploads){
       const foundUpload = await Upload.findOne({ _id: upload });
 
-      if(rating) {
+      if(rating){
         const data = {
           originalRating: foundUpload.rating,
           updatedRating: req.body.rating,
@@ -103,7 +103,7 @@ exports.changeRatings = async (req, res) => {
         foundUpload.moderated = true;
       }
 
-      if(category) {
+      if(category){
         foundUpload.category = category;
       }
 
@@ -111,7 +111,7 @@ exports.changeRatings = async (req, res) => {
     }
 
     res.send('success');
-  }catch(err) {
+  } catch (err){
     res.status(500);
     res.send('fail');
   }
@@ -139,7 +139,7 @@ exports.deleteAccount = async (req, res) => {
   const modDeletingMod = req.user.role == 'moderator' && user.role == 'moderator';
 
   // dont let moderator delete admins
-  if(modDeletingAdmin || modDeletingMod) {
+  if(modDeletingAdmin || modDeletingMod){
     return res.send('err');
   }
 
@@ -150,13 +150,13 @@ exports.deleteAccount = async (req, res) => {
 
   // TODO: bug here, set all visibility as public will have deleterious effects on private uploads, should use status instead
   // make all uploads visibility to removed
-  for(const upload of uploads) {
+  for(const upload of uploads){
     upload.visibility = 'removed';
     await upload.save();
   }
 
   // make all comment visibility to removed
-  for(const comment of comments) {
+  for(const comment of comments){
     comment.visibility = 'removed';
     await comment.save();
   }
@@ -184,12 +184,12 @@ exports.undeleteAccount = async (req, res) => {
   const comments = await Comment.find({ commenter: user._id });
 
   // TODO: bug here, set all visibility as public will have deleterious effects on private uploads, should use status instead
-  for(const upload of uploads) {
+  for(const upload of uploads){
     upload.visibility = 'public';
     await upload.save();
   }
 
-  for(const comment of comments) {
+  for(const comment of comments){
     comment.visibility = 'public';
     await comment.save();
   }
@@ -208,18 +208,18 @@ exports.deleteUpload = async (req, res) => {
 
   const userIsAdmin = req.user.role == 'admin';
 
-  if(userOwnsUploads || userIsAdmin) {
+  if(userOwnsUploads || userIsAdmin){
     upload.visibility = 'removed';
     await upload.save();
 
     // create admin action if deleting user is an admin
-    if(userIsAdmin) {
+    if(userIsAdmin){
       await createAdminAction(req.user, 'uploadDeleted', upload.uploader, upload, []);
     }
 
     req.flash('success', { msg: 'Upload successfully deleted' });
     res.redirect(`/user/${upload.uploader.channelUrl}/`);
-  }else{
+  } else {
     res.status(403);
     return res.render('error/500', {
       title: 'Server Error',
@@ -238,12 +238,12 @@ exports.postPending = async (req, res) => {
   const upload = await Upload.findOne({ uniqueTag }).populate('uploader');
   const user = await User.findOne({ _id: upload.uploader });
 
-  if(moderationValue == 'approve') {
+  if(moderationValue == 'approve'){
     upload.visibility = 'public';
     await upload.save();
   }
 
-  if(moderationValue == 'approveAndTrustUser') {
+  if(moderationValue == 'approveAndTrustUser'){
     upload.visibility = 'public';
     await upload.save();
 
@@ -251,12 +251,12 @@ exports.postPending = async (req, res) => {
     await user.save();
   }
 
-  if(moderationValue == 'banVideo') {
+  if(moderationValue == 'banVideo'){
     upload.visibility = 'removed';
     await upload.save();
   }
 
-  if(moderationValue == 'banVideoAndUser') {
+  if(moderationValue == 'banVideoAndUser'){
     upload.visibility = 'removed';
     await upload.save();
 
@@ -266,9 +266,9 @@ exports.postPending = async (req, res) => {
 
   req.flash('success', { msg: `${upload.title} by ${user.channelName} moderated, thank you.` });
 
-  if(fromUploads) {
+  if(fromUploads){
     res.redirect('/admin/uploads');
-  }else{
+  } else {
     res.redirect('/pending');
   }
 };
@@ -285,17 +285,17 @@ exports.postComments = async (req, res) => {
   const user = await User.findOne({ _id: userId });
   const comment = await Comment.findOne({ _id: commentId });
 
-  if(commentChangeValue == 'deleteComment') {
+  if(commentChangeValue == 'deleteComment'){
     comment.visibility = 'removed';
     await comment.save();
   }
 
-  if(commentChangeValue == 'reinstateComment') {
+  if(commentChangeValue == 'reinstateComment'){
     comment.visibility = 'public';
     await comment.save();
   }
 
-  if(commentChangeValue == 'deleteCommentBanUser') {
+  if(commentChangeValue == 'deleteCommentBanUser'){
     comment.visibility = 'removed';
     await comment.save();
     user.status = 'restricted';
@@ -332,7 +332,7 @@ exports.getUserAccounts = async (req, res) => {
     const response = await deleteUsers.getUsersAndSiteVisitAmount(req.body.channelUrl);
 
     res.send(response);
-  }catch(err) {
+  } catch (err){
     res.status(500);
     res.send('fail');
   }

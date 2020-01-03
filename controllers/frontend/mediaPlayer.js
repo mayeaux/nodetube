@@ -26,7 +26,7 @@ const generateReactInfo = require('../../lib/mediaPlayer/generateReactInfo');
 
 console.log(`UPLOAD SERVER: ${uploadServer}`);
 
-function getParameterByName(name, url) {
+function getParameterByName (name, url){
   if(!url) url = window.location.href;
   name = name.replace(/[\[\]]/g, '\\$&');
   let regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`),
@@ -61,7 +61,7 @@ exports.getMedia = async (req, res) => {
     const userIsAdmin = req.user && req.user.role == 'admin';
 
     // if there is no upload, or upload is deleted and user is not admin
-    if(!upload || (upload.visibility == 'removed' && !userIsAdmin)) {
+    if(!upload || (upload.visibility == 'removed' && !userIsAdmin)){
       console.log('Visible upload not found');
       res.status(404);
       return res.render('error/404');
@@ -88,7 +88,7 @@ exports.getMedia = async (req, res) => {
     // determine if its the user of the channel
     let isAdmin = false;
     let isUser = false;
-    if(req.user) {
+    if(req.user){
       // its the same user
       isUser = (req.user._id.toString() == upload.uploader._id.toString());
 
@@ -108,17 +108,17 @@ exports.getMedia = async (req, res) => {
 
     /** FRAUD CALCULATION, SHOULD PULL OUT INTO OWN LIBRARY * */
     let doingFraud;
-    if(process.env.CUSTOM_FRAUD_DETECTION == 'true') {
+    if(process.env.CUSTOM_FRAUD_DETECTION == 'true'){
       const testIfViewIsLegitimate = require('../../lib/custom/fraudPrevention').testIfViewIsLegitimate;
 
       doingFraud = await testIfViewIsLegitimate(upload, req.siteVisitor._id);
-    }else{
+    } else {
       doingFraud = false;
     }
 
     /** FRAUDULENT VIEW CHECK * */
     // do a legitimacy check here
-    if(!doingFraud) {
+    if(!doingFraud){
       const view = new View({
         siteVisitor: req.siteVisitor._id,
         upload: upload._id,
@@ -130,7 +130,7 @@ exports.getMedia = async (req, res) => {
 
       // console.log(upload);
       await upload.save();
-    }else{
+    } else {
       const view = new View({
         siteVisitor: req.siteVisitor._id,
         upload: upload._id,
@@ -150,9 +150,9 @@ exports.getMedia = async (req, res) => {
     const comments = await generateComments(upload);
 
     let commentCount = 0;
-    for(const comment of comments) {
+    for(const comment of comments){
       commentCount++;
-      for(const response of comment.responses) {
+      for(const response of comment.responses){
         commentCount++;
       }
     }
@@ -166,9 +166,9 @@ exports.getMedia = async (req, res) => {
     upload.views = upload.views + legitViews.length + userFakeViews.length;
 
     // if upload should only be visible to logged in user
-    if(upload.visibility == 'pending' || upload.visibility == 'private') {
+    if(upload.visibility == 'pending' || upload.visibility == 'private'){
       // if no user automatically don't show
-      if(!req.user) {
+      if(!req.user){
         res.status(404);
         return res.render('error/404');
       }
@@ -177,13 +177,13 @@ exports.getMedia = async (req, res) => {
       const isUsersDocument = req.user._id.toString() == upload.uploader._id.toString();
 
       // if its not the user's document and the user is not admin
-      if(!isUsersDocument && (req.user.role !== 'admin' && req.user.role !== 'moderator')) {
+      if(!isUsersDocument && (req.user.role !== 'admin' && req.user.role !== 'moderator')){
         res.status(404);
         return res.render('error/404');
       }
 
       // if is user's document or requesting user is admin
-      if(isUsersDocument || req.user.role == 'admin') {
+      if(isUsersDocument || req.user.role == 'admin'){
         res.render('media', {
           title: upload.title,
           comments,
@@ -196,7 +196,7 @@ exports.getMedia = async (req, res) => {
           uploadServer,
         });
       }
-    }else{
+    } else {
       // document is fine to be shown publicly
 
       /** SET META TAGS * */
@@ -204,7 +204,7 @@ exports.getMedia = async (req, res) => {
 
       res.locals.meta.description = upload.description || 'Hosted on PewTube';
 
-      if(upload.fileType == 'video') {
+      if(upload.fileType == 'video'){
         res.locals.meta.image = upload.customThumbnailUrl || upload.thumbnailUrl;
         res.locals.meta.video = upload.uploadUrl;
       }
@@ -216,19 +216,19 @@ exports.getMedia = async (req, res) => {
       const reportForSiteVisitor = await Report.findOne({ reportingSiteVisitor: req.siteVisitor, upload: upload._id }).hint('Report For Site Visitor');
       const reportForReportingUser = await Report.findOne({ reportingUser: req.user, upload: upload._id }).hint('Report For User');
 
-      if(reportForReportingUser || reportForSiteVisitor) {
+      if(reportForReportingUser || reportForSiteVisitor){
         alreadyReported = true;
-      }else{
+      } else {
         alreadyReported = false;
       }
 
       const blockedUsers = upload.uploader.blockedUsers;
 
       let viewingUserIsBlocked = false;
-      if(req.user) {
+      if(req.user){
         const viewingUserId = req.user._id;
 
-        for(const blockedUser of blockedUsers) {
+        for(const blockedUser of blockedUsers){
           if(blockedUser.toString() == viewingUserId) viewingUserIsBlocked = true;
         }
       }
@@ -258,7 +258,7 @@ exports.getMedia = async (req, res) => {
         viewingUserIsBlocked,
       });
     }
-  }catch(err) {
+  } catch (err){
     console.log(err);
 
     res.status(500);

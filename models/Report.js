@@ -38,7 +38,7 @@ const reportSchema = new mongoose.Schema({
   },
 });
 
-reportSchema.virtual('timeAgo').get(function () {
+reportSchema.virtual('timeAgo').get(function (){
   return timeAgoEnglish.format(new Date(this.createdAt));
 });
 

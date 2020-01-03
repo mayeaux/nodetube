@@ -72,7 +72,7 @@ mailListener.on('error', (err) => {
   console.log(err);
 });
 
-(async function () {
+(async function (){
   const existingEmails = await ReceivedEmail.find({});
 
   const emailIds = existingEmails.map(email => email.emailId);
@@ -95,7 +95,7 @@ mailListener.on('error', (err) => {
     const text = mail.text;
     const sentDate = mail.date;
 
-    if(emailIds.includes(emailId)) {
+    if(emailIds.includes(emailId)){
       console.log(`Already done, skipping ${sentDate}`);
       return;
     }

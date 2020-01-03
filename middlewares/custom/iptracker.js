@@ -7,7 +7,7 @@ const dotenv = require('dotenv');
 dotenv.load({ path: '../.env.settings' });
 dotenv.load({ path: '../.env.private' });
 
-function getIpDataAsync(ip) {
+function getIpDataAsync (ip){
   return new Promise((resolve, reject) => {
     ipstack(ip, process.env.IPSTACK_API_KEY, (err, data) => {
       if(err !== null) reject(err);
@@ -16,7 +16,7 @@ function getIpDataAsync(ip) {
   });
 }
 
-async function iptracker(req, res, next) {
+async function iptracker (req, res, next){
   const trueStatements = Object.keys(req.useragent).filter(x => req.useragent[x] == true);
 
   let ip = req.headers['x-forwarded-for'] ||
@@ -45,15 +45,15 @@ async function iptracker(req, res, next) {
 
   // grab user if it exists
   let user;
-  if(req.user) {
+  if(req.user){
     user = req.user;
     previousVisits = await SiteVisit.find({ user: req.user._id });
 
     // if user has previously visited, see if they're using a matching setup
-    if(previousVisits.length > 0) {
+    if(previousVisits.length > 0){
       // console.log("Found by user");
-      for(const previousVisit of previousVisits) {
-        if(ip == previousVisit.ip && arraysEqual(trueStatements, previousVisit.siteUserData) && matched == false) {
+      for(const previousVisit of previousVisits){
+        if(ip == previousVisit.ip && arraysEqual(trueStatements, previousVisit.siteUserData) && matched == false){
           // console.log('       user has existing matching setup');
 
           // save ref url and increment visit
@@ -74,12 +74,12 @@ async function iptracker(req, res, next) {
         }
       }
     }
-  }else{
+  } else {
     previousVisits = await SiteVisit.find({ ip });
-    if(previousVisits.length > 0) {
+    if(previousVisits.length > 0){
       // console.log("Found by ip");
-      for(const previousVisit of previousVisits) {
-        if(ip == previousVisit.ip && arraysEqual(trueStatements, previousVisit.siteUserData) && matched == false) {
+      for(const previousVisit of previousVisits){
+        if(ip == previousVisit.ip && arraysEqual(trueStatements, previousVisit.siteUserData) && matched == false){
           // console.log('matched old visit setup of ip');
           previousVisit.refs.push(header);
           previousVisit.history.push(reqUrl);
@@ -96,7 +96,7 @@ async function iptracker(req, res, next) {
     }
   }
 
-  if(matched == false) {
+  if(matched == false){
     // console.log('Didnt match anything');
 
     // otherwise, create a new siteVisit

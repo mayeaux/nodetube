@@ -32,7 +32,7 @@ const reactSchema = new mongoose.Schema({
   },
 });
 
-reactSchema.virtual('timeAgo').get(function () {
+reactSchema.virtual('timeAgo').get(function (){
   return timeAgoEnglish.format(new Date(this.createdAt));
 });
 

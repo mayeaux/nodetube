@@ -107,81 +107,81 @@ const uploadSchema = new mongoose.Schema({
 const oneHourAmount = 1000 * 60 * 60;
 const oneDayAmount = 1000 * 60 * 60 * 24;
 
-uploadSchema.virtual('uploadServerUrl').get(function () {
+uploadSchema.virtual('uploadServerUrl').get(function (){
   let uploadServerUrl;
 
-  if(process.env.NODE_ENV == 'development') {
+  if(process.env.NODE_ENV == 'development'){
     uploadServerUrl = '/uploads';
-  }else{
+  } else {
     uploadServerUrl = `https://${this.uploadServer}.pew.tube`;
   }
 
   return uploadServerUrl;
 });
 
-uploadSchema.virtual('thumbnail').get(function () {
+uploadSchema.virtual('thumbnail').get(function (){
   // order of importance: custom, then generated, then medium
   const thumbnail = this.thumbnails.custom || this.thumbnails.generated || this.thumbnails.medium;
 
   return thumbnail;
 });
 
-uploadSchema.virtual('lessThan1hOld').get(function () {
+uploadSchema.virtual('lessThan1hOld').get(function (){
   const timeDiff = new Date() - this.createdAt;
   const timeDiffInH = timeDiff / oneHourAmount;
 
   return timeDiffInH > 1;
 });
 
-uploadSchema.virtual('lessThan24hOld').get(function () {
+uploadSchema.virtual('lessThan24hOld').get(function (){
   const timeDiff = new Date() - this.createdAt;
   const timeDiffInH = timeDiff / oneHourAmount;
 
   return timeDiffInH > 24;
 });
 
-uploadSchema.virtual('lessThan24hOld').get(function () {
+uploadSchema.virtual('lessThan24hOld').get(function (){
   const timeDiff = new Date() - this.createdAt;
   const timeDiffInH = timeDiff / oneHourAmount;
 
   return timeDiffInH > 24;
 });
 
-uploadSchema.virtual('timeAgo').get(function () {
+uploadSchema.virtual('timeAgo').get(function (){
   return timeAgoEnglish.format(new Date(this.createdAt));
 });
 
-uploadSchema.virtual('viewsWithin1hour').get(function () {
+uploadSchema.virtual('viewsWithin1hour').get(function (){
   const realViews = _.filter(this.checkedViews, view => view.validity == 'real' && view.createdAt > (new Date() - oneHourAmount));
 
   return realViews.length;
 });
 
-uploadSchema.virtual('viewsWithin24hour').get(function () {
+uploadSchema.virtual('viewsWithin24hour').get(function (){
   const realViews = _.filter(this.checkedViews, view => view.validity == 'real' && view.createdAt > (new Date() - oneDayAmount));
 
   return realViews.length;
 });
 
-uploadSchema.virtual('viewsWithin1week').get(function () {
+uploadSchema.virtual('viewsWithin1week').get(function (){
   const realViews = _.filter(this.checkedViews, view => view.validity == 'real' && view.createdAt > (new Date() - oneDayAmount * 7));
 
   return realViews.length;
 });
 
-uploadSchema.virtual('viewsWithin1month').get(function () {
+uploadSchema.virtual('viewsWithin1month').get(function (){
   const realViews = _.filter(this.checkedViews, view => view.validity == 'real');
 
   return realViews.length;
 });
 
-uploadSchema.virtual('viewsAllTime').get(function () {
+uploadSchema.virtual('viewsAllTime').get(function (){
   const realViews = _.filter(this.checkedViews, view => view.validity == 'real' && (new Date() - oneDayAmount * 365));
 
   return realViews.length;
 });
 
-uploadSchema.virtual('legitViewAmount').get(function () {
+uploadSchema.virtual('legitViewAmount').get(function (){
   const realViews = _.filter(this.checkedViews, view => view.validity == 'real');
 
   const legitViews = this.views + realViews.length;
@@ -191,7 +191,7 @@ uploadSchema.virtual('legitViewAmount').get(function () {
   const timeDiffInH = timeDiff / (1000 * 60 * 60);
 
   // cap views to 300
-  if(timeDiffInH < 24 && legitViews > 300) {
+  if(timeDiffInH < 24 && legitViews > 300){
     return 300;
   }
 

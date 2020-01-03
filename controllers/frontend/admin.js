@@ -18,7 +18,7 @@ let viewStats,
   searchStats,
   commentStats,
   siteVisitStats;
-async function getStats() {
+async function getStats (){
   const views = await redisClient.getAsync('dailyStatsViews');
   const uploads = await redisClient.getAsync('dailyStatsUploads');
   const users = await redisClient.getAsync('dailyStatsUsers');
@@ -82,7 +82,7 @@ exports.getPending = async (req, res) => {
     visibility: 'pending',
   }).populate('uploader').lean();
 
-  uploads = _.sortBy(uploads, [function (c) { return c.createdAt; }]).reverse();
+  uploads = _.sortBy(uploads, [function (c){ return c.createdAt; }]).reverse();
 
   res.render('moderator/pending', {
     title: 'Pending',
@@ -144,14 +144,14 @@ exports.getUsers = async (req, res) => {
 };
 
 exports.reacts = async (req, res) => {
-  if(!req.user) {
+  if(!req.user){
     res.status(404);
     return res.render('error/404', {
       title: 'Not Found',
     });
   }
 
-  if(req.user.role !== 'admin') {
+  if(req.user.role !== 'admin'){
     res.status(404);
     return res.render('error/404', {
       title: 'Not Found',
