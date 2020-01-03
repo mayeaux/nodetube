@@ -4,6 +4,7 @@ const javascriptTimeAgo = require('javascript-time-ago');
 javascriptTimeAgo.locale(require('javascript-time-ago/locales/en'));
 require('javascript-time-ago/intl-messageformat-global');
 require('intl-messageformat/dist/locale-data/en');
+
 const timeAgoEnglish = new javascriptTimeAgo('en-US');
 
 /**
@@ -40,8 +41,8 @@ const creditActionSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-creditActionSchema.virtual('timeAgo').get(function () {
-  return timeAgoEnglish.format( new Date(this.createdAt) )
+creditActionSchema.virtual('timeAgo').get(function(){
+  return timeAgoEnglish.format(new Date(this.createdAt));
 });
 
 const CreditAction = mongoose.model('CreditAction', creditActionSchema);

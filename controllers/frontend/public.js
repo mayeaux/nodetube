@@ -14,10 +14,10 @@ async function setIndex(){
 }
 
 // get the index if its not a filehost
-if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false'){
+if(!process.env.FILE_HOST || process.env.FILE_HOST == 'false'){
   setIndex();
-  setInterval(function(){
-    setIndex()
+  setInterval(() => {
+    setIndex();
   }, 1000 * 60 * 2);
 }
 
@@ -26,9 +26,10 @@ if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false'){
  * Home page.
  */
 exports.index = async (req, res) => {
-
   const response = indexResponse;
-  let mediaAmount, channelAmount, viewAmount;
+  let mediaAmount,
+    channelAmount,
+    viewAmount;
 
   if(!response){
     mediaAmount = 0;
@@ -46,7 +47,7 @@ exports.index = async (req, res) => {
     title: 'Home',
     mediaAmount,
     channelAmount,
-    viewAmount,
+    viewAmount
   });
 };
 
@@ -60,13 +61,11 @@ exports.about = (req, res) => {
   });
 };
 
-
 /**
  * GET /tos
  * Terms of service page
  */
 exports.tos = async (req, res, next) => {
-
   res.render('public/tos', {
     title: 'Terms Of Service'
   });
@@ -80,30 +79,27 @@ exports.privacy = async (req, res, next) => {
   // res.render('privacy', {
   //   title: 'Privacy'
   // })
-  res.send('public/privacy')
-
+  res.send('public/privacy');
 };
-
 
 /**
  * GET /embed/$uploadUniqueTag
  * Embed page
  */
-exports.getEmbed = async function (req, res){
-
-  res.setHeader('X-Frame-Options', 'ALLOW-FROM ' + req.query.domain);
+exports.getEmbed = async function(req, res){
+  res.setHeader('X-Frame-Options', `ALLOW-FROM ${req.query.domain}`);
 
   const uniqueTag = req.params.uniqueTag;
 
-  let upload = await Upload.findOne({
+  const upload = await Upload.findOne({
     uniqueTag,
     visibility: { $ne: 'removed' }
-  }).populate({path: 'uploader comments checkedViews reacts', populate: {path: 'commenter receivedSubscriptions'}}).exec();
+  }).populate({ path: 'uploader comments checkedViews reacts', populate: { path: 'commenter receivedSubscriptions' } }).exec();
 
   if(!upload){
     console.log('Visible upload not found');
     res.status(404);
-    return res.render('error/404')
+    return res.render('error/404');
   }
 
   res.render('public/embed', {

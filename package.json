@@ -14,9 +14,10 @@
   "scripts": {
     "start": "node --max-old-space-size=4096 app.js",
     "test": "mocha --reporter spec",
+    "eslint": "eslint ./",
+    "fixSyntax": "./node_modules/.bin/eslint --fix .",
     "rebuild:sass": "npm rebuild node-sass",
     "postinstall": "bower install && cp .env.settings.sample .env.settings && cp .env.private.sample .env.private",
-    "eslint": "eslint **/*.js",
     "dev": "nodemon -e pug,js app.js",
     "memory": "node --max-old-space-size=4096 app.js",
     "cache": "node --max-old-space-size=8000 caching/runCaching.js",
@@ -115,8 +116,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "eslint": "^4.18.2",
-    "eslint-config-airbnb-base": "^11.3.2",
+    "eslint": "^3.19.0",
     "eslint-plugin-chai-friendly": "^0.2.0",
     "eslint-plugin-import": "^2.17.2",
     "mocha": "^3.5.3",
@@ -124,27 +124,5 @@
     "sinon": "^2.0.0",
     "sinon-mongoose": "^1.3.0",
     "supertest": "^3.4.2"
-  },
-  "eslintConfig": {
-    "extends": "airbnb-base",
-    "rules": {
-      "comma-dangle": 0,
-      "consistent-return": 0,
-      "no-param-reassign": 0,
-      "no-underscore-dangle": 0,
-      "no-shadow": 0,
-      "no-console": 0,
-      "no-plusplus": 0,
-      "no-unused-expressions": 0,
-      "chai-friendly/no-unused-expressions": 2
-    },
-    "env": {
-      "jasmine": true,
-      "mocha": true,
-      "node": true
-    },
-    "plugins": [
-      "chai-friendly"
-    ]
   }
 }

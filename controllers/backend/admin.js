@@ -17,7 +17,6 @@ const createAdminAction = require('../../lib/administration/createAdminAction');
 const deleteUsers = require('../../lib/administration/deleteUsers');
 
 exports.postUsers = async (req, res) => {
-
   const userId = req.body.user;
 
   const userChangeValue = req.body.userChangeValue;
@@ -55,56 +54,41 @@ exports.postUsers = async (req, res) => {
 
   await createAdminAction(adminOrModerator, actionType, user._id, [], []);
 
-  req.flash('success', {msg: `User ${user.channelUrl} moderated, thank you.`});
+  req.flash('success', { msg: `User ${user.channelUrl} moderated, thank you.` });
 
   res.redirect('/admin/users');
-
 };
 
-
-
-
-
-
 exports.deleteAllUsersAndBlockIps = async (req, res) => {
-
   console.log(req.body);
 
   try {
-
     const response = await deleteUsers.deleteAllUsersAndBlockIps(req.body.channelUrl);
 
     res.send(response);
-
-  } catch (err){
+  } catch(err){
     res.status(500);
     res.send('fail');
   }
 
   // let unlistedUploads = await Upload.find({ visibility: 'unlisted' });
-
-
-
 };
 
 // TODO: add admin audit thing here
 exports.changeRatings = async (req, res) => {
-
   try {
+    const rating = req.body.rating;
+    const uploads = req.body.uploads;
 
-    let rating = req.body.rating;
-    let uploads = req.body.uploads;
-
-    let category = req.body.category;
+    const category = req.body.category;
 
     console.log(rating);
     console.log(uploads);
 
-    for (let upload of uploads) {
-      let foundUpload = await Upload.findOne({_id: upload});
+    for(const upload of uploads){
+      const foundUpload = await Upload.findOne({ _id: upload });
 
       if(rating){
-
         const data = {
           originalRating: foundUpload.rating,
           updatedRating: req.body.rating
@@ -112,7 +96,6 @@ exports.changeRatings = async (req, res) => {
 
         // save admin action for audit
         await createAdminAction(req.user, 'changeUploadRating', foundUpload.uploader._id, foundUpload, [], [], data);
-
 
         foundUpload.rating = rating;
 
@@ -124,31 +107,24 @@ exports.changeRatings = async (req, res) => {
         foundUpload.category = category;
       }
 
-
       await foundUpload.save();
     }
 
     res.send('success');
-
-  } catch (err){
+  } catch(err){
     res.status(500);
     res.send('fail');
   }
 
   // let unlistedUploads = await Upload.find({ visibility: 'unlisted' });
-
-
-
 };
 
-
 exports.deleteAccount = async (req, res) => {
-
   // fullUserDeletion
 
-  let channelUrl = req.body.channelUrl;
+  const channelUrl = req.body.channelUrl;
 
-  let user = await User.findOne({
+  const user = await User.findOne({
     channelUrl
   });
 
@@ -159,8 +135,8 @@ exports.deleteAccount = async (req, res) => {
   // create admin action after all received
   await createAdminAction(req.user, 'fullUserDeletion', user._id, uploads, comments, []);
 
-  const modDeletingAdmin = req.user.role == 'moderator' && user.role == 'admin'
-  const modDeletingMod = req.user.role == 'moderator' && user.role == 'moderator'
+  const modDeletingAdmin = req.user.role == 'moderator' && user.role == 'admin';
+  const modDeletingMod = req.user.role == 'moderator' && user.role == 'moderator';
 
   // dont let moderator delete admins
   if(modDeletingAdmin || modDeletingMod){
@@ -172,16 +148,15 @@ exports.deleteAccount = async (req, res) => {
 
   await user.save();
 
-
   // TODO: bug here, set all visibility as public will have deleterious effects on private uploads, should use status instead
   // make all uploads visibility to removed
-  for(let upload of uploads){
+  for(const upload of uploads){
     upload.visibility = 'removed';
     await upload.save();
   }
 
   // make all comment visibility to removed
-  for(let comment of comments){
+  for(const comment of comments){
     comment.visibility = 'removed';
     await comment.save();
   }
@@ -192,12 +167,11 @@ exports.deleteAccount = async (req, res) => {
 };
 
 exports.undeleteAccount = async (req, res) => {
-
   // fullUserDeletion
 
-  let channelUrl = req.body.channelUrl;
+  const channelUrl = req.body.channelUrl;
 
-  let user = await User.findOne({
+  const user = await User.findOne({
     channelUrl
   });
 
@@ -209,30 +183,25 @@ exports.undeleteAccount = async (req, res) => {
 
   const comments = await Comment.find({ commenter: user._id });
 
-
   // TODO: bug here, set all visibility as public will have deleterious effects on private uploads, should use status instead
-  for(let upload of uploads){
+  for(const upload of uploads){
     upload.visibility = 'public';
     await upload.save();
   }
 
-  for(let comment of comments){
+  for(const comment of comments){
     comment.visibility = 'public';
     await comment.save();
   }
 
   await createAdminAction(req.user, 'fullUserUndeletion', user._id, uploads, comments, []);
 
-
   res.send('success');
 
   // res.redirect(`/user/${channelUrl}`);
 };
 
-
-
 exports.deleteUpload = async (req, res) => {
-
   const upload = await Upload.findOne({ uniqueTag: req.body.videoId }).populate('uploader');
 
   const userOwnsUploads = req.user._id.toString() == upload.uploader._id.toString();
@@ -248,8 +217,8 @@ exports.deleteUpload = async (req, res) => {
       await createAdminAction(req.user, 'uploadDeleted', upload.uploader, upload, []);
     }
 
-    req.flash('success', {msg: `Upload successfully deleted`});
-    res.redirect(`/user/${upload.uploader.channelUrl}/`)
+    req.flash('success', { msg: 'Upload successfully deleted' });
+    res.redirect(`/user/${upload.uploader.channelUrl}/`);
   } else {
     res.status(403);
     return res.render('error/500', {
@@ -258,10 +227,8 @@ exports.deleteUpload = async (req, res) => {
   }
 };
 
-
 exports.postPending = async (req, res) => {
-
-  const fromUploads = /uploads/.test(req.headers.referer)
+  const fromUploads = /uploads/.test(req.headers.referer);
 
   const uniqueTag = req.body.uniqueTag;
   const moderationValue = req.body.moderationValue;
@@ -269,7 +236,7 @@ exports.postPending = async (req, res) => {
   console.log(uniqueTag, moderationValue);
 
   const upload = await Upload.findOne({ uniqueTag }).populate('uploader');
-  const user = await User.findOne({ _id : upload.uploader });
+  const user = await User.findOne({ _id: upload.uploader });
 
   if(moderationValue == 'approve'){
     upload.visibility = 'public';
@@ -289,7 +256,7 @@ exports.postPending = async (req, res) => {
     await upload.save();
   }
 
-  if(moderationValue== 'banVideoAndUser'){
+  if(moderationValue == 'banVideoAndUser'){
     upload.visibility = 'removed';
     await upload.save();
 
@@ -297,28 +264,20 @@ exports.postPending = async (req, res) => {
     await user.save();
   }
 
-  req.flash('success', {msg: `${upload.title} by ${user.channelName} moderated, thank you.`});
+  req.flash('success', { msg: `${upload.title} by ${user.channelName} moderated, thank you.` });
 
   if(fromUploads){
-    res.redirect('/admin/uploads')
+    res.redirect('/admin/uploads');
   } else {
     res.redirect('/pending');
   }
-
 };
 
-
-
-
-
 exports.postSiteVisitors = async (req, res) => {
-
   res.send('hello');
-
 };
 
 exports.postComments = async (req, res) => {
-
   const userId = req.body.user;
   const commentId = req.body.comment;
   const commentChangeValue = req.body.commentChangeValue;
@@ -343,25 +302,20 @@ exports.postComments = async (req, res) => {
     await user.save();
   }
 
-  req.flash('success', {msg: `Comment by ${user.channelName} moderated, thank you.`});
+  req.flash('success', { msg: `Comment by ${user.channelName} moderated, thank you.` });
 
   res.redirect('/admin/comments');
 };
 
-
-
-
 exports.sendNotification = async (req, res) => {
-
-  let message = req.body.message;
-  let channelUrl = req.body.channelUrl;
+  const message = req.body.message;
+  const channelUrl = req.body.channelUrl;
 
   const user = await User.findOne({
     channelUrl
   });
 
-
-  let notification = new Notification({
+  const notification = new Notification({
     user,
     sender: req.user,
     action: 'message',
@@ -373,22 +327,15 @@ exports.sendNotification = async (req, res) => {
   res.redirect('/admin/notifications');
 };
 
-
 exports.getUserAccounts = async (req, res) => {
-
   try {
-
     const response = await deleteUsers.getUsersAndSiteVisitAmount(req.body.channelUrl);
 
     res.send(response);
-
-  } catch (err){
+  } catch(err){
     res.status(500);
     res.send('fail');
   }
 
   // let unlistedUploads = await Upload.find({ visibility: 'unlisted' });
-
-
-
 };

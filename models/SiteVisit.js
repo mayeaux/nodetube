@@ -22,17 +22,17 @@ const siteVisitSchema = new mongoose.Schema({
     default: 1
   },
 
-  doneFraud : {
+  doneFraud: {
     type: Boolean,
     default: false
   },
 
-  filter : {
+  filter: {
     type: String,
     default: 'allAges'
   },
 
-  blocked : {
+  blocked: {
     type: Boolean
   },
   defaultQuality: {
@@ -63,12 +63,6 @@ module.exports = SiteVisit;
 //   trueStatements
 // };
 
-
 // https://github.com/bluesmoon/node-geoip
 // optionally : block tor
-
-
-
-
-
 

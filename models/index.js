@@ -13,7 +13,6 @@ const CreditAction = require('./CreditAction');
 const AdminAction = require('./AdminAction');
 const ReceivedEmail = require('./ReceivedEmail');
 
-
 module.exports = {
   Upload,
   User,
