@@ -15,14 +15,14 @@
     "start": "node --max-old-space-size=4096 app.js",
     "test": "mocha --reporter spec",
     "rebuild:sass": "npm rebuild node-sass",
-    "postinstall": "bower install && cp .env.settings.sample .env.settings && cp .env.private.sample .env.private",
+    "postinstall": "bower install && cpy .env.settings.sample . --rename .env.settings --no-overwrite && cpy .env.private.sample . --rename .env.private --no-overwrite ",
     "eslint": "eslint **/*.js",
     "dev": "nodemon -e pug,js app.js",
     "memory": "node --max-old-space-size=4096 app.js",
     "cache": "node --max-old-space-size=8000 caching/runCaching.js",
     "both": "node --max-old-space-size=4096 app.js & node --max-old-space-size=8000 caching/runCaching.js",
     "nodemonboth": "nodemon --exec npm run both",
-    "installDeps": "npm install && bower install && cp .env.settings.sample .env.settings && cp .env.private.sample .env.private"
+    "installDeps": "npm install && bower install && cpy .env.settings.sample . --rename .env.settings --no-overwrite && cpy .env.private.sample . --rename .env.private --no-overwrite "
   },
   "dependencies": {
     "apicache": "^1.4.0",
@@ -42,6 +42,7 @@
     "connect-multiparty": "^2.2.0",
     "connect-timeout": "^1.9.0",
     "cors": "^2.8.5",
+    "cpy-cli": "^3.0.0",
     "ddos": "^0.1.37",
     "dotenv": "^4.0.0",
     "easy-backblaze": "^2.0.1",
