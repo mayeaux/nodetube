@@ -16,7 +16,7 @@ block content
             div.display-div(style="min-width:50%;min-height:50%;margin:0 auto;")
                 // TODO: Sub out thumbnail here
 
-                video.display-element(poster=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;")
+                video#media_player.display-element(poster=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;")
                     // to
                     source.video-source(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`, type='video/mp4')
                     //source(src=upload.uploadUrl, type='video/mp4')
@@ -337,7 +337,7 @@ block extra_js
 
 
 block extra_css
-  link(rel="stylesheet" href="https://cdn.plyr.io/2.0.16/plyr.css")
+  link(rel="stylesheet" href="https://cdn.plyr.io/3.3.21/plyr.css")
   style.
     .pewtube-pro {
         background: #edeeee;
@@ -368,7 +368,7 @@ block extra_css
 
 block extra_footer_js
   script(src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js")
-  script(src="https://cdn.plyr.io/2.0.16/plyr.js")
+  script(src="https://cdn.plyr.io/3.3.21/plyr.js")
   script.
     var clipboard = new ClipboardJS('.copy-button');
 
