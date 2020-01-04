@@ -41,16 +41,16 @@ script.
   var plyr_options = {
     autoplay: autoplay,
     clickToPlay: true,
-    controls: ['mute', 'progress', 'play', 'fullscreen', 'volume', 'play-large', 'current-time']
+    controls: ['mute', 'progress', 'play', 'fullscreen', 'volume', 'play-large', 'current-time', 'settings'],
+    settings: ['speed'],
   };
 
   // Create the plyr instances - this defines players[0] as our primary player.
-  var players = plyr.setup(plyr_options);
+  var players = Plyr.setup("#media_player", plyr_options);
 
   players[0].on('ready', function (event) {
-    $('.display-element').css('max-height', '620px')
-
     // set video max-height to 620px
+    $('.display-element').css('max-height', '620px');
   });
 
   players[0].on('enterfullscreen', function (event) {
