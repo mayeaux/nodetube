@@ -259,6 +259,7 @@ block content
       .form-group
         label.col-sm-3.control-label(for='channelName') Channel Thumbnail
         .col-sm-7
+          // FILE INPUT BUTTON
           input.center-block.text-center(class="upload-file" data-max-size="500000000" type="file" name="filetoupload" accept="image/*")
 
       div.form-group
@@ -450,40 +451,39 @@ block content
 
     var csrf = '#{_csrf}'
 
-    var handler = StripeCheckout.configure({
-      key: stripeToken,
-      image: 'https://f001.backblazeb2.com/file/pewtube/pewtube/RCbutDM.jpg',
-      locale: 'auto',
-      // bitcoin: true,
-      token: function (token) {
+    //var handler = StripeCheckout.configure({
+    //  key: stripeToken,
+    //  image: 'https://f001.backblazeb2.com/file/pewtube/pewtube/RCbutDM.jpg',
+    //  locale: 'auto',
+    //  // bitcoin: true,
+    //  token: function (token) {
+    //
+    //    var data = {
+    //      _csrf: csrf,
+    //      token
+    //    }
+    //
+    //    $.ajax({
+    //      type: 'POST',
+    //      url: `/api/purchase/plus`,
+    //      data,
+    //      success: function (data) {
+    //        if (data == 'success') {
+    //          window.location = "/account?to=pt-plus";
+    //        } else {
+    //          swal("Something didn't work, please contact PewTube at ceo@pew.tube or via the widget in the bottom right corner")
+    //        }
+    //        console.log(data);
+    //      },
+    //      error: function (err) {
+    //        console.log(err);
+    //      }
+    //    });
 
-        var data = {
-          _csrf: csrf,
-          token
-        }
 
-        $.ajax({
-          type: 'POST',
-          url: `/api/purchase/plus`,
-          data,
-          success: function (data) {
-            if (data == 'success') {
-              window.location = "/account?to=pt-plus";
-            } else {
-              swal("Something didn't work, please contact PewTube at ceo@pew.tube or via the widget in the bottom right corner")
-            }
-            console.log(data);
-          },
-          error: function (err) {
-            console.log(err);
-          }
-        });
-
-
-        console.log(token);
         // TODO: Post this guy to the backend
-      }
-    });
+    //      }
+    //    });
     document.getElementById('customButton').addEventListener('click', function (e) {
       // Open Checkout with further options:
       handler.open({
