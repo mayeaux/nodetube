@@ -16,7 +16,7 @@ block content
             div.display-div(style="min-width:50%;min-height:50%;margin:0 auto;")
                 // TODO: Sub out thumbnail here
 
-                video.display-element(poster=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;")
+                video#media_player.display-element(poster=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;")
                     // to
                     source.video-source(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`, type='video/mp4')
                     //source(src=upload.uploadUrl, type='video/mp4')
@@ -204,15 +204,15 @@ block content
                     img(src='/images/facebook-share.jpg', width='100', height='30', alt='Share on Twitter')
                 a(href=`https://twitter.com/share?url=${url}` target="_blank")
                     img(src='/images/twitter-share.jpg', width='100', height='30', alt='Share on Twitter')
-                a(href=`mailto:?subject=Check out this ${upload.fileType}&body=Check out this ${upload.fileType} on PewTube: ${url}`, title='Share by Email')
+                a(href=`mailto:?subject=Check out this ${upload.fileType}&body=Check out this ${upload.fileType} on NodeTube: ${url}`, title='Share by Email')
                     img(src='/images/email-share.jpg')
 
             br
-            button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} \n\nhttps://pew.tube/user/${upload.uploader.channelUrl}/${upload.uniqueTag}`)
+            button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} \n\nhttps://nodetube.liv/user/${upload.uploader.channelUrl}/${upload.uniqueTag}`)
                 i.fa.fa-info
                 | Copy Details
 
-            button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} by ${upload.uploader.channelName} \n\n https://pew.tube/user/${upload.uploader.channelUrl}/${upload.uniqueTag} \n\n #PewTube`)
+            button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} by ${upload.uploader.channelName} \n\n https://nodetube.live/user/${upload.uploader.channelUrl}/${upload.uniqueTag} \n\n #PewTube`)
                 i.fa.fa-info
                 | With User Info
 
@@ -337,7 +337,7 @@ block extra_js
 
 
 block extra_css
-  link(rel="stylesheet" href="https://cdn.plyr.io/2.0.16/plyr.css")
+  link(rel="stylesheet" href="https://cdn.plyr.io/3.3.21/plyr.css")
   style.
     .pewtube-pro {
         background: #edeeee;
@@ -368,7 +368,7 @@ block extra_css
 
 block extra_footer_js
   script(src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js")
-  script(src="https://cdn.plyr.io/2.0.16/plyr.js")
+  script(src="https://cdn.plyr.io/3.3.21/plyr.js")
   script.
     var clipboard = new ClipboardJS('.copy-button');
 
