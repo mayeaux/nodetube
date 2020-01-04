@@ -1,4 +1,4 @@
-const Promise = require('bluebird')
+const Promise = require('bluebird');
 const express = require('express');
 const http = require('http');
 const url = require('url');
@@ -35,7 +35,6 @@ exports.onLiveDone = (req, res) => {
 
   console.log(user);
 
-
   res.render('livestream/rtmp', {
     user,
     title: 'Livestream ',
@@ -47,7 +46,7 @@ exports.onLiveDone = (req, res) => {
  * POST livestream/on-live-auth
  * Endpoint that nginx-rtmp hits to complete authentication
  */
-exports.onLiveAuth = async (req, res) => {
+exports.onLiveAuth = async(req, res) => {
 
   console.log(req.body);
 
@@ -59,16 +58,16 @@ exports.onLiveAuth = async (req, res) => {
     console.log('authentication passed');
     console.log('found user: ' + user.channelUrl);
 
-    return res.send('working')
+    return res.send('working');
   } else {
 
     console.log('having to blow up');
 
     if(user){
-      console.log('user ' + user.channelUrl)
+      console.log('user ' + user.channelUrl);
     }
 
-    return res.status(500).send('Something broke!')
+    return res.status(500).send('Something broke!');
   }
 
 };
@@ -81,7 +80,7 @@ let connectedUsers;
 let connectedUsersAmount;
 var messagesObject;
 
-if (process.env.LIVESTREAM_APP == "true")
+if(process.env.LIVESTREAM_APP == 'true')
 {
   app = express();
 
@@ -93,7 +92,7 @@ if (process.env.LIVESTREAM_APP == "true")
   };
 
   // boot up express server to handle websocket connections
-  server = https.createServer(options, app).listen(8080, function() {
+  server = https.createServer(options, app).listen(8080, function(){
     console.log('Websockets server started on port 8080');
   });
 
@@ -109,7 +108,7 @@ if (process.env.LIVESTREAM_APP == "true")
     // if the user is hitting a messages endpoint ie: (wss://localhost:8080/messages/anthony)
     var regexp1 = /\/messages\/(.*)/;
 
-    if ( pathname.match(regexp1) ) {
+    if( pathname.match(regexp1) ){
 
       // username succeeds :8080/messages/__
       const username = pathname.match(regexp1)[1];
@@ -146,118 +145,110 @@ if (process.env.LIVESTREAM_APP == "true")
   connectedUsers = [];
   connectedUsersAmount = 2;
 
-  // stringifies message objects
-  function stringifyAndSend(webSocketConnection, objectToSend){
-    webSocketConnection.send( JSON.stringify( objectToSend ) );
-  }
-
   // save already sent messages
   messagesObject = {};
 
-  /** CALLBACK TO SEND A MESSAGE **/
+  /** DECREMENT AMOUNT OF CONNECTED USERS ON CLOSE **/
+  ws.on('close', function(code, reason){
 
-  function messageSocketCallback(ws){
+    console.log('closing socket');
 
-    ws.on('message', function (_message) {
+    connectedUsersAmount--;
 
-      // console.log(_message);
+    for(const user of connectedUsers){
+      if(user.readyState == 1){
+        stringifyAndSend(user, { connectedUsersAmount });
+      }
+    }
+  });
+}
 
-      // parse stingified message sent from frontend
-      message = JSON.parse(_message);
+/** CALLBACK TO SEND A MESSAGE **/
+function messageSocketCallback(ws){
 
-      // get username that sent the message
-      var streamingUser = message.username;
+  ws.on('message', function(_message){
 
-      // code to run when a new user connects
-      if(streamingUser && !messagesObject[streamingUser]){
-        messagesObject[streamingUser] = {};
-        messagesObject[streamingUser].messages = [];
-        messagesObject[streamingUser].connectedUsers = [];
-        messagesObject[streamingUser].connectedUsersCount = 2;
+    // console.log(_message);
+
+    // parse stingified message sent from frontend
+    message = JSON.parse(_message);
+
+    // get username that sent the message
+    var streamingUser = message.username;
+
+    // code to run when a new user connects
+    if(streamingUser && !messagesObject[streamingUser]){
+      messagesObject[streamingUser] = {};
+      messagesObject[streamingUser].messages = [];
+      messagesObject[streamingUser].connectedUsers = [];
+      messagesObject[streamingUser].connectedUsersCount = 2;
+    }
+
+    var message = message.message;
+
+    // TODO: need to add a close message here
+    // this is sent right before changing href location of client
+    if(message == 'DISCONNECTING'){
+
+      messagesObject[streamingUser].connectedUsersCount--;
+
+      return'do something here';
+    }
+
+    // code to run when a new user connects
+    if(message == 'CONNECTING'){
+
+      // send all existing messages
+      // TODO: limit it to latest 200
+      for(const message of messagesObject[streamingUser].messages){
+        stringifyAndSend(ws, { message });
       }
 
-      var message = message.message;
+      // increment amount of connected users
+      messagesObject[streamingUser].connectedUsersCount++;
 
-      // TODO: need to add a close message here
-      // this is sent right before changing href location of client
-      if(message == 'DISCONNECTING'){
+      console.log('new user connected to chat of: ' + streamingUser);
 
-        messagesObject[streamingUser].connectedUsersCount--;
+      // add websocket connection to object
+      messagesObject[streamingUser].connectedUsers.push(ws);
 
-        return 'do something here'
-      }
+      // send new message to already connected users
+      for(const user of messagesObject[streamingUser].connectedUsers){
 
-      // code to run when a new user connects
-      if(message == 'CONNECTING'){
-
-        // send all existing messages
-        // TODO: limit it to latest 200
-        for(const message of messagesObject[streamingUser].messages){
-          stringifyAndSend(ws, { message });
-        }
-
-        // increment amount of connected users
-        messagesObject[streamingUser].connectedUsersCount++;
-
-        console.log('new user connected to chat of: ' + streamingUser);
-
-        // add websocket connection to object
-        messagesObject[streamingUser].connectedUsers.push(ws);
-
-        // send new message to already connected users
-        for(const user of messagesObject[streamingUser].connectedUsers){
-
-          // if the user is still connected
-          if(user.readyState == 1){
-
-            // update how many users are connected
-            stringifyAndSend(user, { connectedUsersAmount: messagesObject[streamingUser].connectedUsersCount });
-          }
-        }
-
-        console.log('connecting');
-        return 'do something here'
-      }
-
-      // sending keep alive as a hack to keep the socket open
-      // this conditional means that a new message has been sent
-      if(message !== 'KEEP-ALIVE' && message !== 'undefined' ){
-
-        // save message to existing sent messages
-        messagesObject[streamingUser].messages.push(message);
-
-        // push new message down to all still connected clients
-        for(const user of messagesObject[streamingUser].connectedUsers){
-
-          // check if connection is still running
-          if(user.readyState == 1){
-
-            stringifyAndSend(user, { message });
-
-          }
-
-        }
-      }
-
-    });
-
-
-    /** DECREMENT AMOUNT OF CONNECTED USERS ON CLOSE **/
-
-    ws.on('close', function (code, reason) {
-
-      console.log('closing socket');
-
-      connectedUsersAmount--;
-
-      for(const user of connectedUsers){
+        // if the user is still connected
         if(user.readyState == 1){
-          stringifyAndSend(user, { connectedUsersAmount });
+
+          // update how many users are connected
+          stringifyAndSend(user, { connectedUsersAmount: messagesObject[streamingUser].connectedUsersCount });
         }
       }
 
-    });
+      console.log('connecting');
+      return'do something here';
+    }
 
-  }
+    // sending keep alive as a hack to keep the socket open
+    // this conditional means that a new message has been sent
+    if(message !== 'KEEP-ALIVE' && message !== 'undefined' ){
+
+      // save message to existing sent messages
+      messagesObject[streamingUser].messages.push(message);
+
+      // push new message down to all still connected clients
+      for(const user of messagesObject[streamingUser].connectedUsers){
+
+        // check if connection is still running
+        if(user.readyState == 1){
+
+          stringifyAndSend(user, { message });
+        }
+      }
+    }
+  });
+}
+
+// stringifies message objects
+function stringifyAndSend(webSocketConnection, objectToSend){
+  webSocketConnection.send( JSON.stringify( objectToSend ) );
 }
 

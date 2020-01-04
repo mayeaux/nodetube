@@ -24,27 +24,26 @@ const _ = require('lodash');
 //
 //
 
-
 async function determineLegitViewsForUploads(uploads, timeRange){
 
   // grab the date object for how long ago a certain time is
   // TODO: Could probably be improved with moment, in meantime cover 1h, 1d, 1w, 1m, (all-time can be run by default)
   let timeAgoDate;
-  if (timeRange == '1hour'){ //Hour
+  if(timeRange == '1hour'){ // Hour
     timeAgoDate = new Date() - 1000 * 60 * 60;
-    console.log("Hour");
+    console.log('Hour');
   } else if(timeRange == '12hour'){ // 12 hours
     timeAgoDate = new Date() - 1000 * 60 * 60 * 12;
-    console.log("12 Hours");
-  } else if(timeRange == '24hour' || timeRange == '1day'){ //Day
+    console.log('12 Hours');
+  } else if(timeRange == '24hour' || timeRange == '1day'){ // Day
     timeAgoDate = new Date() - 1000 * 60 * 60 * 24;
-    console.log("Day");
-  } else if (timeRange == '1week'){ //Week
+    console.log('Day');
+  } else if(timeRange == '1week'){ // Week
     timeAgoDate = new Date() - 1000 * 60 * 60 * 24 * 7;
-    console.log("Week");
-  } else if (timeRange == '1month'){ //Month
+    console.log('Week');
+  } else if(timeRange == '1month'){ // Month
     timeAgoDate = new Date() - 1000 * 60 * 60 * 24 * 30;
-    console.log("Month");
+    console.log('Month');
   }
 
   let updatedUploads = [];
@@ -63,7 +62,6 @@ async function determineLegitViewsForUploads(uploads, timeRange){
     //   if(view.validity == 'fake') fakeViewAmount++
     // }
     // upload.legitViewAmount = upload.views + realViewAmount;
-
 
     /** CAP IF OVER 300 IN LESS THAN 24H **/
     const timeDiff = new Date() - upload.createdAt;

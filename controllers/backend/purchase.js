@@ -16,11 +16,11 @@ exports.purchasePlus = async function(req, res){
     console.log(`Subsription created: ${subscription.id}`);
 
     const updatedUser = await subscriptions.grantUserPlus(req.user);
-    console.log(`UPDATED ${req.user.channelUrl} TO PLUS`)
+    console.log(`UPDATED ${req.user.channelUrl} TO PLUS`);
     console.log(updatedUser.privs);
 
     res.send('success');
-  } catch (err) {
+  } catch(err){
     console.log(err);
     res.send('failure');
   }
@@ -57,7 +57,7 @@ exports.purchaseCredits = async function(req, res){
     console.log('user amount updated to : ' + amount);
 
     res.send('success');
-  } catch (err) {
+  } catch(err){
     console.log(err);
     res.send('failure');
   }
@@ -89,7 +89,7 @@ exports.purchaseCreditsExistingCustomer = async function(req, res){
     console.log('user amount updated to : ' + amount);
 
     res.send('success');
-  } catch (err) {
+  } catch(err){
     console.log(err);
     res.send('failure');
   }

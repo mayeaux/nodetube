@@ -34,8 +34,8 @@ const commentSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-commentSchema.virtual('timeAgo').get(function () {
-  return timeAgoEnglish.format( new Date(this.createdAt) )
+commentSchema.virtual('timeAgo').get(function(){
+  return timeAgoEnglish.format( new Date(this.createdAt) );
 });
 
 const Comment = mongoose.model('Comment', commentSchema);

@@ -31,12 +31,11 @@ const reactSchema = new mongoose.Schema({
   }
 });
 
-reactSchema.virtual('timeAgo').get(function () {
-  return timeAgoEnglish.format( new Date(this.createdAt) )
+reactSchema.virtual('timeAgo').get(function(){
+  return timeAgoEnglish.format( new Date(this.createdAt) );
 });
 
 const React = mongoose.model('React', reactSchema);
 
 module.exports = React;
-
 

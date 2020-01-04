@@ -28,7 +28,7 @@ const logCaching = process.env.LOG_CACHING;
 async function getPopularUploads(){
 
   if(logCaching == 'true'){
-    c.l(`Getting popular uploads`);
+    c.l('Getting popular uploads');
   }
 
   // TODO: have to have a job to update upload's view amounts
@@ -49,16 +49,15 @@ async function getPopularUploads(){
     .lean();
 
   if(logCaching == 'true'){
-    c.l(`Uploads received from database`);
+    c.l('Uploads received from database');
 
     c.l(popularUploads.length);
   }
 
-  return popularUploads
+  return popularUploads;
 }
 
-
-async function setPopularUploads() {
+async function setPopularUploads(){
   let popularUploads  = await getPopularUploads();
 
   // do more stringent check for uploader
@@ -99,7 +98,4 @@ async function setPopularUploads() {
 }
 
 module.exports = setPopularUploads;
-
-
-
 

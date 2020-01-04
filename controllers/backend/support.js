@@ -1,7 +1,7 @@
 const ReceivedEmail = require('../../models/index').ReceivedEmail;
 const supportLib = require('../../lib/support/email.js');
 
-exports.sendResponse = async (req, res) => {
+exports.sendResponse = async(req, res) => {
 
   try {
 
@@ -12,8 +12,8 @@ exports.sendResponse = async (req, res) => {
     // exclude uploads without an uploadUrl
     let receivedEmail = await ReceivedEmail.findById(id);
 
-    if (receivedEmail.response) {
-      throw new Error('Already has a response')
+    if(receivedEmail.response){
+      throw new Error('Already has a response');
     }
 
     receivedEmail.response = response;
@@ -22,16 +22,16 @@ exports.sendResponse = async (req, res) => {
 
     console.log(receivedEmail);
 
-    res.send('success')
+    res.send('success');
 
-  } catch (err){
+  } catch(err){
     console.log(err);
     res.send('err');
   }
 
 };
 
-exports.sendEmail = async (req, res) => {
+exports.sendEmail = async(req, res) => {
 
   try {
 
@@ -44,7 +44,7 @@ exports.sendEmail = async (req, res) => {
     let receivedEmail = await ReceivedEmail.findById(emailId);
 
     if(!receivedEmail.response){
-      throw new Error('No response written yet')
+      throw new Error('No response written yet');
     }
 
     // console.log(receivedEmail)
@@ -57,10 +57,10 @@ exports.sendEmail = async (req, res) => {
 
     await receivedEmail.save();
 
-    res.send('success')
+    res.send('success');
 
-  } catch (err){
+  } catch(err){
     console.log(err);
-    res.send('err')
+    res.send('err');
   }
 };

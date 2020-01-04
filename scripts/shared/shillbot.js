@@ -7,7 +7,6 @@ const twitter = require('../../lib/socialMedia/twitter');
 // const facebook = require('./facebook');
 const facebook = require('../../lib/socialMedia/facebook');
 
-
 process.on('unhandledRejection', console.log);
 
 dotenv.load({ path: '../.env.private' });
@@ -44,7 +43,7 @@ async function socialPostQueue(){
 
   if(!socialPost){
     console.log('No unsent socialPost');
-    return
+    return;
   }
 
   console.log('Sending off socialPost');
@@ -59,23 +58,23 @@ async function socialPostQueue(){
         const response = await gab.gabPost(postData.message);
         console.log(response);
         postData.postedCorrectly = true;
-      } catch (err){
+      } catch(err){
         console.log(err);
       }
-    } else if (postData.network == 'twitter'){
+    } else if(postData.network == 'twitter'){
       try {
         const response = await twitter.twitterPost(postData.message);
         console.log(response);
         postData.postedCorrectly = true;
-      } catch (err){
+      } catch(err){
         console.log(err);
       }
-    } else if (postData.network == 'facebook'){
+    } else if(postData.network == 'facebook'){
       try {
         const response = await facebook.facebookPost(postData.message, socialPost.upload);
         console.log(response);
         postData.postedCorrectly = true;
-      } catch (err){
+      } catch(err){
         console.log(err);
       }
     }
@@ -95,6 +94,6 @@ if(process.env.SHILLBOT_ON == 'true'){
 
   setInterval(socialPostQueue, 1000 * 60 * shillInterval);
 } else {
-  console.log('Shillbot not turned on')
+  console.log('Shillbot not turned on');
 }
 

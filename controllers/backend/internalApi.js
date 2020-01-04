@@ -10,7 +10,7 @@ const fs = require('fs-extra');
 const multiparty = require('multiparty');
 var B2 = require('easy-backblaze');
 const _ = require('lodash');
-var randomstring = require("randomstring");
+var randomstring = require('randomstring');
 var ffmpeg = require('fluent-ffmpeg');
 var mongoose = require('mongoose');
 var concat = require('concat-files');
@@ -20,8 +20,6 @@ const mv = require('mv');
 
 const createAdminAction = require('../../lib/administration/createAdminAction');
 const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
-
-
 
 // const stripe = require('stripe')(process.env.STRIPE_SKEY);
 // const twilio = require('twilio')(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
@@ -38,7 +36,6 @@ console.log(`THUMBNAIL SERVER: ${process.env.THUMBNAIL_SERVER}`);
 
 const frontendServer = process.env.FRONTEND_SERVER || '';
 
-
 const createNotification = require('../../lib/helpers/notifications');
 
 // models
@@ -50,7 +47,6 @@ const Subscription = require('../../models/index').Subscription;
 const Notification = require('../../models/index').Notification;
 const CreditAction = require('../../models/index').CreditAction;
 const Report = require('../../models/index').Report;
-
 
 const getMediaType = require('../../lib/uploading/media');
 
@@ -66,7 +62,6 @@ var b2 = Promise.promisifyAll(new B2(accountId, applicationKey));
 let hostPrepend = '';
 if(process.env.NODE_ENV == 'production') hostPrepend = 'https://pew.tube';
 
-
 var appDir = path.dirname(require.main.filename);
 
 let uploadServer;
@@ -74,7 +69,7 @@ let uploadServer;
 if(process.env.NODE_ENV !== 'production' && !process.env.UPLOAD_SERVER){
   uploadServer = '/uploads';
 // development with an upload server
-} else if (process.env.NODE_ENV !== 'production' && process.env.UPLOAD_SERVER){
+} else if(process.env.NODE_ENV !== 'production' && process.env.UPLOAD_SERVER){
   // otherwise load the upload's uploadServer
   uploadServer = `https://${process.env.UPLOAD_SERVER}.pew.tube/uploads`;
 } else {
@@ -91,13 +86,13 @@ async function updateUsersUnreadSubscriptions(user){
     await subscribingUser.save();
   }
 
-};
+}
 
 /**
  * POST /api/changeDefaultUserQuality
  * Change user's default quality option
  */
-exports.changeDefaultUserQuality = async (req, res) => {
+exports.changeDefaultUserQuality = async(req, res) => {
   const quality = req.params.quality;
 
   let siteVisitor = req.siteVisitor;
@@ -116,19 +111,18 @@ exports.changeDefaultUserQuality = async (req, res) => {
   res.send('success');
 };
 
-
-exports.blockUser = async (req, res) => {
+exports.blockUser = async(req, res) => {
 
   try {
 
     const blockedUsername = req.body.blockedUsername;
 
-    console.log(`blocking ${blockedUsername} for ${req.user.channelUrl}`)
+    console.log(`blocking ${blockedUsername} for ${req.user.channelUrl}`);
 
     const blockedUser = await User.findOne({channelUrl: blockedUsername}).select('id _id');
 
     let userAlreadyBlocked;
-    for(let [index, alreadyBlockedUser] of req.user.blockedUsers.entries()){
+    for(let[index, alreadyBlockedUser]of req.user.blockedUsers.entries()){
 
       if(alreadyBlockedUser == blockedUser._id.toString()){
         userAlreadyBlocked = true;
@@ -136,7 +130,7 @@ exports.blockUser = async (req, res) => {
     }
 
     if(userAlreadyBlocked){
-      console.log('user already blocked')
+      console.log('user already blocked');
       return res.send('success');
     }
 
@@ -144,9 +138,9 @@ exports.blockUser = async (req, res) => {
 
     await req.user.save();
 
-    res.send('success')
+    res.send('success');
 
-  } catch (err){
+  } catch(err){
     console.log(err);
     res.status(500);
     res.send('error');
@@ -154,8 +148,7 @@ exports.blockUser = async (req, res) => {
 
 };
 
-
-exports.unblockUser = async (req, res) => {
+exports.unblockUser = async(req, res) => {
 
   try {
 
@@ -164,7 +157,7 @@ exports.unblockUser = async (req, res) => {
     const blockedUser = await User.findOne({channelUrl: blockedUsername}).select('id _id');
 
     let blockedUserIndex;
-    for(let [index, alreadyBlockedUser] of req.user.blockedUsers.entries()){
+    for(let[index, alreadyBlockedUser]of req.user.blockedUsers.entries()){
 
       if(alreadyBlockedUser == blockedUser._id.toString()){
         blockedUserIndex = index;
@@ -175,9 +168,9 @@ exports.unblockUser = async (req, res) => {
 
     await req.user.save();
 
-    res.send('success')
+    res.send('success');
 
-  } catch (err){
+  } catch(err){
     console.log(err);
     res.status(500);
     res.send('error');
@@ -185,12 +178,11 @@ exports.unblockUser = async (req, res) => {
 
 };
 
-
 /**
  * POST /api/report
  * Report an upload
  */
-exports.reportUpload = async (req, res) => {
+exports.reportUpload = async(req, res) => {
   let siteVisitor = req.siteVisitor;
   let user = req.user;
   const uploadId = req.body.uploadId;
@@ -217,12 +209,11 @@ exports.reportUpload = async (req, res) => {
 
 };
 
-
 /**
  * POST /
  *
  */
-exports.changeUserFilter = async (req, res) => {
+exports.changeUserFilter = async(req, res) => {
   let siteVisitor = req.siteVisitor;
   let user = req.user;
 
@@ -244,7 +235,6 @@ exports.changeUserFilter = async (req, res) => {
 
 };
 
-
 async function markUploadAsComplete(uniqueTag, channelUrl, user, res){
   upload = await Upload.findOne({ uniqueTag });
   upload.status = 'completed';
@@ -253,7 +243,7 @@ async function markUploadAsComplete(uniqueTag, channelUrl, user, res){
   user.uploads.push(upload._id);
   await user.save();
 
-  return 'success'
+  return'success';
 }
 
 async function uploadToB2(upload, uploadPath, hostFilePath){
@@ -261,7 +251,7 @@ async function uploadToB2(upload, uploadPath, hostFilePath){
   console.log('upload to b2');
 
   if(upload.fileType == 'video'){
-    upload.fileExtension = '.mp4'
+    upload.fileExtension = '.mp4';
   }
 
   const response = await b2.uploadFileAsync(uploadPath, {
@@ -276,14 +266,13 @@ async function uploadToB2(upload, uploadPath, hostFilePath){
   console.log(response);
 }
 
-
 /** delete user/channel upload **/
-exports.deleteChannelThumbnail = async (req, res, next) => {
+exports.deleteChannelThumbnail = async(req, res, next) => {
 
   console.log(req.body.uploadToken);
 
   if(!req.user && req.body.uploadToken){
-    req.user = await User.findOne({ uploadToken : req.body.uploadToken })
+    req.user = await User.findOne({ uploadToken : req.body.uploadToken });
   }
 
   req.user.thumbnailUrl = undefined;
@@ -293,21 +282,20 @@ exports.deleteChannelThumbnail = async (req, res, next) => {
   return res.send('success');
 };
 
-
 /** delete upload thumbnail **/
-exports.deleteUploadThumbnail = async (req, res, next) => {
+exports.deleteUploadThumbnail = async(req, res, next) => {
 
   try {
     console.log(req.body.uploadToken);
 
     if(!req.user && req.body.uploadToken){
-      req.user = await User.findOne({ uploadToken : req.body.uploadToken })
+      req.user = await User.findOne({ uploadToken : req.body.uploadToken });
     }
 
     const upload = await Upload.findOne({ uniqueTag: req.params.uniqueTag }).populate('uploader');
 
     if(!upload){
-      res.send('no upload')
+      res.send('no upload');
     }
 
     if(upload.uploader.id.toString() !== req.user.id.toString()){
@@ -321,12 +309,11 @@ exports.deleteUploadThumbnail = async (req, res, next) => {
     res.send('success');
 
     console.log(req.body);
-  } catch (err){
+  } catch(err){
     console.log(err);
   }
 
 };
-
 
 exports.subscribeEndpoint = async function(req, res, next){
 
@@ -350,7 +337,7 @@ exports.subscribeEndpoint = async function(req, res, next){
   }
 
   if(!receivingUser){
-    return res.send('Couldnt find user')
+    return res.send('Couldnt find user');
   }
 
   let alreadySubbed = false;
@@ -383,14 +370,12 @@ exports.subscribeEndpoint = async function(req, res, next){
 
     await subscription.save();
 
-
     // TODO: THIS ISNT WORKING
     receivingUser.receivedSubscriptions.push(subscription._id);
     await receivingUser.save();
 
     subscribingUser.subscriptions.push(subscription._id);
     await subscribingUser.save();
-
 
     // send notification if youre not subscribing to your own channel
 
@@ -412,24 +397,18 @@ exports.subscribeEndpoint = async function(req, res, next){
 
       console.log(notification);
 
-
-
-      console.log('here')
+      console.log('here');
 
     }
 
-
-
-
-
     res.send('subscribed');
 
-  } else if(existingSubscription.active == true) {
+  } else if(existingSubscription.active == true){
     existingSubscription.active = false;
     await existingSubscription.save();
 
     res.send('unsubscribed');
-  } else if (existingSubscription.active == false){
+  } else if(existingSubscription.active == false){
     existingSubscription.active = true;
 
     await existingSubscription.save();
@@ -437,18 +416,14 @@ exports.subscribeEndpoint = async function(req, res, next){
     res.send('resubscribed');
   }
 
-
-
 };
 
-
-
 /** handle react creation/updating **/
-exports.react = async (req, res, next)  => {
+exports.react = async(req, res, next)  => {
   // console.log(`${req.user._id}` , req.params.user);
 
   if(`${req.user._id}` !== req.params.user){
-    return res.send('Not authorized')
+    return res.send('Not authorized');
   }
 
   const existingReact = await React.findOne({
@@ -471,7 +446,7 @@ exports.react = async (req, res, next)  => {
     } else {
       existingReact.react = req.body.emoji;
       await existingReact.save();
-      return res.send('changed')
+      return res.send('changed');
     }
 
   // otherwise create a new react
@@ -480,15 +455,13 @@ exports.react = async (req, res, next)  => {
     const newReact = new React({
       upload: req.params.upload,
       user: req.params.user,
-      react: req.body.emoji,
+      react: req.body.emoji
     });
 
     await newReact.save();
 
     upload.reacts.push(newReact._id);
     await upload.save();
-
-
 
     // add a notification
 
@@ -502,14 +475,14 @@ exports.react = async (req, res, next)  => {
 };
 
 /** POST EDIT UPLOAD **/
-exports.editUpload = async (req, res, next) => {
+exports.editUpload = async(req, res, next) => {
 
   console.log(req.body);
 
   try {
 
-    if (!req.user && req.body.uploadToken) {
-      req.user = await User.findOne({uploadToken: req.body.uploadToken})
+    if(!req.user && req.body.uploadToken){
+      req.user = await User.findOne({uploadToken: req.body.uploadToken});
     }
 
     // TODO: Add error handling
@@ -528,7 +501,7 @@ exports.editUpload = async (req, res, next) => {
 
     /** If it is an admin or moderator changing the rating, save as adminAction and only change rating, mark as moderated  **/
     // TODO: pull this logic out of controller
-    if (!isUser && !isAdmin && !isAdminOrModerator) {
+    if(!isUser && !isAdmin && !isAdminOrModerator){
       return res.render('error/403');
     }
 
@@ -536,7 +509,7 @@ exports.editUpload = async (req, res, next) => {
     const isModeratorOrAdmin = isModerator || isAdmin;
 
     // if moderator or admin is updating rating
-    if (isModeratorOrAdmin && uploadRatingIsChanging) {
+    if(isModeratorOrAdmin && uploadRatingIsChanging){
       upload.moderated = true;
 
       const data = {
@@ -557,7 +530,7 @@ exports.editUpload = async (req, res, next) => {
 
     // check if there's a thumbnail
     let filename, fileType, fileExtension;
-    if (req.files && req.files.filetoupload) {
+    if(req.files && req.files.filetoupload){
       filename = req.files.filetoupload.originalFilename;
       fileType = getMediaType(filename);
       fileExtension = path.extname(filename);
@@ -574,10 +547,10 @@ exports.editUpload = async (req, res, next) => {
     // TODO: would be great if this was its own endpoint
 
     // reject the file
-    if (fileIsNotImage) {
+    if(fileIsNotImage){
       return res.send('We cant accept this file');
       // gotta save and upload image
-    } else if (fileIsImage) {
+    } else if(fileIsImage){
 
       await fs.move(req.files.filetoupload.path, `${saveAndServeFilesDirectory}/${req.user.channelUrl}/${upload.uniqueTag}-custom${fileExtension}`, {overwrite: true});
 
@@ -598,7 +571,7 @@ exports.editUpload = async (req, res, next) => {
       return res.send('success');
 
     }
-  } catch (err){
+  } catch(err){
     console.log(err);
     res.status(500);
     res.send('failure');
@@ -609,7 +582,7 @@ exports.editUpload = async (req, res, next) => {
  * POST /api/comment
  * List of API examples.
  */
-exports.deleteComment = async (req, res) => {
+exports.deleteComment = async(req, res) => {
 
   try {
     // double check this comment doesn't already exist
@@ -631,16 +604,16 @@ exports.deleteComment = async (req, res) => {
 
     // make sure the user has right to delete that comment
     if(!userIsUploader && !userIsCommenter){
-      throw new Error('not the proper user')
+      throw new Error('not the proper user');
     }
 
     existingComment.visibility = 'removed';
 
     await existingComment.save();
 
-    res.send('success')
+    res.send('success');
   }
-  catch (err){
+  catch(err){
 
     console.log(err);
 
@@ -655,10 +628,10 @@ exports.deleteComment = async (req, res) => {
  * POST /api/comment
  * List of API examples.
  */
-exports.postComment = async (req, res) => {
+exports.postComment = async(req, res) => {
 
   if(req.user.status == 'restricted'){
-    return res.send('Comment failed, please try again.')
+    return res.send('Comment failed, please try again.');
   }
 
   if(!req.body.comment){
@@ -702,8 +675,6 @@ exports.postComment = async (req, res) => {
 
     await comment.save();
 
-
-
     if(req.body.commentId){
       let respondedToComment = await Comment.findOne({ _id : req.body.commentId });
 
@@ -728,7 +699,6 @@ exports.postComment = async (req, res) => {
 
     upload = await upload.save();
 
-
     // send notification if youre not reacting to your own material
 
     // create notif for comment on your upload if its not your own thing
@@ -750,7 +720,6 @@ exports.postComment = async (req, res) => {
       }
     }
 
-
     const timeAgo = timeAgoEnglish.format( new Date(comment.createdAt)  );
 
     let responseObject = {
@@ -759,16 +728,11 @@ exports.postComment = async (req, res) => {
       timeAgo
     };
 
-
-
-
-
     res.json(responseObject);
-
 
     // res.send('success')
   }
-  catch (err){
+  catch(err){
 
     console.log(err);
 
@@ -779,13 +743,11 @@ exports.postComment = async (req, res) => {
 
 };
 
-
-
 /**
  * POST /api/credit
  * Send credit to another user
  */
-exports.sendUserCredit = async (req, res) => {
+exports.sendUserCredit = async(req, res) => {
 
   let sendingUser = req.user;
 
@@ -817,9 +779,9 @@ exports.sendUserCredit = async (req, res) => {
 
   let receivingUser = await User.findOne({ channelUrl });
 
-  console.log(receivingUser.channelUrl)
+  console.log(receivingUser.channelUrl);
 
-  console.log(req.body.channelUrl)
+  console.log(req.body.channelUrl);
 
   if(receivingUser.plan !== 'plus'){
     console.log('not plus');
@@ -836,22 +798,21 @@ exports.sendUserCredit = async (req, res) => {
   console.log(amount);
   console.log(typeof amount);
 
-  console.log(sendingUser.credit)
+  console.log(sendingUser.credit);
 
-  const receivingUserInitialCredit = receivingUser.receivedCredit
-  const sendingUserInitialCredit = sendingUser.credit
+  const receivingUserInitialCredit = receivingUser.receivedCredit;
+  const sendingUserInitialCredit = sendingUser.credit;
 
   sendingUser.credit = sendingUser.credit - amount;
-  console.log(sendingUser.credit)
+  console.log(sendingUser.credit);
 
   await sendingUser.save();
 
-  console.log(receivingUser.credit)
+  console.log(receivingUser.credit);
 
   receivingUser.receivedCredit = receivingUser.receivedCredit + amount;
 
-  console.log(receivingUser.credit)
-
+  console.log(receivingUser.credit);
 
   await receivingUser.save();
 
@@ -869,7 +830,6 @@ exports.sendUserCredit = async (req, res) => {
   console.log('credit action');
 
   await creditAction.save();
-
 
   return res.send('success');
 

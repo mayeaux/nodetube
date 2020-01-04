@@ -24,28 +24,25 @@ const uploadServer  = uploadHelpers.uploadServer;
 const generateComments = require('../../lib/mediaPlayer/generateCommentsObjects');
 const generateReactInfo = require('../../lib/mediaPlayer/generateReactInfo');
 
-
 console.log('UPLOAD SERVER: ' + uploadServer);
 
-function getParameterByName(name, url) {
-  if (!url) url = window.location.href;
-  name = name.replace(/[\[\]]/g, "\\$&");
-  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+function getParameterByName(name, url){
+  if(!url) url = window.location.href;
+  name = name.replace(/[\[\]]/g, '\\$&');
+  var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
     results = regex.exec(url);
-  if (!results) return null;
-  if (!results[2]) return '';
-  return decodeURIComponent(results[2].replace(/\+/g, " "));
+  if(!results)return null;
+  if(!results[2])return'';
+  return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
-
 const mongooseHelpers = require('../../caching/mongooseHelpers');
-
 
 /**
  * GET /$user/$uploadUniqueTag
  * Media player page
  */
-exports.getMedia = async (req, res) => {
+exports.getMedia = async(req, res) => {
 
   console.log('getting media');
 
@@ -59,9 +56,8 @@ exports.getMedia = async (req, res) => {
     const channel = req.params.channel;
     const media = req.params.media;
 
-
     let upload = await Upload.findOne({
-      uniqueTag: media,
+      uniqueTag: media
     }).populate({path: 'uploader comments checkedViews blockedUsers', populate: {path: 'commenter'}}).exec();
 
     const userIsAdmin = req.user && req.user.role == 'admin';
@@ -70,16 +66,15 @@ exports.getMedia = async (req, res) => {
     if(!upload || ( upload.visibility == 'removed' && !userIsAdmin)){
       console.log('Visible upload not found');
       res.status(404);
-      return res.render('error/404')
+      return res.render('error/404');
     }
 
     let subscriberAmount = await Subscription.count({subscribedToUser: upload.uploader._id, active: true});
     // console.log(subscriberAmount);
 
-
-    let subscriptions = req.user ? await Subscription.count({subscribedToUser: upload.uploader._id, subscribingUser: req.user._id, active: true}) : 0
+    let subscriptions = req.user ? await Subscription.count({subscribedToUser: upload.uploader._id, subscribingUser: req.user._id, active: true}) : 0;
     let alreadySubbed = (subscriptions > 0) ? true : false;
-    /*let subscriptions = await Subscription.find({ subscribedToUser: upload.uploader._id, active: true });
+    /* let subscriptions = await Subscription.find({ subscribedToUser: upload.uploader._id, active: true });
 
     let alreadySubbed = false;
     // determine if user is subbed already
@@ -91,7 +86,6 @@ exports.getMedia = async (req, res) => {
       }
     }
     */
-
 
     // determine if its the user of the channel
     let isAdmin = false;
@@ -106,28 +100,26 @@ exports.getMedia = async (req, res) => {
 
     const isUploader =  req.user && req.user._id.toString() == upload.uploader._id.toString();
 
-
     const isUserOrAdmin = isAdmin || isUser;
     const isUploaderOrAdmin = isUploader || isAdmin;
 
     const legitViews = _.filter(upload.checkedViews, function(view){
-      return view.validity == 'real'
+      return view.validity == 'real';
     });
 
     // assuming we always have a site visitor
     const userFakeViews = _.filter(upload.checkedViews, function(view){
-      return ( view.siteVisitor.toString() == req.siteVisitor._id.toString() ) && view.validity == 'fake';
+      return( view.siteVisitor.toString() == req.siteVisitor._id.toString() ) && view.validity == 'fake';
     });
-
 
     /** FRAUD CALCULATION, SHOULD PULL OUT INTO OWN LIBRARY **/
     let doingFraud;
     if(process.env.CUSTOM_FRAUD_DETECTION == 'true'){
       const testIfViewIsLegitimate = require('../../lib/custom/fraudPrevention').testIfViewIsLegitimate;
 
-      doingFraud = await testIfViewIsLegitimate(upload, req.siteVisitor._id)
+      doingFraud = await testIfViewIsLegitimate(upload, req.siteVisitor._id);
     } else {
-      doingFraud = false
+      doingFraud = false;
     }
 
     /** FRAUDULENT VIEW CHECK **/
@@ -163,8 +155,6 @@ exports.getMedia = async (req, res) => {
       await upload.save();
     }
 
-
-
     const comments = await generateComments(upload);
 
     let commentCount = 0;
@@ -183,17 +173,14 @@ exports.getMedia = async (req, res) => {
 
     upload.views = upload.views + legitViews.length + userFakeViews.length;
 
-
     // if upload should only be visible to logged in user
-    if (upload.visibility == 'pending' || upload.visibility == 'private'){
+    if(upload.visibility == 'pending' || upload.visibility == 'private'){
 
       // if no user automatically don't show
       if(!req.user){
         res.status(404);
-        return res.render('error/404')
+        return res.render('error/404');
       }
-
-
 
       // if the requesting user id matches upload's uploader id
       const isUsersDocument = req.user._id.toString() == upload.uploader._id.toString();
@@ -201,7 +188,7 @@ exports.getMedia = async (req, res) => {
       // if its not the user's document and the user is not admin
       if(!isUsersDocument && ( req.user.role !== 'admin' && req.user.role !== 'moderator' )){
         res.status(404);
-        return res.render('error/404')
+        return res.render('error/404');
       }
 
       // if is user's document or requesting user is admin
@@ -218,7 +205,6 @@ exports.getMedia = async (req, res) => {
           uploadServer
         });
       }
-
 
     } else {
 
@@ -238,11 +224,11 @@ exports.getMedia = async (req, res) => {
 
       let alreadyReported;
       // need to add the upload
-      let reportForSiteVisitor = await Report.findOne({ reportingSiteVisitor : req.siteVisitor, upload: upload._id  }).hint("Report For Site Visitor");
-      let reportForReportingUser = await Report.findOne({ reportingUser : req.user, upload: upload._id }).hint("Report For User");
+      let reportForSiteVisitor = await Report.findOne({ reportingSiteVisitor : req.siteVisitor, upload: upload._id  }).hint('Report For Site Visitor');
+      let reportForReportingUser = await Report.findOne({ reportingUser : req.user, upload: upload._id }).hint('Report For User');
 
       if(reportForReportingUser || reportForSiteVisitor){
-        alreadyReported = true
+        alreadyReported = true;
       } else {
         alreadyReported = false;
       }
@@ -284,14 +270,12 @@ exports.getMedia = async (req, res) => {
       });
     }
 
-
-
-  } catch (err){
+  } catch(err){
 
     console.log(err);
 
     res.status(500);
-    res.render('error/500')
+    res.render('error/500');
   }
 
 };

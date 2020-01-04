@@ -59,17 +59,17 @@ async function getRecentUploads(){
 
     // console.log(`${recentUploads.length} uploads found for ${category.name}`);
 
-    recentUploadsAllCategories = recentUploadsAllCategories.concat(recentUploads)
+    recentUploadsAllCategories = recentUploadsAllCategories.concat(recentUploads);
   }
 
   if(logCaching == 'true'){
     c.l(`Totalling an amount of ${recentUploadsAllCategories.length} for all recent uploads`);
   }
 
-  return recentUploadsAllCategories
+  return recentUploadsAllCategories;
 }
 
-async function setRecentUploads() {
+async function setRecentUploads(){
   let recentUploads  = await getRecentUploads();
 
   // calculate view periods for each upload
@@ -91,7 +91,6 @@ async function setRecentUploads() {
     return upload.uploader;
   });
 
-
   // build json objects representing uploads
   recentUploads = buildObjects(recentUploads);
 
@@ -106,7 +105,4 @@ async function setRecentUploads() {
 }
 
 module.exports = setRecentUploads;
-
-
-
 

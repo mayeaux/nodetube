@@ -10,8 +10,6 @@
 //   });
 // }
 
-
-
 // getScreenId(function (error, sourceId, screen_constraints){
 //
 //   window.screen_constraints = screen_constraints;
@@ -26,9 +24,9 @@ window.getVideoStream = function(){
 
   var audioConstraints = {
     audio: true,
-    video: true,
+    video: true
   };
-  navigator.getUserMedia(audioConstraints, function(stream) {
+  navigator.getUserMedia(audioConstraints, function(stream){
 
     console.log('got audio!');
 
@@ -38,21 +36,21 @@ window.getVideoStream = function(){
 
     window.streamType = 'video';
 
-    swal('You\'re ready to start streaming, click Present')
+    swal('You\'re ready to start streaming, click Present');
 
-  }, function(error) {
-    console.error("Could not get audio stream! " + error);
+  }, function(error){
+    console.error('Could not get audio stream! ' + error);
   });
 
-}
+};
 
 window.getAudioStream = function(){
 
   var audioConstraints = {
     audio: true,
-    video: false,
+    video: false
   };
-  navigator.getUserMedia(audioConstraints, function(stream) {
+  navigator.getUserMedia(audioConstraints, function(stream){
 
     console.log('got audio!');
 
@@ -60,15 +58,15 @@ window.getAudioStream = function(){
 
     console.log(stream);
 
-  }, function(error) {
-    console.error("Could not get audio stream! " + error);
+  }, function(error){
+    console.error('Could not get audio stream! ' + error);
   });
 
-}
+};
 
 window.getDesktopStream = function(){
 
-  getScreenId(function (error, sourceId, screen_constraints){
+  getScreenId(function(error, sourceId, screen_constraints){
 
     window.screen_constraints = screen_constraints;
 
@@ -76,49 +74,44 @@ window.getDesktopStream = function(){
       console.log(err);
     });
 
-    function successCallbackVideo(stream) {
+    function successCallbackVideo(stream){
       window.desktopStream = stream;
 
       window.streamType = 'screenshare';
 
-      swal('You\'re ready to start streaming, click Present')
+      swal('You\'re ready to start streaming, click Present');
     }
 
     console.log(screen_constraints);
 
   });
 
-}
-
+};
 
 window.getScreenConstraints = function(screen, callback){
 
   console.log('running here!');
 
-
-  getScreenId(function (error, sourceId, screen_constraints){
+  getScreenId(function(error, sourceId, screen_constraints){
 
     console.log(error);
 
     window.screen_constraints = screen_constraints;
 
-
-
-
     console.log(screen_constraints);
 
-    callback(null, screen_constraints)
+    callback(null, screen_constraints);
 
   });
 
-}
+};
 
 function initiateScreenSharing(audioStream){
-  getScreenId(function (error, sourceId, screen_constraints) {
-    console.log("screen_constraints");
+  getScreenId(function(error, sourceId, screen_constraints){
+    console.log('screen_constraints');
     console.log(screen_constraints);
     navigator.getUserMedia = navigator.mozGetUserMedia || navigator.webkitGetUserMedia;
-    navigator.getUserMedia(screen_constraints, function (stream) {
+    navigator.getUserMedia(screen_constraints, function(stream){
       console.log(stream);
 
       var constraints = {
@@ -138,7 +131,7 @@ function initiateScreenSharing(audioStream){
 
       var localParticipant = new Participant(sessionId);
       participants[sessionId] = localParticipant;
-      localVideo = document.getElementById("local_video");
+      localVideo = document.getElementById('local_video');
       var video = localVideo;
 
       var options = {
@@ -149,25 +142,24 @@ function initiateScreenSharing(audioStream){
         sendSource: 'desktop'
       };
 
-
-      localParticipant.rtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendrecv(options, function (error) {
-        if (error) {
+      localParticipant.rtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendrecv(options, function(error){
+        if(error){
           return console.error(error);
         }
 
         // Set localVideo to new object if on IE/Safari
-        localVideo = document.getElementById("local_video");
+        localVideo = document.getElementById('local_video');
 
         // initial main video to local first
         localVideoCurrentId = sessionId;
-        //localVideo.src = localParticipant.rtcPeer.localVideo.src;
+        // localVideo.src = localParticipant.rtcPeer.localVideo.src;
         localVideo.muted = true;
 
-        console.log("local participant id : " + sessionId);
+        console.log('local participant id : ' + sessionId);
         this.generateOffer(localParticipant.offerToReceiveVideo.bind(localParticipant));
       });
 
-    }, function (error) {
+    }, function(error){
       console.error(error);
     });
   });

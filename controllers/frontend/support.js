@@ -2,7 +2,7 @@ const ReceivedEmail = require('../../models/index').ReceivedEmail;
 const Report = require('../../models/index').Report;
 const _ = require('lodash');
 
-exports.getReceivedEmails = async (req, res) => {
+exports.getReceivedEmails = async(req, res) => {
 
   const receivingEmailAddress = req.query.to;
 
@@ -19,15 +19,13 @@ exports.getReceivedEmails = async (req, res) => {
 
   // dont let users access ceo emails unless
   if(receivingEmailAddress == 'ceo@pew.tube' && req.user.role !== 'admin'){
-    return [];
+    return[];
   }
 
   // exclude uploads without an uploadUrl
   let receivedEmails = await ReceivedEmail.find({ toEmailAddress: receivingEmailAddress, respondedTo }).populate().lean();
 
   receivedEmails = receivedEmails.reverse();
-
-
 
   // console.log(receivedEmails);
 
@@ -38,7 +36,7 @@ exports.getReceivedEmails = async (req, res) => {
 
 };
 
-exports.getReceivedEmail = async (req, res) => {
+exports.getReceivedEmail = async(req, res) => {
 
   const id = req.params.id;
 
@@ -55,7 +53,7 @@ exports.getReceivedEmail = async (req, res) => {
 
 };
 
-exports.getReports = async (req, res) => {
+exports.getReports = async(req, res) => {
 
   let reports = await Report.find({ reportingUser: { $exists: true } }).populate('reportingUser upload uploadingUser')
     .sort({createdAt: -1});

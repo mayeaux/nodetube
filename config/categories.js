@@ -5,7 +5,7 @@ const categories = [
     subcategories: [
       { name: 'pranks', displayName: 'Pranks' },
       { name: 'political', displayName: 'Political'}
-    ],
+    ]
   },
   {
     name: 'gaming',

@@ -1,18 +1,15 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
-
 const logCaching = process.env.LOG_CACHING;
 
-
-
 process.on('uncaughtException', (err) => {
-  console.log(`Uncaught Exception: `, err);
+  console.log('Uncaught Exception: ', err);
   console.log(err.stack);
 });
 
 process.on('unhandledRejection', (err) => {
-  console.log(`Unhandled Rejection: `, err);
+  console.log('Unhandled Rejection: ', err);
   console.log(err.stack);
 });
 
@@ -49,7 +46,6 @@ mongoose.connection.on('error', (err) => {
 
 console.log('Connected to ' + database);
 
-
 const setCache = require('./setCache'); // index and daily stats
 
 const cacheRecentUploads = require('./cacheRecentUploads'); // index and daily stats
@@ -63,7 +59,7 @@ async function main(){
 
     await cacheRecentUploads();
 
-  } catch (err){
+  } catch(err){
     console.log(err);
   }
 
@@ -87,7 +83,7 @@ async function runCaching(){
     await setCache.setIndexValues();
 
     // await cacheChannels();
-  } catch (err){
+  } catch(err){
     console.log(err);
   }
 }
@@ -95,7 +91,6 @@ async function runCaching(){
 runCaching();
 
 setInterval(runCaching, cacheIntervalInMs);
-
 
 // setInterval(async function(){
 //   await cacheRecentUploads();
