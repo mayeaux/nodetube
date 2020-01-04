@@ -1,4 +1,4 @@
-async function redirectDomainsMiddleware (req, res, next) {
+async function redirectDomainsMiddleware(req, res, next){
 
   // console.log(req.hostname);
 
@@ -6,19 +6,19 @@ async function redirectDomainsMiddleware (req, res, next) {
   //   res.redirect('https://pew.tube' + req.path);
   // };
 
-  if (req.hostname == 'pewtubestaging.com') {
+  if(req.hostname == 'pewtubestaging.com'){
     return res.redirect('https://pew.tube' + req.path);
-  };
+  }
 
-  if (req.hostname == 'nodetube-1.herokuapp.com') {
+  if(req.hostname == 'nodetube-1.herokuapp.com'){
     return res.redirect('https://nodetube.live' + req.path);
-  };
+  }
 
   // if(req.hostname == 'uploads.pew.tube'){
   //   return res.redirect('https://pew.tube' + req.path);
   // };
 
-  next()
+  next();
 
 }
 

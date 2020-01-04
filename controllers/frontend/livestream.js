@@ -4,11 +4,9 @@
  */
 exports.getLiveRTMP = (req, res) => {
 
-
   const channelUrl = req.params.user;
 
   console.log(channelUrl);
-
 
   res.render('livestream/rtmp', {
     channelUrl,

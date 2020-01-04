@@ -1,7 +1,6 @@
 const SocialPost = require('../../models/index').SocialPost;
 
-
-exports.getOneOffSocialPost = async (req, res) => {
+exports.getOneOffSocialPost = async(req, res) => {
 
   return res.render('socialMedia/oneOffSocialPost', {
     title : 'Create Social Post'
@@ -9,7 +8,7 @@ exports.getOneOffSocialPost = async (req, res) => {
 
 };
 
-exports.getCreateSocialPost = async (req, res) => {
+exports.getCreateSocialPost = async(req, res) => {
 
   // const socialposts = await SocialPost.find({}).populate('upload');
 

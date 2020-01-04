@@ -37,8 +37,8 @@ function buildObjects(uploads){
 
     };
 
-    return upload
-  })
+    return upload;
+  });
 }
 
 // build dates
@@ -51,25 +51,23 @@ var minuteAgo = moment().subtract(1, 'minutes').toDate();
 async function calculateViewsByPeriod(upload, uploadViews){
   upload.viewsAllTime = uploadViews.length;
 
-  uploadViews = _.filter(uploadViews, function(uploadView){ return uploadView.createdAt > monthAgo });
+  uploadViews = _.filter(uploadViews, function(uploadView){ return uploadView.createdAt > monthAgo; });
   upload.viewsWithin1month = uploadViews.length;
 
-  uploadViews = _.filter(uploadViews, function(uploadView){ return uploadView.createdAt > weekAgo });
+  uploadViews = _.filter(uploadViews, function(uploadView){ return uploadView.createdAt > weekAgo; });
   upload.viewsWithin1week = uploadViews.length;
 
-  uploadViews = _.filter(uploadViews, function(uploadView){ return uploadView.createdAt > dayAgo });
+  uploadViews = _.filter(uploadViews, function(uploadView){ return uploadView.createdAt > dayAgo; });
   upload.viewsWithin24hour = uploadViews.length;
 
-  uploadViews = _.filter(uploadViews, function(uploadView){ return uploadView.createdAt > hourAgo });
+  uploadViews = _.filter(uploadViews, function(uploadView){ return uploadView.createdAt > hourAgo; });
   upload.viewsWithin1hour = uploadViews.length;
 
-  uploadViews = _.filter(uploadViews, function(uploadView){ return uploadView.createdAt > minuteAgo });
+  uploadViews = _.filter(uploadViews, function(uploadView){ return uploadView.createdAt > minuteAgo; });
   upload.viewsWithin1minute = uploadViews.length;
 
-  return upload
+  return upload;
 }
-
-
 
 module.exports = {
   calculateViewsByPeriod,

@@ -10,28 +10,24 @@ function scoreReacts(upload){
     const didOwnReact = react.user.toString() == upload.uploader._id.toString();
 
     if( (react.react == 'like' || react.react == 'laugh' || react.react == 'love') && !didOwnReact ){
-      totalScore = totalScore + 1
-    } else if ( react.react == 'dislike' && !didOwnReact){
+      totalScore = totalScore + 1;
+    } else if( react.react == 'dislike' && !didOwnReact){
       totalScore = totalScore + 0.5;
     } else if( (react.react == 'sad' || react.react == 'disgust') && !didOwnReact){
-      totalScore = totalScore + 0.1
+      totalScore = totalScore + 0.1;
     }
   }
 
   return totalScore;
 }
 
-
-
 async function scoreFreshness(upload){
 
-  var now = moment(new Date()); //todays date
-  var end = moment("2015-12-1"); // another date
+  var now = moment(new Date()); // todays date
+  var end = moment('2015-12-1'); // another date
   var duration = moment.duration(now.diff(end));
   var hours = duration.Hours();
   console.log(hours);
-
-
 
   const oneDayAgoHours = 24;
   const oneWeekAgoHours = 24 * 7;
@@ -47,12 +43,11 @@ function calculateMultiplier(upload){
   // console.log(`react score: ${reactScore}`);
 
   if(reactScore == 0){
-    return 0.1
+    return 0.1;
   }
   const allTimeViews = upload.viewsAllTime;
 
   // how many views to get a positive feeling?
-
 
   const viewToReactRatio = allTimeViews / reactScore;
 
@@ -64,7 +59,7 @@ function calculateMultiplier(upload){
 
   const multiplier = baseline / viewToReactRatio;
 
-  return multiplier
+  return multiplier;
 
 }
 
@@ -72,7 +67,6 @@ function scoreUpload(upload){
 
   const multiplier = calculateMultiplier(upload);
   // console.log(`multiplier: ${multiplier}`);
-
 
   // TODO: add freshness
   // const freshness = scoreFreshness
@@ -91,8 +85,7 @@ function scoreUpload(upload){
 
   return upload;
 
-};
-
+}
 
 function scoreUploads(uploads){
 
@@ -107,10 +100,9 @@ function scoreUploads(uploads){
     // console.log('scored upload')
     // console.log(upload);
 
-
     scoredUploads.push(upload);
   }
 
-  return scoredUploads
+  return scoredUploads;
 
 }

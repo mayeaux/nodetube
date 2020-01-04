@@ -8,9 +8,7 @@ const sinon = require('sinon');
 
 var mongoose = require('mongoose');
 
-
 const mongoUri = 'mongodb://localhost:27017/prodpewd';
-
 
 /**
  * Connect to MongoDB.
@@ -30,37 +28,34 @@ mongoose.connection.on('error', (err) => {
   process.exit();
 });
 
-
 process.on('uncaughtException', (err) => {
-  console.log(`Uncaught Exception: `, err);
+  console.log('Uncaught Exception: ', err);
   console.log(err.stack);
 });
 
 process.on('unhandledRejection', (err) => {
-  console.log(`Unhandled Rejection: `, err);
+  console.log('Unhandled Rejection: ', err);
   console.log(err.stack);
 });
-
 
 const User = require('../models/User');
 const Upload = require('../models/Upload');
 
 var app = rewire('../lib/cacheUploads.js');
 
-
 let getTimeAgoValue = app.__get__('getTimeAgoValue');
 
 // let buildUploadData =  app.__get__('buildUploadData');
 let filterViewsForTimeRange =  app.__get__('filterViewsForTimeRange');
 
-describe('getTimeAgoValue function', function() {
+describe('getTimeAgoValue function', function(){
 
-  it('should be a function', function(done) {
+  it('should be a function', function(done){
     getTimeAgoValue.should.be.a('function');
     done();
   });
 
-  it('alltime should return a number', function(done) {
+  it('alltime should return a number', function(done){
 
     const timeRange = 'alltime';
 
@@ -70,7 +65,7 @@ describe('getTimeAgoValue function', function() {
     done();
   });
 
-  it('24hour should return a number', function(done) {
+  it('24hour should return a number', function(done){
 
     const timeRange = '24hour';
 
@@ -80,7 +75,7 @@ describe('getTimeAgoValue function', function() {
     done();
   });
 
-  it('24h should return an error', function(done) {
+  it('24h should return an error', function(done){
 
     // console.log('hello');
 
@@ -91,7 +86,7 @@ describe('getTimeAgoValue function', function() {
       const timeRange = '24h';
       const timeAgoValue = getTimeAgoValue(timeRange);
 
-    } catch (err){
+    } catch(err){
       error = err;
     }
 
@@ -101,8 +96,7 @@ describe('getTimeAgoValue function', function() {
 
 });
 
-
-describe('buildUploadData function', function() {
+describe('buildUploadData function', function(){
 
   // known issue with chai
   // it('should be a function', function(done) {
@@ -112,11 +106,11 @@ describe('buildUploadData function', function() {
 
 });
 
-describe('filterViewsForTimeRange function', function() {
+describe('filterViewsForTimeRange function', function(){
 
   let upload;
 
-  it('should get upload with checked views', async function() {
+  it('should get upload with checked views', async function(){
     upload = await Upload.findOne({
       _id: '599201507b38b1001000baff',
       uploadUrl: {$exists: true},
@@ -124,13 +118,12 @@ describe('filterViewsForTimeRange function', function() {
       'checkedViews.1': { $exists: true }
     }).populate('checkedViews uploader').exec();
 
-
     upload.should.be.an('object');
     // checked views
-    upload.checkedViews.length.should.be.above(0)
+    upload.checkedViews.length.should.be.above(0);
   });
 
-  it('should filter off old views', async function() {
+  it('should filter off old views', async function(){
 
     const filteredViews = filterViewsForTimeRange(upload.checkedViews, '24hour');
 
@@ -139,7 +132,7 @@ describe('filterViewsForTimeRange function', function() {
 
   });
 
-  it('should filter off old views', async function() {
+  it('should filter off old views', async function(){
 
     const filteredViews = filterViewsForTimeRange(upload.checkedViews, 'alltime');
 
@@ -150,7 +143,7 @@ describe('filterViewsForTimeRange function', function() {
 
   });
 
-  it('should add timeRangeViewAmount to upload', async function() {
+  it('should add timeRangeViewAmount to upload', async function(){
 
     const filteredViews = filterViewsForTimeRange(upload.checkedViews, 'alltime');
     upload.timeRangeViewAmount = filteredViews.length;
@@ -158,16 +151,12 @@ describe('filterViewsForTimeRange function', function() {
     upload.timeRangeViewAmount.should.be.a('number');
     upload.timeRangeViewAmount.should.equal(5);
 
-
   });
 
-  it('should be a function', function(done) {
+  it('should be a function', function(done){
     filterViewsForTimeRange.should.be.a('function');
     done();
   });
 
-
-
 });
-
 

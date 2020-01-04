@@ -34,12 +34,11 @@ const subscriptionSchema = new mongoose.Schema({
   }
 });
 
-subscriptionSchema.virtual('timeAgo').get(function () {
-  return timeAgoEnglish.format( new Date(this.createdAt) )
+subscriptionSchema.virtual('timeAgo').get(function(){
+  return timeAgoEnglish.format( new Date(this.createdAt) );
 });
 
 const Subscription = mongoose.model('Subscription', subscriptionSchema);
 
 module.exports = Subscription;
-
 

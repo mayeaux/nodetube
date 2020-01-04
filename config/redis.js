@@ -1,10 +1,10 @@
 const Promise = require('bluebird');
 var redis = require('redis');
 
-if (process.env.REDIS_URL){
+if(process.env.REDIS_URL){
 
   console.log(`Connecting to redis URL, ${process.env.REDIS_URL}`);
-  var client = redis.createClient(process.env.REDIS_URL); //creates a new redisClient
+  var client = redis.createClient(process.env.REDIS_URL); // creates a new redisClient
 
 } else {
   const redisHost = process.env.REDIS_HOST || '127.0.0.1';
@@ -17,9 +17,9 @@ if (process.env.REDIS_URL){
     password: redisPassword
   };
 
-  console.log(`Connecting to redis, host: ${redisHost}, port: ${redisPort}`)
+  console.log(`Connecting to redis, host: ${redisHost}, port: ${redisPort}`);
 
-  var client = redis.createClient(options); //creates a new redisClient
+  var client = redis.createClient(options); // creates a new redisClient
 
 }
 

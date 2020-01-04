@@ -25,11 +25,9 @@ const apiKey = 'AIzaSyByk-KTWDqwVejYLHUwKa6VFBTMe0lnQNk';
 const requestModule = require('request');
 const request = Promise.promisifyAll(requestModule);
 
-
 // pewdie = UC-lHJZR3Gqxm24_Vd_AJ5Yw
 
 async function testId(channelId){
-
 
   // test if it was a username
   const testUrl = `https://www.googleapis.com/youtube/v3/channels?key=${apiKey}&forUsername=${channelId}&part=id`;
@@ -59,24 +57,23 @@ async function testId(channelId){
     // return channelId if exists
     if(body.items && body.items[0]){
       console.log(`'username, returning id:  ( ${channelId} )` );
-      return channelId
+      return channelId;
     }
 
     // returning false as default
     console.log('returning false');
 
-    return false
+    return false;
 
   }
 
 }
 
-
 /**
  * POST /account/backup
  * Add backup functionality (receive channelId)
  */
-exports.saveYouTubeChannelId = async (req, res, next) => {
+exports.saveYouTubeChannelId = async(req, res, next) => {
 
   // SAVE CHANNEL ILD
   if(req.body.youtubeChannelId){
@@ -97,9 +94,6 @@ exports.saveYouTubeChannelId = async (req, res, next) => {
       return res.send('not legit');
     }
   }
-
-
-
 
   // TURN BACKUP BUTTON ON AND OFF
   if(req.body.backupOn == 'true'){

@@ -33,7 +33,6 @@ const { combine, timestamp, label, prettyPrint } = format;
 //   ]
 // });
 
-
 winston.loggers.add('category2', {
   level: 'info',
   // format: winston.format.json(),
@@ -52,7 +51,6 @@ winston.loggers.add('category2', {
     new transports.File({ filename: 'combined.log' })
   ]
 });
-
 
 // logger.info('hey something')
 //

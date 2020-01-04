@@ -23,11 +23,9 @@ const categories = require('../../config/categories');
 
 const uploadFilters = require('../../lib/mediaBrowsing/helpers');
 
-
 const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
 
 const validator = require('email-validator');
-
 
 const javascriptTimeAgo = require('javascript-time-ago');
 javascriptTimeAgo.locale(require('javascript-time-ago/locales/en'));
@@ -39,7 +37,7 @@ const timeAgoEnglish = new javascriptTimeAgo('en-US');
  * GET /upload
  * Page to facilitate user uploads
  */
-exports.getFileUpload = async (req, res) => {
+exports.getFileUpload = async(req, res) => {
 
   if(process.env.UPLOADS_DISABLED == 'true'){
     return res.render('api/disabledUploads', {
@@ -65,22 +63,22 @@ exports.getFileUpload = async (req, res) => {
  * GET /media/subscribed
  * Get user's individual subscriptions page
  */
-exports.subscriptions = async (req, res) => {
+exports.subscriptions = async(req, res) => {
 
   try {
 
-    if (!req.user) {
+    if(!req.user){
       req.flash('errors', {msg: 'Please register to see your subscriptions'});
 
-      return res.redirect('/signup')
+      return res.redirect('/signup');
     }
 
     req.user.unseenSubscriptionUploads = 0;
     await req.user.save();
 
     let page = req.params.page;
-    if (!page) {
-      page = 1
+    if(!page){
+      page = 1;
     }
     page = parseInt(page);
 
@@ -95,7 +93,7 @@ exports.subscriptions = async (req, res) => {
     const subscriptions = await Subscription.find({subscribingUser: req.user._id, active: true});
 
     let subscribedToUsers = [];
-    for (const subscription of subscriptions) {
+    for(const subscription of subscriptions){
       subscribedToUsers.push(subscription.subscribedToUser);
     }
 
@@ -118,7 +116,7 @@ exports.subscriptions = async (req, res) => {
       uploadServer
     });
 
-  } catch (err){
+  } catch(err){
     console.log(err);
   }
 };
@@ -128,10 +126,10 @@ exports.subscriptions = async (req, res) => {
  * GET /channel
  * Profile page.
  */
-exports.getChannel = async (req, res) => {
+exports.getChannel = async(req, res) => {
 
   let page = req.query.page;
-  if(!page){ page = 1 }
+  if(!page){ page = 1; }
   page = parseInt(page);
 
   const channelUrl = req.params.channel;
@@ -148,7 +146,7 @@ exports.getChannel = async (req, res) => {
 
     // find the user per channelUrl
     user = await User.findOne({
-      channelUrl:  new RegExp(["^", req.params.channel, "$"].join(""), "i")
+      channelUrl:  new RegExp(['^', req.params.channel, '$'].join(''), 'i')
     }).populate('receivedSubscriptions').lean()
       .exec();
 
@@ -168,7 +166,7 @@ exports.getChannel = async (req, res) => {
     }
 
     if(user.channelUrl !== req.params.channel){
-      return res.redirect('/user/' + user.channelUrl)
+      return res.redirect('/user/' + user.channelUrl);
     }
 
     const siteVisits = await SiteVisit.find({ user: user });
@@ -181,7 +179,6 @@ exports.getChannel = async (req, res) => {
     // console.log(ips);
 
     // console.log(siteVisits);
-
 
     // determine if its the user of the channel
     let isAdmin = false;
@@ -203,17 +200,17 @@ exports.getChannel = async (req, res) => {
     };
 
     /** DB CALL TO GET UPLOADS **/
-    let uploads = await Upload.find(searchQuery).populate('').sort({ createdAt : -1 })
+    let uploads = await Upload.find(searchQuery).populate('').sort({ createdAt : -1 });
 
     if(!viewerIsAdminOrMod){
       uploads = _.filter(uploads, function(upload){
-        return upload.visibility == 'public'
+        return upload.visibility == 'public';
       });
     }
 
     // remove unlisted videos if its not user and is not admin
     if(!isUser && !viewerIsAdminOrMod){
-      uploads = _.filter(uploads, function(upload){return upload.visibility == 'public'})
+      uploads = _.filter(uploads, function(upload){return upload.visibility == 'public';});
     }
 
     let uploadThumbnailUrl;
@@ -225,32 +222,32 @@ exports.getChannel = async (req, res) => {
 
     let orderBy;
     if(!req.query.orderBy){
-      orderBy = 'newToOld'
+      orderBy = 'newToOld';
     } else {
       orderBy = req.query.orderBy;
     }
 
     if(orderBy !== 'popular' && orderBy !== 'newToOld' && orderBy !== 'oldToNew' && orderBy !== 'alphabetical'){
       console.log('doesnt connect');
-      orderBy = 'newToOld'
+      orderBy = 'newToOld';
     }
 
     let orderByEnglishString;
 
     if(orderBy == 'alphabetical'){
-      orderByEnglishString = 'Alphabetical'
+      orderByEnglishString = 'Alphabetical';
     }
 
     if(orderBy == 'oldToNew'){
-      orderByEnglishString = 'Old To New'
+      orderByEnglishString = 'Old To New';
     }
 
     if(orderBy == 'newToOld'){
-      orderByEnglishString = 'New To Old'
+      orderByEnglishString = 'New To Old';
     }
 
     if(orderBy == 'popular'){
-      orderByEnglishString = 'Popular'
+      orderByEnglishString = 'Popular';
     }
 
     let alreadySubbed = false;
@@ -264,12 +261,10 @@ exports.getChannel = async (req, res) => {
       for(let subscription of user.receivedSubscriptions){
 
         if(subscription.subscribingUser.toString() == req.user._id.toString()){
-          alreadySubbed = true
+          alreadySubbed = true;
         }
       }
     }
-
-
 
     let subscriberAmount;
     if(user.receivedSubscriptions){
@@ -295,16 +290,16 @@ exports.getChannel = async (req, res) => {
 
     if(orderBy == 'newToOld'){
 
-      console.log('new to old')
-      uploads = uploads.sort(function(a, b) {
+      console.log('new to old');
+      uploads = uploads.sort(function(a, b){
         return b.createdAt - a.createdAt;
       });
     }
 
     if(orderBy == 'oldToNew'){
 
-      console.log('old to new')
-      uploads = uploads.sort(function(a, b) {
+      console.log('old to new');
+      uploads = uploads.sort(function(a, b){
         return a.createdAt - b.createdAt;
       });
     }
@@ -313,11 +308,10 @@ exports.getChannel = async (req, res) => {
 
       console.log('alphabetical');
 
-      uploads = uploads.sort(function (a, b) {
-        return a.title.localeCompare(b.title)
+      uploads = uploads.sort(function(a, b){
+        return a.title.localeCompare(b.title);
       });
     }
-
 
     let filter = uploadFilters.getSensitivityFilter(req.user, req.siteVisitor);
 
@@ -333,12 +327,12 @@ exports.getChannel = async (req, res) => {
         upload = upload.toObject();
         const checkedViews = await View.count({ upload: upload.id, validity: 'real' });
         upload.legitViewAmount = checkedViews;
-        return upload
+        return upload;
       })
     );
 
     if(orderBy == 'popular'){
-      uploads = uploads.sort(function(a, b) {
+      uploads = uploads.sort(function(a, b){
         return b.legitViewAmount - a.legitViewAmount;
       });
     }
@@ -379,8 +373,7 @@ exports.getChannel = async (req, res) => {
       joinedTimeAgo
     });
 
-
-  } catch (err){
+  } catch(err){
     console.log(err);
 
     res.status(500);
@@ -395,7 +388,7 @@ exports.getChannel = async (req, res) => {
  * GET /notifications
  * User's specific notifications page
  */
-exports.notification = async (req, res) => {
+exports.notification = async(req, res) => {
 
   try {
 
@@ -416,15 +409,15 @@ exports.notification = async (req, res) => {
     });
 
     // mark notifs as read
-    for (const notif of notifications) {
-      if (notif.read == false) {
+    for(const notif of notifications){
+      if(notif.read == false){
 
         notif.read = true;
         await notif.save();
       }
     }
 
-  } catch (err){
+  } catch(err){
     console.log(err);
     return res.render('error/500');
   }
@@ -434,11 +427,11 @@ exports.notification = async (req, res) => {
  * GET /subscriptionsByViews
  * Shows subscription uploads ordered by view amount
  */
-exports.subscriptionsByViews = async (req, res) => {
+exports.subscriptionsByViews = async(req, res) => {
   if(!req.user){
     req.flash('errors', { msg: 'Please login to see your subscriptions' });
 
-    return res.redirect('/')
+    return res.redirect('/');
   }
 
   const subscriptions = await Subscription.find({ subscribingUser: req.user._id, active: true });
@@ -455,9 +448,8 @@ exports.subscriptionsByViews = async (req, res) => {
   }).populate('uploader checkedViews');
 
   uploads = _.orderBy(uploads, function(upload){
-    return upload.checkedViews.length
+    return upload.checkedViews.length;
   });
-
 
   res.render('account/subscriptionsByViews', {
     title: 'Subscriptions',
@@ -465,19 +457,18 @@ exports.subscriptionsByViews = async (req, res) => {
   });
 };
 
-
 /**
  * GET /Edit upload channel
  * Profile page.
  */
-exports.editUpload = async (req, res) => {
+exports.editUpload = async(req, res) => {
 
   // channel id and file name
   const channel = req.params.channel;
   const media = req.params.media;
 
   let upload = await Upload.findOne({
-    uniqueTag: media,
+    uniqueTag: media
   }).populate({path: 'uploader comments checkedViews', populate: {path: 'commenter'}}).exec();
 
   console.log(upload.rating);
@@ -491,7 +482,7 @@ exports.editUpload = async (req, res) => {
   const hideRatingFrontend = req.user.role == 'user' && upload.moderated == true;
 
   if(upload.visibility == 'removed' && !isAdminOrModerator){
-    return res.render('error/404')
+    return res.render('error/404');
   }
 
   if(!isUser && !isAdmin && !isModerator){
@@ -507,11 +498,9 @@ exports.editUpload = async (req, res) => {
     isAdminOrModerator,
     hideRatingFrontend,
     categories
-  })
-
+  });
 
 };
-
 
 /**
  * GET /logout
@@ -530,9 +519,9 @@ exports.getSignup = (req, res) => {
 
   const recaptchaPublicKey = process.env.RECAPTCHA_SITEKEY;
 
-  const captchaOn = process.env.RECAPTCHA_ON == 'true'
+  const captchaOn = process.env.RECAPTCHA_ON == 'true';
 
-  if (req.user) {
+  if(req.user){
     return res.redirect('/');
   }
   res.render('account/signup', {
@@ -546,7 +535,7 @@ exports.getSignup = (req, res) => {
  * GET /account
  * Account page.
  */
-exports.getAccount = async (req, res) => {
+exports.getAccount = async(req, res) => {
   const stripeToken = process.env.STRIPE_FRONTEND_TOKEN;
 
   // give user an upload token
@@ -558,7 +547,7 @@ exports.getAccount = async (req, res) => {
 
   // delete email if it a standin number
   if(req.user.email && !validator.validate(req.user.email)){
-    req.user.email = undefined
+    req.user.email = undefined;
   }
 
   res.render('account/account', {
@@ -573,7 +562,7 @@ exports.getAccount = async (req, res) => {
  * GET /account/reactHistory
  * React history page.
  */
-exports.getReactHistory = async (req, res) => {
+exports.getReactHistory = async(req, res) => {
   const reacts = await React.find({
     user : req.user._id
   }).populate({path: 'upload', populate: {path: 'uploader'}}).sort({ createdAt: -1 });
@@ -584,12 +573,11 @@ exports.getReactHistory = async (req, res) => {
   });
 };
 
-
 /**
  * GET /account/viewHistory
  * View history page.
  */
-exports.getViewHistory = async (req, res) => {
+exports.getViewHistory = async(req, res) => {
 
   const siteVisits = await SiteVisit.find({
     user: req.user._id
@@ -618,15 +606,15 @@ exports.getViewHistory = async (req, res) => {
  * Reset Password page.
  */
 exports.getReset = (req, res, next) => {
-  if (req.isAuthenticated()) {
+  if(req.isAuthenticated()){
     return res.redirect('/');
   }
   User
     .findOne({ passwordResetToken: req.params.token })
     .where('passwordResetExpires').gt(Date.now())
     .exec((err, user) => {
-      if (err) { return next(err); }
-      if (!user) {
+      if(err){ return next(err); }
+      if(!user){
         req.flash('errors', { msg: 'Password reset token is invalid or has expired.' });
         return res.redirect('/forgot');
       }
@@ -640,11 +628,11 @@ exports.getReset = (req, res, next) => {
  * GET /confirm/:token
  * Confirm email page
  */
-exports.getConfirm = async (req, res, next) => {
+exports.getConfirm = async(req, res, next) => {
   try {
     let user = await User.findOne({ emailConfirmationToken: req.params.token }).where('emailConfirmationExpires').gt(Date.now());
 
-    if (!user) {
+    if(!user){
       req.flash('errors', { msg: 'Confirm email token is invalid or has expired.' });
       return res.redirect('/account');
     }
@@ -652,28 +640,26 @@ exports.getConfirm = async (req, res, next) => {
     user.emailConfirmed = true;
     await user.save();
     req.flash('success', { msg: 'Your email has been confirmed' });
-    res.redirect('/account')
+    res.redirect('/account');
 
-  } catch (err){
+  } catch(err){
     console.log(err);
     return next(err);
   }
 };
-
 
 /**
  * GET /forgot
  * Forgot Password page.
  */
 exports.getForgot = (req, res) => {
-  if (req.isAuthenticated()) {
+  if(req.isAuthenticated()){
     return res.redirect('/');
   }
   res.render('account/forgot', {
     title: 'Forgot Password'
   });
 };
-
 
 /**
  * GET /account/unlink/:provider
@@ -682,24 +668,23 @@ exports.getForgot = (req, res) => {
 exports.getOauthUnlink = (req, res, next) => {
   const provider = req.params.provider;
   User.findById(req.user.id, (err, user) => {
-    if (err) { return next(err); }
+    if(err){ return next(err); }
     user[provider] = undefined;
     user.tokens = user.tokens.filter(token => token.kind !== provider);
     user.save((err) => {
-      if (err) { return next(err); }
+      if(err){ return next(err); }
       req.flash('info', { msg: `${provider} account has been unlinked.` });
       res.redirect('/account');
     });
   });
 };
 
-
 /**
  * GET /login
  * Login page.
  */
 exports.getLogin = (req, res) => {
-  if (req.user) {
+  if(req.user){
     return res.redirect('/');
   }
   res.render('account/login', {
@@ -711,7 +696,7 @@ exports.getLogin = (req, res) => {
  * GET /livestream
  * Livestream info page
  */
-exports.livestreaming = async (req, res) => {
+exports.livestreaming = async(req, res) => {
   res.render('livestream/livestreaming', {
     title: 'Livestreaming'
   });

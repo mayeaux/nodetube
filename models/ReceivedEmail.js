@@ -19,16 +19,14 @@ const receivedEmailSchema = new mongoose.Schema({
     default: false
   }
 }, {
-    timestamps: true
-  });
-
-receivedEmailSchema.virtual('timeAgo').get(function () {
-  return timeAgoEnglish.format( new Date(this.createdAt) )
+  timestamps: true
 });
 
+receivedEmailSchema.virtual('timeAgo').get(function(){
+  return timeAgoEnglish.format( new Date(this.createdAt) );
+});
 
 const ReceivedEmail = mongoose.model('ReceivedEmail', receivedEmailSchema);
 
 module.exports = ReceivedEmail;
-
 

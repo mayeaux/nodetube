@@ -17,7 +17,7 @@ async function setIndex(){
 if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false'){
   setIndex();
   setInterval(function(){
-    setIndex()
+    setIndex();
   }, 1000 * 60 * 2);
 }
 
@@ -25,7 +25,7 @@ if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false'){
  * GET /
  * Home page.
  */
-exports.index = async (req, res) => {
+exports.index = async(req, res) => {
 
   const response = indexResponse;
   let mediaAmount, channelAmount, viewAmount;
@@ -46,7 +46,7 @@ exports.index = async (req, res) => {
     title: 'Home',
     mediaAmount,
     channelAmount,
-    viewAmount,
+    viewAmount
   });
 };
 
@@ -60,12 +60,11 @@ exports.about = (req, res) => {
   });
 };
 
-
 /**
  * GET /tos
  * Terms of service page
  */
-exports.tos = async (req, res, next) => {
+exports.tos = async(req, res, next) => {
 
   res.render('public/tos', {
     title: 'Terms Of Service'
@@ -76,20 +75,19 @@ exports.tos = async (req, res, next) => {
  * GET /privacy
  * Privacy policy
  */
-exports.privacy = async (req, res, next) => {
+exports.privacy = async(req, res, next) => {
   // res.render('privacy', {
   //   title: 'Privacy'
   // })
-  res.send('public/privacy')
+  res.send('public/privacy');
 
 };
-
 
 /**
  * GET /embed/$uploadUniqueTag
  * Embed page
  */
-exports.getEmbed = async function (req, res){
+exports.getEmbed = async function(req, res){
 
   res.setHeader('X-Frame-Options', 'ALLOW-FROM ' + req.query.domain);
 
@@ -103,7 +101,7 @@ exports.getEmbed = async function (req, res){
   if(!upload){
     console.log('Visible upload not found');
     res.status(404);
-    return res.render('error/404')
+    return res.render('error/404');
   }
 
   res.render('public/embed', {

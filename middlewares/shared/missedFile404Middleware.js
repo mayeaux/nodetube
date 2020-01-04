@@ -6,8 +6,8 @@ const audioExtensions = ['.mp3', '.wav', '.ogg', '.m4a'];
 async function middleware(req, res, next){
   const path = req.path;
 
-  var str = "/uploads/Manwe_Sulimo/cqDSPlg.png";
-  var fileExtension = path.substr(path.indexOf("."));
+  var str = '/uploads/Manwe_Sulimo/cqDSPlg.png';
+  var fileExtension = path.substr(path.indexOf('.'));
 
   const allFileExtensions = [].concat(videoExtensions, convertExtensions, imageExtensions, audioExtensions);
 

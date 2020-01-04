@@ -8,11 +8,11 @@ const timeAgoEnglish = new javascriptTimeAgo('en-US');
 
 const socialPostSchema = new mongoose.Schema({
   postData: [{
-      message: String,
-      network : String,
-      postedCorrectly : Boolean,
-      postedTime : Date,
-      distance: String
+    message: String,
+    network : String,
+    postedCorrectly : Boolean,
+    postedTime : Date,
+    distance: String
   }],
   upload: {
     type: mongoose.Schema.Types.ObjectId,
@@ -33,12 +33,11 @@ const socialPostSchema = new mongoose.Schema({
   }
 });
 
-socialPostSchema.virtual('timeAgo').get(function () {
-  return timeAgoEnglish.format( new Date(this.createdAt) )
+socialPostSchema.virtual('timeAgo').get(function(){
+  return timeAgoEnglish.format( new Date(this.createdAt) );
 });
 
 const SocialPost = mongoose.model('SocialPost', socialPostSchema);
 
 module.exports = SocialPost;
-
 

@@ -50,8 +50,6 @@ const notificationSchema = new mongoose.Schema({
     ref: 'Subscription'
   }
 
-
-
 },{ timestamps: true,
   toObject: {
     virtuals: true
@@ -61,15 +59,14 @@ const notificationSchema = new mongoose.Schema({
   }
 });
 
-notificationSchema.virtual('timeAgo').get(function () {
-  return timeAgoEnglish.format( new Date(this.createdAt) )
+notificationSchema.virtual('timeAgo').get(function(){
+  return timeAgoEnglish.format( new Date(this.createdAt) );
 });
 
-notificationSchema.index({user: 1, createdAt: -1}, {name: "User Notifications"});
-notificationSchema.index({user: 1, read: 1, createdAt: -1}, {name: "Read User Notifications"});
+notificationSchema.index({user: 1, createdAt: -1}, {name: 'User Notifications'});
+notificationSchema.index({user: 1, read: 1, createdAt: -1}, {name: 'Read User Notifications'});
 
 const Notification = mongoose.model('Notification', notificationSchema);
 
 module.exports = Notification;
-
 

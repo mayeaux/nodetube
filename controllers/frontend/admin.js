@@ -10,7 +10,6 @@ const Comment = require('../../models/index').Comment;
 const SiteVisit = require('../../models/index').SiteVisit;
 const SearchQuery = require('../../models/index').SearchQuery;
 
-
 let viewStats, uploadStats, userStats, reactStats, subscriptionStats, searchStats, commentStats, siteVisitStats;
 async function getStats(){
   let views = await redisClient.getAsync('dailyStatsViews');
@@ -35,11 +34,10 @@ async function getStats(){
 
 getStats();
 setInterval(function(){
-  getStats()
+  getStats();
 }, 1000 * 60 * 1);
 
-
-exports.dailyStats = async (req, res) => {
+exports.dailyStats = async(req, res) => {
 
   let views = viewStats;
   let uploads = uploadStats;
@@ -57,11 +55,9 @@ exports.dailyStats = async (req, res) => {
     array
   });
 
-
 };
 
-
-exports.getAdminAudit = async (req, res) => {
+exports.getAdminAudit = async(req, res) => {
 
   // exclude uploads without an uploadUrl
 
@@ -78,15 +74,14 @@ exports.getAdminAudit = async (req, res) => {
 
 };
 
-
-exports.getPending = async (req, res) => {
+exports.getPending = async(req, res) => {
 
   // exclude uploads without an uploadUrl
   let uploads = await Upload.find({
     visibility: 'pending'
   }).populate('uploader').lean();
 
-  uploads = _.sortBy(uploads, [function(c) { return c.createdAt }]).reverse();
+  uploads = _.sortBy(uploads, [function(c){ return c.createdAt; }]).reverse();
 
   res.render('moderator/pending', {
     title: 'Pending',
@@ -95,8 +90,7 @@ exports.getPending = async (req, res) => {
 
 };
 
-
-exports.getSiteVisitorHistory = async (req, res) => {
+exports.getSiteVisitorHistory = async(req, res) => {
 
   const id = req.params.id;
 
@@ -104,7 +98,7 @@ exports.getSiteVisitorHistory = async (req, res) => {
 
   const visitor = await SiteVisit.findOne({ _id : id }).populate('user');
 
-  console.log(visitor)
+  console.log(visitor);
 
   res.render('admin/siteVisitorHistory', {
     title: 'Site Visitor History',
@@ -113,8 +107,7 @@ exports.getSiteVisitorHistory = async (req, res) => {
 
 };
 
-
-exports.getSiteVisitors = async (req, res) => {
+exports.getSiteVisitors = async(req, res) => {
 
   const visitors = await SiteVisit.find({}).sort({ _id : -1  }).populate('user');
 
@@ -125,8 +118,7 @@ exports.getSiteVisitors = async (req, res) => {
 
 };
 
-
-exports.getUploads = async (req, res) => {
+exports.getUploads = async(req, res) => {
 
   const uploads = await Upload.find({}).sort({ _id : -1  }).populate('uploader');
 
@@ -137,7 +129,7 @@ exports.getUploads = async (req, res) => {
 
 };
 
-exports.getComments = async (req, res) => {
+exports.getComments = async(req, res) => {
 
   const comments = await Comment.find({}).sort({ _id : -1  }).populate('commenter upload');
 
@@ -148,13 +140,11 @@ exports.getComments = async (req, res) => {
 
 };
 
-
-exports.getNotificationPage = async (req, res) => {
+exports.getNotificationPage = async(req, res) => {
   return res.render('admin/notifications', {});
 };
 
-
-exports.getUsers = async (req, res) => {
+exports.getUsers = async(req, res) => {
 
   const users = await User.find({}).sort({ _id : -1  });
 
@@ -165,8 +155,7 @@ exports.getUsers = async (req, res) => {
 
 };
 
-
-exports.reacts = async (req, res) => {
+exports.reacts = async(req, res) => {
 
   if(!req.user){
     res.status(404);

@@ -1,4 +1,4 @@
-var MailListener = require("mail-listener2");
+var MailListener = require('mail-listener2');
 
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
@@ -46,30 +46,30 @@ var mailListener = new MailListener({
   connTimeout: 10000, // Default by node-imap
   // debug: console.log, // Or your custom function with only one incoming argument. Default: null
   tlsOptions: { rejectUnauthorized: false },
-  mailbox: "INBOX", // mailbox to monitor
+  mailbox: 'INBOX', // mailbox to monitor
   searchFilter: ['SEEN'], // the search filter being used after an IDLE notification has been retrieved
   // markSeen: true, // all fetched email will be marked as seen and not fetched next time
   fetchUnreadOnStart: true, // use it only if you want to get all unread email on lib start. Default is `false`,
   mailParserOptions: {streamAttachments: true}, // options to be passed to mailParser lib.
   attachments: true, // download attachments as they are encountered to the project directory
-  attachmentOptions: { directory: "attachments/" } // specify a download directory for attachments
+  attachmentOptions: { directory: 'attachments/' } // specify a download directory for attachments
 });
 
 mailListener.start(); // start listening
 
 // stop listening
-//mailListener.stop();
+// mailListener.stop();
 
-mailListener.on("server:connected", function(){
-  console.log("imapConnected");
+mailListener.on('server:connected', function(){
+  console.log('imapConnected');
 
 });
 
-mailListener.on("server:disconnected", function(){
-  console.log("imapDisconnected");
+mailListener.on('server:disconnected', function(){
+  console.log('imapDisconnected');
 });
 
-mailListener.on("error", function(err){
+mailListener.on('error', function(err){
   console.log(err);
 });
 
@@ -78,16 +78,13 @@ mailListener.on("error", function(err){
   const existingEmails = await ReceivedEmail.find({});
 
   const emailIds = existingEmails.map(function(email){
-    return email.emailId
+    return email.emailId;
   });
 
   // seqno just an incrementing index
-  mailListener.on("mail", async function(mail, seqno, attributes){
+  mailListener.on('mail', async function(mail, seqno, attributes){
 
     // console.log(attributes);
-
-
-
 
     // /** data collected **/
     // console.log('from: ' + mail.from[0].address);
@@ -105,7 +102,7 @@ mailListener.on("error", function(err){
 
     if(emailIds.includes(emailId)){
       console.log('Already done, skipping ' + sentDate);
-      return
+      return;
     } else {
       console.log('Not downloaded yet, saving now');
     }
@@ -125,8 +122,6 @@ mailListener.on("error", function(err){
 
     console.log('Email saved');
 
-
-
     // toEmailAddress: String,
     //   fromEmailAddress: String,
     //   subject: String,
@@ -135,14 +130,9 @@ mailListener.on("error", function(err){
     //   emailId: String,
     //   response: String
 
-
-
     // console.log(mail.priority);
     // console.log(mail.eml);
     // console.log(mail.text)
-
-
-
 
     // console.log(mail.headers['message-id']);
 
@@ -184,16 +174,12 @@ mailListener.on("error", function(err){
     //   uid: 7,
     //   modseq: '1000000000000000000' }
 
-
-
     // do something with mail object including attachments
     // console.log("emailParsed", mail);
     // mail processing code goes here
   });
 
 // mailListener.imap.move(:msguids, :mailboxes, function(){})
-
-
 
 })();
 

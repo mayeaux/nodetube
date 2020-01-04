@@ -6,7 +6,7 @@ function adminAuth(req, res, next){
     });
   }
 
-// kick out if not admin
+  // kick out if not admin
   const userRole = req.user.role;
   if(userRole !== 'admin'){
 
@@ -19,7 +19,7 @@ function adminAuth(req, res, next){
 
   }
 
-  return next()
+  return next();
 }
 
 function moderatorAuth(req, res, next){
@@ -39,14 +39,13 @@ function moderatorAuth(req, res, next){
     });
   }
 
-  return next()
+  return next();
 }
-
 
 function plusAuth(req, res, next){
   // redirect to login if it's not there already
   if(!req.user){
-    return res.redirect('/login')
+    return res.redirect('/login');
   }
 
   const userRole = req.user.role;
@@ -62,7 +61,7 @@ function plusAuth(req, res, next){
     });
   }
 
-  return next()
+  return next();
 }
 
 module.exports = {
