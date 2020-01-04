@@ -41,52 +41,113 @@ block content
                 div.col-md-6(class="text-left")
                     h3(class="upload-title-value")=upload.title    
                     p(class="text-muted float-left") #{upload.views} Views | Uploaded #{upload.timeAgo} 
-                div.col-md-6(class="float-right")
+                div.col-md-3
+                    div.react(style="width:100%;background-color:;margin:0 auto;border-radius:10px;margin-top:21px;padding-bottom:0px;")
+                            each emoji in emojis
+                                div(style="padding-right:15px;display:inline-block;")
+                                    a(href="#")
+                                        if currentReact
+                                            if currentReact == emoji.name
+                                                div.clicked-emoji
+                                                    img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
+                                            else
+                                                div.unclicked-emoji
+                                                    img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
+                                        else
+                                            div.clicked-emoji
+                                                img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
+                                    p(class=emoji.name) #{emoji.amount}
+                div.col-md-3(class="")        
                     if upload.fileType == 'image' || upload.fileType == 'video'
                         div.change-size-button.increase-size
                             h1(style="cursor:pointer") +
                         div.change-size-button.decrease-size
                             h1(style="cursor:pointer") -
-                    div.change-size-button
-                        h2.download-button
-                            i.download-icon.fa.fa-download(aria-hidden="true" style="cursor:pointer")
-                    div.change-size-button
-                        h2.share-button
-                            i.share-icon.fa.fa-share(aria-hidden="true" style="cursor:pointer")
                     if upload.fileType == 'video' || upload.fileType == 'audio'
                         div.change-size-button(style="margin-left:0px")
                             h2.repeat-div(style="opacity:0.4")
                                 i.repeat-icon.fa.fa-repeat(aria-hidden="true" style="cursor:pointer")
-                    div.change-size-button(style="cursor:pointer")
-                        h2.report-button(style="")
-                            i.share-icon.fa.fa-exclamation-triangle(aria-hidden="true" style="cursor:pointer;font-size:19px;")
+          
+                    div.dropup.btn-group
+                        a.dropdown-toggle(type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: black;")
+                            h2(style="margin-bottom: 25px; margin-left: 10px; color: #333333")
+                                i.fa.fa-ellipsis-h(style="cursor:pointer;")
+                        div.dropdown-menu(aria-labelledby="dropdownMenuButton")
+                            li
+                                a.dropdown-item
+                                    div.change-size-button(style="cursor:pointer")
+                                        p.report-button(style="display: inline;")
+                                            i.share-icon.fa.fa-exclamation-triangle(aria-hidden="true" style="cursor:pointer;font-size:19px;")    
+                                        | Report Content
+                            li
+                                a.dropdown-item
+                                    div.change-size-button
+                                        p.share-button(style="display: inline;")
+                                            i.share-icon.fa.fa-share(aria-hidden="true" style="cursor:pointer")
+                                        | Embed Code
+                            li
+                                a.dropdown-item
+                                    div.change-size-button
+                                        p.download-button(style="display: inline;")
+                                            i.download-icon.fa.fa-download(aria-hidden="true" style="cursor:pointer")
+                                        | Download
+                            if ( user && user.channelUrl == upload.uploader.channelUrl ) ||  ( user && user.role == 'admin' )            
+                                li
+                                    a.dropdown-item(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}/edit`)
+                                        div.change-size-button
+                                            p.download-button(style="display: inline;")
+                                                i.fa.fa-pencil(style="cursor:pointer")
+                                                | Edit
+
 
             hr
 
             div.row(style="margin-left: 150px;")
                 div.col-md-6(class="text-left")
-                    div.uploader-name(style="font-size:26px;")
-                        if upload.uploader.customThumbnail
-                            a(href=`/user/${upload.uploader.channelUrl}`)
-                                img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` width="80px" height="80px" class="img-circle mb-3")
-                        else 
-                            a(href=`/user/${upload.uploader.channelUrl}`)
-                                img(src=`${uploadServer}/defaultUser.png` width="80px" height="80px" class="img-circle mb-3")
-                                
-                        a(href=`/user/${upload.uploader.channelUrl}` style="color:rgb(51, 51, 51); margin-left: 10px;") #{upload.uploader.channelUrl}
-                            if upload.uploader.verified == true
-                                img(src="/images/verified.jpg" width="25px" height="25px" style="margin-left:3px;margin-top:-2px;margin-right:5px;")
-                            if upload.uploader.plan == 'plus'
-                                span.pewtube-pro PLUS
+                    div.row
+                        div.col-md-2
+                            if upload.uploader.customThumbnail
+                                a(href=`/user/${upload.uploader.channelUrl}`)
+                                    img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` width="100px" height="100px" class="img-circle img-responsive mx-auto")
+                            else 
+                                a(href=`/user/${upload.uploader.channelUrl}`)
+                                    img(src=`${uploadServer}/defaultUser.png` width="80px" height="80px" class="img-circle mb-3")
+                        div.col-md-10            
+                            a(href=`/user/${upload.uploader.channelUrl}` style="color:rgb(51, 51, 51)")
+                                h4(style="font-weight: 400") #{upload.uploader.channelUrl}
+                                if upload.uploader.verified == true
+                                    img(src="/images/verified.jpg" width="25px" height="25px" style="margin-left:3px;margin-top:-2px;margin-right:5px;")
+                                if upload.uploader.plan == 'plus'
+                                    span.pewtube-pro PLUS
+            
+                            if upload.category
+                                each category in categories
+                                    if category.name == upload.category
+                                        p(style="margin-top:15px;font-size:12px;") Category: #{category.displayName}
+
+                                        if upload.subcategory
+                                            each subcategory in category.subcategories
+                                                if upload.subcategory == subcategory.name
+                                                    p(style="margin-top:15px;font-size:12px;") Subcategory: #{subcategory.displayName}
+
+                            if upload.rating
+                                if upload.rating == 'allAges'
+                                    p(style="margin-top:15px;font-size:12px;") Rating: Safe For Work
+                                if upload.rating == 'mature'
+                                    p(style="margin-top:15px;font-size:12px;") Rating: Not Safe For Work
+                                if upload.rating == 'sensitive'
+                                    p(style="margin-top:15px;font-size:12px;") Rating: Sensitive (18+)
+
+                            if upload.description
+                                h4(class="upload-description-value") Description
+                                p(style="width:50%;text-align: center;margin: 0 auto;white-space:pre-line;word-wrap:break-word;" id="descriptionText") #{upload.description}
+
 
                 div.col-md-6(class="float-right")
                     if alreadySubbed
                         button.subscribe.btn.btn-danger(style="border-radius:4px; margin-top: 20px;") Unsubscribe 
                     else
                         button.subscribe.btn.btn-lg.btn-success(style="border-radius:4px; margin-top: 20px;") Subscribe #{upload.uploader.receivedSubscriptions.length}
-
-            br
-            br
 
             if upload.quality && upload.quality.high
                 div.dropdown
@@ -101,22 +162,10 @@ block content
                             a.high-quality High
 
             if upload.uploader.plan == 'plus' && ( upload.uploader.channelUrl == 'pewtube' || upload.uploader.channelUrl == 'anthony')
-                br
                 button.donate.btn.btn-success(style="margin-bottom:-10px") Donate
-
-            div
-                // edit button
-                if ( user && user.channelUrl == upload.uploader.channelUrl ) ||  ( user && user.role == 'admin' )
-                    br
-                    a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}/edit`)
-                        button.btn.btn-success(style="margin-bottom:-10px") Edit
-
 
             // More Upload Details
             div.col-sm-12
-                // Upload View Amount
-
-                // Upload time ago and uploader
                 if upload.uploader
 
                     if upload.visibility == 'removed'
@@ -124,62 +173,6 @@ block content
 
                     if upload.fileType == 'video' || upload.fileType == 'audio'
                         p(style="margin-top:15px") File Size: #{ ( upload.fileSize/ ( 1000 * 1000)).toFixed() } MB
-
-                    if upload.category
-                        each category in categories
-                            if category.name == upload.category
-                                p(style="margin-top:15px;font-size:12px;") Category: #{category.displayName}
-
-                                if upload.subcategory
-
-                                    each subcategory in category.subcategories
-
-                                        if upload.subcategory == subcategory.name
-                                            p(style="margin-top:15px;font-size:12px;") Subcategory: #{subcategory.displayName}
-
-
-                    if upload.rating
-                        if upload.rating == 'allAges'
-                            p(style="margin-top:15px;font-size:12px;") Rating: Safe For Work
-                        if upload.rating == 'mature'
-                            p(style="margin-top:15px;font-size:12px;") Rating: Not Safe For Work
-                        if upload.rating == 'sensitive'
-                            p(style="margin-top:15px;font-size:12px;") Rating: Sensitive (18+)
-
-
-                    br
-
-
-                // react functionality
-                div.react(style="width:39%;background-color:white;margin:0 auto;border-radius:10px;margin-bottom:21px;padding-bottom:12px;")
-                    br
-                    each emoji in emojis
-                        div(style="padding-right:15px;display:inline-block;")
-                            a(href="#")
-                                if currentReact
-                                    if currentReact == emoji.name
-                                        div.clicked-emoji
-                                            img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
-
-                                    else
-                                        div.unclicked-emoji
-                                            img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
-
-                                else
-                                    div.clicked-emoji
-                                        img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
-
-                            p(class=emoji.name) #{emoji.amount}
-
-
-
-                // Upload Description
-                if upload.description
-                    h4(class="upload-description-value") Description
-                    p(style="width:50%;text-align: center;margin: 0 auto;white-space:pre-line;word-wrap:break-word;" id="descriptionText") #{upload.description}
-
-                br
-                br
 
             // SHARING BUTTONS
             div
@@ -202,11 +195,10 @@ block content
 
 
             // COMMENT SECTION AND FORM
-            div
+            div.container.float-left
                 br
                 br
                 br
-                div.col-sm-12
                 if user
                     if !viewingUserIsBlocked
                         // comment form

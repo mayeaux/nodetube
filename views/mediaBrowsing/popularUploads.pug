@@ -1,47 +1,22 @@
 extends ../layout
 
 block content
-    div
+    div(class="container")
+        h1.center-block.pull-left Popular Uploads
         include ../viewPartials/popularUploadsNavbar
+    hr
 
-    h1.center-block.text-center #{englishString} (#{viewAmountInPeriod})
 
     p
 
-        h2.center-block.text-center #{timeAgoEnglish}
-
-        div.center-block.text-center.col-sm-12
-
-
-            br
-
-            //br
-
-            if category
-                include ../viewPartials/categoryDropdown
-
-            include ../viewPartials/popularUploadsMediaDropdown
-
-            include ../viewPartials/sensitivityFilterDropdown
-
-
-        include ../viewPartials/popularUploadsPagination
-
-
-        br
         div.uploads
             if !isACategory
                 include ../viewPartials/categoryOverviews
 
             else
                 each upload in uploads
-                    div.col-sm-4(style="text-align:center;height:360px;")
-
-                        include ../viewPartials/uploadThumbnail
-
+                    div.col-sm-3(style="text-align:center;height:360px;")        
                         include ../viewPartials/uploadDetails
-
-                        // include ../viewPartials/uploadDetailsPopular
 
 
             include ../viewPartials/adminSensitivityButtons
@@ -157,5 +132,3 @@ block content
 
     script.
       balanceText();
-
-    include ../viewPartials/mouseOverJavascript

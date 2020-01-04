@@ -1,18 +1,96 @@
-div.row
-    div.col-sm-2
-        h3
-            a(href=`/media/popular/1?within=1hour`) Last Hour
-    div.col-sm-2
-        h3
-            a(href=`/media/popular/1?within=24hour`) Last Day
-    div.col-sm-2
-        h3
-            a(href=`/media/popular/1?within=1week`) Last Week
-    div.col-sm-2
-        h3
-            a(href=`/media/popular/1?within=1month`) Last Month
-    div.col-sm-2
-        h3
-            a(href="/media/popular") All-Time
+div(style="margin-top: 20px;")
+    div.btn-group.pull-right
+        div.dropdown.p-2.btn-group.mx-3
+            button.btn.btn-primary.dropdown-toggle(type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") Last Day
+            div.dropdown-menu(aria-labelledby="dropdownMenuButton")
+                li
+                    a.dropdown-item(href=`/media/popular/1?within=1hour`) Last Hour
+                li
+                    a.dropdown-item(href=`/media/popular/1?within=24hour`) Last Day
+                li
+                    a.dropdown-item(href=`/media/popular/1?within=1week`) Last Week
+                li
+                    a.dropdown-item(href=`/media/popular/1?within=1month`) Last Month
+                li
+                    a.dropdown-item(href="/media/popular") All-Time
+        
+        div.dropdown.p-2.btn-group.mx-3
+            button.btn.btn-primary.dropdown-toggle(type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") All
+            div.dropdown-menu(aria-labelledby="dropdownMenuButton")
+                li
+                    a.dropdown-item(href=`/media/popular/1?media=all&category=${category}&within=${within}`) All
+                li
+                    a.dropdown-item(href=`/media/popular/1?media=video&category=${category}&within=${within}`) Videos
+                li
+                    a.dropdown-item(href=`/media/popular/1?media=audio&category=${category}&within=${within}`) Audio
+                li
+                    a.dropdown-item(href=`/media/popular/1?media=image&category=${category}&within=${within}`) Images
 
-hr
+        div.dropdown.p-2.btn-group.mx-3
+            if !user
+                // show current loaded filter
+                button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown')
+                    if siteVisitor.filter == 'allAges'
+                        | SFW &nbsp
+                        span.caret
+                    else if siteVisitor.filter == 'mature'
+                        | SFW/NSWF &nbsp
+                        span.caret
+
+                // show available options to change filter
+                ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1')
+                    li(role='presentation')
+                        if siteVisitor.filter == 'mature'
+                            a.changeFilterButton(value="allAges" href="#") SFW
+                        else if siteVisitor.filter == 'allAges'
+                            a.changeFilterButton(value="mature" href="#") SFW/NFSW
+
+            else
+                button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown')
+                    if user.filter == 'allAges'
+                        | SFW &nbsp
+                        span.caret
+                    else if user.filter == 'mature'
+                        | SFW/NSWF &nbsp
+                        span.caret
+                    else if user.filter == 'sensitive'
+                        | SFW/NSFW/Sensitive &nbsp
+                        span.caret
+
+
+                ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1')
+                    li(role='presentation')
+                        if siteVisitor.filter == 'allAges'
+                            a.changeFilterButton(value="mature" href="#") SFW/NSFW
+                            a.changeFilterButton(value="sensitive" href="#") SFW/NSFW/Sensitive
+                        else if siteVisitor.filter == 'mature'
+                            a.changeFilterButton(value="allAges" href="#") SFW
+                            a.changeFilterButton(value="sensitive" href="#") SFW/NSFW/Sensitive
+                        else if siteVisitor.filter == 'sensitive'
+                            a.changeFilterButton(value="allAges" href="#") SFW
+                            a.changeFilterButton(value="mature" href="#") SFW/NSFW
+
+        if category
+            div.dropdown(style="display:inline;")
+                button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown')
+                    | #{categoryObj.displayName} &nbsp
+                    span.caret
+
+                ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1')
+                    each category in categories
+                        li(role='presentation')
+                            a(href=`/media/recent/1?media=all&category=${category.name}`) #{category.displayName}
+
+            
+        div.dropdown(style="display:inline;")
+            button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown')
+                | Order By: #{orderByEnglishString} &nbsp
+                span.caret
+
+            ul.dropdown-menu.dropdown
+                li
+                    a(href=`/search?searchQuery=${searchQuery}&orderBy=popular&mediaType=${mediaType}&searchType=${searchType}`) Popular
+                li
+                    a(href=`/search?searchQuery=${searchQuery}&orderBy=newToOld&mediaType=${mediaType}&searchType=${searchType}`) New To Old
+                li
+                    a(href=`/search?searchQuery=${searchQuery}&orderBy=oldToNew&mediaType=${mediaType}&searchType=${searchType}`) Old To New
