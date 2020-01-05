@@ -49,7 +49,7 @@ module.exports = {
         "comma-dangle": ["error", "never"],
         "no-useless-escape": 0,
         "no-console": 0,
-        "no-unused-vars": 0,
+        "no-unused-vars": 2,
         "no-undef": 0,
         "no-redeclare": 0,
         "no-unreachable": 0
