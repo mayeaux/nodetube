@@ -110,10 +110,9 @@ function livestreamRoutes(app){
   // app.get(/\/user\/(.+)\/live\/staging/, livestreamController.getStaging);
   // app.get(/\/user\/(.+)\/live/, livestreamController.getLive);
 
-  /** redirect all routes to the pewtube.com equivalent **/
   app.get('*', function(req, res, next){
 
-    const frontendAppUrl = 'https://pewtube.com';
+    const frontendAppUrl = `https://${domainNameAndTLD}`;
 
     return res.redirect(frontendAppUrl + req.path);
   });

@@ -98,7 +98,7 @@ if(cluster.isMaster){
     console.log(`FRONTEND SERVER: ${process.env.FRONTEND_SERVER}`);
 
     /** connect to MongoDB **/
-    const mongoUri = process.env.MONGODB_URI || process.env.MONGODB_DOCKER_URI || process.env.MONGO_URI || process.env.MONGOLAB_URI || 'mongodb://localhost:27017/april15pewtube';
+    const mongoUri = process.env.MONGODB_URI || process.env.MONGODB_DOCKER_URI || process.env.MONGO_URI || process.env.MONGOLAB_URI;
 
     mongoose.Promise = global.Promise;
 
@@ -186,7 +186,7 @@ if(cluster.isMaster){
       cookie: {expires: new Date(2147483647000)},
       resave: true,
       saveUninitialized: true,
-      secret: process.env.PEWTUBE_SESSION_SECRET || process.env.SESSION_SECRET,
+      secret: process.env.SESSION_SECRET,
       store: new MongoStore({
         url: mongoUri,
         autoReconnect: true,
