@@ -53,10 +53,9 @@ const getMediaType = require('../../lib/uploading/media');
 const ffmpegHelper = require('../../lib/uploading/ffmpeg');
 var resumable = require('../../lib/uploading/resumable.js')(__dirname +  '/upload');
 
-const hostUrl = process.env.hostUrl || 'https://f001.backblazeb2.com/file/pewtubedev/';
-const accountId = process.env.backBlazeId || 'febb41851504';
-const applicationKey = process.env.backBlazeAppKey || '001c2a6f616f34dfca8205736fad3479de77232d79' ;
-const bucket = process.env.BACKBLAZE_BUCKET || 'pewtubedev';
+const accountId = process.env.backBlazeId;
+const applicationKey = process.env.backBlazeAppKey;
+const bucket = process.env.BACKBLAZE_BUCKET;
 var b2 = Promise.promisifyAll(new B2(accountId, applicationKey));
 
 let hostPrepend = '';
