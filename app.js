@@ -31,21 +31,11 @@ const ipfilter = require('express-ipfilter').IpFilter;
 const _ = require('lodash');
 const ngrok = require('ngrok');
 
+const jsHelpers = require('./lib/helpers/js-helpers');
+
 /** FOR FINDING ERRANT LOGS **/
-if(process.env.SHOW_LOG_LOCATION == 'true' || 2 == 1){
-  /** Code to find errant console logs **/
-  ['log', 'warn', 'error'].forEach(function(method){
-    var old = console[method];
-    console[method] = function(){
-      var stack = (new Error()).stack.split(/\n/);
-      // Chrome includes a single "Error" line, FF doesn't.
-      if(stack[0].indexOf('Error') === 0){
-        stack = stack.slice(1);
-      }
-      var args = [].slice.apply(arguments).concat([stack[1].trim()]);
-      return old.apply(console, args);
-    };
-  });
+if(process.env.SHOW_LOG_LOCATION == 'true' || 1 == 1){
+  jsHelpers.showLogLocation()
 }
 
 mongoose.set('useNewUrlParser', true);
