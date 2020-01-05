@@ -275,10 +275,6 @@ block content
           i.fa.fa-pencil
           | Update Profile
 
-
-  // DISPLAY THUMBNAIL IF IT EXISTS
-
-  if user.thumbnailUrl || user.customThumbnail
     br
     br
     div.col-sm-12(style="margin-bottom:100px")
@@ -286,11 +282,10 @@ block content
       h3.text-center Channel Thumbnail
       br
       // TODO: Sub out thumbnail here
-
       if user.customThumbnail
-        img.center-block.text-center(src=`${uploadServer}/${user.channelUrl}/${user.customThumbnail}` width="256px" height="168px")
+          img(src=`${uploadServer}/${user.channelUrl}/${user.customThumbnail}` width="120px" height="120px" class="img-circle center-block")
       else
-        img.center-block.text-center(src=`${uploadServer}/${user._id}/unique.png` width="256px" height="168px")
+          img(src=`/images/default-user-icon.jpg` width="120px" height="120px" class="img-circle center-block")
 
 
       form.delete-user-thumbnail-form(action=`${thumbnailServer}/api/channel/thumbnail/delete` method="POST")

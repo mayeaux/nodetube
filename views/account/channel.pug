@@ -45,37 +45,38 @@ block content
     div.row 
         div.col-md-2
             div.my-5
-                if channel.thumbnailUrl || channel.customThumbnail
-                    if channel.customThumbnail
-                        img(src=`${uploadServer}/${channel.channelUrl}/${channel.customThumbnail}` width="120px" height="120px" class="img-circle center-block")
+                if channel.customThumbnail
+                    img(src=`${uploadServer}/${channel.channelUrl}/${channel.customThumbnail}` width="120px" height="120px" class="img-circle center-block")
+                else
+                    img(src=`/images/default-user-icon.jpg` width="120px" height="120px" class="img-circle center-block")
+                                        
+                h3.text-center #{channel.channelName || channel.channelUrl}
+                if channel.verified == true
+                    img(src="/images/verified.jpg" width="25px" height="25px" style="margin-left:3px;margin-top:-2px;margin-right:5px;")
+                if channel.plan == 'plus'
+                    span.pewtube-pro PLUS
+
+                if user.channelUrl != channel.channelUrl
+                    if alreadySubbed
+                        button.subscribe.btn.btn-danger.center-block(style="border-radius:4px; margin-top: 20px;") Unsubscribe 
                     else
-                        img(src=`${uploadServer}/${channel._id}/unique.png` width="120px" height="120px")
-                    h3.text-center #{channel.channelName || channel.channelUrl}
-                    if channel.verified == true
-                        img(src="/images/verified.jpg" width="25px" height="25px" style="margin-left:3px;margin-top:-2px;margin-right:5px;")
-                    if channel.plan == 'plus'
-                        span.pewtube-pro PLUS
-
-                    if user.channelUrl != channel.channelUrl
-                        if alreadySubbed
-                            button.subscribe.btn.btn-danger.center-block(style="border-radius:4px; margin-top: 20px;") Unsubscribe 
-                        else
-                            button.subscribe.btn.btn-lg.btn-success(style="border-radius:4px; margin-top: 20px;") Subscribe
+                        button.subscribe.btn.btn-lg.btn-success(style="border-radius:4px; margin-top: 20px;") Subscribe
                     
-                    div.btn-group.text-center(role="group" aria-label="delete-controls" style="margin-left: 7%; margin-right: auto; margin-bottom: 20px;")
-                        if user && ( user.role == 'admin' || user.role == 'moderator') && channel.status !== 'restricted'
-                            button.delete-account.btn.btn-danger Delete Account
-                            //button.delete-account.btn.btn-danger Delete Account And Ban Ip
-                            if user.role == 'admin'
-                                button.delete-ips.btn.btn-danger Ban IP Address
+                div.btn-group.text-center(role="group" aria-label="delete-controls" style="margin-left: 7%; margin-right: auto; margin-bottom: 20px;")
+                    if user && ( user.role == 'admin' || user.role == 'moderator') && channel.status !== 'restricted'
+                        button.delete-account.btn.btn-danger Delete Account
+                        //button.delete-account.btn.btn-danger Delete Account And Ban Ip
+                        if user.role == 'admin'
+                            button.delete-ips.btn.btn-danger Ban IP Address
 
-                        if user && ( user.role == 'admin' || user.role == 'moderator') && channel.status == 'restricted'
-                            br
-                            h3 ACCOUNT DELETED
-                            button.undelete-account.btn.btn-warning Undelete Account
-                            //button.undelete-account.btn.btn-warning Undelete Account And Unban Ip
-                            if user.role == 'admin'
-                                button.delete-ips.btn.btn-warning Undelete All Accounts / Unban All Ips
+                    if user && ( user.role == 'admin' || user.role == 'moderator') && channel.status == 'restricted'
+                        br
+                        h3 ACCOUNT DELETED
+                        button.undelete-account.btn.btn-warning Undelete Account
+                        //button.undelete-account.btn.btn-warning Undelete Account And Unban Ip
+                        if user.role == 'admin'
+                            button.delete-ips.btn.btn-warning Undelete All Accounts / Unban All Ips
+
             if user.channelUrl == channel.channelUrl
                 div
                     ul.list-group

@@ -146,7 +146,6 @@ exports.postSignup = async (req, res, next) => {
     email: '' + Math.random() + Math.random(),
     password: req.body.password,
     channelUrl: req.body.channelUrl,
-    // channelName: req.body.channelName,
   });
 
   // make sure first user is admin, can refactor later
