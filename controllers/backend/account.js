@@ -30,6 +30,8 @@ const verifyEmailPassword = process.env.NODETUBE_VERIFY_EMAIL_PASSWORD;
 
 const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
 
+const backblaze = require('../../lib/uploading/backblaze');
+
 const recaptcha = new reCAPTCHA({
   siteKey : process.env.RECAPTCHA_SITEKEY,
   secretKey : process.env.RECAPTCHA_SECRETKEY
@@ -240,6 +242,7 @@ exports.postUpdateProfile = async(req, res, next)  => {
 
     // upload thumbnail to b2
     if(process.env.UPLOAD_TO_B2 == 'true'){
+      backblaze.uploadUserThumbnailToB2(req.user.channelUrl, fileExtension);
       // await uploadToB2thing(param)
     }
 
