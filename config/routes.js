@@ -29,7 +29,7 @@ const supportFrontendController = require('../controllers/frontend/support');
 
 const domainNameAndTLD = process.env.DOMAIN_NAME_AND_TLD;
 
-console.log('DOMAIN NAME AND TLD ' + domainNameAndTLD);
+console.log('DOMAIN NAME AND TLD: ' + domainNameAndTLD);
 
 /** passport config **/
 const passportConfig = require('../config/passport');
