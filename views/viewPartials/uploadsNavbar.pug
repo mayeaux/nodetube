@@ -1,30 +1,32 @@
 div(style="margin-top: 20px;")
     div.btn-group.pull-right
-        div.dropdown.p-2.btn-group.mx-3
-            button.btn.btn-primary.dropdown-toggle(type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") Last Day
-            div.dropdown-menu(aria-labelledby="dropdownMenuButton")
-                li
-                    a.dropdown-item(href=`/media/popular/1?within=1hour`) Last Hour
-                li
-                    a.dropdown-item(href=`/media/popular/1?within=24hour`) Last Day
-                li
-                    a.dropdown-item(href=`/media/popular/1?within=1week`) Last Week
-                li
-                    a.dropdown-item(href=`/media/popular/1?within=1month`) Last Month
-                li
-                    a.dropdown-item(href="/media/popular") All-Time
+        if recentPopular == "popular"
+            div.dropdown.p-2.btn-group.mx-3
+                button.btn.btn-primary.dropdown-toggle(type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") #{withinDisplayString}
+    
+                div.dropdown-menu(aria-labelledby="dropdownMenuButton")
+                    li
+                        a.dropdown-item(href=`/media/${recentPopular}/1?within=1hour`) Last Hour
+                    li
+                        a.dropdown-item(href=`/media/${recentPopular}/1?within=24hour`) Last Day
+                    li
+                        a.dropdown-item(href=`/media/${recentPopular}/1?within=1week`) Last Week
+                    li
+                        a.dropdown-item(href=`/media/${recentPopular}/1?within=1month`) Last Month
+                    li
+                        a.dropdown-item(href="/media/popular") All-Time
         
         div.dropdown.p-2.btn-group.mx-3
-            button.btn.btn-primary.dropdown-toggle(type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") All
+            button.btn.btn-primary.dropdown-toggle(type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") #{media}
             div.dropdown-menu(aria-labelledby="dropdownMenuButton")
                 li
-                    a.dropdown-item(href=`/media/popular/1?media=all&category=${category}&within=${within}`) All
+                    a.dropdown-item(href=`/media/${recentPopular}/1?media=all&category=${category}&within=${within}`) All
                 li
-                    a.dropdown-item(href=`/media/popular/1?media=video&category=${category}&within=${within}`) Videos
+                    a.dropdown-item(href=`/media/${recentPopular}/1?media=video&category=${category}&within=${within}`) Videos
                 li
-                    a.dropdown-item(href=`/media/popular/1?media=audio&category=${category}&within=${within}`) Audio
+                    a.dropdown-item(href=`/media/${recentPopular}/1?media=audio&category=${category}&within=${within}`) Audio
                 li
-                    a.dropdown-item(href=`/media/popular/1?media=image&category=${category}&within=${within}`) Images
+                    a.dropdown-item(href=`/media/${recentPopular}/1?media=image&category=${category}&within=${within}`) Images
 
         div.dropdown.p-2.btn-group.mx-3
             if !user
@@ -79,18 +81,18 @@ div(style="margin-top: 20px;")
                 ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1')
                     each category in categories
                         li(role='presentation')
-                            a(href=`/media/recent/1?media=all&category=${category.name}`) #{category.displayName}
+                            a(href=`/media/${recentPopular}/1?media=all&category=${category.name}`) #{category.displayName}
 
             
-        div.dropdown(style="display:inline;")
+        // div.dropdown(style="display:inline;")
             button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown')
                 | Order By: #{orderByEnglishString} &nbsp
                 span.caret
 
             ul.dropdown-menu.dropdown
                 li
-                    a(href=`/search?searchQuery=${searchQuery}&orderBy=popular&mediaType=${mediaType}&searchType=${searchType}`) Popular
+                    a(href=`/media/popular/&orderBy=popular&mediaType=${mediaType}&searchType=${searchType}`) Popular
                 li
-                    a(href=`/search?searchQuery=${searchQuery}&orderBy=newToOld&mediaType=${mediaType}&searchType=${searchType}`) New To Old
+                    a(href=`/media/popular/&orderBy=newToOld&mediaType=${mediaType}&searchType=${searchType}`) New To Old
                 li
-                    a(href=`/search?searchQuery=${searchQuery}&orderBy=oldToNew&mediaType=${mediaType}&searchType=${searchType}`) Old To New
+                    a(href=`/media/popular/&orderBy=oldToNew&mediaType=${mediaType}&searchType=${searchType}`) Old To New

@@ -30,9 +30,9 @@ block content
                     //source(src=upload.uploadUrl, type='audio/mp3')
 
         else if upload.fileType === 'image'
-            div.display-div(style="background-color: #0d0d0d")
+            div.display-div(style="background-color: #0d0d0d; max-height: 600px;")
                 a(href=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`)
-                    img.display-element(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` class="img-responsive" style="margin-left: auto; margin-right: auto")
+                    img.display-element(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` class="img-responsive" style="margin-left: auto; margin-right: auto; max-height: 600px;")
 
 
         div.non-player-content(style="position:relative;")
@@ -112,6 +112,13 @@ block content
                             else 
                                 a(href=`/user/${upload.uploader.channelUrl}`)
                                     img(src=`${uploadServer}/defaultUser.png` width="80px" height="80px" class="img-circle mb-3")
+                            
+                            if user.channelUrl != upload.uploader.channelUrl
+                                if alreadySubbed
+                                    button.subscribe.btn.btn-danger(style="border-radius:4px; margin-top: 20px;") Unsubscribe 
+                                else
+                                    button.subscribe.btn.btn-lg.btn-success(style="border-radius:4px; margin-top: 20px;") Subscribe #{upload.uploader.receivedSubscriptions.length}
+                            
                         div.col-md-10            
                             a(href=`/user/${upload.uploader.channelUrl}` style="color:rgb(51, 51, 51)")
                                 h4(style="font-weight: 400") #{upload.uploader.channelUrl}
@@ -141,13 +148,6 @@ block content
                             if upload.description
                                 h4(class="upload-description-value") Description
                                 p(style="width:50%;text-align: center;margin: 0 auto;white-space:pre-line;word-wrap:break-word;" id="descriptionText") #{upload.description}
-
-
-                div.col-md-6(class="float-right")
-                    if alreadySubbed
-                        button.subscribe.btn.btn-danger(style="border-radius:4px; margin-top: 20px;") Unsubscribe 
-                    else
-                        button.subscribe.btn.btn-lg.btn-success(style="border-radius:4px; margin-top: 20px;") Subscribe #{upload.uploader.receivedSubscriptions.length}
 
             if upload.quality && upload.quality.high
                 div.dropdown

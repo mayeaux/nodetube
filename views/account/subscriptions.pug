@@ -33,9 +33,7 @@ block content
         br
         each upload in uploads
             if upload.uploader
-                div.col-sm-4(style="text-align:center;height:360px")
-                    include ../viewPartials/uploadThumbnail
-
+                div.col-sm-3(style="text-align:center;height:360px")
                     include ../viewPartials/uploadDetails
 
 

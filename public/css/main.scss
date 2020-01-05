@@ -14,7 +14,7 @@ html {
 }
 
 body {
-  background-color: #FAFAFA;
+  background-color: #fafafa;
   padding-top: 60px;
   margin-bottom: 75px;
 }
@@ -26,7 +26,8 @@ footer {
   height: 45px;
   line-height: 45px;
 
-  p, ul {
+  p,
+  ul {
     margin-bottom: 0;
   }
 }
@@ -70,6 +71,10 @@ textarea {
   margin-right: 6px;
 }
 
-.navbar-fixed-top .navbar-collapse, .navbar-fixed-bottom .navbar-collapse {
+.navbar-fixed-top .navbar-collapse,
+.navbar-fixed-bottom .navbar-collapse {
   max-height: 381px;
 }
+
+// Cards
+// ------------------------

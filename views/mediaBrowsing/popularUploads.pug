@@ -3,20 +3,19 @@ extends ../layout
 block content
     div(class="container")
         h1.center-block.pull-left Popular Uploads
-        include ../viewPartials/popularUploadsNavbar
+        include ../viewPartials/uploadsNavbar
     hr
 
-
     p
-
         div.uploads
             if !isACategory
                 include ../viewPartials/categoryOverviews
 
             else
-                each upload in uploads
-                    div.col-sm-3(style="text-align:center;height:360px;")        
-                        include ../viewPartials/uploadDetails
+                div.row
+                    each upload in uploads
+                        div.col-md-3.col-sm-6(style="text-align:center;height:360px;")        
+                            include ../viewPartials/uploadDetails
 
 
             include ../viewPartials/adminSensitivityButtons
@@ -24,7 +23,7 @@ block content
 
         if uploads
             div.col-sm-12
-                include ../viewPartials/popularUploadsPagination
+                include ../viewPartials/pagination
 
 
 

@@ -7,11 +7,10 @@ for category in categories
                 h2 #{category.displayName}
                 br
 
-            // begin individual upload section
-            each upload in uploads[category.name]
-                if upload.uploader
-                    div.col-sm-3(style="text-align:center;height:310px;")
-                            include ../viewPartials/uploadDetails
+        // begin individual upload section
+        each upload in uploads[category.name]
+            if upload.uploader
+                div.col-md-3.col-sm-6(style="text-align:center;height:310px;")
+                        include ../viewPartials/uploadDetails
 
-                            //include ../viewPartials/uploadDetailsPopular
 
