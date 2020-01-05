@@ -65,6 +65,8 @@ const portNumber =  process.env.PORT || 3000;
 if(cluster.isMaster){
   console.log('BOOTING APP...\n');
 
+  console.log(`NODE_ENV: ${process.env.NODE_ENV}\n`);
+
   console.log(`RUNNING WITH THIS MANY PROCESSES: ${amountOfProcesses}\n`);
 
   console.log(`SAVE AND SERVE FILES DIRECTORY: ${saveAndServeFilesDirectory}\n`);
@@ -80,6 +82,10 @@ if(cluster.isMaster){
 
     if(process.env.CACHING_ON == 'true'){
       const runcaching = require('./caching/runCaching');
+    }
+
+    if(process.env.UPLOAD_TO_B2 == 'true'){
+      console.log(`UPLOAD TO BACKBLAZE ON, BUCKET: ${process.env.BACKBLAZE_BUCKET}\n`)
     }
 
     // site visit
