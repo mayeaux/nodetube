@@ -25,8 +25,6 @@ const apiKey = 'AIzaSyByk-KTWDqwVejYLHUwKa6VFBTMe0lnQNk';
 const requestModule = require('request');
 const request = Promise.promisifyAll(requestModule);
 
-// pewdie = UC-lHJZR3Gqxm24_Vd_AJ5Yw
-
 async function testId(channelId){
 
   // test if it was a username

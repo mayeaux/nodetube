@@ -26,6 +26,8 @@ const generateReactInfo = require('../../lib/mediaPlayer/generateReactInfo');
 
 console.log('UPLOAD SERVER: ' + uploadServer);
 
+const brandName = process.env.INSTANCE_BRAND_NAME;
+
 function getParameterByName(name, url){
   if(!url) url = window.location.href;
   name = name.replace(/[\[\]]/g, '\\$&');
@@ -213,7 +215,7 @@ exports.getMedia = async(req, res) => {
       /** SET META TAGS **/
       res.locals.meta.title = `${upload.title}`;
 
-      res.locals.meta.description = upload.description || 'Hosted on PewTube';
+      res.locals.meta.description = upload.description || `Hosted on ${brandName}`;
 
       if(upload.fileType == 'video'){
         res.locals.meta.image = upload.customThumbnailUrl || upload.thumbnailUrl;

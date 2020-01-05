@@ -7,6 +7,8 @@ require('javascript-time-ago/intl-messageformat-global');
 require('intl-messageformat/dist/locale-data/en');
 const timeAgoEnglish = new javascriptTimeAgo('en-US');
 
+const domainNameAndTLD = process.env.DOMAIN_NAME_AND_TLD;
+
 const uploadSchema = new mongoose.Schema({
   title: String,
   description: String,
@@ -112,7 +114,7 @@ uploadSchema.virtual('uploadServerUrl').get(function(){
   if(process.env.NODE_ENV == 'development'){
     uploadServerUrl = '/uploads';
   } else {
-    uploadServerUrl = `https://${this.uploadServer}.pew.tube`;
+    uploadServerUrl = `https://${this.uploadServer}.${domainNameAndTLD}`;
   }
 
   return uploadServerUrl;
