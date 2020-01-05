@@ -12,7 +12,7 @@ process.on('unhandledRejection', console.log);
 dotenv.load({ path: '../.env.private' });
 dotenv.load({ path: '../.env.settings' });
 
-const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/nov28pewtube';
+const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI;
 
 console.log('Connected to ' + mongoUri);
 

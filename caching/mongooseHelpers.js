@@ -10,7 +10,7 @@ const _ = require('lodash');
 // mongoose.Promise = global.Promise;
 //
 // mongoose.Promise = global.Promise;
-// mongoose.connect('mongodb://localhost:27017/prodpewd', {
+// mongoose.connect('mongodb://localhost:27017/nodetube', {
 //   keepAlive: true,
 //   reconnectTries: Number.MAX_VALUE,
 //   useMongoClient: true

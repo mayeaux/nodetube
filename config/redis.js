@@ -3,7 +3,7 @@ var redis = require('redis');
 
 if(process.env.REDIS_URL){
 
-  console.log(`Connecting to redis URL, ${process.env.REDIS_URL}`);
+  console.log(`CONNECTING TO REDIS_URL:, ${process.env.REDIS_URL}`);
   var client = redis.createClient(process.env.REDIS_URL); // creates a new redisClient
 
 } else {
@@ -13,11 +13,14 @@ if(process.env.REDIS_URL){
 
   const options = {
     host: redisHost,
-    port: redisPort,
-    password: redisPassword
+    port: redisPort
   };
 
-  console.log(`Connecting to redis, host: ${redisHost}, port: ${redisPort}`);
+  if(process.env.NODE_ENV == 'production'){
+    options.password = redisPassword;
+  }
+
+  console.log(`CONNECTING TO REDIS, HOST: ${redisHost}, PORT: ${redisPort}\n`);
 
   var client = redis.createClient(options); // creates a new redisClient
 

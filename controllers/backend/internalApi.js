@@ -18,6 +18,8 @@ var Busboy = require('busboy');
 const mkdirp = Promise.promisifyAll(require('mkdirp'));
 const mv = require('mv');
 
+const domainNameAndTLD = process.env.DOMAIN_NAME_AND_TLD;
+
 const createAdminAction = require('../../lib/administration/createAdminAction');
 const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
 
@@ -32,7 +34,9 @@ require('javascript-time-ago/intl-messageformat-global');
 require('intl-messageformat/dist/locale-data/en');
 const timeAgoEnglish = new javascriptTimeAgo('en-US');
 
-console.log(`THUMBNAIL SERVER: ${process.env.THUMBNAIL_SERVER}`);
+if(process.env.THUMBNAIL_SERVER){
+  console.log(`THUMBNAIL SERVER: ${process.env.THUMBNAIL_SERVER}`);
+}
 
 const frontendServer = process.env.FRONTEND_SERVER || '';
 
@@ -53,14 +57,13 @@ const getMediaType = require('../../lib/uploading/media');
 const ffmpegHelper = require('../../lib/uploading/ffmpeg');
 var resumable = require('../../lib/uploading/resumable.js')(__dirname +  '/upload');
 
-const hostUrl = process.env.hostUrl || 'https://f001.backblazeb2.com/file/pewtubedev/';
-const accountId = process.env.backBlazeId || 'febb41851504';
-const applicationKey = process.env.backBlazeAppKey || '001c2a6f616f34dfca8205736fad3479de77232d79' ;
-const bucket = process.env.BACKBLAZE_BUCKET || 'pewtubedev';
+const accountId = process.env.backBlazeId;
+const applicationKey = process.env.backBlazeAppKey;
+const bucket = process.env.BACKBLAZE_BUCKET;
 var b2 = Promise.promisifyAll(new B2(accountId, applicationKey));
 
 let hostPrepend = '';
-if(process.env.NODE_ENV == 'production') hostPrepend = 'https://pew.tube';
+if(process.env.NODE_ENV == 'production') hostPrepend = `https://${domainNameAndTLD}`;
 
 var appDir = path.dirname(require.main.filename);
 
@@ -71,9 +74,9 @@ if(process.env.NODE_ENV !== 'production' && !process.env.UPLOAD_SERVER){
 // development with an upload server
 } else if(process.env.NODE_ENV !== 'production' && process.env.UPLOAD_SERVER){
   // otherwise load the upload's uploadServer
-  uploadServer = `https://${process.env.UPLOAD_SERVER}.pew.tube/uploads`;
+  uploadServer = `https://${process.env.UPLOAD_SERVER}.${domainNameAndTLD}/uploads`;
 } else {
-  uploadServer = `https://${process.env.UPLOAD_SERVER}.pew.tube/uploads`;
+  uploadServer = `https://${process.env.UPLOAD_SERVER}.${domainNameAndTLD}/uploads`;
 }
 
 async function updateUsersUnreadSubscriptions(user){

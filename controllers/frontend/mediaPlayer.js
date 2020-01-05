@@ -24,7 +24,9 @@ const uploadServer  = uploadHelpers.uploadServer;
 const generateComments = require('../../lib/mediaPlayer/generateCommentsObjects');
 const generateReactInfo = require('../../lib/mediaPlayer/generateReactInfo');
 
-console.log('UPLOAD SERVER: ' + uploadServer);
+console.log(`UPLOAD SERVER: ${uploadServer}\n`);
+
+const brandName = process.env.INSTANCE_BRAND_NAME;
 
 function getParameterByName(name, url){
   if(!url) url = window.location.href;
@@ -69,10 +71,10 @@ exports.getMedia = async(req, res) => {
       return res.render('error/404');
     }
 
-    let subscriberAmount = await Subscription.count({subscribedToUser: upload.uploader._id, active: true});
+    let subscriberAmount = await Subscription.countDocuments({subscribedToUser: upload.uploader._id, active: true});
     // console.log(subscriberAmount);
 
-    let subscriptions = req.user ? await Subscription.count({subscribedToUser: upload.uploader._id, subscribingUser: req.user._id, active: true}) : 0;
+    let subscriptions = req.user ? await Subscription.countDocuments({subscribedToUser: upload.uploader._id, subscribingUser: req.user._id, active: true}) : 0;
     let alreadySubbed = (subscriptions > 0) ? true : false;
     /* let subscriptions = await Subscription.find({ subscribedToUser: upload.uploader._id, active: true });
 
@@ -213,7 +215,7 @@ exports.getMedia = async(req, res) => {
       /** SET META TAGS **/
       res.locals.meta.title = `${upload.title}`;
 
-      res.locals.meta.description = upload.description || 'Hosted on PewTube';
+      res.locals.meta.description = upload.description || `Hosted on ${brandName}`;
 
       if(upload.fileType == 'video'){
         res.locals.meta.image = upload.customThumbnailUrl || upload.thumbnailUrl;

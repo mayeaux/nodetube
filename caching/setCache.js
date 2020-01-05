@@ -47,19 +47,19 @@ async function setIndexValues(){
     console.log('Old view amount calculated, calculating channel amount');
   }
 
-  channelAmount = await User.count({});
+  channelAmount = await User.estimatedDocumentCount({});
 
   if(logCaching == 'true'){
     console.log('Channel amount calculated, calculating upload amount');
   }
 
-  mediaAmount = await Upload.count({});
+  mediaAmount = await Upload.estimatedDocumentCount({});
 
   if(logCaching == 'true'){
     console.log('Upload amount calculated, calculating view amount');
   }
 
-  const legitCheckedViews = await View.count({ validity: 'real' });
+  const legitCheckedViews = await View.countDocuments({ validity: 'real' });
 
   if(logCaching == 'true'){
     console.log('Legit view amount calculated, setting redis amounts');
@@ -89,7 +89,7 @@ async function setIndexValues(){
 // TODO: refactor to do via count
 async function getAmountsPerPeriods(Model, objectName){
 
-  const totalDocumentAmount = await Model.count({});
+  const totalDocumentAmount = await Model.estimatedDocumentCount({});
 
   if(logCaching == 'true'){
     console.log(`Got total ${objectName} counted`);
@@ -103,11 +103,11 @@ async function getAmountsPerPeriods(Model, objectName){
   var minuteAgo = moment().subtract(1, 'minutes').toDate();
 
   // find the views
-  const lastMonthAmount= await Model.count({ createdAt: { $gte: monthAgo } });
-  const lastWeekAmount = await Model.count({ createdAt: { $gte: weekAgo } });
-  const lastDayAmount = await Model.count({ createdAt: { $gte: dayAgo } });
-  const lastHourAmount = await Model.count({ createdAt: { $gte: hourAgo } });
-  const lastMinuteAmount = await Model.count({ createdAt: { $gte: minuteAgo } });
+  const lastMonthAmount= await Model.countDocuments({ createdAt: { $gte: monthAgo } });
+  const lastWeekAmount = await Model.countDocuments({ createdAt: { $gte: weekAgo } });
+  const lastDayAmount = await Model.countDocuments({ createdAt: { $gte: dayAgo } });
+  const lastHourAmount = await Model.countDocuments({ createdAt: { $gte: hourAgo } });
+  const lastMinuteAmount = await Model.countDocuments({ createdAt: { $gte: minuteAgo } });
 
   return{
     name: objectName,

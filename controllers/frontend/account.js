@@ -13,6 +13,8 @@ const Subscription = require('../../models/index').Subscription;
 
 const { uploadServer, uploadUrl } = require('../../lib/helpers/settings');
 
+const brandName = process.env.INSTANCE_BRAND_NAME;
+
 const thumbnailServer = process.env.THUMBNAIL_SERVER || '';
 
 const pagination = require('../../lib/helpers/pagination');
@@ -273,7 +275,7 @@ exports.getChannel = async(req, res) => {
       subscriberAmount = 0;
     }
 
-    res.locals.meta.title = `${user.channelName || user.channelUrl} - on PewTube`;
+    res.locals.meta.title = `${user.channelName || user.channelUrl} - on ${brandName}`;
 
     if(user.channelDescription) res.locals.meta.description = user.channelDescription;
 
@@ -325,7 +327,7 @@ exports.getChannel = async(req, res) => {
     uploads = await Promise.all(
       uploads.map(async function(upload){
         upload = upload.toObject();
-        const checkedViews = await View.count({ upload: upload.id, validity: 'real' });
+        const checkedViews = await View.countDocuments({ upload: upload.id, validity: 'real' });
         upload.legitViewAmount = checkedViews;
         return upload;
       })

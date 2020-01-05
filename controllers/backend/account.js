@@ -20,15 +20,16 @@ const mailgunTransport = mailTransports.mailgunTransport;
 const User = require('../../models/index').User;
 const getMediaType = require('../../lib/uploading/media');
 
+const brandName = process.env.INSTANCE_BRAND_NAME;
+
 const thumbnailServer = process.env.THUMBNAIL_SERVER || '';
 
 const frontendServer = process.env.FRONTEND_SERVER || '';
 
-const verifyEmailPassword = process.env.PEWTUBE_VERIFY_EMAIL_PASSWORD;
+const verifyEmailPassword = process.env.NODETUBE_VERIFY_EMAIL_PASSWORD;
 
 const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
 
-// a.mayfield.contact
 const recaptcha = new reCAPTCHA({
   siteKey : process.env.RECAPTCHA_SITEKEY,
   secretKey : process.env.RECAPTCHA_SECRETKEY
@@ -143,7 +144,7 @@ exports.postSignup = async(req, res, next) => {
   });
 
   // make sure first user is admin, can refactor later
-  const numberOfUsers = await User.count();
+  const numberOfUsers = await User.estimatedDocumentCount();
 
   if(numberOfUsers == 0){
     user.role = 'admin';
@@ -339,7 +340,7 @@ exports.postReset = async(req, res, next) => {
   const mailOptions = {
     to: user.email,
     from: process.env.FORGOT_PASSWORD_EMAIL_ADDRESS,
-    subject: 'Your PewTube password has been reset',
+    subject: `Your ${brandName} password has been reset`,
     text: `Hello,\n\nThis is a confirmation that the password for your account ${user.email} has just been changed.\n`
   };
 
@@ -384,7 +385,7 @@ exports.postForgot = async(req, res, next) => {
     const mailOptions = {
       to: user.email,
       from: process.env.FORGOT_PASSWORD_EMAIL_ADDRESS,
-      subject: 'Reset your password on PewTube',
+      subject: `Reset your password on ${brandName}`,
       text: `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
       Please click on the following link, or paste this into your browser to complete the process:\n\n
       http://${req.headers.host}/reset/${token}\n\n
@@ -436,7 +437,7 @@ exports.postConfirmEmail = async(req, res, next) => {
     const mailOptions = {
       to: user.email,
       from: process.env.CONFIRM_USER_EMAIL_ADDRESS,
-      subject: 'Confirm your email on PewTube',
+      subject: `Confirm your email on ${brandName}`,
       text: `You are receiving this email because you (or someone else) has attempted to link this email to their account.\n\n
       Please click on the following link, or paste this into your browser to complete the process:\n\n
       http://${req.headers.host}/confirmEmail/${token}\n\n
