@@ -34,7 +34,7 @@ const ngrok = require('ngrok');
 const jsHelpers = require('./lib/helpers/js-helpers');
 
 /** FOR FINDING ERRANT LOGS **/
-if(process.env.SHOW_LOG_LOCATION == 'true' || 1 == 1){
+if(process.env.SHOW_LOG_LOCATION == 'true' || 2 == 1){
   jsHelpers.showLogLocation()
 }
 
@@ -55,20 +55,20 @@ dotenv.load({path: '.env.private'});
 
 const amountOfProcesses = process.env.WEB_CONCURRENCY || numCPUs;
 
-if(process.env.CACHING_ON == 'true'){
-  const runcaching = require('./caching/runCaching');
-}
-
 // set upload server, upload url and save files directory
 const settings = require('./lib/helpers/settings');
 
 const saveAndServeFilesDirectory = settings.saveAndServeFilesDirectory;
 
-console.log(`SAVE AND SERVE FILES DIRECTORY: ${saveAndServeFilesDirectory}`);
-
 const portNumber =  process.env.PORT || 3000;
 
 if(cluster.isMaster){
+  console.log('BOOTING APP...\n')
+
+  console.log(`RUNNING WITH THIS MANY PROCESSES: ${amountOfProcesses}\n`);
+
+  console.log(`SAVE AND SERVE FILES DIRECTORY: ${saveAndServeFilesDirectory}\n`);
+
   for(let i = 0; i < amountOfProcesses; i++){
     // Create a worker
     cluster.fork();
@@ -76,9 +76,11 @@ if(cluster.isMaster){
 
 } else {
 
-  console.log(`Running with this many processes: ${amountOfProcesses}`);
-
   (async function(){
+
+    if(process.env.CACHING_ON == 'true'){
+      const runcaching = require('./caching/runCaching');
+    }
 
     // site visit
     const Notification = require('./models').Notification;
@@ -107,7 +109,10 @@ if(cluster.isMaster){
       // console.log(`Process message: `, message);
     });
 
-    console.log(`FRONTEND SERVER: ${process.env.FRONTEND_SERVER}`);
+    if(process.env.FRONTEND_SERVER){
+      console.log(`FRONTEND SERVER: ${process.env.FRONTEND_SERVER}`);
+    }
+
 
     /** connect to MongoDB **/
     const mongoUri = process.env.MONGODB_URI || process.env.MONGODB_DOCKER_URI || process.env.MONGO_URI || process.env.MONGOLAB_URI;
@@ -130,7 +135,7 @@ if(cluster.isMaster){
       process.exit();
     });
 
-    console.log('Connected to ' + mongoUri);
+    console.log('CONNECTED TO DATABASE AT: ' + mongoUri + '\n');
 
     if(process.env.EMAIL_LISTENER_ON == 'true'){
       const emailListenerScript = require('./scripts/shared/saveUnseenEmails');
@@ -166,8 +171,6 @@ if(cluster.isMaster){
     } else if(process.env.NODE_ENV == 'production'){
       app.use(logger('dev'));
     }
-
-    console.log(`SERVE UPLOADS PATH: ${saveAndServeFilesDirectory}`);
 
     if(process.env.SAVE_AND_SERVE_FILES == 'true'){
       app.use('/uploads', express.static(saveAndServeFilesDirectory, {maxAge: 31557600000}));

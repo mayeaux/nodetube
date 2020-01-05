@@ -24,7 +24,7 @@ const uploadServer  = uploadHelpers.uploadServer;
 const generateComments = require('../../lib/mediaPlayer/generateCommentsObjects');
 const generateReactInfo = require('../../lib/mediaPlayer/generateReactInfo');
 
-console.log('UPLOAD SERVER: ' + uploadServer);
+console.log(`UPLOAD SERVER: ${uploadServer}\n`);
 
 const brandName = process.env.INSTANCE_BRAND_NAME;
 

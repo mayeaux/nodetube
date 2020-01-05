@@ -25,7 +25,7 @@ const categories = require('../../config/categories');
 
 const logCaching = process.env.LOG_CACHING;
 
-console.log('UPLOAD SERVER: ' + uploadServer + ' on: media browsing frontend controller');
+// console.log('UPLOAD SERVER: ' + uploadServer + ' on: media browsing frontend controller');
 
 function getParameterByName(name, url){
   if(!url) url = window.location.href;

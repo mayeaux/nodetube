@@ -34,7 +34,9 @@ require('javascript-time-ago/intl-messageformat-global');
 require('intl-messageformat/dist/locale-data/en');
 const timeAgoEnglish = new javascriptTimeAgo('en-US');
 
-console.log(`THUMBNAIL SERVER: ${process.env.THUMBNAIL_SERVER}`);
+if(process.env.THUMBNAIL_SERVER){
+  console.log(`THUMBNAIL SERVER: ${process.env.THUMBNAIL_SERVER}`);
+}
 
 const frontendServer = process.env.FRONTEND_SERVER || '';
 

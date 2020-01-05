@@ -29,7 +29,7 @@ const supportFrontendController = require('../controllers/frontend/support');
 
 const domainNameAndTLD = process.env.DOMAIN_NAME_AND_TLD;
 
-console.log('DOMAIN NAME AND TLD: ' + domainNameAndTLD);
+console.log(`DOMAIN NAME AND TLD: ${domainNameAndTLD}\n`);
 
 /** passport config **/
 const passportConfig = require('../config/passport');
@@ -119,7 +119,7 @@ function livestreamRoutes(app){
 }
 
 function frontendRoutes(app){
-  console.log('RUNNING AS FRONTEND');
+  console.log('RUNNING AS FRONTEND \n');
 
   /** publicly available routes **/
   app.get('/', publicController.index);
