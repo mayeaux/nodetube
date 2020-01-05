@@ -130,7 +130,7 @@ if(cluster.isMaster){
       useNewUrlParser: true
     });
 
-    if(process.env.MONGOOSE_DEBUG == 'true' || process.env.MONGOOSE_DEBUG == 'on'){
+    if(process.env.MONGOOSE_DEBUG == 'true' || process.env.MONGOOSE_DEBUG == 'on' || 1 == 2){
       mongoose.set('debug', true);
     }
 
@@ -293,7 +293,7 @@ if(cluster.isMaster){
     /** HOW MANY UNREAD NOTIFS **/
     app.use(async function(req, res, next){
       if(req.user){
-        let unreadNotifs = await Notification.count({read: false, user: req.user._id});
+        let unreadNotifs = await Notification.countDocuments({read: false, user: req.user._id});
         res.locals.unreadNotifAmount = unreadNotifs;
         // console.log(unreadNotifs + ' unreadnotifs')
 

@@ -145,7 +145,7 @@ exports.postSignup = async(req, res, next) => {
   });
 
   // make sure first user is admin, can refactor later
-  const numberOfUsers = await User.count();
+  const numberOfUsers = await User.estimatedDocumentCount();
 
   if(numberOfUsers == 0){
     user.role = 'admin';
