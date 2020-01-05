@@ -242,7 +242,7 @@ exports.postUpdateProfile = async(req, res, next)  => {
 
     // upload thumbnail to b2
     if(process.env.UPLOAD_TO_B2 == 'true'){
-      backblaze.uploadUserThumbnailToB2(req.user.channelUrl, fileExtension);
+      await backblaze.uploadUserThumbnailToB2(req.user.channelUrl, fileExtension);
       // await uploadToB2thing(param)
     }
 
