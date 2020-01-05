@@ -18,6 +18,8 @@ var Busboy = require('busboy');
 const mkdirp = Promise.promisifyAll(require('mkdirp'));
 const mv = require('mv');
 
+const domainNameAndTLD = process.env.DOMAIN_NAME_AND_TLD;
+
 const createAdminAction = require('../../lib/administration/createAdminAction');
 const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
 
@@ -59,7 +61,7 @@ const bucket = process.env.BACKBLAZE_BUCKET;
 var b2 = Promise.promisifyAll(new B2(accountId, applicationKey));
 
 let hostPrepend = '';
-if(process.env.NODE_ENV == 'production') hostPrepend = 'https://pew.tube';
+if(process.env.NODE_ENV == 'production') hostPrepend = `https://${domainNameAndTLD}`;
 
 var appDir = path.dirname(require.main.filename);
 
@@ -70,9 +72,9 @@ if(process.env.NODE_ENV !== 'production' && !process.env.UPLOAD_SERVER){
 // development with an upload server
 } else if(process.env.NODE_ENV !== 'production' && process.env.UPLOAD_SERVER){
   // otherwise load the upload's uploadServer
-  uploadServer = `https://${process.env.UPLOAD_SERVER}.pew.tube/uploads`;
+  uploadServer = `https://${process.env.UPLOAD_SERVER}.${domainNameAndTLD}/uploads`;
 } else {
-  uploadServer = `https://${process.env.UPLOAD_SERVER}.pew.tube/uploads`;
+  uploadServer = `https://${process.env.UPLOAD_SERVER}.${domainNameAndTLD}/uploads`;
 }
 
 async function updateUsersUnreadSubscriptions(user){
