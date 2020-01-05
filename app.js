@@ -35,7 +35,7 @@ const jsHelpers = require('./lib/helpers/js-helpers');
 
 /** FOR FINDING ERRANT LOGS **/
 if(process.env.SHOW_LOG_LOCATION == 'true' || 2 == 1){
-  jsHelpers.showLogLocation()
+  jsHelpers.showLogLocation();
 }
 
 mongoose.set('useNewUrlParser', true);
@@ -63,7 +63,7 @@ const saveAndServeFilesDirectory = settings.saveAndServeFilesDirectory;
 const portNumber =  process.env.PORT || 3000;
 
 if(cluster.isMaster){
-  console.log('BOOTING APP...\n')
+  console.log('BOOTING APP...\n');
 
   console.log(`RUNNING WITH THIS MANY PROCESSES: ${amountOfProcesses}\n`);
 
@@ -112,7 +112,6 @@ if(cluster.isMaster){
     if(process.env.FRONTEND_SERVER){
       console.log(`FRONTEND SERVER: ${process.env.FRONTEND_SERVER}`);
     }
-
 
     /** connect to MongoDB **/
     const mongoUri = process.env.MONGODB_URI || process.env.MONGODB_DOCKER_URI || process.env.MONGO_URI || process.env.MONGOLAB_URI;

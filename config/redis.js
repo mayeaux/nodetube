@@ -13,7 +13,7 @@ if(process.env.REDIS_URL){
 
   const options = {
     host: redisHost,
-    port: redisPort,
+    port: redisPort
   };
 
   if(process.env.NODE_ENV == 'production'){

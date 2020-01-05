@@ -35,7 +35,6 @@ const recaptcha = new reCAPTCHA({
   secretKey : process.env.RECAPTCHA_SECRETKEY
 });
 
-
 const { b2 } = require('../../lib/uploading/backblaze');
 const pagination = require('../../lib/helpers/pagination');
 
