@@ -13,9 +13,12 @@ if(process.env.REDIS_URL){
 
   const options = {
     host: redisHost,
-    port: redisPort,
-    password: redisPassword
+    port: redisPort
   };
+
+  if(process.env.NODE_ENV == 'production'){
+    options.password = redisPassword;
+  }
 
   console.log(`Connecting to redis, host: ${redisHost}, port: ${redisPort}`);
 

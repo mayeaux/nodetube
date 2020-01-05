@@ -31,6 +31,28 @@ const ipfilter = require('express-ipfilter').IpFilter;
 const _ = require('lodash');
 const ngrok = require('ngrok');
 
+/** FOR FINDING ERRANT LOGS **/
+if(process.env.SHOW_LOG_LOCATION == 'true' || 2 == 1){
+  /** Code to find errant console logs **/
+  ['log', 'warn', 'error'].forEach(function(method){
+    var old = console[method];
+    console[method] = function(){
+      var stack = (new Error()).stack.split(/\n/);
+      // Chrome includes a single "Error" line, FF doesn't.
+      if(stack[0].indexOf('Error') === 0){
+        stack = stack.slice(1);
+      }
+      var args = [].slice.apply(arguments).concat([stack[1].trim()]);
+      return old.apply(console, args);
+    };
+  });
+}
+
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
+mongoose.set('useUnifiedTopology', true);
+
 /** Code for clustering, running on multiple CPUS **/
 const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
@@ -102,10 +124,10 @@ if(cluster.isMaster){
 
     mongoose.Promise = global.Promise;
 
-    mongoose.Promise = global.Promise;
     mongoose.connect(mongoUri, {
       keepAlive: true,
-      reconnectTries: Number.MAX_VALUE
+      reconnectTries: Number.MAX_VALUE,
+      useNewUrlParser: true
     });
 
     if(process.env.MONGOOSE_DEBUG == 'true' || process.env.MONGOOSE_DEBUG == 'on'){
@@ -383,23 +405,6 @@ if(cluster.isMaster){
 
   if(process.env.RUN_NGROK == 'true'){
     runNgrok();
-  }
-
-  /** FOR FINDING ERRANT LOGS **/
-  if(process.env.SHOW_LOG_LOCATION == 'true' || 1 == 2){
-    /** Code to find errant console logs **/
-    ['log', 'warn', 'error'].forEach(function(method){
-      var old = console[method];
-      console[method] = function(){
-        var stack = (new Error()).stack.split(/\n/);
-        // Chrome includes a single "Error" line, FF doesn't.
-        if(stack[0].indexOf('Error') === 0){
-          stack = stack.slice(1);
-        }
-        var args = [].slice.apply(arguments).concat([stack[1].trim()]);
-        return old.apply(console, args);
-      };
-    });
   }
 }
 
