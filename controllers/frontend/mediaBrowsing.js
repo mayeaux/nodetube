@@ -115,6 +115,7 @@ exports.recentUploads = async(req, res) => {
     }
 
     const mediaType = media;
+    const recentPopular = "recent"
 
     const uploads = await getFromCache.getRecentUploads(limit, skipAmount, mediaType, filter, category, subcategory);
 
@@ -122,6 +123,7 @@ exports.recentUploads = async(req, res) => {
 
     res.render('mediaBrowsing/recentUploads', {
       title: 'Recent Uploads',
+      recentPopular,
       uploads,
       numbersArray,
       highlightedNumber: page,
@@ -241,11 +243,13 @@ exports.popularUploads = async(req, res) => {
     const popularTimeViews = 'viewsWithin' + within;
 
     console.log(popularTimeViews);
+    const recentPopular = "recent"
 
     console.log('getting popular uploads');
 
     res.render('mediaBrowsing/popularUploads', {
       title: 'Popular Uploads',
+      recentPopular,
       uploads,
       numbersArray,
       highlightedNumber: page,
