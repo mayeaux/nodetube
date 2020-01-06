@@ -7,11 +7,8 @@ RUN apk add --no-cache tar
 WORKDIR /app/
 
 COPY package*.json /app/
-COPY bower.json /app/
 
 RUN npm i
-RUN npm i -g bower
-RUN bower install --allow-root
 
 COPY . .
 
