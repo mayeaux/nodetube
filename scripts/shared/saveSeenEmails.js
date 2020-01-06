@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const ReceivedEmail = require('../../models').ReceivedEmail;
 
 /** connect to MongoDB **/
-const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/april15pewtube';
+const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI;
 
 mongoose.Promise = global.Promise;
 

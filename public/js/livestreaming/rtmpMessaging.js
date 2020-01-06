@@ -1,3 +1,7 @@
+const domainNameAndTLD = process.env.DOMAIN_NAME_AND_TLD;  
+
+const brandName = process.env.INSTANCE_BRAND_NAME;
+
 
 /** MESSAGING FUNCTIONALITY**/
 
@@ -15,8 +19,8 @@ var messageUrl;
 // var webSocketUrl = 'wss://' + location.host + '/one2many';
 
 if(env == 'production'){
-  webSocketUrl = 'wss://' + 'live.pewtube.com' + '/stream/' + username;
-  messageUrl = 'wss://' + 'live.pewtube.com' + '/messages/' + username;
+  webSocketUrl = 'wss://' + `live.${domainNameAndTLD}` + '/stream/' + username;
+  messageUrl = 'wss://' + `live.${domainNameAndTLD}` + '/messages/' + username;
 } else {
   webSocketUrl = 'wss://' + 'localhost:8080' + '/stream/' + username;
   messageUrl = 'wss://' + 'localhost:8080' + '/messages/' + username;

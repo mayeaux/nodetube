@@ -1,3 +1,8 @@
+const domainNameAndTLD = process.env.DOMAIN_NAME_AND_TLD;  
+
+const brandName = process.env.INSTANCE_BRAND_NAME;
+
+
 /**
  * GET /live/${username}
  * Get staging page.
@@ -25,7 +30,7 @@ exports.getLive = (req, res) => {
 
   // ?
   if(process.env.LIVESTREAM_APP !== 'true' && process.env.NODE_ENV == 'production'){
-    const livestreamApp = 'https://live.pewtube.com';
+    const livestreamApp = `https://live.${domainNameAndTLD}`;
 
     return res.redirect(livestreamApp + req.path);
   }
