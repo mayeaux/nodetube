@@ -1,11 +1,24 @@
-nav.center-block.text-center(aria-label='Page navigation example')
-    ul.pagination
-        li.page-item
-            a.page-link(href=`/media/recent/${previousNumber}?media=${media}&category${category}&page=`) <
+if recentPopular == "recent"
+    nav.center-block.text-center(aria-label='Page navigation example')
+        ul.pagination
+            li.page-item
+                a.page-link(href=`/media/recent/${previousNumber}?media=${media}&category${category}&page=`) <
 
-        each number in numbersArray
-            li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
-                a.page-link(href=`/media/recent/${number}?media=${media}&category=${category}&page=`) #{number}
+            each number in numbersArray
+                li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
+                    a.page-link(href=`/media/recent/${number}?media=${media}&category=${category}&page=`) #{number}
 
-        li.page-item
-            a.page-link(href=`/media/recent/${nextNumber}?media=${media}&category=${category}&page=${nextNumber}`) >
+            li.page-item
+                a.page-link(href=`/media/recent/${nextNumber}?media=${media}&category=${category}&page=${nextNumber}`) >
+else
+    nav.center-block.text-center(aria-label='Page navigation example')
+        ul.pagination
+            li.page-item
+                a.page-link(href=`/media/popular/${previousNumber}?media=${media}&category${category}&within=${within}`) <
+
+            each number in numbersArray
+                li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
+                    a.page-link(href=`/media/popular/${number}?media=${media}&category=${category}&within=${within}`) #{number}
+
+            li.page-item
+                a.page-link(href=`/media/popular/${nextNumber}?media=${media}&category=${category}&within=${within}`) >

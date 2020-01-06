@@ -1,3 +1,32 @@
+div.card()         
+    include ../viewPartials/uploadThumbnail         
+        div.card-body
+            div.card-title
+                a(href=`/user/${upload.uploader.channelUrl || channelUrl}/${upload.uniqueTag}` style="color:black") 
+                    h4.text-left #{upload.title}
+            div.card-text
+                p.upload-title-text.views-text(style="margin:0 auto;text-align:left; height: auto;")
+                    a.upload-user-text.views-text(href=`/user/${upload.uploader.channelUrl}` style="margin:0;text-align:center;display:inline;") #{upload.uploader.channelName || upload.uploader.channelUrl}
+                if !within    
+                    p.upload-title-text.views-text(style="margin:0 auto;text-align:left;display:inline;") uploaded #{upload.timeAgo} 
+                    p.upload-title-text.views-text(style="margin:0 auto;text-align:left;display:inline;")  | #{upload.legitViewAmount} views
+                if within
+                    p.upload-title-text.views-text(style="text-align:left;") #{upload[popularTimeViews]} #{withinDisplayString}
+
+        if user && user.role == 'admin'
+            div.admin-div(style="margin-bottom:15px;margin-top:-4px;")
+                if upload.category
+                    p.upload-title-text.views-text(style="margin:0;margin-left:3px;text-align:center;display:inline;") #{upload.category} 
+                if upload.subcategory
+                    p.upload-title-text.views-text(style="margin:0;margin-left:3px;text-align:center;display:inline;") | #{upload.subcategory} 
+                if upload.rating
+                    if upload.rating == 'allAges'
+                        p.upload-title-text.views-text(style="display:inline") | SFW
+                    if upload.rating == 'mature'
+                        p.upload-title-text.views-text(style="display:inline") | NSFW
+                    if upload.rating == 'sensitive'
+                        p.upload-title-text.views-text(style="display:inline") | Sensitive (18+)
+
 style.
     input[type=checkbox] {
         /* Double-sized Checkboxes */
@@ -8,43 +37,9 @@ style.
         padding: 10px;
     }
 
-div.random-thing
-    p.upload-title-text.views-text(style="margin:0 auto;text-align:center;display:inline;") #{upload.legitViewAmount} views &nbsp
-        if upload.fileType == 'video'
-            i.fa.fa-video-camera(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;")
-        else if upload.fileType == 'audio'
-            i.fa.fa-volume-up(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;")
-        else if upload.fileType == 'image'
-            i.fa.fa-picture-o(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;")
-        // upload time ago
-
-        if !within
-            p.upload-title-text.views-text(style="margin:0 auto;text-align:center;display:inline;") &nbsp uploaded #{upload.timeAgo} &nbsp
-                a.upload-user-text.views-text(href=`/user/${upload.uploader.channelUrl}` style="margin:0;text-align:center;display:inline;") #{upload.uploader.channelName || upload.uploader.channelUrl}
-        else
-            p.upload-title-text.views-text(style="margin:0 auto;text-align:center;display:inline;") &nbsp
-                a.upload-user-text.views-text(href=`/user/${upload.uploader.channelUrl}` style="margin:0;text-align:center;display:inline;") #{upload.uploader.channelName || upload.uploader.channelUrl}
-
-
-div.upload-thing
-    if within
-        p.upload-title-text.views-text #{upload[popularTimeViews]} #{withinDisplayString}
-
 if user && user.role == 'admin'
     div.admin-div(style="margin-bottom:15px;margin-top:-4px;")
-        if upload.category
-            p.upload-title-text.views-text(style="margin:0;margin-left:3px;text-align:center;display:inline;") #{upload.category}
-        if upload.subcategory
-            p.upload-title-text.views-text(style="margin:0;margin-left:3px;text-align:center;display:inline;") #{upload.subcategory}
-        if upload.rating
-            if upload.rating == 'allAges'
-                p.upload-title-text.views-text(style="display:inline") SFW
-            if upload.rating == 'mature'
-                p.upload-title-text.views-text(style="display:inline") NSFW
-            if upload.rating == 'sensitive'
-                p.upload-title-text.views-text(style="display:inline") Sensitive (18+)
-
-        div.thing(style="margin-top:-33px;margin-left:44px;display:block")
+        div.thing(style="margin-top:-33px;margin-left:54px;display:block")
              input.ratingChanged(style="display:block" type="checkbox" value=`${upload._id}`)
 
 // denote whether upload is deleted
