@@ -24,6 +24,10 @@ const recentActionsController = require('../controllers/frontend/recentActions')
 const socialMediaFrontendController = require('../controllers/frontend/socialMedia');
 const supportFrontendController = require('../controllers/frontend/support');
 
+const domainNameAndTLD = process.env.DOMAIN_NAME_AND_TLD;
+
+console.log(`DOMAIN NAME AND TLD: ${domainNameAndTLD}\n`);
+
 /** passport config **/
 const passportConfig = require('../config/passport');
 const authMiddleware = require('../middlewares/shared/authentication');
@@ -106,14 +110,14 @@ function livestreamRoutes(app){
   /** redirect all routes to the pewtube.com equivalent **/
   app.get('*', function(req, res){
 
-    const frontendAppUrl = 'https://pewtube.com';
+    const frontendAppUrl = `https://${domainNameAndTLD}`;
 
     return res.redirect(frontendAppUrl + req.path);
   });
 }
 
 function frontendRoutes(app){
-  console.log('RUNNING AS FRONTEND');
+  console.log('RUNNING AS FRONTEND \n');
 
   /** publicly available routes **/
   app.get('/', publicController.index);

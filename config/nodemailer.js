@@ -9,7 +9,7 @@ const zohoTransport = nodemailer.createTransport({
   secure: true, // use SSL
   auth: {
     user: process.env.EMAIL_ADDRESS,
-    pass: process.env.PEWTUBE_VERIFY_EMAIL_PASSWORD
+    pass: process.env.NODETUBE_VERIFY_EMAIL_PASSWORD
   }
 });
 

@@ -29,14 +29,14 @@ const ffmpegHelper = require('../../lib/uploading/ffmpeg');
 const uploadHelpers = require('../../lib/uploading/helpers');
 const backblaze = require('../../lib/uploading/backblaze');
 
-console.log(`SAVE AND SERVE FILES DIRECTORY: ${saveAndServeFilesDirectory}`);
+// console.log(`SAVE AND SERVE FILES DIRECTORY: ${saveAndServeFilesDirectory}`);
 
 var resumable = require('../../lib/uploading/resumable.js')(__dirname +  '/upload');
 
 const winston = require('winston');
 const uploadsOn = process.env.UPLOADS_ON;
 
-console.log(uploadsOn + ' uploads on');
+console.log(`UPLOADS ON: ${uploadsOn}\n`);
 
 //
 // Grab your preconfigured logger

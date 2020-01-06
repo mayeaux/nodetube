@@ -8,20 +8,20 @@ html
         meta(name='csrf-token', content=_csrf)
         meta(name="description", content=meta.description)
 
-        meta(property='og:title', content=meta.title || title + ' - PewTube')
+        meta(property='og:title', content=meta.title || title + ' - NodeTube')
         meta(property='og:image', content=meta.image)
         meta(property='og:description', content=meta.description)
         meta(property='og:video', content=meta.video)
 
 
         meta(name='twitter:card', content='summary')
-        meta(name='twitter:site', content='@alt_tech_')
-        meta(name='twitter:title', content=meta.title || title + ' - PewTube')
-        meta(name='twitter:description', content=meta.description || "PewTube - A free speech YouTube alternative for video, audio and images, which won't censor you for wrongthink.")
+        meta(name='twitter:site', content='@nodetube_org')
+        meta(name='twitter:title', content=meta.title || title + ' - NodeTube')
+        meta(name='twitter:description', content=meta.description)
         meta(name='twitter:image', content=meta.image)
 
 
-        title #{title} - PewTube
+        title #{title} - NodeTube
         link(rel='shortcut icon', href='/favicon.ico')
         script(src='/js/lib/jquery-3.1.1.min.js')
         script(src='/js/lib/bootstrap.min.js')
@@ -45,19 +45,19 @@ html
         link(rel="stylesheet" href="/css/sweetalert.css")
 
         link(rel='stylesheet', href='/css/main.css')
-        link(rel='stylesheet', href='/css/pewtube.css')
+        link(rel='stylesheet', href='/css/nodetube.css')
 
 
 
 
         // Google Analytics: change UA-XXXXX-X to be your site's ID
-        script.
-          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-              (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-          ga('create', 'UA-105337276-1', 'auto');
-          ga('send', 'pageview');
+        //script.
+        //  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        //      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        //    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        //  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        //  ga('create', 'UA-105337276-1', 'auto');
+        //  ga('send', 'pageview');
 
     style.
         body  {
@@ -89,7 +89,7 @@ html
                 video.display-element(poster=upload.thumbnailUrl controls='')
                     // TODO: Sub out thumbnail here
 
-                    source(src=`https://uploads2.pew.tube/uploads/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`, type='video/mp4')
+                    source(src=`https://nodetube.live/uploads/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`, type='video/mp4')
                     source(src=upload.uploadUrl, type='video/mp4')
             else if upload.fileType == 'image'
                 img.display-element(src=upload.uploadUrl style="height:100%;width:100%")

@@ -19,9 +19,7 @@ process.on('unhandledRejection', (err) => {
 dotenv.load({ path: '.env.settings' });
 dotenv.load({ path: '.env.private' });
 
-const database = process.env.MONGODB_URI || process.env.MONGODB_DOCKER_URI || process.env.MONGO_URI || process.env.MONGOLAB_URI || 'mongodb://localhost:27017/april15pewtube';
-
-console.log(database);
+const database = process.env.MONGODB_URI || process.env.MONGODB_DOCKER_URI || process.env.MONGO_URI || process.env.MONGOLAB_URI;
 
 /**
  * Connect to MongoDB.
@@ -44,7 +42,7 @@ mongoose.connection.on('error', (err) => {
   process.exit();
 });
 
-console.log('Connected to ' + database);
+console.log(`CACHING ON AND RUNNING AGAINST: ${database} \n`);
 
 const setCache = require('./setCache'); // index and daily stats
 

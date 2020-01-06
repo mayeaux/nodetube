@@ -24,6 +24,18 @@ var multipart = require('connect-multiparty');
 const Promise = require('bluebird');
 const ngrok = require('ngrok');
 
+const jsHelpers = require('./lib/helpers/js-helpers');
+
+/** FOR FINDING ERRANT LOGS **/
+if(process.env.SHOW_LOG_LOCATION == 'true' || 2 == 1){
+  jsHelpers.showLogLocation();
+}
+
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
+mongoose.set('useUnifiedTopology', true);
+
 /** Code for clustering, running on multiple CPUS **/
 const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
@@ -39,11 +51,17 @@ const settings = require('./lib/helpers/settings');
 
 const saveAndServeFilesDirectory = settings.saveAndServeFilesDirectory;
 
-console.log(`SAVE AND SERVE FILES DIRECTORY: ${saveAndServeFilesDirectory}`);
-
 const portNumber =  process.env.PORT || 3000;
 
 if(cluster.isMaster){
+  console.log('BOOTING APP...\n');
+
+  console.log(`NODE_ENV: ${process.env.NODE_ENV}\n`);
+
+  console.log(`RUNNING WITH THIS MANY PROCESSES: ${amountOfProcesses}\n`);
+
+  console.log(`SAVE AND SERVE FILES DIRECTORY: ${saveAndServeFilesDirectory}\n`);
+
   for(let i = 0; i < amountOfProcesses; i++){
     // Create a worker
     cluster.fork();
@@ -51,9 +69,15 @@ if(cluster.isMaster){
 
 } else {
 
-  console.log(`Running with this many processes: ${amountOfProcesses}`);
-
   (async function(){
+
+    if(process.env.CACHING_ON == 'true'){
+      const runcaching = require('./caching/runCaching');
+    }
+
+    if(process.env.UPLOAD_TO_B2 == 'true'){
+      console.log(`UPLOAD TO BACKBLAZE ON, BUCKET: ${process.env.BACKBLAZE_BUCKET}\n`);
+    }
 
     // site visit
     const Notification = require('./models').Notification;
@@ -81,17 +105,17 @@ if(cluster.isMaster){
     console.log(`FRONTEND SERVER: ${process.env.FRONTEND_SERVER}`);
 
     /** connect to MongoDB **/
-    const mongoUri = process.env.MONGODB_URI || process.env.MONGODB_DOCKER_URI || process.env.MONGO_URI || process.env.MONGOLAB_URI || 'mongodb://localhost:27017/april15pewtube';
+    const mongoUri = process.env.MONGODB_URI || process.env.MONGODB_DOCKER_URI || process.env.MONGO_URI || process.env.MONGOLAB_URI;
 
     mongoose.Promise = global.Promise;
 
-    mongoose.Promise = global.Promise;
     mongoose.connect(mongoUri, {
       keepAlive: true,
-      reconnectTries: Number.MAX_VALUE
+      reconnectTries: Number.MAX_VALUE,
+      useNewUrlParser: true
     });
 
-    if(process.env.MONGOOSE_DEBUG == 'true' || process.env.MONGOOSE_DEBUG == 'on'){
+    if(process.env.MONGOOSE_DEBUG == 'true' || process.env.MONGOOSE_DEBUG == 'on' || 1 == 2){
       mongoose.set('debug', true);
     }
 
@@ -101,7 +125,7 @@ if(cluster.isMaster){
       process.exit();
     });
 
-    console.log('Connected to ' + mongoUri);
+    console.log('CONNECTED TO DATABASE AT: ' + mongoUri + '\n');
 
     /** create express app **/
     const app = express();
@@ -134,8 +158,6 @@ if(cluster.isMaster){
       app.use(logger('dev'));
     }
 
-    console.log(`SERVE UPLOADS PATH: ${saveAndServeFilesDirectory}`);
-
     if(process.env.SAVE_AND_SERVE_FILES == 'true'){
       app.use('/uploads', express.static(saveAndServeFilesDirectory, {maxAge: 31557600000}));
     }
@@ -159,7 +181,7 @@ if(cluster.isMaster){
       cookie: {expires: new Date(2147483647000)},
       resave: true,
       saveUninitialized: true,
-      secret: process.env.PEWTUBE_SESSION_SECRET || process.env.SESSION_SECRET,
+      secret: process.env.SESSION_SECRET,
       store: new MongoStore({
         url: mongoUri,
         autoReconnect: true,
@@ -244,7 +266,7 @@ if(cluster.isMaster){
     /** HOW MANY UNREAD NOTIFS **/
     app.use(async function(req, res, next){
       if(req.user){
-        let unreadNotifs = await Notification.count({read: false, user: req.user._id});
+        let unreadNotifs = await Notification.countDocuments({read: false, user: req.user._id});
         res.locals.unreadNotifAmount = unreadNotifs;
         // console.log(unreadNotifs + ' unreadnotifs')
 
@@ -356,23 +378,6 @@ if(cluster.isMaster){
 
   if(process.env.RUN_NGROK == 'true'){
     runNgrok();
-  }
-
-  /** FOR FINDING ERRANT LOGS **/
-  if(process.env.SHOW_LOG_LOCATION == 'true' || 1 == 2){
-    /** Code to find errant console logs **/
-    ['log', 'warn', 'error'].forEach(function(method){
-      var old = console[method];
-      console[method] = function(){
-        var stack = (new Error()).stack.split(/\n/);
-        // Chrome includes a single "Error" line, FF doesn't.
-        if(stack[0].indexOf('Error') === 0){
-          stack = stack.slice(1);
-        }
-        var args = [].slice.apply(arguments).concat([stack[1].trim()]);
-        return old.apply(console, args);
-      };
-    });
   }
 }
 

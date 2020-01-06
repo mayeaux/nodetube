@@ -25,7 +25,7 @@ const categories = require('../../config/categories');
 
 const logCaching = process.env.LOG_CACHING;
 
-console.log('UPLOAD SERVER: ' + uploadServer + ' on: media browsing frontend controller');
+// console.log('UPLOAD SERVER: ' + uploadServer + ' on: media browsing frontend controller');
 
 function getParameterByName(name, url){
   if(!url) url = window.location.href;
@@ -411,7 +411,7 @@ exports.search = async(req, res) => {
     uploads = await Promise.all(
       uploads.map(async function(upload){
         upload = upload.toObject();
-        const checkedViews = await View.count({ upload: upload.id, validity: 'real' });
+        const checkedViews = await View.countDocuments({ upload: upload.id, validity: 'real' });
         upload.legitViewAmount = checkedViews;
         return upload;
       })
