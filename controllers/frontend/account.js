@@ -19,8 +19,6 @@ const thumbnailServer = process.env.THUMBNAIL_SERVER || '';
 
 const pagination = require('../../lib/helpers/pagination');
 
-const mongooseHelper = require('../../caching/mongooseHelpers');
-
 const categories = require('../../config/categories');
 
 const uploadFilters = require('../../lib/mediaBrowsing/helpers');

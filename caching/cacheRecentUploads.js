@@ -1,19 +1,8 @@
 const Promise = require('bluebird');
 const _ = require('lodash');
-const User = require('../models/index').User;
 const View = require('../models/index').View;
-
 const Upload = require('../models/index').Upload;
-
 const categories = require('../config/categories');
-
-const clone = require('clone');
-const sizeof = require('object-sizeof');
-const moment = require('moment');
-
-const c = {
-  l : console.log
-};
 
 const javascriptTimeAgo = require('javascript-time-ago');
 javascriptTimeAgo.locale(require('javascript-time-ago/locales/en'));
@@ -38,7 +27,7 @@ async function getRecentUploads(){
   for(const category of categories){
 
     if(logCaching == 'true'){
-      c.l(`Getting uploads for category: ${category.name}`);
+      console.log(`Getting uploads for category: ${category.name}`);
     }
 
     const searchQuery = {
@@ -63,7 +52,7 @@ async function getRecentUploads(){
   }
 
   if(logCaching == 'true'){
-    c.l(`Totalling an amount of ${recentUploadsAllCategories.length} for all recent uploads`);
+    console.log(`Totalling an amount of ${recentUploadsAllCategories.length} for all recent uploads`);
   }
 
   return recentUploadsAllCategories;
@@ -73,7 +62,7 @@ async function setRecentUploads(){
   let recentUploads  = await getRecentUploads();
 
   // calculate view periods for each upload
-  recentUploads = await Promise.all(recentUploads.map(async function(upload, index){
+  recentUploads = await Promise.all(recentUploads.map(async function(upload){
 
     // get all valid views per upload
     const uploadViews = await View.find({ upload, validity: 'real' }).select('createdAt');
@@ -98,8 +87,8 @@ async function setRecentUploads(){
   const response = await redisClient.setAsync(redisKey, JSON.stringify(recentUploads));
 
   if(logCaching == 'true'){
-    c.l(`REDIS RESPONSE FOR ${redisKey}: ${response}`);
-    c.l(`${redisKey} cached`);
+    console.log(`REDIS RESPONSE FOR ${redisKey}: ${response}`);
+    console.log(`${redisKey} cached`);
   }
 
 }

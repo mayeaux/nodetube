@@ -1,6 +1,5 @@
 const ReceivedEmail = require('../../models/index').ReceivedEmail;
 const Report = require('../../models/index').Report;
-const _ = require('lodash');
 
 const domainNameAndTLD = process.env.DOMAIN_NAME_AND_TLD;
 
@@ -35,7 +34,6 @@ exports.getReceivedEmails = async(req, res) => {
     title: 'Received Emails',
     receivedEmails
   });
-
 };
 
 exports.getReceivedEmail = async(req, res) => {
@@ -52,7 +50,6 @@ exports.getReceivedEmail = async(req, res) => {
     receivedEmail,
     email: receivedEmail
   });
-
 };
 
 exports.getReports = async(req, res) => {
@@ -64,5 +61,4 @@ exports.getReports = async(req, res) => {
     title: 'Reports',
     reports
   });
-
 };
