@@ -144,9 +144,9 @@ if(process.env.LIVESTREAM_APP == 'true')
   messagesObject = {};
 
   /** DECREMENT AMOUNT OF CONNECTED USERS ON CLOSE **/
-  ws.on('close', function(){
+  ws.on('close', function(code, reason){
 
-    console.log('closing socket');
+    console.log(`closing socket: ${code}, ${reason}`);
 
     connectedUsersAmount--;
 
