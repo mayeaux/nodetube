@@ -85,7 +85,7 @@ if(cluster.isMaster){
     }
 
     if(process.env.UPLOAD_TO_B2 == 'true'){
-      console.log(`UPLOAD TO BACKBLAZE ON, BUCKET: ${process.env.BACKBLAZE_BUCKET}\n`)
+      console.log(`UPLOAD TO BACKBLAZE ON, BUCKET: ${process.env.BACKBLAZE_BUCKET}\n`);
     }
 
     // site visit
