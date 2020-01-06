@@ -31,7 +31,7 @@ dotenv.load({ path: '.env.private' });
 dotenv.load({ path: '.env.settings' });
 
 const imapUsername = process.env.EMAIL_ADDRESS;
-const imapPassword = process.env.PEWTUBE_VERIFY_EMAIL_PASSWORD;
+const imapPassword = process.env.NODETUBE_VERIFY_EMAIL_PASSWORD;
 const imapHost = process.env.EMAIL_HOST;
 const imapPort = process.env.EMAIL_PORT;
 

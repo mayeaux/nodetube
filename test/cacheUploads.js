@@ -8,7 +8,7 @@ const sinon = require('sinon');
 
 var mongoose = require('mongoose');
 
-const mongoUri = 'mongodb://localhost:27017/prodpewd';
+const mongoUri = 'mongodb://localhost:27017/nodetube';
 
 /**
  * Connect to MongoDB.
