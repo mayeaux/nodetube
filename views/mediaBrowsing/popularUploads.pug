@@ -1,12 +1,12 @@
 extends ../layout
 
 block content
-    div
+    div.container
         include ../viewPartials/popularUploadsNavbar
 
     h1.center-block.text-center #{englishString} (#{viewAmountInPeriod})
 
-    p
+    div.container
 
         h2.center-block.text-center #{timeAgoEnglish}
 
