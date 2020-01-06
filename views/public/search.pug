@@ -26,25 +26,25 @@ block content
         div.col-sm-12.text-center(style="margin:0 auto;margin-top:50px;")
             if uploads
                 div.text-center.center-div
+                    div.dropdown(style="display:inline;margin-right:15px;")
+                        button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
+                            | #{orderByEnglishString} 
+                            span.caret
 
-                    include ../viewPartials/orderByDropdown
-
-                    include ../viewPartials/searchUploadsFileTypeDropdown
-
-                    include ../viewPartials/sensitivityFilterDropdown
-                br
-                br
-
-                include ../viewPartials/searchPagination
+                        ul.dropdown-menu.dropdown
+                            li
+                                a(href=`/search?searchQuery=${searchQuery}&orderBy=popular&mediaType=${mediaType}&searchType=${searchType}`) Popular
+                            li
+                                a(href=`/search?searchQuery=${searchQuery}&orderBy=newToOld&mediaType=${mediaType}&searchType=${searchType}`) New To Old
+                            li
+                                a(href=`/search?searchQuery=${searchQuery}&orderBy=oldToNew&mediaType=${mediaType}&searchType=${searchType}`) Old To New
 
                 p(style="text-decoration:underline;font-size:20px;") #{totalUploadsAmount} Results
 
                 if uploads && uploads.length > 0
                     each upload in uploads
                       if upload.uploader
-                          div.col-sm-4(style="text-align:center;height:360px")
-                              include ../viewPartials/uploadThumbnail
-
+                          div.col-sm-3(style="text-align:center;height:360px")
                               include ../viewPartials/uploadDetails
 
 
@@ -77,6 +77,10 @@ block content
                         br
                         br
                         p(style="font-size:20px") No Results Found
+
+        if uploads && uploads.length > 0
+            include ../viewPartials/searchPagination
+
 
 
     script.
@@ -122,5 +126,3 @@ block content
 
 
     include ../viewPartials/changeSensitivityFilterJs
-
-    include ../viewPartials/mouseOverJavascript
