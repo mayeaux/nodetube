@@ -1,11 +1,3 @@
-const fs = require('fs');
-const _ = require('lodash');
-const moment = require('moment');
-const Promise = require('bluebird');
-const randomstring = require('randomstring');
-const mkdirp = Promise.promisifyAll(require('mkdirp'));
-const mongoose = require('mongoose');
-
 const User = require('../../models/index').User;
 const Upload = require('../../models/index').Upload;
 const Comment = require('../../models/index').Comment;

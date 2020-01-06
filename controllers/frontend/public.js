@@ -64,7 +64,7 @@ exports.about = (req, res) => {
  * GET /tos
  * Terms of service page
  */
-exports.tos = async(req, res, next) => {
+exports.tos = async(req, res) => {
 
   res.render('public/tos', {
     title: 'Terms Of Service'
@@ -75,7 +75,7 @@ exports.tos = async(req, res, next) => {
  * GET /privacy
  * Privacy policy
  */
-exports.privacy = async(req, res, next) => {
+exports.privacy = async(req, res) => {
   // res.render('privacy', {
   //   title: 'Privacy'
   // })
