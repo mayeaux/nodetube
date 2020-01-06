@@ -1,6 +1,8 @@
 version: '3.1'
+
 services:
   node:
+    container_name: nodetube
     build:
       context: .
       dockerfile: Dockerfile
@@ -13,7 +15,7 @@ services:
       - ./uploads:/app/uploads
     environment:
       - REDIS_HOST=redis
-      - MONGODB_DOCKER_URI=mongodb://mongo:27017/nodetube
+      - MONGODB_DOCKER_URI=mongodb://nodetube-mongo:27017/nodetube
     depends_on:
       - redis
       - mongo
@@ -22,7 +24,7 @@ services:
       - nodetube-network
 
   mongo:
-    container_name: mongodb
+    container_name: nodetube-mongo
     image: mongo:3.6
     volumes:
       - ./data/db:/data/db
@@ -32,9 +34,11 @@ services:
       - nodetube-network
 
   redis:
+    container_name: nodetube-redis
     image: redis
     networks:
       - nodetube-network
+
 networks:
   nodetube-network:
     driver: bridge
