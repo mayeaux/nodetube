@@ -1,4 +1,4 @@
-const domainNameAndTLD = process.env.DOMAIN_NAME_AND_TLD;  
+const domainNameAndTLD = process.env.DOMAIN_NAME_AND_TLD;
 
 const brandName = process.env.INSTANCE_BRAND_NAME;
 
