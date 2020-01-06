@@ -15,7 +15,7 @@
     "start": "node --max-old-space-size=4096 app.js",
     "test": "mocha --reporter spec",
     "rebuild:sass": "npm rebuild node-sass",
-    "postinstall": "bower install && cpy .env.settings.sample . --rename .env.settings --no-overwrite && cpy .env.private.sample . --rename .env.private --no-overwrite ",
+    "postinstall": "cpy .env.settings.sample . --rename .env.settings --no-overwrite && cpy .env.private.sample . --rename .env.private --no-overwrite ",
     "eslint": "eslint ./",
     "eslint:fix": "./node_modules/.bin/eslint --fix .",
     "dev": "nodemon -e pug,js app.js",
@@ -23,7 +23,7 @@
     "cache": "node --max-old-space-size=8000 caching/runCaching.js",
     "both": "node --max-old-space-size=4096 app.js & node --max-old-space-size=8000 caching/runCaching.js",
     "nodemonboth": "nodemon --exec npm run both",
-    "installDeps": "npm install && bower install && cpy .env.settings.sample . --rename .env.settings --no-overwrite && cpy .env.private.sample . --rename .env.private --no-overwrite "
+    "installDeps": "npm install && cpy .env.settings.sample . --rename .env.settings --no-overwrite && cpy .env.private.sample . --rename .env.private --no-overwrite "
   },
   "dependencies": {
     "apicache": "^1.4.0",
@@ -31,7 +31,6 @@
     "bcrypt-nodejs": "^0.0.3",
     "bluebird": "^3.5.4",
     "body-parser": "^1.19.0",
-    "bower": "^1.8.8",
     "captchapng": "0.0.1",
     "chalk": "^1.1.3",
     "cheerio": "^0.22.0",
