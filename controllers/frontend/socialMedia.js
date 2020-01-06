@@ -5,7 +5,6 @@ exports.getOneOffSocialPost = async(req, res) => {
   return res.render('socialMedia/oneOffSocialPost', {
     title : 'Create Social Post'
   });
-
 };
 
 exports.getCreateSocialPost = async(req, res) => {
@@ -18,5 +17,4 @@ exports.getCreateSocialPost = async(req, res) => {
     title : 'Create Social Post',
     socialposts
   });
-
 };

@@ -1,13 +1,9 @@
-const Promise = require('bluebird');
 const express = require('express');
-const http = require('http');
 const url = require('url');
 const WebSocket = require('ws');
 const fs = require('fs');
 const https = require('https');
 const ws = require('ws');
-const path = require('path');
-const minimist = require('minimist');
 
 const User = require('../../models/index').User;
 
@@ -75,7 +71,6 @@ exports.onLiveAuth = async(req, res) => {
 var app;
 var server;
 let webSockets;
-let existingMessages;
 let connectedUsers;
 let connectedUsersAmount;
 var messagesObject;
@@ -149,7 +144,7 @@ if(process.env.LIVESTREAM_APP == 'true')
   messagesObject = {};
 
   /** DECREMENT AMOUNT OF CONNECTED USERS ON CLOSE **/
-  ws.on('close', function(code, reason){
+  ws.on('close', function(){
 
     console.log('closing socket');
 

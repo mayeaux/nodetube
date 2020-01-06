@@ -25,7 +25,6 @@ const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
 const getMediaType = require('../../lib/uploading/media');
 const { b2, bucket, hostUrl } = require('../../lib/uploading/backblaze');
 
-const mongooseHelpers = require('../../caching/mongooseHelpers');
 const ffmpegHelper = require('../../lib/uploading/ffmpeg');
 const uploadHelpers = require('../../lib/uploading/helpers');
 const backblaze = require('../../lib/uploading/backblaze');

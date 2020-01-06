@@ -80,7 +80,6 @@ exports.privacy = async(req, res, next) => {
   //   title: 'Privacy'
   // })
   res.send('public/privacy');
-
 };
 
 /**

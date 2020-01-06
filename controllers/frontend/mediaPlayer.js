@@ -1,9 +1,6 @@
 const _ = require('lodash');
-
 const redisClient = require('../../config/redis');
-
 const pagination = require('../../lib/helpers/pagination');
-
 const User = require('../../models/index').User;
 const Upload = require('../../models/index').Upload;
 const Comment = require('../../models/index').Comment;
@@ -35,8 +32,6 @@ function getParameterByName(name, url){
   if(!results[2])return'';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
-
-const mongooseHelpers = require('../../caching/mongooseHelpers');
 
 /**
  * GET /$user/$uploadUniqueTag

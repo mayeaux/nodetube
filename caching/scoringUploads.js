@@ -1,3 +1,5 @@
+/**  UNFINISHED **/
+
 function scoreReacts(upload){
   let totalScore = 0;
 

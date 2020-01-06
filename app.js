@@ -7,7 +7,6 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
 const chalk = require('chalk');
-const errorHandler = require('errorhandler');
 const lusca = require('lusca');
 const dotenv = require('dotenv');
 const MongoStore = require('connect-mongo')(session);
@@ -19,33 +18,21 @@ const expressValidator = require('express-validator');
 const expressStatusMonitor = require('express-status-monitor');
 const sass = require('node-sass-middleware');
 const timeout = require('connect-timeout');
-const sslRedirect = require('heroku-ssl-redirect');
 const favicon = require('serve-favicon');
-const Ddos = require('ddos');
 const useragent = require('express-useragent');
 var multipart = require('connect-multiparty');
-var apicache = require('apicache');
-var cors = require('cors');
 const Promise = require('bluebird');
-const ipfilter = require('express-ipfilter').IpFilter;
-const _ = require('lodash');
 const ngrok = require('ngrok');
 
 /** Code for clustering, running on multiple CPUS **/
 const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
 
-const winston = require('./config/winston');
-
 /** Load environment variables from .env file, where API keys and passwords are configured. **/
 dotenv.load({path: '.env.settings'});
 dotenv.load({path: '.env.private'});
 
 const amountOfProcesses = process.env.WEB_CONCURRENCY || numCPUs;
-
-if(process.env.CACHING_ON == 'true'){
-  const runcaching = require('./caching/runCaching');
-}
 
 // set upload server, upload url and save files directory
 const settings = require('./lib/helpers/settings');
@@ -91,10 +78,6 @@ if(cluster.isMaster){
       console.log(err.code);
     });
 
-    process.on('message', (message) => {
-      // console.log(`Process message: `, message);
-    });
-
     console.log(`FRONTEND SERVER: ${process.env.FRONTEND_SERVER}`);
 
     /** connect to MongoDB **/
@@ -119,10 +102,6 @@ if(cluster.isMaster){
     });
 
     console.log('Connected to ' + mongoUri);
-
-    if(process.env.EMAIL_LISTENER_ON == 'true'){
-      const emailListenerScript = require('./scripts/shared/saveUnseenEmails');
-    }
 
     /** create express app **/
     const app = express();
@@ -175,12 +154,6 @@ if(cluster.isMaster){
     app.use(express.static(path.join(__dirname, 'hls'), {}));
 
     app.use(missedFile404Middleware);
-
-    app.use(function(err, req, res, next){
-      console.log('THING');
-      console.log(err);
-      // logic
-    });
 
     app.use(session({
       cookie: {expires: new Date(2147483647000)},
@@ -310,7 +283,7 @@ if(cluster.isMaster){
 
     // take site down for maintenance
     if(process.env.DOING_MAINTENANCE == 'true'){
-      app.use('*', function(req, res, next){
+      app.use('*', function(req, res){
         return res.render('maintain', {
           title: 'Maintenance'
         });
@@ -339,7 +312,7 @@ if(cluster.isMaster){
     });
 
     // catch requests that didn't hit a path and 404
-    app.get('*', function(req, res, next){
+    app.get('*', function(req, res){
 
       res.status(404);
 
@@ -348,7 +321,7 @@ if(cluster.isMaster){
       });
     });
 
-    app.use(function(err, req, res, next){
+    app.use(function(err, req, res){
       console.log(err.stack);
       res.status(500);
       res.render('error/500');
