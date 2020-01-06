@@ -1,3 +1,7 @@
+const domainNameAndTLD = process.env.DOMAIN_NAME_AND_TLD;
+
+const brandName = process.env.INSTANCE_BRAND_NAME;
+
 var pathName = window.location.pathname;
 
 var regexp = /\/user\/(.*)\/live/;
@@ -10,9 +14,9 @@ webSocketUrl = 'ws://' + 'localhost:8443' + '/one2many';
 
 webSocketUrl = 'wss://' + 'localhost:8080' + '/stream/' + username;
 
-// webSocketUrl = 'wss://' + 'live.pewtube.com' + '/stream/' + username;
+// webSocketUrl = 'wss://' + `live.${domainNameAndTLD}` + '/stream/' + username;
 
-// webSocketUrl = 'wss://' + 'livestream.pew.tube:8443' + '/one2many';
+// webSocketUrl = 'wss://' + `livestream.${domainNameAndTLD}:8443` + '/one2many';
 
 console.log(webSocketUrl);
 
