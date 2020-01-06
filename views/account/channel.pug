@@ -46,7 +46,7 @@ block content
         }
 
 
-    div.channel-information
+    div.channel-information.container
         div.col-sm-12
             div.col-sm-4
                 h3 #{channel.channelName || channel.channelUrl}
@@ -149,22 +149,23 @@ block content
     br
     br
 
-    each upload in channel.uploads
-        div.col-sm-4(style="text-align:center;height:360px")
-            if isUser || isAdmin || ( user && user.role == 'moderator' )
-                div.editFileButtons
-                    form.editLink(action="/api/upload/delete" method="POST" style="display:inline-block")
-                        input(type='hidden', name='_csrf', value=_csrf)
-                        input(type='hidden', name='videoId', value=upload.uniqueTag)
-                        button.btn.btn-danger.delete-media Delete
-                    if isUser || isAdmin || user.role == 'moderator'
-                        a.editLink(href=`/user/${channel.channelUrl}/${upload.uniqueTag}/edit` style="display:inline-block")
-                            button.btn.btn-primary Edit
+    div.container
+        each upload in channel.uploads
+            div.col-sm-4(style="text-align:center;height:360px")
+                if isUser || isAdmin || ( user && user.role == 'moderator' )
+                    div.editFileButtons
+                        form.editLink(action="/api/upload/delete" method="POST" style="display:inline-block")
+                            input(type='hidden', name='_csrf', value=_csrf)
+                            input(type='hidden', name='videoId', value=upload.uniqueTag)
+                            button.btn.btn-danger.delete-media Delete
+                        if isUser || isAdmin || user.role == 'moderator'
+                            a.editLink(href=`/user/${channel.channelUrl}/${upload.uniqueTag}/edit` style="display:inline-block")
+                                button.btn.btn-primary Edit
 
 
-            include ../viewPartials/uploadThumbnail
+                include ../viewPartials/uploadThumbnail
 
-            include ../viewPartials/uploadDetails
+                include ../viewPartials/uploadDetails
 
     include ../viewPartials/adminSensitivityButtons
 
