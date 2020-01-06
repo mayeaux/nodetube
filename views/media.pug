@@ -2,16 +2,12 @@ extends layout
 
 block content
 
-
-    br
     div.center-block.text-center.col-sm-12
         if upload.status == 'processing'
             h2 Your upload #{upload.title} is processing. Check back in a couple minutes.
             br
             br
 
-        br
-        br
         if upload.fileType === 'video'
             div.display-div(style="min-width:50%;min-height:50%;margin:0 auto;")
                 // TODO: Sub out thumbnail here
@@ -48,6 +44,37 @@ block content
             // Upload Title
             //h2(class="upload-title-value" style="align-content:center;justify-content:normal;width:60%;margin: 0 auto;")=upload.title
             h2.balance-text(class="upload-title-value" style="text-wrap:balance;width:80%;margin:0 auto;")=upload.title
+
+            div.dropup.btn-group
+                a.dropdown-toggle(type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: black;")
+                    h2(style="margin-bottom: 25px; margin-left: 10px; color: #333333")
+                        i.fa.fa-ellipsis-h(style="cursor:pointer;")
+                div.dropdown-menu(aria-labelledby="dropdownMenuButton")
+                    li
+                        a.dropdown-item
+                            div.change-size-button(style="cursor:pointer")
+                                p.report-button(style="display: inline;")
+                                    i.share-icon.fa.fa-exclamation-triangle(aria-hidden="true" style="cursor:pointer;font-size:19px;")    
+                                | Report Content
+                    li
+                        a.dropdown-item
+                            div.change-size-button
+                                p.share-button(style="display: inline;")
+                                    i.share-icon.fa.fa-share(aria-hidden="true" style="cursor:pointer")
+                                | Embed Code
+                    li
+                        a.dropdown-item
+                            div.change-size-button
+                                p.download-button(style="display: inline;")
+                                    i.download-icon.fa.fa-download(aria-hidden="true" style="cursor:pointer")
+                                | Download
+                    if ( user && user.channelUrl == upload.uploader.channelUrl ) ||  ( user && user.role == 'admin' )            
+                        li
+                            a.dropdown-item(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}/edit`)
+                                div.change-size-button
+                                    p.download-button(style="display: inline;")
+                                        i.fa.fa-pencil(style="cursor:pointer")
+                                    | Edit
 
             br
             // uploader byline
