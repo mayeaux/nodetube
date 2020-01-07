@@ -1,13 +1,7 @@
 const Promise = require('bluebird');
 const _ = require('lodash');
-const User = require('../models/index').User;
 const View = require('../models/index').View;
-
 const Upload = require('../models/index').Upload;
-
-const clone = require('clone');
-const sizeof = require('object-sizeof');
-const moment = require('moment');
 
 const c = {
   l : console.log

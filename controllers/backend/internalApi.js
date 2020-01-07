@@ -1,3 +1,5 @@
+/** UNFINISHED **/
+
 const bluebird = require('bluebird');
 const Promise = require('bluebird');
 const request = bluebird.promisifyAll(require('request'), { multiArgs: true });
@@ -17,6 +19,8 @@ var concat = require('concat-files');
 var Busboy = require('busboy');
 const mkdirp = Promise.promisifyAll(require('mkdirp'));
 const mv = require('mv');
+
+const backblaze = require('../../lib/uploading/backblaze');
 
 const domainNameAndTLD = process.env.DOMAIN_NAME_AND_TLD;
 
@@ -558,6 +562,11 @@ exports.editUpload = async(req, res, next) => {
       await fs.move(req.files.filetoupload.path, `${saveAndServeFilesDirectory}/${req.user.channelUrl}/${upload.uniqueTag}-custom${fileExtension}`, {overwrite: true});
 
       upload.thumbnails.custom = `${upload.uniqueTag}-custom${fileExtension}`;
+
+      if(process.env.UPLOAD_TO_B2 == 'true'){
+
+        await backblaze.editploadThumbnailToB2(req.user.channelUrl, upload.uniqueTag, fileExtension, upload);
+      }
 
       // sendUploadThumbnailToB2(args)
 

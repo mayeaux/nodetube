@@ -1,6 +1,7 @@
-
 const stripe = require('../../lib/payments/stripe');
 const subscriptions = require('../../lib/helpers/subscriptions');
+
+const brandName = process.env.INSTANCE_BRAND_NAME;
 
 exports.purchasePlus = async function(req, res){
 
@@ -12,7 +13,7 @@ exports.purchasePlus = async function(req, res){
     const customer = await stripe.createCustomerWithToken(req.body.token.id, userDescriptor);
     console.log(`Customer created: ${customer.id}`);
 
-    const subscription = await stripe.subscribeUser(customer.id, 'PewTubePlus');
+    const subscription = await stripe.subscribeUser(customer.id, `${brandName}Plus`);
     console.log(`Subsription created: ${subscription.id}`);
 
     const updatedUser = await subscriptions.grantUserPlus(req.user);

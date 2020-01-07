@@ -12,7 +12,6 @@ exports.channelsByReacts = async(req, res) => {
   page = parseInt(page);
 
   const limit = 51;
-  const skipAmount = (page * limit) - limit;
 
   const startingNumber = pagination.getMiddleNumber(page);
   const numbersArray = pagination.createArray(startingNumber);
@@ -25,8 +24,6 @@ exports.channelsByReacts = async(req, res) => {
     let allChannels = await User.find({
       status: { $ne: 'restricted' }
     }).populate('subscribers uploads').lean().exec();
-
-    let updatedArray = [];
 
     for(let channel of allChannels){
 
@@ -86,7 +83,6 @@ exports.channelsBySubs = async(req, res) => {
   page = parseInt(page);
 
   const limit = 51;
-  const skipAmount = (page * limit) - limit;
 
   const startingNumber = pagination.getMiddleNumber(page);
   const numbersArray = pagination.createArray(startingNumber);

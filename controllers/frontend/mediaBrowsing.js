@@ -37,8 +37,6 @@ function getParameterByName(name, url){
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
-const mongooseHelpers = require('../../caching/mongooseHelpers');
-
 // todo: get out of controller
 let viewStats;
 let indexResponse = {};

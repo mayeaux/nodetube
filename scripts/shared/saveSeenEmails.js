@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const ReceivedEmail = require('../../models').ReceivedEmail;
 
 /** connect to MongoDB **/
-const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/april15pewtube';
+const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI;
 
 mongoose.Promise = global.Promise;
 
@@ -31,7 +31,7 @@ dotenv.load({ path: '.env.private' });
 dotenv.load({ path: '.env.settings' });
 
 const imapUsername = process.env.EMAIL_ADDRESS;
-const imapPassword = process.env.PEWTUBE_VERIFY_EMAIL_PASSWORD;
+const imapPassword = process.env.NODETUBE_VERIFY_EMAIL_PASSWORD;
 const imapHost = process.env.EMAIL_HOST;
 const imapPort = process.env.EMAIL_PORT;
 

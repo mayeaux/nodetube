@@ -1,17 +1,10 @@
 const pagination = require('../../lib/helpers/pagination');
 const _ = require('lodash');
-
-const User = require('../../models/index').User;
-const Upload = require('../../models/index').Upload;
 const Comment = require('../../models/index').Comment;
 const View = require('../../models/index').View;
-const SiteVisit = require('../../models/index').SiteVisit;
 const React = require('../../models/index').React;
-const Notification = require('../../models/index').Notification;
-const SocialPost = require('../../models/index').SocialPost;
-const Subscription = require('../../models/index').Subscription;
-
 const uploadHelpers = require('../../lib/helpers/settings');
+
 const uploadServer = uploadHelpers.uploadServer;
 
 /**

@@ -1,6 +1,3 @@
-const express = require('express');
-const path = require('path');
-
 /**
  * Controllers (route handlers).
  */
@@ -65,7 +62,7 @@ function fileHostRoutes(app){
   app.post('/api/channel/thumbnail/delete', internalApiController.deleteChannelThumbnail);
 
   // anything that misses, return a 404
-  app.get('*', function(req, res, next){
+  app.get('*', function(req, res){
 
     res.status(404);
 
@@ -110,7 +107,8 @@ function livestreamRoutes(app){
   // app.get(/\/user\/(.+)\/live\/staging/, livestreamController.getStaging);
   // app.get(/\/user\/(.+)\/live/, livestreamController.getLive);
 
-  app.get('*', function(req, res, next){
+  /** redirect all routes to the pewtube.com equivalent **/
+  app.get('*', function(req, res){
 
     const frontendAppUrl = `https://${domainNameAndTLD}`;
 
@@ -292,14 +290,14 @@ function frontendRoutes(app){
   app.post('/admin/siteVisitors', authMiddleware.adminAuth, adminBackendController.postSiteVisitors);
   app.post('/admin/notifications', authMiddleware.adminAuth, adminBackendController.sendNotification);
 
-  app.get('/debug', async function(req, res, next){
+  app.get('/debug', async function(req, res){
     return res.render('error/debug', {
       title: 'Debug'
     });
   });
 
   // anything that misses, return a 404
-  app.get('*', function(req, res, next){
+  app.get('*', function(req, res){
 
     res.status(404);
 
