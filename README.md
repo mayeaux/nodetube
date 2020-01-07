@@ -37,8 +37,8 @@ git clone https://github.com/mayeaux/nodetube
 # Enter the nodetube folder that was just created
 cd nodetube
 
-# Install backend and frontend dependencies
-npm run installDeps
+# Install Node modules
+npm install
 
 # Then simply start your app
 npm start
