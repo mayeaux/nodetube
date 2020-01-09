@@ -56,11 +56,26 @@ block content
                 if channel.plan == 'plus'
                     span.pewtube-pro PLUS
 
+                div.row(style="padding-right: 10px; padding-left: 10px;")
+                      div.col-md-4.col-xs-4.text-center 
+                          h4 #{userUploadAmount}
+                          p.font-weight-bold Uploads
+                      div.col-md-4.col-xs-4.text-center
+                          h4 #{channel.totalViews}
+                          p.font-weight-bold Views
+                      div.col-md-4.col-xs-4.text-center
+                          if channel.receivedSubscriptions
+                              h4 #{channel.receivedSubscriptions.length}
+                              p.font-weight-bold Subs
+                          else
+                              h4 0
+                              p.font-weight-bold Subs
+
                 if user.channelUrl != channel.channelUrl
                     if alreadySubbed
                         button.subscribe.btn.btn-danger.center-block(style="border-radius:4px; margin-top: 20px;") Unsubscribe 
                     else
-                        button.subscribe.btn.btn-lg.btn-success(style="border-radius:4px; margin-top: 20px;") Subscribe
+                        button.subscribe.btn.btn-lg.btn-success.center-block(style="border-radius:4px; margin-top: 20px; margin-bottom: 5px;") Subscribe
                     
                 div.btn-group.text-center(role="group" aria-label="delete-controls" style="margin-left: 7%; margin-right: auto; margin-bottom: 20px;")
                     if user && ( user.role == 'admin' || user.role == 'moderator') && channel.status !== 'restricted'
@@ -80,8 +95,6 @@ block content
             if user.channelUrl == channel.channelUrl
                 div.list-group
                     a.list-group-item.list-group-item-action(href="/upload") Upload
-                    a.list-group-item.list-group-item-action(href="/notifications") Notifications
-                        span.badge.badge-pill (#{unreadNotifAmount})
                     a.list-group-item.list-group-item-action(href="/account") Account
             div.card(style="margin-bottom: 10px;")
                 div.card-body 
@@ -96,32 +109,8 @@ block content
                                     p= ip
                       
         div.col-md-10     
-            div.row
-                div.col-md-3.col-xs-4.text-center
-                    i.fas.fa-file-upload.fa-3x
-                    div.card-title
-                        h2 #{userUploadAmount}
-                        p uploads
-                div.col-md-3.col-xs-4.text-center
-                    i.fas.fa-eye.fa-3x
-                    div.card-title
-                        h2 #{channel.totalViews}
-                        p views
-                if channel.receivedSubscriptions
-                    div.col-md-3.col-xs-4.text-center
-                        i.fas.fa-users.fa-3x
-                        div.card-title
-                            h2 #{channel.receivedSubscriptions.length}
-                            p subscribers
-                else
-                    div.col-md-3.col-xs-4.text-center
-                        i.fas.fa-file-upload
-                        div.card-title
-                            h2 0
-                            p subscribers
-            hr
-
             div.float-left(style="margin-bottom: 10px")
+                h4.font-weight-bold SORT BY
                 div.dropdown(style="display:inline;margin-right:15px;")
                     button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown')
                         | #{orderByEnglishString} 
@@ -129,11 +118,11 @@ block content
 
                     ul.dropdown-menu.dropdown
                         li
-                            a(href=`/user/${channel.channelUrl}?orderBy=popular`) Popular
+                            a(href=`/user/${channel.channelUrl}?orderBy=popular`) Most Popular
                         li
-                            a(href=`/user/${channel.channelUrl}?orderBy=newToOld`) New To Old
+                            a(href=`/user/${channel.channelUrl}?orderBy=newToOld`) Newest First
                         li
-                            a(href=`/user/${channel.channelUrl}?orderBy=oldToNew`) Old To New
+                            a(href=`/user/${channel.channelUrl}?orderBy=oldToNew`) Oldest First
                         li
                             a(href=`/user/${channel.channelUrl}?orderBy=alphabetical`) Alphabetical
 
@@ -223,9 +212,6 @@ block content
                 script.
                   var myTextEl = document.getElementById('descriptionText');
                   myTextEl.innerHTML = Autolinker.link(myTextEl.innerHTML);
-
-
-
 
                 script.
                   $('.delete-media').on('click', function (e) {

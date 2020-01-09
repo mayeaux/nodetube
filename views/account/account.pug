@@ -138,6 +138,8 @@ block content
 
               div.list-group
                   a.list-group-item(href=`/user/${user.channelUrl}`) Channel Page
+                  a.list-group-item.list-group-item-action(href="/notifications") Notifications
+                      span.badge.badge-pill (#{unreadNotifAmount})
                   a.list-group-item(href="/account/viewHistory") View History
                   a.list-group-item(href="/account/reactHistory") React History
                   a.list-group-item(href="/account/livestreaming") Livestreaming
