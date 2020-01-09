@@ -171,7 +171,7 @@ exports.reacts = async(req, res) => {
     });
   }
 
-  const reacts = await React.find({}).populate({path: 'user upload', populate: {path: 'uploader'}});
+  const reacts = await React.find({}).populate({path: 'user upload', populate: {path: 'uploader'}}).sort({ _id : -1  });
 
   console.log(reacts);
 
