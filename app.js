@@ -152,11 +152,7 @@ if(cluster.isMaster){
       dest: path.join(__dirname, 'public')
     }));
 
-    if(process.env.NODE_ENV == 'development'){
-      app.use(logger('dev'));
-    } else if(process.env.NODE_ENV == 'production'){
-      app.use(logger('dev'));
-    }
+
 
     if(process.env.SAVE_AND_SERVE_FILES == 'true'){
       app.use('/uploads', express.static(saveAndServeFilesDirectory, {maxAge: 31557600000}));
@@ -174,6 +170,14 @@ if(cluster.isMaster){
     app.use(express.static(path.join(__dirname, 'public'), {maxAge: 31557600000}));
 
     app.use(express.static(path.join(__dirname, 'hls'), {}));
+
+    /** Putting logger after express.static to suppress static logs,
+     * put it before express.static to see static GET requests come through**/
+    if(process.env.NODE_ENV == 'development'){
+      app.use(logger('dev'));
+    } else if(process.env.NODE_ENV == 'production'){
+      app.use(logger('dev'));
+    }
 
     app.use(missedFile404Middleware);
 
