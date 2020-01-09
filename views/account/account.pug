@@ -103,270 +103,162 @@ block content
   //  // Display the payment button.
   //  input(type='image', name='submit', src='https://www.paypalobjects.com/webstatic/en_US/i/btn/png/btn_subscribe_113x26.png', alt='Subscribe')
   //  img(alt='', width='1', height='1', src='https://www.paypalobjects.com/en_US/i/scr/pixel.gif')
-
-
-
-  div.row
-    div.col-sm-2
-      h4
-        a(href=`/user/${user.channelUrl}`) Channel Page
-    div.col-sm-2
-      h4
-        a(href="/account/viewHistory") View History
-    div.col-sm-2
-      h4
-        a(href="/account/reactHistory") React History
-    //div.col-sm-2
-    //      h4
-    //        a(href="/" + `${user.channelUrl}` +  "/playlists") Playlists
-    div.col-sm-2
-      h4
-        a(href="/account/livestreaming") Livestreaming
-        //a.livestream-button Livestreaming
-        //a.livestreaming-link(href=`/user/${user.channelUrl}/live/staging`) Livestreaming
-    div.col-sm-2
-      h4 Credit ($#{user.credit/100})
-    div.col-sm-2
-      h4 Earnings ($#{user.receivedCredit / 100})
-    //div.col-sm-2
-    //  h3
-    //    a(href=`/account/creditHistory`) Credit History
-
-  p
-  hr
-
-
-  h2.text-center Channel Overview
-  hr
-
-  // TODO: export a variable plus_enabled if user enables payments
-  if plus_enabled
-    h3.text-center(style="margin-bottom:16px") NodeTube Plus
-    div.pt-plus.center-div.text-center
-      if user.plan == 'plus'
-        p Thank you so much for subscribing!
-        p This area is currently being expanded
-        p In the meantime enjoy your new features:
-        h4 Automatic YouTube backup functionality, unlisted uploads, private uploads, 2GB upload size
-      else
-        p(style="white-space:pre-line;margin-bottom:19px;").
-          - Upload file-size limit raised to 2GB
-
-          - Unlisted, private and scheduled uploads
-
-          - Livestream video, audio or screensharing
-
-          - Built in monetization via direct payments (COMING SOON)
-
-          - Access to NodeTube Recording Studio (COMING SOON)
-
-          - One-click complete YouTube backup (including future uploads)
-
-          - Early access to all beta features
-
-          - $4.95/month, cancel at any time
-
-        button.stripe-button-el#customButton(type="submit" class="stripe-button-el" style="visibility: visible;")
-          span(style="display: block; min-height: 30px;") Buy Now
-
-      br
-      br
-
-
-
-  if user.plan == 'plus' || user.youtubeChannelId
-    h3.ytBackup
-      br
-      br
-      br
-      h3.text-center YouTube Backup
-      br
-
-      //form
-      //  .form-group
-      //    .col-sm-offset-3.col-sm-7
-      //      a.btn.btn-block.btn-google.btn-social(href='/auth/youtube')
-      //        i.fa.fa-youtube
-      //        | Sign in with YouTube
-      //
-      //br
-      //br
-
-    if !user.youtubeChannelId
-      form.form-horizontal
-        .form-group
-          label.col-sm-3.control-label(for='youtubeChannelId') YouTube Username Or Channel ID
-          .col-sm-7
-            input.form-control(type='youtubeChannelId', name='youtubeChannelId', id='youtubeChannelId')
-        .form-group
-          .col-sm-offset-3.col-sm-4
-            button.btn.btn-primary.saveChannelId(type='submit')
-              i.fa.fa-pencil
-              | Save Channel Username
-
-
-        br
-        div.form-group.disabled
-          label.col-sm-3.control-label(for='youtubeChannelId') Status
-          .col-sm-7.disabled
-            input.disable(type='checkbox', disabled='', data-toggle='toggle')
-
-    else
-      div(style="text-align:center")
-        label.control-label(for='updateStatus') YouTube Channel Id
-        h5 #{user.youtubeChannelId}
-        br
-
-        label.control-label(for='updateStatus') Status
-        br
-        if user.userSettings.backupOn == false
-          input(id="toggle-event" type='checkbox', data-toggle='toggle')
-        else if user.userSettings.backupOn == true
-          input(id="toggle-event" type='checkbox', checked='', data-toggle='toggle')
-        div(id="console-event")
-
-  br
-
-  h3.text-center Channel Information
-    br
-    br
-    if !user.channelUrl
+  if !user.channelUrl
       div.text-center
-        h4 Upgrade! Create a new account and you can select a custom username!
+          h4 Upgrade! Create a new account and you can select a custom username!
+
+  else
+      div.row
+          div.col-md-2.bg-white
+              div.my-5
+                  h3.text-center.text-muted Your Profile
+                  br
+                  if user.customThumbnail
+                      img(src=`${uploadServer}/${user.channelUrl}/${user.customThumbnail}` width="120px" height="120px" class="img-circle center-block")
+                  else
+                      img(src=`/images/default-user-icon.jpg` width="120px" height="120px" class="img-circle center-block")
+                                              
+                  h3.text-center #{user.channelUrl}
+                  if user.verified == true
+                      img(src="/images/verified.jpg" width="25px" height="25px" style="margin-left:3px;margin-top:-2px;margin-right:5px;")
+                  if user.plan == 'plus'
+                      span.pewtube-pro PLUS
+                    
+                  div.row(style="padding-right: 10px; padding-left: 10px;")
+                      div.col-md-4.col-xs-4.text-center 
+                          h4 #{user.receivedSubscriptions.length}
+                          p.text-muted Subs
+                      div.col-md-4.col-xs-4.text-center
+                          h4 $#{user.credit/100}
+                          p.text-muted Credit
+                      div.col-md-4.col-xs-4.text-center
+                          h4 $#{user.receivedCredit / 100}
+                          p.text-muted Revenue
+
+              div
+                  ul.list-group
+                      li.list-group-item
+                          a(href=`/user/${user.channelUrl}`) Channel Page
+                      li.list-group-item
+                          a(href="/account/viewHistory") View History
+                      li.list-group-item
+                          a(href="/account/reactHistory") React History
+                      li.list-group-item
+                        a(href="/account/livestreaming") Livestreaming
+
+          div.col-md-6.col-sm-12
+              h3.text-center.text-muted Edit Your Account Details
+              br
+              //form.upload-form(role="form" method="POST" enctype="multipart/form-data")
+              form.update-user-details-form.text-center(role="form" method="POST" enctype="multipart/form-data" action=`${thumbnailServer}/account/profile`)
+                  input(type="hidden" name="uploadToken" value=`${user.uploadToken}`)
+
+                  h4 Channel Display Name
+                  div.form-group
+                      input.form-control.center-block(type='text', name='channelName', id='channelName', minlength=3, maxlength=25, value=user.channelName style="width: 50%")
+
+                  h4 Channel Description
+                  div.form-group
+                      textarea(id="description" name="description" maxlength='500' rows="7" cols="70") #{user.channelDescription}
+
+                  h4 Channel Thumbnail
+                  div.form-group
+                      input.center-block.text-center(class="upload-file" data-max-size="500000000" type="file" name="filetoupload" accept="image/*")
+                      p.help-block Thumbnails up to 302 x 168 pixels are accepted.
+
+                  button.btn.btn.btn-primary(type='submit')
+                        i.fa.fa-pencil
+                        | Update Profile
+ 
+          // TODO: export a variable plus_enabled if user enables payments
+          div.col-md-4
+              if plusEnabled
+                  h3.text-center.text-muted NodeTube Plus
+                  br
+                  div.card.alert-success
+                    div.pt-plus.center-div.text-center
+                      if user.plan == 'plus'
+                        p Thank you so much for subscribing!
+                        p This area is currently being expanded
+                        p In the meantime enjoy your new features:
+                        h4 Automatic YouTube backup functionality, unlisted uploads, private uploads, 2GB upload size
+                      else
+                        p(style="white-space:pre-line;margin-bottom:19px;").
+                          - Upload file-size limit raised to 2GB
+
+                          - Unlisted, private and scheduled uploads
+
+                          - Livestream video, audio or screensharing
+
+                          - Built in monetization via direct payments (COMING SOON)
+
+                          - Access to NodeTube Recording Studio (COMING SOON)
+
+                          - One-click complete YouTube backup (including future uploads)
+
+                          - Early access to all beta features
+
+                          - $4.95/month, cancel at any time
+
+                        button.stripe-button-el#customButton(type="submit" class="stripe-button-el" style="visibility: visible;")
+                          span(style="display: block; min-height: 30px;") Buy Now
+
+                  if user.plan == 'plus' || user.youtubeChannelId
+                    h3.ytBackup
+                      br
+                      br
+                      br
+                      h3.text-center YouTube Backup
+                      br
+
+                      //form
+                      //  .form-group
+                      //    .col-sm-offset-3.col-sm-7
+                      //      a.btn.btn-block.btn-google.btn-social(href='/auth/youtube')
+                      //        i.fa.fa-youtube
+                      //        | Sign in with YouTube
+                      //
+                      //br
+                      //br
+
+                    if !user.youtubeChannelId
+                      form.form-horizontal
+                        .form-group
+                          label.col-sm-3.control-label(for='youtubeChannelId') YouTube Username Or Channel ID
+                          .col-sm-7
+                            input.form-control(type='youtubeChannelId', name='youtubeChannelId', id='youtubeChannelId')
+                        .form-group
+                          .col-sm-offset-3.col-sm-4
+                            button.btn.btn-primary.saveChannelId(type='submit')
+                              i.fa.fa-pencil
+                              | Save Channel Username
+
+
+                        br
+                        div.form-group.disabled
+                          label.col-sm-3.control-label(for='youtubeChannelId') Status
+                          .col-sm-7.disabled
+                            input.disable(type='checkbox', disabled='', data-toggle='toggle')
+
+                    else
+                      div(style="text-align:center")
+                        label.control-label(for='updateStatus') YouTube Channel Id
+                        h5 #{user.youtubeChannelId}
+                        br
+
+                        label.control-label(for='updateStatus') Status
+                        br
+                        if user.userSettings.backupOn == false
+                          input(id="toggle-event" type='checkbox', data-toggle='toggle')
+                        else if user.userSettings.backupOn == true
+                          input(id="toggle-event" type='checkbox', checked='', data-toggle='toggle')
+                        div(id="console-event")
 
 
 
-  //form.upload-form(role="form" method="POST" enctype="multipart/form-data")
-  form.update-user-details-form.form-horizontal(role="form" method="POST" enctype="multipart/form-data" action=`${thumbnailServer}/account/profile`)
-    input(type="hidden" name="uploadToken" value=`${user.uploadToken}`)
-    .form-group
-      label.col-sm-3.control-label(for='channelName') Channel Username
-      .col-sm-7
-        h4= user.channelUrl
-
-    .form-group
-      label.col-sm-3.control-label(for='channelName') Channel Display Name
-      .col-sm-7
-        input.form-control(type='text', name='channelName', id='channelName', minlength=3, maxlength=25, value=user.channelName)
-
-    .form-group
-      label.col-sm-3.control-label(for='channelName') Channel Description
-      .col-sm-7
-        textarea(id="description" name="description" maxlength='500' rows="7" cols="70") #{user.channelDescription}
-
-    // UPLOAD FORM IF NO THUMBNAIL
-    if !user.thumbnailUrl
-      .form-group
-        label.col-sm-3.control-label(for='channelName') Channel Thumbnail
-        .col-sm-7
-          // FILE INPUT BUTTON
-          input.center-block.text-center(class="upload-file" data-max-size="500000000" type="file" name="filetoupload" accept="image/*")
-
-      div.form-group
-        div.col-sm-3.
-        p.col-sm-7(style="white-space:pre-line;margin-top:-15px;margin-bottom:-1px;").
-          Thumbnail dimensions:
-          width: up to 302px,
-          height: 168px
-
-    .form-group
-      .col-sm-offset-3.col-sm-4
-        button.btn.btn.btn-primary(type='submit')
-          i.fa.fa-pencil
-          | Update Profile
-
-
-  // DISPLAY THUMBNAIL IF IT EXISTS
-
-  if user.thumbnailUrl || user.customThumbnail
-    br
-    br
-    div.col-sm-12(style="margin-bottom:100px")
-
-      h3.text-center Channel Thumbnail
-      br
-      // TODO: Sub out thumbnail here
-
-      if user.customThumbnail
-        img.center-block.text-center(src=`${uploadServer}/${user.channelUrl}/${user.customThumbnail}` width="256px" height="168px")
-      else
-        img.center-block.text-center(src=`${uploadServer}/${user._id}/unique.png` width="256px" height="168px")
-
-
-      form.delete-user-thumbnail-form(action=`${thumbnailServer}/api/channel/thumbnail/delete` method="POST")
-        input(type='hidden', name='_csrf', value=_csrf)
-        input(type="hidden" name="channelUrl" value=`${user.channelUrl}`)
-        input(type="hidden" name="uploadToken" value=`${user.uploadToken}`)
-
-        button.btn.btn.btn-danger.center-block.text-center(type='submit' style="margin-top:20px")
-          i.fa.fa-pencil
-          | Delete
-
-  if user.email && user.emailConfirmed
-    h3.text-center Confirmed Email
-      br
-    form.form-horizontal(action='/account/email', method='POST')
-      input(type='hidden', name='_csrf', value=_csrf)
-      .form-group
-        label.col-sm-3.control-label(for='email') Email Address
-        .col-sm-7
-          h5 #{user.email}
-
-  if user.email && !user.emailConfirmed
-    h3.text-center Save Email
-      br
-    form.form-horizontal(action='/account/email', method='POST')
-      input(type='hidden', name='_csrf', value=_csrf)
-      .form-group
-        label.col-sm-3.control-label(for='email') Email Address
-        .col-sm-7
-          input.form-control(type='email', name='email', id='email' value=`${user.email}`)
-      .form-group
-        .col-sm-offset-3.col-sm-4
-          button.btn.btn-primary(type='submit')
-            i.fa.fa-envelope
-            | Resend Confirmation Email
-
-  if !user.email
-    h3.text-center Save Email
-      br
-    form.form-horizontal(action='/account/email', method='POST')
-      input(type='hidden', name='_csrf', value=_csrf)
-      .form-group
-        label.col-sm-3.control-label(for='email') Email Address
-        .col-sm-7
-          input.form-control(type='email', name='email', id='email')
-      .form-group
-        .col-sm-offset-3.col-sm-4
-          button.btn.btn-primary(type='submit')
-            i.fa.fa-envelope
-            | Send Confirmation Email
-  br
-  h3.text-center Change Password
-  br
-
-  form.form-horizontal(action='/account/password', method='POST')
-    input(type='hidden', name='_csrf', value=_csrf)
-    .form-group
-      label.col-sm-3.control-label(for='password') New Password
-      .col-sm-7
-        input.form-control(type='password', name='password', id='password')
-    .form-group
-      label.col-sm-3.control-label(for='confirmPassword') Confirm Password
-      .col-sm-7
-        input.form-control(type='password', name='confirmPassword', id='confirmPassword')
-    .form-group
-      .col-sm-offset-3.col-sm-4
-        button.btn.btn-primary(type='submit')
-          i.fa.fa-lock
-          | Change Password
+  
 
   script.
-
-
-    //.delete-user-thumbnail-form
-
-
     // capture submit
     $('.update-user-details-form').submit(function (event) {
 
@@ -630,4 +522,6 @@ block content
 
       })
     })
+
+
 

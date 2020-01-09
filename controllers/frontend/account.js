@@ -538,6 +538,8 @@ exports.getSignup = (req, res) => {
 exports.getAccount = async(req, res) => {
   const stripeToken = process.env.STRIPE_FRONTEND_TOKEN;
 
+  const plusEnabled = process.env.PLUS_ENABLED == 'true';
+
   // give user an upload token
   if(!req.user.uploadToken){
     const uploadToken = randomstring.generate(25);
@@ -554,7 +556,8 @@ exports.getAccount = async(req, res) => {
     title: 'Account Management',
     stripeToken,
     uploadServer,
-    thumbnailServer
+    thumbnailServer,
+    plusEnabled
   });
 };
 
