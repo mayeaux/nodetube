@@ -25,7 +25,6 @@ const Promise = require('bluebird');
 const ngrok = require('ngrok');
 const commandExists = require('command-exists');
 
-
 const jsHelpers = require('./lib/helpers/js-helpers');
 
 /** FOR FINDING ERRANT LOGS **/
@@ -87,6 +86,7 @@ if(cluster.isMaster){
 
     const customMiddleware = require('./middlewares/custom');
     const widgetMiddleware = require('./middlewares/shared/widgets');
+    const socialRedirectMiddleware = require('./middlewares/shared/socialRedirects');
 
     const missedFile404Middleware = require('./middlewares/shared/missedFile404Middleware');
 
@@ -153,8 +153,6 @@ if(cluster.isMaster){
       src: path.join(__dirname, 'public'),
       dest: path.join(__dirname, 'public')
     }));
-
-
 
     if(process.env.SAVE_AND_SERVE_FILES == 'true'){
       app.use('/uploads', express.static(saveAndServeFilesDirectory, {maxAge: 31557600000}));
@@ -257,6 +255,9 @@ if(cluster.isMaster){
     for(const middleware in widgetMiddleware){
       app.use(widgetMiddleware[middleware]);
     }
+
+    // run all the widget middleware software which adds credentials to res.local
+    app.use(socialRedirectMiddleware);
 
     /** META TAGS FOR SOCIAL **/
     app.use(async function(req, res, next){
@@ -383,8 +384,8 @@ if(cluster.isMaster){
       .then(function(command){
         // ffmpeg installed
       }).catch(function(){
-      console.log('WARNING: ffmpeg IS NOT INSTALLED. Video uploads will fail.')
-    });
+        console.log('WARNING: ffmpeg IS NOT INSTALLED. Video uploads will fail.');
+      });
 
     module.exports = app;
 
