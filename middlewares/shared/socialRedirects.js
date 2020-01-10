@@ -17,6 +17,8 @@ async function middleware(req, res, next){
     res.redirect('https://discord.gg/ejGah8H');
   }
 
+  next();
+
 }
 
 module.exports = middleware;
