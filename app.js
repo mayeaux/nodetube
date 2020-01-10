@@ -152,8 +152,6 @@ if(cluster.isMaster){
       dest: path.join(__dirname, 'public')
     }));
 
-
-
     if(process.env.SAVE_AND_SERVE_FILES == 'true'){
       app.use('/uploads', express.static(saveAndServeFilesDirectory, {maxAge: 31557600000}));
     }
