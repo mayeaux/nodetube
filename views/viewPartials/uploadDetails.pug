@@ -1,5 +1,6 @@
 div.card()         
-    include ../viewPartials/uploadThumbnail         
+        div.card-img-top
+            include ../viewPartials/uploadThumbnail         
         div.card-body
             div.card-title
                 a(href=`/user/${upload.uploader.channelUrl || channelUrl}/${upload.uniqueTag}` style="color:black") 

@@ -1,23 +1,23 @@
-div.card-img-top
-        a.title-anchor(href=`/user/${upload.uploader.channelUrl || channelUrl}/${upload.uniqueTag}` style="color:black")
-            div.center-block(style="width: 368px; height: 207px; background-color: black")
-                if upload.thumbnails && upload.thumbnails.custom
-                    img.preview-image(src=`${uploadServer}/${channelUrl || upload.uploader.channelUrl}/${upload.thumbnails.custom}` style="width:inherit;max-width:302px;")
 
-                else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.generated
-                    img.preview-image(src=`${uploadServer}/${channelUrl || upload.uploader.channelUrl}/${upload.thumbnails.generated}` style="width:inherit;max-width:302px;")
+a.title-anchor(href=`/user/${upload.uploader.channelUrl || channelUrl}/${upload.uniqueTag}` style="color:black")
+    div.center-block(style="width: 368px; height: 207px; background-color: black")
+        if upload.thumbnails && upload.thumbnails.custom
+            img.preview-image(src=`${uploadServer}/${channelUrl || upload.uploader.channelUrl}/${upload.thumbnails.custom}` style="margin-left: auto; width: auto; height: 207px;")
 
-                else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.medium
-                    img.preview-image(src=`${uploadServer}/${channelUrl || upload.uploader.channelUrl}/${upload.thumbnails.medium}` style="width:inherit;max-width:302px;")
+        else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.generated
+            img.preview-image(src=`${uploadServer}/${channelUrl || upload.uploader.channelUrl}/${upload.thumbnails.generated}` style="margin-left: auto; width: auto; height: 207px;")
 
-                else if upload.fileType == 'video' && !upload.thumbnailUrl
-                    img.preview-image(src="/no_img.png" style="width:inherit;max-width:302px;")
+        else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.medium
+            img.preview-image(src=`${uploadServer}/${channelUrl || upload.uploader.channelUrl}/${upload.thumbnails.medium}` style="margin-left: auto; width: auto; height: 207px;")
 
-                else if upload.fileType == 'image'
-                    img.preview-image(src=`${uploadServer}/${channelUrl|| upload.uploader.channelUrl }/${upload.uniqueTag}${upload.fileExtension}` style="margin-left: auto; width: auto; height: 207px;")
+        else if upload.fileType == 'video' && !upload.thumbnailUrl
+            img.preview-image(src="/no_img.png" style="margin-left: auto; width: auto; height: 207px;")
 
-                else if upload.fileType == 'audio'
-                    img.preview-image(src='/images/audio.svg' style="width:inherit;max-width:302px;")
+        else if upload.fileType == 'image'
+            img.preview-image(src=`${uploadServer}/${channelUrl|| upload.uploader.channelUrl }/${upload.uniqueTag}${upload.fileExtension}` style="margin-left: auto; width: auto; height: 207px;")
 
-                else if upload.fileType == 'unknown'
-                    img.preview-image(src='/images/no_img.png' style="width:inherit;max-width:302px;")
+        else if upload.fileType == 'audio'
+            img.preview-image(src='/images/audio.svg' style="margin-left: auto; width: auto; height: 207px;")
+
+        else if upload.fileType == 'unknown'
+            img.preview-image(src='/images/no_img.png' style="margin-left: auto; width: auto; height: 207px;")
