@@ -2,6 +2,14 @@ extends layout
 
 block content
 
+    style.
+        .pending-string {
+            max-width: 400px;
+            margin: 0 auto;
+            margin-top: 30px;
+        }
+        }
+
 
     br
     div.center-block.text-center.col-sm-12
@@ -48,6 +56,10 @@ block content
             // Upload Title
             //h2(class="upload-title-value" style="align-content:center;justify-content:normal;width:60%;margin: 0 auto;")=upload.title
             h2.balance-text(class="upload-title-value" style="text-wrap:balance;width:80%;margin:0 auto;")=upload.title
+
+            if upload.visibility == 'pending'
+                h3.pending-string Your video is currently pending moderator approval. If it's still pending after several minutes please contact a mod at
+                    a(href="/discord")  Discord
 
             br
             // uploader byline
