@@ -152,7 +152,7 @@ exports.getChannel = async(req, res) => {
 
     let viewerIsMod = Boolean(req.user && (req.user.role == 'admin' || req.user.role == 'moderator'));
 
-    let viewerIsOwner = req.user.channelUrl == user.channelUrl;
+    let viewerIsOwner = (req.user && req.user.channelUrl) == user.channelUrl;
 
     let viewerIsAdminOrMod = false;
     if(req.user && (req.user.role == 'admin' || req.user.role == 'moderator')){
