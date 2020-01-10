@@ -71,7 +71,7 @@ block content
                               h4 0
                               p.font-weight-bold Subs
 
-                if user.channelUrl != channel.channelUrl
+                if user && user.channelUrl != channel.channelUrl
                     if alreadySubbed
                         button.subscribe.btn.btn-danger.center-block(style="border-radius:4px; margin-top: 20px;") Unsubscribe 
                     else
@@ -92,7 +92,7 @@ block content
                         if user.role == 'admin'
                             button.delete-ips.btn.btn-warning Undelete All Accounts / Unban All Ips
 
-            if user.channelUrl == channel.channelUrl
+            if user && user.channelUrl == channel.channelUrl
                 div.list-group
                     a.list-group-item.list-group-item-action(href="/upload") Upload
                     a.list-group-item.list-group-item-action(href="/account") Account
