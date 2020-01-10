@@ -384,8 +384,10 @@ if(cluster.isMaster){
       .then(function(command){
         // ffmpeg installed
       }).catch(function(){
-        console.log('WARNING: ffmpeg IS NOT INSTALLED. Video uploads will fail.');
+        console.log('WARNING: ffmpeg IS NOT INSTALLED. Video uploads will fail. \n');
       });
+
+    if(process.env.MODERATION_UPDATES_TO_DISCORD == 'true') console.log('SENDING MODERATION REQUESTS TO DISCORD \n')
 
     module.exports = app;
 
