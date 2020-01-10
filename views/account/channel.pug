@@ -1,8 +1,5 @@
 extends ../layout
 
-
-
-
 block content
     style.
         .editLink  {
@@ -45,393 +42,368 @@ block content
             transform: translateY(-2px);
         }
 
-
-    div.channel-information.container
-        div.col-sm-12
-            div.col-sm-4
-                h3 #{channel.channelName || channel.channelUrl}
-                    if channel.verified == true
-                        img(src="/images/verified.jpg" width="25px" height="25px" style="margin-left:3px;margin-top:-2px;margin-right:5px;")
-                    if channel.plan == 'plus'
-                        span.pewtube-pro PLUS
-            div.user-stats.col-sm-6(style="margin-top:14px")
-                div.col-sm-3
-                    h5 Uploads: #{userUploadAmount} &nbsp &nbsp
-                div.col-sm-3
-                    h5 Views : #{channel.totalViews}
-                div.col-sm-3
-                    h5 Joined: #{joinedTimeAgo}
-                if channel.receivedSubscriptions
-                    div.col-sm-3
-                        h5 Subscribers : #{channel.receivedSubscriptions.length}
+    div.row
+        div.col-md-2
+            div
+                if channel.customThumbnail
+                    img(src=`${uploadServer}/${channel.channelUrl}/${channel.customThumbnail}` width="120px" height="120px" class="img-circle center-block")
                 else
-                    div.col-sm-3
-                        h5 Subscribers : 0
-            br
-            br
-            br
-            br
-            if channel.thumbnailUrl || channel.customThumbnail
-                div.col-sm-2
-                    if channel.customThumbnail
-                        img(src=`${uploadServer}/${channel.channelUrl}/${channel.customThumbnail}` width="120px" height="120px")
+                    img(src=`/images/default-user-icon.jpg` width="120px" height="120px" class="img-circle center-block")
+                                        
+                h3.text-center #{channel.channelName || channel.channelUrl}
+                if channel.verified == true
+                    img(src="/images/verified.jpg" width="25px" height="25px" style="margin-left:3px;margin-top:-2px;margin-right:5px;")
+                if channel.plan == 'plus'
+                    span.pewtube-pro PLUS
+
+                div.row(style="padding-right: 10px; padding-left: 10px;")
+                      div.col-md-4.col-xs-4.text-center 
+                          h4 #{userUploadAmount}
+                          p.font-weight-bold Uploads
+                      div.col-md-4.col-xs-4.text-center
+                          h4 #{channel.totalViews}
+                          p.font-weight-bold Views
+                      div.col-md-4.col-xs-4.text-center
+                          if channel.receivedSubscriptions
+                              h4 #{channel.receivedSubscriptions.length}
+                              p.font-weight-bold Subs
+                          else
+                              h4 0
+                              p.font-weight-bold Subs
+
+                if user && user.channelUrl != channel.channelUrl
+                    if alreadySubbed
+                        button.subscribe.btn.btn-danger.center-block(style="border-radius:4px; margin-top: 20px;") Unsubscribe 
                     else
-                        img(src=`${uploadServer}/${channel._id}/unique.png` width="120px" height="120px")
+                        button.subscribe.btn.btn-lg.btn-success.center-block(style="border-radius:4px; margin-top: 20px; margin-bottom: 5px;") Subscribe
+                    
+                div.btn-group.text-center(role="group" aria-label="delete-controls" style="margin-left: 7%; margin-right: auto; margin-bottom: 20px;")
+                    if user && ( user.role == 'admin' || user.role == 'moderator') && channel.status !== 'restricted'
+                        button.delete-account.btn.btn-danger Delete Account
+                        //button.delete-account.btn.btn-danger Delete Account And Ban Ip
+                        if user.role == 'admin'
+                            button.delete-ips.btn.btn-danger Ban IP Address
 
-                    //img(src=channel.thumbnailUrl width="120px" height="120px")
+                    if user && ( user.role == 'admin' || user.role == 'moderator') && channel.status == 'restricted'
+                        br
+                        h3 ACCOUNT DELETED
+                        button.undelete-account.btn.btn-warning Undelete Account
+                        //button.undelete-account.btn.btn-warning Undelete Account And Unban Ip
+                        if user.role == 'admin'
+                            button.delete-ips.btn.btn-warning Undelete All Accounts / Unban All Ips
 
+            if user && user.channelUrl == channel.channelUrl
+                div.list-group
+                    a.list-group-item.list-group-item-action(href="/upload") Upload
+                    a.list-group-item.list-group-item-action(href="/account") Account
+            div.card(style="margin-bottom: 10px;")
+                div.card-body 
+                    h4.card-title Channel Description
+                    div.card-text #{channel.channelDescription}
+            if user && user.role == 'admin'
+                div.card(style="margin-top: 10px;")
+                    div.card-body 
+                        h4.card-title Last Login IP:
+                        div.card-text 
+                                each ip in ips
+                                    p= ip
+                      
+        div.col-md-10     
+            div.float-left(style="margin-bottom: 10px")
+                h4.font-weight-bold SORT BY
+                div.dropdown(style="display:inline;margin-right:15px;")
+                    button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown')
+                        | #{orderByEnglishString} 
+                        span.caret
 
-            div.col-sm-8
-                p(id="descriptionText") #{channel.channelDescription}
-                if user && user.role == 'admin'
-                    each ip in ips
-                        p= ip
+                    ul.dropdown-menu.dropdown
+                        li
+                            a(href=`/user/${channel.channelUrl}?orderBy=popular`) Most Popular
+                        li
+                            a(href=`/user/${channel.channelUrl}?orderBy=newToOld`) Newest First
+                        li
+                            a(href=`/user/${channel.channelUrl}?orderBy=oldToNew`) Oldest First
+                        li
+                            a(href=`/user/${channel.channelUrl}?orderBy=alphabetical`) Alphabetical
 
+            each upload in channel.uploads
+                div.col-sm-3(style="text-align:center;height:360px")
+                    if isUser || isAdmin || ( user && user.role == 'moderator' )
+                        div.editFileButtons
+                            form.editLink(action="/api/upload/delete" method="POST" style="display:inline-block")
+                                input(type='hidden', name='_csrf', value=_csrf)
+                                input(type='hidden', name='videoId', value=upload.uniqueTag)
+                                button.btn.btn-danger.delete-media Delete
+                            if isUser || isAdmin || user.role == 'moderator'
+                                a.editLink(href=`/user/${channel.channelUrl}/${upload.uniqueTag}/edit` style="display:inline-block")
+                                    button.btn.btn-primary Edit
 
-                if alreadySubbed
-                    button.subscribe.btn.btn-success Subscribed (#{subscriberAmount})
+                    include ../viewPartials/uploadDetails
+
+        if upload && channel.uploads.length > 12
+            include ../viewPartials/channelOverviewPagination
+
+        div.container
+            include ../viewPartials/adminSensitivityButtons
+
+            include ../viewPartials/changeSensitivityFilterJs
+
+                if user
+                    script.
+                      var user = '#{user.channelUrl}'
                 else
-                    button.subscribe.btn.btn-success Subscribe (#{subscriberAmount})
+                    script.
+                      var user = undefined
 
-                if user && ( user.role == 'admin' || user.role == 'moderator') && channel.status !== 'restricted'
-                    br
-                    br
-                    button.delete-account.btn.btn-danger Delete Account
-                    //button.delete-account.btn.btn-danger Delete Account And Ban Ip
-                    if user.role == 'admin'
-                        button.delete-ips.btn.btn-danger Delete All Accounts / Ips
+                script.
+                  var amountOfSubs = #{subscriberAmount}
+                  var alreadySubbed = #{alreadySubbed}
 
-                if user && ( user.role == 'admin' || user.role == 'moderator') && channel.status == 'restricted'
+                  $('.subscribe').on('touchstart click', function (e) {
 
-                    br
-                    h3 ACCOUNT DELETED
-                    button.undelete-account.btn.btn-warning Undelete Account
-                    //button.undelete-account.btn.btn-warning Undelete Account And Unban Ip
-                    if user.role == 'admin'
-                        button.delete-ips.btn.btn-warning Undelete All Accounts / Unban All Ips
-
-        br
-        div
-        br
-
-    div(style="margin-top:80px;")
-        div
-
-    br
-    br
-    br
-    br
-    br
-    p
-    hr
-
-    br
-    div.center-block.text-center
-        div.dropdown(style="display:inline;margin-right:15px;")
-            button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
-                | Order By: #{orderByEnglishString} &nbsp
-                span.caret
-
-            ul.dropdown-menu.dropdown
-                li
-                    a(href=`/user/${channel.channelUrl}?orderBy=popular`) Popular
-                li
-                    a(href=`/user/${channel.channelUrl}?orderBy=newToOld`) New To Old
-                li
-                    a(href=`/user/${channel.channelUrl}?orderBy=oldToNew`) Old To New
-                li
-                    a(href=`/user/${channel.channelUrl}?orderBy=alphabetical`) Alphabetical
-
-        include ../viewPartials/sensitivityFilterDropdown
-
-        include ../viewPartials/channelOverviewPagination
-
-    br
-    br
-
-    div.container
-        each upload in channel.uploads
-            div.col-sm-4(style="text-align:center;height:360px")
-                if isUser || isAdmin || ( user && user.role == 'moderator' )
-                    div.editFileButtons
-                        form.editLink(action="/api/upload/delete" method="POST" style="display:inline-block")
-                            input(type='hidden', name='_csrf', value=_csrf)
-                            input(type='hidden', name='videoId', value=upload.uniqueTag)
-                            button.btn.btn-danger.delete-media Delete
-                        if isUser || isAdmin || user.role == 'moderator'
-                            a.editLink(href=`/user/${channel.channelUrl}/${upload.uniqueTag}/edit` style="display:inline-block")
-                                button.btn.btn-primary Edit
-
-
-                include ../viewPartials/uploadThumbnail
-
-                include ../viewPartials/uploadDetails
-
-    include ../viewPartials/adminSensitivityButtons
-
-    include ../viewPartials/changeSensitivityFilterJs
-
-    include ../viewPartials/mouseOverJavascript
-
-    if user
-        script.
-          var user = '#{user.channelUrl}'
-    else
-        script.
-          var user = undefined
-
-    script.
-      var amountOfSubs = #{subscriberAmount}
-      var alreadySubbed = #{alreadySubbed}
-
-      $('.subscribe').on('touchstart click', function (e) {
-
-        if (!user) {
-          return swal('Please register an account to subscribe')
-        }
-
-        var channelUrl = '#{channel.channelUrl}'
-        var csrf = '#{_csrf}'
-
-        // dont move browser
-        e.preventDefault();
-
-        if (alreadySubbed) {
-          amountOfSubs = amountOfSubs - 1
-          alreadySubbed = false;
-        } else {
-          amountOfSubs = amountOfSubs + 1
-          alreadySubbed = true;
-        }
-
-        var userName = "#{channel.channelName || channel.channelUrl}"
-
-        if (!alreadySubbed) {
-          $('.subscribe').html(`Subscribe (${amountOfSubs})`)
-          swal('You have unsubscribed from ' + userName)
-
-        } else {
-          $('.subscribe').html(`Subscribed (${amountOfSubs})`)
-          swal('You have subscribed to ' + userName )
-        }
-
-        //
-        var data = {
-          _csrf: csrf,
-          channelUrl
-        }
-
-        $.ajax({
-          type: 'POST',
-          url: `/api/subscribe`,
-          data,
-          success: function (data) {
-            console.log(data);
-          },
-          error: function (err) {
-            console.log(err);
-          }
-        });
-      })
-
-    script.
-      var myTextEl = document.getElementById('descriptionText');
-      myTextEl.innerHTML = Autolinker.link(myTextEl.innerHTML);
-
-
-
-
-    script.
-      $('.delete-media').on('click', function (e) {
-        e.preventDefault();
-        var form = $(this).parents('form');
-
-        swal({
-          title: "WARNING",
-          text: "Are you sure you want to delete this upload?",
-          type: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#DD6B55",
-          confirmButtonText: "Yes, delete it"
-        }).then(function (result) {
-          if (result.value == true) {
-            form.submit();
-          }
-          console.log(result);
-        })
-      });
-
-    if user && ( user.role == 'admin' || user.role == 'moderator' )
-        script.
-            $('.delete-account').on('click', function (e) {
-                e.preventDefault();
-                swal({
-                    title: "WARNING",
-                    text: "Are you sure you want to delete this account?",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "Yes, delete it"
-                }).then(function (result) {
-                      if(result.value !== true){
-                        return
-                      }
-
-                      var channelUrl = '#{channel.channelUrl}';
-                      var csrf = '#{_csrf}';
-                        // sweetalert2.js:131 SweetAlert2: Unknown parameter "closeOnConfirm"
-                      // dont move browser
-                      e.preventDefault();
-
-                      //
-                      var data = {
-                        _csrf: csrf,
-                        channelUrl
-                      }
-
-                      console.log(data);
-
-                      $.ajax({
-                        type: 'POST',
-                        url: `/admin/deleteAccount`,
-                        data,
-                        success: function (data) {
-
-                          console.log(data);
-
-                          location.reload();
-
-                        },
-                        error: function (err) {
-                          console.log(err);
-                        }
-                      });
-                });
-            });
-
-    if user && ( user.role == 'admin' || user.role == 'moderator' )
-        script.
-          $('.undelete-account').on('click', function (e) {
-            e.preventDefault();
-            swal({
-              title: "WARNING",
-              text: "Are you sure you want to undelete this account?",
-              type: "warning",
-              showCancelButton: true,
-              confirmButtonColor: "#DD6B55",
-              confirmButtonText: "Yes, delete it"
-            }).then(function (result) {
-              if (result.value !== true) {
-                return
-              }
-
-              var channelUrl = '#{channel.channelUrl}';
-              var csrf = '#{_csrf}';
-              // sweetalert2.js:131 SweetAlert2: Unknown parameter "closeOnConfirm"
-              // dont move browser
-              e.preventDefault();
-
-              //
-              var data = {
-                _csrf: csrf,
-                channelUrl
-              }
-
-              $.ajax({
-                type: 'POST',
-                url: `/admin/undeleteAccount`,
-                data,
-                success: function (data) {
-
-                  console.log(data);
-
-                  location.reload();
-
-                },
-                error: function (err) {
-                  console.log(err);
-                }
-              });
-            });
-          });
-
-    if user && user.role == 'admin'
-        script.
-          $('.delete-ips').on('click', function (e) {
-            e.preventDefault();
-
-            $.ajax({
-              type: 'POST',
-              url: `/admin/getUserAccounts`,
-              data : {
-                _csrf: '#{_csrf}',
-                channelUrl: '#{channel.channelUrl}'
-              },
-              success: function (data) {
-
-                // console.log(data);
-
-                var string = '';
-                for(var channelUrl of data.channelUrls){
-                  string = string + ' ' + channelUrl;
-                }
-
-                var siteVisitorAmount = data.ids.length;
-
-                swal({
-                  title: "WARNING",
-                  text: "Are you sure you want to delete this account?" + string + '. ' + siteVisitorAmount + ' site visitors',
-                  type: "warning",
-                  showCancelButton: true,
-                  confirmButtonColor: "#DD6B55",
-                  confirmButtonText: "Yes, delete it"
-                }).then(function (result) {
-                  if (result.value !== true) {
-                    return
-                  }
-
-                  var channelUrl = '#{channel.channelUrl}'
-                  var csrf = '#{_csrf}'
-                  // sweetalert2.js:131 SweetAlert2: Unknown parameter "closeOnConfirm"
-                  // dont move browser
-                  e.preventDefault();
-
-                  //
-                  var data = {
-                    _csrf: csrf,
-                    channelUrl
-                  }
-
-                  console.log(data);
-
-                  $.ajax({
-                    type: 'POST',
-                    url: `/admin/deleteAllUsersAndBlockIps`,
-                    data,
-                    success: function (data) {
-
-                      console.log(data);
-
-                      location.reload();
-
-                    },
-                    error: function (err) {
-                      console.log(err);
+                    if (!user) {
+                      return swal('Please register an account to subscribe')
                     }
+
+                    var channelUrl = '#{channel.channelUrl}'
+                    var csrf = '#{_csrf}'
+
+                    // dont move browser
+                    e.preventDefault();
+
+                    if (alreadySubbed) {
+                      amountOfSubs = amountOfSubs - 1
+                      alreadySubbed = false;
+                    } else {
+                      amountOfSubs = amountOfSubs + 1
+                      alreadySubbed = true;
+                    }
+
+                    var userName = "#{channel.channelName || channel.channelUrl}"
+
+                    if (!alreadySubbed) {
+                      $('.subscribe').html(`Subscribe (${amountOfSubs})`)
+                      swal('You have unsubscribed from ' + userName)
+
+                    } else {
+                      $('.subscribe').html(`Subscribed (${amountOfSubs})`)
+                      swal('You have subscribed to ' + userName )
+                    }
+
+                    //
+                    var data = {
+                      _csrf: csrf,
+                      channelUrl
+                    }
+
+                    $.ajax({
+                      type: 'POST',
+                      url: `/api/subscribe`,
+                      data,
+                      success: function (data) {
+                        console.log(data);
+                      },
+                      error: function (err) {
+                        console.log(err);
+                      }
+                    });
+                  })
+
+                script.
+                  var myTextEl = document.getElementById('descriptionText');
+                  myTextEl.innerHTML = Autolinker.link(myTextEl.innerHTML);
+
+                script.
+                  $('.delete-media').on('click', function (e) {
+                    e.preventDefault();
+                    var form = $(this).parents('form');
+
+                    swal({
+                      title: "WARNING",
+                      text: "Are you sure you want to delete this upload?",
+                      type: "warning",
+                      showCancelButton: true,
+                      confirmButtonColor: "#DD6B55",
+                      confirmButtonText: "Yes, delete it"
+                    }).then(function (result) {
+                      if (result.value == true) {
+                        form.submit();
+                      }
+                      console.log(result);
+                    })
                   });
-                });
 
-                console.log(data);
+                if user && ( user.role == 'admin' || user.role == 'moderator' )
+                    script.
+                        $('.delete-account').on('click', function (e) {
+                            e.preventDefault();
+                            swal({
+                                title: "WARNING",
+                                text: "Are you sure you want to delete this account?",
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: "Yes, delete it"
+                            }).then(function (result) {
+                                  if(result.value !== true){
+                                    return
+                                  }
 
-              },
-              error: function (err) {
-                console.log(err);
-              }
-            });
+                                  var channelUrl = '#{channel.channelUrl}';
+                                  var csrf = '#{_csrf}';
+                                    // sweetalert2.js:131 SweetAlert2: Unknown parameter "closeOnConfirm"
+                                  // dont move browser
+                                  e.preventDefault();
+
+                                  //
+                                  var data = {
+                                    _csrf: csrf,
+                                    channelUrl
+                                  }
+
+                                  console.log(data);
+
+                                  $.ajax({
+                                    type: 'POST',
+                                    url: `/admin/deleteAccount`,
+                                    data,
+                                    success: function (data) {
+
+                                      console.log(data);
+
+                                      location.reload();
+
+                                    },
+                                    error: function (err) {
+                                      console.log(err);
+                                    }
+                                  });
+                            });
+                        });
+
+                if user && ( user.role == 'admin' || user.role == 'moderator' )
+                    script.
+                      $('.undelete-account').on('click', function (e) {
+                        e.preventDefault();
+                        swal({
+                          title: "WARNING",
+                          text: "Are you sure you want to undelete this account?",
+                          type: "warning",
+                          showCancelButton: true,
+                          confirmButtonColor: "#DD6B55",
+                          confirmButtonText: "Yes, delete it"
+                        }).then(function (result) {
+                          if (result.value !== true) {
+                            return
+                          }
+
+                          var channelUrl = '#{channel.channelUrl}';
+                          var csrf = '#{_csrf}';
+                          // sweetalert2.js:131 SweetAlert2: Unknown parameter "closeOnConfirm"
+                          // dont move browser
+                          e.preventDefault();
+
+                          //
+                          var data = {
+                            _csrf: csrf,
+                            channelUrl
+                          }
+
+                          $.ajax({
+                            type: 'POST',
+                            url: `/admin/undeleteAccount`,
+                            data,
+                            success: function (data) {
+
+                              console.log(data);
+
+                              location.reload();
+
+                            },
+                            error: function (err) {
+                              console.log(err);
+                            }
+                          });
+                        });
+                      });
+
+                if user && user.role == 'admin'
+                    script.
+                      $('.delete-ips').on('click', function (e) {
+                        e.preventDefault();
+
+                        $.ajax({
+                          type: 'POST',
+                          url: `/admin/getUserAccounts`,
+                          data : {
+                            _csrf: '#{_csrf}',
+                            channelUrl: '#{channel.channelUrl}'
+                          },
+                          success: function (data) {
+
+                            // console.log(data);
+
+                            var string = '';
+                            for(var channelUrl of data.channelUrls){
+                              string = string + ' ' + channelUrl;
+                            }
+
+                            var siteVisitorAmount = data.ids.length;
+
+                            swal({
+                              title: "WARNING",
+                              text: "Are you sure you want to delete this account?" + string + '. ' + siteVisitorAmount + ' site visitors',
+                              type: "warning",
+                              showCancelButton: true,
+                              confirmButtonColor: "#DD6B55",
+                              confirmButtonText: "Yes, delete it"
+                            }).then(function (result) {
+                              if (result.value !== true) {
+                                return
+                              }
+
+                              var channelUrl = '#{channel.channelUrl}'
+                              var csrf = '#{_csrf}'
+                              // sweetalert2.js:131 SweetAlert2: Unknown parameter "closeOnConfirm"
+                              // dont move browser
+                              e.preventDefault();
+
+                              //
+                              var data = {
+                                _csrf: csrf,
+                                channelUrl
+                              }
+
+                              console.log(data);
+
+                              $.ajax({
+                                type: 'POST',
+                                url: `/admin/deleteAllUsersAndBlockIps`,
+                                data,
+                                success: function (data) {
+
+                                  console.log(data);
+
+                                  location.reload();
+
+                                },
+                                error: function (err) {
+                                  console.log(err);
+                                }
+                              });
+                            });
+
+                            console.log(data);
+
+                          },
+                          error: function (err) {
+                            console.log(err);
+                          }
+                        });
 
 
-          });
+                      });
 
-block extra_js
-  script(src="https://cdnjs.cloudflare.com/ajax/libs/autolinker/1.4.4/Autolinker.js")
+            block extra_js
+              script(src="https://cdnjs.cloudflare.com/ajax/libs/autolinker/1.4.4/Autolinker.js")
 

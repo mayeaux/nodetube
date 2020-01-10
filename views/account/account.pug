@@ -118,7 +118,8 @@ block content
                   else
                       img(src=`/images/default-user-icon.jpg` width="120px" height="120px" class="img-circle center-block")
                                               
-                  h3.text-center #{user.channelUrl}
+                  h3.text-center 
+                    a(href=`/user/${user.channelUrl}` style="color: black") #{user.channelUrl}
                   if user.verified == true
                       img(src="/images/verified.jpg" width="25px" height="25px" style="margin-left:3px;margin-top:-2px;margin-right:5px;")
                   if user.plan == 'plus'
@@ -135,16 +136,13 @@ block content
                           h4 $#{user.receivedCredit / 100}
                           p.text-muted Revenue
 
-              div
-                  ul.list-group
-                      li.list-group-item
-                          a(href=`/user/${user.channelUrl}`) Channel Page
-                      li.list-group-item
-                          a(href="/account/viewHistory") View History
-                      li.list-group-item
-                          a(href="/account/reactHistory") React History
-                      li.list-group-item
-                        a(href="/account/livestreaming") Livestreaming
+              div.list-group
+                  a.list-group-item(href=`/user/${user.channelUrl}`) Channel Page
+                  a.list-group-item.list-group-item-action(href="/notifications") Notifications
+                      span.badge.badge-pill (#{unreadNotifAmount})
+                  a.list-group-item(href="/account/viewHistory") View History
+                  a.list-group-item(href="/account/reactHistory") React History
+                  a.list-group-item(href="/account/livestreaming") Livestreaming
 
           div.col-md-6.col-sm-12
               h3.text-center.text-muted Edit Your Account Details
@@ -162,11 +160,11 @@ block content
                       textarea(id="description" name="description" maxlength='500' rows="7" cols="70") #{user.channelDescription}
 
                   h4 Channel Thumbnail
-                  div.form-group
-                      input.center-block.text-center(class="upload-file" data-max-size="500000000" type="file" name="filetoupload" accept="image/*")
+                  div.form-group(style="padding-top: 10px; padding-bottom: 10px;" )
+                      input.center-block.text-center(style="padding: 6px 12px; background: white;" data-max-size="500000000" type="file" name="filetoupload" accept="image/*")
                       p.help-block Thumbnails up to 302 x 168 pixels are accepted.
 
-                  button.btn.btn.btn-primary(type='submit')
+                  button.btn.btn-primary(type='submit')
                         i.fa.fa-pencil
                         | Update Profile
  
@@ -175,7 +173,7 @@ block content
               if plusEnabled
                   h3.text-center.text-muted NodeTube Plus
                   br
-                  div.card.alert-success
+                  div.card(style="padding-top: 10px; padding-bottom: 10px;")
                     div.pt-plus.center-div.text-center
                       if user.plan == 'plus'
                         p Thank you so much for subscribing!

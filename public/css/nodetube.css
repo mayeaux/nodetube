@@ -137,3 +137,13 @@
 .body {
     background-color: #FAFAFA;
 }
+
+/* Consistent button styling @ diamond */
+.btn {
+    border-radius:5px
+}
+
+.form-group input, textarea {
+    border-radius:5px;
+    border: 1px solid #ccc
+}

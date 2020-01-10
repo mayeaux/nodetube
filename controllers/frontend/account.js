@@ -247,15 +247,15 @@ exports.getChannel = async(req, res) => {
     }
 
     if(orderBy == 'oldToNew'){
-      orderByEnglishString = 'Old To New';
+      orderByEnglishString = 'Oldest First';
     }
 
     if(orderBy == 'newToOld'){
-      orderByEnglishString = 'New To Old';
+      orderByEnglishString = 'Newest First';
     }
 
     if(orderBy == 'popular'){
-      orderByEnglishString = 'Popular';
+      orderByEnglishString = 'Most Popular';
     }
 
     let alreadySubbed = false;
