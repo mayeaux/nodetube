@@ -1,13 +1,7 @@
-const fs = require('fs');
+const fs = require('fs-extra');
 
-// destination.txt will be created or overwritten by default.
-fs.copyFile('.env.settings.sample', '.env.settings', { flag: 'wx' }, (err) => {
-  if(err)throw err;
-  console.log('Settings file created');
-});
+console.log('Copying settings and private file if necessary');
 
-// destination.txt will be created or overwritten by default.
-fs.copyFile('.env.private.sample', '.env.private', { flag: 'wx' }, (err) => {
-  if(err)throw err;
-  console.log('Private keys file created');
-});
+fs.copySync('.env.settings.sample', '.env.settings', { overwrite: false });
+
+fs.copySync('.env.private.sample', '.env.private', { overwrite: false });
