@@ -23,6 +23,8 @@ const useragent = require('express-useragent');
 var multipart = require('connect-multiparty');
 const Promise = require('bluebird');
 const ngrok = require('ngrok');
+const commandExists = require('command-exists');
+
 
 const jsHelpers = require('./lib/helpers/js-helpers');
 
@@ -374,6 +376,14 @@ if(cluster.isMaster){
     app.listen(app.get('port'), () => {
       console.log('%s App is running at http://localhost:%d in %s mode', chalk.green('✓'), app.get('port'), app.get('env'));
       console.log('  Press CTRL-C to stop\n');
+    });
+
+    // warn user if ffmpeg is not installed
+    commandExists('ffmpeg')
+      .then(function(command){
+        // ffmpeg installed
+      }).catch(function(){
+      console.log('WARNING: ffmpeg IS NOT INSTALLED. Video uploads will fail.')
     });
 
     module.exports = app;
