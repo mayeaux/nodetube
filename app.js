@@ -379,6 +379,10 @@ if(cluster.isMaster){
       console.log('  Press CTRL-C to stop\n');
     });
 
+    require('dns').lookup(require('os').hostname(), function(err, localIp, fam){
+      console.log(`NodeTube can be accessed on your local network at ${localIp}:${portNumber}`);
+    });
+
     // warn user if ffmpeg is not installed
     commandExists('ffmpeg')
       .then(function(command){
