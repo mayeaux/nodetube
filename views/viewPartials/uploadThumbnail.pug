@@ -1,6 +1,6 @@
 
 a.title-anchor(href=`/user/${upload.uploader.channelUrl || channelUrl}/${upload.uniqueTag}` style="color:black")
-    div.center-block(style="width: 368px; height: 207px; background-color: black")
+    div.center-block(style="")
         if upload.thumbnails && upload.thumbnails.custom
             img.preview-image(src=`${uploadServer}/${channelUrl || upload.uploader.channelUrl}/${upload.thumbnails.custom}` style="margin-left: auto; width: auto; height: 207px;")
 
