@@ -11,18 +11,10 @@ block content
                 // NEW CHANNEL UPLOAD FORMAT
 
                 a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}`)
-                    if upload.fileType == 'video' && upload.thumbnailUrl
-                        img.preview-image.border-preview(src=upload.thumbnailUrl)
-                    else if upload.fileType == 'image'
-                        img.preview-image.border-preview(src=upload.uploadUrl)
-                    else if upload.fileType == 'audio'
-                        img.preview-image.border-preview(src='/images/audio.svg')
-                    else if upload.fileType == 'unknown'
-                        img.preview-image.border-preview(src='/images/no_img.png')
+                    // TODO: pretty sure this route is broken
 
-                    div
-                        p.upload-title-text #{upload.title}
-                    br
+                    include ../viewPartials/uploadThumbnail
+
 
                 div.upload-details
                     // capitalize media type
