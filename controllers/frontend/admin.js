@@ -10,6 +10,8 @@ const Comment = require('../../models/index').Comment;
 const SiteVisit = require('../../models/index').SiteVisit;
 const SearchQuery = require('../../models/index').SearchQuery;
 
+const { uploadServer, uploadUrl } = require('../../lib/helpers/settings');
+
 let viewStats, uploadStats, userStats, reactStats, subscriptionStats, searchStats, commentStats, siteVisitStats;
 async function getStats(){
   let views = await redisClient.getAsync('dailyStatsViews');
@@ -85,7 +87,8 @@ exports.getPending = async(req, res) => {
 
   res.render('moderator/pending', {
     title: 'Pending',
-    uploads
+    uploads,
+    uploadServer
   });
 
 };

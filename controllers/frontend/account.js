@@ -150,7 +150,11 @@ exports.getChannel = async(req, res) => {
     }).populate('receivedSubscriptions').lean()
       .exec();
 
-    let viewerIsAdminOrMod;
+    let viewerIsMod = Boolean(req.user && (req.user.role == 'admin' || req.user.role == 'moderator'));
+
+    let viewerIsOwner = (req.user && req.user.channelUrl) == user.channelUrl;
+
+    let viewerIsAdminOrMod = false;
     if(req.user && (req.user.role == 'admin' || req.user.role == 'moderator')){
       viewerIsAdminOrMod = true;
     }
@@ -202,7 +206,11 @@ exports.getChannel = async(req, res) => {
     /** DB CALL TO GET UPLOADS **/
     let uploads = await Upload.find(searchQuery).populate('').sort({ createdAt : -1 });
 
-    if(!viewerIsAdminOrMod){
+    console.log(`IS ADMIN OR MOD: ${viewerIsAdminOrMod}`);
+    console.log(`IS OWNER: ${viewerIsOwner}`);
+
+    // if the viewer isnt a mod/admin or the owning user, then only show public uploads
+    if(!viewerIsAdminOrMod && !viewerIsOwner){
       uploads = _.filter(uploads, function(upload){
         return upload.visibility == 'public';
       });
