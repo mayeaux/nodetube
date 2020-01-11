@@ -33,7 +33,8 @@ block content
 
             include ../viewPartials/sensitivityFilterDropdown
 
-            include ../viewPartials/pagination
+            div.container.d-flex.justify-content-center.mt-4
+                include ../viewPartials/pagination
 
             br
 
@@ -51,11 +52,8 @@ block content
 
             include ../viewPartials/adminSensitivityButtons
 
-            div.center-block.text-center.col-sm-12
-
-                        div.dropdown
-
-                            include ../viewPartials/pagination
+            div.container.d-flex.justify-content-center.mt-4
+                include ../viewPartials/pagination
 
 
         if user && user.role == 'admin'

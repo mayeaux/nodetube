@@ -130,10 +130,6 @@
     background:white;
 }
 
-.navbar-fixed-top .navbar-collapse, .navbar-fixed-bottom .navbar-collapse {
-    max-height: 381px;
-}
-
 .body {
     background-color: #FAFAFA;
 }

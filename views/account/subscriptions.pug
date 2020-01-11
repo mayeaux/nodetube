@@ -2,15 +2,42 @@ extends ../layout
 
 block content
 
-    div.center-block.text-center.col-sm-12
-
+    div.center-block.text-center.mt-3
 
         h1 Subscriptions
-
         hr
 
         // TOP PAGINATION
-        nav.center-block.text-center(aria-label='Page navigation example')
+        if uploads.length > 12
+            div.container.d-flex.justify-content-center
+                ul.pagination
+                    li.page-item
+                        a.page-link(href=`/media/subscribed/${previousNumber}`) <
+
+                    each number in numbersArray
+                        li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
+                            a.page-link(href=`/media/subscribed/${number}`) #{number}
+
+                    li.page-item
+                        a.page-link(href=`/media/subscribed/${nextNumber}`) >
+
+
+    if uploads.length == 0
+        h3.text-center Subscribe to a channel to see your subscriptions
+    else
+        br
+        br
+        div.row
+            each upload in uploads
+                if upload.uploader
+                    div.col-sm-3(style="text-align:center;height:360px")
+                        include ../viewPartials/uploadDetails
+
+
+
+    if uploads.length > 12
+        // TOP PAGINATION
+        div.container.d-flex.justify-content-center
             ul.pagination
                 li.page-item
                     a.page-link(href=`/media/subscribed/${previousNumber}`) <
@@ -21,40 +48,6 @@ block content
 
                 li.page-item
                     a.page-link(href=`/media/subscribed/${nextNumber}`) >
-
-
-
-
-    hr
-    if uploads.length == 0
-        h3.text-center Subscribe to a channel to see your subscriptions
-    else
-        br
-        br
-        each upload in uploads
-            if upload.uploader
-                div.col-sm-4(style="text-align:center;height:360px")
-                    include ../viewPartials/uploadThumbnail
-
-                    include ../viewPartials/uploadDetails
-
-
-
-    if uploads.length > 0
-
-        div.center-block.text-center.col-sm-12
-
-                nav.center-block.text-center(aria-label='Page navigation example')
-                    ul.pagination
-                        li.page-item
-                            a.page-link(href=`/media/subscribed/${previousNumber}`) <
-
-                        each number in numbersArray
-                            li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
-                                a.page-link(href=`/media/subscribed/${number}`) #{number}
-
-                        li.page-item
-                            a.page-link(href=`/media/subscribed/${nextNumber}`) >
 
 
     script.

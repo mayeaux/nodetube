@@ -2,17 +2,17 @@ for category in categories
     //p= uploads[category.name]
     // if there's more than one per category
     if uploads[category.name] && uploads[category.name].length && uploads[category.name].length > 0
-        div.category.col-sm-12
+        div.row.col-sm-12
             a.upload-user-text(href=`${addressPrepend}/${highlightedNumber}?category=${category.name}&within=${within}&media=${mediaType || ''}`)
                 h2 #{category.displayName}
-                br
 
             // begin individual upload section
-            each upload in uploads[category.name]
-                if upload.uploader
-                    div.col-sm-4(style="text-align:center;height:310px;")
-                        div(style="width:100%")
-                            include ../viewPartials/uploadDetails
+            div.row
+                each upload in uploads[category.name]
+                    if upload.uploader
+                        div.col-sm-4(style="text-align:center;height:310px;")
+                            div(style="width:100%")
+                                include ../viewPartials/uploadDetails
 
-                            //include ../viewPartials/uploadDetailsPopular
+                                //include ../viewPartials/uploadDetailsPopular
 

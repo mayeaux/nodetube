@@ -3,7 +3,6 @@
 @import "lib/bootstrap/bootstrap";
 @import "lib/font-awesome/font-awesome";
 
-@import "themes/default/default";
 
 // Scaffolding
 // -------------------------
@@ -15,7 +14,6 @@ html {
 
 body {
   background-color: #FAFAFA;
-  padding-top: 60px;
   margin-bottom: 75px;
 }
 
@@ -68,8 +66,4 @@ textarea {
 
 .fa {
   margin-right: 6px;
-}
-
-.navbar-fixed-top .navbar-collapse, .navbar-fixed-bottom .navbar-collapse {
-  max-height: 381px;
 }

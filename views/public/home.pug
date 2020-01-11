@@ -1,56 +1,38 @@
 extends ../layout
 
 block content
-  div.container(style="text-align:center")
-    br
-    br
-    br
-    br
-    br
-    br
+  div.container.text-center.py-5.my-5
     h2 Welcome to NodeTube:
     h2 The internet's best hosting for creators and developers
-    br
-    br
-    br
-    br
 
-    hr
-
-    .row
-      .col-sm-4
-        h2 No Email Required &nbsp
+    div.row.mt-5
+      div.col-sm-12.col-md-4.p-5
+        h2 No Email Required 
           i.fa.fa-bolt
         p Start using the platform and
         | uploading content without an email
-      .col-sm-4
-        h2 Video, Audio, Images &nbsp
+      div.col-sm-12.col-md-4.p-5
+        h2 Video, Audio, Images 
           i.fa.fa-thumbs-o-up
         p Host all forms of media on
         | our robust and innovative platform
-        br
-        br
-        br
-      .col-sm-4
-        h2 100% Open Source &nbsp
+      div.col-sm-12.col-md-4.p-5
+        h2 100% Open Source 
           i.fa.fa-space-shuttle
         p Clone your own copy of NodeTube and
         | have your instance up in minutes
-
-
-    .row
-      .col-sm-4
-        h2 #{channelAmount} Channels &nbsp
-          i.fa.fa-users
+      div.col-sm-12.col-md-4.p-5
+        h2 #{channelAmount} Channels 
+         i.fa.fa-users
         p The amount of people who have
         | chosen this NodeTube for their hosting
-      .col-sm-4
-        h2 #{mediaAmount} Uploads &nbsp
+      div.col-sm-12.col-md-4.p-5
+        h2 #{mediaAmount} Uploads 
           i.fa.fa-upload
         p The amount of  times users have
         | chosen us for hosting their media
-      .col-sm-4
-        h2 #{viewAmount} Views &nbsp
+      div.col-sm-12.col-md-4.p-5
+        h2 #{viewAmount} Views 
           i.fa.fa-video
         p The amount of times people have
         | enjoyed the innovative new platform
