@@ -23,6 +23,7 @@ const useragent = require('express-useragent');
 var multipart = require('connect-multiparty');
 const Promise = require('bluebird');
 const ngrok = require('ngrok');
+const commandExists = require('command-exists');
 
 const jsHelpers = require('./lib/helpers/js-helpers');
 
@@ -85,6 +86,7 @@ if(cluster.isMaster){
 
     const customMiddleware = require('./middlewares/custom');
     const widgetMiddleware = require('./middlewares/shared/widgets');
+    const socialRedirectMiddleware = require('./middlewares/shared/socialRedirects');
 
     const missedFile404Middleware = require('./middlewares/shared/missedFile404Middleware');
 
@@ -254,6 +256,9 @@ if(cluster.isMaster){
       app.use(widgetMiddleware[middleware]);
     }
 
+    // run all the widget middleware software which adds credentials to res.local
+    app.use(socialRedirectMiddleware);
+
     /** META TAGS FOR SOCIAL **/
     app.use(async function(req, res, next){
       res.locals.meta = {
@@ -373,6 +378,20 @@ if(cluster.isMaster){
       console.log('%s App is running at http://localhost:%d in %s mode', chalk.green('✓'), app.get('port'), app.get('env'));
       console.log('  Press CTRL-C to stop\n');
     });
+
+    require('dns').lookup(require('os').hostname(), function(err, localIp, fam){
+      console.log(`NodeTube can be accessed on your local network at ${localIp}:${portNumber}\n`);
+    });
+
+    // warn user if ffmpeg is not installed
+    commandExists('ffmpeg')
+      .then(function(command){
+        // ffmpeg installed
+      }).catch(function(){
+        console.log('WARNING: ffmpeg IS NOT INSTALLED. Video uploads will fail. \n');
+      });
+
+    if(process.env.MODERATION_UPDATES_TO_DISCORD == 'true') console.log('SENDING MODERATION REQUESTS TO DISCORD \n');
 
     module.exports = app;
 

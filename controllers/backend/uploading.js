@@ -21,6 +21,8 @@ const Notification = require('../../models/index').Notification;
 const SocialPost = require('../../models/index').SocialPost;
 const Subscription = require('../../models/index').Subscription;
 
+const sendMessageToDiscord = require('../../lib/moderation/discordWebhooks');
+
 const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
 const getMediaType = require('../../lib/uploading/media');
 const { b2, bucket, hostUrl } = require('../../lib/uploading/backblaze');
@@ -198,6 +200,10 @@ exports.postFileUpload = async(req, res, next) => {
 
         if(requireModeration){
           upload.visibility = 'pending';
+        }
+
+        if(requireModeration && process.env.MODERATION_UPDATES_TO_DISCORD == 'true'){
+          await sendMessageToDiscord(`Pending upload requires moderation on NodeTube.live. ${new Date()}`);
         }
 
         await upload.save();
