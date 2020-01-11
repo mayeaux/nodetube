@@ -33,7 +33,7 @@ const passportConfig = require('../config/passport');
 const authMiddleware = require('../middlewares/shared/authentication');
 
 function fileHostRoutes(app){
-  console.log('RUNNING AS FILE HOST');
+  console.log('RUNNING AS FILE HOST \n');
 
   // set res header to upload to another server
   if(process.env.ALLOW_COR == 'true'){
