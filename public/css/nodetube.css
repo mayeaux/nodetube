@@ -130,10 +130,16 @@
     background:white;
 }
 
-.navbar-fixed-top .navbar-collapse, .navbar-fixed-bottom .navbar-collapse {
-    max-height: 381px;
-}
-
 .body {
     background-color: #FAFAFA;
+}
+
+/* Consistent button styling @ diamond */
+.btn {
+    border-radius:5px
+}
+
+.form-group input, textarea {
+    border-radius:5px;
+    border: 1px solid #ccc
 }
