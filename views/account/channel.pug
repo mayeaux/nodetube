@@ -1,54 +1,13 @@
 extends ../layout
 
 block content
-    style.
-        .editLink  {
-            display: inline-block;
-        }
-
-block content
-    style.
-        .dropdown {
-            text-align: center;
-        }
-
-        .button, .dropdown-menu {
-            margin: 10px auto
-        }
-
-        .dropdown-menu {
-            width: 200px;
-            left: 50%;
-            margin-left: -100px;
-        }
-
-        input[type=checkbox] {
-            /* Double-sized Checkboxes */
-            -ms-transform: scale(2); /* IE */
-            -moz-transform: scale(2); /* FF */
-            -webkit-transform: scale(2); /* Safari and Chrome */
-            -o-transform: scale(2); /* Opera */
-            padding: 10px;
-        }
-
-        .pewtube-pro {
-            background: #edeeee;
-            font-weight: 400;
-            font-size: 13px;
-            margin-left: 3px;
-            padding: 8px 9px;
-            display: inline-block;
-            border-radius: 3px;
-            transform: translateY(-2px);
-        }
-
     div.row
-        div.col-md-2
-            div
+        div.col-md-2.bg-white.border-right.pr-0
+            div.my-3
                 if channel.customThumbnail
-                    img(src=`${uploadServer}/${channel.channelUrl}/${channel.customThumbnail}` width="120px" height="120px" class="img-circle center-block")
+                    img(src=`${uploadServer}/${channel.channelUrl}/${channel.customThumbnail}` class="img-fluid rounded mx-auto d-block" style="border-radius: 200rem !important;")
                 else
-                    img(src=`/images/default-user-icon.jpg` width="120px" height="120px" class="img-circle center-block")
+                    img(src=`/images/default-user-icon.jpg` width="120px" height="120px" class="img-fluid rounded mx-auto d-block" style="border-radius: 200rem !important;")
                                         
                 h3.text-center #{channel.channelName || channel.channelUrl}
                 if channel.verified == true
@@ -73,11 +32,11 @@ block content
 
                 if user && user.channelUrl != channel.channelUrl
                     if alreadySubbed
-                        button.subscribe.btn.btn-danger.center-block(style="border-radius:4px; margin-top: 20px;") Unsubscribe 
+                        button.subscribe.btn.btn-danger.btn-lg.mx-auto.d-block(style="border-radius:4px; margin-top: 20px;") Unsubscribe 
                     else
-                        button.subscribe.btn.btn-lg.btn-success.center-block(style="border-radius:4px; margin-top: 20px; margin-bottom: 5px;") Subscribe
+                        button.subscribe.btn.btn-primary.btn-lg.mx-auto.d-block(style="border-radius:4px; margin-top: 20px; margin-bottom: 5px;") Subscribe
                     
-                div.btn-group.text-center(role="group" aria-label="delete-controls" style="margin-left: 7%; margin-right: auto; margin-bottom: 20px;")
+                div.btn-group.my-2(role="group" aria-label="delete-controls" style="width: 90%; margin-left: 5%")
                     if user && ( user.role == 'admin' || user.role == 'moderator') && channel.status !== 'restricted'
                         button.delete-account.btn.btn-danger Delete Account
                         //button.delete-account.btn.btn-danger Delete Account And Ban Ip
@@ -96,49 +55,47 @@ block content
                 div.list-group
                     a.list-group-item.list-group-item-action(href="/upload") Upload
                     a.list-group-item.list-group-item-action(href="/account") Account
-            div.card(style="margin-bottom: 10px;")
-                div.card-body 
-                    h4.card-title Channel Description
-                    div.card-text #{channel.channelDescription}
+
+            if channel.channelDescription
+                div.card.bg-light.mx-auto.my-2
+                    div.card-body 
+                        h4.card-title Channel Description
+                        div.card-text #{channel.channelDescription}
+
             if user && user.role == 'admin'
-                div.card(style="margin-top: 10px;")
+                div.card.bg-light.mx-auto.my-2
                     div.card-body 
                         h4.card-title Last Login IP:
                         div.card-text 
                                 each ip in ips
                                     p= ip
                       
-        div.col-md-10     
-            div.float-left(style="margin-bottom: 10px")
-                h4.font-weight-bold SORT BY
-                div.dropdown(style="display:inline;margin-right:15px;")
-                    button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown')
-                        | #{orderByEnglishString} 
-                        span.caret
-
-                    ul.dropdown-menu.dropdown
-                        li
-                            a(href=`/user/${channel.channelUrl}?orderBy=popular`) Most Popular
-                        li
-                            a(href=`/user/${channel.channelUrl}?orderBy=newToOld`) Newest First
-                        li
-                            a(href=`/user/${channel.channelUrl}?orderBy=oldToNew`) Oldest First
-                        li
-                            a(href=`/user/${channel.channelUrl}?orderBy=alphabetical`) Alphabetical
-
-            each upload in channel.uploads
-                div.col-sm-3(style="text-align:center;height:360px")
-                    if isUser || isAdmin || ( user && user.role == 'moderator' )
-                        div.editFileButtons
-                            form.editLink(action="/api/upload/delete" method="POST" style="display:inline-block")
-                                input(type='hidden', name='_csrf', value=_csrf)
-                                input(type='hidden', name='videoId', value=upload.uniqueTag)
-                                button.btn.btn-danger.delete-media Delete
-                            if isUser || isAdmin || user.role == 'moderator'
-                                a.editLink(href=`/user/${channel.channelUrl}/${upload.uniqueTag}/edit` style="display:inline-block")
-                                    button.btn.btn-primary Edit
-
-                    include ../viewPartials/uploadDetails
+        div.col-md-10
+            div.container-fluid.mt-3
+                    p.font-weight-bold.text-muted(style="margin-bottom: 5px;") SORT BY
+                    div.dropdown(style="display:inline;margin-right:15px;")
+                        button.btn.btn-primary.dropdown-toggle(type='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
+                            | #{orderByEnglishString} 
+                            span.caret
+                        div.dropdown-menu
+                            a.dropdown-item(href=`/user/${channel.channelUrl}?orderBy=popular`) Most Popular
+                            a.dropdown-item(href=`/user/${channel.channelUrl}?orderBy=newToOld`) Newest First
+                            a.dropdown-item(href=`/user/${channel.channelUrl}?orderBy=oldToNew`) Oldest First
+                            a.dropdown-item(href=`/user/${channel.channelUrl}?orderBy=alphabetical`) Alphabetical
+            hr
+            div.row.mt-5
+                each upload in channel.uploads
+                    div.col-sm-3(style="text-align:center;height:360px")
+                        include ../viewPartials/uploadDetails
+                        if isUser || isAdmin || ( user && user.role == 'moderator' )
+                            div.editFileButtons
+                                form.editLink.mt-2(action="/api/upload/delete" method="POST" style="display:inline-block")
+                                    input(type='hidden', name='_csrf', value=_csrf)
+                                    input(type='hidden', name='videoId', value=upload.uniqueTag)
+                                    button.btn.btn-danger.delete-media.mr-2 Delete
+                                if isUser || isAdmin || user.role == 'moderator'
+                                    a.editLink(href=`/user/${channel.channelUrl}/${upload.uniqueTag}/edit` style="display:inline-block")
+                                        button.btn.btn-primary Edit
 
         if upload && channel.uploads.length > 12
             include ../viewPartials/channelOverviewPagination

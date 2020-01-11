@@ -24,27 +24,23 @@ block content
 
             include ../viewPartials/sensitivityFilterDropdown
 
-
-        include ../viewPartials/popularUploadsPagination
-
-
         br
         div.uploads
             if !isACategory
                 include ../viewPartials/categoryOverviews
-
             else
-                each upload in uploads
-                    div.col-sm-4(style="text-align:center;height:360px;")
-                        include ../viewPartials/uploadDetails
-                        // include ../viewPartials/uploadDetailsPopular
+              div.row
+                  each upload in uploads
+                      div.col-sm-4(style="text-align:center;height:360px;")
+                          include ../viewPartials/uploadDetails
+                          // include ../viewPartials/uploadDetailsPopular
 
 
             include ../viewPartials/adminSensitivityButtons
 
 
         if uploads
-            div.col-sm-12
+            div.container.d-flex.justify-content-center
                 include ../viewPartials/popularUploadsPagination
 
 
