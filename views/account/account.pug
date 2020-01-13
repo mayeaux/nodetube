@@ -109,8 +109,8 @@ block content
 
   else
       div.row
-          div.col-md-2.bg-white
-              div.my-5
+          div.col-md-2.bg-white.py-3
+              div
                   h3.text-center.text-muted Your Profile
                   br
                   if user.customThumbnail
@@ -144,7 +144,7 @@ block content
                   a.list-group-item(href="/account/reactHistory") React History
                   a.list-group-item(href="/account/livestreaming") Livestreaming
 
-          div.col-md-6.col-sm-12
+          div.col-md-6.col-sm-12.py-3
               h3.text-center.text-muted Edit Your Account Details
               br
               //form.upload-form(role="form" method="POST" enctype="multipart/form-data")
@@ -153,7 +153,7 @@ block content
 
                   h4 Channel Display Name
                   div.form-group
-                      input.form-control.center-block(type='text', name='channelName', id='channelName', minlength=3, maxlength=25, value=user.channelName style="width: 50%")
+                      input.form-control.w-50.mx-auto(type='text', name='channelName', id='channelName', minlength=3, maxlength=25, value=user.channelName)
 
                   h4 Channel Description
                   div.form-group

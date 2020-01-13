@@ -1,27 +1,25 @@
 extends ../layout
 
 block content
-  .page-header
-    h3.center-block.text-center Login To NodeTube
-  form.form-horizontal(method='POST')
-    input(type='hidden', name='_csrf', value=_csrf)
-    .form-group
-      label.col-sm-3.control-label(for='email') Email or Username
-      .col-sm-7
-        input.form-control(name='email', id='email', placeholder='Email or Username', autofocus, required)
-    .form-group
-      label.col-sm-3.control-label(for='password') Password
-      .col-sm-7
-        input.form-control(type='password', name='password', id='password', placeholder='Password', required)
-    .form-group
-      .col-sm-offset-3.col-sm-7
-        button.col-sm-3.btn.btn-primary(type='submit')
-          i.fa.fa-user
-          | Login
-        a.btn.btn-link(href='/forgot') Forgot your password?
-    .form-group
-      .col-sm-12
-        hr
+  div.container.mt-3
+    .row
+      .col-md-6.offset-3.text-center
+        h3.text-center Login To NodeTube
+        form(method='POST')
+          input(type='hidden', name='_csrf', value=_csrf)
+          .form-group
+            label.control-label(for='email') Email or Username
+            input.form-control(name='email', id='email', placeholder='Email or Username', autofocus, required)
+          .form-group
+            label.control-label(for='password') Password
+            input.form-control(type='password', name='password', id='password', placeholder='Password', required)
+          .form-group
+              button.btn.btn-primary(type='submit')
+                i.fa.fa-user
+                | Login
+          .form-group
+              a.btn.btn-link(href='/forgot') Forgot your password?
+              hr
 
         //p.center-block.text-center No account?
         //  a(href="/signup" style="margin-left:8px;") Sign Up Here

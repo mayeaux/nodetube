@@ -1,46 +1,43 @@
 extends ../layout
 
 block content
-  .page-header
-    h3.center-block.text-center Sign Up
-  form.form-horizontal.signup-form(id='signup-form', method='POST')
-    input(type='hidden', name='_csrf', value=_csrf)
-    //.form-group
-    //  label.col-sm-3.control-label(for='channelName') Display Name
-    //  .col-sm-7
-    //    input.form-control(type='text', name='channelName', id='channelName', placeholder='The name that shows up for your channel',
-    //    autofocus, minlength=3, maxlength=25, required)
-    .form-group
-      label.col-sm-3.control-label(for='channelUrl') Channel Username
-      .col-sm-7
-        input.form-control.username(type='text', name='channelUrl', id='channelUrl', autofocus, required placeholder='Please enter your channel username')
-    .form-group
-      label.col-sm-3.control-label(for='password') Password
-      .col-sm-7
-        input.form-control(type='password', name='password', id='password', placeholder='Please enter your password', required)
-    .form-group
-      label.col-sm-3.control-label(for='confirmPassword') Confirm Password
-      .col-sm-7
-        input.form-control(type='password', name='confirmPassword', id='confirmPassword', placeholder='Please confirm your password', required)
+  .container.mt-3
+    .row
+      .col-md-6.offset-3
+        h3.center-block.text-center Sign Up
+        form.signup-form.text-center(id='signup-form', method='POST')
+          input(type='hidden', name='_csrf', value=_csrf)
+          //.form-group
+          //  label.col-sm-3.control-label(for='channelName') Display Name
+          //  .col-sm-7
+          //    input.form-control(type='text', name='channelName', id='channelName', placeholder='The name that shows up for your channel',
+          //    autofocus, minlength=3, maxlength=25, required)
+          .form-group
+            label.control-label(for='channelUrl') Channel Username
+            input.form-control.username(type='text', name='channelUrl', id='channelUrl', autofocus, required placeholder='Please enter your channel username')
+          .form-group
+            label.control-label(for='password') Password
+            input.form-control(type='password', name='password', id='password', placeholder='Please enter your password', required)
+          .form-group
+            label.control-label(for='confirmPassword') Confirm Password
+            input.form-control(type='password', name='confirmPassword', id='confirmPassword', placeholder='Please confirm your password', required)
 
-    if nodeEnv == 'production' && captchaOn == 'true'
-      .form-group
-        label.col-sm-3.control-label(for='captcha') Captcha
-        //.col-sm-offset-3.col-sm-7
-        .form-group.col-md-4(style="margin-left:1pt;")
-          .g-recaptcha(data-sitekey=`${recaptchaPublicKey}` id='captcha')
+          if nodeEnv == 'production' && captchaOn == 'true'
+            .form-group
+              label.control-label(for='captcha') Captcha
+              //.col-sm-offset-3.col-sm-7
+              .form-group(style="margin-left:1pt;")
+                .g-recaptcha(data-sitekey=`${recaptchaPublicKey}` id='captcha')
 
-    //var regex = new RegExp("^[a-zA-Z]+$");
+          //var regex = new RegExp("^[a-zA-Z]+$");
 
-    .form-group
-      .col-sm-offset-3.col-sm-7
-        p By signing up you are agreeing you have read and agree to the
-          a(href="/termsofservice") &nbspTerms Of Service
-    .form-group
-      .col-sm-offset-3.col-sm-7
-        button.btn.btn-success(type='submit')
-          i.fa.fa-user-plus
-          | Signup
+          .form-group
+              p By signing up you are agreeing you have read and agree to the
+                a(href="/termsofservice") &nbspTerms Of Service
+          .form-group
+              button.btn.btn-success(type='submit')
+                i.fa.fa-user-plus
+                | Signup
 
 
   script.
