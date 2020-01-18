@@ -1,5 +1,15 @@
 const categories = [
   {
+    name: 'howToAndEducation',
+    displayName: 'How To & Education',
+    subcategories: []
+  },
+  {
+    name: 'nodeTube',
+    displayName: 'NodeTube Related',
+    subcategories: []
+  },
+  {
     name: 'comedy',
     displayName: 'Comedy',
     subcategories: [
