@@ -61,7 +61,7 @@ exports.postFileUpload = async(req, res, next) => {
     }
 
     let logObject = {
-      user: req.user.channelUrl,
+      user: req.user && req.user.channelUrl,
       upload: req.query.title
     };
 
