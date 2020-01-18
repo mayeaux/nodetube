@@ -83,12 +83,13 @@ block content
                     if upload.uploader.plan == 'plus'
                         span.pewtube-pro PLUS
 
-            if alreadySubbed
-                button.subscribe.btn.btn-danger(style="border-radius:4px") Unsubscribe (#{subscriberAmount})
-            else
-                button.subscribe.btn.btn-success(style="border-radius:4px") Subscribe (#{subscriberAmount})
-            br
-            br
+            if upload.visibility != 'pending'
+                if alreadySubbed
+                    button.subscribe.btn.btn-danger(style="border-radius:4px") Unsubscribe (#{subscriberAmount})
+                else
+                    button.subscribe.btn.btn-success(style="border-radius:4px") Subscribe (#{subscriberAmount})
+                br
+                br
 
             if upload.quality && upload.quality.high
                 div.dropdown
