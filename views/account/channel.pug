@@ -11,11 +11,11 @@ block content
 
 block content
     style.
-        .dropdown {
+        .order-by-dropdown {
             text-align: center;
         }
 
-        .button, .dropdown-menu {
+        .button, .order-by-dropdown-menu {
             margin: 10px auto
         }
 
@@ -132,7 +132,7 @@ block content
                 | Order By: #{orderByEnglishString} &nbsp
                 span.caret
 
-            ul.dropdown-menu.dropdown
+            ul.order-by-dropdown-menu.order-by-dropdown
                 li
                     a(href=`/user/${channel.channelUrl}?orderBy=popular`) Popular
                 li

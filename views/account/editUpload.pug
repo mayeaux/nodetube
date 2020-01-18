@@ -1,142 +1,144 @@
 extends ../layout
 
 block content
-    .page-header
-        h3 Edit Upload
+    .container
 
-    h3.center-block.text-center
-        a(href=`/user/${upload.uploader.channelUrl}`) View Channel
-        br
-        br
-        a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}`) View Upload
-        br
-        br
+        .page-header
+            h3 Edit Upload
+
+        h3.center-block.text-center
+            a(href=`/user/${upload.uploader.channelUrl}`) View Channel
+            br
+            br
+            a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}`) View Upload
+            br
+            br
 
 
 
-    form.edit-upload-form.form-horizontal(action=`${thumbnailServer}/api/upload/${upload.uniqueTag}/edit`, method='POST' enctype="multipart/form-data" novalidate )
-        input(type='hidden', name='_csrf', value=_csrf)
-        input(type='hidden', name='uploadToken', value=user.uploadToken)
-        .form-group
-            label.col-sm-3.control-label(for='title') Title
-            .col-sm-7
-                input.form-control(type='text', name='title', id='title', minlength=3, maxlength=150 value=upload.title)
-
-        .form-group
-            label.col-sm-3.control-label(for='description') Description
-            .col-sm-7
-                textarea(id="description" name="description" maxlength='2000' rows="10" cols="70") #{upload.description}
-
-        div(style="margin:0 auto;text-align:center;margin-bottom:15px;")
-
-            div.dropdown(style="display:inline;padding-right:15px;")
-                button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px;")
-                    | Category: &nbsp
-                    span.caret
-
-                ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1' style="margin-top:-17px;margin-left:-81px;")
-                    each category in categories
-                        li(role='presentation')
-                            a.categoryValue(style="cursor:pointer;" data-value=category.name data-displayname=category.displayName) #{category.displayName}
-
-                br
-
-            div.categoryName(style="display:none")
-                h5.categoryDisplayName Category: $Thing
-                br
-
-                // subcategories
-                each category in categories
-                    if category.subcategories && category.subcategories.length > 1
-                        div.subcategories(class=category.name style="display:none;")
-                            label(for='subcategory') Subcategory (Optional)
-                            each subcategory in category.subcategories
-                                div.radio-buttons.subcategory(class=category.name style="display:none")
-                                    label.radio-inline
-                                        input.radio-button(type='radio', name='subcategory' value=subcategory.name required)
-                                        | #{subcategory.displayName}
-
-                                    br
-                                    br
-
-        // dont show if its already moderated by admin or mod
-        if !hideRatingFrontend
+        form.edit-upload-form.form-horizontal(action=`${thumbnailServer}/api/upload/${upload.uniqueTag}/edit`, method='POST' enctype="multipart/form-data" novalidate )
+            input(type='hidden', name='_csrf', value=_csrf)
+            input(type='hidden', name='uploadToken', value=user.uploadToken)
             .form-group
-                label.col-sm-3.control-label(for='rating') Rating
+                label.col-sm-3.control-label(for='title') Title
                 .col-sm-7
-                    label.radio-inline
-                        input.radio-button(type='radio', name='rating' value="sensitive" required checked=(rating==='sensitive' ? "checked" : undefined))
-                        | Sensitive (Shocking content) 18+
+                    input.form-control(type='text', name='title', id='title', minlength=3, maxlength=150 value=upload.title)
+
+            .form-group
+                label.col-sm-3.control-label(for='description') Description
+                .col-sm-7
+                    textarea(id="description" name="description" maxlength='2000' rows="10" cols="70") #{upload.description}
+
+            div(style="margin:0 auto;text-align:center;margin-bottom:15px;")
+
+                div.dropdown(style="display:inline;padding-right:15px;")
+                    button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px;")
+                        | Category: &nbsp
+                        span.caret
+
+                    ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1' style="margin-top:-17px;margin-left:-81px;")
+                        each category in categories
+                            li(role='presentation')
+                                a.categoryValue(style="cursor:pointer;" data-value=category.name data-displayname=category.displayName) #{category.displayName}
 
                     br
-                    br
-                    label.radio-inline
-                        input.radio-button(type='radio', name='rating' value="mature" checked=(rating==='mature' ? "checked" : undefined) )
-                        | Not Safe For Work
-                    br
-                    br
-                    label.radio-inline
-                        input.radio-button(type='radio', name='rating' value="allAges" checked=(rating==='allAges' ? "checked" : undefined) )
-                        | Safe For Work
-                        br
-                        br
 
-        if upload.fileType == 'video' || upload.fileType == 'audio'
+                div.categoryName(style="display:none")
+                    h5.categoryDisplayName Category: $Thing
+                    br
 
-            if !upload.customThumbnailUrl
-                div.form-group
-                    label.col-sm-3.control-label(for='filetoupload' style="") Upload Thumbnail
+                    // subcategories
+                    each category in categories
+                        if category.subcategories && category.subcategories.length > 1
+                            div.subcategories(class=category.name style="display:none;")
+                                label(for='subcategory') Subcategory (Optional)
+                                each subcategory in category.subcategories
+                                    div.radio-buttons.subcategory(class=category.name style="display:none")
+                                        label.radio-inline
+                                            input.radio-button(type='radio', name='subcategory' value=subcategory.name required)
+                                            | #{subcategory.displayName}
+
+                                        br
+                                        br
+
+            // dont show if its already moderated by admin or mod
+            if !hideRatingFrontend
+                .form-group
+                    label.col-sm-3.control-label(for='rating') Rating
                     .col-sm-7
-                        input.center-block.text-center.upload-thumbnail-input(class="upload-file" data-max-size="500000000" type="file" id="filetoupload" name="filetoupload" accept="image/*")
+                        label.radio-inline
+                            input.radio-button(type='radio', name='rating' value="sensitive" required checked=(rating==='sensitive' ? "checked" : undefined))
+                            | Sensitive (Shocking content) 18+
 
-                div.form-group
-                    div.col-sm-3.
-                    p.col-sm-7(style="white-space:pre-line;margin-top:-15px;").
-                        Thumbnail resolution:
-                            width: 302px;
-                            height: 168x;
+                        br
+                        br
+                        label.radio-inline
+                            input.radio-button(type='radio', name='rating' value="mature" checked=(rating==='mature' ? "checked" : undefined) )
+                            | Not Safe For Work
+                        br
+                        br
+                        label.radio-inline
+                            input.radio-button(type='radio', name='rating' value="allAges" checked=(rating==='allAges' ? "checked" : undefined) )
+                            | Safe For Work
+                            br
+                            br
 
-                div.form-group
-                    .col-sm-offset-3.col-sm-4
-                        button.btn.btn.btn-primary(type='submit')
-                            i.fa.fa-pencil
-                            | Edit Upload
+            if upload.fileType == 'video' || upload.fileType == 'audio'
+
+                if !upload.customThumbnailUrl
+                    div.form-group
+                        label.col-sm-3.control-label(for='filetoupload' style="") Upload Thumbnail
+                        .col-sm-7
+                            input.center-block.text-center.upload-thumbnail-input(class="upload-file" data-max-size="500000000" type="file" id="filetoupload" name="filetoupload" accept="image/*")
+
+                    div.form-group
+                        div.col-sm-3.
+                        p.col-sm-7(style="white-space:pre-line;margin-top:-15px;").
+                            Thumbnail resolution:
+                                width: 302px;
+                                height: 168x;
+
+                    div.form-group
+                        .col-sm-offset-3.col-sm-4
+                            button.btn.btn.btn-primary(type='submit')
+                                i.fa.fa-pencil
+                                | Edit Upload
 
 
+                else
+                    div.form-group
+                        .col-sm-offset-3.col-sm-4
+                            button.btn.btn.btn-primary(type='submit')
+                                i.fa.fa-pencil
+                                | Edit Upload
             else
                 div.form-group
                     .col-sm-offset-3.col-sm-4
                         button.btn.btn.btn-primary(type='submit')
                             i.fa.fa-pencil
                             | Edit Upload
-        else
-            div.form-group
-                .col-sm-offset-3.col-sm-4
-                    button.btn.btn.btn-primary(type='submit')
+
+        br
+        // DELETE FUNCTIONALITY
+        if upload.customThumbnailUrl || upload.thumbnails.custom
+            label.col-sm-3.control-label(for='' style="text-align:right;") Upload Thumbnail
+            .col-sm-7
+                // TODO: need to do the data migration here
+                if upload.thumbnails.custom
+                    img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.custom}` style="width:301.96px;height:167.969px")
+                else
+                    img(src=upload.customThumbnailUrl style="width:301.96px;height:167.969px")
+
+                form.form-horizontal.delete-thumbnail-form(action=`${thumbnailServer}/api/upload/${upload.uniqueTag}/thumbnail/delete` method="POST")
+                    input(type='hidden', name='_csrf', value=_csrf)
+                    input(type="hidden" name="channelUrl" value=`${user.channelUrl}`)
+                    input(type="hidden" name="uploadToken" value=`${user.uploadToken}`)
+
+                    br
+
+                    button.btn.btn.btn-danger(type='submit' style="margin-top:20px")
                         i.fa.fa-pencil
-                        | Edit Upload
-
-    br
-    // DELETE FUNCTIONALITY
-    if upload.customThumbnailUrl || upload.thumbnails.custom
-        label.col-sm-3.control-label(for='' style="text-align:right;") Upload Thumbnail
-        .col-sm-7
-            // TODO: need to do the data migration here
-            if upload.thumbnails.custom
-                img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.custom}` style="width:301.96px;height:167.969px")
-            else
-                img(src=upload.customThumbnailUrl style="width:301.96px;height:167.969px")
-
-            form.form-horizontal.delete-thumbnail-form(action=`${thumbnailServer}/api/upload/${upload.uniqueTag}/thumbnail/delete` method="POST")
-                input(type='hidden', name='_csrf', value=_csrf)
-                input(type="hidden" name="channelUrl" value=`${user.channelUrl}`)
-                input(type="hidden" name="uploadToken" value=`${user.uploadToken}`)
-
-                br
-
-                button.btn.btn.btn-danger(type='submit' style="margin-top:20px")
-                    i.fa.fa-pencil
-                    | Delete Thumbnail
+                        | Delete Thumbnail
 
 
 

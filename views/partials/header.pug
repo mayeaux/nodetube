@@ -1,3 +1,18 @@
+style.
+  .dropdown-anchors {
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    transition: all 0.2s linear;
+    color: white;
+  }
+
+  .dropdown-anchors:hover {
+    color: #4da5f4 !important;
+    background-color: transparent;
+  }
+
+
 .navbar.navbar-default.navbar-fixed-top(style="background-color:rgb(24,55,147)")
   .container
     .navbar-header
@@ -61,23 +76,23 @@
                 i.caret
               ul.dropdown-menu
                 li
-                  a(href=`/admin/adminAudit`) Admin Audit
+                  a.dropdown-anchors(href=`/admin/adminAudit`) Admin Audit
                 li(class=(title == 'Comments') ? 'active' : undefined)
-                  a(href=`/admin/comments`) Comments
+                  a.dropdown-anchors(href=`/admin/comments`) Comments
                 li(class=(title == 'Uploads') ? 'active' : undefined)
-                  a(href=`/admin/uploads`) Uploads
+                  a.dropdown-anchors(href=`/admin/uploads`) Uploads
                 li(class=(title == 'Users') ? 'active' : undefined)
-                  a(href=`/admin/users`) Users
+                  a.dropdown-anchors(href=`/admin/users`) Users
                 li
-                  a(href=`/admin/siteVisitors`) Site Visitors
+                  a.dropdown-anchors(href=`/admin/siteVisitors`) Site Visitors
                 li
-                  a(href=`/admin/dailyStats`) Daily Stats
+                  a.dropdown-anchors(href=`/admin/dailyStats`) Daily Stats
                 li
-                  a(href=`/admin/reacts`) Reacts
+                  a.dropdown-anchors(href=`/admin/reacts`) Reacts
                 li
-                  a(href=`/admin/createSocialPost`) Create Social Post
+                  a.dropdown-anchors(href=`/admin/createSocialPost`) Create Social Post
                 li
-                  a(href=`/admin/oneOffSocialPost`) One Off Social Post
+                  a.dropdown-anchors(href=`/admin/oneOffSocialPost`) One Off Social Post
 
         //li(class=(title == 'Features') ? 'active' : undefined)
         //  a(href=`/features`) Features
@@ -108,17 +123,17 @@
               i.caret
             ul.dropdown-menu
               li
-                a(href=`/notifications`) Notifications (#{unreadNotifAmount})
+                a.dropdown-anchors(href=`/notifications` style="color:white;") Notifications (#{unreadNotifAmount})
               li
-                a(href=`/user/` + user.channelUrl) My Channel
+                a.dropdown-anchors(href=`/user/` + user.channelUrl style="color:white;") My Channel
               li
-                a(href=`/account`) My Account
+                a.dropdown-anchors(href=`/account` style="color:white;") My Account
 
               li(class=(title == 'Upload') ? 'active' : undefined)
-                a(href=`/upload`) Upload
+                a.dropdown-anchors(href=`/upload` style="color:white;") Upload
               li.divider
               li
-                a(href=`/logout`) Logout
+                a.dropdown-anchors(href=`/logout` style="color:white;") Logout
 
 if !user
   script.
