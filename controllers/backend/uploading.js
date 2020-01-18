@@ -418,7 +418,7 @@ exports.postFileUpload = async(req, res, next) => {
               const highQualityNameForB2 = `${channelUrl}/${uniqueTag}-high`;
 
               // file name to save
-              const highQualityFileName = `${uniqueTag}-high${fileExtension}`;
+              const highQualityFileName = `${uniqueTag}-high.mp4`;
 
               // the full local path of where the file will be served from
               let highQualityFileInDirectory = `${channelUrlFolder}/${highQualityFileName}`;
