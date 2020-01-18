@@ -212,7 +212,9 @@ exports.postFileUpload = async(req, res, next) => {
 
         /** FILE PROCESSING */
 
-        // say it's processing if it's 25+ seconds
+        // send user to the upload page and say it's still  processing if the request is waiting after 25 seconds
+        // cant seem to pull it out of controller since it accesses timing variables in this backend
+        // sure you could use express to get around this but it stays for the time being
         (async function(){
           await Promise.delay(1000 * 25);
 
@@ -254,6 +256,7 @@ exports.postFileUpload = async(req, res, next) => {
           if(fileType == 'video' || fileType == 'audio' || fileType == 'convert'){
             const response = await ffmpegHelper.ffprobePromise(`${uploadPath}/convertedFile`);
 
+            // TODO: what are the units of measurement here?
             bitrate = response.format.bit_rate / 1000;
 
             uploadLogger.info(`BITRATE: ${response.format.bit_rate / 1000}`, logObject);
@@ -263,7 +266,7 @@ exports.postFileUpload = async(req, res, next) => {
             }
           }
 
-          // where to save the files
+          // where to save the files locally
           const channelUrlFolder = `${saveAndServeFilesDirectory}/${user.channelUrl}`;
 
           console.log(channelUrlFolder + ' channel url folder');
@@ -274,7 +277,7 @@ exports.postFileUpload = async(req, res, next) => {
           // file name to save
           const fileName = `${uniqueTag}${fileExtension}`;
 
-          // where the file will be served from
+          // the full local path of where the file will be served from
           let fileInDirectory = `${channelUrlFolder}/${fileName}`;
 
           /** MOVE CONVERTED FILE TO PROPER DIRECTORY **/
@@ -296,23 +299,32 @@ exports.postFileUpload = async(req, res, next) => {
           console.log('done moving file');
 
           /** CONVERT AND UPLOAD VIDEO **/
+          // TODO: PULL THIS OUT INTO A LIBRARY
           if(upload.fileType == 'convert'){
+
+            // take a thumbnail using ffmpeg and save it to the document as uniqueTag.png
+            // TODO: this also uploads to B2, this should be pulled out into its own fucntion
             await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, hostFilePath, bucket, upload, channelUrl, b2);
 
             uploadLogger.info('Captured thumbnail', logObject);
 
-            // TODO: we're compressing the upload as we convert it, may want to convert and then compress and keep both (lose best quality as is)
+            // if bitrate is above 2500 we also compress it.
+            // if we wanted to be really nice we would convert one where we don't compress it at all
+            // something to consider in the future
+
+            const savePath = `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}.mp4`;
+
+            // convert video to libx264 and also compress if bitrate over 2500
             await ffmpegHelper.convertVideo({
               uploadedPath: fileInDirectory,
-              uniqueTag,
-              channelUrl,
               title: upload.title,
-              bitrate
+              bitrate,
+              savePath
             });
 
             uploadLogger.info('Finished converting file', logObject);
 
-            // assuming an mp4 is created at this point
+            // assuming an mp4 is created at this point so we delete the old uncoverted video
             await fs.remove(`${fileInDirectory}`);
 
             uploadLogger.info('Deleted unconverted file', logObject);
@@ -330,7 +342,11 @@ exports.postFileUpload = async(req, res, next) => {
           }
 
           /** UPLOAD VIDEO AND CONVERT IF NEEDED **/
+          // TODO: fix b2 upload here
           if(upload.fileExtension == '.mp4' || upload.fileExtension == '.MP4'){
+
+            // take a thumbnail using ffmpeg and save it to the document as uniqueTag.png
+            // TODO: this also uploads to B2, this should be pulled out into its own fucntion
             await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, hostFilePath, bucket, upload, channelUrl, b2);
 
             if(bitrate > 2500){
@@ -339,17 +355,23 @@ exports.postFileUpload = async(req, res, next) => {
 
               (async function(){
 
+                const savePath = `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-compressed.mp4`;
+
+                // compresses video ([ '-preset medium', '-b:v 1000k' ]); -> /${uniqueTag}-compressed.mp4
                 await ffmpegHelper.compressVideo({
                   uploadedPath: fileInDirectory,
                   uniqueTag,
                   channelUrl,
-                  title: upload.title
+                  title: upload.title,
+                  savePath
                 });
 
                 uploadLogger.info('Video file is compressed', logObject);
 
                 // mark original upload file as high quality file
                 await fs.move(fileInDirectory, `${channelUrlFolder}/${uniqueTag}-high.mp4`);
+
+                // TODO: upload to b2 here?
 
                 uploadLogger.info('Moved original filename to uniqueTag-high.mp4', logObject);
 
@@ -383,8 +405,26 @@ exports.postFileUpload = async(req, res, next) => {
           }
 
           /** UPLOAD TO B2 **/
-          if(process.env.NODE_ENV == 'production' && process.env.UPLOAD_TO_B2 == 'true'){
+          if(process.env.UPLOAD_TO_B2 == 'true'){
             await backblaze.uploadToB2(upload, fileInDirectory, hostFilePath);
+
+            // indicates presence of compressed mp4, also upload that one
+            if((upload.fileExtension == '.mp4' || upload.fileExtension == '.MP4') && bitrate > 2500){
+
+              console.log('UPLOADING THIS MP4 COMPRESSION TO BACKBLAZE');
+
+              // name for b2 : hostFilePath + upload.fileExtension,
+
+              const highQualityNameForB2 = `${channelUrl}/${uniqueTag}-high`;
+
+              // file name to save
+              const highQualityFileName = `${uniqueTag}-high${fileExtension}`;
+
+              // the full local path of where the file will be served from
+              let highQualityFileInDirectory = `${channelUrlFolder}/${highQualityFileName}`;
+
+              await backblaze.uploadToB2(upload, highQualityFileInDirectory, highQualityNameForB2);
+            }
           }
 
           await uploadHelpers.markUploadAsComplete(uniqueTag, channelUrl, user);

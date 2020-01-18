@@ -20,7 +20,7 @@ const uploadSchema = new mongoose.Schema({
   hostUrl: String, // (backblaze prepend)  TODO: can eventually delete this
   uniqueTag: { type: String, index: true, unique: true },
   fileType: { type: String, enum: ['video', 'image', 'audio', 'unknown', 'convert'] },
-  fileSize: Number,
+  fileSize: Number,  // TODO: should support highQualityFileSize as well for compressions
   views: {
     type: Number,
     default: 0
