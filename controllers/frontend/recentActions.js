@@ -44,7 +44,7 @@ exports.recentComments = async(req, res) => {
       return comment.upload && comment.upload.visibility == 'public';
     });
 
-    res.render('public/recentReacts', {
+    res.render('admin/recentReacts', {
       title: 'Recent Comments',
       comments,
       numbersArray,
@@ -99,7 +99,7 @@ exports.recentReacts = async(req, res) => {
     return react.upload.visibility == 'public' && react.upload.status !== 'processing';
   });
 
-  res.render('public/recentReacts', {
+  res.render('admin/recentReacts', {
     title: 'Recent Reacts',
     reacts,
     numbersArray,
@@ -149,7 +149,7 @@ exports.recentViews = async(req, res) => {
     return view.upload.visibility == 'public' && view.upload.status !== 'processing';
   });
 
-  res.render('public/recentReacts', {
+  res.render('admin/recentReacts', {
     title: 'Recent Views',
     views,
     numbersArray,

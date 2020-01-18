@@ -1,7 +1,7 @@
 extends ../layout
 
 block content
-    div
+    div.container
         div.col-sm-12.text-center(style="margin:0 auto;")
             h2
             h2(style="display:inline;") Search For Keyword
@@ -9,7 +9,7 @@ block content
             br
             div(style="margin: 0 auto;")
                 input(type='hidden', name='_csrf', value=_csrf )
-                input.search-query-input.form-control(style="margin: 0 auto;width:400px" type='search', name='search', id='search' placeholder=`${searchQuery !== 'undefined' ? searchQuery: ''}`)
+                input.search-query-input.form-control(style="margin: 0 auto;width:400px;max-width:100%" type='search', name='search', id='search' placeholder=`${searchQuery !== 'undefined' ? searchQuery: ''}`)
                 br
                 button.search-uploads-button.btn-lg.btn.btn-primary(type='submit' style="margin-right:10px" name="type" value="upload")
                     //i.fa.fa-lock
