@@ -6,7 +6,11 @@ const logCaching = process.env.LOG_CACHING;
 
 const { filterUploadsBySensitivity, filterUploadsByCategory, filterUploadsBySubcategory, filterUploadsByMediaType } = require('../lib/mediaBrowsing/helpers');
 
+// set these globally as they will store the data returned in memory
 let popularUploads;
+let recentUploads;
+
+
 async function setGlobalPopularUploads(){
   popularUploads = await redisClient.getAsync('popularUploads');
   popularUploads = JSON.parse(popularUploads);
@@ -17,12 +21,15 @@ async function setGlobalPopularUploads(){
 
 }
 
-if(!process.env.FILE_HOST || process.env.FILE_HOST == 'false'){
+
+if(!process.env.FILE_HOST || process.env.FILE_HOST == 'false' || process.env.GET_CACHE == 'true'){
+  if(logCaching == 'true'){
+    console.log('not running as a file host, get from cache ');
+  }
   setGlobalPopularUploads();
   setInterval(setGlobalPopularUploads, 1000 * 60 * 5);
 }
 
-let recentUploads;
 async function setGlobalRecentUploads(){
   recentUploads = await redisClient.getAsync('recentUploads');
   recentUploads = JSON.parse(recentUploads);
@@ -33,9 +40,9 @@ async function setGlobalRecentUploads(){
 }
 
 // set global uploads if the service is not a FILE_HOST
-if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false'){
+if(!process.env.FILE_HOST || process.env.FILE_HOST == 'false' || process.env.GET_CACHE == 'true'){
   setGlobalRecentUploads();
-  setInterval(setGlobalRecentUploads, 1000 * 60 * 5);
+  // setInterval(setGlobalRecentUploads, 1000 * 60 * 5);
   setInterval(setGlobalRecentUploads, 1000 * 30);
 }
 

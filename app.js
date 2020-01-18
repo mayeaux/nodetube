@@ -107,6 +107,12 @@ if(cluster.isMaster){
 
     console.log(`FRONTEND SERVER: ${process.env.FRONTEND_SERVER} \n`);
 
+    if(process.env.LOG_CACHING == 'true'){
+      console.log(`CACHING LOGS WILL COME THROUGH CONSOLE \n`)
+    } else {
+      console.log(`CACHING LOGS WILL NOT COME THROUGH \n`)
+    }
+
     /** connect to MongoDB **/
     const mongoUri = process.env.MONGODB_URI || process.env.MONGODB_DOCKER_URI || process.env.MONGO_URI || process.env.MONGOLAB_URI;
 
