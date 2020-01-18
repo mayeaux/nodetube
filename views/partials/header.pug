@@ -4,7 +4,7 @@ style.
     font-weight: 500;
     text-transform: uppercase;
     transition: all 0.2s linear;
-    color: white;
+    color: white !important;
   }
 
   .dropdown-anchors:hover {
@@ -62,11 +62,11 @@ style.
                 i.caret
               ul.dropdown-menu
                 li(class=(title == 'Reports') ? 'active' : undefined)
-                  a(href=`/support/reports`) Reports
+                  a.dropdown-anchors(href=`/support/reports`) Reports
                 li(class=(title == 'Recent Uploads') ? 'active' : undefined)
-                  a(href=`/media/recent`) Recent Uploads
+                  a.dropdown-anchors(href=`/media/recent`) Recent Uploads
                 li(class=(title == 'Pending') ? 'active' : undefined)
-                  a(href=`/pending`) Pending
+                  a.dropdown-anchors(href=`/pending`) Pending
 
           // admin dropdown
           if user.role == 'admin'
