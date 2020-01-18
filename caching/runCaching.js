@@ -42,7 +42,7 @@ mongoose.connection.on('error', (err) => {
   process.exit();
 });
 
-console.log(`CACHING ON AND RUNNING AGAINST: ${database} \n`);
+console.log(`CACHING IS RUNNING AGAINST: ${database} \n`);
 
 const setCache = require('./setCache'); // index and daily stats
 

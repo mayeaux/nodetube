@@ -73,6 +73,7 @@ if(cluster.isMaster){
   (async function(){
 
     if(process.env.CACHING_ON == 'true'){
+      console.log('CACHING IS ON');
       const runcaching = require('./caching/runCaching');
     }
 
@@ -104,7 +105,7 @@ if(cluster.isMaster){
       console.log(err.code);
     });
 
-    console.log(`FRONTEND SERVER: ${process.env.FRONTEND_SERVER}`);
+    console.log(`FRONTEND SERVER: ${process.env.FRONTEND_SERVER} \n`);
 
     /** connect to MongoDB **/
     const mongoUri = process.env.MONGODB_URI || process.env.MONGODB_DOCKER_URI || process.env.MONGO_URI || process.env.MONGOLAB_URI;
