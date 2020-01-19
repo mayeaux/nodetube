@@ -10,7 +10,6 @@ const { filterUploadsBySensitivity, filterUploadsByCategory, filterUploadsBySubc
 let popularUploads;
 let recentUploads;
 
-
 async function setGlobalPopularUploads(){
   popularUploads = await redisClient.getAsync('popularUploads');
   popularUploads = JSON.parse(popularUploads);
@@ -20,7 +19,6 @@ async function setGlobalPopularUploads(){
   }
 
 }
-
 
 if(!process.env.FILE_HOST || process.env.FILE_HOST == 'false' || process.env.GET_CACHE == 'true'){
   if(logCaching == 'true'){
