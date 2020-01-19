@@ -102,6 +102,12 @@ You may also be interested in [videodownloader](https://github.com/mayeaux/video
 
 Don't forget to join the open-source community developing NodeTube on [Discord](https://discord.gg/ejGah8H), [Riot.im](https://riot.im/app/#/room/#nodetube:matrix.org) and [Reddit](https://reddit.com/r/nodetube)
 
+## Live NodeTube Instances
+
+Domain | Registrations Open 
+:---: | :---: 
+https://nodetube.live | Yes 
+https://nullvideo.com| Yes 
 
 License
 -------
