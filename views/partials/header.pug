@@ -5,6 +5,7 @@ style.
     text-transform: uppercase;
     transition: all 0.2s linear;
     color: white !important;
+    font-weight:500 !important;
   }
 
   .dropdown-anchors:hover {
@@ -121,7 +122,7 @@ style.
             a.dropdown-toggle(href='#', data-toggle='dropdown')
               span #{user.channelName || user.channelUrl } (#{unreadNotifAmount}) &nbsp
               i.caret
-            ul.dropdown-menu
+            ul.dropdown-menu(style="background-color:rgb(24,55,147)")
               li
                 a.dropdown-anchors(href=`/notifications` style="color:white;") Notifications (#{unreadNotifAmount})
               li

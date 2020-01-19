@@ -8,14 +8,22 @@ style.
         padding: 10px;
     }
 
-div.random-thing
-    p.upload-title-text.views-text(style="margin:0 auto;text-align:center;display:inline;") #{upload.legitViewAmount} views &nbsp
+// all the details including title
+
+// UPLOAD TITLE
+div
+    p.balance-text.upload-title-text(style="width:100%;margin:0 auto;margin-top:11px;margin-bottom:7px;") #{upload.title} &nbsp
+
         if upload.fileType == 'video'
             i.fa.fa-video-camera(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;")
         else if upload.fileType == 'audio'
             i.fa.fa-volume-up(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;")
         else if upload.fileType == 'image'
             i.fa.fa-picture-o(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;")
+
+// 55 views   Zoran Zivcho Blagovcanin
+div.random-thing
+    p.upload-title-text.views-text(style="margin:0 auto;text-align:center;display:inline;") #{upload.legitViewAmount} views &nbsp
         // upload time ago
 
         if !within
