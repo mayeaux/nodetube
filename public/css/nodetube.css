@@ -10,11 +10,6 @@
 
 /* 70 : 39 aspect ratio */
 
-.preview-image {
-    width: 302px;
-    height: 168px;
-}
-
 .border-preview {
     border: 1px solid black;
 }
@@ -39,11 +34,11 @@
 
 .upload-title-text {
     color:black;
-    font-size:15px;
+    font-size:18px;
     text-align: center;
     margin: 0;
     margin-top:8px;
-    height:40px;
+    height:52px;
     overflow:hidden;
 
     font-weight:300;
