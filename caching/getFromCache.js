@@ -157,7 +157,19 @@ async function getRecentUploads(limit, offset, mediaType, filter, category, subc
   if(category){
 
     if(category == 'all'){
-      return uploads;
+
+      console.log(uploads);
+
+      // have to sort by most recent here
+
+      uploads = uploads.sort(function(a, b){
+        console.log(a.createdAt);
+        return a.createdAt - b.createdAt;
+      });
+
+      // console.log(uploads);
+
+      return uploads
     }
 
     uploads = filterUploadsByCategory(uploads, category);
