@@ -112,6 +112,8 @@ exports.recentUploads = async(req, res) => {
       }
     }
 
+    console.log(`CATEGORY: ${category}`);
+
     const mediaType = media;
 
     const uploads = await getFromCache.getRecentUploads(limit, skipAmount, mediaType, filter, category, subcategory);
