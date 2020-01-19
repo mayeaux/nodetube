@@ -24,6 +24,7 @@ var multipart = require('connect-multiparty');
 const Promise = require('bluebird');
 const ngrok = require('ngrok');
 const commandExists = require('command-exists');
+const errorHandler = require('errorhandler');
 
 const jsHelpers = require('./lib/helpers/js-helpers');
 
@@ -363,6 +364,11 @@ if(cluster.isMaster){
       res.render('error/500');
     });
 
+    /** error handler **/
+    if (process.env.NODE_ENV === 'development') {
+      app.use(errorHandler());
+    }
+
     /** ip block error handler **/
     app.use(async function(err, req, res, next){
       // console.log(err);
@@ -374,11 +380,6 @@ if(cluster.isMaster){
         next();
       }
     });
-
-    /** error handler **/
-    // if (process.env.NODE_ENV === 'development') {
-    //   app.use(errorHandler());
-    // }
 
     /** start server **/
     app.listen(app.get('port'), () => {
