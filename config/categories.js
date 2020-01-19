@@ -10,11 +10,12 @@ const categories = [
     subcategories: []
   },
   {
-    name: 'comedy',
-    displayName: 'Comedy',
+    name: 'technologyAndScience',
+    displayName: 'Technology & Science',
     subcategories: [
-      { name: 'pranks', displayName: 'Pranks' },
-      { name: 'political', displayName: 'Political'}
+      { name: 'blockchain', displayName: 'Blockchain' },
+      { name: 'internet', displayName: 'Internet'},
+      { name: 'software', displayName: 'Software'}
     ]
   },
   {
@@ -23,20 +24,20 @@ const categories = [
     subcategories: []
   },
   {
+    name: 'comedy',
+    displayName: 'Comedy',
+    subcategories: [
+      { name: 'pranks', displayName: 'Pranks' },
+      { name: 'political', displayName: 'Political'}
+    ]
+  },
+
+  {
     name: 'healthAndWellness',
     displayName: 'Health And Wellness',
     subcategories: [
       { name: 'yogaAndMeditation', displayName: 'Yoga & Meditation' },
       { name: 'fitness', displayName: 'Fitness'}
-    ]
-  },
-  {
-    name: 'technologyAndScience',
-    displayName: 'Technology & Science',
-    subcategories: [
-      { name: 'blockchain', displayName: 'Blockchain' },
-      { name: 'internet', displayName: 'Internet'},
-      { name: 'software', displayName: 'Software'}
     ]
   },
   {
