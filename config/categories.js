@@ -35,13 +35,9 @@ const categories = [
     displayName: 'Technology & Science',
     subcategories: [
       { name: 'blockchain', displayName: 'Blockchain' },
-      { name: 'internet', displayName: 'Internet'}
+      { name: 'internet', displayName: 'Internet'},
+      { name: 'software', displayName: 'Software'}
     ]
-  },
-  {
-    name: 'howToAndEducation',
-    displayName: 'How To & Education',
-    subcategories: []
   },
   {
     name: 'music',

@@ -91,7 +91,7 @@ const uploadSchema = new mongoose.Schema({
   },
 
   subcategory: { type: String, enum: ['pranks', 'meditation', 'yoga', 'rightwing', 'leftwing', 'uncategorized', 'fitness',
-    'yogaAndMeditation', 'blockchain', 'internet', 'political'] }
+    'yogaAndMeditation', 'blockchain', 'internet', 'political', 'software'] }
 
 }, {
   timestamps: true,
