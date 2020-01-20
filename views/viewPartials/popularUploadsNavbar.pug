@@ -1,18 +1,18 @@
 div.row
     div.col-sm-2
         h3
-            a(href=`/media/popular/1?within=1hour`) Last Hour
+            a(href=`/media/popular/1?within=1hour&category=${category}`) Last Hour
     div.col-sm-2
         h3
-            a(href=`/media/popular/1?within=24hour`) Last Day
+            a(href=`/media/popular/1?within=24hour&category=${category}`) Last Day
     div.col-sm-2
         h3
-            a(href=`/media/popular/1?within=1week`) Last Week
+            a(href=`/media/popular/1?within=1week&category=${category}`) Last Week
     div.col-sm-2
         h3
-            a(href=`/media/popular/1?within=1month`) Last Month
+            a(href=`/media/popular/1?within=1month&category=${category}`) Last Month
     div.col-sm-2
         h3
-            a(href="/media/popular") All-Time
+            a(href=`/media/popular?category=${category}`) All-Time
 
 hr

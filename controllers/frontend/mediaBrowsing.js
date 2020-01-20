@@ -74,6 +74,8 @@ exports.recentUploads = async(req, res) => {
 
   try {
 
+    const mediaBrowsingType = 'recent';
+
     console.log('getting recent uploads');
 
     const addressPrepend = '/media/recent';
@@ -136,7 +138,8 @@ exports.recentUploads = async(req, res) => {
       category,
       isACategory : category,
       addressPrepend,
-      categoryObj
+      categoryObj,
+      mediaBrowsingType
     });
 
   } catch(err){
@@ -154,6 +157,8 @@ exports.recentUploads = async(req, res) => {
 exports.popularUploads = async(req, res) => {
 
   console.log('getting popular uploads');
+
+  const mediaBrowsingType = 'popular'
 
   const addressPrepend = '/media/popular';
 
@@ -269,7 +274,8 @@ exports.popularUploads = async(req, res) => {
       categoryObj,
       within,
       withinDisplayString,
-      popularTimeViews
+      popularTimeViews,
+      mediaBrowsingType
     });
 
   } catch(err){

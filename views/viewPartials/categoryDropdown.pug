@@ -6,4 +6,4 @@ div.dropdown(style="display:inline;padding-right:15px;")
     ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1')
         each category in categories
             li(role='presentation')
-                a(href=`/media/recent/1?media=all&category=${category.name}`) #{category.displayName}
+                a(href=`/media/${mediaBrowsingType}/1?media=all&category=${category.name}`) #{category.displayName}
