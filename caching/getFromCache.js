@@ -163,7 +163,7 @@ async function getRecentUploads(limit, offset, mediaType, filter, category, subc
         return new Date(b.createdAt) - new Date(a.createdAt);
       });
 
-      return uploads
+      return uploads;
     }
 
     uploads = filterUploadsByCategory(uploads, category);
