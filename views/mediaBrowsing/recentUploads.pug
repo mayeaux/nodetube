@@ -43,9 +43,15 @@ block content
                 include ../viewPartials/categoryOverviews
 
             else
+
+                div.category.col-sm-12
+                    a.upload-user-text(href=`${addressPrepend}/${highlightedNumber}?category=${category.name}&within=${within}&media=${mediaType || ''}`)
+                        h1 #{categoryObj.displayName}
+                        br
+
                 each upload in uploads
                     if upload.uploader
-                        div.col-sm-4(style="text-align:center;height:310px;")
+                        div.col-sm-4(style="text-align:center;height:335px;")
                             div(style="width:100%")
                                 include ../viewPartials/uploadThumbnail
 

@@ -13,6 +13,7 @@ function buildObjects(uploads){
         curated: upload.uploader.curated
       },
       _id: upload._id,
+      createdAt: upload.createdAt,
       title: upload.title,
       fileType: upload.fileType,
       fileExtension: upload.fileExtension,

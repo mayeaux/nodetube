@@ -1,5 +1,10 @@
 const categories = [
   {
+    name: 'all',
+    displayName: 'All Uploads',
+    subcategories: []
+  },
+  {
     name: 'howToAndEducation',
     displayName: 'How To & Education',
     subcategories: []

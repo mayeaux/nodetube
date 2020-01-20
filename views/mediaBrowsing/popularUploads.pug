@@ -33,12 +33,20 @@ block content
 
         br
         div.uploads
+            // show all the categories via previews if it's not already a category overview
             if !isACategory
                 include ../viewPartials/categoryOverviews
 
             else
+
+                div.category.col-sm-12
+                    a.upload-user-text(href=`${addressPrepend}/${highlightedNumber}?category=${category.name}&within=${within}&media=${mediaType || ''}`)
+                        h1 #{categoryObj.displayName}
+                        br
+
+
                 each upload in uploads
-                    div.col-sm-4(style="text-align:center;height:310px;")
+                    div.col-sm-4(style="text-align:center;height:335px;")
 
                         include ../viewPartials/uploadThumbnail
 

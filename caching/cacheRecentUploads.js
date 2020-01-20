@@ -20,6 +20,7 @@ const redisClient = require('../config/redis');
 
 const logCaching = process.env.LOG_CACHING;
 
+/** Get all recent uploads from the database per category and concat them **/
 async function getRecentUploads(){
 
   let recentUploadsAllCategories = [];
@@ -58,6 +59,7 @@ async function getRecentUploads(){
   return recentUploadsAllCategories;
 }
 
+/** Get recent uploads per the function above, calculate their views per time period **/
 async function setRecentUploads(){
   let recentUploads  = await getRecentUploads();
 
