@@ -1,6 +1,12 @@
 extends ../layout
 
 block content
+
+  style.
+    .explainer {
+      margin-top: 15px;
+    }
+
   div.container(style="text-align:center")
     br
     br
@@ -8,9 +14,9 @@ block content
     br
     br
     br
-    h1 Welcome to NodeTube
+    h1 Introducing NodeTube
     br
-    h2 The internet's simplest and funnest file hosting
+    h2 The internet's best hosting for creators and developers
     br
     br
     br
@@ -22,12 +28,12 @@ block content
       .col-sm-4
         h2 No Email Required &nbsp
           i.fa.fa-bolt
-        p Start your channel on NodeTube
+        p.explainer Start your channel on NodeTube
         | without having to verify your email
       .col-sm-4
         h2 Video, Audio, Images &nbsp
           i.fa.fa-thumbs-o-up
-        p Over 30 file formats are supported
+        p.explainer Over 30 file formats are supported
         | between video, audio and image uploads
         br
         br
@@ -35,7 +41,7 @@ block content
       .col-sm-4
         h2 100% Open Source &nbsp
           i.fa.fa-space-shuttle
-        p Create your own NodeTube instance
+        p.explainer Create your own NodeTube instance
         | in just minutes following our tutorials
 
 
@@ -43,15 +49,15 @@ block content
       .col-sm-4
         h2 #{channelAmount} Channels &nbsp
           i.fa.fa-users
-        p The number of creator who have
+        p.explainer The number of creators who have
         | chosen NodeTube for their media hosting
       .col-sm-4
         h2 #{mediaAmount} Uploads &nbsp
           i.fa.fa-upload
-        p The number of  times creators have
+        p.explainer The number of  times creators have
         | chosen NodeTube for their content hosting
       .col-sm-4
         h2 #{viewAmount} Views &nbsp
           i.fa.fa-video
-        p The number of times people have
+        p.explainer The number of times people have
         | enjoyed the innovative new platform
