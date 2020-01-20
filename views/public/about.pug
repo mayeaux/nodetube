@@ -3,6 +3,11 @@ extends ../layout
 block content
 
         style.
+                .container div h3 {
+                        font-size:23px;
+                        font-weight:300;
+                }
+
                 .ldBar {
                         margin: 0 auto;
                 }
@@ -11,14 +16,16 @@ block content
                         margin-left:5px
                 }
 
+
+
         .container
                 div(style="padding-top:75px;max-width:629px;margin:0 auto;")
 
                         h3 NodeTube was created to allow anyone with basic technical skills to run their own media hosting platform
                         br
-                        h3 Please check out the GitHub repo for more information
-                                a(style="margin-left:5px" href="https://github.com/mayeaux/nodetube").
-                                          here
+                        h3(style="display:inline")  Please check out the
+                                a(style="margin-left:5px" href="https://github.com/mayeaux/nodetube") GitHub Repo
+                        h3(style="display:inline") &nbspto see the source code and learn more about the application
 
                         br
                         h3
@@ -29,6 +36,16 @@ block content
                                 |  and
                                 a.left(href='https://reddit.com/r/nodetube') Reddit
 
+                        h3 If you find the project interesting and want to help it succeed please send the link to this live instance and the Github repo around on places like Reddit, Hacker News, Twitter, Facebook, Discord.  Self-promotion is really frowned upon on the internet and the less time I have to do bringing people’s attention to the project the more I can focus on working on improving the software
 
 
+                        h3.
+                                Github Repo Link
+                        h3.
+                                https://github.com/mayeaux/nodetube
+
+                        h3.
+                                Live Instance Link
+                        h3.
+                                https://nodetube.live
 
