@@ -29,9 +29,9 @@ style.
         li(class=(title == 'Home') ? 'active' : undefined)
           a(href=`/`) Home
           li(class=(title == 'Popular Uploads') ? 'active' : undefined)
-            a(href=`/media/popular/1?within=24hour`) Popular
+            a(href=`/media/popular/1?within=24hour&category=all`) Popular
           li(class=(title == 'Recent Uploads') ? 'active' : undefined)
-            a(href=`/media/recent`) Recent
+            a(href=`/media/recent?category=all`) Recent
           //li(class=(title == 'Channels') ? 'active' : undefined)
           //  a(href=`/channels?within=24hour`) Channels
 
