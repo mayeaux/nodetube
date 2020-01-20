@@ -209,11 +209,27 @@ exports.getChannel = async(req, res) => {
     console.log(`IS ADMIN OR MOD: ${viewerIsAdminOrMod}`);
     console.log(`IS OWNER: ${viewerIsOwner}`);
 
-    // if the viewer isnt a mod/admin or the owning user, then only show public uploads
-    if(!viewerIsAdminOrMod && !viewerIsOwner){
+    // if the viewer isnt a mod/admin, then only show public uploads
+
+    // if the viewer is not an owner or admin, only public
+    // if they are owner, then public / pending / private / unlisted
+    // if they are mod/admin, then no need to filter at all
+
+    if(!viewerIsOwner && !viewerIsAdminOrMod){
       uploads = _.filter(uploads, function(upload){
-        return upload.visibility == 'public';
+        return upload.visibility == 'public' || upload.visibility == 'unlisted';
       });
+    }
+
+    // if viewer is owner but not admin they can also see pending / private uploads
+    if(viewerIsOwner && !viewerIsAdminOrMod){
+      uploads = _.filter(uploads, function(upload){
+        return upload.visibility == 'public' ||  upload.visibility == 'unlisted' ||  upload.visibility == 'pending' ||  upload.visibility == 'private';
+      });
+    }
+
+    if(viewerIsAdminOrMod){
+      // no need to do any filters
     }
 
     // remove unlisted videos if its not user and is not admin
