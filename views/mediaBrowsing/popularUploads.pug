@@ -40,9 +40,8 @@ block content
             else
 
                 div.category.col-sm-12
-                    a.upload-user-text(href=`${addressPrepend}/${highlightedNumber}?category=${category.name}&within=${within}&media=${mediaType || ''}`)
-                        h1 #{categoryObj.displayName}
-                        br
+                    h1 #{categoryObj.displayName}
+                    br
 
 
                 each upload in uploads
