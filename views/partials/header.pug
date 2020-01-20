@@ -51,9 +51,9 @@ style.
               a.dropdown-toggle(href='#', data-toggle='dropdown')
                 span= 'Support'
                 i.caret
-              ul.dropdown-menu
+              ul.dropdown-menu(style="background-color:rgb(24,55,147)")
                 li(class=(title == 'Emails') ? 'active' : undefined)
-                  a(href=`/support/emails`) Emails
+                  a.dropdown-anchors(href=`/support/emails`) Emails
 
           // moderator dropdown
           if user.role == 'moderator' || user.role == 'admin'
@@ -61,7 +61,7 @@ style.
               a.dropdown-toggle(href='#', data-toggle='dropdown')
                 span= 'Moderator'
                 i.caret
-              ul.dropdown-menu
+              ul.dropdown-menu(style="background-color:rgb(24,55,147)")
                 li(class=(title == 'Reports') ? 'active' : undefined)
                   a.dropdown-anchors(href=`/support/reports`) Reports
                 li(class=(title == 'Recent Uploads') ? 'active' : undefined)
@@ -75,7 +75,7 @@ style.
               a.dropdown-toggle(href='#', data-toggle='dropdown')
                 span= 'Admin Panel'
                 i.caret
-              ul.dropdown-menu
+              ul.dropdown-menu(style="background-color:rgb(24,55,147)")
                 li
                   a.dropdown-anchors(href=`/admin/adminAudit`) Admin Audit
                 li(class=(title == 'Comments') ? 'active' : undefined)
