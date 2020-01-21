@@ -3,23 +3,21 @@ extends ../layout
 block content
 
   style.
-    .explainer {
-      margin-top: 15px;
-    }
-
-    /*with mobile, 22px; is ideal*/
-
-    .pitch-header {
-      font-size:30px;
-    }
-
     .lead-header {
       margin-top: 137px;
-      margin-bottom:47px;
+      margin-bottom: 47px;
     }
 
     .tagline-header {
       margin-bottom: 70px;
+    }
+
+    .explainer {
+      margin-top: 15px;
+    }
+
+    .pitch-header {
+      font-size:30px;
     }
 
     .first-row {
@@ -31,6 +29,11 @@ block content
     }
 
     @media (max-width: 480px) {
+
+      .lead-header {
+        margin-top: 80px;
+      }
+
       .pitch-header {
         font-size: 22px;
       }
