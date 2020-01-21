@@ -459,8 +459,8 @@ exports.postFileUpload = async(req, res, next) => {
           if(process.env.UPLOAD_TO_B2 == 'true'){
             await backblaze.uploadToB2(upload, fileInDirectory, hostFilePath);
 
-            // indicates presence of compressed mp4, also upload that one
-            if((upload.fileExtension == '.mp4' || upload.fileExtension == '.MP4') && bitrate > 2500){
+            // indicates presence of compressed mp4, also upload that one, also if it's a convert mp4 it's already compressed so no need to upload
+            if((upload.fileExtension == '.mp4' || upload.fileExtension == '.MP4') && bitrate > 2500 && convertMp4 !== true){
 
               console.log('UPLOADING THIS MP4 COMPRESSION TO BACKBLAZE');
 
