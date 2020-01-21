@@ -399,7 +399,8 @@ exports.postFileUpload = async(req, res, next) => {
             // TODO: this also uploads to B2, this should be pulled out into its own fucntion
             await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, hostFilePath, bucket, upload, channelUrl, b2);
 
-            if(bitrate > 2500){
+            // if convertmp4 is true it means it was already converted
+            if(bitrate > 2500 && convertMp4 !== true){
 
               uploadLogger.info('About to compress file since bitrate is over 2500', logObject);
 
