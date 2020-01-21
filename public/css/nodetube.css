@@ -132,3 +132,16 @@
 .body {
     background-color: #FAFAFA;
 }
+
+.preview-image {
+    width: inherit;
+    max-width:324px;
+    height:200px;
+    max-height:200px;
+}
+
+@media (max-width: 347px) {
+    .preview-image {
+        max-width:280px;
+    }
+}

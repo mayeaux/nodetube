@@ -7,57 +7,85 @@ block content
       margin-top: 15px;
     }
 
-  div.container(style="text-align:center")
-    br
-    br
-    br
-    br
-    br
-    br
-    h1 Introducing NodeTube
-    br
-    h2 The internet's best hosting for creators and developers
-    br
-    br
-    br
-    br
+    /*with mobile, 22px; is ideal*/
 
+    .pitch-header {
+      font-size:30px;
+    }
+
+    .lead-header {
+      margin-top: 137px;
+      margin-bottom:47px;
+    }
+
+    .tagline-header {
+      margin-bottom: 70px;
+    }
+
+    .first-row {
+      margin-top:35px;
+    }
+
+    .second-row {
+      margin-top: 20px;
+    }
+
+    @media (max-width: 480px) {
+      .pitch-header {
+        font-size: 22px;
+      }
+
+      .row .col-sm-4 {
+        margin-bottom:52px;
+      }
+
+      .first-row {
+        margin-bottom: 0px;
+      }
+
+      .second-row {
+        margin-top: 0px;
+      }
+      /* styles for mobile browsers smaller than 480px; (iPhone) */
+    }
+
+  div.container(style="text-align:center")
+
+    h1.lead-header Introducing NodeTube
+    h2.tagline-header An open-source YouTube alternative powered by Node.js
     hr
 
-    .row
+    .row.first-row
       .col-sm-4
-        h2 No Email Required &nbsp
+        h2.pitch-header No Email Required &nbsp
           i.fa.fa-bolt
         p.explainer Start your channel on NodeTube
         | without having to verify your email
       .col-sm-4
-        h2 Video, Audio, Images &nbsp
+        h2.pitch-header Video, Audio, Images &nbsp
           i.fa.fa-thumbs-o-up
         p.explainer Over 30 file formats are supported
         | between video, audio and image uploads
-        br
-        br
-        br
       .col-sm-4
-        h2 100% Open Source &nbsp
+        h2.pitch-header 100% Open Source &nbsp
           i.fa.fa-space-shuttle
         p.explainer Create your own NodeTube instance
         | in just minutes following our tutorials
 
 
-    .row
+    .row.second-row
       .col-sm-4
-        h2 #{channelAmount} Channels &nbsp
+        h2.pitch-header #{channelAmount} Channels &nbsp
           i.fa.fa-users
         p.explainer The number of creators who have
         | chosen NodeTube for their media hosting
       .col-sm-4
-        h2 #{mediaAmount} Uploads &nbsp
+        h2.pitch-header #{mediaAmount} Uploads &nbsp
           i.fa.fa-upload
         p.explainer The number of  times creators have
         | chosen NodeTube for their content hosting
       .col-sm-4
-        h2 #{viewAmount} Views &nbsp
+        h2.pitch-header #{viewAmount} Views &nbsp
           i.fa.fa-video
         p.explainer The number of times people have
         | enjoyed the innovative new platform
