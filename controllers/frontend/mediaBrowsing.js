@@ -158,7 +158,7 @@ exports.popularUploads = async(req, res) => {
 
   console.log('getting popular uploads');
 
-  const mediaBrowsingType = 'popular'
+  const mediaBrowsingType = 'popular';
 
   const addressPrepend = '/media/popular';
 
