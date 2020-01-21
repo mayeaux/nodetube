@@ -256,6 +256,13 @@ exports.postFileUpload = async(req, res, next) => {
           if(fileType == 'video' || fileType == 'audio' || fileType == 'convert'){
             const response = await ffmpegHelper.ffprobePromise(`${uploadPath}/convertedFile`);
 
+            const codecName = response.streams[0].codec_name;
+
+            const codecProfile = response.streams[0].profile;
+
+
+            // return console.log(response.streams[0].codec_name);
+
             // TODO: what are the units of measurement here?
             bitrate = response.format.bit_rate / 1000;
 
@@ -264,6 +271,18 @@ exports.postFileUpload = async(req, res, next) => {
             if(bitrate > 2500){
               // console.log('need to convert here')
             }
+
+            // TODO: convert hevc even though it's .mp4
+            if(codecName == 'hevc'){
+              console.log('HEVC UPLOAD');
+            }
+
+            // TODO: have to convert here
+            if(codecProfile == 'High 4:4:4 Predictive'){
+              console.log('HIGH 4:4:4 Predictive UPLOAD');
+            }
+
+            console.log(response);
           }
 
           // where to save the files locally
