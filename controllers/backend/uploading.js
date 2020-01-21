@@ -400,48 +400,45 @@ exports.postFileUpload = async(req, res, next) => {
 
               uploadLogger.info('About to compress file since bitrate is over 2500', logObject);
 
-              (async function(){
+              const savePath = `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-compressed.mp4`;
 
-                const savePath = `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-compressed.mp4`;
+              // compresses video ([ '-preset medium', '-b:v 1000k' ]); -> /${uniqueTag}-compressed.mp4
+              await ffmpegHelper.compressVideo({
+                uploadedPath: fileInDirectory,
+                uniqueTag,
+                channelUrl,
+                title: upload.title,
+                savePath
+              });
 
-                // compresses video ([ '-preset medium', '-b:v 1000k' ]); -> /${uniqueTag}-compressed.mp4
-                await ffmpegHelper.compressVideo({
-                  uploadedPath: fileInDirectory,
-                  uniqueTag,
-                  channelUrl,
-                  title: upload.title,
-                  savePath
-                });
+              uploadLogger.info('Video file is compressed', logObject);
 
-                uploadLogger.info('Video file is compressed', logObject);
+              // mark original upload file as high quality file
+              await fs.move(fileInDirectory, `${channelUrlFolder}/${uniqueTag}-high.mp4`);
 
-                // mark original upload file as high quality file
-                await fs.move(fileInDirectory, `${channelUrlFolder}/${uniqueTag}-high.mp4`);
+              // TODO: upload to b2 here?
 
-                // TODO: upload to b2 here?
+              uploadLogger.info('Moved original filename to uniqueTag-high.mp4', logObject);
 
-                uploadLogger.info('Moved original filename to uniqueTag-high.mp4', logObject);
+              // move compressed video to original video's place
+              await fs.move(`${channelUrlFolder}/${uniqueTag}-compressed.mp4`, fileInDirectory);
 
-                // move compressed video to original video's place
-                await fs.move(`${channelUrlFolder}/${uniqueTag}-compressed.mp4`, fileInDirectory);
+              uploadLogger.info('Moved compressed file to default uniqueTag.mp4 location', logObject);
 
-                uploadLogger.info('Moved compressed file to default uniqueTag.mp4 location', logObject);
+              // save high quality video size
+              const highQualityFileStats = fs.statSync(`${channelUrlFolder}/${uniqueTag}-high.mp4`);
+              upload.quality.high = highQualityFileStats.size;
 
-                // save high quality video size
-                const highQualityFileStats = fs.statSync(`${channelUrlFolder}/${uniqueTag}-high.mp4`);
-                upload.quality.high = highQualityFileStats.size;
+              // save compressed video quality size
+              const compressedFileStats = fs.statSync(fileInDirectory);
+              upload.fileSize = compressedFileStats.size;
 
-                // save compressed video quality size
-                const compressedFileStats = fs.statSync(fileInDirectory);
-                upload.fileSize = compressedFileStats.size;
+              // uploadLogger.info(`Moved file to user's directory`, logObject);
 
-                // uploadLogger.info(`Moved file to user's directory`, logObject);
+              await upload.save();
 
-                await upload.save();
+              uploadLogger.info('Upload document saved after compression and moving files', logObject);
 
-                uploadLogger.info('Upload document saved after compression and moving files', logObject);
-
-              })();
             }
 
           }
