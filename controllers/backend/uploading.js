@@ -252,6 +252,8 @@ exports.postFileUpload = async(req, res, next) => {
 
           uploadLogger.info('Concat done', logObject);
 
+          let convertMp4 = false;
+
           // calculate bitrate for video, audio and converts
           if(fileType == 'video' || fileType == 'audio' || fileType == 'convert'){
             const response = await ffmpegHelper.ffprobePromise(`${uploadPath}/convertedFile`);
@@ -274,11 +276,19 @@ exports.postFileUpload = async(req, res, next) => {
 
             // TODO: convert hevc even though it's .mp4
             if(codecName == 'hevc'){
+
+              convertMp4 = true;
+
+              upload.fileType = 'convert';
               console.log('HEVC UPLOAD');
             }
 
             // TODO: have to convert here
             if(codecProfile == 'High 4:4:4 Predictive'){
+
+              convertMp4 = true;
+
+              upload.fileType = 'convert';
               console.log('HIGH 4:4:4 Predictive UPLOAD');
             }
 
@@ -333,18 +343,39 @@ exports.postFileUpload = async(req, res, next) => {
 
             const savePath = `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}.mp4`;
 
-            // convert video to libx264 and also compress if bitrate over 2500
-            await ffmpegHelper.convertVideo({
-              uploadedPath: fileInDirectory,
-              title: upload.title,
-              bitrate,
-              savePath
-            });
+            // TODO: savePath and fileInDirectory are the same thing, need to clean this code up
 
-            uploadLogger.info('Finished converting file', logObject);
+            if(convertMp4 == true){
+              await fs.move(savePath, `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-old.mp4`);
 
-            // assuming an mp4 is created at this point so we delete the old uncoverted video
-            await fs.remove(`${fileInDirectory}`);
+              // convert video to libx264 and also compress if bitrate over 2500
+              await ffmpegHelper.convertVideo({
+                uploadedPath: `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-old.mp4`,
+                title: upload.title,
+                bitrate,
+                savePath
+              });
+
+              uploadLogger.info('Finished converting file', logObject);
+
+              // assuming an mp4 is created at this point so we delete the old uncoverted video
+              await fs.remove(`${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-old.mp4`);
+
+            } else {
+              // convert video to libx264 and also compress if bitrate over 2500
+              await ffmpegHelper.convertVideo({
+                uploadedPath: fileInDirectory,
+                title: upload.title,
+                bitrate,
+                savePath
+              });
+
+              uploadLogger.info('Finished converting file', logObject);
+
+              // assuming an mp4 is created at this point so we delete the old uncoverted video
+              await fs.remove(`${fileInDirectory}`);
+            }
+
 
             uploadLogger.info('Deleted unconverted file', logObject);
 
