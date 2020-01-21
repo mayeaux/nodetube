@@ -280,7 +280,6 @@ exports.postFileUpload = async(req, res, next) => {
               convertMp4 = true;
 
               upload.fileType = 'convert';
-              console.log('HEVC UPLOAD');
             }
 
             // TODO: have to convert here
@@ -289,10 +288,7 @@ exports.postFileUpload = async(req, res, next) => {
               convertMp4 = true;
 
               upload.fileType = 'convert';
-              console.log('HIGH 4:4:4 Predictive UPLOAD');
             }
-
-            console.log(response);
           }
 
           // where to save the files locally
