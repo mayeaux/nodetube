@@ -308,7 +308,6 @@ exports.postFileUpload = async(req, res, next) => {
 
             const codecProfile = response.streams[0].profile;
 
-
             // return console.log(response.streams[0].codec_name);
 
             // TODO: what are the units of measurement here?
@@ -417,7 +416,6 @@ exports.postFileUpload = async(req, res, next) => {
               // assuming an mp4 is created at this point so we delete the old uncoverted video
               await fs.remove(`${fileInDirectory}`);
             }
-
 
             uploadLogger.info('Deleted unconverted file', logObject);
 
