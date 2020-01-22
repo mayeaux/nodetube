@@ -1,0 +1,14 @@
+{
+  "name": "NodeTube",
+  "short_name": "NodeTube",
+  "theme_color": "#183793",
+  "background_color": "#FAFAFA",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/media/popular/1?within=24hour&category=all",
+  "icons": [{
+    "src": "/images/app-icon-512x512.png",
+    "type" : "image/png",
+    "sizes": "512x512"
+  }]
+}

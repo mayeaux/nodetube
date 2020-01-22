@@ -5,7 +5,7 @@ html
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
     meta(content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no', name='viewport')
     meta(name='apple-mobile-web-app-capable', content='yes')
-    meta(name='theme-color' content='#4DA5F4')
+    meta(name='theme-color' content='#183793')
     meta(name='csrf-token', content=_csrf)
     meta(name="description", content=meta.description)
 
@@ -23,12 +23,13 @@ html
 
 
     title #{title} - NodeTube
-
     link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@7.33.1/dist/sweetalert2.css')
     link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css')
     link(rel='stylesheet', href='/css/main.css')
     link(rel='stylesheet', href='/css/nodetube.css')
     link(rel='shortcut icon', href='/favicon.ico')
+    link(rel='apple-touch-icon', href='/images/app-icon-512x512.png')
+    link(rel='manifest', href='/manifest.json')
     link(href='https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css', rel='stylesheet')
     block extra_css
 
