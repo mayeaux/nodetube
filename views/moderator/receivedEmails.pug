@@ -6,12 +6,12 @@ block content
             h2
             h2.view-header Received Emails
             h3
-                a(href="/support/emails?to=support@pewtube.com&respondedTo=false") Support Emails
+                a(href="/support/emails?to=support@nodetube.org&respondedTo=false") Support Emails
             h3
-                a(href="/support/emails?to=copyright@pewtube.com&respondedTo=false") Copyright Emails
+                a(href="/support/emails?to=copyright@nodetube.org&respondedTo=false") Copyright Emails
             if user.role == 'admin'
                 h3
-                    a(href="/support/emails?to=ceo@pew.tube&respondedTo=false") Ceo Emails
+                    a(href="/support/emails?to=ceo@nodetube.org&respondedTo=false") Ceo Emails
         hr
         each email in receivedEmails
             a(href=`/support/emails/${email._id}`)

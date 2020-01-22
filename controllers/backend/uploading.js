@@ -36,14 +36,60 @@ const backblaze = require('../../lib/uploading/backblaze');
 var resumable = require('../../lib/uploading/resumable.js')(__dirname +  '/upload');
 
 const winston = require('winston');
-const uploadsOn = process.env.UPLOADS_ON;
+//
+// winston.loggers.add('uploadEndpoint', {
+//   level: 'info',
+//   // format: winston.format.json(),
+//   format: combine(
+//     format.splat(),
+//     format.simple(),
+//     format.json(),
+//     // label({ label: 'custom label!' }),
+//     // timestamp(),
+//   ),
+//   transports: [
+//     //
+//     // - Write to all logs with level `info` and below to `combined.log`
+//     // - Write all logs error (and below) to `error.log`.
+//     //
+//     new transports.Console(),
+//     new transports.File({ filename: 'error.log', level: 'error' }),
+//     new transports.File({ filename: 'logs/uploads.log' })
+//   ]
+// });
 
+const { createLogger, format, transports } = require('winston');
+
+const uploadsOn = process.env.UPLOADS_ON;
 console.log(`UPLOADS ON: ${uploadsOn}\n`);
 
-//
-// Grab your preconfigured logger
-//
-const uploadLogger = winston.loggers.get('uploadEndpoint');
+let uploadLogger;
+if(process.env.NODE_ENV !== 'production'){
+  // PULL OUT TO OWN FILE
+  uploadLogger = winston.createLogger({
+    level: 'info',
+    format: format.combine(
+      format.splat(),
+      format.simple()
+    ),
+    transports: [
+      new winston.transports.Console(),
+      new winston.transports.File({ filename: 'logfile.log' })
+    ]
+  });
+
+} else {
+  // PULL OUT TO OWN FILE
+  uploadLogger = winston.createLogger({
+    level: 'info',
+    format: winston.format.json(),
+    transports: [
+      new winston.transports.Console(),
+      new winston.transports.File({ filename: 'logfile.log' })
+    ]
+  });
+
+}
 
 /**
  * POST /api/upload
@@ -232,7 +278,7 @@ exports.postFileUpload = async(req, res, next) => {
               responseSent = true;
               res.send({
                 message: 'ABOUT TO PROCESS',
-                url: `/user/${channelUrl}/${uniqueTag}`
+                url: `/user/${channelUrl}/${uniqueTag}?autoplay=off`
               });
             }
           }
@@ -400,48 +446,45 @@ exports.postFileUpload = async(req, res, next) => {
 
               uploadLogger.info('About to compress file since bitrate is over 2500', logObject);
 
-              (async function(){
+              const savePath = `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-compressed.mp4`;
 
-                const savePath = `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-compressed.mp4`;
+              // compresses video ([ '-preset medium', '-b:v 1000k' ]); -> /${uniqueTag}-compressed.mp4
+              await ffmpegHelper.compressVideo({
+                uploadedPath: fileInDirectory,
+                uniqueTag,
+                channelUrl,
+                title: upload.title,
+                savePath
+              });
 
-                // compresses video ([ '-preset medium', '-b:v 1000k' ]); -> /${uniqueTag}-compressed.mp4
-                await ffmpegHelper.compressVideo({
-                  uploadedPath: fileInDirectory,
-                  uniqueTag,
-                  channelUrl,
-                  title: upload.title,
-                  savePath
-                });
+              uploadLogger.info('Video file is compressed', logObject);
 
-                uploadLogger.info('Video file is compressed', logObject);
+              // mark original upload file as high quality file
+              await fs.move(fileInDirectory, `${channelUrlFolder}/${uniqueTag}-high.mp4`);
 
-                // mark original upload file as high quality file
-                await fs.move(fileInDirectory, `${channelUrlFolder}/${uniqueTag}-high.mp4`);
+              // TODO: upload to b2 here?
 
-                // TODO: upload to b2 here?
+              uploadLogger.info('Moved original filename to uniqueTag-high.mp4', logObject);
 
-                uploadLogger.info('Moved original filename to uniqueTag-high.mp4', logObject);
+              // move compressed video to original video's place
+              await fs.move(`${channelUrlFolder}/${uniqueTag}-compressed.mp4`, fileInDirectory);
 
-                // move compressed video to original video's place
-                await fs.move(`${channelUrlFolder}/${uniqueTag}-compressed.mp4`, fileInDirectory);
+              uploadLogger.info('Moved compressed file to default uniqueTag.mp4 location', logObject);
 
-                uploadLogger.info('Moved compressed file to default uniqueTag.mp4 location', logObject);
+              // save high quality video size
+              const highQualityFileStats = fs.statSync(`${channelUrlFolder}/${uniqueTag}-high.mp4`);
+              upload.quality.high = highQualityFileStats.size;
 
-                // save high quality video size
-                const highQualityFileStats = fs.statSync(`${channelUrlFolder}/${uniqueTag}-high.mp4`);
-                upload.quality.high = highQualityFileStats.size;
+              // save compressed video quality size
+              const compressedFileStats = fs.statSync(fileInDirectory);
+              upload.fileSize = compressedFileStats.size;
 
-                // save compressed video quality size
-                const compressedFileStats = fs.statSync(fileInDirectory);
-                upload.fileSize = compressedFileStats.size;
+              // uploadLogger.info(`Moved file to user's directory`, logObject);
 
-                // uploadLogger.info(`Moved file to user's directory`, logObject);
+              await upload.save();
 
-                await upload.save();
+              uploadLogger.info('Upload document saved after compression and moving files', logObject);
 
-                uploadLogger.info('Upload document saved after compression and moving files', logObject);
-
-              })();
             }
 
           }

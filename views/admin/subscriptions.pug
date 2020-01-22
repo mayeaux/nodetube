@@ -1,0 +1,18 @@
+extends ../layout
+
+block content
+    div
+        div
+            h2
+            h2.view-header Subscriptions (Admin)
+        hr
+        each subscription in subscriptions
+            if subscription.drivingUpload
+                p(style="display:inline") Driving Upload: &nbsp
+                p(style="display:inline-block")
+                    a(href=`/uploads/${subscription.subscribingUser.channelUrl}/${subscription.drivingUpload.uniqueTag}`) #{subscription.drivingUpload.title}
+            p Uploader: #{subscription.subscribingUser.channelUrl}
+            p Subscriber : #{subscription.subscribedToUser.channelUrl}
+
+            br
+            br

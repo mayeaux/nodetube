@@ -176,11 +176,38 @@ exports.reacts = async(req, res) => {
 
   const reacts = await React.find({}).populate({path: 'user upload', populate: {path: 'uploader'}}).sort({ _id : -1  });
 
-  console.log(reacts);
+  // console.log(reacts);
 
   return res.render('admin/reacts', {
     title : 'Admin Reacts',
     reacts
+  });
+
+};
+
+exports.subscriptions = async(req, res) => {
+
+  if(!req.user){
+    res.status(404);
+    return res.render('error/404', {
+      title: 'Not Found'
+    });
+  }
+
+  if(req.user.role !== 'admin'){
+    res.status(404);
+    return res.render('error/404', {
+      title: 'Not Found'
+    });
+  }
+
+  const subscriptions = await Subscription.find({}).populate({path: 'subscribingUser subscribedToUser drivingUpload', populate: {path: 'uploader'}}).sort({ _id : -1  });
+
+  // console.log(subscriptions);
+
+  return res.render('admin/subscriptions', {
+    title : 'Admin Reacts',
+    subscriptions
   });
 
 };

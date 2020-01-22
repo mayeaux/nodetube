@@ -3,7 +3,7 @@ var redis = require('redis');
 
 if(process.env.REDIS_URL){
 
-  console.log(`CONNECTING TO REDIS_URL: ${process.env.REDIS_URL}`);
+  console.log(`CONNECTING TO REDIS_URL: ${process.env.REDIS_URL} \n`);
   var client = redis.createClient(process.env.REDIS_URL); // creates a new redisClient
 
 } else {

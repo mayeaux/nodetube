@@ -51,3 +51,8 @@ scripts/custom
 
 testing-manual
 testing
+
+.logfile.log
+combined.log
+error.log
+

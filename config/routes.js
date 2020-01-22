@@ -107,7 +107,7 @@ function livestreamRoutes(app){
   // app.get(/\/user\/(.+)\/live\/staging/, livestreamController.getStaging);
   // app.get(/\/user\/(.+)\/live/, livestreamController.getLive);
 
-  /** redirect all routes to the pewtube.com equivalent **/
+  /** redirect all routes to the nodetube.live equivalent **/
   app.get('*', function(req, res){
 
     const frontendAppUrl = `https://${domainNameAndTLD}`;
@@ -260,6 +260,7 @@ function frontendRoutes(app){
 
   /** ADMIN PAGES **/
   app.get('/admin/users', authMiddleware.adminAuth, adminFrontendController.getUsers);
+  app.get('/admin/subscriptions', authMiddleware.adminAuth, adminFrontendController.subscriptions);
   app.get('/admin/comments', authMiddleware.adminAuth, adminFrontendController.getComments);
   app.get('/admin/uploads', authMiddleware.adminAuth, adminFrontendController.getUploads);
   app.get('/admin/dailyStats', authMiddleware.adminAuth, adminFrontendController.dailyStats);
