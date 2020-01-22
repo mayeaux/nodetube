@@ -258,7 +258,7 @@ exports.postFileUpload = async(req, res, next) => {
               responseSent = true;
               res.send({
                 message: 'ABOUT TO PROCESS',
-                url: `/user/${channelUrl}/${uniqueTag}`
+                url: `/user/${channelUrl}/${uniqueTag}?autoplay=off`
               });
             }
           }
