@@ -58,18 +58,38 @@ const winston = require('winston');
 //   ]
 // });
 
+const { createLogger, format, transports } = require('winston');
+
 const uploadsOn = process.env.UPLOADS_ON;
 console.log(`UPLOADS ON: ${uploadsOn}\n`);
 
-// PULL OUT TO OWN FILE
-const uploadLogger = winston.createLogger({
-  level: 'info',
-  format: winston.format.json(),
-  transports: [
-    new winston.transports.Console(),
-    new winston.transports.File({ filename: 'logfile.log' })
-  ]
-});
+let uploadLogger;
+if(process.env.NODE_ENV !== 'production'){
+  // PULL OUT TO OWN FILE
+  uploadLogger = winston.createLogger({
+    level: 'info',
+    format: format.combine(
+      format.splat(),
+      format.simple()
+    ),
+    transports: [
+      new winston.transports.Console(),
+      new winston.transports.File({ filename: 'logfile.log' })
+    ]
+  });
+
+} else {
+  // PULL OUT TO OWN FILE
+  uploadLogger = winston.createLogger({
+    level: 'info',
+    format: winston.format.json(),
+    transports: [
+      new winston.transports.Console(),
+      new winston.transports.File({ filename: 'logfile.log' })
+    ]
+  });
+
+}
 
 /**
  * POST /api/upload
