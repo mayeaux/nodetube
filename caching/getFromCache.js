@@ -114,6 +114,9 @@ async function getPopularUploads(timeRange, limit, offset,  mediaType, filter, c
 
   if(category){
     if(category == 'all'){
+      uploads = trimUploads(uploads, limit, offset);
+      uploads[category.name] = 'all';
+
       return uploads;
     }
 
@@ -162,6 +165,9 @@ async function getRecentUploads(limit, offset, mediaType, filter, category, subc
       uploads = uploads.sort(function(a, b){
         return new Date(b.createdAt) - new Date(a.createdAt);
       });
+
+      uploads = trimUploads(uploads, limit, offset);
+      uploads[category.name] = 'all';
 
       return uploads;
     }
