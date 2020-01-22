@@ -8,10 +8,10 @@ block content
         hr
         each subscription in subscriptions
             p
-                a(href=`/uploads/${react.upload.uploader.channelUrl}/${react.upload.uniqueTag}`) Upload Title #{react.upload.title}
-            p Uploader: #{react.upload.uploader.channelUrl}
-            p Reacter : #{react.user.channelUrl}
-            p Reaction: #{react.react}
+                a(href=`/uploads/${subscription.upload.uploader.channelUrl}/${subscription.upload.uniqueTag}`) Upload Title #{subscription.upload.title}
+            p Uploader: #{subscription.upload.uploader.channelUrl}
+            p Reacter : #{subscription.user.channelUrl}
+            p Reaction: #{subscription.react}
 
             br
             br
