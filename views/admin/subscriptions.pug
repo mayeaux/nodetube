@@ -7,11 +7,12 @@ block content
             h2.view-header Subscriptions (Admin)
         hr
         each subscription in subscriptions
-            p
-                a(href=`/uploads/${subscription.upload.uploader.channelUrl}/${subscription.upload.uniqueTag}`) Upload Title #{subscription.upload.title}
-            p Uploader: #{subscription.upload.uploader.channelUrl}
-            p Reacter : #{subscription.user.channelUrl}
-            p Reaction: #{subscription.react}
+            if subscription.drivingUpload
+                p(style="display:inline") Driving Upload: &nbsp
+                p(style="display:inline-block")
+                    a(href=`/uploads/${subscription.subscribingUser.channelUrl}/${subscription.drivingUpload.uniqueTag}`) #{subscription.drivingUpload.title}
+            p Uploader: #{subscription.subscribingUser.channelUrl}
+            p Subscriber : #{subscription.subscribedToUser.channelUrl}
 
             br
             br

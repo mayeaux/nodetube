@@ -176,7 +176,7 @@ exports.reacts = async(req, res) => {
 
   const reacts = await React.find({}).populate({path: 'user upload', populate: {path: 'uploader'}}).sort({ _id : -1  });
 
-  console.log(reacts);
+  // console.log(reacts);
 
   return res.render('admin/reacts', {
     title : 'Admin Reacts',
@@ -201,9 +201,9 @@ exports.subscriptions = async(req, res) => {
     });
   }
 
-  const subscriptions = await Subscription.find({}).populate({path: 'user upload', populate: {path: 'uploader'}}).sort({ _id : -1  });
+  const subscriptions = await Subscription.find({}).populate({path: 'subscribingUser subscribedToUser drivingUpload', populate: {path: 'uploader'}}).sort({ _id : -1  });
 
-  console.log(subscriptions);
+  // console.log(subscriptions);
 
   return res.render('admin/subscriptions', {
     title : 'Admin Reacts',
