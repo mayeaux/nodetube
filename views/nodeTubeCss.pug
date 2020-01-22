@@ -145,3 +145,18 @@ style.
             transform: translateX(-50%);
         }
     }
+
+    @media (min-width: 900px) {
+        .navbar-left {
+            float: left !important;
+        }
+
+        .navbar-right {
+            float: right !important;
+            margin-right: -87px;
+        }
+
+        .navbar-right ~ .navbar-right {
+            margin-right: 0;
+        }
+    }
