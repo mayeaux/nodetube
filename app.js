@@ -76,6 +76,8 @@ if(cluster.isMaster){
     if(process.env.CACHING_ON == 'true'){
       console.log('CACHING IS ON');
       const runcaching = require('./caching/runCaching');
+    } else {
+      console.log('CACHING IS OFF \n')
     }
 
     if(process.env.UPLOAD_TO_B2 == 'true'){

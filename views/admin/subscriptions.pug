@@ -4,9 +4,9 @@ block content
     div
         div
             h2
-            h2.view-header Reacts (Admin)
+            h2.view-header Subscriptions (Admin)
         hr
-        each react in reacts
+        each subscription in subscriptions
             p
                 a(href=`/uploads/${react.upload.uploader.channelUrl}/${react.upload.uniqueTag}`) Upload Title #{react.upload.title}
             p Uploader: #{react.upload.uploader.channelUrl}

@@ -13,6 +13,8 @@ if user
       }
       var userDefaultQuality = '#{user.defaultQuality}'
 
+      const lowQualityFileSize = #{ ( upload.fileSize/ ( 1000 * 1000)).toFixed() }
+
       if (userDefaultQuality == 'high' && highQualityExists) {
         $('.video-source').attr('src', highQualityVideo)
         media = $(fileType)[0];
@@ -21,6 +23,9 @@ if user
         $('#dropdownMenu1').text('Quality: High')
         $('#dropdownMenu1').attr('quality', 'high');
         $("#dropdownMenu1").append("<span class='caret'></span>");
+
+        $('#dropdownMenu1').text('Quality: High')
+
       }
 else
     script.

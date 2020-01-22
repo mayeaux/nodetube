@@ -36,14 +36,40 @@ const backblaze = require('../../lib/uploading/backblaze');
 var resumable = require('../../lib/uploading/resumable.js')(__dirname +  '/upload');
 
 const winston = require('winston');
-const uploadsOn = process.env.UPLOADS_ON;
+//
+// winston.loggers.add('uploadEndpoint', {
+//   level: 'info',
+//   // format: winston.format.json(),
+//   format: combine(
+//     format.splat(),
+//     format.simple(),
+//     format.json(),
+//     // label({ label: 'custom label!' }),
+//     // timestamp(),
+//   ),
+//   transports: [
+//     //
+//     // - Write to all logs with level `info` and below to `combined.log`
+//     // - Write all logs error (and below) to `error.log`.
+//     //
+//     new transports.Console(),
+//     new transports.File({ filename: 'error.log', level: 'error' }),
+//     new transports.File({ filename: 'logs/uploads.log' })
+//   ]
+// });
 
+const uploadsOn = process.env.UPLOADS_ON;
 console.log(`UPLOADS ON: ${uploadsOn}\n`);
 
-//
-// Grab your preconfigured logger
-//
-const uploadLogger = winston.loggers.get('uploadEndpoint');
+// PULL OUT TO OWN FILE
+const uploadLogger = winston.createLogger({
+  level: 'info',
+  format: winston.format.json(),
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: 'logfile.log' })
+  ]
+});
 
 /**
  * POST /api/upload
