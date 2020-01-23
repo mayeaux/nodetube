@@ -51,7 +51,7 @@ style.
               a.dropdown-toggle(href='#', data-toggle='dropdown')
                 span= 'Support'
                 i.caret
-              ul.dropdown-menu(style="background-color:rgb(24,55,147)")
+              ul.dropdown-menu(style="background-color:rgb(24,55,147);max-width: 100px;min-width:100px;margin-right: -6px;")
                 li(class=(title == 'Emails') ? 'active' : undefined)
                   a.dropdown-anchors(href=`/support/emails`) Emails
 
@@ -61,7 +61,7 @@ style.
               a.dropdown-toggle(href='#', data-toggle='dropdown')
                 span= 'Mod'
                 i.caret
-              ul.dropdown-menu(style="background-color:rgb(24,55,147)")
+              ul.dropdown-menu(style="background-color:rgb(24,55,147);max-width: 100px;min-width:100px;margin-right: -19px;")
                 li(class=(title == 'Reports') ? 'active' : undefined)
                   a.dropdown-anchors(href=`/support/reports`) Reports
                 li(class=(title == 'Pending') ? 'active' : undefined)
