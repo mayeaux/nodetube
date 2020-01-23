@@ -1,7 +1,7 @@
 div.dropdown(style="display:inline")
     if !user
         // show current loaded filter
-        button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
+        button#dropdownMenu1.fw.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
             if siteVisitor.filter == 'allAges'
                 | Rating: SFW &nbsp
                 span.caret
@@ -18,7 +18,7 @@ div.dropdown(style="display:inline")
                     a.changeFilterButton(value="mature" href="#") SFW/NFSW
 
     else
-        button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
+        button#dropdownMenu1.fw.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
             if user.filter == 'allAges'
                 | Rating: SFW &nbsp
                 span.caret

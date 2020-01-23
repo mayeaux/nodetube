@@ -8,7 +8,6 @@ block content
             margin: 0 auto;
             margin-top: 30px;
         }
-        }
 
 
     br
@@ -48,7 +47,7 @@ block content
         else if upload.fileType === 'image'
             div.display-div(style="")
                 a(href=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`)
-                    img.display-element(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="max-width:80%;min-width:50%;min-height:50%;max-height:620px;")
+                    img.display-element(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="border-radius:13px;max-width:80%;min-width:50%;min-height:50%;max-height:620px;")
 
 
         div.non-player-content(style="position:relative;")
@@ -57,7 +56,7 @@ block content
             br
             // Upload Title
             //h2(class="upload-title-value" style="align-content:center;justify-content:normal;width:60%;margin: 0 auto;")=upload.title
-            h2.balance-text(class="upload-title-value" style="text-wrap:balance;width:80%;margin:0 auto;")=upload.title
+            h2.balance-text(class="upload-title-value" style="text-wrap:balance;width:80%;margin:0 auto;font-weight:300")=upload.title
 
             if upload.visibility == 'pending' && upload.status !== 'processing'
                 h3.pending-string Your video is currently pending moderator approval. If it's still pending after several minutes please contact a mod at
@@ -79,7 +78,7 @@ block content
                         br
                         br
 
-                a(href=`/user/${upload.uploader.channelUrl}` style="color:rgb(51, 51, 51)") #{upload.uploader.channelName || upload.uploader.channelUrl}
+                a(href=`/user/${upload.uploader.channelUrl}` style="color:rgb(51, 51, 51);font-weight:300") #{upload.uploader.channelName || upload.uploader.channelUrl}
                     if upload.uploader.verified == true
                         img(src="/images/verified.jpg" width="25px" height="25px" style="margin-left:3px;margin-top:-2px;margin-right:5px;")
                     if upload.uploader.plan == 'plus'
@@ -87,9 +86,9 @@ block content
 
             if upload.visibility != 'pending'
                 if alreadySubbed
-                    button.subscribe.btn.btn-danger(style="border-radius:4px") Unsubscribe (#{subscriberAmount})
+                    button.subscribe.btn.fw.btn-danger(style="border-radius:4px") Unsubscribe (#{subscriberAmount})
                 else
-                    button.subscribe.btn.btn-success(style="border-radius:4px") Subscribe (#{subscriberAmount})
+                    button.subscribe.btn.fw.btn-success(style="border-radius:4px") Subscribe (#{subscriberAmount})
                 br
                 br
 
@@ -114,7 +113,7 @@ block content
                 if ( user && user.channelUrl == upload.uploader.channelUrl ) ||  ( user && user.role == 'admin' )
                     br
                     a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}/edit`)
-                        button.btn.btn-success(style="margin-bottom:-10px") Edit
+                        button.fw.btn.btn-success(style="margin-bottom:-10px;border-radius:5px;") Edit
 
 
             // EXTRA BUTTONS
@@ -143,39 +142,39 @@ block content
             // More Upload Details
             div.col-sm-12
                 // Upload View Amount
-                h3 #{upload.views} Views
+                h3.fw #{upload.views} Views
 
                 // Upload time ago and uploader
                 if upload.uploader
-                    h4
+                    h4.fw
                         | Uploaded #{upload.timeAgo} &nbsp
 
                     if upload.visibility == 'removed'
                         h2 Upload Deleted
 
                     if upload.fileType == 'video' || upload.fileType == 'audio'
-                        p.fileSizeText(style="margin-top:15px") File Size: #{ ( upload.fileSize/ ( 1000 * 1000)).toFixed() } MB
+                        p.fw.fileSizeText(style="margin-top:15px") File Size: #{ ( upload.fileSize/ ( 1000 * 1000)).toFixed() } MB
 
                     if upload.category
                         each category in categories
                             if category.name == upload.category
-                                p(style="margin-top:15px;font-size:12px;") Category: #{category.displayName}
+                                p.fw(style="margin-top:15px;font-size:12px;") Category: #{category.displayName}
 
                                 if upload.subcategory
 
                                     each subcategory in category.subcategories
 
                                         if upload.subcategory == subcategory.name
-                                            p(style="margin-top:15px;font-size:12px;") Subcategory: #{subcategory.displayName}
+                                            p.fw(style="margin-top:15px;font-size:12px;") Subcategory: #{subcategory.displayName}
 
 
                     if upload.rating
                         if upload.rating == 'allAges'
-                            p(style="margin-top:15px;font-size:12px;") Rating: Safe For Work
+                            p.fw(style="margin-top:15px;font-size:12px;") Rating: Safe For Work
                         if upload.rating == 'mature'
-                            p(style="margin-top:15px;font-size:12px;") Rating: Not Safe For Work
+                            p.fw(style="margin-top:15px;font-size:12px;") Rating: Not Safe For Work
                         if upload.rating == 'sensitive'
-                            p(style="margin-top:15px;font-size:12px;") Rating: Sensitive (18+)
+                            p.fw(style="margin-top:15px;font-size:12px;") Rating: Sensitive (18+)
 
 
                     br
@@ -200,7 +199,7 @@ block content
                                     div.clicked-emoji
                                         img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
 
-                            p(class=emoji.name) #{emoji.amount}
+                            p.fw(class=emoji.name) #{emoji.amount}
 
 
 
@@ -224,11 +223,11 @@ block content
 
             br
             button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} \n\nhttps://nodetube.liv/user/${upload.uploader.channelUrl}/${upload.uniqueTag}`)
-                i.fa.fa-info
+                i.fa.fa-info.fw
                 | Copy Details
 
             button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} by ${upload.uploader.channelName} \n\n https://nodetube.live/user/${upload.uploader.channelUrl}/${upload.uniqueTag} \n\n #PewTube`)
-                i.fa.fa-info
+                i.fa.fa-info.fw
                 | With User Info
 
 
@@ -249,7 +248,7 @@ block content
                                 input(type="hidden" name="upload" id="upload" value=upload._id)
                                 textarea(name="comment" id="comment" minlength="2" style="width:400px;max-width:100%")
                                 br
-                                input.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
+                                input.fw.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
                 else
                     div.comment-form.form-group.no-user-comment-form
                         form.form-horizontal.overall-comment-form(class="comment-form")
@@ -257,7 +256,7 @@ block content
                             br
                             textarea(name="comment" id="comment" minlength="2" style="width:400px;max-width:100%")
                             br
-                            input.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
+                            input.fw.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
 
 
                 // DISPLAY COMMENTS
