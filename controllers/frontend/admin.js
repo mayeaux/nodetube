@@ -1,6 +1,5 @@
 const redisClient = require('../../config/redis');
 const _ = require('lodash');
-
 const Upload = require('../../models/index').Upload;
 const AdminAction = require('../../models/index').AdminAction;
 const User = require('../../models/index').User;
@@ -8,9 +7,9 @@ const Subscription = require('../../models/index').Subscription;
 const React = require('../../models/index').React;
 const Comment = require('../../models/index').Comment;
 const SiteVisit = require('../../models/index').SiteVisit;
-const SearchQuery = require('../../models/index').SearchQuery;
-
+const { uploadServer} = require('../../lib/helpers/settings');
 let viewStats, uploadStats, userStats, reactStats, subscriptionStats, searchStats, commentStats, siteVisitStats;
+
 async function getStats(){
   let views = await redisClient.getAsync('dailyStatsViews');
   let uploads = await redisClient.getAsync('dailyStatsUploads');

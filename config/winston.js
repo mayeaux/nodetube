@@ -1,7 +1,8 @@
 /** UNFINISHED **/
+/* eslint-disable no-unused-vars */
 
 const winston = require('winston');
-const { createLogger, format, transports } = require('winston');
+const {format, transports } = require('winston');
 const { combine, timestamp, label, prettyPrint } = format;
 
 // //

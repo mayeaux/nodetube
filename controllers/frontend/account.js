@@ -1,6 +1,8 @@
+/** UNFINISHED **/
+/* eslint-disable no-unused-vars */
+
 const randomstring = require('randomstring');
 const _ = require('lodash');
-
 const User = require('../../models/index').User;
 const Upload = require('../../models/index').Upload;
 const Comment = require('../../models/index').Comment;

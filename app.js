@@ -72,7 +72,13 @@ if(cluster.isMaster){
   (async function(){
 
     if(process.env.CACHING_ON == 'true'){
+<<<<<<< Updated upstream
       const runcaching = require('./caching/runCaching');
+=======
+      console.log('CACHING IS ON');
+    } else {
+      console.log('CACHING IS OFF \n');
+>>>>>>> Stashed changes
     }
 
     if(process.env.UPLOAD_TO_B2 == 'true'){
@@ -371,6 +377,20 @@ if(cluster.isMaster){
       console.log('%s App is running at http://localhost:%d in %s mode', chalk.green('✓'), app.get('port'), app.get('env'));
       console.log('  Press CTRL-C to stop\n');
     });
+
+    require('dns').lookup(require('os').hostname(), function(err, localIp){
+      console.log(`NodeTube can be accessed on your local network at ${localIp}:${portNumber}\n`);
+    });
+
+    // warn user if ffmpeg is not installed
+    commandExists('ffmpeg')
+      .then(function(){
+        // ffmpeg installed
+      }).catch(function(){
+        console.log('WARNING: ffmpeg IS NOT INSTALLED. Video uploads will fail. \n');
+      });
+
+    if(process.env.MODERATION_UPDATES_TO_DISCORD == 'true') console.log('SENDING MODERATION REQUESTS TO DISCORD \n');
 
     module.exports = app;
 
