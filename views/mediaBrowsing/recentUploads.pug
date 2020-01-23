@@ -45,12 +45,12 @@ block content
             else
 
                 div.category.col-sm-12
-                    h1 #{categoryObj.displayName}
+                    h1.categoryDisplayName #{categoryObj.displayName}
                     br
 
                 each upload in uploads
                     if upload.uploader
-                        div.col-sm-4(style="text-align:center;height:335px;")
+                        div.col-xs-12.col-sm-6.col-md-6.col-lg-4(style="text-align:center;height:335px;")
                             div(style="width:100%")
                                 include ../viewPartials/uploadThumbnail
 

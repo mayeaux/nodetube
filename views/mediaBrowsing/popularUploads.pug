@@ -1,6 +1,7 @@
 extends ../layout
 
 block content
+
     div.container
         include ../viewPartials/popularUploadsNavbar
 
@@ -40,7 +41,7 @@ block content
             else
 
                 div.category.col-sm-12
-                    h1 #{categoryObj.displayName}
+                    h1.categoryDisplayName #{categoryObj.displayName}
                     br
 
 
