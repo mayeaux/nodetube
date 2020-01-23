@@ -59,6 +59,18 @@ style.
         /*text-decoration:underline;*/
     }
 
+    .search-upload-buttons-container {
+        display: grid;
+        justify-content: center;
+        grid-gap: 10px;
+    }
+
+    @media (min-width: 480px) {
+        .search-upload-buttons-container {
+            grid-auto-flow: column;
+        }
+    }
+
     .twenty-six {
         font-size: 26px;
     }

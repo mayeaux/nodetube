@@ -11,13 +11,14 @@ block content
                 input(type='hidden', name='_csrf', value=_csrf )
                 input.search-query-input.form-control(style="margin: 0 auto;width:400px;max-width:100%" type='search', name='search', id='search' placeholder=`${searchQuery !== 'undefined' ? searchQuery: ''}`)
                 br
-                button.search-uploads-button.btn-lg.btn.btn-primary(type='submit' style="margin-right:10px" name="type" value="upload")
-                    //i.fa.fa-lock
-                    | Search For Media
+                div.search-upload-buttons-container
+                    button.search-uploads-button.btn-lg.btn.btn-primary(type='submit' name="type" value="upload")
+                        //i.fa.fa-lock
+                        | Search For Media
 
-                button.search-users-button.btn-lg.btn.btn-primary(type='submit' style="margin-left:10px" name="type" value="user")
-                    //i.fa.fa-lock
-                    | Search For User
+                    button.search-users-button.btn-lg.btn.btn-primary(type='submit' name="type" value="user")
+                        //i.fa.fa-lock
+                        | Search For User
 
 
 
