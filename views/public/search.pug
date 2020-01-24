@@ -4,7 +4,7 @@ block content
     div.container
         div.col-sm-12.text-center(style="margin:0 auto;")
             h2
-            h2(style="display:inline;") Search For Keyword
+            h2.fw(style="display:inline;") Search For Keyword
             br
             br
             div(style="margin: 0 auto;")
@@ -12,11 +12,11 @@ block content
                 input.search-query-input.form-control(style="margin: 0 auto;width:400px;max-width:100%" type='search', name='search', id='search' placeholder=`${searchQuery !== 'undefined' ? searchQuery: ''}`)
                 br
                 div.search-upload-buttons-container
-                    button.search-uploads-button.btn-lg.btn.btn-primary(type='submit' name="type" value="upload")
+                    button.fw.search-uploads-button.btn-lg.btn.btn-primary(type='submit' name="type" value="upload")
                         //i.fa.fa-lock
                         | Search For Media
 
-                    button.search-users-button.btn-lg.btn.btn-primary(type='submit' name="type" value="user")
+                    button.fw.search-users-button.btn-lg.btn.btn-primary(type='submit' name="type" value="user")
                         //i.fa.fa-lock
                         | Search For User
 
@@ -38,7 +38,7 @@ block content
 
                 include ../viewPartials/searchPagination
 
-                p(style="text-decoration:underline;font-size:20px;") #{totalUploadsAmount} Results
+                p.fw(style="font-size:27px;margin-top:30px;margin-bottom:30px;") #{totalUploadsAmount} Results
 
                 if uploads && uploads.length > 0
                     each upload in uploads
