@@ -2,35 +2,36 @@
  * Controllers (route handlers).
  */
 /** BACKEND API CONTROLLERS **/
-const accountBackendController = require('../controllers/backend/account');
-const adminBackendController = require('../controllers/backend/admin');
-const internalApiController = require('../controllers/backend/internalApi');
-const livestreamBackendController = require('../controllers/backend/livestream');
-const purchaseController = require('../controllers/backend/purchase');
-const socialMediaBackendController = require('../controllers/backend/socialMedia');
-const uploadingController = require('../controllers/backend/uploading');
-const youtubeController = require('../controllers/backend/youtube');
-const supportBackendController = require('../controllers/backend/support');
+const accountBackendController = require('./controllers/backend/account');
+const adminBackendController = require('./controllers/backend/admin');
+const internalApiController = require('./controllers/backend/internalApi');
+const livestreamBackendController = require('./controllers/backend/livestream');
+const purchaseController = require('./controllers/backend/purchase');
+const socialMediaBackendController = require('./controllers/backend/socialMedia');
+const uploadingController = require('./controllers/backend/uploading');
+const youtubeController = require('./controllers/backend/youtube');
+const supportBackendController = require('./controllers/backend/support');
 
 /** FRONTEND PAGE CONTROLLERS **/
-const accountFrontendController = require('../controllers/frontend/account');
-const adminFrontendController = require('../controllers/frontend/admin');
-const channelBrowsingController = require('../controllers/frontend/channelBrowsing');
-const livestreamFrontendController = require('../controllers/frontend/livestream');
-const mediaBrowsingController = require('../controllers/frontend/mediaBrowsing');
-const mediaPlayerController = require('../controllers/frontend/mediaPlayer');
-const publicController = require('../controllers/frontend/public');
-const recentActionsController = require('../controllers/frontend/recentActions');
-const socialMediaFrontendController = require('../controllers/frontend/socialMedia');
-const supportFrontendController = require('../controllers/frontend/support');
+
+const accountFrontendController = require('./controllers/frontend/account');
+const adminFrontendController = require('./controllers/frontend/admin');
+const channelBrowsingController = require('./controllers/frontend/channelBrowsing');
+const livestreamFrontendController = require('./controllers/frontend/livestream');
+const mediaBrowsingController = require('./controllers/frontend/mediaBrowsing');
+const mediaPlayerController = require('./controllers/frontend/mediaPlayer');
+const publicController = require('./controllers/frontend/public');
+const recentActionsController = require('./controllers/frontend/recentActions');
+const socialMediaFrontendController = require('./controllers/frontend/socialMedia');
+const supportFrontendController = require('./controllers/frontend/support');
 
 const domainNameAndTLD = process.env.DOMAIN_NAME_AND_TLD;
 
 console.log(`DOMAIN NAME AND TLD: ${domainNameAndTLD}\n`);
 
 /** passport config **/
-const passportConfig = require('../config/passport');
-const authMiddleware = require('../middlewares/shared/authentication');
+const passportConfig = require('./config/passport');
+const authMiddleware = require('./middlewares/shared/authentication');
 
 function fileHostRoutes(app){
   console.log('RUNNING AS FILE HOST \n');

@@ -86,7 +86,7 @@ if(cluster.isMaster){
 
     // site visit
     const Notification = require('./models').Notification;
-    const routes = require('./config/routes');
+    const routes = require('./routes');
 
     const customMiddleware = require('./middlewares/custom');
     const widgetMiddleware = require('./middlewares/shared/widgets');

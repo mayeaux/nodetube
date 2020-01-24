@@ -34,7 +34,7 @@ block content
             padding: 10px;
         }
 
-        .pewtube-pro {
+        .nodetube-pro {
             background: #edeeee;
             font-weight: 400;
             font-size: 13px;
@@ -53,7 +53,7 @@ block content
                     if channel.verified == true
                         img(src="/images/verified.jpg" width="25px" height="25px" style="margin-left:3px;margin-top:-2px;margin-right:5px;")
                     if channel.plan == 'plus'
-                        span.pewtube-pro PLUS
+                        span.nodetube-pro PLUS
             div.user-stats.col-sm-6(style="margin-top:14px")
                 div.col-sm-3
                     h5 Uploads: #{userUploadAmount} &nbsp &nbsp
@@ -149,9 +149,11 @@ block content
     br
     br
 
+    //UPLOAD DISPLAY SECTION
+
     div.container
         each upload in channel.uploads
-            div.col-xs-12.col-sm-6.col-md-6.col-lg-4(style="text-align:center;height:298px")
+            div.col-xs-12.col-sm-6.col-md-6.col-lg-4(style="text-align:center;height:330px")
                 if isUser || isAdmin || ( user && user.role == 'moderator' )
                     div.editFileButtons
                         form.editLink(action="/api/upload/delete" method="POST" style="display:inline-block")

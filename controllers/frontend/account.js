@@ -52,7 +52,7 @@ exports.getFileUpload = async(req, res) => {
     await req.user.save();
   }
 
-  res.render('upload', {
+  res.render('uploading', {
     title: 'File Upload',
     uploadUrl,
     categories
