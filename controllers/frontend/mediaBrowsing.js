@@ -171,7 +171,11 @@ exports.popularUploads = async(req, res) => {
 
   let subcategory = req.query.subcategory || '';
 
-  const within = req.query.within;
+  let within = req.query.within;
+
+  if(!within){
+    within = '24hour'
+  }
 
   // setup page
   let page = req.params.page;
