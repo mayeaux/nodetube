@@ -92,17 +92,19 @@ block content
                 br
                 br
 
-            if upload.quality && upload.quality.high
-                div.dropdown
-                    button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:4px;" quality="low")
-                        | Quality: Low
-                        span.caret
-
-                    ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1' style="cursor:pointer;")
-                        li(role='presentation')
-                            a.low-quality Low
-                        li(role='presentation')
-                            a.high-quality High
+            // REMOVE QUALITY THING, EVERYONE CAN STAY LOW QUALITY
+            // also have to add .fw to this thing when take it live
+            //if upload.quality && upload.quality.high
+            //    div.dropdown
+            //        button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:4px;" quality="low")
+            //            | Quality: Low
+            //            span.caret
+            //
+            //        ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1' style="cursor:pointer;")
+            //            li(role='presentation')
+            //                a.low-quality Low
+            //            li(role='presentation')
+            //                a.high-quality High
 
             //if upload.uploader.plan == 'plus'
             //    br

@@ -3,21 +3,21 @@ extends ../layout
 block content
   .container
     .page-header
-      h3.center-block.text-center Login To NodeTube
+      h3.center-block.text-center.fw Login To NodeTube
     form.form-horizontal(method='POST')
       input(type='hidden', name='_csrf', value=_csrf)
       .form-group
-        label.col-sm-3.control-label(for='email') Email or Username
+        label.fw.loginHeader.col-sm-3.control-label(for='email') Email or Username
         .col-sm-7
-          input.form-control(name='email', id='email', placeholder='Email or Username', autofocus, required)
+          input.form-control.fw.loginHeader(name='email', id='email', placeholder='Email or Username', autofocus, required)
       .form-group
-        label.col-sm-3.control-label(for='password') Password
+        label.fw.loginHeader.col-sm-3.control-label(for='password') Password
         .col-sm-7
-          input.form-control(type='password', name='password', id='password', placeholder='Password', required)
+          input.form-control.fw(type='password', name='password', id='password', placeholder='Password', required)
       .form-group
         .col-sm-offset-3.col-sm-7
-          button.col-sm-3.btn.btn-primary(type='submit')
-            i.fa.fa-user
+          button.fw.loginHeader.col-sm-3.btn.btn-primary(type='submit')
+            i.fw.loginHeader.fa.fa-user
             | Login
 
           // turn off forgot password, should expose it as an env var

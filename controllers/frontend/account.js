@@ -206,8 +206,8 @@ exports.getChannel = async(req, res) => {
     /** DB CALL TO GET UPLOADS **/
     let uploads = await Upload.find(searchQuery).populate('').sort({ createdAt : -1 });
 
-    console.log(`IS ADMIN OR MOD: ${viewerIsAdminOrMod}`);
-    console.log(`IS OWNER: ${viewerIsOwner}`);
+    // console.log(`IS ADMIN OR MOD: ${viewerIsAdminOrMod}`);
+    // console.log(`IS OWNER: ${viewerIsOwner}`);
 
     // if the viewer isnt a mod/admin, then only show public uploads
 
