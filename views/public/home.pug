@@ -28,6 +28,12 @@ block content
       margin-top: 20px;
     }
 
+    p.fw {
+      font-size: 15px;
+    }
+
+    /** Redesign for narrow devices **/
+
     @media (max-width: 480px) {
 
       .lead-header {
@@ -54,41 +60,41 @@ block content
 
   div.container(style="text-align:center")
 
-    h1.lead-header Introducing NodeTube
-    h2.tagline-header An open-source YouTube alternative powered by Node.js
+    h1.lead-header.fw Introducing NodeTube
+    h2.tagline-header.fw An open-source YouTube alternative powered by Node.js
     hr
 
     .row.first-row
       .col-sm-4
-        h2.pitch-header No Email Required &nbsp
+        h2.pitch-header.fw No Email Required &nbsp
           i.fa.fa-bolt
-        p.explainer Start your channel on NodeTube
-        | without having to verify your email
+        p.explainer.fw Start your channel on NodeTube
+        p.fw without having to verify your email
       .col-sm-4
-        h2.pitch-header Video, Audio, Images &nbsp
+        h2.pitch-header.fw Video, Audio, Images &nbsp
           i.fa.fa-thumbs-o-up
-        p.explainer Over 30 file formats are supported
-        | between video, audio and image uploads
+        p.explainer.fw Over 30 file formats are supported
+        p.fw between video, audio and image uploads
       .col-sm-4
-        h2.pitch-header 100% Open Source &nbsp
+        h2.pitch-header.fw 100% Open Source &nbsp
           i.fa.fa-space-shuttle
-        p.explainer Create your own NodeTube instance
-        | in just minutes following our tutorials
+        p.explainer.fw Create your own NodeTube instance
+        p.fw in just minutes following our tutorials
 
 
     .row.second-row
       .col-sm-4
-        h2.pitch-header #{channelAmount} Channels &nbsp
+        h2.pitch-header.fw #{channelAmount} Channels &nbsp
           i.fa.fa-users
-        p.explainer The number of creators who have
-        | chosen NodeTube for their media hosting
+        p.explainer.fw The number of creators who have
+        p.fw chosen NodeTube for their media hosting
       .col-sm-4
-        h2.pitch-header #{mediaAmount} Uploads &nbsp
+        h2.pitch-header.fw #{mediaAmount} Uploads &nbsp
           i.fa.fa-upload
-        p.explainer The number of  times creators have
-        | chosen NodeTube for their content hosting
+        p.explainer.fw The number of  times creators have
+        p.fw chosen NodeTube for their content hosting
       .col-sm-4
-        h2.pitch-header #{viewAmount} Views &nbsp
+        h2.pitch-header.fw #{viewAmount} Views &nbsp
           i.fa.fa-video
-        p.explainer The number of times people have
-        | enjoyed the innovative new platform
+        p.explainer.fw The number of times people have
+        p.fw enjoyed the innovative new platform
