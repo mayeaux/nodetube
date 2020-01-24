@@ -66,6 +66,8 @@ if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false'){
   }, 1000 * 60 * 2);
 }
 
+const pageLimit = 42;
+
 /**
  * GET /media/recent
  * Page displaying most recently uploaded content
@@ -91,7 +93,7 @@ exports.recentUploads = async(req, res) => {
     let page = parseInt(req.params.page || 1);
 
     // limit amount to list per page
-    let limit = 102;
+    let limit = pageLimit;
 
     if(!category){
       limit = 6;
@@ -176,7 +178,7 @@ exports.popularUploads = async(req, res) => {
   if(!page){ page = 1; }
   page = parseInt(page);
 
-  let limit = 102;
+  let limit = pageLimit;
 
   if(!category){
     limit = 6;
