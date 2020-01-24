@@ -105,13 +105,13 @@ block content
 
                   h3.fw(style="font-size:30px;margin-bottom:15px;") Upload Details
 
-                  label(for='title') Title (*)
-                  input.form-group.center-block.text-center(style="width:400px;max-width:95%;border-radius:2px;" type="text" name="title" id="title" minlength=3, maxlength=100 required)
+                  label.fw(style="font-size: 23px;" for='title') Title (*)
+                  input.form-group.center-block.text-center(style="width:400px;max-width:95%;border-radius:2px;font-size:20px;font-weight:300;" type="text" name="title" id="title" minlength=3, maxlength=100 required)
                   br
 
                   // add endpoint for visibility
                   if user.plan == 'plus'
-                    label(for='title') Visibility
+                    label.fw(for='title') Visibility
                     br
                     div.radio-buttons.visibility
                       label.radio-inline
@@ -125,11 +125,11 @@ block content
                         | Private
                     br
 
-                  label(for='title') Select A Category
+                  label.fw(for='title' style="font-size:20px") Select A Category
                   br
 
                   div.dropdown(style="display:inline;padding-right:15px;")
-                    button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px;")
+                    button#dropdownMenu1.fw.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px;font-size:15px;")
                       | Category: &nbsp
                       span.caret
 
@@ -141,48 +141,49 @@ block content
                   br
                   br
                   div.categoryName(style="display:none")
-                    h5(style="font-size:20px;").categoryDisplayName Category: $Thing
+                    h5.fw(style="font-size:20px;").categoryDisplayName Category: $Thing
                     br
 
 
 
-                  br
-                  br
 
                   // subcategories
                   each category in categories
                     if category.subcategories && category.subcategories.length > 1
                       div.subcategories(class=category.name style="display:none;")
-                        label(for='subcategory') Subcategory (Optional)
+                        label.fw(for='subcategory' style="font-size:18px;") Subcategory (Optional)
                         each subcategory in category.subcategories
                             div.radio-buttons.subcategory(class=category.name style="display:none")
-                              label.radio-inline
+                              label.fw.radio-inline(style="margin-top:7px;font-size:15px;")
                                 input.radio-button(type='radio', name='subcategory' value=subcategory.name required)
                                 | #{subcategory.displayName}
 
                               br
-                              br
                         br
+
+
+
+                  // RATINGS
                   // todo: actually add site rating as passed variable
                   if site_rating || 1 == 1
-                    label(for='rating') Rating (*)
+                    label.fw(for='rating' style="font-size:24px;margin-top:26px;margin-bottom:15px;") Rating (*)
                     br
-                    div.radio-buttons.rating
+                    div.radio-buttons.rating(style="")
                       if user.privs.safeForWorkUpload
-                        label.radio-inline
+                        label.fw.radio-inline(style="font-size:18px;")
                           input.radio-button(type='radio', name='rating' value="allAges")
                           | Safe For Work
                           br
                           br
                       br
 
-                      label.radio-inline
+                      label.fw.radio-inline(style="font-size:18px;")
                         input.radio-button(type='radio', name='rating' value="mature")
                         | Not Safe For Work
                       br
                       br
 
-                      label.radio-inline
+                      label.fw.radio-inline(style="font-size:18px;")
                         input.radio-button(type='radio', name='rating' value="sensitive" required)
                         | Sensitive (Shocking content) 18+
 
