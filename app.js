@@ -72,13 +72,9 @@ if(cluster.isMaster){
   (async function(){
 
     if(process.env.CACHING_ON == 'true'){
-<<<<<<< Updated upstream
-      const runcaching = require('./caching/runCaching');
-=======
       console.log('CACHING IS ON');
     } else {
       console.log('CACHING IS OFF \n');
->>>>>>> Stashed changes
     }
 
     if(process.env.UPLOAD_TO_B2 == 'true'){
