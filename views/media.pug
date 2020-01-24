@@ -82,7 +82,7 @@ block content
                     if upload.uploader.verified == true
                         img(src="/images/verified.jpg" width="25px" height="25px" style="margin-left:3px;margin-top:-2px;margin-right:5px;")
                     if upload.uploader.plan == 'plus'
-                        span.pewtube-pro PLUS
+                        span.nodetube-pro PLUS
 
             if upload.visibility != 'pending'
                 if alreadySubbed
@@ -228,7 +228,7 @@ block content
                 i.fa.fa-info.fw
                 | Copy Details
 
-            button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} by ${upload.uploader.channelName} \n\n https://nodetube.live/user/${upload.uploader.channelUrl}/${upload.uniqueTag} \n\n #PewTube`)
+            button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} by ${upload.uploader.channelName} \n\n https://nodetube.live/user/${upload.uploader.channelUrl}/${upload.uniqueTag} \n\n #NodeTube`)
                 i.fa.fa-info.fw
                 | With User Info
 
@@ -355,7 +355,7 @@ block extra_js
 block extra_css
   link(rel="stylesheet" href="https://cdn.plyr.io/3.3.21/plyr.css")
   style.
-    .pewtube-pro {
+    .nodetube-pro {
         background: #edeeee;
         font-weight: 400;
         font-size: 13px;
