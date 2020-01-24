@@ -175,7 +175,7 @@ exports.popularUploads = async(req, res) => {
   let within = req.query.within;
 
   if(!within){
-    within = '24hour'
+    within = '24hour';
   }
 
   // setup page
@@ -205,7 +205,7 @@ exports.popularUploads = async(req, res) => {
   //  amount to show in brackets that equals view amount in time period
   let viewAmountInPeriod;
 
-  console.log(`WITHIN: ${within}`)
+  console.log(`WITHIN: ${within}`);
 
   function calculateViewAmount(uploads){
     let viewCounter = 0;
@@ -214,14 +214,14 @@ exports.popularUploads = async(req, res) => {
 
       let stringToCheck;
       if(within == 'alltime'){
-        stringToCheck = `viewsAllTime`;
+        stringToCheck = 'viewsAllTime';
       } else {
         stringToCheck = `viewsWithin${within}`;
       }
       const forThisUpload = checkUpload[stringToCheck];
       viewCounter = viewCounter + forThisUpload;
     }
-    return viewCounter
+    return viewCounter;
   }
 
   try {
