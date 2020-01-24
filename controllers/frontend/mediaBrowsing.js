@@ -141,7 +141,8 @@ exports.recentUploads = async(req, res) => {
       isACategory : category,
       addressPrepend,
       categoryObj,
-      mediaBrowsingType
+      mediaBrowsingType,
+      mediaType
     });
 
   } catch(err){
