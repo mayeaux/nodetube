@@ -9,14 +9,14 @@ block content
       .form-group
         label.fw.loginHeader.col-sm-3.control-label(for='email') Email or Username
         .col-sm-7
-          input.form-control.fw.loginHeader(name='email', id='email', placeholder='Email or Username', autofocus, required)
+          input.form-control(name='email', id='email', placeholder='Email or Username', autofocus, required)
       .form-group
         label.fw.loginHeader.col-sm-3.control-label(for='password') Password
         .col-sm-7
-          input.form-control.fw(type='password', name='password', id='password', placeholder='Password', required)
+          input.form-control(type='password', name='password', id='password', placeholder='Password', required)
       .form-group
         .col-sm-offset-3.col-sm-7
-          button.fw.loginHeader.col-sm-3.btn.btn-primary(type='submit')
+          button.fw.loginHeader.col-sm-3.btn.btn-primary(type='submit' style="border-radius:8px;width:122px;")
             i.fw.loginHeader.fa.fa-user
             | Login
 

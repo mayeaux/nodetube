@@ -2,7 +2,7 @@ extends ../layout
 
 block content
   .page-header
-    h3.center-block.text-center Sign Up
+    h3.fw.center-block.text-center(style="font-size:33px;") Sign Up
   form.form-horizontal.signup-form(id='signup-form', method='POST')
     input(type='hidden', name='_csrf', value=_csrf)
     //.form-group
@@ -11,21 +11,21 @@ block content
     //    input.form-control(type='text', name='channelName', id='channelName', placeholder='The name that shows up for your channel',
     //    autofocus, minlength=3, maxlength=25, required)
     .form-group
-      label.col-sm-3.control-label(for='channelUrl') Channel Username
+      label.fw.loginHeader.col-sm-3.control-label(for='channelUrl') Channel Username
       .col-sm-7
         input.form-control.username(type='text', name='channelUrl', id='channelUrl', autofocus, required placeholder='Please enter your channel username')
     .form-group
-      label.col-sm-3.control-label(for='password') Password
+      label.fw.loginHeader.col-sm-3.control-label(for='password') Password
       .col-sm-7
         input.form-control(type='password', name='password', id='password', placeholder='Please enter your password', required)
     .form-group
-      label.col-sm-3.control-label(for='confirmPassword') Confirm Password
+      label.fw.loginHeader.col-sm-3.control-label(for='confirmPassword') Confirm Password
       .col-sm-7
         input.form-control(type='password', name='confirmPassword', id='confirmPassword', placeholder='Please confirm your password', required)
 
     if nodeEnv == 'production' && captchaOn == 'true'
       .form-group
-        label.col-sm-3.control-label(for='captcha') Captcha
+        label.fw.loginHeader.col-sm-3.control-label(for='captcha') Captcha
         //.col-sm-offset-3.col-sm-7
         .form-group.col-md-4(style="margin-left:1pt;")
           .g-recaptcha(data-sitekey=`${recaptchaPublicKey}` id='captcha')
@@ -38,7 +38,7 @@ block content
           a(href="/termsofservice") &nbspTerms Of Service
     .form-group
       .col-sm-offset-3.col-sm-7
-        button.btn.btn-success(type='submit')
+        button.fw.loginHeader.btn.btn-success(type='submit' style="border-radius:8px;width:133px;")
           i.fa.fa-user-plus
           | Signup
 
