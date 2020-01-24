@@ -36,7 +36,7 @@ block content
 
     .upload-information p, .formats p {
       font-weight:300;
-      font-size:15px;
+      font-size:17px;
     }
 
     .u
@@ -53,7 +53,7 @@ block content
         br
         br
         div.formats(style="max-width:500px;margin:0 auto;")
-          p(style="font-size:15px;margin-bottom:16px;") Supported File Formats
+          p(style="font-size:20px;margin-bottom:16px;") Supported File Formats
           p Video
           p(style="line-height:23px;max-width:310px;margin:0 auto;margin-bottom:19px;") .mp4, .avi, .flv, .MOV, .m4v, .ogv, .webm, .wmv, .mkv, .mov, .m2t, .MTS, .m2ts, .MPG, .AVI, .mpg
           p Audio
@@ -64,7 +64,11 @@ block content
 
         br
 
-        p Your current upload file size limit is #{user.privs.uploadSize} MB (#{user.privs.uploadSize / 1000} GB)
+        p(style="font-size:18px;margin-bottom: 27px;") Your current upload file size limit is #{user.privs.uploadSize} MB (#{user.privs.uploadSize / 1000} GB)
+        br
+
+        h3.fw(style="font-size: 30px;") Select Upload
+
         if user.plan == 'free' && plus_enabled
           p You can raise this limit to 2000 MB by subscribing for&nbsp
             a(href="/account?to=pt-plus") NodeTube Plus
@@ -89,14 +93,17 @@ block content
                 .form-group.center-block.text-center
                   br
                   a.resumable-browse
-                      button.btn.btn-success.resumable-brwoser Select File
+                      button.fw.btn.btn-success.resumable-brwoser(style="font-size:19px;margin-bottom:-9px;") Select File
+
+                  h3.fw OR
 
 
                   div#dropTarget(style="")
                     img(src="/images/filedropdown.png" style="width:350px;")
                   br
                   br
-                  br
+
+                  h3.fw(style="font-size:30px;margin-bottom:15px;") Upload Details
 
                   label(for='title') Title (*)
                   input.form-group.center-block.text-center(style="width:400px;max-width:95%;border-radius:2px;" type="text" name="title" id="title" minlength=3, maxlength=100 required)
