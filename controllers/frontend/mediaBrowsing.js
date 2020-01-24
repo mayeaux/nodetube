@@ -205,6 +205,25 @@ exports.popularUploads = async(req, res) => {
   //  amount to show in brackets that equals view amount in time period
   let viewAmountInPeriod;
 
+  console.log(`WITHIN: ${within}`)
+
+  function calculateViewAmount(uploads){
+    let viewCounter = 0;
+    for(const checkUpload of uploads){
+      // console.log(checkUpload);
+
+      let stringToCheck;
+      if(within == 'alltime'){
+        stringToCheck = `viewsAllTime`;
+      } else {
+        stringToCheck = `viewsWithin${within}`;
+      }
+      const forThisUpload = checkUpload[stringToCheck];
+      viewCounter = viewCounter + forThisUpload;
+    }
+    return viewCounter
+  }
+
   try {
 
     switch(englishString){
@@ -231,6 +250,8 @@ exports.popularUploads = async(req, res) => {
     let filter = getSensitivityFilter(req.user, req.siteVisitor);
 
     let uploads = await getFromCache.getPopularUploads(timeRange, limit, skipAmount, mediaType, filter, category, subcategory);
+
+    viewAmountInPeriod = calculateViewAmount(uploads);
 
     let categoryObj;
     for(const cat of categories){
