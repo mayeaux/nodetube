@@ -165,6 +165,7 @@ if(cluster.isMaster){
     }));
 
     if(process.env.SAVE_AND_SERVE_FILES == 'true'){
+      // TODO: there is a bug here where the user's account profile picture is being cached and doesnt appear updated, pull that out of this route (should have maxage: 0 )
       app.use('/uploads', express.static(saveAndServeFilesDirectory, {maxAge: 31557600000}));
     }
 
