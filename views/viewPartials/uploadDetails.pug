@@ -46,7 +46,7 @@ div.random-thing(style="margin-top:-4px;")
                 a.upload-user-text.views-text(href=`/user/${upload.uploader.channelUrl}` style="margin:0;text-align:center;display:inline;") #{upload.uploader.channelName || upload.uploader.channelUrl}
 
 
-// show views within time
+// show views within time if on popular page
 div.upload-thing
     if within
         p.upload-title-text.views-text(style="margin-top:-8px") #{upload[popularTimeViews]} #{withinDisplayString}

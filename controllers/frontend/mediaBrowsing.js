@@ -273,6 +273,10 @@ exports.popularUploads = async(req, res) => {
 
     withinDisplayString = 'views ' + withinDisplayString;
 
+    if(within == 'alltime'){
+      withinDisplayString = ''
+    }
+
     const popularTimeViews = 'viewsWithin' + within;
     const recentPopular = 'popular';
 
