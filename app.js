@@ -23,7 +23,7 @@ const useragent = require('express-useragent');
 var multipart = require('connect-multiparty');
 const Promise = require('bluebird');
 const ngrok = require('ngrok');
-
+const commandExists = require('command-exists');
 const jsHelpers = require('./lib/helpers/js-helpers');
 
 /** FOR FINDING ERRANT LOGS **/
