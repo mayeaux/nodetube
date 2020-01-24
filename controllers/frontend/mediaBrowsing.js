@@ -252,8 +252,9 @@ exports.popularUploads = async(req, res) => {
 
     let uploads = await getFromCache.getPopularUploads(timeRange, limit, skipAmount, mediaType, filter, category, subcategory);
 
+    let viewsOnThisPage;
     if(category){
-      viewAmountInPeriod = calculateViewAmount(uploads);
+      viewsOnThisPage = calculateViewAmount(uploads);
     }
 
     let categoryObj;
@@ -312,7 +313,8 @@ exports.popularUploads = async(req, res) => {
       withinDisplayString,
       popularTimeViews,
       mediaBrowsingType,
-      mediaType
+      mediaType,
+      viewsOnThisPage
     });
 
   } catch(err){

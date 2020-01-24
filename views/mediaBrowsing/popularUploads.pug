@@ -8,6 +8,9 @@ block content
     // show view amount and time period like: Last Day (294)
     h1.center-block.text-center #{englishString} (#{viewAmountInPeriod})
 
+    if category
+        h3.center-block.text-center Views On This Page: (#{viewsOnThisPage})
+
     div.container
 
         h2.center-block.text-center #{timeAgoEnglish}
@@ -55,7 +58,7 @@ block content
                         // include ../viewPartials/uploadDetailsPopular
 
 
-            include ../viewPartials/adminSensitivityButtons
+            //include ../viewPartials/adminSensitivityButtons
 
 
         if uploads
