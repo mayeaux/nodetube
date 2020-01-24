@@ -78,7 +78,7 @@ exports.recentUploads = async(req, res) => {
 
     const mediaBrowsingType = 'recent';
 
-    console.log('getting recent uploads');
+    // console.log('getting recent uploads');
 
     const addressPrepend = '/media/recent';
 
@@ -116,14 +116,14 @@ exports.recentUploads = async(req, res) => {
       }
     }
 
-    console.log(`CATEGORY: ${category}`);
+    // console.log(`CATEGORY: ${category}`);
 
     const mediaType = media;
 
     const uploads = await getFromCache.getRecentUploads(limit, skipAmount, mediaType, filter, category, subcategory);
     const recentPopular = 'recent';
 
-    console.log('rendering');
+    // console.log('rendering');
 
     res.render('mediaBrowsing/recentUploads', {
       title: 'Recent Uploads',
@@ -159,7 +159,7 @@ exports.recentUploads = async(req, res) => {
  */
 exports.popularUploads = async(req, res) => {
 
-  console.log('getting popular uploads');
+  // console.log('getting popular uploads');
 
   const mediaBrowsingType = 'popular';
 
@@ -255,9 +255,9 @@ exports.popularUploads = async(req, res) => {
     const popularTimeViews = 'viewsWithin' + within;
     const recentPopular = 'popular';
 
-    console.log(popularTimeViews);
-
-    console.log('getting popular uploads');
+    // console.log(popularTimeViews);
+    //
+    // console.log('getting popular uploads');
 
     res.render('mediaBrowsing/popularUploads', {
       title: 'Popular Uploads',
@@ -282,7 +282,8 @@ exports.popularUploads = async(req, res) => {
       within,
       withinDisplayString,
       popularTimeViews,
-      mediaBrowsingType
+      mediaBrowsingType,
+      mediaType
     });
 
   } catch(err){
