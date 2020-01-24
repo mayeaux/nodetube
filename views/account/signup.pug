@@ -13,15 +13,15 @@ block content
     .form-group
       label.fw.loginHeader.col-sm-3.control-label(for='channelUrl') Channel Username
       .col-sm-7
-        input.form-control.username(type='text', name='channelUrl', id='channelUrl', autofocus, required placeholder='Please enter your channel username')
+        input.fw.loginHeader.form-control.username(type='text', name='channelUrl', id='channelUrl', autofocus, required placeholder='Please enter your channel username')
     .form-group
       label.fw.loginHeader.col-sm-3.control-label(for='password') Password
       .col-sm-7
-        input.form-control(type='password', name='password', id='password', placeholder='Please enter your password', required)
+        input.fw.loginHeader.form-control(type='password', name='password', id='password', placeholder='Please enter your password', required)
     .form-group
       label.fw.loginHeader.col-sm-3.control-label(for='confirmPassword') Confirm Password
       .col-sm-7
-        input.form-control(type='password', name='confirmPassword', id='confirmPassword', placeholder='Please confirm your password', required)
+        input.fw.loginHeader.form-control(type='password', name='confirmPassword', id='confirmPassword', placeholder='Please confirm your password', required)
 
     if nodeEnv == 'production' && captchaOn == 'true'
       .form-group
@@ -34,7 +34,7 @@ block content
 
     .form-group
       .col-sm-offset-3.col-sm-7
-        p By signing up you are agreeing you have read and agree to the
+        p.fw By signing up you are agreeing you have read and agree to the
           a(href="/termsofservice") &nbspTerms Of Service
     .form-group
       .col-sm-offset-3.col-sm-7
