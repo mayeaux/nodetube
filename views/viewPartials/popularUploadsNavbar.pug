@@ -3,18 +3,21 @@ div.row
         h3
 
 
-            a(href=`/media/popular/1?media=${mediaType}&category=${category}&within=1hour`) Last Hour
+            a(href=`/media/popular/${page}?media=${mediaType}&category=${category}&within=1hour`) Last Hour
     div.col-sm-2
         h3
-            a(href=`/media/popular/1?media=${mediaType}&category=${category}&within=24hour`) Last Day
+            a(href=`/media/popular/${page}?media=${mediaType}&category=${category}&within=24hour`) Last Day
     div.col-sm-2
         h3
-            a(href=`/media/popular/1?media=${mediaType}&category=${category}&within=1week`) Last Week
+            a(href=`/media/popular/${page}?media=${mediaType}&category=${category}&within=1week`) Last Week
     div.col-sm-2
         h3
-            a(href=`/media/popular/1?media=${mediaType}&category=${category}&within=1month`) Last Month
+            a(href=`/media/popular/${page}?media=${mediaType}&category=${category}&within=1month`) Last Month
     div.col-sm-2
         h3
-            a(href=`/media/popular/1?media=${mediaType}&category=${category}&within=alltime`) All-Time
+            a(href=`/media/popular/${page}?media=${mediaType}&category=${category}&within=alltime`) All-Time
+    div.col-sm-2
+        h3
+            a(href=`/media/popular/${page}?media=${mediaType}`) Categories
 
 hr

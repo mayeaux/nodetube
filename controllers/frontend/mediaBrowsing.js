@@ -209,6 +209,7 @@ exports.popularUploads = async(req, res) => {
 
   function calculateViewAmount(uploads){
     let viewCounter = 0;
+
     for(const checkUpload of uploads){
       // console.log(checkUpload);
 
@@ -251,7 +252,9 @@ exports.popularUploads = async(req, res) => {
 
     let uploads = await getFromCache.getPopularUploads(timeRange, limit, skipAmount, mediaType, filter, category, subcategory);
 
-    viewAmountInPeriod = calculateViewAmount(uploads);
+    if(category){
+      viewAmountInPeriod = calculateViewAmount(uploads);
+    }
 
     let categoryObj;
     for(const cat of categories){
@@ -290,6 +293,7 @@ exports.popularUploads = async(req, res) => {
       uploads,
       numbersArray,
       highlightedNumber: page,
+      page,
       previousNumber,
       nextNumber,
       withinString,
