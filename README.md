@@ -83,9 +83,9 @@ NodeTube has the functionality to act as an authentication app for an nginx-rtmp
 - Public IP stays private, unlike some other YouTube alts
 - Upload all forms of content (video, audio, image)
 - 500 MB max upload size
--Able to load your account with credit and support creators directly [Note: This functionality exists in the NodeTube source tube but finding a payment processor to support this/legal implications are more difficult to pull off in practice.]
+- Able to load your account with credit and support creators directly [Note: This functionality exists in the NodeTube source tube but finding a payment processor to support this/legal implications are more difficult to pull off in practice.]
 - Support open-source software, help decentralize and open the internet.
--Engage with and help grow a community
+- Engage with and help grow a community
 
 ### Reasons To Use NodeTube as a Paid User:
 - Ability to monetize your account and be paid directly by the instance users [Note: This functionality exists in the NodeTube source tube but finding a payment processor to support this/legal implications are more difficult to pull off in practice.]
