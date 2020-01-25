@@ -61,11 +61,8 @@ block content
 
             include ../viewPartials/adminSensitivityButtons
 
-            div.center-block.text-center.col-sm-12
-
-                        div.dropdown
-
-                            include ../viewPartials/pagination
+        div.col-sm-12
+            include ../viewPartials/pagination
 
 
         if user && user.role == 'admin'
