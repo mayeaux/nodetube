@@ -6,9 +6,10 @@ block content
         include ../viewPartials/popularUploadsNavbar
 
     // show view amount and time period like: Last Day (294)
-    h1.center-block.text-center #{englishString} (#{viewAmountInPeriod})
+    h2.fw.center-block.text-center #{englishString} (#{viewAmountInPeriod})
 
-    if category
+    // it's a pretty big change so turn off for now
+    if category & 1 == 2
         h3.center-block.text-center Views On This Page: (#{viewsOnThisPage})
 
     div.container
@@ -24,8 +25,8 @@ block content
 
             // Non-video stuff (orderBy, sensitivity dropdowns,
 
-            if category
-                include ../viewPartials/categoryDropdown
+            // CATEGORY DROPDOWN
+            include ../viewPartials/categoryDropdown
 
             include ../viewPartials/popularUploadsMediaDropdown
 
