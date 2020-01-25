@@ -38,14 +38,14 @@ block content
 
         br
         div.uploads
-            // show all the categories via previews if it's not already a category overview
+            // CATEGORY OVERVIEW PAGE IF NOT A CATEGORY
             if !isACategory
                 include ../viewPartials/categoryOverviews
 
             else
 
                 div.category.col-sm-12
-                    h1.categoryDisplayName #{categoryObj.displayName}
+                    h1.fw.categoryDisplayName(style="font-size:42px") #{categoryObj.displayName}
                     br
 
 

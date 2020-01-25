@@ -4,7 +4,7 @@ for category in categories
     if uploads[category.name] && uploads[category.name].length && uploads[category.name].length > 0
         div.category.col-sm-12
             a.upload-user-text(href=`${addressPrepend}/${highlightedNumber}?category=${category.name}&within=${within}&media=${mediaType || ''}`)
-                h2 #{category.displayName}
+                h1.fw(style="font-size:41px") #{category.displayName}
                 br
 
             // begin individual upload section
