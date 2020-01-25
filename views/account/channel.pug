@@ -68,7 +68,7 @@ block content
 
                 div(style="height:10px;")
                 if alreadySubbed
-                    button(style="display:inherit;margin:0 auto;border-radius:3px;").fw.subscribe.btn.btn-success Subscribed (#{subscriberAmount})
+                    button(style="display:inherit;margin:0 auto;border-radius:3px;").fw.subscribe.btn.btn-danger Unsubscribe (#{subscriberAmount})
                 else
                     button(style="display:inherit;margin:0 auto;border-radius:3px;").fw.subscribe.btn.btn-success Subscribe (#{subscriberAmount})
 
@@ -166,59 +166,8 @@ block content
         script.
           var user = undefined
 
-    script.
-      var amountOfSubs = #{subscriberAmount}
-      var alreadySubbed = #{alreadySubbed}
+    include ../mediaPlayerPartials/subscribeFunctionalityJs
 
-      $('.subscribe').on('touchstart click', function (e) {
-
-        if (!user) {
-          return swal('Please register an account to subscribe')
-        }
-
-        var channelUrl = '#{channel.channelUrl}'
-        var csrf = '#{_csrf}'
-
-        // dont move browser
-        e.preventDefault();
-
-        if (alreadySubbed) {
-          amountOfSubs = amountOfSubs - 1
-          alreadySubbed = false;
-        } else {
-          amountOfSubs = amountOfSubs + 1
-          alreadySubbed = true;
-        }
-
-        var userName = "#{channel.channelName || channel.channelUrl}"
-
-        if (!alreadySubbed) {
-          $('.subscribe').html(`Subscribe (${amountOfSubs})`)
-          swal('You have unsubscribed from ' + userName)
-
-        } else {
-          $('.subscribe').html(`Subscribed (${amountOfSubs})`)
-          swal('You have subscribed to ' + userName )
-        }
-
-        //
-        var data = {
-          _csrf: csrf,
-          channelUrl
-        }
-
-        $.ajax({
-          type: 'POST',
-          url: `/api/subscribe`,
-          data,
-          success: function (data) {
-            console.log(data);
-          },
-          error: function (err) {
-            console.log(err);
-          }
-        });
-      })
 
     script.
       var myTextEl = document.getElementById('descriptionText');
