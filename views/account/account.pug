@@ -107,26 +107,26 @@ block content
   .container
     div.row
       div.col-sm-2
-        h4
+        h3.fw
           a(href=`/user/${user.channelUrl}`) Channel Page
       div.col-sm-2
-        h4
+        h3.fw
           a(href="/account/viewHistory") View History
       div.col-sm-2
-        h4
+        h3.fw
           a(href="/account/reactHistory") React History
       //div.col-sm-2
       //      h4
       //        a(href="/" + `${user.channelUrl}` +  "/playlists") Playlists
       div.col-sm-2
-        h4
+        h3.fw
           a(href="/account/livestreaming") Livestreaming
           //a.livestream-button Livestreaming
           //a.livestreaming-link(href=`/user/${user.channelUrl}/live/staging`) Livestreaming
       div.col-sm-2
-        h4 Credit ($#{user.credit/100})
+        h3.fw Credit ($#{user.credit/100})
       div.col-sm-2
-        h4 Earnings ($#{user.receivedCredit / 100})
+        h3.fw Earnings ($#{user.receivedCredit / 100})
       //div.col-sm-2
       //  h3
       //    a(href=`/account/creditHistory`) Credit History
@@ -135,12 +135,13 @@ block content
     hr
 
 
-    h2.text-center Channel Overview
+    h1.fw.text-center Channel Overview
     hr
 
     // TODO: export a variable plus_enabled if user enables payments
+    // TODO: has to have styled updated with fw
     if plus_enabled
-      h3.text-center(style="margin-bottom:16px") NodeTube Plus
+      h2.fw.text-center(style="margin-bottom:16px") NodeTube Plus
       div.pt-plus.center-div.text-center
         if user.plan == 'plus'
           p Thank you so much for subscribing!
@@ -178,7 +179,7 @@ block content
         br
         br
         br
-        h3.text-center YouTube Backup
+        h3.fw.text-center YouTube Backup
         br
 
         //form
@@ -226,22 +227,17 @@ block content
 
     br
 
-    h3.text-center Channel Information
+    h2.fw.text-center Channel Information
       br
       br
-      if !user.channelUrl
-        div.text-center
-          h4 Upgrade! Create a new account and you can select a custom username!
-
-
 
     //form.upload-form(role="form" method="POST" enctype="multipart/form-data")
     form.update-user-details-form.form-horizontal(role="form" method="POST" enctype="multipart/form-data" action=`${thumbnailServer}/account/profile`)
       input(type="hidden" name="uploadToken" value=`${user.uploadToken}`)
       .form-group
-        label.col-sm-3.control-label(for='channelName') Channel Username
+        label.fw.col-sm-3.control-label(for='channelName' style="font-size:17px;margin-top:16px;") Channel Username
         .col-sm-7
-          h4= user.channelUrl
+          h3.fw= user.channelUrl
 
       .form-group
         label.col-sm-3.control-label(for='channelName') Channel Display Name

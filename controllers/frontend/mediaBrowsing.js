@@ -252,6 +252,7 @@ exports.popularUploads = async(req, res) => {
 
     let uploads = await getFromCache.getPopularUploads(timeRange, limit, skipAmount, mediaType, filter, category, subcategory);
 
+    // show the view amount per the particular page
     let viewsOnThisPage;
     if(category){
       viewsOnThisPage = calculateViewAmount(uploads);
