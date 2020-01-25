@@ -17,13 +17,13 @@ block content
     .form-group
       label.fw.loginHeader.col-sm-3.control-label(for='password') Password
       .col-sm-7
-        input.fw.loginHeader.form-control(type='password', name='password', id='password', placeholder='Please enter your password', required)
+        input.fw.logineader.form-control(type='password', name='password', id='password', placeholder='Please enter your password', required)
     .form-group
       label.fw.loginHeader.col-sm-3.control-label(for='confirmPassword') Confirm Password
       .col-sm-7
         input.fw.loginHeader.form-control(type='password', name='confirmPassword', id='confirmPassword', placeholder='Please confirm your password', required)
 
-    if nodeEnv == 'production' && captchaOn == 'true'
+    if captchaOn == true
       .form-group
         label.fw.loginHeader.col-sm-3.control-label(for='captcha') Captcha
         //.col-sm-offset-3.col-sm-7
