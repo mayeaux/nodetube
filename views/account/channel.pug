@@ -49,36 +49,35 @@ block content
     div.channel-information.container
         div.col-sm-12
             div.col-sm-4
-                h3 #{channel.channelName || channel.channelUrl}
+                h2.fw #{channel.channelName || channel.channelUrl}
                     if channel.verified == true
                         img(src="/images/verified.jpg" width="25px" height="25px" style="margin-left:3px;margin-top:-2px;margin-right:5px;")
                     if channel.plan == 'plus'
                         span.nodetube-pro PLUS
+
+                if channel.thumbnailUrl || channel.customThumbnail
+                    if channel.customThumbnail
+                        img(src=`${uploadServer}/${channel.channelUrl}/${channel.customThumbnail}` style="border-radius:5px;width:140px;height:140px")
+                    else
+                        img(src=`${uploadServer}/${channel._id}/unique.png` style="border-radius:5px;width:140px;height:140px")
+
+                        //img(src=channel.thumbnailUrl width="120px" height="120px")
+
             div.user-stats.col-sm-6(style="margin-top:14px")
                 div.col-sm-3
-                    h5 Uploads: #{userUploadAmount} &nbsp &nbsp
+                    h4.fw Uploads: #{userUploadAmount} &nbsp &nbsp
                 div.col-sm-3
-                    h5 Views : #{channel.totalViews}
+                    h4.fw Views : #{channel.totalViews}
                 div.col-sm-3
-                    h5 Joined: #{joinedTimeAgo}
+                    h4.fw Joined: #{joinedTimeAgo}
                 if channel.receivedSubscriptions
                     div.col-sm-3
-                        h5 Subscribers : #{channel.receivedSubscriptions.length}
+                        h4.fw(style="border-radius:5px;") Subscribers : #{channel.receivedSubscriptions.length}
                 else
                     div.col-sm-3
-                        h5 Subscribers : 0
-            br
-            br
-            br
-            br
-            if channel.thumbnailUrl || channel.customThumbnail
-                div.col-sm-2
-                    if channel.customThumbnail
-                        img(src=`${uploadServer}/${channel.channelUrl}/${channel.customThumbnail}` width="120px" height="120px")
-                    else
-                        img(src=`${uploadServer}/${channel._id}/unique.png` width="120px" height="120px")
+                        h4.fw(style="border-radius:5px;") Subscribers : 0
 
-                    //img(src=channel.thumbnailUrl width="120px" height="120px")
+
 
 
             div.col-sm-8
@@ -89,9 +88,9 @@ block content
 
 
                 if alreadySubbed
-                    button.subscribe.btn.btn-success Subscribed (#{subscriberAmount})
+                    button.fw.subscribe.btn.btn-success Subscribed (#{subscriberAmount})
                 else
-                    button.subscribe.btn.btn-success Subscribe (#{subscriberAmount})
+                    button.fw.subscribe.btn.btn-success Subscribe (#{subscriberAmount})
 
                 if user && ( user.role == 'admin' || user.role == 'moderator') && channel.status !== 'restricted'
                     br
@@ -110,37 +109,16 @@ block content
                     if user.role == 'admin'
                         button.delete-ips.btn.btn-warning Undelete All Accounts / Unban All Ips
 
-        br
         div
-        br
 
     div(style="margin-top:80px;")
         div
 
-    br
-    br
-    br
-    br
-    br
     p
     hr
 
-    br
     div.center-block.text-center
-        div.dropdown(style="display:inline;margin-right:15px;")
-            button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
-                | Order By: #{orderByEnglishString} &nbsp
-                span.caret
-
-            ul.dropdown-menu.dropdown
-                li
-                    a(href=`/user/${channel.channelUrl}?orderBy=popular`) Popular
-                li
-                    a(href=`/user/${channel.channelUrl}?orderBy=newToOld`) New To Old
-                li
-                    a(href=`/user/${channel.channelUrl}?orderBy=oldToNew`) Old To New
-                li
-                    a(href=`/user/${channel.channelUrl}?orderBy=alphabetical`) Alphabetical
+        include ../viewPartials/categoryDropdown
 
         include ../viewPartials/sensitivityFilterDropdown
 
