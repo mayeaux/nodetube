@@ -109,6 +109,7 @@ Domain | Registrations Open
 https://nodetube.live | Yes 
 https://nullvideo.com| Yes 
 https://videoflicktube.com| Yes 
+https://xchtube.com| Yes 
 
 License
 -------
