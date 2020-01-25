@@ -240,33 +240,33 @@ block content
           h3.fw= user.channelUrl
 
       .form-group
-        label.col-sm-3.control-label(for='channelName') Channel Display Name
+        label.fw.col-sm-3.control-label(for='channelName' style="font-size:17px;margin-top:-5px;") Channel Display Name
         .col-sm-7
-          input.form-control(type='text', name='channelName', id='channelName', minlength=3, maxlength=25, value=user.channelName)
+          input.form-control(type='text', name='channelName', id='channelName', minlength=3, maxlength=25, value=user.channelName style="max-width:513px;")
 
       .form-group
-        label.col-sm-3.control-label(for='channelName') Channel Description
+        label.fw.col-sm-3.control-label(for='channelName' style="font-size:17px;margin-top:-5px;") Channel Description
         .col-sm-7
           textarea(id="description" name="description" maxlength='500' rows="7" cols="70" style="max-width:100%") #{user.channelDescription}
 
       // UPLOAD FORM IF NO THUMBNAIL
       if !user.thumbnailUrl
         .form-group
-          label.col-sm-3.control-label(for='channelName') Channel Thumbnail
+          label.fw.col-sm-3.control-label(for='channelName' style="font-size:17px;margin-top:-5px;") Channel Thumbnail
           .col-sm-7
             // FILE INPUT BUTTON
-            input.center-block.text-center(class="upload-file" data-max-size="500000000" type="file" name="filetoupload" accept="image/*" style="margin:0;margin-bottom:3px;border:0px;")
+            input.center-block.text-center.fw(class="upload-file" data-max-size="500000000" type="file" name="filetoupload" accept="image/*" style="margin:0;margin-bottom:3px;border:0px;")
 
-        div.form-group
-          div.col-sm-3.
-          p.col-sm-7(style="white-space:pre-line;margin-top:-15px;margin-bottom:-1px;").
-            Thumbnail dimensions:
-            width: up to 302px,
-            height: 168px
+        //div.form-group
+        //  div.col-sm-3.
+        //  p.col-sm-7(style="white-space:pre-line;margin-top:-15px;margin-bottom:-1px;").
+        //    Thumbnail dimensions:
+        //    width: up to 302px,
+        //    height: 168px
 
       .form-group
         .col-sm-offset-3.col-sm-4
-          button.btn.btn.btn-primary(type='submit')
+          button.fw.btn.btn.btn-primary(type='submit' style="font-size:16px;border-radius:5px;")
             i.fa.fa-pencil
             | Update Profile
 
@@ -278,7 +278,7 @@ block content
       br
       div.col-sm-12(style="margin-bottom:100px")
 
-        h3.text-center Channel Thumbnail
+        h2.fw.text-center Channel Thumbnail
         br
         // TODO: Sub out thumbnail here
 
@@ -293,12 +293,13 @@ block content
           input(type="hidden" name="channelUrl" value=`${user.channelUrl}`)
           input(type="hidden" name="uploadToken" value=`${user.uploadToken}`)
 
-          button.btn.btn.btn-danger.center-block.text-center(type='submit' style="margin-top:20px")
+          button.fw.btn.btn.btn-danger.center-block.text-center(type='submit' style="margin-top:20px;border-radius:3px;")
             i.fa.fa-pencil
             | Delete
 
+    // IF USER HAS CONFIRMED EMAIL
     if user.email && user.emailConfirmed
-      h3.text-center Confirmed Email
+      h2.fw.text-center Confirmed Email
         br
       form.form-horizontal(action='/account/email', method='POST')
         input(type='hidden', name='_csrf', value=_csrf)
@@ -338,22 +339,22 @@ block content
     //          i.fa.fa-envelope
     //          | Send Confirmation Email
     br
-    h3.text-center Change Password
+    h3.fw.text-center Change Password
     br
 
     form.form-horizontal(action='/account/password', method='POST')
       input(type='hidden', name='_csrf', value=_csrf)
       .form-group
-        label.col-sm-3.control-label(for='password') New Password
+        label.fw.col-sm-3.control-label(for='password' style="font-size:16px") New Password
         .col-sm-7
-          input.form-control(type='password', name='password', id='password')
+          input.form-control(type='password', name='password', id='password' style="max-width:513px;")
       .form-group
-        label.col-sm-3.control-label(for='confirmPassword') Confirm Password
+        label.fw.col-sm-3.control-label(for='confirmPassword' style="font-size:16px") Confirm Password
         .col-sm-7
-          input.form-control(type='password', name='confirmPassword', id='confirmPassword')
+          input.form-control(type='password', name='confirmPassword', id='confirmPassword' style="max-width:513px;")
       .form-group
         .col-sm-offset-3.col-sm-4
-          button.btn.btn-primary(type='submit')
+          button.fw.btn.btn-primary(type='submit' style="margin-top:20px;border-radius:3px;")
             i.fa.fa-lock
             | Change Password
 
