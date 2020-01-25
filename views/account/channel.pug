@@ -45,7 +45,10 @@ block content
             transform: translateY(-2px);
         }
 
-
+        .user-stats {
+            text-align:center;
+            margin-top:30px;
+        }
     div.channel-information.container
         div.col-sm-12
             div.col-sm-4(style="margin:0 auto;text-align:center;")
@@ -57,9 +60,9 @@ block content
 
                 if channel.thumbnailUrl || channel.customThumbnail
                     if channel.customThumbnail
-                        img(src=`${uploadServer}/${channel.channelUrl}/${channel.customThumbnail}` style="border-radius:5px;width:140px;height:140px")
+                        img(src=`${uploadServer}/${channel.channelUrl}/${channel.customThumbnail}` style="border-radius:5px;width:200px;height:200px")
                     else
-                        img(src=`${uploadServer}/${channel._id}/unique.png` style="border-radius:5px;width:140px;height:140px")
+                        img(src=`${uploadServer}/${channel._id}/unique.png` style="border-radius:5px;width:200px;height:200px")
 
                         //img(src=channel.thumbnailUrl width="120px" height="120px")
 
@@ -71,45 +74,46 @@ block content
 
 
 
-            div.user-stats.col-sm-8(style="margin-top:14px")
+            div.user-stats.col-sm-8(style="")
                 div.col-sm-3
                     h4.fw Uploads: #{userUploadAmount} &nbsp &nbsp
                 div.col-sm-3
                     h4.fw Views : #{channel.totalViews}
-                div.col-sm-4
+                div.col-sm-3
                     h4.fw Joined: #{joinedTimeAgo}
                 if channel.receivedSubscriptions
-                    div.col-sm-4
+                    div.col-sm-3
                         h4.fw(style="border-radius:5px;") Subscribers : #{channel.receivedSubscriptions.length}
                 else
-                    div.col-sm-4
+                    div.col-sm-3
                         h4.fw(style="border-radius:5px;") Subscribers : 0
 
 
 
 
-            div.col-sm-8
-                p(id="descriptionText") #{channel.channelDescription}
-                if user && user.role == 'admin'
-                    each ip in ips
-                        p= ip
 
-                if user && ( user.role == 'admin' || user.role == 'moderator') && channel.status !== 'restricted'
-                    br
-                    br
-                    button.delete-account.btn.btn-danger Delete Account
-                    //button.delete-account.btn.btn-danger Delete Account And Ban Ip
-                    if user.role == 'admin'
-                        button.delete-ips.btn.btn-danger Delete All Accounts / Ips
+                div.col-sm-12(style="margin-top:30px;")
+                    p.fw(style="font-size:18px" id="descriptionText") Description: #{channel.channelDescription}
+                    if user && user.role == 'admin'
+                        each ip in ips
+                            p= ip
 
-                if user && ( user.role == 'admin' || user.role == 'moderator') && channel.status == 'restricted'
+                    if user && ( user.role == 'admin' || user.role == 'moderator') && channel.status !== 'restricted'
+                        br
+                        br
+                        button.delete-account.btn.btn-danger Delete Account
+                        //button.delete-account.btn.btn-danger Delete Account And Ban Ip
+                        if user.role == 'admin'
+                            button.delete-ips.btn.btn-danger Delete All Accounts / Ips
 
-                    br
-                    h3 ACCOUNT DELETED
-                    button.undelete-account.btn.btn-warning Undelete Account
-                    //button.undelete-account.btn.btn-warning Undelete Account And Unban Ip
-                    if user.role == 'admin'
-                        button.delete-ips.btn.btn-warning Undelete All Accounts / Unban All Ips
+                    if user && ( user.role == 'admin' || user.role == 'moderator') && channel.status == 'restricted'
+
+                        br
+                        h3 ACCOUNT DELETED
+                        button.undelete-account.btn.btn-warning Undelete Account
+                        //button.undelete-account.btn.btn-warning Undelete Account And Unban Ip
+                        if user.role == 'admin'
+                            button.delete-ips.btn.btn-warning Undelete All Accounts / Unban All Ips
 
         div
 
