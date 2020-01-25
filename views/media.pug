@@ -248,7 +248,7 @@ block content
                                 label.fw(for="comment" style="font-size:20px;") Enter Comment
                                 br
                                 input(type="hidden" name="upload" id="upload" value=upload._id)
-                                textarea(name="comment" id="comment" minlength="2" style="width:400px;max-width:100%")
+                                textarea.fw(name="comment" id="comment" minlength="2" style="width:400px;max-width:100%")
                                 br
                                 input.fw.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
                 else
@@ -256,7 +256,7 @@ block content
                         form.form-horizontal.overall-comment-form(class="comment-form")
                             label.fw(for="comment" style="font-size:17px;") Enter Comment
                             br
-                            textarea(name="comment" id="comment" minlength="2" style="width:400px;max-width:100%")
+                            textarea.fw(name="comment" id="comment" minlength="2" style="width:400px;max-width:100%")
                             br
                             input.fw.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
 
@@ -275,7 +275,7 @@ block content
                 else
                     if commentCount > 0
                         div.comment-containing-div.col-sm-6.col-sm-offset-3(style="margin-top:60px;text-align:center")
-                            if commentCount < 1
+                            if commentCount == 1
                                 div(style="display:block")
                                     h2.fw(style="text-align:left;") #{commentCount} Comment
                             else
@@ -311,9 +311,9 @@ block content
                                                     input(type='hidden', name='_csrf', value=_csrf)
                                                     input(type="hidden" name="upload" id="upload" value=upload._id)
                                                     input(type="hidden" name="commentId" id="commentId" value=comment.id)
-                                                    textarea(name="comment" id="comment" minlength="2" style="width:400px;max-width:100%;")
+                                                    textarea.fw(name="comment" id="comment" minlength="2" style="width:400px;max-width:100%;")
                                                     br
-                                                    input.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
+                                                    input.fw.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
                                                     br
                                                     br
 
@@ -322,10 +322,10 @@ block content
                                                 if responseComment.visibility !== 'removed'
                                                     div(style="display:block;padding-bottom:15px;padding-left:40px;")
                                                         div.top-line(style="text-align:left;")
-                                                            p(style="text-align:left;display:inline-block;")
+                                                            p.fw(style="text-align:left;display:inline-block;")
                                                                 a(href=`/user/${responseComment.commenter.channelUrl}` style="color:black;margin-right:5px;") #{responseComment.commenter.channelName || responseComment.commenter.channelUrl}
-                                                            p(style="display:inline-block;") - #{responseComment.timeAgo} &nbsp
-                                                        p(style="text-align:left;") #{responseComment.text}
+                                                            p.fw(style="display:inline-block;") - #{responseComment.timeAgo} &nbsp
+                                                        p.fw(style="text-align:left;") #{responseComment.text}
 
                                                     //div.reply-container(style="display:none")
                                                     //    form.form-horizontal.reply-form(class="comment-form" action='/api/comment', method='post')
@@ -393,6 +393,7 @@ block extra_footer_js
     });
 
 
+  //COMMENT FUNCTIONALITY CONTAINED HERE
   script(src="/js/media.js")
 
   script.

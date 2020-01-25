@@ -32,7 +32,7 @@ $(function(){
     var replyContainer = replyLinkContainingDiv.children('.reply-container').css('display', 'inline');
   });
 
-  /* POST COMMENT FUNCTIONALITY START */
+  /** POST COMMENT FUNCTIONALITY START **/
 
   $('.comment-posted').hide();
 
@@ -59,7 +59,7 @@ $(function(){
 
         if($('.no-comments-div').length > 0  ){
 
-          var html = `<p style="text-align:left;">${data.user} - ${data.timeAgo} &nbsp;</p><p style="text-align:left;">${data.text}</p>`;
+          var html = `<p class="fw" style="text-align:left;">${data.user} - ${data.timeAgo} &nbsp;</p><p style="text-align:left;">${data.text}</p>`;
 
           $('.no-comments-header').text('1 Comment');
 
@@ -74,7 +74,7 @@ $(function(){
 
           var containingDiv = $('.comment-containing-div');
 
-          var commentDiv =$(`<div style="display:block;padding-bottom:15px;"><p style="text-align:left;">${data.user} - ${data.timeAgo} &nbsp;</p><p style="text-align:left;">${data.text}</p>`);
+          var commentDiv =$(`<div style="display:block;padding-bottom:15px;"><p class="fw" style="text-align:left;">${data.user} - ${data.timeAgo} &nbsp;</p><p class="fw" style="text-align:left;">${data.text}</p>`);
 
           var responsesDiv = containingDiv.append(commentDiv);
 
@@ -84,7 +84,7 @@ $(function(){
 
           var containingDiv = commentForm.parent().parent().parent();
 
-          var commentDiv =$(`<div style="display:block;padding-bottom:15px;padding-left:40px;"><p style="text-align:left;">${data.user} - ${data.timeAgo} &nbsp;</p><p style="text-align:left;">${data.text}</p>`);
+          var commentDiv =$(`<div style="display:block;padding-bottom:15px;padding-left:40px;"><p class="fw" style="text-align:left;">${data.user} - ${data.timeAgo} &nbsp;</p><p class="fw" style="text-align:left;">${data.text}</p>`);
 
           var responsesDiv = containingDiv.children('.responses').append(commentDiv);
 
