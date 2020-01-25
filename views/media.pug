@@ -84,6 +84,15 @@ block content
                     if upload.uploader.plan == 'plus'
                         span.nodetube-pro PLUS
 
+
+            if upload.visibility != 'pending'
+                if alreadySubbed
+                    button.subscribe.btn.fw.btn-danger(style="border-radius:4px") Unsubscribe (#{subscriberAmount})
+                else
+                    button.subscribe.btn.fw.btn-success(style="border-radius:4px") Subscribe (#{subscriberAmount})
+                br
+                br
+
             // REMOVE QUALITY THING, EVERYONE CAN STAY LOW QUALITY
             // also have to add .fw to this thing when take it live
             //if upload.quality && upload.quality.high
