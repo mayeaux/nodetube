@@ -48,7 +48,7 @@ block content
 
     div.channel-information.container
         div.col-sm-12
-            div.col-sm-4
+            div.col-sm-4(style="margin:0 auto;text-align:center;")
                 h2.fw #{channel.channelName || channel.channelUrl}
                     if channel.verified == true
                         img(src="/images/verified.jpg" width="25px" height="25px" style="margin-left:3px;margin-top:-2px;margin-right:5px;")
@@ -63,18 +63,26 @@ block content
 
                         //img(src=channel.thumbnailUrl width="120px" height="120px")
 
-            div.user-stats.col-sm-6(style="margin-top:14px")
+                div(style="height:10px;")
+                if alreadySubbed
+                    button(style="display:inherit;margin:0 auto;border-radius:3px;").fw.subscribe.btn.btn-success Subscribed (#{subscriberAmount})
+                else
+                    button(style="display:inherit;margin:0 auto;border-radius:3px;").fw.subscribe.btn.btn-success Subscribe (#{subscriberAmount})
+
+
+
+            div.user-stats.col-sm-8(style="margin-top:14px")
                 div.col-sm-3
                     h4.fw Uploads: #{userUploadAmount} &nbsp &nbsp
                 div.col-sm-3
                     h4.fw Views : #{channel.totalViews}
-                div.col-sm-3
+                div.col-sm-4
                     h4.fw Joined: #{joinedTimeAgo}
                 if channel.receivedSubscriptions
-                    div.col-sm-3
+                    div.col-sm-4
                         h4.fw(style="border-radius:5px;") Subscribers : #{channel.receivedSubscriptions.length}
                 else
-                    div.col-sm-3
+                    div.col-sm-4
                         h4.fw(style="border-radius:5px;") Subscribers : 0
 
 
@@ -85,12 +93,6 @@ block content
                 if user && user.role == 'admin'
                     each ip in ips
                         p= ip
-
-
-                if alreadySubbed
-                    button.fw.subscribe.btn.btn-success Subscribed (#{subscriberAmount})
-                else
-                    button.fw.subscribe.btn.btn-success Subscribe (#{subscriberAmount})
 
                 if user && ( user.role == 'admin' || user.role == 'moderator') && channel.status !== 'restricted'
                     br
