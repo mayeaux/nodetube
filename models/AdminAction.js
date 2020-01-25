@@ -13,7 +13,7 @@ const adminActionSchema = new mongoose.Schema({
   actionType: {
     type: String,
     enum: ['userDeleted', 'userUndeleted', 'uploadDeleted', 'fullIpDeletion', 'banUser', 'unbanUser', 'fullUserDeletion',
-      'fullUserUndeletion', 'changeUploadRating', 'untrustUser']
+      'fullUserUndeletion', 'changeUploadRating', 'untrustUser', 'trustUser']
   },
   adminOrModerator: {
     type: mongoose.Schema.Types.ObjectId,
