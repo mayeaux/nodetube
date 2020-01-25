@@ -27,17 +27,18 @@ block content
             br
 
             // CATEGORY DROPDOWN
-            if category
-                include ../viewPartials/categoryDropdown
+            .search-upload-buttons-container
+                if category
+                    include ../viewPartials/categoryDropdown
 
-            // MEDIA TYPE DROPDOWN
-            include ../viewPartials/mediaDropdown
+                // MEDIA TYPE DROPDOWN
+                include ../viewPartials/mediaDropdown
 
-            // SENSITIVITY TYPE DROPDOWN
-            include ../viewPartials/sensitivityFilterDropdown
+                // SENSITIVITY TYPE DROPDOWN
+                include ../viewPartials/sensitivityFilterDropdown
 
-            // 5 LINK PAGINATION
-            include ../viewPartials/pagination
+                // 5 LINK PAGINATION
+                include ../viewPartials/pagination
 
             br
 
