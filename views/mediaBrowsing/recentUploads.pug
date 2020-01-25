@@ -22,7 +22,7 @@ block content
 
 
             a.upload-user-text(href=`${addressPrepend}`)
-                h1 Recently Uploaded
+                h1.fw Recently Uploaded
 
             br
 
@@ -49,7 +49,7 @@ block content
             else
 
                 div.category.col-sm-12
-                    h1.categoryDisplayName #{categoryObj.displayName}
+                    h2.fw.categoryDisplayName(style="font-size:42px") #{categoryObj.displayName}
                     br
 
                 each upload in uploads
