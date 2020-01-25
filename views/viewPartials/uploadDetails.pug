@@ -73,11 +73,11 @@ div.upload-thing
 //             input.ratingChanged(style="display:block" type="checkbox" value=`${upload._id}`)
 //
 //// denote whether upload is deleted
-//if user && (user.role == 'admin' || user.role == 'moderator') && upload.visibility == 'removed'
-//    div
-//        h4(style="margin-top:-5px;margin-bottom:-18px;") DELETED
-//        //p(style="font-size:15px") #{upload.uploader.channelName || upload.uploader.channelUrl}
-//        //    if upload.uploader.verified == true
-//        //        img(src="/images/verified.jpg" width="19px" height="19px" style="margin-left:3px;margin-top:-2px;")
-//        //    if upload.uploader.plan == 'plus'
-//        //        span.pewtube-pro PLUS
+if user && (user.role == 'admin' || user.role == 'moderator') && upload.visibility == 'removed'
+    div
+        h4(style="margin-top:-5px;margin-bottom:-1px;") DELETED
+        //p(style="font-size:15px") #{upload.uploader.channelName || upload.uploader.channelUrl}
+        //    if upload.uploader.verified == true
+        //        img(src="/images/verified.jpg" width="19px" height="19px" style="margin-left:3px;margin-top:-2px;")
+        //    if upload.uploader.plan == 'plus'
+        //        span.pewtube-pro PLUS
