@@ -13,6 +13,9 @@ style.
     background-color: transparent;
   }
 
+  .brandName {
+    font-size:19px;
+  }
 
 .navbar.navbar-default.navbar-fixed-top(style="background-color:rgb(24,55,147)")
   .container
@@ -23,7 +26,7 @@ style.
         span.icon-bar
         span.icon-bar
       a.navbar-brand(href=`/`)
-        h5(style="color:white;margin-right:-10px;margin-top:2px;") NodeTube
+        h5.brandName(style="color:white;margin-right:-10px;margin-top:0px;") NodeTube
     .collapse.navbar-collapse
       ul.nav.navbar-nav.front-header
         li(class=(title == 'Home') ? 'active' : undefined)
