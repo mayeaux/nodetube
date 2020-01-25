@@ -8,6 +8,7 @@ upload
 thing
 ytdl/videos/
 hls
+data
 
 lib-cov
 *.seed
