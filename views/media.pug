@@ -68,13 +68,13 @@ block content
                 if upload.uploader.customThumbnail
                     a(href=`/user/${upload.uploader.channelUrl}`)
 
-                        img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` width="170px" height="170px" style="border-radius:13px")
+                        img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` style="border-radius:13px;width:159px;height:159px;")
                         br
                         br
                 else if upload.uploader.thumbnailUrl
                     a(href=`/user/${upload.uploader.channelUrl}`)
 
-                        img(src=`${uploadServer}/${upload.uploader._id}/unique.png` width="170px" height="170px" style="border-radius:13px")
+                        img(src=`${uploadServer}/${upload.uploader._id}/unique.png` style="border-radius:13px;width:159px;height:159px;")
                         br
                         br
 
@@ -245,7 +245,7 @@ block content
                         div.comment-form.form-group
                             form.form-horizontal.overall-comment-form(class="comment-form" action='/api/comment', method='post')
                                 input(type='hidden', name='_csrf', value=_csrf)
-                                label(for="comment" style="font-size:17px;") Enter Comment
+                                label.fw(for="comment" style="font-size:20px;") Enter Comment
                                 br
                                 input(type="hidden" name="upload" id="upload" value=upload._id)
                                 textarea(name="comment" id="comment" minlength="2" style="width:400px;max-width:100%")
@@ -254,7 +254,7 @@ block content
                 else
                     div.comment-form.form-group.no-user-comment-form
                         form.form-horizontal.overall-comment-form(class="comment-form")
-                            label(for="comment" style="font-size:17px;") Enter Comment
+                            label.fw(for="comment" style="font-size:17px;") Enter Comment
                             br
                             textarea(name="comment" id="comment" minlength="2" style="width:400px;max-width:100%")
                             br
@@ -267,7 +267,7 @@ block content
                 if commentCount == 0
                     div.comment-containing-div(style="width:400px;margin:0 auto;margin-top:70px;")
                         div(style="display:block")
-                            h3.no-comments-header(style="text-decoration:underline;text-align:left;") No Comments Yet
+                            h2.fw.no-comments-header(style="text-decoration:underline;text-align:left;") No Comments Yet
 
                             div.comment-thread
                                 div.original-comment.no-comments-div(style="display:block;padding-bottom:15px;padding-top:10px;")
@@ -277,19 +277,19 @@ block content
                         div.comment-containing-div.col-sm-6.col-sm-offset-3(style="margin-top:60px;text-align:center")
                             if commentCount < 1
                                 div(style="display:block")
-                                    h3(style="text-decoration:underline;text-align:left;") #{commentCount} Comment
+                                    h2.fw(style="text-align:left;") #{commentCount} Comment
                             else
                                 div(style="display:block")
-                                    h3(style="text-decoration:underline;text-align:left;") #{commentCount} Comments
+                                    h2.fw(style="text-align:left;") #{commentCount} Comments
                             each comment in comments
                                 if comment.commenter
                                     div.comment-thread
                                         div.original-comment(style="display:block;padding-bottom:15px;padding-top:10px;")
                                             // TODO: Add it here
                                             div.top-line(style="text-align:left;")
-                                                p(style="text-align:left;display:inline-block;")
+                                                p.fw(style="text-align:left;display:inline-block;")
                                                     a(href=`/user/${comment.commenter.channelUrl}` style="color:black;margin-right:5px;") #{comment.commenter.channelName || comment.commenter.channelUrl}
-                                                p(style="display:inline-block;") - #{comment.timeAgo} &nbsp
+                                                p.fw(style="display:inline-block;") - #{comment.timeAgo} &nbsp
                                                     if user && !viewingUserIsBlocked
                                                         a.reply-link(style="cursor:pointer") Reply
                                                     // delete button
@@ -303,7 +303,7 @@ block content
                                                         a.unblock-user-button(style="margin-left:9px;cursor:pointer;" blockedusername=comment.commenter.channelUrl) Unblock User
 
 
-                                            p(style="text-align:left;") #{comment.text}
+                                            p.fw(style="text-align:left;font-size:16px;") #{comment.text}
 
                                             // container that appears after you hit Reply
                                             div.reply-container(style="display:none")
@@ -348,7 +348,7 @@ block content
 
 
 block extra_js
-  script(src='https://checkout.stripe.com/checkout.js')
+  //script(src='https://checkout.stripe.com/checkout.js')
   script(src="https://cdnjs.cloudflare.com/ajax/libs/autolinker/1.4.4/Autolinker.js")
 
 
