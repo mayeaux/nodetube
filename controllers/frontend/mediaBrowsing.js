@@ -1,41 +1,18 @@
 const _ = require('lodash');
-
 const redisClient = require('../../config/redis');
-
 const Promise = require('bluebird');
-
 const pagination = require('../../lib/helpers/pagination');
-
 const User = require('../../models/index').User;
 const Upload = require('../../models/index').Upload;
 const SearchQuery = require('../../models/index').SearchQuery;
 const View = require('../../models/index').View;
-
 const uploadHelpers = require('../../lib/helpers/settings');
-
 const uploadServer = uploadHelpers.uploadServer;
-
 const getFromCache = require('../../caching/getFromCache');
-
 const uploadFilters = require('../../lib/mediaBrowsing/helpers');
-
 const getSensitivityFilter =  uploadFilters.getSensitivityFilter;
-
 const categories = require('../../config/categories');
-
 const logCaching = process.env.LOG_CACHING;
-
-// console.log('UPLOAD SERVER: ' + uploadServer + ' on: media browsing frontend controller');
-
-function getParameterByName(name, url){
-  if(!url) url = window.location.href;
-  name = name.replace(/[\[\]]/g, '\\$&');
-  var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-    results = regex.exec(url);
-  if(!results)return null;
-  if(!results[2])return'';
-  return decodeURIComponent(results[2].replace(/\+/g, ' '));
-}
 
 // todo: get out of controller
 let viewStats;

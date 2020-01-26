@@ -1,4 +1,5 @@
 /** UNFINISHED **/
+/* eslint-disable no-unused-vars */
 
 const bluebird = require('bluebird');
 const Promise = require('bluebird');
