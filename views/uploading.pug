@@ -136,7 +136,8 @@ block content
                     ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1' style="margin-top:-17px;margin-left:-81px;")
                       each category in categories
                         li(role='presentation')
-                          a.categoryValue(style="cursor:pointer;" data-value=category.name data-displayname=category.displayName) #{category.displayName}
+                          if category.displayName !== 'All Uploads'
+                            a.categoryValue(style="cursor:pointer;" data-value=category.name data-displayname=category.displayName) #{category.displayName}
 
                   br
                   br
