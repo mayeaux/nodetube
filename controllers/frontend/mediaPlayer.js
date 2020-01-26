@@ -35,6 +35,17 @@ function getParameterByName(name, url){
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
+// TODO: put this in the config file for determining uploadUrl
+function validURL(str){
+  var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+  return!!pattern.test(str);
+}
+
 /**
  * GET /$user/$uploadUniqueTag
  * Media player page
@@ -207,20 +218,9 @@ exports.getMedia = async(req, res) => {
 
       // document is fine to be shown publicly
 
-      // TODO: put this in the config file for determining uploadUrl
-      function validURL(str) {
-        var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-          '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-          '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-          '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-          '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-          '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-        return !!pattern.test(str);
-      }
-
       // if the upload server is a relative path prepend the protocol and host to make it an absolute url
       if(!validURL(uploadServer)){
-        uploadServer = req.protocol + '://' + req.get('host') + uploadServer
+        uploadServer = req.protocol + '://' + req.get('host') + uploadServer;
       }
 
       /** SET META TAGS **/
@@ -231,11 +231,11 @@ exports.getMedia = async(req, res) => {
       if(upload.fileType == 'video'){
         // set proper thumbnail url
         if(upload.thumbnail && upload.thumbnails.custom){
-          res.locals.meta.image = `${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.custom}`
-        } else if (upload.thumbnails && upload.thumbnails.generated){
-          res.locals.meta.image = `${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated}`
-        } else if (upload.thumbnails && upload.thumbnails.medium){
-          res.locals.meta.image = `${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.medium}`
+          res.locals.meta.image = `${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.custom}`;
+        } else if(upload.thumbnails && upload.thumbnails.generated){
+          res.locals.meta.image = `${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated}`;
+        } else if(upload.thumbnails && upload.thumbnails.medium){
+          res.locals.meta.image = `${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.medium}`;
         }
 
         res.locals.meta.video = `${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`;

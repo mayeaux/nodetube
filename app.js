@@ -389,7 +389,6 @@ if(cluster.isMaster){
       console.log('  Press CTRL-C to stop\n');
     });
 
-
     require('dns').lookup(require('os').hostname(), function(err, localIp){
       console.log(`NodeTube can be accessed on your local network at ${localIp}:${portNumber}\n`);
     });
