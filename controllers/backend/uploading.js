@@ -1,3 +1,6 @@
+/**  UNFINISHED **/
+/* eslint-disable no-unused-vars */
+
 const Promise = require('bluebird');
 var concat = require('concat-files');
 var B2 = require('easy-backblaze');
@@ -95,7 +98,7 @@ if(process.env.NODE_ENV !== 'production'){
  * POST /api/upload
  * File Upload API example.
  */
-exports.postFileUpload = async(req, res, next) => {
+exports.postFileUpload = async(req, res) => {
 
   try {
 

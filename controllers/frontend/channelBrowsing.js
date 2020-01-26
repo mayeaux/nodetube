@@ -1,8 +1,6 @@
 const pagination = require('../../lib/helpers/pagination');
 const _ = require('lodash');
-
 const getFromCache = require('../../caching/getFromCache');
-
 const User = require('../../models/index').User;
 
 exports.channelsByReacts = async(req, res) => {
@@ -10,8 +8,6 @@ exports.channelsByReacts = async(req, res) => {
   let page = req.params.page;
   if(!page){ page = 1; }
   page = parseInt(page);
-
-  const limit = 51;
 
   const startingNumber = pagination.getMiddleNumber(page);
   const numbersArray = pagination.createArray(startingNumber);
@@ -36,11 +32,9 @@ exports.channelsByReacts = async(req, res) => {
             reactAmount = reactAmount + amountOfReacts;
           }
         }
-
       }
 
       channel.reactAmount = reactAmount || 0;
-
     }
 
     for(channel of allChannels){
@@ -81,8 +75,6 @@ exports.channelsBySubs = async(req, res) => {
   let page = req.params.page;
   if(!page){ page = 1; }
   page = parseInt(page);
-
-  const limit = 51;
 
   const startingNumber = pagination.getMiddleNumber(page);
   const numbersArray = pagination.createArray(startingNumber);

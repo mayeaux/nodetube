@@ -25,7 +25,6 @@ const Promise = require('bluebird');
 const ngrok = require('ngrok');
 const commandExists = require('command-exists');
 const errorHandler = require('errorhandler');
-
 const jsHelpers = require('./lib/helpers/js-helpers');
 
 /** FOR FINDING ERRANT LOGS **/
@@ -390,13 +389,14 @@ if(cluster.isMaster){
       console.log('  Press CTRL-C to stop\n');
     });
 
-    require('dns').lookup(require('os').hostname(), function(err, localIp, fam){
+
+    require('dns').lookup(require('os').hostname(), function(err, localIp){
       console.log(`NodeTube can be accessed on your local network at ${localIp}:${portNumber}\n`);
     });
 
     // warn user if ffmpeg is not installed
     commandExists('ffmpeg')
-      .then(function(command){
+      .then(function(){
         // ffmpeg installed
       }).catch(function(){
         console.log('WARNING: ffmpeg IS NOT INSTALLED. Video uploads will fail. \n');

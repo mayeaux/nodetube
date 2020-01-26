@@ -1,4 +1,5 @@
 /**  UNFINISHED **/
+/* eslint-disable no-unused-vars */
 
 function scoreReacts(upload){
   let totalScore = 0;

@@ -23,7 +23,7 @@
     "cache": "node --max-old-space-size=8000 caching/runCaching.js",
     "both": "node --max-old-space-size=4096 app.js & node --max-old-space-size=8000 caching/runCaching.js",
     "nodemonboth": "nodemon --exec npm run both",
-    "ngrok" : "./node_modules/ngrok/bin/ngrok http 3000"
+    "ngrok": "./node_modules/ngrok/bin/ngrok http 3000"
   },
   "dependencies": {
     "apicache": "^1.4.0",

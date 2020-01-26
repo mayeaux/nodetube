@@ -7,15 +7,9 @@ const Comment = require('../models/index').Comment;
 const SiteVisit = require('../models/index').SiteVisit;
 const SearchQuery = require('../models/index').SearchQuery;
 
-const _ = require('lodash');
-
 const moment = require('moment');
 
 const redisClient = require('../config/redis');
-
-const c = {
-  l : console.log
-};
 
 const logCaching = process.env.LOG_CACHING;
 
