@@ -124,7 +124,20 @@ block content
     hr
 
     div.center-block.text-center
-        include ../viewPartials/categoryDropdown
+        div.dropdown(style="display:inline;margin-right:15px;")
+            button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
+                | Order By: #{orderByEnglishString} &nbsp
+                span.caret
+
+            ul.dropdown-menu.dropdown
+                li
+                    a(href=`/user/${channel.channelUrl}?orderBy=popular`) Popular
+                li
+                    a(href=`/user/${channel.channelUrl}?orderBy=newToOld`) New To Old
+                li
+                    a(href=`/user/${channel.channelUrl}?orderBy=oldToNew`) Old To New
+                li
+                    a(href=`/user/${channel.channelUrl}?orderBy=alphabetical`) Alphabetical
 
         include ../viewPartials/sensitivityFilterDropdown
 
