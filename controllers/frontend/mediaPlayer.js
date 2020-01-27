@@ -46,6 +46,8 @@ function validURL(str){
   return!!pattern.test(str);
 }
 
+const stripeToken = process.env.STRIPE_FRONTEND_TOKEN || 'pk_test_iIpX39D0QKD1cXh5CYNUw69B';
+
 /**
  * GET /$user/$uploadUniqueTag
  * Media player page
@@ -54,47 +56,19 @@ exports.getMedia = async(req, res) => {
 
   console.log('getting media');
 
-  const stripeToken = process.env.STRIPE_FRONTEND_TOKEN || 'pk_test_iIpX39D0QKD1cXh5CYNUw69B';
-
-  let emojis = ['like', 'dislike', 'laugh', 'sad', 'disgust', 'love'];
-
   try {
 
     // channel id and file name
     const channel = req.params.channel;
     const media = req.params.media;
 
+    console.log('hitting db');
+
     let upload = await Upload.findOne({
       uniqueTag: media
-    }).populate({path: 'uploader comments checkedViews blockedUsers', populate: {path: 'commenter'}}).exec();
+    }).populate({path: 'uploader comments blockedUsers', populate: {path: 'commenter'}}).exec();
 
-    const userIsAdmin = req.user && req.user.role == 'admin';
-
-    // if there is no upload, or upload is deleted and user is not admin
-    if(!upload || ( upload.visibility == 'removed' && !userIsAdmin)){
-      console.log('Visible upload not found');
-      res.status(404);
-      return res.render('error/404');
-    }
-
-    let subscriberAmount = await Subscription.countDocuments({subscribedToUser: upload.uploader._id, active: true});
-    // console.log(subscriberAmount);
-
-    let subscriptions = req.user ? await Subscription.countDocuments({subscribedToUser: upload.uploader._id, subscribingUser: req.user._id, active: true}) : 0;
-    let alreadySubbed = (subscriptions > 0) ? true : false;
-    /* let subscriptions = await Subscription.find({ subscribedToUser: upload.uploader._id, active: true });
-
-    let alreadySubbed = false;
-    // determine if user is subbed already
-    if(req.user && subscriptions){
-      for(let subscription of subscriptions){
-        if(subscription.subscribingUser.toString() == req.user._id.toString()){
-          alreadySubbed = true
-        }
-      }
-    }
-    */
-
+    /** determine relationship between current viewer and upload **/
     // determine if its the user of the channel
     let isAdmin = false;
     let isUser = false;
@@ -111,199 +85,76 @@ exports.getMedia = async(req, res) => {
     const isUserOrAdmin = isAdmin || isUser;
     const isUploaderOrAdmin = isUploader || isAdmin;
 
-    const legitViews = _.filter(upload.checkedViews, function(view){
-      return view.validity == 'real';
-    });
+    // TODO: pull in actual functionality
+    alreadyReported = false;
+    viewingUserIsBlocked = false;
 
-    // assuming we always have a site visitor
-    const userFakeViews = _.filter(upload.checkedViews, function(view){
-      return( view.siteVisitor.toString() == req.siteVisitor._id.toString() ) && view.validity == 'fake';
-    });
+    console.log('db hit')
 
-    /** FRAUD CALCULATION, SHOULD PULL OUT INTO OWN LIBRARY **/
-    let doingFraud;
-    if(process.env.CUSTOM_FRAUD_DETECTION == 'true'){
-      const testIfViewIsLegitimate = require('../../lib/custom/fraudPrevention').testIfViewIsLegitimate;
 
-      doingFraud = await testIfViewIsLegitimate(upload, req.siteVisitor._id);
-    } else {
-      doingFraud = false;
-    }
+    /** calculate info to show to frontend **/
+    // amount of total subs
+    let subscriberAmount = await Subscription.countDocuments({subscribedToUser: upload.uploader._id, active: true});
 
-    /** FRAUDULENT VIEW CHECK **/
-    // do a legitimacy check here
-    if(!doingFraud){
+    // calculate if viewer has is subbed
+    let subscriptions = req.user ? await Subscription.countDocuments({subscribedToUser: upload.uploader._id, subscribingUser: req.user._id, active: true}) : 0;
+    let alreadySubbed = subscriptions > 0;
 
-      const view = new View({
-        siteVisitor : req.siteVisitor._id,
-        upload : upload._id,
-        validity: 'real'
-      });
+    console.log('filter 1')
 
-      await view.save();
-      upload.checkedViews.push(view);
+    const { comments, commentCount } = await generateComments(upload._id);
 
-      // console.log(upload);
-      await upload.save();
-    } else {
+    console.log('filter 2')
 
-      const view = new View({
-        siteVisitor : req.siteVisitor._id,
-        upload : upload._id,
-        validity: 'fake'
-      });
 
-      await view.save();
-      upload.checkedViews.push(view);
-
-      req.siteVisitor.doneFraud = true;
-      await req.siteVisitor.save();
-
-      // console.log(upload);
-      await upload.save();
-    }
-
-    const comments = await generateComments(upload);
-
-    let commentCount = 0;
-    for(const comment of comments){
-      commentCount++;
-      for(const response of comment.responses){
-        commentCount++;
-      }
-    }
 
     const reactInfo = await generateReactInfo(upload, req.user);
+
+    console.log('filter 3')
 
     const emojis = reactInfo.emojis;
 
     const currentReact = reactInfo.currentReact;
 
-    upload.views = upload.views + legitViews.length + userFakeViews.length;
+    upload.views = await View.countDocuments({
+      upload: upload.id
+    });
 
-    // if upload should only be visible to logged in user
-    if(upload.visibility == 'pending' || upload.visibility == 'private'){
+    // TODO: increment view here
 
-      // if no user automatically don't show
-      if(!req.user){
-        res.status(404);
-        return res.render('error/404');
-      }
+    console.log('filter 4')
 
-      // if the requesting user id matches upload's uploader id
-      const isUsersDocument = req.user._id.toString() == upload.uploader._id.toString();
+    // document is fine to be shown publicly
 
-      // if its not the user's document and the user is not admin
-      if(!isUsersDocument && ( req.user.role !== 'admin' && req.user.role !== 'moderator' )){
-        res.status(404);
-        return res.render('error/404');
-      }
+    const url = req.protocol + '://' + req.get('host') + req.originalUrl;
 
-      // if is user's document or requesting user is admin
-      if(isUsersDocument || req.user.role == 'admin'){
-        res.render('media', {
-          title: upload.title,
-          comments,
-          upload,
-          channel,
-          media,
-          commentCount,
-          categories,
-          emojis,
-          uploadServer
-        });
-      }
+    console.log(`${new Date()} filtering9`)
 
-    } else {
 
-      // document is fine to be shown publicly
-
-      let metaThumbnail;
-
-      // if the upload server is a relative path prepend the protocol and host to make it an absolute url
-      if(!validURL(uploadServer)){
-        metaThumbnail = req.protocol + '://' + req.get('host') + uploadServer;
-      } else {
-        metaThumbnail = uploadServer;
-      }
-
-      /** SET META TAGS **/
-      res.locals.meta.title = `${upload.title}`;
-
-      res.locals.meta.description = upload.description || `Hosted on ${brandName}`;
-
-      if(upload.fileType == 'video'){
-        // set proper thumbnail url
-        if(upload.thumbnail && upload.thumbnails.custom){
-          res.locals.meta.image = `${metaThumbnail}/${upload.uploader.channelUrl}/${upload.thumbnails.custom}`;
-        } else if(upload.thumbnails && upload.thumbnails.generated){
-          res.locals.meta.image = `${metaThumbnail}/${upload.uploader.channelUrl}/${upload.thumbnails.generated}`;
-        } else if(upload.thumbnails && upload.thumbnails.medium){
-          res.locals.meta.image = `${metaThumbnail}/${upload.uploader.channelUrl}/${upload.thumbnails.medium}`;
-        }
-
-        res.locals.meta.video = `${metaThumbnail}/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`;
-      }
-
-      // TODO: fix this to use updated paths
-      if(upload.fileType == 'audio'){
-        res.locals.meta.image = upload.customThumbnailUrl || upload.thumbnailUrl;
-      }
-
-      // TODO: implement this
-      // if(upload.fileType == 'image'){
-      //   res.locals.meta.image = upload.customThumbnailUrl || upload.thumbnailUrl;
-      // }
-
-      const url = req.protocol + '://' + req.get('host') + req.originalUrl;
-
-      let alreadyReported;
-      // need to add the upload
-      let reportForSiteVisitor = await Report.findOne({ reportingSiteVisitor : req.siteVisitor, upload: upload._id  }).hint('Report For Site Visitor');
-      let reportForReportingUser = await Report.findOne({ reportingUser : req.user, upload: upload._id }).hint('Report For User');
-
-      if(reportForReportingUser || reportForSiteVisitor){
-        alreadyReported = true;
-      } else {
-        alreadyReported = false;
-      }
-
-      const blockedUsers = upload.uploader.blockedUsers;
-
-      let viewingUserIsBlocked = false;
-      if(req.user){
-        const viewingUserId = req.user._id;
-
-        for(const blockedUser of blockedUsers){
-          if(blockedUser.toString() == viewingUserId) viewingUserIsBlocked = true;
-        }
-      }
-
-      res.render('media', {
-        title: upload.title,
-        comments,
-        upload,
-        channel,
-        media,
-        isUser,
-        isAdmin,
-        emojis,
-        currentReact,
-        subscriberAmount,
-        alreadySubbed,
-        url,
-        commentCount,
-        uploadServer,
-        stripeToken,
-        alreadyReported,
-        categories,
-        isUserOrAdmin,
-        isUploaderOrAdmin,
-        isUploader,
-        getParameterByName,
-        viewingUserIsBlocked
-      });
-    }
+    res.render('media', {
+      title: upload.title,
+      comments,
+      upload,
+      channel,
+      media,
+      isUser,
+      isAdmin,
+      emojis,
+      currentReact,
+      subscriberAmount,
+      alreadySubbed,
+      url,
+      commentCount,
+      uploadServer,
+      stripeToken,
+      alreadyReported,
+      categories,
+      isUserOrAdmin,
+      isUploaderOrAdmin,
+      isUploader,
+      getParameterByName,
+      viewingUserIsBlocked
+    });
 
   } catch(err){
 
