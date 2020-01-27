@@ -20,6 +20,8 @@ let uploadServer  = uploadHelpers.uploadServer;
 
 const generateComments = require('../../lib/mediaPlayer/generateCommentsObjects');
 const generateReactInfo = require('../../lib/mediaPlayer/generateReactInfo');
+const saveMetaToResLocal = require('../../lib/mediaPlayer/generateMetatags');
+const hideUpload = require('../../lib/mediaPlayer/detectUploadVisibility');
 
 console.log(`UPLOAD SERVER: ${uploadServer}\n`);
 
@@ -33,17 +35,6 @@ function getParameterByName(name, url){
   if(!results)return null;
   if(!results[2])return'';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
-}
-
-// TODO: put this in the config file for determining uploadUrl
-function validURL(str){
-  var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-  return!!pattern.test(str);
 }
 
 const stripeToken = process.env.STRIPE_FRONTEND_TOKEN || 'pk_test_iIpX39D0QKD1cXh5CYNUw69B';
@@ -68,6 +59,15 @@ exports.getMedia = async(req, res) => {
       uniqueTag: media
     }).populate({path: 'uploader comments blockedUsers', populate: {path: 'commenter'}}).exec();
 
+    const return404 = hideUpload(upload, req.user, res);
+
+    if(return404){
+      res.status(404);
+      return res.render('error/404', {
+        title: 'Not Found'
+      });
+    }
+
     /** determine relationship between current viewer and upload **/
     // determine if its the user of the channel
     let isAdmin = false;
@@ -89,8 +89,6 @@ exports.getMedia = async(req, res) => {
     alreadyReported = false;
     viewingUserIsBlocked = false;
 
-    console.log('db hit')
-
 
     /** calculate info to show to frontend **/
     // amount of total subs
@@ -100,17 +98,10 @@ exports.getMedia = async(req, res) => {
     let subscriptions = req.user ? await Subscription.countDocuments({subscribedToUser: upload.uploader._id, subscribingUser: req.user._id, active: true}) : 0;
     let alreadySubbed = subscriptions > 0;
 
-    console.log('filter 1')
-
     const { comments, commentCount } = await generateComments(upload._id);
-
-    console.log('filter 2')
-
 
 
     const reactInfo = await generateReactInfo(upload, req.user);
-
-    console.log('filter 3')
 
     const emojis = reactInfo.emojis;
 
@@ -120,9 +111,19 @@ exports.getMedia = async(req, res) => {
       upload: upload.id
     });
 
-    // TODO: increment view here
+    // TODO: do fraud detection
+    const view = new View({
+      siteVisitor : req.siteVisitor._id,
+      upload : upload._id,
+      validity: 'real'
+    });
 
-    console.log('filter 4')
+    await view.save();
+    upload.checkedViews.push(view);
+
+    // console.log(upload);
+    await upload.save();
+
 
     // document is fine to be shown publicly
 
@@ -130,6 +131,7 @@ exports.getMedia = async(req, res) => {
 
     console.log(`${new Date()} filtering9`)
 
+    saveMetaToResLocal(upload, uploadServer, req, res);
 
     res.render('media', {
       title: upload.title,
