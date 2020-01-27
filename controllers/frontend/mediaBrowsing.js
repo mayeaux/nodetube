@@ -403,6 +403,7 @@ exports.search = async(req, res) => {
       status: { $ne: 'restricted'}
     }).populate('uploads');
 
+    // only show users with at least one upload
     users = _.filter(users, function(user){
       return user.uploads.length > 0;
     });

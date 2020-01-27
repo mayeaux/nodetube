@@ -16,7 +16,8 @@ const commentSchema = new mongoose.Schema({
   },
   upload: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Upload'
+    ref: 'Upload',
+    index: true
   },
   inResponseTo: {
     type: mongoose.Schema.Types.ObjectId,
@@ -30,7 +31,8 @@ const commentSchema = new mongoose.Schema({
   visibility: {
     type: String,
     enum: ['public', 'removed'],
-    default: 'public'
+    default: 'public',
+    index: true
   }
 }, { timestamps: true });
 

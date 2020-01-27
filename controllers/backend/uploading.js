@@ -151,6 +151,8 @@ exports.postFileUpload = async(req, res) => {
     const user = req.user;
 
     // TODO: add a better check here
+    // for one if it says it's processing, don't reallow upload
+    // fail processing
     const alreadyUploaded = await Upload.findOne({
       uploader: req.user._id,
       title: req.query.title,
