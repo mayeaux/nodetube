@@ -268,7 +268,7 @@ block content
                 if commentCount == 0
                     div.comment-containing-div(style="width:400px;margin:0 auto;margin-top:70px;")
                         div(style="display:block")
-                            h2.fw.no-comments-header(style="text-decoration:underline;text-align:left;") No Comments Yet
+                            h3.fw.no-comments-header(style="text-decoration:underline;text-align:left;font-size:22px;") No Comments Yet
 
                             div.comment-thread
                                 div.original-comment.no-comments-div(style="display:block;padding-bottom:15px;padding-top:10px;")
@@ -278,10 +278,10 @@ block content
                         div.comment-containing-div.col-sm-6.col-sm-offset-3(style="margin-top:60px;text-align:center")
                             if commentCount == 1
                                 div(style="display:block")
-                                    h3.fw(style="text-align:left;font-size:30px;") #{commentCount} Comment
+                                    h3.fw(style="text-align:left;font-size:28px;margin-bottom:14px;") #{commentCount} Comment
                             else
                                 div(style="display:block")
-                                    h3.fw(style="text-align:left;font-size:30px;") #{commentCount} Comments
+                                    h3.fw(style="text-align:left;font-size:28px;margin-bottom:14px;") #{commentCount} Comments
                             each comment in comments
                                 if comment.commenter
                                     div.comment-thread

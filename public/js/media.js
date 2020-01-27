@@ -59,7 +59,7 @@ $(function(){
 
         if($('.no-comments-div').length > 0  ){
 
-          var html = `<p class="fw" style="text-align:left;">${data.user} - ${data.timeAgo} &nbsp;</p><p style="text-align:left;">${data.text}</p>`;
+          var html = `<p class="fw" style="text-align:left;">${data.user} - ${data.timeAgo} &nbsp;</p><p class="fw" style="text-align:left;">${data.text}</p>`;
 
           $('.no-comments-header').text('1 Comment');
 

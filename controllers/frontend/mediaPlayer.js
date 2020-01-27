@@ -218,9 +218,13 @@ exports.getMedia = async(req, res) => {
 
       // document is fine to be shown publicly
 
+      let metaThumbnail;
+
       // if the upload server is a relative path prepend the protocol and host to make it an absolute url
       if(!validURL(uploadServer)){
-        uploadServer = req.protocol + '://' + req.get('host') + uploadServer;
+        metaThumbnail = req.protocol + '://' + req.get('host') + uploadServer;
+      } else {
+        metaThumbnail = uploadServer;
       }
 
       /** SET META TAGS **/
@@ -231,14 +235,14 @@ exports.getMedia = async(req, res) => {
       if(upload.fileType == 'video'){
         // set proper thumbnail url
         if(upload.thumbnail && upload.thumbnails.custom){
-          res.locals.meta.image = `${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.custom}`;
+          res.locals.meta.image = `${metaThumbnail}/${upload.uploader.channelUrl}/${upload.thumbnails.custom}`;
         } else if(upload.thumbnails && upload.thumbnails.generated){
-          res.locals.meta.image = `${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated}`;
+          res.locals.meta.image = `${metaThumbnail}/${upload.uploader.channelUrl}/${upload.thumbnails.generated}`;
         } else if(upload.thumbnails && upload.thumbnails.medium){
-          res.locals.meta.image = `${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.medium}`;
+          res.locals.meta.image = `${metaThumbnail}/${upload.uploader.channelUrl}/${upload.thumbnails.medium}`;
         }
 
-        res.locals.meta.video = `${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`;
+        res.locals.meta.video = `${metaThumbnail}/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`;
       }
 
       // TODO: fix this to use updated paths

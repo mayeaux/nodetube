@@ -136,6 +136,7 @@ block content
                     ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1' style="margin-top:-17px;margin-left:-81px;")
                       each category in categories
                         li(role='presentation')
+                          // this is being added because allUploads is not a legitimate category, but this is a bit of a hack fix
                           if category.displayName !== 'All Uploads'
                             a.categoryValue(style="cursor:pointer;" data-value=category.name data-displayname=category.displayName) #{category.displayName}
 
