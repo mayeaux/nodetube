@@ -45,15 +45,11 @@ const stripeToken = process.env.STRIPE_FRONTEND_TOKEN || 'pk_test_iIpX39D0QKD1cX
  */
 exports.getMedia = async(req, res) => {
 
-  console.log('getting media');
-
   try {
 
     // channel id and file name
     const channel = req.params.channel;
     const media = req.params.media;
-
-    console.log('hitting db');
 
     let upload = await Upload.findOne({
       uniqueTag: media
@@ -89,7 +85,6 @@ exports.getMedia = async(req, res) => {
     alreadyReported = false;
     viewingUserIsBlocked = false;
 
-
     /** calculate info to show to frontend **/
     // amount of total subs
     let subscriberAmount = await Subscription.countDocuments({subscribedToUser: upload.uploader._id, active: true});
@@ -99,7 +94,6 @@ exports.getMedia = async(req, res) => {
     let alreadySubbed = subscriptions > 0;
 
     const { comments, commentCount } = await generateComments(upload._id);
-
 
     const reactInfo = await generateReactInfo(upload, req.user);
 
@@ -124,12 +118,9 @@ exports.getMedia = async(req, res) => {
     // console.log(upload);
     await upload.save();
 
-
     // document is fine to be shown publicly
 
     const url = req.protocol + '://' + req.get('host') + req.originalUrl;
-
-    console.log(`${new Date()} filtering9`)
 
     saveMetaToResLocal(upload, uploadServer, req, res);
 
