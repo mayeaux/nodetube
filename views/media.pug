@@ -13,14 +13,12 @@ block content
     br
     div.center-block.text-center.col-sm-12
         if upload.status == 'processing'
-            div(id="update" style="max-width:443px;margin:0 auto;")
-                h3 Your upload #{upload.title} is processing. Please check back in a couple minutes.
-                br
-                br
-                h4 If your upload is stuck on processing, let an admin know via the social links at the bottom of the page and we'll take a look.
 
             div(style="max-width:443px;margin:0 auto;")
-                h2(id="processing") Your upload is currently 1% done
+                h2(id="processing") Your upload is currently 1% done being processed
+
+                h4 If your upload is stuck on processing, let an admin know via the social links at the bottom of the page and we'll take a look.
+
 
         br
         br

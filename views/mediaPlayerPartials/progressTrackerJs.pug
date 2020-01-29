@@ -1,6 +1,8 @@
 script.
 
   function doThing(){
+    var csrf = '#{_csrf}'
+
     var mediaUniqueTag = '#{upload.uniqueTag}'
 
     var channelUrl = '#{upload.uploader.channelUrl}'
@@ -18,7 +20,7 @@ script.
       success: function (data) {
         console.log(data);
 
-        $('#processing').text(`Your upload is currently ${data}% done being converted`);
+        $('#processing').text(`Your upload is currently ${data}% done being processed`);
 
       },
       error: function (err) {
@@ -27,5 +29,4 @@ script.
     });
   }
 
-  //
-  setInterval(doThing, 1000 * 10)
+  setInterval(doThing, 1000 * 7)
