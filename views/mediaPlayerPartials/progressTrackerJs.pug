@@ -22,6 +22,10 @@ script.
 
         $('#processing').text(`Your upload is currently ${data}% done being processed`);
 
+        if(parseInt(data) == 100){
+          location.reload();
+        }
+
       },
       error: function (err) {
         console.log(err);

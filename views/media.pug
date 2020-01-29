@@ -22,7 +22,7 @@ block content
 
         br
         br
-        if upload.fileType === 'video'
+        if upload.fileType === 'video' && !upload.status !== 'processing'
             div.display-div(style="min-width:50%;min-height:50%;margin:0 auto;")
                 // TODO: Sub out thumbnail here
 
