@@ -66,14 +66,13 @@ async function setRecentUploads(){
 
     // console.log(upload.uniqueTag);
 
-    // get all valid views per upload
-    upload.viewAmount = await View.find({
-      upload: upload._id
-    }).countDocuments();
-
     // console.log(`view amount ${upload.viewAmount}`);
 
     upload.timeAgo = timeAgoEnglish.format( new Date(upload.createdAt) );
+
+    upload.viewsAllTime = await View.find({
+      upload: upload._id
+    }).countDocuments();
 
     return upload
 
