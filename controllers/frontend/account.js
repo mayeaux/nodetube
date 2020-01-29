@@ -136,7 +136,7 @@ exports.getChannel = async(req, res) => {
 
   const channelUrl = req.params.channel;
 
-  const limit = 102;
+  const limit = 51;
   const skipAmount = (page * limit) - limit;
 
   const startingNumber = pagination.getMiddleNumber(page);
