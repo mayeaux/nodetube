@@ -92,11 +92,18 @@ if(process.env.NODE_ENV !== 'production'){
 exports.getUploadProgress = async(req, res) => {
   // example request /user/fred/j9dle/progress
 
-  const uniqueTag = req.params.uniqueTag;
+  const uniqueTag = req.params.media;
 
-  const value = redisClient.getAsync(`${uniqueTag}uploadProgress`);
+  console.log(uniqueTag);
+  // nuspa41uploadProgress
+  const string = `${uniqueTag}uploadProgress`;
 
-  res.status(200);
+  console.log(string);
+
+  const value = await redisClient.getAsync(`${uniqueTag}uploadProgress`);
+
+  console.log(value);
+
   return res.send(value)
 
 };

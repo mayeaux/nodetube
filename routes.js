@@ -145,6 +145,11 @@ function frontendRoutes(app){
   app.get('/channelsByReacts', authMiddleware.adminAuth, channelBrowsingController.channelsByReacts);
 
   // media page
+
+  // TODO: add the ability to get progress here
+
+  app.get('/user/:channel/:media/progress', uploadingController.getUploadProgress);
+
   app.get('/user/:channel/:media', mediaPlayerController.getMedia);
 
   /** user channel and individual media page */
