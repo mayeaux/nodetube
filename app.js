@@ -360,6 +360,8 @@ if(cluster.isMaster){
       });
     });
 
+    /** ERROR HANDLING **/
+
     app.use(function(err, req, res){
       console.log(err.stack);
       res.status(500);

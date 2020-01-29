@@ -1,0 +1,32 @@
+script.
+
+  function doThing(){
+    var csrf = '#{_csrf}'
+
+    var mediaUniqueTag = '#{upload.uniqueTag}'
+
+    var channelUrl = '#{upload.uploader.channelUrl}'
+
+    var data = {
+      _csrf: csrf,
+      uniqueTag: mediaUniqueTag,
+      channelUrl
+    }
+
+    $.ajax({
+      type: 'POST',
+      url: `/user/${channelUrl}/${mediaUniqueTag}/progress`,
+      data,
+      success: function (data) {
+        console.log(data);
+
+        $('#processing').text(`Your upload is currently ${data}% done being processed`);
+
+      },
+      error: function (err) {
+        console.log(err);
+      }
+    });
+  }
+
+  setInterval(doThing, 1000 * 7)
