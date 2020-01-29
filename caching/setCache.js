@@ -23,6 +23,8 @@ async function setIndexValues(){
   }
 
   // view amount is for the old view amount
+
+  // TODO: have to implement this as real: true only when validation is done
   viewAmount = await  View.estimatedDocumentCount({});
 
   if(logCaching == 'true'){

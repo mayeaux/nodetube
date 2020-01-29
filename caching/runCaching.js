@@ -51,7 +51,7 @@ const cachePopularUploads = require('./cachePopularUploads'); // index and daily
 
 // const cacheRecentUploads = require('./cacheRecentAndPopularUploads');
 
-async function main(){
+async function cacheOnlyRecentUploads(){
 
   try {
 
@@ -62,19 +62,21 @@ async function main(){
   }
 
 }
-// cache recent uploads every minute
-main();
-setInterval(main, 1000 * 60 * 1);
+// calculate and cache recent uploads every minute
+cacheOnlyRecentUploads();
 
-let cacheIntervalInMinutes = parseInt(process.env.CACHE_INTERVAL_IN_MINUTES) || 5;
+                                   // parse int because it's a string comming from dotenv
+let cacheRecentIntervalInMinutes = parseInt(process.env.CACHE_RECENT_INTERVAL_IN_MINUTES) || 2.5;
 
-const cacheIntervalInMs = cacheIntervalInMinutes * ( 1000 * 60 );
+const cacheRecentIntervalInMs = cacheRecentIntervalInMinutes * ( 1000 * 60 );
 
-if(logCaching == 'true'){
-  console.log(cacheIntervalInMinutes  + ': cache interval in minutes');
-}
 
-async function runCaching(){
+console.log(`CACHE RECENT INTERVAL IN MINUTES: ${cacheRecentIntervalInMinutes}`);
+
+setInterval(cacheOnlyRecentUploads, cacheRecentIntervalInMs);
+
+
+async function cachePopularDailyStatsAndIndex(){
   try {
     await cachePopularUploads();
     await setCache.setDailyStats();
@@ -86,9 +88,17 @@ async function runCaching(){
   }
 }
 
-runCaching();
+cachePopularDailyStatsAndIndex();
 
-setInterval(runCaching, cacheIntervalInMs);
+
+
+let cacheIntervalInMinutes = parseInt(process.env.CACHE_INTERVAL_IN_MINUTES) || 5;
+
+const cacheIntervalInMs = cacheIntervalInMinutes * ( 1000 * 60 );
+
+console.log(`CACHE INTERVAL IN MINUTES: ${cacheIntervalInMinutes} \n`);
+
+setInterval(cachePopularDailyStatsAndIndex, cacheIntervalInMs);
 
 // setInterval(async function(){
 //   await cacheRecentUploads();

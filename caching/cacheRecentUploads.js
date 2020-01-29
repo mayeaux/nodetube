@@ -74,17 +74,12 @@ async function setRecentUploads(){
       upload: upload._id
     }).countDocuments();
 
-    return upload
+    return upload;
 
     // console.log(index + ' done')
 
     // calculate their views per period (last24h, lastweek)
   }));
-
-  // do more stringent check for uploader
-  recentUploads =  _.filter(recentUploads, function(upload){
-    return upload.uploader;
-  });
 
   // build json objects representing uploads
   recentUploads = buildObjects(recentUploads);

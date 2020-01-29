@@ -180,7 +180,7 @@ exports.popularUploads = async(req, res) => {
   //  amount to show in brackets that equals view amount in time period
   let viewAmountInPeriod;
 
-  console.log(`WITHIN: ${within}`);
+  // console.log(`WITHIN: ${within}`);
 
   // used for 'views per these returned items
   function calculateViewAmount(uploads){
