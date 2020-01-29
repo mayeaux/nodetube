@@ -16,18 +16,10 @@ const logCaching = process.env.LOG_CACHING;
 
 // todo: get out of controller
 let viewStats;
-let indexResponse = {};
 
 async function getStats(){
   let views = await redisClient.getAsync('dailyStatsViews');
   viewStats = JSON.parse(views);
-}
-
-async function setIndex(){
-  indexResponse = await redisClient.hgetallAsync('indexValues');
-  if(logCaching == 'true'){
-    console.log('got index cache');
-  }
 }
 
 if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false'){
@@ -37,11 +29,6 @@ if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false'){
     getStats();
   }, 1000 * 60 * 1);
 
-  // setIndex();
-  //
-  // setInterval(function(){
-  //   setIndex();
-  // }, 1000 * 60 * 2);
 }
 
 const pageLimit = 42;

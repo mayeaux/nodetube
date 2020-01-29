@@ -40,6 +40,8 @@ exports.index = async(req, res) => {
     viewAmount = response.viewAmount;
   }
 
+  // console.log(viewAmount);
+
   // console.log('set index');
 
   res.render('public/home', {

@@ -23,7 +23,7 @@ async function setIndexValues(){
   }
 
   // view amount is for the old view amount
-  viewAmount = View.estimatedDocumentCount({});
+  viewAmount = await  View.estimatedDocumentCount({});
 
   if(logCaching == 'true'){
     console.log('View amount calculated, calculating channel amount');
@@ -41,13 +41,6 @@ async function setIndexValues(){
     console.log('Upload amount calculated, calculating view amount');
   }
 
-  const legitCheckedViews = await View.countDocuments({ validity: 'real' });
-
-  if(logCaching == 'true'){
-    console.log('Legit view amount calculated, setting redis amounts');
-  }
-
-  viewAmount = viewAmount + legitCheckedViews;
 
   // set object properly
   redisClient.hmset('indexValues', {
