@@ -226,11 +226,11 @@ block content
                     img(src='/images/email-share.jpg')
 
             br
-            button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} \n\nhttps://nodetube.liv/user/${upload.uploader.channelUrl}/${upload.uniqueTag}`)
+            button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} \n\n${url}`)
                 i.fa.fa-info.fw
                 | Copy Details
 
-            button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} by ${upload.uploader.channelName} \n\n https://nodetube.live/user/${upload.uploader.channelUrl}/${upload.uniqueTag} \n\n #NodeTube`)
+            button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} by ${upload.uploader.channelName} \n\n ${url} \n\n #${brandName}`)
                 i.fa.fa-info.fw
                 | With User Info
 

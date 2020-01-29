@@ -110,6 +110,7 @@ exports.getMedia = async(req, res) => {
 
     // document is fine to be shown publicly
 
+    // for the copy buttons and sharing buttons
     const url = req.protocol + '://' + req.get('host') + req.originalUrl;
 
     saveMetaToResLocal(upload, uploadServer, req, res);
@@ -136,7 +137,8 @@ exports.getMedia = async(req, res) => {
       isUploaderOrAdmin,
       isUploader,
       getParameterByName,
-      viewingUserIsBlocked
+      viewingUserIsBlocked,
+      brandName
     });
 
   } catch(err){
