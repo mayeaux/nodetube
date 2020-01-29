@@ -1,8 +1,6 @@
 script.
 
-
-  //
-  setInterval(function(){
+  function doThing(){
     var mediaUniqueTag = '#{upload.uniqueTag}'
 
     var channelUrl = '#{upload.uploader.channelUrl}'
@@ -27,6 +25,7 @@ script.
         console.log(err);
       }
     });
-  }, 1000 * 5);
+  }
 
-
+  //
+  setInterval(doThing, 1000 * 10)

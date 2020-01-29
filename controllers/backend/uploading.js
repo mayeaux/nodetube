@@ -92,21 +92,24 @@ if(process.env.NODE_ENV !== 'production'){
 exports.getUploadProgress = async(req, res) => {
   // example request /user/fred/j9dle/progress
 
-  console.log(req.params);
 
-  console.log(req.body);
+
 
   const uniqueTag = req.body.uniqueTag;
-
-  console.log(uniqueTag);
   // nuspa41uploadProgress
   const string = `${uniqueTag}uploadProgress`;
 
-  console.log(string);
 
   const value = await redisClient.getAsync(`${uniqueTag}uploadProgress`);
 
-  console.log(value);
+  // console.log(value);
+  //
+  // console.log(req.params);
+  //
+  // console.log(req.body);
+  //
+  // console.log(uniqueTag);
+
 
   return res.send(value)
 
@@ -397,6 +400,15 @@ exports.postFileUpload = async(req, res) => {
           // TODO: PULL THIS OUT INTO A LIBRARY
           if(upload.fileType == 'convert'){
 
+            upload.status = 'processing';
+            await upload.save();
+
+            responseSent = true;
+            res.send({
+              message: 'ABOUT TO PROCESS',
+              url: `/user/${channelUrl}/${uniqueTag}?autoplay=off`
+            });
+
             // take a thumbnail using ffmpeg and save it to the document as uniqueTag.png
             // TODO: this also uploads to B2, this should be pulled out into its own fucntion
             await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, hostFilePath, bucket, upload, channelUrl, b2);
@@ -450,6 +462,9 @@ exports.postFileUpload = async(req, res) => {
             fileInDirectory = `${channelUrlFolder}/${uniqueTag}.mp4`;
 
             upload.status = 'completed';
+
+            ffmpegHelper.setRedisClient({ uniqueTag: upload.uniqueTag, progress: 100 })
+
             upload.fileType = 'video';
 
             upload = await upload.save();
@@ -468,6 +483,17 @@ exports.postFileUpload = async(req, res) => {
 
             // if convertmp4 is true it means it was already converted
             if(bitrate > 2500 && convertMp4 !== true){
+
+              // TODO: res.status here
+
+              upload.status = 'processing';
+              await upload.save();
+
+              responseSent = true;
+              res.send({
+                message: 'ABOUT TO PROCESS',
+                url: `/user/${channelUrl}/${uniqueTag}?autoplay=off`
+              });
 
               uploadLogger.info('About to compress file since bitrate is over 2500', logObject);
 
@@ -505,6 +531,8 @@ exports.postFileUpload = async(req, res) => {
               upload.fileSize = compressedFileStats.size;
 
               // uploadLogger.info(`Moved file to user's directory`, logObject);
+
+              ffmpegHelper.setRedisClient({ uniqueTag: upload.uniqueTag, progress: 100 })
 
               await upload.save();
 
