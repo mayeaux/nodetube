@@ -155,6 +155,9 @@ function frontendRoutes(app){
   /** user channel and individual media page */
   app.get('/user/:channel', accountFrontendController.getChannel);
 
+  /** rss feed routes **/
+  app.get('/media/recent/rss', mediaBrowsingController.recentRssFeed);
+
   /** media browsing routes **/
   app.get('/media/recent', mediaBrowsingController.recentUploads);
   app.get('/media/recent/:page', mediaBrowsingController.recentUploads);

@@ -45,6 +45,16 @@ if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false'){
 
 const pageLimit = 42;
 
+exports.recentRssFeed = async(req, res) => {
+  const uploads = await getFromCache.getRecentUploads(20, 0, 'all', 'sensitive', 'all', '');
+
+  console.log(uploads);
+
+  res.send(uploads);
+
+  // TOOD: incorporate rss feed here and send it as response
+};
+
 /**
  * GET /media/recent
  * Page displaying most recently uploaded content
