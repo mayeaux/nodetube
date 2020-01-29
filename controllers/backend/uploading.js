@@ -16,13 +16,7 @@ const pagination = require('../../lib/helpers/pagination');
 
 const User = require('../../models/index').User;
 const Upload = require('../../models/index').Upload;
-const Comment = require('../../models/index').Comment;
-const View = require('../../models/index').View;
-const SiteVisit = require('../../models/index').SiteVisit;
-const React = require('../../models/index').React;
-const Notification = require('../../models/index').Notification;
-const SocialPost = require('../../models/index').SocialPost;
-const Subscription = require('../../models/index').Subscription;
+
 
 const sendMessageToDiscord = require('../../lib/moderation/discordWebhooks');
 
@@ -93,6 +87,21 @@ if(process.env.NODE_ENV !== 'production'){
   });
 
 }
+
+
+exports.getUploadProgress = async(req, res) => {
+  // example request /user/fred/j9dle/progress
+
+  const uniqueTag = req.params.uniqueTag;
+
+  const value = redisClient.getAsync(`${uniqueTag}uploadProgress`);
+
+  res.status(200);
+  return res.send(value)
+
+};
+
+
 
 /**
  * POST /api/upload
@@ -399,7 +408,8 @@ exports.postFileUpload = async(req, res) => {
                 uploadedPath: `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-old.mp4`,
                 title: upload.title,
                 bitrate,
-                savePath
+                savePath,
+                uniqueTag: upload.uniqueTag
               });
 
               uploadLogger.info('Finished converting file', logObject);
@@ -413,7 +423,8 @@ exports.postFileUpload = async(req, res) => {
                 uploadedPath: fileInDirectory,
                 title: upload.title,
                 bitrate,
-                savePath
+                savePath,
+                uniqueTag: upload.uniqueTag
               });
 
               uploadLogger.info('Finished converting file', logObject);
@@ -454,10 +465,10 @@ exports.postFileUpload = async(req, res) => {
               // compresses video ([ '-preset medium', '-b:v 1000k' ]); -> /${uniqueTag}-compressed.mp4
               await ffmpegHelper.compressVideo({
                 uploadedPath: fileInDirectory,
-                uniqueTag,
                 channelUrl,
                 title: upload.title,
-                savePath
+                savePath,
+                uniqueTag: upload.uniqueTag
               });
 
               uploadLogger.info('Video file is compressed', logObject);
