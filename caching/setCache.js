@@ -23,22 +23,12 @@ async function setIndexValues(){
   }
 
   // view amount is for the old view amount
-  viewAmount = await Upload.aggregate([
-    { $match:  {visibility: { $ne: 'removed' } }},
-    { $group: {
-      _id: '',
-      views: { $sum: '$views' }
-    }
-    }]);
 
-  if(!viewAmount[0]){
-    viewAmount = 0;
-  } else {
-    viewAmount = viewAmount[0].views;
-  }
+  // TODO: have to implement this as real: true only when validation is done
+  viewAmount = await  View.estimatedDocumentCount({});
 
   if(logCaching == 'true'){
-    console.log('Old view amount calculated, calculating channel amount');
+    console.log('View amount calculated, calculating channel amount');
   }
 
   channelAmount = await User.estimatedDocumentCount({});
@@ -53,13 +43,6 @@ async function setIndexValues(){
     console.log('Upload amount calculated, calculating view amount');
   }
 
-  const legitCheckedViews = await View.countDocuments({ validity: 'real' });
-
-  if(logCaching == 'true'){
-    console.log('Legit view amount calculated, setting redis amounts');
-  }
-
-  viewAmount = viewAmount + legitCheckedViews;
 
   // set object properly
   redisClient.hmset('indexValues', {
