@@ -148,7 +148,7 @@ function frontendRoutes(app){
 
   // TODO: add the ability to get progress here
 
-  app.get('/user/:channel/:media/progress', uploadingController.getUploadProgress);
+  app.all('/user/:channel/:media/progress', uploadingController.getUploadProgress);
 
   app.get('/user/:channel/:media', mediaPlayerController.getMedia);
 

@@ -92,7 +92,11 @@ if(process.env.NODE_ENV !== 'production'){
 exports.getUploadProgress = async(req, res) => {
   // example request /user/fred/j9dle/progress
 
-  const uniqueTag = req.params.media;
+  console.log(req.params);
+
+  console.log(req.body);
+
+  const uniqueTag = req.body.uniqueTag;
 
   console.log(uniqueTag);
   // nuspa41uploadProgress

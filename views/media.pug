@@ -13,11 +13,14 @@ block content
     br
     div.center-block.text-center.col-sm-12
         if upload.status == 'processing'
-            div(style="max-width:443px;margin:0 auto;")
+            div(id="update" style="max-width:443px;margin:0 auto;")
                 h3 Your upload #{upload.title} is processing. Please check back in a couple minutes.
                 br
                 br
                 h4 If your upload is stuck on processing, let an admin know via the social links at the bottom of the page and we'll take a look.
+
+            div(id="processing" style="max-width:443px;margin:0 auto;")
+                h2 Your upload is currently 1% done
 
         br
         br
@@ -384,6 +387,11 @@ block extra_css
 
 
 block extra_footer_js
+
+  include ./mediaPlayerPartials/progressTrackerJs
+
+
+
   script(src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js")
   script(src="https://cdn.plyr.io/3.3.21/plyr.js")
   script.
