@@ -12,8 +12,6 @@ const timeAgoEnglish = new javascriptTimeAgo('en-US');
 
 const helpers = require('../caching/helpers');
 
-const calculateViewsByPeriod = helpers.calculateViewsByPeriod;
-
 const buildObjects = helpers.buildObjects;
 
 const redisClient = require('../config/redis');
@@ -66,15 +64,22 @@ async function setRecentUploads(){
   // calculate view periods for each upload
   recentUploads = await Promise.all(recentUploads.map(async function(upload){
 
+    // console.log(upload.uniqueTag);
+
     // get all valid views per upload
-    const uploadViews = await View.find({ upload, validity: 'real' }).select('createdAt');
+    upload.viewAmount = await View.find({
+      upload: upload._id
+    }).countDocuments();
+
+    // console.log(`view amount ${upload.viewAmount}`);
 
     upload.timeAgo = timeAgoEnglish.format( new Date(upload.createdAt) );
+
+    return upload
 
     // console.log(index + ' done')
 
     // calculate their views per period (last24h, lastweek)
-    return calculateViewsByPeriod(upload, uploadViews);
   }));
 
   // do more stringent check for uploader
