@@ -388,7 +388,8 @@ block extra_css
 
 block extra_footer_js
 
-  include ./mediaPlayerPartials/progressTrackerJs
+  if upload.status == 'processing'
+    include ./mediaPlayerPartials/progressTrackerJs
 
 
 
