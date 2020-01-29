@@ -31,16 +31,17 @@ async function setIndex(){
 }
 
 if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false'){
+  // update daily view stats per minute
   getStats();
   setInterval(function(){
     getStats();
   }, 1000 * 60 * 1);
 
-  setIndex();
-
-  setInterval(function(){
-    setIndex();
-  }, 1000 * 60 * 2);
+  // setIndex();
+  //
+  // setInterval(function(){
+  //   setIndex();
+  // }, 1000 * 60 * 2);
 }
 
 const pageLimit = 42;
@@ -194,6 +195,7 @@ exports.popularUploads = async(req, res) => {
 
   console.log(`WITHIN: ${within}`);
 
+  // used for 'views per these returned items
   function calculateViewAmount(uploads){
     let viewCounter = 0;
 
@@ -228,7 +230,7 @@ exports.popularUploads = async(req, res) => {
       viewAmountInPeriod = viewStats.month;
       break;
     case'All Time':
-      viewAmountInPeriod = indexResponse.viewAmount;
+      viewAmountInPeriod = viewStats.alltime;
       break;
     }
 
@@ -240,10 +242,10 @@ exports.popularUploads = async(req, res) => {
     let uploads = await getFromCache.getPopularUploads(timeRange, limit, skipAmount, mediaType, filter, category, subcategory);
 
     // show the view amount per the particular page
-    let viewsOnThisPage;
-    if(category){
-      viewsOnThisPage = calculateViewAmount(uploads);
-    }
+    // let viewsOnThisPage;
+    // if(category){
+    //   viewsOnThisPage = calculateViewAmount(uploads);
+    // }
 
     let categoryObj;
     for(const cat of categories){
@@ -302,7 +304,7 @@ exports.popularUploads = async(req, res) => {
       popularTimeViews,
       mediaBrowsingType,
       mediaType,
-      viewsOnThisPage
+      // viewsOnThisPage
     });
 
   } catch(err){

@@ -23,22 +23,10 @@ async function setIndexValues(){
   }
 
   // view amount is for the old view amount
-  viewAmount = await Upload.aggregate([
-    { $match:  {visibility: { $ne: 'removed' } }},
-    { $group: {
-      _id: '',
-      views: { $sum: '$views' }
-    }
-    }]);
-
-  if(!viewAmount[0]){
-    viewAmount = 0;
-  } else {
-    viewAmount = viewAmount[0].views;
-  }
+  viewAmount = View.estimatedDocumentCount({});
 
   if(logCaching == 'true'){
-    console.log('Old view amount calculated, calculating channel amount');
+    console.log('View amount calculated, calculating channel amount');
   }
 
   channelAmount = await User.estimatedDocumentCount({});
