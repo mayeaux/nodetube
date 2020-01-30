@@ -116,6 +116,26 @@ exports.getUploadProgress = async(req, res) => {
 };
 
 
+function areUploadsOff(uploadsOn, isNotTrustedUser){
+  if(uploadsOn == 'false' && !req.user.privs.autoVisibleUpload){
+    console.log('HERE');
+    res.status(500);
+    return res.send({ message: 'UPLOADS_OFF'});
+  }
+}
+
+function testIfUserRestricted(userIsRestricted, logObject){
+  if(userIsRestricted){
+    uploadLogger.info('User upload status restricted', logObject);
+
+    res.status(403);
+    return res.send('Sorry your account is restricted');
+  }
+}
+
+function generateLogObject(){
+
+}
 
 /**
  * POST /api/upload
@@ -125,13 +145,15 @@ exports.postFileUpload = async(req, res) => {
 
   try {
 
-    // if uploads are off and user not auto allowed
-    if(uploadsOn == 'false' && !req.user.privs.autoVisibleUpload){
-      console.log('HERE');
-      res.status(500);
-      return res.send({ message: 'UPLOADS_OFF'});
-    }
+    const isNotTrustedUser = !req.user.privs.autoVisibleUpload;
 
+    areUploadsOff(uploadsOn, isNotTrustedUser);
+
+    const user = req.user;
+    const channelUrl = req.user.channelUrl;
+    const uploadToken = req.query.uploadToken;
+
+    // setup logobject for winstson
     let logObject = {
       user: req.user && req.user.channelUrl,
       upload: req.query.title
@@ -142,20 +164,26 @@ exports.postFileUpload = async(req, res) => {
     // console.log(req.query.uploadToken);
 
     // if there is no user on the request, get it from the req query
-    if(!req.user && req.query.uploadToken){
-      req.user = await User.findOne({uploadToken: req.query.uploadToken});
+
+    // use an uploadToken if it exists but there is no req.user
+    // load req.user from finding the user
+    if(!user && uploadToken){
+      req.user = await User.findOne({
+        uploadToken
+      });
     }
 
     // console.log(`REQUESTED BY : ${req.user.channelName}`);
 
-    if(req.user.status == 'uploadRestricted'){
-      uploadLogger.info('User upload status restricted', logObject);
 
-      res.status(403);
-      return res.send('Sorry your account is restricted');
-    }
+    const userStatusIsRestricted = req.user.status == 'uploadRestricted';
+
+    // ends the response early if user is restricted
+    testIfUserRestricted(userStatusIsRestricted, logObject);
 
     // TODO: File size check
+
+
 
     if(req.user.status == 'restricted'){
       uploadLogger.info('User status restricted', logObject);
