@@ -48,7 +48,7 @@ block content
         else if upload.fileType === 'image'
             div.display-div(style="")
                 a(href=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`)
-                    img.display-element(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="border-radius:13px;max-width:80%;min-width:50%;min-height:50%;max-height:620px;")
+                    img.display-element(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="border-radius:13px;max-width:80%;min-width:50%;min-height:50%;max-height:620px;image-orientation: from-image;")
 
 
         div.non-player-content(style="position:relative;")
