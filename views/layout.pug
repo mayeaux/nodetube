@@ -9,20 +9,20 @@ html
     meta(name='csrf-token', content=_csrf)
     meta(name="description", content=meta.description)
 
-    meta(property='og:title', content=meta.title || title + ' - nullvideo')
+    meta(property='og:title', content=meta.title || title)
     meta(property='og:image', content=meta.image)
     meta(property='og:description', content=meta.description)
     meta(property='og:video', content=meta.video)
 
 
     meta(name='twitter:card', content='summary')
-    meta(name='twitter:title', content=meta.title || title + ' - nullvideo')
+    meta(name='twitter:title', content=meta.title || title)
     meta(name='twitter:description', content=meta.description || "An open-source file hosting platform")
     meta(name='twitter:image', content=meta.image)
 
 
 
-    title #{title} - nullvideo
+    title #{title} - #{brandName}
     link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@7.33.1/dist/sweetalert2.css')
     link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css')
     link(rel='stylesheet', href='/css/main.css')
