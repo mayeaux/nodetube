@@ -17,7 +17,6 @@ const pagination = require('../../lib/helpers/pagination');
 const User = require('../../models/index').User;
 const Upload = require('../../models/index').Upload;
 
-
 const sendMessageToDiscord = require('../../lib/moderation/discordWebhooks');
 
 const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
@@ -88,17 +87,12 @@ if(process.env.NODE_ENV !== 'production'){
 
 }
 
-
 exports.getUploadProgress = async(req, res) => {
   // example request /user/fred/j9dle/progress
-
-
-
 
   const uniqueTag = req.body.uniqueTag;
   // nuspa41uploadProgress
   const string = `${uniqueTag}uploadProgress`;
-
 
   const value = await redisClient.getAsync(`${uniqueTag}uploadProgress`);
 
@@ -110,12 +104,9 @@ exports.getUploadProgress = async(req, res) => {
   //
   // console.log(uniqueTag);
 
-
-  return res.send(value)
+  return res.send(value);
 
 };
-
-
 
 /**
  * POST /api/upload
@@ -463,7 +454,7 @@ exports.postFileUpload = async(req, res) => {
 
             upload.status = 'completed';
 
-            ffmpegHelper.setRedisClient({ uniqueTag: upload.uniqueTag, progress: 100 })
+            ffmpegHelper.setRedisClient({ uniqueTag: upload.uniqueTag, progress: 100 });
 
             upload.fileType = 'video';
 
@@ -532,7 +523,7 @@ exports.postFileUpload = async(req, res) => {
 
               // uploadLogger.info(`Moved file to user's directory`, logObject);
 
-              ffmpegHelper.setRedisClient({ uniqueTag: upload.uniqueTag, progress: 100 })
+              ffmpegHelper.setRedisClient({ uniqueTag: upload.uniqueTag, progress: 100 });
 
               await upload.save();
 

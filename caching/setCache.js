@@ -43,7 +43,6 @@ async function setIndexValues(){
     console.log('Upload amount calculated, calculating view amount');
   }
 
-
   // set object properly
   redisClient.hmset('indexValues', {
     viewAmount,

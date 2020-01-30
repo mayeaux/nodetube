@@ -65,16 +65,14 @@ async function cacheOnlyRecentUploads(){
 // calculate and cache recent uploads every minute
 cacheOnlyRecentUploads();
 
-                                   // parse int because it's a string comming from dotenv
+// parse int because it's a string comming from dotenv
 let cacheRecentIntervalInMinutes = parseInt(process.env.CACHE_RECENT_INTERVAL_IN_MINUTES) || 2.5;
 
 const cacheRecentIntervalInMs = cacheRecentIntervalInMinutes * ( 1000 * 60 );
 
-
 console.log(`CACHE RECENT INTERVAL IN MINUTES: ${cacheRecentIntervalInMinutes}`);
 
 setInterval(cacheOnlyRecentUploads, cacheRecentIntervalInMs);
-
 
 async function cachePopularDailyStatsAndIndex(){
   try {
@@ -89,8 +87,6 @@ async function cachePopularDailyStatsAndIndex(){
 }
 
 cachePopularDailyStatsAndIndex();
-
-
 
 let cacheIntervalInMinutes = parseInt(process.env.CACHE_INTERVAL_IN_MINUTES) || 5;
 

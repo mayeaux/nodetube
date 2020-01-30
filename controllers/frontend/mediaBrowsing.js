@@ -290,7 +290,7 @@ exports.popularUploads = async(req, res) => {
       withinDisplayString,
       popularTimeViews,
       mediaBrowsingType,
-      mediaType,
+      mediaType
       // viewsOnThisPage
     });
 
