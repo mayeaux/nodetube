@@ -102,8 +102,10 @@ function areUploadsOff(uploadsOn, isNotTrustedUser){
   }
 }
 
-function testIfUserRestricted(userIsRestricted, logObject, res){
-  if(userIsRestricted){
+function testIfUserRestricted(user, logObject, res){
+  const userStatusIsRestricted = user.status == 'uploadRestricted';
+
+  if(userStatusIsRestricted){
     uploadLogger.info('User upload status restricted', logObject);
 
     res.status(403);
@@ -171,9 +173,6 @@ exports.postFileUpload = async(req, res) => {
       upload: title
     };
 
-    // IS THIS NECESSARY?
-    // res.setHeader('Access-Control-Allow-Origin', '*');
-
     // use an uploadToken if it exists but there is no req.user
     // load req.user with the found user
     if(!user && uploadToken){
@@ -181,15 +180,10 @@ exports.postFileUpload = async(req, res) => {
         uploadToken
       });
     }
-
-    const userStatusIsRestricted = req.user.status == 'uploadRestricted';
-
     // ends the response early if user is restricted
-    testIfUserRestricted(userStatusIsRestricted, logObject, res);
+    testIfUserRestricted(user, logObject, res);
 
     checkIfAlreadyUploaded(user, title, res);
-
-    const requireModeration = moderationIsRequired(user);
 
     /** WHEN A NEW CHUNK IS COMPLETED **/
     resumable.post(req, async function(status, filename, original_filename, identifier){
@@ -273,6 +267,8 @@ exports.postFileUpload = async(req, res) => {
         };
 
         let upload = new Upload(uploadObject);
+
+        const requireModeration = moderationIsRequired(user);
 
         if(requireModeration){
           upload.visibility = 'pending';
