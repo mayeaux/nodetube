@@ -8,10 +8,10 @@ RUN apk add --no-cache tar
 COPY package*.json /app/
 
 WORKDIR /app/
-RUN rm -rf ./node_modules
-RUN npm cache clean --force
-RUN npm i
-RUN npm rebuild node-sass
+#RUN rm -rf ./node_modules
+#RUN npm cache clean --force
+RUN npm i --production
+#RUN npm rebuild node-sass
 
 COPY . .
 
