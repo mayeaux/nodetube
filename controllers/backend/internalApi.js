@@ -653,12 +653,18 @@ exports.postComment = async(req, res) => {
   }
 
   try {
-    // double check this comment doesn't already exist
-    const oldComment = await Comment.findOne({ text: req.body.comment, upload: req.body.upload });
 
-    if(oldComment){
-      return res.send('Comment already exists');
-    }
+    // note: this functionality is kind of crappy so turning it off
+    // it was to prevent double posting but if that does come up again make a nicer implementation
+    // double check this comment doesn't already exist
+    // const oldComment = await Comment.findOne({
+    //   text: req.body.comment,
+    //   upload: req.body.upload
+    // });
+    //
+    // if(oldComment){
+    //   return res.send('Comment already exists');
+    // }
 
     let upload = await Upload.findOne({_id: req.body.upload}).populate('uploader');
 
