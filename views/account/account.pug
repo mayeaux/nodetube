@@ -141,7 +141,7 @@ block content
     // TODO: export a variable plus_enabled if user enables payments
     // TODO: has to have styled updated with fw
     if plus_enabled
-      h2.fw.text-center(style="margin-bottom:16px") NodeTube Plus
+      h2.fw.text-center(style="margin-bottom:16px") #{brandName} Plus
       div.pt-plus.center-div.text-center
         if user.plan == 'plus'
           p Thank you so much for subscribing!
@@ -158,7 +158,7 @@ block content
 
             - Built in monetization via direct payments (COMING SOON)
 
-            - Access to NodeTube Recording Studio (COMING SOON)
+            - Access to #{brandName} Recording Studio (COMING SOON)
 
             - One-click complete YouTube backup (including future uploads)
 
@@ -468,7 +468,7 @@ block content
     //        if (data == 'success') {
     //          window.location = "/account?to=pt-plus";
     //        } else {
-    //          swal("Something didn't work, please contact NodeTube at ceo@nodetube.live or via the widget in the bottom right corner")
+    //          swal("Something didn't work, please contact #{brandName} at ceo@nodetube.live or via the widget in the bottom right corner")
     //        }
     //        console.log(data);
     //      },
@@ -484,8 +484,8 @@ block content
     document.getElementById('customButton').addEventListener('click', function (e) {
       // Open Checkout with further options:
       handler.open({
-        name: 'NodeTube, Inc.',
-        description: 'One Month Of NodeTube Plus',
+        name: '#{brandName}',
+        description: 'One Month Of #{brandName} Plus',
         amount: 495,
         allowRememberMe: false
         // email: "customer@email.com"

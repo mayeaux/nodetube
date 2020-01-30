@@ -26,6 +26,7 @@ if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false'){
  * Home page.
  */
 exports.index = async(req, res) => {
+	return res.redirect('/media/recent?category=all');
 
   const response = indexResponse;
   let mediaAmount, channelAmount, viewAmount;

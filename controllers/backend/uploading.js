@@ -268,7 +268,7 @@ exports.postFileUpload = async(req, res) => {
         }
 
         if(requireModeration && process.env.MODERATION_UPDATES_TO_DISCORD == 'true'){
-          await sendMessageToDiscord(`Pending upload requires moderation on NodeTube.live. ${new Date()}`);
+          await sendMessageToDiscord(`Pending upload requires moderation on ${process.env.BRAND_NAME}. ${new Date()}`);
         }
 
         await upload.save();

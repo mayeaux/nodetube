@@ -392,7 +392,7 @@ if(cluster.isMaster){
     });
 
     require('dns').lookup(require('os').hostname(), function(err, localIp){
-      console.log(`NodeTube can be accessed on your local network at ${localIp}:${portNumber}\n`);
+      console.log(`${process.env.BRAND_NAME} can be accessed on your local network at ${localIp}:${portNumber}\n`);
     });
 
     // warn user if ffmpeg is not installed
@@ -427,7 +427,7 @@ async function runNgrok(){
 
   const url = await ngrok.connect(ngrokOptions);
 
-  console.log(`Access NodeTube on the public web via ${url}. This link will be changed if you restart the app, to
+  console.log(`Access ${process.env.BRAND_NAME} on the public web via ${url}. This link will be changed if you restart the app, to
   use Ngrok with a permanent subdomain please purchase a token and update the settings in .env.private (see runNgrok function in app.js)`);
 }
 
