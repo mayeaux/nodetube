@@ -6,9 +6,12 @@ RUN apk add --no-cache tar
 
 ARG user_uid=1000
 RUN adduser -D -u $user_uid nodetube || true
-RUN mkdir /app/ && chown $user_uid -R /app/
 USER $user_uid
 WORKDIR /app/
+
+USER root
+RUN chmod $user_uid /app/ -R
+USER $user_uid
 
 COPY --chown=$user_uid copySettingsAndPrivateFiles.js /app/
 COPY --chown=$user_uid package*.json /app/
