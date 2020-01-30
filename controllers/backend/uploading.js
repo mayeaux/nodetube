@@ -34,27 +34,6 @@ var resumable = require('../../lib/uploading/resumable.js')(__dirname +  '/uploa
 
 const winston = require('winston');
 //
-// winston.loggers.add('uploadEndpoint', {
-//   level: 'info',
-//   // format: winston.format.json(),
-//   format: combine(
-//     format.splat(),
-//     format.simple(),
-//     format.json(),
-//     // label({ label: 'custom label!' }),
-//     // timestamp(),
-//   ),
-//   transports: [
-//     //
-//     // - Write to all logs with level `info` and below to `combined.log`
-//     // - Write all logs error (and below) to `error.log`.
-//     //
-//     new transports.Console(),
-//     new transports.File({ filename: 'error.log', level: 'error' }),
-//     new transports.File({ filename: 'logs/uploads.log' })
-//   ]
-// });
-
 const { createLogger, format, transports } = require('winston');
 
 const uploadsOn = process.env.UPLOADS_ON;
@@ -76,7 +55,6 @@ if(process.env.NODE_ENV !== 'production'){
   });
 
 } else {
-  // PULL OUT TO OWN FILE
   uploadLogger = winston.createLogger({
     level: 'info',
     format: winston.format.json(),
@@ -124,7 +102,7 @@ function areUploadsOff(uploadsOn, isNotTrustedUser){
   }
 }
 
-function testIfUserRestricted(userIsRestricted, logObject){
+function testIfUserRestricted(userIsRestricted, logObject, res){
   if(userIsRestricted){
     uploadLogger.info('User upload status restricted', logObject);
 
@@ -136,6 +114,39 @@ function testIfUserRestricted(userIsRestricted, logObject){
 function generateLogObject(){
 
 }
+
+
+function moderationIsRequired (user){
+  const restrictUntrustedUploads = process.env.RESTRICT_UNTRUSTED_UPLOADS == 'true';
+
+  // if the user is not allowed to auto upload
+  const userIsUntrusted = !user.privs.autoVisibleUpload;
+
+  // moderation is required if restrict uploads is on and user is untrusted
+  const requireModeration = restrictUntrustedUploads && userIsUntrusted;
+
+  return requireModeration;
+}
+
+
+async function checkIfAlreadyUploaded(user, title, res){
+  // TODO: File size check
+
+  const alreadyUploaded = await Upload.findOne({
+    uploader: user._id,
+    title,
+    visibility: 'public',
+    status: 'completed'
+  });
+
+  if(alreadyUploaded){
+    uploadLogger.info('Upload title already uploaded', logObject);
+    res.status(500);
+    return res.send({message: 'ALREADY-UPLOADED'});
+  }
+}
+
+
 
 /**
  * POST /api/upload
@@ -152,17 +163,16 @@ exports.postFileUpload = async(req, res) => {
     const user = req.user;
     const channelUrl = req.user.channelUrl;
     const uploadToken = req.query.uploadToken;
+    const title = req.query.title;
 
     // setup logobject for winston
     let logObject = {
-      user: req.user && req.user.channelUrl,
-      upload: req.query.title
+      user: user && user.channelUrl,
+      upload: title
     };
 
+    // IS THIS NECESSARY?
     // res.setHeader('Access-Control-Allow-Origin', '*');
-
-    // console.log(req.query.uploadToken);
-
 
     // use an uploadToken if it exists but there is no req.user
     // load req.user with the found user
@@ -172,48 +182,14 @@ exports.postFileUpload = async(req, res) => {
       });
     }
 
-    // console.log(`REQUESTED BY : ${req.user.channelName}`);
-
-
     const userStatusIsRestricted = req.user.status == 'uploadRestricted';
 
     // ends the response early if user is restricted
-    testIfUserRestricted(userStatusIsRestricted, logObject);
+    testIfUserRestricted(userStatusIsRestricted, logObject, res);
 
-    const moderationRequired = moderationIsRequired(user);
-
-    // TODO: File size check
-
-    function moderationIsRequired (user){
-      const restrictUntrustedUploads = process.env.RESTRICT_UNTRUSTED_UPLOADS == 'true';
-
-      // if the user is not allowed to auto upload
-      const userIsUntrusted = !user.privs.autoVisibleUpload;
-
-      // moderation is required if restrict uploads is on and user is untrusted
-      const requireModeration = restrictUntrustedUploads && userIsUntrusted;
-
-      return requireModeration;
-    }
+    checkIfAlreadyUploaded(user, title, res);
 
     const requireModeration = moderationIsRequired(user);
-
-
-    // TODO: add a better check here
-    // for one if it says it's processing, don't reallow upload
-    // fail processing
-    const alreadyUploaded = await Upload.findOne({
-      uploader: req.user._id,
-      title: req.query.title,
-      visibility: 'public',
-      $or : [ { status: 'completed' }, { uploadUrl: { $exists: true } } ]
-    });
-
-    if(alreadyUploaded){
-      uploadLogger.info('Upload title already uploaded', logObject);
-      res.status(500);
-      return res.send({message: 'ALREADY-UPLOADED'});
-    }
 
     /** WHEN A NEW CHUNK IS COMPLETED **/
     resumable.post(req, async function(status, filename, original_filename, identifier){
