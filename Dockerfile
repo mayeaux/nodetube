@@ -7,8 +7,8 @@ RUN apk add --no-cache tar
 WORKDIR /app/
 
 ARG user_uid=1000
-RUN adduser -u $user_uid nodetube
-USER nodetube
+RUN adduser -u $user_uid nodetube || true
+USER $user_id
 
 COPY package*.json /app/
 
