@@ -153,7 +153,7 @@ exports.postFileUpload = async(req, res) => {
     const channelUrl = req.user.channelUrl;
     const uploadToken = req.query.uploadToken;
 
-    // setup logobject for winstson
+    // setup logobject for winston
     let logObject = {
       user: req.user && req.user.channelUrl,
       upload: req.query.title
@@ -163,10 +163,9 @@ exports.postFileUpload = async(req, res) => {
 
     // console.log(req.query.uploadToken);
 
-    // if there is no user on the request, get it from the req query
 
     // use an uploadToken if it exists but there is no req.user
-    // load req.user from finding the user
+    // load req.user with the found user
     if(!user && uploadToken){
       req.user = await User.findOne({
         uploadToken
@@ -181,25 +180,24 @@ exports.postFileUpload = async(req, res) => {
     // ends the response early if user is restricted
     testIfUserRestricted(userStatusIsRestricted, logObject);
 
+    const moderationRequired = moderationIsRequired(user);
+
     // TODO: File size check
 
+    function moderationIsRequired (user){
+      const restrictUntrustedUploads = process.env.RESTRICT_UNTRUSTED_UPLOADS == 'true';
 
+      // if the user is not allowed to auto upload
+      const userIsUntrusted = !user.privs.autoVisibleUpload;
 
-    if(req.user.status == 'restricted'){
-      uploadLogger.info('User status restricted', logObject);
-      res.status(403);
-      return res.send('Sorry uploads are halted');
+      // moderation is required if restrict uploads is on and user is untrusted
+      const requireModeration = restrictUntrustedUploads && userIsUntrusted;
+
+      return requireModeration;
     }
 
-    let restrictUntrustedUploads = process.env.RESTRICT_UNTRUSTED_UPLOADS || false;
-    // force to boolean
-    restrictUntrustedUploads = ( restrictUntrustedUploads == 'true' );
+    const requireModeration = moderationIsRequired(user);
 
-    const userIsUntrusted = !req.user.privs.autoVisibleUpload;
-
-    const requireModeration = restrictUntrustedUploads && userIsUntrusted;
-
-    const user = req.user;
 
     // TODO: add a better check here
     // for one if it says it's processing, don't reallow upload
