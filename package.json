@@ -83,7 +83,7 @@
     "node-cache": "^4.2.0",
     "node-fetch": "^2.6.0",
     "node-ffprobe": "^1.2.2",
-    "node-sass": "^4.13.0",
+    "node-sass": "^4.13.1",
     "node-sass-middleware": "^0.11.0",
     "nodemailer": "^3.1.7",
     "nodemailer-mailgun-transport": "^1.4.0",
