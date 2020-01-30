@@ -6,6 +6,10 @@ RUN apk add --no-cache tar
 
 WORKDIR /app/
 
+ARG user_uid=1000
+RUN useradd -m -u $user_uid nodetube
+USER nodetube
+
 COPY package*.json /app/
 
 RUN npm i
