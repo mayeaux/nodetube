@@ -1,4 +1,5 @@
 .*
+!.env.*.sample
 docker-compose.yml
 *.md
 
