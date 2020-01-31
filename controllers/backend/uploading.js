@@ -73,14 +73,24 @@ exports.getUploadProgress = async(req, res) => {
   // example request /user/fred/j9dle/progress
 
 
-
-
   const uniqueTag = req.body.uniqueTag;
+
+
+  const upload = await Upload.findOne({
+    uniqueTag
+  });
+
+  if(upload && upload.status == 'completed'){
+    return res.send('100');
+  }
+
   // nuspa41uploadProgress
   const string = `${uniqueTag}uploadProgress`;
 
 
   const value = await redisClient.getAsync(`${uniqueTag}uploadProgress`);
+
+  console.log(value);
 
   // console.log(value);
   //
