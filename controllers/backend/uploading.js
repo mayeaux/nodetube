@@ -115,6 +115,13 @@ function testIfUserRestricted(user, logObject, res){
   }
 }
 
+function aboutToProcess(res, channelUrl, uniqueTag){
+  res.send({
+    message: 'ABOUT TO PROCESS',
+    url: `/user/${channelUrl}/${uniqueTag}?autoplay=off`
+  });
+}
+
 const getExtensionString = path.extname;
 
 function generateLogObject(){
@@ -209,7 +216,7 @@ exports.postFileUpload = async(req, res) => {
     // why can't change name to fileName ?
     resumable.post(req, async function(status, filename, original_filename, identifier){
 
-      console.log(req.body);
+      // console.log(req.body);
 
       // TODO: would be nice to do a log here so you can see the chunks come through on the backend rather than divining from the request
 
@@ -230,7 +237,6 @@ exports.postFileUpload = async(req, res) => {
       if(fileExtension == '.MP4'){
         fileExtension = '.mp4';
       }
-
 
       let category = req.query.category;
       if(category == 'undefined' || category == undefined){
@@ -315,10 +321,7 @@ exports.postFileUpload = async(req, res) => {
               responseSent = true;
 
               // dont return here so the rest of the code can process
-              res.send({
-                message: 'ABOUT TO PROCESS',
-                url: `/user/${channelUrl}/${uniqueTag}?autoplay=off`
-              });
+              aboutToProcess(res, channelUrl, uniqueTag);
             }
           }
         })();
@@ -381,36 +384,28 @@ exports.postFileUpload = async(req, res) => {
 
           console.log('done moving file');
 
-
-
-
           const specificMatches = ( codecName == 'hevc' || codecProfile == 'High 4:4:4 Predictive' );
 
           if(specificMatches || bitrate > 2500) {
             upload.fileType = 'convert';
           }
 
-          function aboutToProcess(res){
-            res.send({
-              message: 'ABOUT TO PROCESS',
-              url: `/user/${channelUrl}/${uniqueTag}?autoplay=off`
-            });
-          }
-
-          await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, hostFilePath, bucket, upload, channelUrl, b2);
-
           /** CONVERT AND UPLOAD VIDEO **/
           // TODO: PULL THIS OUT INTO A LIBRARY
           // convert as avi to mp4 (convert)
           // convert as mp4 birate to 2500
 
-          if(upload.fileType == 'convert' || bitrate > 2500){
+          if(upload.fileType == 'convert' || bitrate > 2500 || upload.fileType == 'video'){
 
-            upload.status = 'processing';
-            await upload.save();
+            await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, hostFilePath, bucket, upload, channelUrl, b2);
 
-            responseSent = true;
-            aboutToProcess(res);
+            if(upload.fileType == 'convert' || bitrate > 2500){
+              upload.status = 'processing';
+              await upload.save();
+
+              responseSent = true;
+              aboutToProcess(res, channelUrl, uniqueTag);
+            }
 
             uploadLogger.info('Captured thumbnail', logObject);
 
@@ -424,6 +419,7 @@ exports.postFileUpload = async(req, res) => {
               fileInDirectory = `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-old.mp4`;
             }
 
+            // TODO: this isn't quite done yet
             // convert video to libx264 and also compress if bitrate over 2500
             await ffmpegHelper.convertVideo({
               uploadedPath: fileInDirectory,
@@ -474,10 +470,7 @@ exports.postFileUpload = async(req, res) => {
           if(!responseSent)
           {
             responseSent = true;
-            res.send({
-              message: 'DONE PROCESSING',
-              url: `/user/${channelUrl}/${uniqueTag}?autoplay=off`
-            });
+            aboutToProcess(res, channelUrl, uniqueTag);
           }
         });
       } else {
