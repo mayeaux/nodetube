@@ -194,10 +194,6 @@ exports.postFileUpload = async(req, res) => {
 
   try {
 
-    const isNotTrustedUser = !req.user.privs.autoVisibleUpload;
-
-    areUploadsOff(uploadsOn, isNotTrustedUser);
-
     const user = req.user;
 
     const { channelUrl } = user;
@@ -217,6 +213,11 @@ exports.postFileUpload = async(req, res) => {
         uploadToken
       });
     }
+
+    const isNotTrustedUser = !req.user.privs.autoVisibleUpload;
+
+    areUploadsOff(uploadsOn, isNotTrustedUser);
+
     // ends the response early if user is restricted
     testIfUserRestricted(user, logObject, res);
 
