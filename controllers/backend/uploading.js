@@ -180,8 +180,11 @@ const testIsFileTypeUnknown = async function(upload, fileType, fileExtension, lo
     uploadLogger.info('Unknown file type', logObject);
 
     res.status(500);
-    return res.send({message: 'UNKNOWN FILETYPE'});
+    res.send({message: 'UNKNOWN-FILETYPE'});
+    return true
   }
+
+  return false
 
 };
 
@@ -215,6 +218,7 @@ exports.postFileUpload = async(req, res) => {
 
     const isNotTrustedUser = !req.user.privs.autoVisibleUpload;
 
+    // TODO: have to fix these, should end function execution early (see unknown file type below)
     areUploadsOff(uploadsOn, isNotTrustedUser, logObject, res);
 
     // ends the response early if user is restricted
@@ -268,8 +272,10 @@ exports.postFileUpload = async(req, res) => {
         uniqueTag
       });
 
+      // TODO: not a great design but I don't know a better approach
       // user this after upload object is made because it saves it to db
-      testIsFileTypeUnknown(upload, fileType, fileExtension, logObject, res);
+      const isUnknown = await testIsFileTypeUnknown(upload, fileType, fileExtension, logObject, res);
+      if(isUnknown) return;
 
       // where is this used?
       let uploadPath = `./upload/${identifier}`;

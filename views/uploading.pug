@@ -392,21 +392,14 @@ block content
 
           response = JSON.parse(response);
 
-          if (response.message == 'UNKNOWN FILE') {
-            //  HIDE FORM SHOW GIF
-            $(".upload-form").show();
-            $(".upload-gif").hide();
-
-            // auto fill in title
-            $('#title').val('');
-            return swal('Sorry, the file type is unknown, please try another file')
-
-          }
-
           if(response.message == 'ALREADY-UPLOADED'){
             //  HIDE FORM SHOW GIF
             $(".upload-form").show();
             $(".upload-gif").hide();
+
+
+            $('.upload-information').show();
+
 
             // auto fill in title
             $('#title').val('');
@@ -433,10 +426,29 @@ block content
 
           console.log('file error');
 
+          if (response.message == 'UNKNOWN-FILETYPE') {
+            //  HIDE FORM SHOW GIF
+            $(".upload-form").show();
+            $(".upload-gif").hide();
+            $('.upload-information').show();
+
+
+            // auto fill in title
+            $('#title').val('');
+            return swal({
+              title: 'File Type Not Supported',
+              text: 'Sorry, this file type is not supported, please try another file'
+            }, function () {
+              window.location.href = '/upload'
+            })
+          }
+
           if (response.message == 'ALREADY-UPLOADED') {
             //  HIDE FORM SHOW GIF
             $(".upload-form").show();
             $(".upload-gif").hide();
+            $('.upload-information').show();
+
 
             // auto fill in title
             $('#title').val('');
