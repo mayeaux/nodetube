@@ -99,8 +99,8 @@ exports.getUploadProgress = async(req, res) => {
 
 };
 
-function areUploadsOff(uploadsOn, isNotTrustedUser){
-  if(uploadsOn == 'false' && !req.user.privs.autoVisibleUpload){
+function areUploadsOff(uploadsOn, isNotTrustedUser, res){
+  if(uploadsOn == 'false' && isNotTrustedUser){
     console.log('HERE');
     res.status(500);
     return res.send({ message: 'UPLOADS_OFF'});
@@ -143,7 +143,7 @@ function moderationIsRequired(user){
   return requireModeration;
 }
 
-async function checkIfAlreadyUploaded(user, title, res){
+async function checkIfAlreadyUploaded(user, title, logObject, res){
   // TODO: File size check
 
   const alreadyUploaded = await Upload.findOne({
@@ -161,7 +161,7 @@ async function checkIfAlreadyUploaded(user, title, res){
 }
 
 /** RESPOND EARLY IF ITS AN UNKNOWN FILE TYPE **/
-const testIsFileTypeUnknown = async function(upload, fileType, fileExtension, logObject){
+const testIsFileTypeUnknown = async function(upload, fileType, fileExtension, logObject, res){
   if(fileType == 'unknown'){
     upload.status = 'rejected';
 
@@ -206,12 +206,12 @@ exports.postFileUpload = async(req, res) => {
 
     const isNotTrustedUser = !req.user.privs.autoVisibleUpload;
 
-    areUploadsOff(uploadsOn, isNotTrustedUser);
+    areUploadsOff(uploadsOn, isNotTrustedUser, logObject, res);
 
     // ends the response early if user is restricted
     testIfUserRestricted(user, logObject, res);
 
-    checkIfAlreadyUploaded(user, title, res);
+    checkIfAlreadyUploaded(user, title, logObject, res);
 
     // let upload = setUpload()
 
@@ -262,7 +262,7 @@ exports.postFileUpload = async(req, res) => {
       });
 
       // user this after upload object is made because it saves it to db
-      testIsFileTypeUnknown(upload, fileType, fileExtension, logObject);
+      testIsFileTypeUnknown(upload, fileType, fileExtension, logObject, res);
 
       // where is this used?
       let uploadPath = `./upload/${identifier}`;
