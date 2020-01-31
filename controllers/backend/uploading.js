@@ -10,7 +10,6 @@ const path = require('path');
 const mkdirp = Promise.promisifyAll(require('mkdirp'));
 var randomstring = require('randomstring');
 
-
 const redisClient = require('../../config/redis');
 
 const pagination = require('../../lib/helpers/pagination');
@@ -91,7 +90,7 @@ exports.getUploadProgress = async(req, res) => {
   // kind of an ugly workaround, if the upload is at 100% converted, mark it as 99%
   // just so backblaze and other things can finish before the frontend redirects
   if(value == '100'){
-    res.send('99')
+    res.send('99');
   } else {
     return res.send(value);
   }
@@ -181,10 +180,10 @@ const testIsFileTypeUnknown = async function(upload, fileType, fileExtension, lo
 
     res.status(500);
     res.send({message: 'UNKNOWN-FILETYPE'});
-    return true
+    return true;
   }
 
-  return false
+  return false;
 
 };
 
@@ -231,7 +230,7 @@ exports.postFileUpload = async(req, res) => {
     /** WHEN A NEW CHUNK IS COMPLETED **/
     resumable.post(req, async function(status, filename, original_filename, identifier){
 
-      let { category, subcategory, rating } = req.query;
+      let{ category, subcategory, rating } = req.query;
 
       const { resumableTotalSize, resumableChunkNumber, resumableTotalChunks } = req.body;
 
@@ -275,7 +274,7 @@ exports.postFileUpload = async(req, res) => {
       // TODO: not a great design but I don't know a better approach
       // user this after upload object is made because it saves it to db
       const isUnknown = await testIsFileTypeUnknown(upload, fileType, fileExtension, logObject, res);
-      if(isUnknown) return;
+      if(isUnknown)return;
 
       // where is this used?
       let uploadPath = `./upload/${identifier}`;
@@ -412,7 +411,7 @@ exports.postFileUpload = async(req, res) => {
               // set upload progress as 1 so it has something to show on the frontend
               redisClient.setAsync(`${uniqueTag}uploadProgress`, 1);
 
-              if(!responseSent) {
+              if(!responseSent){
                 responseSent = true;
                 aboutToProcess(res, channelUrl, uniqueTag);
               }
