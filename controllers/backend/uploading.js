@@ -88,6 +88,14 @@ exports.getUploadProgress = async(req, res) => {
 
   console.log(value);
 
+  // kind of an ugly workaround, if the upload is at 100% converted, mark it as 99%
+  // just so backblaze and other things can finish before the frontend redirects
+  if(value == '100'){
+    res.send('99')
+  } else {
+    return res.send(value);
+  }
+
   // console.log(value);
   //
   // console.log(req.params);
