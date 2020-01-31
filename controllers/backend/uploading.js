@@ -395,11 +395,11 @@ exports.postFileUpload = async(req, res) => {
           // convert as avi to mp4 (convert)
           // convert as mp4 birate to 2500
 
-          if(upload.fileType == 'convert' || bitrate > 2500 || upload.fileType == 'video'){
+          if(upload.fileType == 'convert' || bitrate > 2500 || upload.fileType == 'video') {
 
             await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, hostFilePath, bucket, upload, channelUrl, b2);
 
-            if(upload.fileType == 'convert' || bitrate > 2500){
+            if (upload.fileType == 'convert' || bitrate > 2500) {
               upload.status = 'processing';
               await upload.save();
 
@@ -413,7 +413,7 @@ exports.postFileUpload = async(req, res) => {
 
             // TODO: savePath and fileInDirectory are the same thing, need to clean this code up
 
-            if(fileExtension == '.mp4' && bitrate > 2500){
+            if (fileExtension == '.mp4' && bitrate > 2500) {
               await fs.move(savePath, `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-old.mp4`);
 
               fileInDirectory = `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-old.mp4`;
@@ -421,32 +421,36 @@ exports.postFileUpload = async(req, res) => {
 
             // TODO: this isn't quite done yet
             // convert video to libx264 and also compress if bitrate over 2500
-            await ffmpegHelper.convertVideo({
-              uploadedPath: fileInDirectory,
-              title,
-              bitrate,
-              savePath,
-              uniqueTag
-            });
 
-            uploadLogger.info('Finished converting file', logObject);
+            if (upload.fileType == 'convert' || bitrate > 2500) {
 
-            // assuming an mp4 is created at this point so we delete the old uncoverted video
-            await fs.remove(`${fileInDirectory}`);
+              await ffmpegHelper.convertVideo({
+                uploadedPath: fileInDirectory,
+                title,
+                bitrate,
+                savePath,
+                uniqueTag
+              });
 
-            uploadLogger.info('Deleted unconverted file', logObject);
+              uploadLogger.info('Finished converting file', logObject);
 
-            // for upload to b2
-            fileInDirectory = `${channelUrlFolder}/${uniqueTag}.mp4`;
+              // assuming an mp4 is created at this point so we delete the old uncoverted video
+              await fs.remove(`${fileInDirectory}`);
 
-            upload.status = 'completed';
+              uploadLogger.info('Deleted unconverted file', logObject);
 
-            upload.fileType = 'video';
+              // for upload to b2
+              fileInDirectory = `${channelUrlFolder}/${uniqueTag}.mp4`;
 
-            upload = await upload.save();
+              upload.status = 'completed';
 
-            uploadLogger.info('Completed video conversion', logObject);
+              upload.fileType = 'video';
 
+              upload = await upload.save();
+
+              uploadLogger.info('Completed video conversion', logObject);
+
+            }
           }
 
           /** UPLOAD IMAGE OR AUDIO **/
