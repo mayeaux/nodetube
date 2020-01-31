@@ -194,9 +194,6 @@ exports.postFileUpload = async(req, res) => {
 
   try {
 
-    const user = req.user;
-
-    const { channelUrl } = user;
 
     const { description, visibility, title, uploadToken } = req.query;
 
@@ -213,6 +210,10 @@ exports.postFileUpload = async(req, res) => {
         uploadToken
       });
     }
+
+    const user = req.user;
+
+    const { channelUrl } = user;
 
     const isNotTrustedUser = !req.user.privs.autoVisibleUpload;
 
