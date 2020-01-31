@@ -397,8 +397,10 @@ exports.postFileUpload = async(req, res) => {
               upload.status = 'processing';
               await upload.save();
 
-              responseSent = true;
-              aboutToProcess(res, channelUrl, uniqueTag);
+              if(!responseSent) {
+                responseSent = true;
+                aboutToProcess(res, channelUrl, uniqueTag);
+              }
             }
 
             uploadLogger.info('Captured thumbnail', logObject);
