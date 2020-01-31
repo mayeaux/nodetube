@@ -391,30 +391,25 @@ exports.postFileUpload = async(req, res) => {
           }
 
           function aboutToProcess(res){
-            responseSent = true;
             res.send({
               message: 'ABOUT TO PROCESS',
               url: `/user/${channelUrl}/${uniqueTag}?autoplay=off`
             });
-
           }
-
 
           await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, hostFilePath, bucket, upload, channelUrl, b2);
 
-
           /** CONVERT AND UPLOAD VIDEO **/
           // TODO: PULL THIS OUT INTO A LIBRARY
-
           // convert as avi to mp4 (convert)
           // convert as mp4 birate to 2500
-
 
           if(upload.fileType == 'convert' || bitrate > 2500){
 
             upload.status = 'processing';
             await upload.save();
 
+            responseSent = true;
             aboutToProcess(res);
 
             uploadLogger.info('Captured thumbnail', logObject);
@@ -458,55 +453,6 @@ exports.postFileUpload = async(req, res) => {
 
           }
 
-          /** UPLOAD VIDEO AND CONVERT IF NEEDED **/
-          // TODO: fix b2 upload here
-          if(fileExtension == '.mp4'&& upload.fileType !== 'convert'){
-
-            uploadLogger.info('About to compress file since bitrate is over 2500', logObject);
-
-            const savePath = `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-compressed.mp4`;
-
-            // compresses video ([ '-preset medium', '-b:v 1000k' ]); -> /${uniqueTag}-compressed.mp4
-            await ffmpegHelper.compressVideo({
-              uploadedPath: fileInDirectory,
-              channelUrl,
-              title: upload.title,
-              savePath,
-              uniqueTag: upload.uniqueTag
-            });
-
-            uploadLogger.info('Video file is compressed', logObject);
-
-            // mark original upload file as high quality file
-            await fs.move(fileInDirectory, `${channelUrlFolder}/${uniqueTag}-high.mp4`);
-
-            // TODO: upload to b2 here?
-
-            uploadLogger.info('Moved original filename to uniqueTag-high.mp4', logObject);
-
-            // move compressed video to original video's place
-            await fs.move(`${channelUrlFolder}/${uniqueTag}-compressed.mp4`, fileInDirectory);
-
-            uploadLogger.info('Moved compressed file to default uniqueTag.mp4 location', logObject);
-
-            // save high quality video size
-            const highQualityFileStats = fs.statSync(`${channelUrlFolder}/${uniqueTag}-high.mp4`);
-            upload.quality.high = highQualityFileStats.size;
-
-            // save compressed video quality size
-            const compressedFileStats = fs.statSync(fileInDirectory);
-            upload.fileSize = compressedFileStats.size;
-
-            // uploadLogger.info(`Moved file to user's directory`, logObject);
-
-            ffmpegHelper.setRedisClient({ uniqueTag: upload.uniqueTag, progress: 100 })
-
-            await upload.save();
-
-            uploadLogger.info('Upload document saved after compression and moving files', logObject);
-
-          }
-
           /** UPLOAD IMAGE OR AUDIO **/
           if(upload.fileType == 'image' || upload.fileType == 'audio'){
             // everything is already done
@@ -515,24 +461,6 @@ exports.postFileUpload = async(req, res) => {
           /** UPLOAD TO B2 **/
           if(process.env.UPLOAD_TO_B2 == 'true'){
             await backblaze.uploadToB2(upload, fileInDirectory, hostFilePath);
-
-            // indicates presence of compressed mp4, also upload that one, also if it's a convert mp4 it's already compressed so no need to upload
-            if((upload.fileExtension == '.mp4' || upload.fileExtension == '.MP4') && bitrate > 2500 && convertMp4 !== true){
-
-              console.log('UPLOADING THIS MP4 COMPRESSION TO BACKBLAZE');
-
-              // name for b2 : hostFilePath + upload.fileExtension,
-
-              const highQualityNameForB2 = `${channelUrl}/${uniqueTag}-high`;
-
-              // file name to save
-              const highQualityFileName = `${uniqueTag}-high.mp4`;
-
-              // the full local path of where the file will be served from
-              let highQualityFileInDirectory = `${channelUrlFolder}/${highQualityFileName}`;
-
-              await backblaze.uploadToB2(upload, highQualityFileInDirectory, highQualityNameForB2);
-            }
           }
 
           await uploadHelpers.markUploadAsComplete(uniqueTag, channelUrl, user);
