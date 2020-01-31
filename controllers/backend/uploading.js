@@ -212,22 +212,18 @@ exports.postFileUpload = async(req, res) => {
 
     checkIfAlreadyUploaded(user, title, res);
 
+    // let upload = setUpload()
+
     /** WHEN A NEW CHUNK IS COMPLETED **/
-    // why can't change name to fileName ?
     resumable.post(req, async function(status, filename, original_filename, identifier){
-
-      // console.log(req.body);
-
-      // TODO: would be nice to do a log here so you can see the chunks come through on the backend rather than divining from the request
-
-      // console.log(req.query);
 
       const { chunkNumber, totalChunks, rating } = req.query;
 
+      let { category, subcategory } = req.query;
+
       const { resumableTotalSize, resumableChunkNumber, resumableTotalChunks } = req.body;
 
-      // uploadLogger.info(`Processing chunk number ${chunkNumber} of ${totalChunks} `, logObject);
-
+      uploadLogger.info(`Processing chunk number ${chunkNumber} of ${totalChunks} `, logObject);
       const fileName = filename;
       const fileType = getMediaType(filename);
       let fileExtension = getExtensionString(filename);
@@ -238,12 +234,10 @@ exports.postFileUpload = async(req, res) => {
         fileExtension = '.mp4';
       }
 
-      let category = req.query.category;
       if(category == 'undefined' || category == undefined){
         category = 'uncategorized';
       }
 
-      let subcategory = req.query.subcategory;
       if(subcategory == 'undefined' || subcategory == undefined){
         subcategory = 'uncategorized';
       }
@@ -394,10 +388,7 @@ exports.postFileUpload = async(req, res) => {
             upload.fileType = 'convert';
           }
 
-          /** CONVERT AND UPLOAD VIDEO **/
-          // TODO: PULL THIS OUT INTO A LIBRARY
-          // convert as avi to mp4 (convert)
-          // convert as mp4 birate to 2500
+          /** CONVERT AND UPLOAD VIDEO IF NECESSARY **/
 
           if(upload.fileType == 'convert' || bitrate > 2500 || upload.fileType == 'video') {
 
@@ -423,10 +414,7 @@ exports.postFileUpload = async(req, res) => {
               fileInDirectory = `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-old.mp4`;
             }
 
-            // TODO: this isn't quite done yet
-            // convert video to libx264 and also compress if bitrate over 2500
-
-            if (upload.fileType == 'convert' || bitrate > 2500) {
+            if (upload.fileType == 'convert' || (bitrate > 2500 && fileExtension == '.mp4')){
               await ffmpegHelper.convertVideo({
                 uploadedPath: fileInDirectory,
                 title,
@@ -483,7 +471,6 @@ exports.postFileUpload = async(req, res) => {
   } catch(err){
     console.log(err);
   }
-
 };
 
 /** TODO: pull into livestream **/
