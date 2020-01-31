@@ -351,26 +351,19 @@ exports.postFileUpload = async(req, res) => {
 
           uploadLogger.info(`BITRATE: ${bitrate}`, logObject);
 
-          const specificMatches = ( codecName == 'hevc' || codecProfile == 'High 4:4:4 Predictive' );
-
-          if(specificMatches) {
-            upload.fileType = 'convert';
-            convertMp4 = true;
-          }
 
           // where to save the files locally
           const channelUrlFolder = `${saveAndServeFilesDirectory}/${user.channelUrl}`;
-
-          console.log(channelUrlFolder + ' channel url folder');
-
-          // make user's folder if it doesn't exist yet
-          await mkdirp.mkdirpAsync(channelUrlFolder);
 
           // file name to save
           const fileName = `${uniqueTag}${fileExtension}`;
 
           // the full local path of where the file will be served from
           let fileInDirectory = `${channelUrlFolder}/${fileName}`;
+
+
+          // make user's folder if it doesn't exist yet
+          await mkdirp.mkdirpAsync(channelUrlFolder);
 
           /** MOVE CONVERTED FILE TO PROPER DIRECTORY **/
           await fs.move(`./${uploadPath}/convertedFile`, fileInDirectory);
@@ -389,6 +382,19 @@ exports.postFileUpload = async(req, res) => {
           await upload.save();
 
           console.log('done moving file');
+
+
+
+
+          const specificMatches = ( codecName == 'hevc' || codecProfile == 'High 4:4:4 Predictive' );
+
+          if(specificMatches) {
+            upload.fileType = 'convert';
+            convertMp4 = true;
+          }
+
+          
+
 
           /** CONVERT AND UPLOAD VIDEO **/
           // TODO: PULL THIS OUT INTO A LIBRARY
