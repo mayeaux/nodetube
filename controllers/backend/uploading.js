@@ -17,7 +17,6 @@ const pagination = require('../../lib/helpers/pagination');
 const User = require('../../models/index').User;
 const Upload = require('../../models/index').Upload;
 
-
 const sendMessageToDiscord = require('../../lib/moderation/discordWebhooks');
 
 const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
@@ -68,13 +67,10 @@ if(process.env.NODE_ENV !== 'production'){
 
 }
 
-
 exports.getUploadProgress = async(req, res) => {
   // example request /user/fred/j9dle/progress
 
-
   const uniqueTag = req.body.uniqueTag;
-
 
   const upload = await Upload.findOne({
     uniqueTag
@@ -86,7 +82,6 @@ exports.getUploadProgress = async(req, res) => {
 
   // nuspa41uploadProgress
   const string = `${uniqueTag}uploadProgress`;
-
 
   const value = await redisClient.getAsync(`${uniqueTag}uploadProgress`);
 
@@ -100,11 +95,9 @@ exports.getUploadProgress = async(req, res) => {
   //
   // console.log(uniqueTag);
 
-
-  return res.send(value)
+  return res.send(value);
 
 };
-
 
 function areUploadsOff(uploadsOn, isNotTrustedUser){
   if(uploadsOn == 'false' && !req.user.privs.autoVisibleUpload){
@@ -138,8 +131,7 @@ function generateLogObject(){
 
 }
 
-
-function moderationIsRequired (user){
+function moderationIsRequired(user){
   const restrictUntrustedUploads = process.env.RESTRICT_UNTRUSTED_UPLOADS == 'true';
 
   // if the user is not allowed to auto upload
@@ -150,7 +142,6 @@ function moderationIsRequired (user){
 
   return requireModeration;
 }
-
 
 async function checkIfAlreadyUploaded(user, title, res){
   // TODO: File size check
@@ -185,7 +176,6 @@ const testIsFileTypeUnknown = async function(upload, fileType, fileExtension, lo
 
 };
 
-
 /**
  * POST /api/upload
  * File Upload API example.
@@ -194,9 +184,7 @@ exports.postFileUpload = async(req, res) => {
 
   try {
 
-
     const { description, visibility, title, uploadToken } = req.query;
-
 
     // use an uploadToken if it exists but there is no req.user
     // load req.user with the found user
@@ -232,7 +220,7 @@ exports.postFileUpload = async(req, res) => {
 
       const { chunkNumber, totalChunks, rating } = req.query;
 
-      let { category, subcategory } = req.query;
+      let{ category, subcategory } = req.query;
 
       const { resumableTotalSize, resumableChunkNumber, resumableTotalChunks } = req.body;
 
@@ -280,7 +268,7 @@ exports.postFileUpload = async(req, res) => {
       let uploadPath = `./upload/${identifier}`;
 
       /** FINISHED DOWNLOADING EVERYTHING **/
-      if(resumableChunkNumber !== resumableTotalChunks) {
+      if(resumableChunkNumber !== resumableTotalChunks){
         res.send(status);
       } else {
         /** FINISHED DOWNLOADING EVERYTHING **/
@@ -363,7 +351,6 @@ exports.postFileUpload = async(req, res) => {
 
           uploadLogger.info(`BITRATE: ${bitrate}`, logObject);
 
-
           // where to save the files locally
           const channelUrlFolder = `${saveAndServeFilesDirectory}/${user.channelUrl}`;
 
@@ -372,7 +359,6 @@ exports.postFileUpload = async(req, res) => {
 
           // the full local path of where the file will be served from
           let fileInDirectory = `${channelUrlFolder}/${fileName}`;
-
 
           // make user's folder if it doesn't exist yet
           await mkdirp.mkdirpAsync(channelUrlFolder);
@@ -397,17 +383,17 @@ exports.postFileUpload = async(req, res) => {
 
           const specificMatches = ( codecName == 'hevc' || codecProfile == 'High 4:4:4 Predictive' );
 
-          if(specificMatches || bitrate > 2500) {
+          if(specificMatches || bitrate > 2500){
             upload.fileType = 'convert';
           }
 
           /** CONVERT AND UPLOAD VIDEO IF NECESSARY **/
 
-          if(upload.fileType == 'convert' || bitrate > 2500 || upload.fileType == 'video') {
+          if(upload.fileType == 'convert' || bitrate > 2500 || upload.fileType == 'video'){
 
             await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, hostFilePath, bucket, upload, channelUrl, b2);
 
-            if (upload.fileType == 'convert' || bitrate > 2500) {
+            if(upload.fileType == 'convert' || bitrate > 2500){
               upload.status = 'processing';
               await upload.save();
 
@@ -421,13 +407,13 @@ exports.postFileUpload = async(req, res) => {
 
             // TODO: savePath and fileInDirectory are the same thing, need to clean this code up
 
-            if (fileExtension == '.mp4' && bitrate > 2500) {
+            if(fileExtension == '.mp4' && bitrate > 2500){
               await fs.move(savePath, `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-old.mp4`);
 
               fileInDirectory = `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-old.mp4`;
             }
 
-            if (upload.fileType == 'convert' || (bitrate > 2500 && fileExtension == '.mp4')){
+            if(upload.fileType == 'convert' || (bitrate > 2500 && fileExtension == '.mp4')){
               await ffmpegHelper.convertVideo({
                 uploadedPath: fileInDirectory,
                 title,
