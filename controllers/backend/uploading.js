@@ -10,6 +10,7 @@ const path = require('path');
 const mkdirp = Promise.promisifyAll(require('mkdirp'));
 var randomstring = require('randomstring');
 
+
 const redisClient = require('../../config/redis');
 
 const pagination = require('../../lib/helpers/pagination');
@@ -315,6 +316,8 @@ exports.postFileUpload = async(req, res) => {
 
             uploadLogger.info('Still processing after 25s', logObject);
 
+            redisClient.setAsync(`${uniqueTag}uploadProgress`, 1);
+
             // note that we've responded to the user and send them to processing page
             if(!responseSent){
               responseSent = true;
@@ -391,17 +394,20 @@ exports.postFileUpload = async(req, res) => {
 
           if(upload.fileType == 'convert' || bitrate > 2500 || upload.fileType == 'video'){
 
-            await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, hostFilePath, bucket, upload, channelUrl, b2);
-
+            // if upload is a convert, or bitrate is over 2500, mark as processing and sent response to user
             if(upload.fileType == 'convert' || bitrate > 2500){
               upload.status = 'processing';
               await upload.save();
+
+              redisClient.setAsync(`${uniqueTag}uploadProgress`, 1);
 
               if(!responseSent) {
                 responseSent = true;
                 aboutToProcess(res, channelUrl, uniqueTag);
               }
             }
+
+            await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, hostFilePath, bucket, upload, channelUrl, b2);
 
             uploadLogger.info('Captured thumbnail', logObject);
 
@@ -436,9 +442,6 @@ exports.postFileUpload = async(req, res) => {
 
               uploadLogger.info('Completed video conversion', logObject);
             }
-
-            upload.status = 'completed';
-            ffmpegHelper.setRedisClient({ uniqueTag: upload.uniqueTag, progress: 100 });
 
             upload.fileType = 'video';
 
