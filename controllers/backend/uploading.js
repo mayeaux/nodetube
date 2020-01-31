@@ -219,11 +219,9 @@ exports.postFileUpload = async(req, res) => {
     /** WHEN A NEW CHUNK IS COMPLETED **/
     resumable.post(req, async function(status, filename, original_filename, identifier){
 
-      const { chunkNumber, totalChunks, rating } = req.query;
+      let { category, subcategory, rating } = req.query;
 
-      let{ category, subcategory } = req.query;
-
-      const { resumableTotalSize, resumableChunkNumber, resumableTotalChunks } = req.body;
+      const { resumableTotalSize, resumableChunkNumber, resumableTotalChunks, chunkNumber, totalChunks } = req.body;
 
       uploadLogger.info(`Processing chunk number ${chunkNumber} of ${totalChunks} `, logObject);
       const fileName = filename;
