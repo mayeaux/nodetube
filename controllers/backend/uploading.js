@@ -32,6 +32,8 @@ const backblaze = require('../../lib/uploading/backblaze');
 
 var resumable = require('../../lib/uploading/resumable.js')(__dirname +  '/upload');
 
+const moderationUpdatesToDiscord = process.env.MODERATION_UPDATES_TO_DISCORD == 'true';
+
 const winston = require('winston');
 //
 const { createLogger, format, transports } = require('winston');
@@ -180,11 +182,10 @@ exports.postFileUpload = async(req, res) => {
     areUploadsOff(uploadsOn, isNotTrustedUser);
 
     const user = req.user;
-    const channelUrl = req.user.channelUrl;
-    const uploadToken = req.query.uploadToken;
-    const title = req.query.title;
 
-    const { description, visibility } = req.query;
+    const { channelUrl } = user;
+
+    const { description, visibility, title, uploadToken } = req.query;
 
     // setup logobject for winston
     let logObject = {
@@ -207,13 +208,18 @@ exports.postFileUpload = async(req, res) => {
     /** WHEN A NEW CHUNK IS COMPLETED **/
     // why can't change name to fileName ?
     resumable.post(req, async function(status, filename, original_filename, identifier){
+
+      console.log(req.body);
+
+      // TODO: would be nice to do a log here so you can see the chunks come through on the backend rather than divining from the request
+
       // console.log(req.query);
 
-      const { chunkNumber, totalChunks } = req.query;
+      const { chunkNumber, totalChunks, rating } = req.query;
 
-      uploadLogger.info(`Processing chunk number ${chunkNumber} of ${totalChunks} `, logObject);
+      const { resumableTotalSize, resumableChunkNumber, resumableTotalChunks } = req.body;
 
-      const { resumableTotalSize } = req.body;
+      // uploadLogger.info(`Processing chunk number ${chunkNumber} of ${totalChunks} `, logObject);
 
       const fileName = filename;
       const fileType = getMediaType(filename);
@@ -221,10 +227,22 @@ exports.postFileUpload = async(req, res) => {
 
       const fileSize = resumableTotalSize;
 
-
       if(fileExtension == '.MP4'){
         fileExtension = '.mp4';
       }
+
+
+      let category = req.query.category;
+      if(category == 'undefined' || category == undefined){
+        category = 'uncategorized';
+      }
+
+      let subcategory = req.query.subcategory;
+      if(subcategory == 'undefined' || subcategory == undefined){
+        subcategory = 'uncategorized';
+      }
+
+      const uniqueTag = randomstring.generate(7);
 
       let upload = new Upload({
         uploader: user._id,
@@ -236,50 +254,28 @@ exports.postFileUpload = async(req, res) => {
         hostUrl,
         fileExtension,
         fileSize,
-        status: 'rejected'
+        category,
+        subcategory,
+        rating,
+        uniqueTag
       });
 
+      // user this after upload object is made because it saves it to db
       testIsFileTypeUnknown(upload, fileType, fileExtension, logObject);
 
+      // where is this used?
       let uploadPath = `./upload/${identifier}`;
 
       /** FINISHED DOWNLOADING EVERYTHING **/
-      if(req.body.resumableChunkNumber == req.body.resumableTotalChunks){
-
-        const channelUrl = req.user.channelUrl;
-        const uniqueTag = randomstring.generate(7);
-
-        const hostFilePath = `${channelUrl}/${uniqueTag}`;
-        // const uploadServer = process.env.UPLOAD_SERVER || 'uploads1' ;
+      if(resumableChunkNumber == resumableTotalChunks){
         let responseSent = false;
 
-        let category = req.query.category;
-        if(category == 'undefined' || category == undefined){
-          category = 'uncategorized';
-        }
+        const channelUrl = user.channelUrl;
 
-        let subcategory = req.query.subcategory;
-        if(subcategory == 'undefined' || subcategory == undefined){
-          subcategory = 'uncategorized';
-        }
+        const hostFilePath = `${channelUrl}/${uniqueTag}`;
 
-        let uploadObject = {
-          uploader: req.user._id,
-          title: req.query.title,
-          description: req.query.description,
-          visibility: req.query.visibility,
-          originalFileName: fileName,
-          fileType,
-          hostUrl,
-          fileExtension,
-          uniqueTag,
-          rating: req.query.rating,
-          category,
-          subcategory
-          // uploadServer
-        };
-
-        let upload = new Upload(uploadObject);
+        // TODO: 'uploadServer' functionality is totally unsupported
+        // const uploadServer = process.env.UPLOAD_SERVER || 'uploads1' ;
 
         const requireModeration = moderationIsRequired(user);
 
@@ -287,19 +283,21 @@ exports.postFileUpload = async(req, res) => {
           upload.visibility = 'pending';
         }
 
-        if(requireModeration && process.env.MODERATION_UPDATES_TO_DISCORD == 'true'){
+        // TODO: make this smarter, url etc
+        if(requireModeration && moderationUpdatesToDiscord){
           await sendMessageToDiscord(`Pending upload requires moderation on NodeTube.live. ${new Date()}`);
         }
 
         await upload.save();
 
-        uploadLogger.info('Upload document added to db', Object.assign({}, logObject, uploadObject));
+        // uploadLogger.info('Upload document added to db', Object.assign({}, logObject, upload));
 
         /** FILE PROCESSING */
 
         // send user to the upload page and say it's still  processing if the request is waiting after 25 seconds
         // cant seem to pull it out of controller since it accesses timing variables in this backend
         // sure you could use express to get around this but it stays for the time being
+        // it seems for sure loaded into memory (resp
         (async function(){
           await Promise.delay(1000 * 25);
 
@@ -315,6 +313,8 @@ exports.postFileUpload = async(req, res) => {
             // note that we've responded to the user and send them to processing page
             if(!responseSent){
               responseSent = true;
+
+              // dont return here so the rest of the code can process
               res.send({
                 message: 'ABOUT TO PROCESS',
                 url: `/user/${channelUrl}/${uniqueTag}?autoplay=off`
@@ -323,11 +323,14 @@ exports.postFileUpload = async(req, res) => {
           }
         })();
 
-        // turn filenames into an array for concatenation
+        /** turn filenames into an array for concatenation **/
+
         const fileNameArray = [];
-        for(var x = 1; x < parseInt(req.body.resumableTotalChunks, 10) + 1; x++){
+        for(let x = 1; x < parseInt(resumableTotalChunks, 10) + 1; x++){
           fileNameArray.push(`${uploadPath}/${x}`);
         }
+
+        // I feel like I pulled this into a promise once and it didn't work
 
         /** CONCATENATE FILES AND BEGIN PROCESSING **/
         concat(fileNameArray, `${uploadPath}/convertedFile`, async function(err){
@@ -339,40 +342,20 @@ exports.postFileUpload = async(req, res) => {
 
           let convertMp4 = false;
 
-          // calculate bitrate for video, audio and converts
-          if(fileType == 'video' || fileType == 'audio' || fileType == 'convert'){
-            const response = await ffmpegHelper.ffprobePromise(`${uploadPath}/convertedFile`);
+          const response = await ffmpegHelper.ffprobePromise(`${uploadPath}/convertedFile`);
 
-            const codecName = response.streams[0].codec_name;
+          const { codecName, codecProfile } = response.streams[0];
 
-            const codecProfile = response.streams[0].profile;
+          // TODO: what are the units of measurement here?
+          bitrate = response.format.bit_rate / 1000;
 
-            // return console.log(response.streams[0].codec_name);
+          uploadLogger.info(`BITRATE: ${bitrate}`, logObject);
 
-            // TODO: what are the units of measurement here?
-            bitrate = response.format.bit_rate / 1000;
+          const specificMatches = ( codecName == 'hevc' || codecProfile == 'High 4:4:4 Predictive' );
 
-            uploadLogger.info(`BITRATE: ${response.format.bit_rate / 1000}`, logObject);
-
-            if(bitrate > 2500){
-              // console.log('need to convert here')
-            }
-
-            // TODO: convert hevc even though it's .mp4
-            if(codecName == 'hevc'){
-
-              convertMp4 = true;
-
-              upload.fileType = 'convert';
-            }
-
-            // TODO: have to convert here
-            if(codecProfile == 'High 4:4:4 Predictive'){
-
-              convertMp4 = true;
-
-              upload.fileType = 'convert';
-            }
+          if(specificMatches) {
+            upload.fileType = 'convert';
+            convertMp4 = true;
           }
 
           // where to save the files locally
