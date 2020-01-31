@@ -221,9 +221,9 @@ exports.postFileUpload = async(req, res) => {
 
       let { category, subcategory, rating } = req.query;
 
-      const { resumableTotalSize, resumableChunkNumber, resumableTotalChunks, chunkNumber, totalChunks } = req.body;
+      const { resumableTotalSize, resumableChunkNumber, resumableTotalChunks } = req.body;
 
-      uploadLogger.info(`Processing chunk number ${chunkNumber} of ${totalChunks} `, logObject);
+      uploadLogger.info(`Processing chunk number ${resumableChunkNumber} of ${resumableTotalChunks} `, logObject);
       const fileName = filename;
       const fileType = getMediaType(filename);
       let fileExtension = getExtensionString(filename);
@@ -314,8 +314,6 @@ exports.postFileUpload = async(req, res) => {
 
             uploadLogger.info('Still processing after 25s', logObject);
 
-            redisClient.setAsync(`${uniqueTag}uploadProgress`, 1);
-
             // note that we've responded to the user and send them to processing page
             if(!responseSent){
               responseSent = true;
@@ -397,6 +395,7 @@ exports.postFileUpload = async(req, res) => {
               upload.status = 'processing';
               await upload.save();
 
+              // set upload progress as 1 so it has something to show on the frontend
               redisClient.setAsync(`${uniqueTag}uploadProgress`, 1);
 
               if(!responseSent) {
