@@ -436,6 +436,7 @@ exports.postFileUpload = async(req, res) => {
             }
 
             upload.status = 'completed';
+            ffmpegHelper.setRedisClient({ uniqueTag: upload.uniqueTag, progress: 100 });
 
             upload.fileType = 'video';
 

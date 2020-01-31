@@ -21,6 +21,11 @@ dotenv.load({ path: '.env.private' });
 
 const database = process.env.MONGODB_URI || process.env.MONGODB_DOCKER_URI || process.env.MONGO_URI || process.env.MONGOLAB_URI;
 
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
+mongoose.set('useUnifiedTopology', true);
+
 /**
  * Connect to MongoDB.
  */
@@ -65,16 +70,14 @@ async function cacheOnlyRecentUploads(){
 // calculate and cache recent uploads every minute
 cacheOnlyRecentUploads();
 
-                                   // parse int because it's a string comming from dotenv
+// parse int because it's a string comming from dotenv
 let cacheRecentIntervalInMinutes = parseInt(process.env.CACHE_RECENT_INTERVAL_IN_MINUTES) || 2.5;
 
 const cacheRecentIntervalInMs = cacheRecentIntervalInMinutes * ( 1000 * 60 );
 
-
 console.log(`CACHE RECENT INTERVAL IN MINUTES: ${cacheRecentIntervalInMinutes}`);
 
 setInterval(cacheOnlyRecentUploads, cacheRecentIntervalInMs);
-
 
 async function cachePopularDailyStatsAndIndex(){
   try {
@@ -89,8 +92,6 @@ async function cachePopularDailyStatsAndIndex(){
 }
 
 cachePopularDailyStatsAndIndex();
-
-
 
 let cacheIntervalInMinutes = parseInt(process.env.CACHE_INTERVAL_IN_MINUTES) || 5;
 
