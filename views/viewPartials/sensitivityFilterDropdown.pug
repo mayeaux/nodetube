@@ -6,7 +6,7 @@ div.search-upload-buttons-container.dropdown(style="display:inline")
                 | Rating: SFW &nbsp
                 span.caret
             else if siteVisitor.filter == 'mature'
-                | Rating: SFW/NSWF &nbsp
+                | Rating: SFW/NSFW &nbsp
                 span.caret
 
         // show available options to change filter
@@ -15,7 +15,7 @@ div.search-upload-buttons-container.dropdown(style="display:inline")
                 if siteVisitor.filter == 'mature'
                     a.changeFilterButton(value="allAges" href="#") SFW
                 else if siteVisitor.filter == 'allAges'
-                    a.changeFilterButton(value="mature" href="#") SFW/NFSW
+                    a.changeFilterButton(value="mature" href="#") SFW/NSFW
 
     else
         button#dropdownMenu1.fw.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")

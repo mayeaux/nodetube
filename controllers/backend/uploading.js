@@ -31,29 +31,10 @@ const backblaze = require('../../lib/uploading/backblaze');
 
 var resumable = require('../../lib/uploading/resumable.js')(__dirname +  '/upload');
 
+const moderationUpdatesToDiscord = process.env.MODERATION_UPDATES_TO_DISCORD == 'true';
+
 const winston = require('winston');
 //
-// winston.loggers.add('uploadEndpoint', {
-//   level: 'info',
-//   // format: winston.format.json(),
-//   format: combine(
-//     format.splat(),
-//     format.simple(),
-//     format.json(),
-//     // label({ label: 'custom label!' }),
-//     // timestamp(),
-//   ),
-//   transports: [
-//     //
-//     // - Write to all logs with level `info` and below to `combined.log`
-//     // - Write all logs error (and below) to `error.log`.
-//     //
-//     new transports.Console(),
-//     new transports.File({ filename: 'error.log', level: 'error' }),
-//     new transports.File({ filename: 'logs/uploads.log' })
-//   ]
-// });
-
 const { createLogger, format, transports } = require('winston');
 
 const uploadsOn = process.env.UPLOADS_ON;
@@ -75,7 +56,6 @@ if(process.env.NODE_ENV !== 'production'){
   });
 
 } else {
-  // PULL OUT TO OWN FILE
   uploadLogger = winston.createLogger({
     level: 'info',
     format: winston.format.json(),
@@ -91,10 +71,21 @@ exports.getUploadProgress = async(req, res) => {
   // example request /user/fred/j9dle/progress
 
   const uniqueTag = req.body.uniqueTag;
+
+  const upload = await Upload.findOne({
+    uniqueTag
+  });
+
+  if(upload && upload.status == 'completed'){
+    return res.send('100');
+  }
+
   // nuspa41uploadProgress
   const string = `${uniqueTag}uploadProgress`;
 
   const value = await redisClient.getAsync(`${uniqueTag}uploadProgress`);
+
+  console.log(value);
 
   // console.log(value);
   //
@@ -108,6 +99,83 @@ exports.getUploadProgress = async(req, res) => {
 
 };
 
+function areUploadsOff(uploadsOn, isNotTrustedUser){
+  if(uploadsOn == 'false' && !req.user.privs.autoVisibleUpload){
+    console.log('HERE');
+    res.status(500);
+    return res.send({ message: 'UPLOADS_OFF'});
+  }
+}
+
+function testIfUserRestricted(user, logObject, res){
+  const userStatusIsRestricted = user.status == 'uploadRestricted';
+
+  if(userStatusIsRestricted){
+    uploadLogger.info('User upload status restricted', logObject);
+
+    res.status(403);
+    return res.send('Sorry your account is restricted');
+  }
+}
+
+function aboutToProcess(res, channelUrl, uniqueTag){
+  res.send({
+    message: 'ABOUT TO PROCESS',
+    url: `/user/${channelUrl}/${uniqueTag}?autoplay=off`
+  });
+}
+
+const getExtensionString = path.extname;
+
+function generateLogObject(){
+
+}
+
+function moderationIsRequired(user){
+  const restrictUntrustedUploads = process.env.RESTRICT_UNTRUSTED_UPLOADS == 'true';
+
+  // if the user is not allowed to auto upload
+  const userIsUntrusted = !user.privs.autoVisibleUpload;
+
+  // moderation is required if restrict uploads is on and user is untrusted
+  const requireModeration = restrictUntrustedUploads && userIsUntrusted;
+
+  return requireModeration;
+}
+
+async function checkIfAlreadyUploaded(user, title, res){
+  // TODO: File size check
+
+  const alreadyUploaded = await Upload.findOne({
+    uploader: user._id,
+    title,
+    visibility: 'public',
+    status: 'completed'
+  });
+
+  if(alreadyUploaded){
+    uploadLogger.info('Upload title already uploaded', logObject);
+    res.status(500);
+    return res.send({message: 'ALREADY-UPLOADED'});
+  }
+}
+
+/** RESPOND EARLY IF ITS AN UNKNOWN FILE TYPE **/
+const testIsFileTypeUnknown = async function(upload, fileType, fileExtension, logObject){
+  if(fileType == 'unknown'){
+    upload.status = 'rejected';
+
+    await upload.save();
+
+    logObject.uploadExtension = fileExtension;
+    uploadLogger.info('Unknown file type', logObject);
+
+    res.status(500);
+    return res.send({message: 'UNKNOWN FILETYPE'});
+  }
+
+};
+
 /**
  * POST /api/upload
  * File Upload API example.
@@ -116,170 +184,125 @@ exports.postFileUpload = async(req, res) => {
 
   try {
 
-    // if uploads are off and user not auto allowed
-    if(uploadsOn == 'false' && !req.user.privs.autoVisibleUpload){
-      console.log('HERE');
-      res.status(500);
-      return res.send({ message: 'UPLOADS_OFF'});
+    const { description, visibility, title, uploadToken } = req.query;
+
+    // use an uploadToken if it exists but there is no req.user
+    // load req.user with the found user
+    if(!req.user && uploadToken){
+      req.user = await User.findOne({
+        uploadToken
+      });
     }
-
-    let logObject = {
-      user: req.user && req.user.channelUrl,
-      upload: req.query.title
-    };
-
-    // res.setHeader('Access-Control-Allow-Origin', '*');
-
-    // console.log(req.query.uploadToken);
-
-    // if there is no user on the request, get it from the req query
-    if(!req.user && req.query.uploadToken){
-      req.user = await User.findOne({uploadToken: req.query.uploadToken});
-    }
-
-    // console.log(`REQUESTED BY : ${req.user.channelName}`);
-
-    if(req.user.status == 'uploadRestricted'){
-      uploadLogger.info('User upload status restricted', logObject);
-
-      res.status(403);
-      return res.send('Sorry your account is restricted');
-    }
-
-    // TODO: File size check
-
-    if(req.user.status == 'restricted'){
-      uploadLogger.info('User status restricted', logObject);
-      res.status(403);
-      return res.send('Sorry uploads are halted');
-    }
-
-    let restrictUntrustedUploads = process.env.RESTRICT_UNTRUSTED_UPLOADS || false;
-    // force to boolean
-    restrictUntrustedUploads = ( restrictUntrustedUploads == 'true' );
-
-    const userIsUntrusted = !req.user.privs.autoVisibleUpload;
-
-    const requireModeration = restrictUntrustedUploads && userIsUntrusted;
 
     const user = req.user;
 
-    // TODO: add a better check here
-    // for one if it says it's processing, don't reallow upload
-    // fail processing
-    const alreadyUploaded = await Upload.findOne({
-      uploader: req.user._id,
-      title: req.query.title,
-      visibility: 'public',
-      $or : [ { status: 'completed' }, { uploadUrl: { $exists: true } } ]
-    });
+    const { channelUrl } = user;
 
-    if(alreadyUploaded){
-      uploadLogger.info('Upload title already uploaded', logObject);
-      res.status(500);
-      return res.send({message: 'ALREADY-UPLOADED'});
-    }
+    // setup logobject for winston
+    let logObject = {
+      user: channelUrl,
+      upload: title
+    };
+
+    const isNotTrustedUser = !req.user.privs.autoVisibleUpload;
+
+    areUploadsOff(uploadsOn, isNotTrustedUser);
+
+    // ends the response early if user is restricted
+    testIfUserRestricted(user, logObject, res);
+
+    checkIfAlreadyUploaded(user, title, res);
+
+    // let upload = setUpload()
 
     /** WHEN A NEW CHUNK IS COMPLETED **/
     resumable.post(req, async function(status, filename, original_filename, identifier){
-      // console.log(req.query);
 
-      const chunkNumber = req.query.resumableChunkNumber;
-      const totalChunks = req.query.resumableTotalChunks;
+      const { chunkNumber, totalChunks, rating } = req.query;
+
+      let{ category, subcategory } = req.query;
+
+      const { resumableTotalSize, resumableChunkNumber, resumableTotalChunks } = req.body;
 
       uploadLogger.info(`Processing chunk number ${chunkNumber} of ${totalChunks} `, logObject);
-
-      const fileSize = req.body.resumableTotalSize;
       const fileName = filename;
-
       const fileType = getMediaType(filename);
-      let fileExtension = path.extname(filename);
+      let fileExtension = getExtensionString(filename);
+
+      const fileSize = resumableTotalSize;
 
       if(fileExtension == '.MP4'){
         fileExtension = '.mp4';
       }
 
-      /** RESPOND EARLY IF ITS AN UNKNOWN FILE TYPE **/
-      if(fileType == 'unknown'){
-        let upload = new Upload({
-          uploader: req.user._id,
-          title: req.query.title,
-          description: req.query.description,
-          visibility: req.query.visibility,
-          originalFileName: fileName,
-          fileType,
-          hostUrl,
-          fileExtension,
-          fileSize,
-          status: 'rejected'
-        });
-
-        await upload.save();
-
-        logObject.uploadExtension = fileExtension;
-        uploadLogger.info('Unknown file type', logObject);
-
-        res.status(500);
-        return res.send({message: 'UNKNOWN FILETYPE'});
+      if(category == 'undefined' || category == undefined){
+        category = 'uncategorized';
       }
 
+      if(subcategory == 'undefined' || subcategory == undefined){
+        subcategory = 'uncategorized';
+      }
+
+      const uniqueTag = randomstring.generate(7);
+
+      let upload = new Upload({
+        uploader: user._id,
+        title,
+        description,
+        visibility,
+        originalFileName: fileName,
+        fileType,
+        hostUrl,
+        fileExtension,
+        fileSize,
+        category,
+        subcategory,
+        rating,
+        uniqueTag
+      });
+
+      // user this after upload object is made because it saves it to db
+      testIsFileTypeUnknown(upload, fileType, fileExtension, logObject);
+
+      // where is this used?
       let uploadPath = `./upload/${identifier}`;
 
       /** FINISHED DOWNLOADING EVERYTHING **/
-      if(req.body.resumableChunkNumber == req.body.resumableTotalChunks){
+      if(resumableChunkNumber !== resumableTotalChunks){
+        res.send(status);
+      } else {
+        /** FINISHED DOWNLOADING EVERYTHING **/
 
-        const channelUrl = req.user.channelUrl;
-        const uniqueTag = randomstring.generate(7);
-
-        const hostFilePath = `${channelUrl}/${uniqueTag}`;
-        // const uploadServer = process.env.UPLOAD_SERVER || 'uploads1' ;
         let responseSent = false;
 
-        let category = req.query.category;
-        if(category == 'undefined' || category == undefined){
-          category = 'uncategorized';
-        }
+        const channelUrl = user.channelUrl;
 
-        let subcategory = req.query.subcategory;
-        if(subcategory == 'undefined' || subcategory == undefined){
-          subcategory = 'uncategorized';
-        }
+        const hostFilePath = `${channelUrl}/${uniqueTag}`;
 
-        let uploadObject = {
-          uploader: req.user._id,
-          title: req.query.title,
-          description: req.query.description,
-          visibility: req.query.visibility,
-          originalFileName: fileName,
-          fileType,
-          hostUrl,
-          fileExtension,
-          uniqueTag,
-          rating: req.query.rating,
-          category,
-          subcategory
-          // uploadServer
-        };
+        // TODO: 'uploadServer' functionality is totally unsupported
+        // const uploadServer = process.env.UPLOAD_SERVER || 'uploads1' ;
 
-        let upload = new Upload(uploadObject);
+        const requireModeration = moderationIsRequired(user);
 
         if(requireModeration){
           upload.visibility = 'pending';
         }
 
-        if(requireModeration && process.env.MODERATION_UPDATES_TO_DISCORD == 'true'){
-          await sendMessageToDiscord(`Pending upload requires moderation on NodeTube.live. ${new Date()}`);
-        }
-
         await upload.save();
 
-        uploadLogger.info('Upload document added to db', Object.assign({}, logObject, uploadObject));
+        // uploadLogger.info('Upload document added to db', Object.assign({}, logObject, upload));
+
+        // TODO: make this smarter, url etc
+        if(requireModeration && moderationUpdatesToDiscord){
+          await sendMessageToDiscord(`Pending upload requires moderation on NodeTube.live. ${new Date()}`);
+        }
 
         /** FILE PROCESSING */
 
         // send user to the upload page and say it's still  processing if the request is waiting after 25 seconds
         // cant seem to pull it out of controller since it accesses timing variables in this backend
         // sure you could use express to get around this but it stays for the time being
+        // it seems for sure loaded into memory (resp
         (async function(){
           await Promise.delay(1000 * 25);
 
@@ -295,19 +318,21 @@ exports.postFileUpload = async(req, res) => {
             // note that we've responded to the user and send them to processing page
             if(!responseSent){
               responseSent = true;
-              res.send({
-                message: 'ABOUT TO PROCESS',
-                url: `/user/${channelUrl}/${uniqueTag}?autoplay=off`
-              });
+
+              // dont return here so the rest of the code can process
+              aboutToProcess(res, channelUrl, uniqueTag);
             }
           }
         })();
 
-        // turn filenames into an array for concatenation
+        /** turn filenames into an array for concatenation **/
+
         const fileNameArray = [];
-        for(var x = 1; x < parseInt(req.body.resumableTotalChunks, 10) + 1; x++){
+        for(let x = 1; x < parseInt(resumableTotalChunks, 10) + 1; x++){
           fileNameArray.push(`${uploadPath}/${x}`);
         }
+
+        // I feel like I pulled this into a promise once and it didn't work
 
         /** CONCATENATE FILES AND BEGIN PROCESSING **/
         concat(fileNameArray, `${uploadPath}/convertedFile`, async function(err){
@@ -317,57 +342,26 @@ exports.postFileUpload = async(req, res) => {
 
           uploadLogger.info('Concat done', logObject);
 
-          let convertMp4 = false;
+          const response = await ffmpegHelper.ffprobePromise(`${uploadPath}/convertedFile`);
 
-          // calculate bitrate for video, audio and converts
-          if(fileType == 'video' || fileType == 'audio' || fileType == 'convert'){
-            const response = await ffmpegHelper.ffprobePromise(`${uploadPath}/convertedFile`);
+          const { codecName, codecProfile } = response.streams[0];
 
-            const codecName = response.streams[0].codec_name;
+          // TODO: what are the units of measurement here?
+          bitrate = response.format.bit_rate / 1000;
 
-            const codecProfile = response.streams[0].profile;
-
-            // return console.log(response.streams[0].codec_name);
-
-            // TODO: what are the units of measurement here?
-            bitrate = response.format.bit_rate / 1000;
-
-            uploadLogger.info(`BITRATE: ${response.format.bit_rate / 1000}`, logObject);
-
-            if(bitrate > 2500){
-              // console.log('need to convert here')
-            }
-
-            // TODO: convert hevc even though it's .mp4
-            if(codecName == 'hevc'){
-
-              convertMp4 = true;
-
-              upload.fileType = 'convert';
-            }
-
-            // TODO: have to convert here
-            if(codecProfile == 'High 4:4:4 Predictive'){
-
-              convertMp4 = true;
-
-              upload.fileType = 'convert';
-            }
-          }
+          uploadLogger.info(`BITRATE: ${bitrate}`, logObject);
 
           // where to save the files locally
           const channelUrlFolder = `${saveAndServeFilesDirectory}/${user.channelUrl}`;
-
-          console.log(channelUrlFolder + ' channel url folder');
-
-          // make user's folder if it doesn't exist yet
-          await mkdirp.mkdirpAsync(channelUrlFolder);
 
           // file name to save
           const fileName = `${uniqueTag}${fileExtension}`;
 
           // the full local path of where the file will be served from
           let fileInDirectory = `${channelUrlFolder}/${fileName}`;
+
+          // make user's folder if it doesn't exist yet
+          await mkdirp.mkdirpAsync(channelUrlFolder);
 
           /** MOVE CONVERTED FILE TO PROPER DIRECTORY **/
           await fs.move(`./${uploadPath}/convertedFile`, fileInDirectory);
@@ -387,150 +381,66 @@ exports.postFileUpload = async(req, res) => {
 
           console.log('done moving file');
 
-          /** CONVERT AND UPLOAD VIDEO **/
-          // TODO: PULL THIS OUT INTO A LIBRARY
-          if(upload.fileType == 'convert'){
+          const specificMatches = ( codecName == 'hevc' || codecProfile == 'High 4:4:4 Predictive' );
 
-            upload.status = 'processing';
-            await upload.save();
+          if(specificMatches || bitrate > 2500){
+            upload.fileType = 'convert';
+          }
 
-            responseSent = true;
-            res.send({
-              message: 'ABOUT TO PROCESS',
-              url: `/user/${channelUrl}/${uniqueTag}?autoplay=off`
-            });
+          /** CONVERT AND UPLOAD VIDEO IF NECESSARY **/
 
-            // take a thumbnail using ffmpeg and save it to the document as uniqueTag.png
-            // TODO: this also uploads to B2, this should be pulled out into its own fucntion
+          if(upload.fileType == 'convert' || bitrate > 2500 || upload.fileType == 'video'){
+
             await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, hostFilePath, bucket, upload, channelUrl, b2);
 
-            uploadLogger.info('Captured thumbnail', logObject);
+            if(upload.fileType == 'convert' || bitrate > 2500){
+              upload.status = 'processing';
+              await upload.save();
 
-            // if bitrate is above 2500 we also compress it.
-            // if we wanted to be really nice we would convert one where we don't compress it at all
-            // something to consider in the future
+              responseSent = true;
+              aboutToProcess(res, channelUrl, uniqueTag);
+            }
+
+            uploadLogger.info('Captured thumbnail', logObject);
 
             const savePath = `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}.mp4`;
 
             // TODO: savePath and fileInDirectory are the same thing, need to clean this code up
 
-            if(convertMp4 == true){
+            if(fileExtension == '.mp4' && bitrate > 2500){
               await fs.move(savePath, `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-old.mp4`);
 
-              // convert video to libx264 and also compress if bitrate over 2500
-              await ffmpegHelper.convertVideo({
-                uploadedPath: `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-old.mp4`,
-                title: upload.title,
-                bitrate,
-                savePath,
-                uniqueTag: upload.uniqueTag
-              });
+              fileInDirectory = `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-old.mp4`;
+            }
 
-              uploadLogger.info('Finished converting file', logObject);
-
-              // assuming an mp4 is created at this point so we delete the old uncoverted video
-              await fs.remove(`${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-old.mp4`);
-
-            } else {
-              // convert video to libx264 and also compress if bitrate over 2500
+            if(upload.fileType == 'convert' || (bitrate > 2500 && fileExtension == '.mp4')){
               await ffmpegHelper.convertVideo({
                 uploadedPath: fileInDirectory,
-                title: upload.title,
+                title,
                 bitrate,
                 savePath,
-                uniqueTag: upload.uniqueTag
+                uniqueTag
               });
 
               uploadLogger.info('Finished converting file', logObject);
 
               // assuming an mp4 is created at this point so we delete the old uncoverted video
               await fs.remove(`${fileInDirectory}`);
+
+              uploadLogger.info('Deleted unconverted file', logObject);
+
+              // for upload to b2
+              fileInDirectory = `${channelUrlFolder}/${uniqueTag}.mp4`;
+
+              uploadLogger.info('Completed video conversion', logObject);
             }
 
-            uploadLogger.info('Deleted unconverted file', logObject);
-
-            // for upload to b2
-            fileInDirectory = `${channelUrlFolder}/${uniqueTag}.mp4`;
-
             upload.status = 'completed';
-
             ffmpegHelper.setRedisClient({ uniqueTag: upload.uniqueTag, progress: 100 });
 
             upload.fileType = 'video';
 
             upload = await upload.save();
-
-            uploadLogger.info('Completed video conversion', logObject);
-
-          }
-
-          /** UPLOAD VIDEO AND CONVERT IF NEEDED **/
-          // TODO: fix b2 upload here
-          if(upload.fileExtension == '.mp4' || upload.fileExtension == '.MP4'){
-
-            // take a thumbnail using ffmpeg and save it to the document as uniqueTag.png
-            // TODO: this also uploads to B2, this should be pulled out into its own fucntion
-            await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, hostFilePath, bucket, upload, channelUrl, b2);
-
-            // if convertmp4 is true it means it was already converted
-            if(bitrate > 2500 && convertMp4 !== true){
-
-              // TODO: res.status here
-
-              upload.status = 'processing';
-              await upload.save();
-
-              responseSent = true;
-              res.send({
-                message: 'ABOUT TO PROCESS',
-                url: `/user/${channelUrl}/${uniqueTag}?autoplay=off`
-              });
-
-              uploadLogger.info('About to compress file since bitrate is over 2500', logObject);
-
-              const savePath = `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-compressed.mp4`;
-
-              // compresses video ([ '-preset medium', '-b:v 1000k' ]); -> /${uniqueTag}-compressed.mp4
-              await ffmpegHelper.compressVideo({
-                uploadedPath: fileInDirectory,
-                channelUrl,
-                title: upload.title,
-                savePath,
-                uniqueTag: upload.uniqueTag
-              });
-
-              uploadLogger.info('Video file is compressed', logObject);
-
-              // mark original upload file as high quality file
-              await fs.move(fileInDirectory, `${channelUrlFolder}/${uniqueTag}-high.mp4`);
-
-              // TODO: upload to b2 here?
-
-              uploadLogger.info('Moved original filename to uniqueTag-high.mp4', logObject);
-
-              // move compressed video to original video's place
-              await fs.move(`${channelUrlFolder}/${uniqueTag}-compressed.mp4`, fileInDirectory);
-
-              uploadLogger.info('Moved compressed file to default uniqueTag.mp4 location', logObject);
-
-              // save high quality video size
-              const highQualityFileStats = fs.statSync(`${channelUrlFolder}/${uniqueTag}-high.mp4`);
-              upload.quality.high = highQualityFileStats.size;
-
-              // save compressed video quality size
-              const compressedFileStats = fs.statSync(fileInDirectory);
-              upload.fileSize = compressedFileStats.size;
-
-              // uploadLogger.info(`Moved file to user's directory`, logObject);
-
-              ffmpegHelper.setRedisClient({ uniqueTag: upload.uniqueTag, progress: 100 });
-
-              await upload.save();
-
-              uploadLogger.info('Upload document saved after compression and moving files', logObject);
-
-            }
-
           }
 
           /** UPLOAD IMAGE OR AUDIO **/
@@ -541,24 +451,6 @@ exports.postFileUpload = async(req, res) => {
           /** UPLOAD TO B2 **/
           if(process.env.UPLOAD_TO_B2 == 'true'){
             await backblaze.uploadToB2(upload, fileInDirectory, hostFilePath);
-
-            // indicates presence of compressed mp4, also upload that one, also if it's a convert mp4 it's already compressed so no need to upload
-            if((upload.fileExtension == '.mp4' || upload.fileExtension == '.MP4') && bitrate > 2500 && convertMp4 !== true){
-
-              console.log('UPLOADING THIS MP4 COMPRESSION TO BACKBLAZE');
-
-              // name for b2 : hostFilePath + upload.fileExtension,
-
-              const highQualityNameForB2 = `${channelUrl}/${uniqueTag}-high`;
-
-              // file name to save
-              const highQualityFileName = `${uniqueTag}-high.mp4`;
-
-              // the full local path of where the file will be served from
-              let highQualityFileInDirectory = `${channelUrlFolder}/${highQualityFileName}`;
-
-              await backblaze.uploadToB2(upload, highQualityFileInDirectory, highQualityNameForB2);
-            }
           }
 
           await uploadHelpers.markUploadAsComplete(uniqueTag, channelUrl, user);
@@ -569,25 +461,16 @@ exports.postFileUpload = async(req, res) => {
 
           uploadLogger.info('Updated subscribed users subscriptions', logObject);
 
-          if(!responseSent)
-          {
+          if(!responseSent){
             responseSent = true;
-            res.send({
-              message: 'DONE PROCESSING',
-              url: `/user/${channelUrl}/${uniqueTag}?autoplay=off`
-            });
+            aboutToProcess(res, channelUrl, uniqueTag);
           }
         });
-      } else {
-        res.send(status);
       }
-
     });
-
   } catch(err){
     console.log(err);
   }
-
 };
 
 /** TODO: pull into livestream **/
