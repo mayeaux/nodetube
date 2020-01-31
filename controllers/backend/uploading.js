@@ -453,6 +453,8 @@ exports.postFileUpload = async(req, res) => {
 
           /** UPLOAD TO B2 **/
           if(process.env.UPLOAD_TO_B2 == 'true'){
+            // note it's at 99% so the frontend doesnt redirect yet
+            redisClient.setAsync(`${uniqueTag}uploadProgress`, 99);
             await backblaze.uploadToB2(upload, fileInDirectory, hostFilePath);
           }
 
