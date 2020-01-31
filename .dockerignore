@@ -1,6 +1,5 @@
-.*
-docker-compose.yml
-*.md
-
 node_modules
 npm-debug.log
+upload
+uploads
+data
