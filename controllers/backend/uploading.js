@@ -390,76 +390,58 @@ exports.postFileUpload = async(req, res) => {
             upload.fileType = 'convert';
           }
 
-
-
-
-
-
-
-
-
-
-          /** CONVERT AND UPLOAD VIDEO **/
-          // TODO: PULL THIS OUT INTO A LIBRARY
-          if(upload.fileType == 'convert'){
-
-            upload.status = 'processing';
-            await upload.save();
-
+          function aboutToProcess(res){
             responseSent = true;
             res.send({
               message: 'ABOUT TO PROCESS',
               url: `/user/${channelUrl}/${uniqueTag}?autoplay=off`
             });
 
-            // take a thumbnail using ffmpeg and save it to the document as uniqueTag.png
-            // TODO: this also uploads to B2, this should be pulled out into its own fucntion
-            await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, hostFilePath, bucket, upload, channelUrl, b2);
+          }
+
+
+          await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, hostFilePath, bucket, upload, channelUrl, b2);
+
+
+          /** CONVERT AND UPLOAD VIDEO **/
+          // TODO: PULL THIS OUT INTO A LIBRARY
+
+          // convert as avi to mp4 (convert)
+          // convert as mp4 birate to 2500
+
+
+          if(upload.fileType == 'convert' || bitrate > 2500){
+
+            upload.status = 'processing';
+            await upload.save();
+
+            aboutToProcess(res);
 
             uploadLogger.info('Captured thumbnail', logObject);
-
-            // if bitrate is above 2500 we also compress it.
-            // if we wanted to be really nice we would convert one where we don't compress it at all
-            // something to consider in the future
 
             const savePath = `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}.mp4`;
 
             // TODO: savePath and fileInDirectory are the same thing, need to clean this code up
 
-            if(fileExtension == '.mp4'){
+            if(fileExtension == '.mp4' && bitrate > 2500){
               await fs.move(savePath, `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-old.mp4`);
 
               fileInDirectory = `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-old.mp4`;
-
-              // convert video to libx264 and also compress if bitrate over 2500
-              await ffmpegHelper.convertVideo({
-                uploadedPath: fileInDirectory,
-                title,
-                bitrate,
-                savePath,
-                uniqueTag
-              });
-
-              uploadLogger.info('Finished converting file', logObject);
-
-              // assuming an mp4 is created at this point so we delete the old uncoverted video
-              await fs.remove(fileInDirectory);
-
-            } else {
-              // convert video to libx264 and also compress if bitrate over 2500
-              await ffmpegHelper.convertVideo({
-                uploadedPath: fileInDirectory,
-                title: upload.title,
-                bitrate,
-                savePath,
-                uniqueTag: upload.uniqueTag
-              });
-
-              uploadLogger.info('Finished converting file', logObject);
-
-              // assuming an mp4 is created at this point so we delete the old uncoverted video
-              await fs.remove(`${fileInDirectory}`);
             }
+
+            // convert video to libx264 and also compress if bitrate over 2500
+            await ffmpegHelper.convertVideo({
+              uploadedPath: fileInDirectory,
+              title,
+              bitrate,
+              savePath,
+              uniqueTag
+            });
+
+            uploadLogger.info('Finished converting file', logObject);
+
+            // assuming an mp4 is created at this point so we delete the old uncoverted video
+            await fs.remove(`${fileInDirectory}`);
 
             uploadLogger.info('Deleted unconverted file', logObject);
 
@@ -478,70 +460,50 @@ exports.postFileUpload = async(req, res) => {
 
           /** UPLOAD VIDEO AND CONVERT IF NEEDED **/
           // TODO: fix b2 upload here
-          if(upload.fileExtension == '.mp4' || upload.fileExtension == '.MP4'){
+          if(fileExtension == '.mp4'&& upload.fileType !== 'convert'){
 
-            // take a thumbnail using ffmpeg and save it to the document as uniqueTag.png
-            // TODO: this also uploads to B2, this should be pulled out into its own fucntion
-            await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, hostFilePath, bucket, upload, channelUrl, b2);
+            uploadLogger.info('About to compress file since bitrate is over 2500', logObject);
 
-            // if convertmp4 is true it means it was already converted
-            if(bitrate > 2500 && convertMp4 !== true){
+            const savePath = `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-compressed.mp4`;
 
-              // TODO: res.status here
+            // compresses video ([ '-preset medium', '-b:v 1000k' ]); -> /${uniqueTag}-compressed.mp4
+            await ffmpegHelper.compressVideo({
+              uploadedPath: fileInDirectory,
+              channelUrl,
+              title: upload.title,
+              savePath,
+              uniqueTag: upload.uniqueTag
+            });
 
-              upload.status = 'processing';
-              await upload.save();
+            uploadLogger.info('Video file is compressed', logObject);
 
-              responseSent = true;
-              res.send({
-                message: 'ABOUT TO PROCESS',
-                url: `/user/${channelUrl}/${uniqueTag}?autoplay=off`
-              });
+            // mark original upload file as high quality file
+            await fs.move(fileInDirectory, `${channelUrlFolder}/${uniqueTag}-high.mp4`);
 
-              uploadLogger.info('About to compress file since bitrate is over 2500', logObject);
+            // TODO: upload to b2 here?
 
-              const savePath = `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-compressed.mp4`;
+            uploadLogger.info('Moved original filename to uniqueTag-high.mp4', logObject);
 
-              // compresses video ([ '-preset medium', '-b:v 1000k' ]); -> /${uniqueTag}-compressed.mp4
-              await ffmpegHelper.compressVideo({
-                uploadedPath: fileInDirectory,
-                channelUrl,
-                title: upload.title,
-                savePath,
-                uniqueTag: upload.uniqueTag
-              });
+            // move compressed video to original video's place
+            await fs.move(`${channelUrlFolder}/${uniqueTag}-compressed.mp4`, fileInDirectory);
 
-              uploadLogger.info('Video file is compressed', logObject);
+            uploadLogger.info('Moved compressed file to default uniqueTag.mp4 location', logObject);
 
-              // mark original upload file as high quality file
-              await fs.move(fileInDirectory, `${channelUrlFolder}/${uniqueTag}-high.mp4`);
+            // save high quality video size
+            const highQualityFileStats = fs.statSync(`${channelUrlFolder}/${uniqueTag}-high.mp4`);
+            upload.quality.high = highQualityFileStats.size;
 
-              // TODO: upload to b2 here?
+            // save compressed video quality size
+            const compressedFileStats = fs.statSync(fileInDirectory);
+            upload.fileSize = compressedFileStats.size;
 
-              uploadLogger.info('Moved original filename to uniqueTag-high.mp4', logObject);
+            // uploadLogger.info(`Moved file to user's directory`, logObject);
 
-              // move compressed video to original video's place
-              await fs.move(`${channelUrlFolder}/${uniqueTag}-compressed.mp4`, fileInDirectory);
+            ffmpegHelper.setRedisClient({ uniqueTag: upload.uniqueTag, progress: 100 })
 
-              uploadLogger.info('Moved compressed file to default uniqueTag.mp4 location', logObject);
+            await upload.save();
 
-              // save high quality video size
-              const highQualityFileStats = fs.statSync(`${channelUrlFolder}/${uniqueTag}-high.mp4`);
-              upload.quality.high = highQualityFileStats.size;
-
-              // save compressed video quality size
-              const compressedFileStats = fs.statSync(fileInDirectory);
-              upload.fileSize = compressedFileStats.size;
-
-              // uploadLogger.info(`Moved file to user's directory`, logObject);
-
-              ffmpegHelper.setRedisClient({ uniqueTag: upload.uniqueTag, progress: 100 })
-
-              await upload.save();
-
-              uploadLogger.info('Upload document saved after compression and moving files', logObject);
-
-            }
+            uploadLogger.info('Upload document saved after compression and moving files', logObject);
 
           }
 
