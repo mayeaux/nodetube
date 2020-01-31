@@ -273,7 +273,11 @@ exports.postFileUpload = async(req, res) => {
       let uploadPath = `./upload/${identifier}`;
 
       /** FINISHED DOWNLOADING EVERYTHING **/
-      if(resumableChunkNumber == resumableTotalChunks){
+      if(resumableChunkNumber !== resumableTotalChunks) {
+        res.send(status);
+      } else {
+        /** FINISHED DOWNLOADING EVERYTHING **/
+
         let responseSent = false;
 
         const channelUrl = user.channelUrl;
@@ -423,7 +427,6 @@ exports.postFileUpload = async(req, res) => {
             // convert video to libx264 and also compress if bitrate over 2500
 
             if (upload.fileType == 'convert' || bitrate > 2500) {
-
               await ffmpegHelper.convertVideo({
                 uploadedPath: fileInDirectory,
                 title,
@@ -442,15 +445,14 @@ exports.postFileUpload = async(req, res) => {
               // for upload to b2
               fileInDirectory = `${channelUrlFolder}/${uniqueTag}.mp4`;
 
-              upload.status = 'completed';
-
-              upload.fileType = 'video';
-
-              upload = await upload.save();
-
               uploadLogger.info('Completed video conversion', logObject);
-
             }
+
+            upload.status = 'completed';
+
+            upload.fileType = 'video';
+
+            upload = await upload.save();
           }
 
           /** UPLOAD IMAGE OR AUDIO **/
@@ -471,18 +473,13 @@ exports.postFileUpload = async(req, res) => {
 
           uploadLogger.info('Updated subscribed users subscriptions', logObject);
 
-          if(!responseSent)
-          {
+          if(!responseSent){
             responseSent = true;
             aboutToProcess(res, channelUrl, uniqueTag);
           }
         });
-      } else {
-        res.send(status);
       }
-
     });
-
   } catch(err){
     console.log(err);
   }
