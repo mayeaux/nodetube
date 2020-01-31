@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo chown -R $USER:$USER .
+#sudo chown -R $USER:$USER .
 
 git stash && git pull && git stash pop
 
