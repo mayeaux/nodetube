@@ -197,11 +197,6 @@ exports.postFileUpload = async(req, res) => {
 
     const { description, visibility, title, uploadToken } = req.query;
 
-    // setup logobject for winston
-    let logObject = {
-      user: user && user.channelUrl,
-      upload: title
-    };
 
     // use an uploadToken if it exists but there is no req.user
     // load req.user with the found user
@@ -214,6 +209,12 @@ exports.postFileUpload = async(req, res) => {
     const user = req.user;
 
     const { channelUrl } = user;
+
+    // setup logobject for winston
+    let logObject = {
+      user: channelUrl,
+      upload: title
+    };
 
     const isNotTrustedUser = !req.user.privs.autoVisibleUpload;
 
