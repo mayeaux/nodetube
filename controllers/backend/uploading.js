@@ -283,14 +283,14 @@ exports.postFileUpload = async(req, res) => {
           upload.visibility = 'pending';
         }
 
+        await upload.save();
+
+        // uploadLogger.info('Upload document added to db', Object.assign({}, logObject, upload));
+
         // TODO: make this smarter, url etc
         if(requireModeration && moderationUpdatesToDiscord){
           await sendMessageToDiscord(`Pending upload requires moderation on NodeTube.live. ${new Date()}`);
         }
-
-        await upload.save();
-
-        // uploadLogger.info('Upload document added to db', Object.assign({}, logObject, upload));
 
         /** FILE PROCESSING */
 
@@ -340,8 +340,6 @@ exports.postFileUpload = async(req, res) => {
 
           uploadLogger.info('Concat done', logObject);
 
-          let convertMp4 = false;
-
           const response = await ffmpegHelper.ffprobePromise(`${uploadPath}/convertedFile`);
 
           const { codecName, codecProfile } = response.streams[0];
@@ -388,12 +386,17 @@ exports.postFileUpload = async(req, res) => {
 
           const specificMatches = ( codecName == 'hevc' || codecProfile == 'High 4:4:4 Predictive' );
 
-          if(specificMatches) {
+          if(specificMatches || bitrate > 2500) {
             upload.fileType = 'convert';
-            convertMp4 = true;
           }
 
-          
+
+
+
+
+
+
+
 
 
           /** CONVERT AND UPLOAD VIDEO **/
@@ -423,22 +426,24 @@ exports.postFileUpload = async(req, res) => {
 
             // TODO: savePath and fileInDirectory are the same thing, need to clean this code up
 
-            if(convertMp4 == true){
+            if(fileExtension == '.mp4'){
               await fs.move(savePath, `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-old.mp4`);
+
+              fileInDirectory = `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-old.mp4`;
 
               // convert video to libx264 and also compress if bitrate over 2500
               await ffmpegHelper.convertVideo({
-                uploadedPath: `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-old.mp4`,
-                title: upload.title,
+                uploadedPath: fileInDirectory,
+                title,
                 bitrate,
                 savePath,
-                uniqueTag: upload.uniqueTag
+                uniqueTag
               });
 
               uploadLogger.info('Finished converting file', logObject);
 
               // assuming an mp4 is created at this point so we delete the old uncoverted video
-              await fs.remove(`${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-old.mp4`);
+              await fs.remove(fileInDirectory);
 
             } else {
               // convert video to libx264 and also compress if bitrate over 2500
@@ -462,8 +467,6 @@ exports.postFileUpload = async(req, res) => {
             fileInDirectory = `${channelUrlFolder}/${uniqueTag}.mp4`;
 
             upload.status = 'completed';
-
-            ffmpegHelper.setRedisClient({ uniqueTag: upload.uniqueTag, progress: 100 })
 
             upload.fileType = 'video';
 
