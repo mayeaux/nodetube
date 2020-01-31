@@ -113,6 +113,8 @@ function testIfUserRestricted(user, logObject, res){
   }
 }
 
+const getExtensionString = path.extname;
+
 function generateLogObject(){
 
 }
@@ -148,6 +150,21 @@ async function checkIfAlreadyUploaded(user, title, res){
   }
 }
 
+/** RESPOND EARLY IF ITS AN UNKNOWN FILE TYPE **/
+const testIsFileTypeUnknown = async function(upload, fileType, fileExtension, logObject){
+  if(fileType == 'unknown'){
+    upload.status = 'rejected';
+
+    await upload.save();
+
+    logObject.uploadExtension = fileExtension;
+    uploadLogger.info('Unknown file type', logObject);
+
+    res.status(500);
+    return res.send({message: 'UNKNOWN FILETYPE'});
+  }
+
+};
 
 
 /**
@@ -166,6 +183,8 @@ exports.postFileUpload = async(req, res) => {
     const channelUrl = req.user.channelUrl;
     const uploadToken = req.query.uploadToken;
     const title = req.query.title;
+
+    const { description, visibility } = req.query;
 
     // setup logobject for winston
     let logObject = {
@@ -186,47 +205,41 @@ exports.postFileUpload = async(req, res) => {
     checkIfAlreadyUploaded(user, title, res);
 
     /** WHEN A NEW CHUNK IS COMPLETED **/
+    // why can't change name to fileName ?
     resumable.post(req, async function(status, filename, original_filename, identifier){
       // console.log(req.query);
 
-      const chunkNumber = req.query.resumableChunkNumber;
-      const totalChunks = req.query.resumableTotalChunks;
+      const { chunkNumber, totalChunks } = req.query;
 
       uploadLogger.info(`Processing chunk number ${chunkNumber} of ${totalChunks} `, logObject);
 
-      const fileSize = req.body.resumableTotalSize;
-      const fileName = filename;
+      const { resumableTotalSize } = req.body;
 
+      const fileName = filename;
       const fileType = getMediaType(filename);
-      let fileExtension = path.extname(filename);
+      let fileExtension = getExtensionString(filename);
+
+      const fileSize = resumableTotalSize;
+
 
       if(fileExtension == '.MP4'){
         fileExtension = '.mp4';
       }
 
-      /** RESPOND EARLY IF ITS AN UNKNOWN FILE TYPE **/
-      if(fileType == 'unknown'){
-        let upload = new Upload({
-          uploader: req.user._id,
-          title: req.query.title,
-          description: req.query.description,
-          visibility: req.query.visibility,
-          originalFileName: fileName,
-          fileType,
-          hostUrl,
-          fileExtension,
-          fileSize,
-          status: 'rejected'
-        });
+      let upload = new Upload({
+        uploader: user._id,
+        title,
+        description,
+        visibility,
+        originalFileName: fileName,
+        fileType,
+        hostUrl,
+        fileExtension,
+        fileSize,
+        status: 'rejected'
+      });
 
-        await upload.save();
-
-        logObject.uploadExtension = fileExtension;
-        uploadLogger.info('Unknown file type', logObject);
-
-        res.status(500);
-        return res.send({message: 'UNKNOWN FILETYPE'});
-      }
+      testIsFileTypeUnknown(upload, fileType, fileExtension, logObject);
 
       let uploadPath = `./upload/${identifier}`;
 
