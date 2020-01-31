@@ -200,7 +200,7 @@ exports.postFileUpload = async(req, res) => {
 
     // use an uploadToken if it exists but there is no req.user
     // load req.user with the found user
-    if(!user && uploadToken){
+    if(!req.user && uploadToken){
       req.user = await User.findOne({
         uploadToken
       });
