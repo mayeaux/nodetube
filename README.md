@@ -7,6 +7,7 @@ You can join the open-source community actively developing NodeTube on [Discord]
 
 <br>
 
+<a href="https://nodetube.live/user/NodeTube/7KH5xau" />
 <img src="https://user-images.githubusercontent.com/7200471/71718920-f46a9400-2dd9-11ea-8932-3b0314ec9c4e.png" width="800" >
 
 ## Get Your Instance Running:
