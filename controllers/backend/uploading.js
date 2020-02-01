@@ -235,7 +235,7 @@ exports.postFileUpload = async(req, res) => {
     const userIsRestricted = testIfUserRestricted(user, logObject, res);
     if(userIsRestricted){ return; }
 
-    const uploadAlreadyUploaded = checkIfAlreadyUploaded(user, title, logObject, res);
+    const uploadAlreadyUploaded = await checkIfAlreadyUploaded(user, title, logObject, res);
     if(uploadAlreadyUploaded){ return; }
 
     // let upload = setUpload()
