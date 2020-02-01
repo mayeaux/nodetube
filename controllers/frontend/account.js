@@ -15,6 +15,9 @@ const Subscription = require('../../models/index').Subscription;
 
 const { uploadServer, uploadUrl } = require('../../lib/helpers/settings');
 
+const { URLSearchParams } = require('url');
+
+
 const brandName = process.env.INSTANCE_BRAND_NAME;
 
 const thumbnailServer = process.env.THUMBNAIL_SERVER || '';
@@ -130,11 +133,34 @@ exports.subscriptions = async(req, res) => {
  */
 exports.getChannel = async(req, res) => {
 
+  // console.log(req.originalUrl);
+
+  let requestedUrl = req.path;
+
+  let urlParams = new URLSearchParams(req.query);
+
+  urlParams.set('mediaType', 'all');
+
+  console.log(urlParams);
+
+  urlParams = urlParams.toString();
+
+  console.log(urlParams);
+
+  const newUrl = `${requestedUrl}?${urlParams}`;
+
+  console.log(newUrl);
+
   let page = req.query.page;
   if(!page){ page = 1; }
   page = parseInt(page);
 
   const channelUrl = req.params.channel;
+
+  media = req.query.mediaType;
+  if(!media){
+    return res.redirect(`${newUrl}`);
+  }
 
   const limit = 51;
   const skipAmount = (page * limit) - limit;
@@ -375,8 +401,6 @@ exports.getChannel = async(req, res) => {
     const siteVisitor = req.siteVisitor;
 
     const joinedTimeAgo = timeAgoEnglish.format(user.createdAt);
-
-    media = req.query.mediaType;
 
     res.render('account/channel', {
       channel : user,
