@@ -133,33 +133,15 @@ exports.subscriptions = async(req, res) => {
  */
 exports.getChannel = async(req, res) => {
 
-  // console.log(req.originalUrl);
-
-  let requestedUrl = req.path;
-
-  let urlParams = new URLSearchParams(req.query);
-
-  urlParams.set('mediaType', 'all');
-
-  console.log(urlParams);
-
-  urlParams = urlParams.toString();
-
-  console.log(urlParams);
-
-  const newUrl = `${requestedUrl}?${urlParams}`;
-
-  console.log(newUrl);
-
   let page = req.query.page;
   if(!page){ page = 1; }
   page = parseInt(page);
 
   const channelUrl = req.params.channel;
 
-  media = req.query.mediaType;
+  let media = req.query.mediaType;
   if(!media){
-    return res.redirect(`${newUrl}`);
+    media = 'all'
   }
 
   const limit = 51;
@@ -278,6 +260,8 @@ exports.getChannel = async(req, res) => {
     } else {
       orderBy = req.query.orderBy;
     }
+
+    console.log(`orderBy : ${orderBy}`)
 
     if(orderBy !== 'popular' && orderBy !== 'newToOld' && orderBy !== 'oldToNew' && orderBy !== 'alphabetical'){
       console.log('doesnt connect');
@@ -422,7 +406,10 @@ exports.getChannel = async(req, res) => {
       userUploadAmount,
       channelUrl: user.channelUrl,
       categories,
-      joinedTimeAgo
+      joinedTimeAgo,
+      media,
+      page,
+      orderBy
     });
 
   } catch(err){
