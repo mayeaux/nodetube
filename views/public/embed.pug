@@ -8,7 +8,7 @@ html
         meta(name='csrf-token', content=_csrf)
         meta(name="description", content=meta.description)
 
-        meta(property='og:title', content=meta.title || title + ' - NodeTube')
+        meta(property='og:title', content=(meta.title || title) + ` - ${brandName}`)
         meta(property='og:image', content=meta.image)
         meta(property='og:description', content=meta.description)
         meta(property='og:video', content=meta.video)
@@ -16,12 +16,12 @@ html
 
         meta(name='twitter:card', content='summary')
         meta(name='twitter:site', content='@nodetube_org')
-        meta(name='twitter:title', content=meta.title || title + ' - NodeTube')
+        meta(name='twitter:title', content=(meta.title || title) + ` - ${brandName}`)
         meta(name='twitter:description', content=meta.description)
         meta(name='twitter:image', content=meta.image)
 
 
-        title #{title} - NodeTube
+        title #{title} - #{brandName}
         link(rel='shortcut icon', href='/favicon.ico')
         script(src='/js/lib/jquery-3.1.1.min.js')
         script(src='/js/lib/bootstrap.min.js')
