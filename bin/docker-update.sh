@@ -1,6 +1,9 @@
 #!/bin/bash
 
-git pull
+sudo chown -R $USER:$USER .
+
+#git stash && git pull && git stash pop
+
 CURRENT_UID=$(id -u):$(id -g) docker-compose pull
-#CURRENT_UID=$(id -u):$(id -g) docker-compose down
-CURRENT_UID=$(id -u):$(id -g) docker-compose up --build -d
+CURRENT_UID=$(id -u):$(id -g) docker-compose build
+CURRENT_UID=$(id -u):$(id -g) docker-compose up -d
