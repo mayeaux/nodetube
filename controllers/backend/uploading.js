@@ -108,11 +108,16 @@ exports.getUploadProgress = async(req, res) => {
 };
 
 function areUploadsOff(uploadsOn, isNotTrustedUser, res){
+
+  // allows users to
   if(uploadsOn == 'false' && isNotTrustedUser){
     console.log('HERE');
     res.status(500);
-    return res.send({ message: 'UPLOADS_OFF'});
+    res.send({ message: 'UPLOADS_OFF'});
+    return false;
   }
+
+  return true;
 }
 
 function testIfUserRestricted(user, logObject, res){
@@ -122,8 +127,11 @@ function testIfUserRestricted(user, logObject, res){
     uploadLogger.info('User upload status restricted', logObject);
 
     res.status(403);
-    return res.send('Sorry your account is restricted');
+    res.send('Sorry your account is restricted');
+    return true;
   }
+
+  return false;
 }
 
 function aboutToProcess(res, channelUrl, uniqueTag){
@@ -164,8 +172,11 @@ async function checkIfAlreadyUploaded(user, title, logObject, res){
   if(alreadyUploaded){
     uploadLogger.info('Upload title already uploaded', logObject);
     res.status(500);
-    return res.send({message: 'ALREADY-UPLOADED'});
+    res.send({message: 'ALREADY-UPLOADED'});
+    return true;
   }
+
+  return false;
 }
 
 /** RESPOND EARLY IF ITS AN UNKNOWN FILE TYPE **/
@@ -217,13 +228,15 @@ exports.postFileUpload = async(req, res) => {
 
     const isNotTrustedUser = !req.user.privs.autoVisibleUpload;
 
-    // TODO: have to fix these, should end function execution early (see unknown file type below)
-    areUploadsOff(uploadsOn, isNotTrustedUser, logObject, res);
+    const uploadsAreOff = areUploadsOff(uploadsOn, isNotTrustedUser, logObject, res);
+    if(uploadsAreOff){ return; }
 
     // ends the response early if user is restricted
-    testIfUserRestricted(user, logObject, res);
+    const userIsRestricted = testIfUserRestricted(user, logObject, res);
+    if(userIsRestricted){ return; }
 
-    checkIfAlreadyUploaded(user, title, logObject, res);
+    const uploadAlreadyUploaded = checkIfAlreadyUploaded(user, title, logObject, res);
+    if(uploadAlreadyUploaded){ return; }
 
     // let upload = setUpload()
 
@@ -274,7 +287,7 @@ exports.postFileUpload = async(req, res) => {
       // TODO: not a great design but I don't know a better approach
       // user this after upload object is made because it saves it to db
       const isUnknown = await testIsFileTypeUnknown(upload, fileType, fileExtension, logObject, res);
-      if(isUnknown)return;
+      if(isUnknown){ return; }
 
       // where is this used?
       let uploadPath = `./upload/${identifier}`;

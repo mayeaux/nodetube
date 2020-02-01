@@ -124,22 +124,41 @@ block content
     hr
 
     div.center-block.text-center
+
         div.dropdown(style="display:inline;margin-right:15px;")
-            button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
+            button.fw.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
                 | Order By: #{orderByEnglishString} &nbsp
                 span.caret
 
             ul.dropdown-menu.dropdown
                 li
-                    a(href=`/user/${channel.channelUrl}?orderBy=popular`) Popular
+                    a(href=`/user/${channel.channelUrl}?orderBy=popular&mediaType=${media}&page=${page}`) Popular
                 li
-                    a(href=`/user/${channel.channelUrl}?orderBy=newToOld`) New To Old
+                    a(href=`/user/${channel.channelUrl}?orderBy=newToOld&mediaType=${media}&page=${page}`) New To Old
                 li
-                    a(href=`/user/${channel.channelUrl}?orderBy=oldToNew`) Old To New
+                    a(href=`/user/${channel.channelUrl}?orderBy=oldToNew&mediaType=${media}&page=${page}`) Old To New
                 li
-                    a(href=`/user/${channel.channelUrl}?orderBy=alphabetical`) Alphabetical
+                    a(href=`/user/${channel.channelUrl}?orderBy=alphabetical&mediaType=${media}&page=${page}`) Alphabetical
+
+        div.search-upload-buttons-container.dropdown(style="display:inline;padding-right:15px;")
+            button#dropdownMenu1.fw.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px;")
+                | File Type: #{media.charAt(0).toUpperCase() + media.slice(1)} &nbsp
+                span.caret
+
+            ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1')
+                li(role='presentation')
+                    a(href=`/user/${channelUrl}/?mediaType=all&orderBy=${orderBy}&page=${page}`) All
+                li(role='presentation')
+                    a(href=`/user/${channelUrl}/?mediaType=video&orderBy=${orderBy}&page=${page}`) Videos
+                li(role='presentation')
+                    a(href=`/user/${channelUrl}/?mediaType=audio&orderBy=${orderBy}&page=${page}`) Audio
+                li(role='presentation')
+                    a(href=`/user/${channelUrl}/?mediaType=image&orderBy=${orderBy}&page=${page}`) Images
 
         include ../viewPartials/sensitivityFilterDropdown
+
+
+
 
         include ../viewPartials/channelOverviewPagination
 
