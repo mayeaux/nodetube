@@ -3,7 +3,7 @@ extends ../layout
 block content
   .container
     .page-header
-      h3.center-block.text-center.fw Login To NodeTube
+      h3.center-block.text-center.fw Login To #{brandName}
     form.form-horizontal(method='POST')
       input(type='hidden', name='_csrf', value=_csrf)
       .form-group
