@@ -124,8 +124,9 @@ block content
     hr
 
     div.center-block.text-center
+
         div.dropdown(style="display:inline;margin-right:15px;")
-            button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
+            button.fw.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
                 | Order By: #{orderByEnglishString} &nbsp
                 span.caret
 
@@ -139,7 +140,57 @@ block content
                 li
                     a(href=`/user/${channel.channelUrl}?orderBy=alphabetical`) Alphabetical
 
+        //div.search-upload-buttons-container.dropdown(style="display:inline;padding-right:15px;")
+        //    button#dropdownMenu1.fw.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px;")
+        //        if category
+        //            | Category: #{categoryObj.displayName} &nbsp
+        //            span.caret
+        //        else
+        //            | Select A Category &nbsp
+        //            span.caret
+        //
+        //    ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1')
+        //        each category in categories
+        //            li(role='presentation')
+        //                a(href=`/media/${mediaBrowsingType}/1?media=${mediaType}&category=${category.name}&within=${within}`) #{category.displayName}
+
+        div.search-upload-buttons-container.dropdown(style="display:inline;padding-right:15px;")
+            button#dropdownMenu1.fw.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px;")
+                | File Type: #{media.charAt(0).toUpperCase() + media.slice(1)} &nbsp
+                span.caret
+
+            ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1')
+                li(role='presentation')
+                    a(href=`/media/popular/1?media=all&orderBy=newToOld}`) All
+                li(role='presentation')
+                    a(href=`/media/popular/1?media=video`) Videos
+                li(role='presentation')
+                    a(href=`/media/popular/1?media=audio`) Audio
+                li(role='presentation')
+                    a(href=`/media/popular/1?media=image`) Images
+
+
+        //div.search-upload-buttons-container.dropdown(style="display:inline;padding-right:15px;")
+        //    button#dropdownMenu1.fw.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px;")
+        //        | File Type: #{'Video'} &nbsp
+        //        span.caret
+        //
+        //    ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1')
+                //li(role='presentation')
+                //    a(href=`/media/popular/1?media=all&category=${category}&within=${within}`) All
+                //li(role='presentation')
+                //    a(href=`/media/popular/1?media=video&category=${category}&within=${within}`) Videos
+                //li(role='presentation')
+                //    a(href=`/media/popular/1?media=audio&category=${category}&within=${within}`) Audio
+                //li(role='presentation')
+                //    a(href=`/media/popular/1?media=image&category=${category}&within=${within}`) Images
+
+
+
         include ../viewPartials/sensitivityFilterDropdown
+
+
+
 
         include ../viewPartials/channelOverviewPagination
 

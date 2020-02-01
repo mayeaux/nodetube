@@ -123,7 +123,7 @@ exports.subscriptions = async(req, res) => {
   }
 };
 
-// TODO: find a new home, wrong controller
+// TODO: desperately needs a cleanup
 /**
  * GET /channel
  * Profile page.
@@ -375,6 +375,8 @@ exports.getChannel = async(req, res) => {
     const siteVisitor = req.siteVisitor;
 
     const joinedTimeAgo = timeAgoEnglish.format(user.createdAt);
+
+    media = req.query.mediaType;
 
     res.render('account/channel', {
       channel : user,
