@@ -17,7 +17,6 @@ const { uploadServer, uploadUrl } = require('../../lib/helpers/settings');
 
 const { URLSearchParams } = require('url');
 
-
 const brandName = process.env.INSTANCE_BRAND_NAME;
 
 const thumbnailServer = process.env.THUMBNAIL_SERVER || '';
@@ -141,7 +140,7 @@ exports.getChannel = async(req, res) => {
 
   let media = req.query.mediaType;
   if(!media){
-    media = 'all'
+    media = 'all';
   }
 
   const limit = 51;
@@ -261,7 +260,7 @@ exports.getChannel = async(req, res) => {
       orderBy = req.query.orderBy;
     }
 
-    console.log(`orderBy : ${orderBy}`)
+    // console.log(`orderBy : ${orderBy}`)
 
     if(orderBy !== 'popular' && orderBy !== 'newToOld' && orderBy !== 'oldToNew' && orderBy !== 'alphabetical'){
       console.log('doesnt connect');
@@ -326,7 +325,7 @@ exports.getChannel = async(req, res) => {
 
     if(orderBy == 'newToOld'){
 
-      console.log('new to old');
+      // console.log('new to old');
       uploads = uploads.sort(function(a, b){
         return b.createdAt - a.createdAt;
       });
@@ -334,7 +333,7 @@ exports.getChannel = async(req, res) => {
 
     if(orderBy == 'oldToNew'){
 
-      console.log('old to new');
+      // console.log('old to new');
       uploads = uploads.sort(function(a, b){
         return a.createdAt - b.createdAt;
       });
@@ -342,7 +341,7 @@ exports.getChannel = async(req, res) => {
 
     if(orderBy == 'alphabetical'){
 
-      console.log('alphabetical');
+      // console.log('alphabetical');
 
       uploads = uploads.sort(function(a, b){
         return a.title.localeCompare(b.title);
