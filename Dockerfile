@@ -4,7 +4,6 @@ RUN apk add --no-cache ffmpeg
 RUN apk add --no-cache git
 RUN apk add --no-cache tar
 
-
 COPY package*.json /app/
 
 WORKDIR /app/

@@ -103,6 +103,7 @@
     "redis": "^2.8.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
+    "rss": "^1.2.2",
     "serve-favicon": "^2.5.0",
     "shelljs": "^0.7.8",
     "stripe": "^4.25.0",
