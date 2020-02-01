@@ -13,6 +13,7 @@ const uploadFilters = require('../../lib/mediaBrowsing/helpers');
 const getSensitivityFilter =  uploadFilters.getSensitivityFilter;
 const categories = require('../../config/categories');
 const logCaching = process.env.LOG_CACHING;
+const RSS = require('rss');
 
 // todo: get out of controller
 let viewStats;
@@ -37,8 +38,35 @@ exports.recentRssFeed = async(req, res) => {
   const uploads = await getFromCache.getRecentUploads(20, 0, 'all', 'sensitive', 'all', '');
 
   console.log(uploads);
+	const feed = new RSS({
+    title: 'title',
+    description: 'description',
+    feed_url: 'http://example.com/rss.xml',
+    site_url: 'http://example.com',
+    image_url: 'http://example.com/icon.png',
+    copyright: '2013 Dylan Greene',
+    language: 'en',
+    pubDate: new Date(),
+    ttl: '60',
+	});
 
-  res.send(uploads);
+	uploads.map(item => {
+		const { title, url, category } = item;
+		const categories = [category];
+
+		feed.item({
+				title,
+				url, // link to the item
+				guid: item._id, // optional - defaults to url
+				categories, // optional - array of item categories
+				author: item.uploader.channelName, // optional - defaults to feed author property
+				date: item.createdAt, // any format that js Date can parse.
+		});
+	});
+
+
+	const xml = feed.xml({indent: true});
+  res.send(xml);
 
   // TOOD: incorporate rss feed here and send it as response
 };
