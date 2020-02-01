@@ -15,6 +15,8 @@ const Subscription = require('../../models/index').Subscription;
 
 const { uploadServer, uploadUrl } = require('../../lib/helpers/settings');
 
+const { filterUploadsByMediaType } = require('../../lib/mediaBrowsing/helpers');
+
 const { URLSearchParams } = require('url');
 
 const brandName = process.env.INSTANCE_BRAND_NAME;
@@ -142,6 +144,7 @@ exports.getChannel = async(req, res) => {
   if(!media){
     media = 'all';
   }
+  const mediaType = media;
 
   const limit = 51;
   const skipAmount = (page * limit) - limit;
@@ -214,6 +217,8 @@ exports.getChannel = async(req, res) => {
 
     /** DB CALL TO GET UPLOADS **/
     let uploads = await Upload.find(searchQuery).populate('').sort({ createdAt : -1 });
+
+    uploads = filterUploadsByMediaType(uploads, mediaType);
 
     // console.log(`IS ADMIN OR MOD: ${viewerIsAdminOrMod}`);
     // console.log(`IS OWNER: ${viewerIsOwner}`);
