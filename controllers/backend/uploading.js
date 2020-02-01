@@ -114,10 +114,10 @@ function areUploadsOff(uploadsOn, isNotTrustedUser, res){
     console.log('HERE');
     res.status(500);
     res.send({ message: 'UPLOADS_OFF'});
-    return false;
+    return true;
   }
 
-  return true;
+  return false;
 }
 
 function testIfUserRestricted(user, logObject, res){
