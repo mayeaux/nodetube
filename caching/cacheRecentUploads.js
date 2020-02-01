@@ -38,7 +38,7 @@ async function getRecentUploads(){
     };
 
     const selectString = 'rating title views uploader fileType thumbnailUrl ' +
-      'uploadUrl uniqueTag customThumbnailUrl fileExtension thumbnails reacts uncurated category subcategory createdAt';
+      'uploadUrl uniqueTag customThumbnailUrl fileExtension thumbnails reacts uncurated category subcategory createdAt description';
 
     let recentUploads = await Upload.find(searchQuery).select(selectString).populate('uploader reacts')
       .sort({ createdAt : - 1 })
