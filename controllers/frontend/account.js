@@ -15,6 +15,10 @@ const Subscription = require('../../models/index').Subscription;
 
 const { uploadServer, uploadUrl } = require('../../lib/helpers/settings');
 
+const { filterUploadsByMediaType } = require('../../lib/mediaBrowsing/helpers');
+
+const { URLSearchParams } = require('url');
+
 const brandName = process.env.INSTANCE_BRAND_NAME;
 
 const thumbnailServer = process.env.THUMBNAIL_SERVER || '';
@@ -123,7 +127,7 @@ exports.subscriptions = async(req, res) => {
   }
 };
 
-// TODO: find a new home, wrong controller
+// TODO: desperately needs a cleanup
 /**
  * GET /channel
  * Profile page.
@@ -135,6 +139,12 @@ exports.getChannel = async(req, res) => {
   page = parseInt(page);
 
   const channelUrl = req.params.channel;
+
+  let media = req.query.mediaType;
+  if(!media){
+    media = 'all';
+  }
+  const mediaType = media;
 
   const limit = 51;
   const skipAmount = (page * limit) - limit;
@@ -208,6 +218,8 @@ exports.getChannel = async(req, res) => {
     /** DB CALL TO GET UPLOADS **/
     let uploads = await Upload.find(searchQuery).populate('').sort({ createdAt : -1 });
 
+    uploads = filterUploadsByMediaType(uploads, mediaType);
+
     // console.log(`IS ADMIN OR MOD: ${viewerIsAdminOrMod}`);
     // console.log(`IS OWNER: ${viewerIsOwner}`);
 
@@ -252,6 +264,8 @@ exports.getChannel = async(req, res) => {
     } else {
       orderBy = req.query.orderBy;
     }
+
+    // console.log(`orderBy : ${orderBy}`)
 
     if(orderBy !== 'popular' && orderBy !== 'newToOld' && orderBy !== 'oldToNew' && orderBy !== 'alphabetical'){
       console.log('doesnt connect');
@@ -316,7 +330,7 @@ exports.getChannel = async(req, res) => {
 
     if(orderBy == 'newToOld'){
 
-      console.log('new to old');
+      // console.log('new to old');
       uploads = uploads.sort(function(a, b){
         return b.createdAt - a.createdAt;
       });
@@ -324,7 +338,7 @@ exports.getChannel = async(req, res) => {
 
     if(orderBy == 'oldToNew'){
 
-      console.log('old to new');
+      // console.log('old to new');
       uploads = uploads.sort(function(a, b){
         return a.createdAt - b.createdAt;
       });
@@ -332,7 +346,7 @@ exports.getChannel = async(req, res) => {
 
     if(orderBy == 'alphabetical'){
 
-      console.log('alphabetical');
+      // console.log('alphabetical');
 
       uploads = uploads.sort(function(a, b){
         return a.title.localeCompare(b.title);
@@ -396,7 +410,10 @@ exports.getChannel = async(req, res) => {
       userUploadAmount,
       channelUrl: user.channelUrl,
       categories,
-      joinedTimeAgo
+      joinedTimeAgo,
+      media,
+      page,
+      orderBy
     });
 
   } catch(err){
