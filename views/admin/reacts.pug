@@ -8,7 +8,7 @@ block content
         hr
         each react in reacts
             p
-                a(href=`/uploads/${react.upload.uploader.channelUrl}/${react.upload.uniqueTag}`) Upload Title #{react.upload.title}
+                a(href=`/user/${react.upload.uploader.channelUrl}/${react.upload.uniqueTag}`) Upload Title #{react.upload.title}
             p Uploader: #{react.upload.uploader.channelUrl}
             p Reacter : #{react.user.channelUrl}
             p Reaction: #{react.react}
