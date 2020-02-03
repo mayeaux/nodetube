@@ -1,5 +1,5 @@
 # NodeTube
-Introducing NodeTube: an open-source YouTube alternative powered by Node.js
+Introducing an open-source YouTube alternative that offers video, audio and image uploads, livestreaming and built-in monetization
 
 A live NodeTube instance is available to interact with at [https://nodetube.live](https://nodetube.live)
 
