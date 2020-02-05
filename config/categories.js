@@ -5,6 +5,11 @@ const categories = [
     subcategories: []
   },
   {
+    name: 'overview',
+    displayName: 'Category Overview',
+    subcategories: []
+  },
+  {
     name: 'howToAndEducation',
     displayName: 'How To & Education',
     subcategories: []

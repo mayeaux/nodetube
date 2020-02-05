@@ -40,7 +40,7 @@ block content
         br
         div.uploads
             // CATEGORY OVERVIEW PAGE IF NOT A CATEGORY
-            if !isACategory
+            if !isACategory || category == 'overview'
                 include ../viewPartials/categoryOverviews
 
             else

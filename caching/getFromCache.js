@@ -101,6 +101,11 @@ async function getPopularUploads(timeRange, limit, offset,  mediaType, filter, c
   // load recent uploads into memory
   let uploads = popularUploads;
 
+  // if category is overview act like no category is given (triggers category frontend)
+  if(category == 'overview'){
+    category = '';
+  }
+
   if(!uploads)return[];
 
   if(!timeRange) timeRange = 'allTime';
