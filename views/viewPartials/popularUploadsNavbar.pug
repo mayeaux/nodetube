@@ -12,7 +12,7 @@ div.row
         div.col-sm-2
             h3.fw
                 if category == 'overview' || category == 'all'
-                    a(href=`/media/popular/${page}?media=${mediaType}&category=all&within=${dobj.withinString}`) #{dobj.englishString}
+                    a(href=`/media/popular/${page}?media=${mediaType}&category=${category}&within=${dobj.withinString}`) #{dobj.englishString}
                 else
                     a(href=`/media/popular/${page}?media=${mediaType}&category=${category}&within=${dobj.withinString}`) #{dobj.englishString}
 
