@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const RSS = require('rss');
 const redisClient = require('../../config/redis');
 const Promise = require('bluebird');
 const pagination = require('../../lib/helpers/pagination');
@@ -6,14 +7,15 @@ const User = require('../../models/index').User;
 const Upload = require('../../models/index').Upload;
 const SearchQuery = require('../../models/index').SearchQuery;
 const View = require('../../models/index').View;
+
 const uploadHelpers = require('../../lib/helpers/settings');
 const uploadServer = uploadHelpers.uploadServer;
 const getFromCache = require('../../caching/getFromCache');
 const uploadFilters = require('../../lib/mediaBrowsing/helpers');
+
 const getSensitivityFilter =  uploadFilters.getSensitivityFilter;
 const categories = require('../../config/categories');
 const logCaching = process.env.LOG_CACHING;
-const RSS = require('rss');
 
 // todo: get out of controller
 let viewStats;
@@ -170,7 +172,15 @@ exports.popularUploads = async(req, res) => {
   // get media page, either video, image, audio or all
   let media = req.query.media || 'all';
 
-  let category = req.query.category || '';
+
+  // TODO: pull this into a process var
+
+  let category = req.query.category || 'all';
+
+  // let 'overview' be passed as a category
+
+
+  // let category = req.query.category || 'all';
 
   let subcategory = req.query.subcategory || '';
 
@@ -193,6 +203,8 @@ exports.popularUploads = async(req, res) => {
 
   const skipAmount = (page * limit) - limit;
 
+  // TODO: pull this out and export a function that returns an object with these values
+  // then use ES6 syntax to declare them {}
   const startingNumber = pagination.getMiddleNumber(page);
   const numbersArray = pagination.createArray(startingNumber);
   const previousNumber = pagination.getPreviousNumber(page);
@@ -208,6 +220,10 @@ exports.popularUploads = async(req, res) => {
   let viewAmountInPeriod;
 
   // console.log(`WITHIN: ${within}`);
+
+  let displayObject = [{ withinString: '1hour', englishString: 'Last Hour' }, { withinString : '24hour', englishString: 'Last Day'},
+    {withinString: '1week', englishString: 'Last Week'}
+  , { withinString: '1month', englishString: 'Last Month' }];
 
   // used for 'views per these returned items
   function calculateViewAmount(uploads){
@@ -261,6 +277,7 @@ exports.popularUploads = async(req, res) => {
     //   viewsOnThisPage = calculateViewAmount(uploads);
     // }
 
+    // get the full category object from categories
     let categoryObj;
     for(const cat of categories){
       if(cat.name == category){
@@ -268,6 +285,9 @@ exports.popularUploads = async(req, res) => {
       }
     }
 
+    // TODO: create into its own function and import it
+
+    // add the within string per the time overview
     let withinDisplayString = '';
     if(within == '1hour'){
       withinDisplayString = 'last hour';
@@ -284,9 +304,10 @@ exports.popularUploads = async(req, res) => {
     if(within == 'alltime'){
       withinDisplayString = '';
     }
+    // TODO:
+
 
     const popularTimeViews = 'viewsWithin' + within;
-    const recentPopular = 'popular';
 
     // console.log(popularTimeViews);
     //
@@ -294,7 +315,6 @@ exports.popularUploads = async(req, res) => {
 
     res.render('mediaBrowsing/popularUploads', {
       title: 'Popular Uploads',
-      recentPopular,
       uploads,
       numbersArray,
       highlightedNumber: page,
@@ -317,7 +337,8 @@ exports.popularUploads = async(req, res) => {
       withinDisplayString,
       popularTimeViews,
       mediaBrowsingType,
-      mediaType
+      mediaType,
+      displayObject
       // viewsOnThisPage
     });
 

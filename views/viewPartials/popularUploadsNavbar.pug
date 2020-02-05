@@ -1,23 +1,10 @@
 div.row
-    div.col-sm-2
-        h3.fw
-
-
-            a(href=`/media/popular/${page}?media=${mediaType}&category=${category}&within=1hour`) Last Hour
-    div.col-sm-2
-        h3.fw
-            a(href=`/media/popular/${page}?media=${mediaType}&category=${category}&within=24hour`) Last Day
-    div.col-sm-2
-        h3.fw
-            a(href=`/media/popular/${page}?media=${mediaType}&category=${category}&within=1week`) Last Week
-    div.col-sm-2
-        h3.fw
-            a(href=`/media/popular/${page}?media=${mediaType}&category=${category}&within=1month`) Last Month
-    div.col-sm-2
-        h3.fw
-            a(href=`/media/popular/${page}?media=${mediaType}&category=${category}&within=alltime`) All-Time
-    div.col-sm-2
-        h3.fw
-            a(href=`/media/popular/${page}?media=${mediaType}`) Categories
+    each dobj in displayObject
+        div.col-sm-2
+            h3.fw
+                if category == 'overview' || category == 'all'
+                    a(href=`/media/popular/${page}?media=${mediaType}&category=all&within=${dobj.withinString}`) #{dobj.englishString}
+                else
+                    a(href=`/media/popular/${page}?media=${mediaType}&category=${category}&within=${dobj.withinString}`) #{dobj.englishString}
 
 hr
