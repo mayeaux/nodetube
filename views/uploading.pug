@@ -228,9 +228,11 @@ block content
       // progress bar stuff
       var bar1 = new ldBar("#myItem1");
 
-
       var selectedCategory;
       var selectedSubcategory;
+
+      // hide uploading gif
+      $(".upload-gif").hide();
 
       // when a new category is selected
       $('.categoryValue').click(function(){
@@ -255,10 +257,6 @@ block content
 
         console.log(value, displayName);
       })
-
-      // HIDE GIF
-       $(".upload-gif").hide();
-
 
       var privs = #{user.privs}
 
@@ -303,7 +301,6 @@ block content
         r.assignBrowse($('.resumable-browse')[0]);
 
         r.assignDrop(document.getElementById('dropTarget'));
-
 
         // Handle file add event
 
