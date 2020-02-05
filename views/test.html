@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<body>
+<h1>Download files using the WebTorrent protocol (BitTorrent over WebRTC).</h1>
+
+<h2>Log</h2>
+<div class="log"></div>
+
+<!-- Include the latest version of WebTorrent -->
+<script src="https://cdn.jsdelivr.net/npm/webtorrent@latest/webtorrent.min.js"></script>
+<script src="https://bundle.run/drag-drop@6.0.0"></script>
+
+<script>
+  var client = new WebTorrent()
+
+  // When user drops files on the browser, create a new torrent and start seeding it!
+  dragDrop('body', function (files) {
+    client.seed(files, function (torrent) {
+      console.log('Client is seeding ' + torrent.magnetURI)
+    })
+  })
+</script>
+</body>
+</html>

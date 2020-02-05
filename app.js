@@ -44,7 +44,7 @@ const numCPUs = require('os').cpus().length;
 /** Load environment variables from .env file, where API keys and passwords are configured. **/
 dotenv.load({path: '.env.settings'});
 dotenv.load({path: '.env.private'});
-
++
 const amountOfProcesses = process.env.WEB_CONCURRENCY || numCPUs;
 
 // set upload server, upload url and save files directory

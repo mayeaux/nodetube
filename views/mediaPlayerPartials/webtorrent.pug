@@ -3,10 +3,22 @@ script(src = 'https://cdnjs.cloudflare.com/ajax/libs/webtorrent/0.107.17/webtorr
 script.
   var client = new WebTorrent()
 
+
+
   // Sintel, a free, Creative Commons movie
   var torrentId = 'magnet:?xt=urn:btih:08ada5a7a6183aae1e09d831df6748d566095a10&dn=Sintel&tr=udp%3A%2F%2Fexplodie.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.empire-js.us%3A1337&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com&ws=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2F&xs=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2Fsintel.torrent'
 
-  client.add(torrentId, function (torrent) {
+  var torrentId1 = 'magnet:?xt=urn:btih:a631140cc06f66438155e62c8e83ef5164b0bd50&dn=c4l.mp4'
+
+  var torrentId2 = 'magnet:?xt=urn:btih:c9e15763f722f23e98a29decdfae341b98d53056&dn=Cosmos+Laundromat&tr=udp%3A%2F%2Fexplodie.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.empire-js.us%3A1337&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com&ws=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2F&xs=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2Fcosmos-laundromat.torrent'
+
+  var torrentId3 = 'magnet:?xt=urn:btih:a631140cc06f66438155e62c8e83ef5164b0bd50&dn=c4l.mp4&tr=http%3A%2F%2F192.168.1.44%3A8000%2Fannounce&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com'
+
+  var torrentId4 = 'magnet:?xt=urn:btih:a631140cc06f66438155e62c8e83ef5164b0bd50&dn=c4l.mp4&tr=http%3A%2F%2F192.168.1.44%3A8000%2Fannounce'
+
+  var torrentId5 = 'magnet:?xt=urn:btih:f9435fb103d53a0b3cce14afbae867cc6999d76b&dn=c5l.mp4&tr=udp%3A%2F%2Fexplodie.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.empire-js.us%3A1337&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=wss%3A%2F%2Ftracker.openwebtorrent.com'
+
+  client.add(torrentId5, function (torrent) {
     // Torrents can contain many files. Let's use the .mp4 file
     var file = torrent.files.find(function (file) {
       console.log(file);
