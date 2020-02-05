@@ -172,13 +172,11 @@ exports.popularUploads = async(req, res) => {
   // get media page, either video, image, audio or all
   let media = req.query.media || 'all';
 
-
   // TODO: pull this into a process var
 
   let category = req.query.category || 'all';
 
   // let 'overview' be passed as a category
-
 
   // let category = req.query.category || 'all';
 
@@ -223,7 +221,7 @@ exports.popularUploads = async(req, res) => {
 
   let displayObject = [{ withinString: '1hour', englishString: 'Last Hour' }, { withinString : '24hour', englishString: 'Last Day'},
     {withinString: '1week', englishString: 'Last Week'}
-  , { withinString: '1month', englishString: 'Last Month' }];
+    , { withinString: '1month', englishString: 'Last Month' }];
 
   // used for 'views per these returned items
   function calculateViewAmount(uploads){
@@ -305,7 +303,6 @@ exports.popularUploads = async(req, res) => {
       withinDisplayString = '';
     }
     // TODO:
-
 
     const popularTimeViews = 'viewsWithin' + within;
 
