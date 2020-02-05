@@ -1,4 +1,13 @@
 div.row
+    if category == 'overview'
+        div.col-sm-2
+            h3.fw
+                a(href=`/media/popular/${page}?media=${mediaType}&category=all`) All Uploads
+    if category == 'all'
+        div.col-sm-2
+            h3.fw
+                a(href=`/media/popular/${page}?media=${mediaType}&category=overview`) Categories
+
     each dobj in displayObject
         div.col-sm-2
             h3.fw
