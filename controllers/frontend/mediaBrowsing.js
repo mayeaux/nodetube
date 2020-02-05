@@ -197,7 +197,7 @@ exports.popularUploads = async(req, res) => {
 
   let limit = pageLimit;
 
-  if(!category){
+  if(!category || category == 'overview'){
     limit = 6;
   }
 
