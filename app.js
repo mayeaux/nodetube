@@ -269,12 +269,15 @@ if(cluster.isMaster){
     // run all the widget middleware software which adds credentials to res.local
     app.use(socialRedirectMiddleware);
 
-    /** META TAGS FOR SOCIAL **/
+    /** META TAGS FOR SOCIAL AND SET POPULAR DEFAULT VARIABLE **/
     app.use(async function(req, res, next){
       res.locals.meta = {
         description: process.env.META_DESCRIPTION,
         image: process.env.META_IMAGE
       };
+
+      // set popular default to 'all' or 'overview'
+      res.locals.popularDefault = process.env.POPULAR_DEFAULT  || 'all';
 
       next();
 

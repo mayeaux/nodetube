@@ -33,7 +33,10 @@ style.
           a(href=`/`) Home
           li(class=(title == 'Popular Uploads') ? 'active' : undefined)
             // category set to overview to trigger overview functionality by default
-            a(href=`/media/popular/1?within=24hour&category=overview`) Popular
+            if popularDefault == 'all'
+              a(href=`/media/popular/1?within=24hour&category=all`) Popular
+            else if popularDefault == 'overview'
+              a(href=`/media/popular/1?within=24hour&category=overview`) Popular
           li(class=(title == 'Recent Uploads') ? 'active' : undefined)
             a(href=`/media/recent?category=all`) Recent
           //li(class=(title == 'Channels') ? 'active' : undefined)
