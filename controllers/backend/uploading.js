@@ -368,6 +368,7 @@ exports.postFileUpload = async(req, res) => {
           uploadLogger.info('Concat done', logObject);
 
           const response = await ffmpegHelper.ffprobePromise(`${uploadPath}/convertedFile`);
+          upload.duration = response.format.duration;
 
           const { codecName, codecProfile } = response.streams[0];
 
