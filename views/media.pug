@@ -148,10 +148,13 @@ block content
                 // Upload View Amount
                 h3.fw #{upload.views} Views
 
-                // Upload time ago and uploader
+                // Upload time ago, duration and uploader
                 if upload.uploader
                     h4.fw
                         | Uploaded #{upload.timeAgo} &nbsp
+
+                    p.fw
+                        | Duration: #{upload.formattedDuration}
 
                     if upload.visibility == 'removed'
                         h2 Upload Deleted
