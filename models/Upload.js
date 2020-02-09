@@ -20,6 +20,8 @@ const uploadSchema = new mongoose.Schema({
   hostUrl: String, // (backblaze prepend)  TODO: can eventually delete this
   uniqueTag: { type: String, index: true, unique: true },
   fileType: { type: String, enum: ['video', 'image', 'audio', 'unknown', 'convert'] },
+  originalFileSizeInMb: Number,
+  processedFileSizeInMb: Number,
   fileSize: Number,  // TODO: should support highQualityFileSize as well for compressions
   views: {
     type: Number,
@@ -93,8 +95,10 @@ const uploadSchema = new mongoose.Schema({
   subcategory: { type: String, enum: ['pranks', 'meditation', 'yoga', 'rightwing', 'leftwing', 'uncategorized', 'fitness',
     'yogaAndMeditation', 'blockchain', 'internet', 'political', 'software'] },
 
-  durationInSeconds: { type: Number },
-  formattedDuration: { type: String }
+  durationInSeconds: Number ,
+  formattedDuration: String,
+
+  processingCompletedAt: Date
 
 }, {
   timestamps: true,
