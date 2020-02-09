@@ -257,6 +257,7 @@ exports.postFileUpload = async(req, res) => {
       const fileType = getMediaType(filename);
       let fileExtension = getExtensionString(filename);
 
+      const fileSize = resumableTotalSize;
       const originalFileSizeInMb = bytesToMb(resumableTotalSize);
 
       if(fileExtension == '.MP4'){
@@ -282,6 +283,7 @@ exports.postFileUpload = async(req, res) => {
         fileType,
         hostUrl,
         fileExtension,
+        fileSize,
         originalFileSizeInMb,
         category,
         subcategory,
@@ -415,6 +417,12 @@ exports.postFileUpload = async(req, res) => {
           await fs.remove(`./${uploadPath}`);
 
           uploadLogger.info('Removed original file parts', logObject);
+
+          // save filesize
+          const convertedFileStats = fs.statSync(fileInDirectory);
+
+          upload.fileSize = convertedFileStats.size;
+          await upload.save();
 
           console.log('done moving file');
 
@@ -601,6 +609,7 @@ exports.adminUpload = async(req, res) => {
 
     // console.log(response);
 
+    upload.fileSize = response.format.size;
     upload.processedFileSizeInMb = bytesToMb(response.format.size);
 
     upload.bitrate = response.format.bit_rate / 1000;
