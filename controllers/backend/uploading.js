@@ -77,6 +77,7 @@ exports.getUploadProgress = async(req, res) => {
   });
 
   if(upload && upload.status == 'completed'){
+    upload.processingCompletedAt = new Date();
     return res.send('100');
   }
 
@@ -198,6 +199,10 @@ const testIsFileTypeUnknown = async function(upload, fileType, fileExtension, lo
 
 };
 
+const bytesToMb = (bytes, decimalPlaces = 4) => {
+  return+(bytes / Math.pow(2,20)).toFixed(decimalPlaces);
+};
+
 /**
  * POST /api/upload
  * File Upload API example.
@@ -252,7 +257,7 @@ exports.postFileUpload = async(req, res) => {
       const fileType = getMediaType(filename);
       let fileExtension = getExtensionString(filename);
 
-      const fileSize = resumableTotalSize;
+      const originalFileSizeInMb = bytesToMb(resumableTotalSize);
 
       if(fileExtension == '.MP4'){
         fileExtension = '.mp4';
@@ -277,7 +282,7 @@ exports.postFileUpload = async(req, res) => {
         fileType,
         hostUrl,
         fileExtension,
-        fileSize,
+        originalFileSizeInMb,
         category,
         subcategory,
         rating,
@@ -411,12 +416,6 @@ exports.postFileUpload = async(req, res) => {
 
           uploadLogger.info('Removed original file parts', logObject);
 
-          // save filesize
-          const convertedFileStats = fs.statSync(fileInDirectory);
-
-          upload.fileSize = convertedFileStats.size;
-          await upload.save();
-
           console.log('done moving file');
 
           const specificMatches = ( codecName == 'hevc' || codecProfile == 'High 4:4:4 Predictive' );
@@ -467,6 +466,11 @@ exports.postFileUpload = async(req, res) => {
               });
 
               uploadLogger.info('Finished converting file', logObject);
+
+              // Save file size after compression.
+              const response = await ffmpegHelper.ffprobePromise(fileInDirectory);
+              upload.processedFileSizeInMb = bytesToMb(response.format.size);
+              await upload.save();
 
               // assuming an mp4 is created at this point so we delete the old uncoverted video
               await fs.remove(`${fileInDirectory}`);
@@ -597,7 +601,7 @@ exports.adminUpload = async(req, res) => {
 
     // console.log(response);
 
-    upload.fileSize = response.format.size;
+    upload.processedFileSizeInMb = bytesToMb(response.format.size);
 
     upload.bitrate = response.format.bit_rate / 1000;
 
