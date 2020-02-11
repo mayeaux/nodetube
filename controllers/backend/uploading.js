@@ -412,11 +412,11 @@ exports.postFileUpload = async(req, res) => {
             upload.fileType = 'convert';
           }
 
-          /** CONVERT AND UPLOAD VIDEO IF NECESSARY **/
 
+          /** TELL THE USER WE ARE CONVERTING / COMPRESSING THEIR VIDEO **/
           if(upload.fileType == 'convert' || bitrate > 2500 || upload.fileType == 'video'){
 
-            // if upload is a convert, or bitrate is over 2500, mark as processing and sent response to user
+            // if upload is a convert, or bitrate is over 2500, mark as processing and send response to user
             if(upload.fileType == 'convert' || bitrate > 2500){
               upload.status = 'processing';
               await upload.save();
@@ -429,6 +429,8 @@ exports.postFileUpload = async(req, res) => {
                 aboutToProcess(res, channelUrl, uniqueTag);
               }
             }
+
+            /** CONVERT AND UPLOAD VIDEO IF NECESSARY **/
 
             await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, hostFilePath, bucket, upload, channelUrl, b2);
 
@@ -462,6 +464,10 @@ exports.postFileUpload = async(req, res) => {
 
               // for upload to b2
               fileInDirectory = `${channelUrlFolder}/${uniqueTag}.mp4`;
+
+              // TODO: ^ this fileInDirectory points to the path of the compressed/converted file
+              // we need to do an ffprobe here with this file, and then save the new
+              // maybe let's save both, originalFizeSizeInMb (make sure it's in MB I'm not sure what it is right now
 
               uploadLogger.info('Completed video conversion', logObject);
             }
