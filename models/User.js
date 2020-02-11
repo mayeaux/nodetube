@@ -4,6 +4,13 @@ const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 var Schema = mongoose.Schema;
 
+const defaultMaxSizeUpload = process.env.DEFAULT_MAX_UPLOAD_SIZE_IN_MB;
+
+if(!defaultMaxSizeUpload){
+  throw new Error('Default max size is not set properly on the Upload model file. ' +
+    'See DEFAULT_MAX_UPLOAD_SIZE_IN_MB in .env.settings.sample')
+}
+
 const userSchema = new mongoose.Schema({
   email: { type: String, unique: true },
   emailConfirmed: { type: Boolean, default: false },
@@ -77,14 +84,17 @@ const userSchema = new mongoose.Schema({
       type: Boolean,
       default: false
     },
+    // backup full youtube channel
     youtubeBackup: {
       type: Boolean,
       default: false
     },
+    // unit is MB
     uploadSize : {
       type: Number,
-      default: process.env.MAX_FILE_SIZE_MB
+      default: defaultMaxSizeUpload
     },
+    // if the user is alowed to make SFW uploads (can remove priv for users who don't mark properly)
     safeForWorkUpload: {
       type: Boolean,
       default: true
@@ -129,7 +139,6 @@ const userSchema = new mongoose.Schema({
   // },
 
   socialMedia: {
-    gab: String,
     twitter: String,
     facebook: String
   },
