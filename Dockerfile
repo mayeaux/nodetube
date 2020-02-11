@@ -1,8 +1,8 @@
 FROM node:8-alpine
 
-RUN apk add --no-cache ffmpeg
-RUN apk add --no-cache git
-RUN apk add --no-cache tar
+RUN apk add ffmpeg
+RUN apk add git
+RUN apk add tar
 
 COPY package*.json /app/
 
