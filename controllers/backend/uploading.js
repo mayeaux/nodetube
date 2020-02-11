@@ -198,9 +198,24 @@ const testIsFileTypeUnknown = async function(upload, fileType, fileExtension, lo
 
 };
 
+// TODO: this should be with decimal instead of binary
 const bytesToMb = (bytes, decimalPlaces = 4) => {
   return+(bytes / Math.pow(2,20)).toFixed(decimalPlaces);
 };
+
+// TODO: let's call this secondsToFormattedTime
+// we can add in a comment that it is hh:mm:ss
+// also let's use moment here, actually the moment API may be so easy that we can just drop it 'in place' when we instantiate the variable
+function secondsToHms(timeInSeconds){
+  const hours = Math.floor(timeInSeconds / 3600).toString().padStart(2, '0');
+  const minutes = Math.floor(timeInSeconds % 3600 / 60).toString().padStart(2, '0');
+  const seconds = Math.floor(timeInSeconds % 3600 % 60).toString().padStart(2, '0');
+
+  const hms = `${hours}:${minutes}:${seconds}`;
+  // https://stackoverflow.com/questions/42879023/remove-leading-zeros-from-time-format
+  const removeLeadingZeroesRegex = /^0(?:0:0?)?/;
+  return hms.replace(removeLeadingZeroesRegex, '');
+}
 
 /**
  * POST /api/upload
@@ -376,16 +391,7 @@ exports.postFileUpload = async(req, res) => {
           const response = await ffmpegHelper.ffprobePromise(`${uploadPath}/convertedFile`);
 
           upload.durationInSeconds = Math.round(response.format.duration);
-          function secondsToHms(timeInSeconds){
-            const hours = Math.floor(timeInSeconds / 3600).toString().padStart(2, '0');
-            const minutes = Math.floor(timeInSeconds % 3600 / 60).toString().padStart(2, '0');
-            const seconds = Math.floor(timeInSeconds % 3600 % 60).toString().padStart(2, '0');
 
-            const hms = `${hours}:${minutes}:${seconds}`;
-            // https://stackoverflow.com/questions/42879023/remove-leading-zeros-from-time-format
-            const removeLeadingZeroesRegex = /^0(?:0:0?)?/;
-            return hms.replace(removeLeadingZeroesRegex, '');
-          }
           upload.formattedDuration = secondsToHms(Math.round(response.format.duration));
 
           const { codecName, codecProfile } = response.streams[0];
