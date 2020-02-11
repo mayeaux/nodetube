@@ -159,9 +159,11 @@ uploadSchema.virtual('lessThan24hOld').get(function(){
   return timeDiffInH > 24;
 });
 
+// TODO: eventually this can be simplified because we won't support createdAt anymore
+// can also be simplified in caching
 uploadSchema.virtual('timeAgo').get(function(){
 
-  return timeAgoEnglish.format( new Date(this.createdAt) );
+  return timeAgoEnglish.format( new Date(this.processingCompletedAt || this.createdAt) );
 });
 
 uploadSchema.virtual('viewsWithin1hour').get(function(){
