@@ -83,7 +83,7 @@ const userSchema = new mongoose.Schema({
     },
     uploadSize : {
       type: Number,
-      default: 500
+      default: process.env.MAX_FILE_SIZE_MB
     },
     safeForWorkUpload: {
       type: Boolean,
