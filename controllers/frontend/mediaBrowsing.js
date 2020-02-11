@@ -53,8 +53,8 @@ exports.recentRssFeed = async(req, res) => {
   uploads.map(item => {
     const { title, category } = item;
     const categories = [category];
-    const author = item.uploader.channelName;
-    const url = `${process.env.DOMAIN_NAME_AND_TLD}/user/${author}/${item.uniqueTag}`; 
+    const author = item.uploader.channelUrl;
+    const url = `${process.env.DOMAIN_NAME_AND_TLD}/user/${encodeURIComponent(author)}/${item.uniqueTag}`; 
 
     feed.item({
       title,
