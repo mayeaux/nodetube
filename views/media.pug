@@ -153,8 +153,9 @@ block content
                     h4.fw
                         | Uploaded #{upload.timeAgo} &nbsp
 
-                    p.fw
-                        | Duration: #{upload.formattedDuration}
+                    if upload.formattedDuration
+                        p.fw
+                            | Duration: #{upload.formattedDuration}
 
                     if upload.visibility == 'removed'
                         h2 Upload Deleted

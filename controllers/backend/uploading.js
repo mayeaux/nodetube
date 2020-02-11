@@ -77,7 +77,6 @@ exports.getUploadProgress = async(req, res) => {
   });
 
   if(upload && upload.status == 'completed'){
-    upload.processingCompletedAt = new Date();
     return res.send('100');
   }
 
@@ -477,22 +476,21 @@ exports.postFileUpload = async(req, res) => {
 
               uploadLogger.info('Finished converting file', logObject);
 
-              // Save file size after compression.
-              const response = await ffmpegHelper.ffprobePromise(fileInDirectory);
-              upload.processedFileSizeInMb = bytesToMb(response.format.size);
-              await upload.save();
-
               // assuming an mp4 is created at this point so we delete the old uncoverted video
               await fs.remove(`${fileInDirectory}`);
 
               uploadLogger.info('Deleted unconverted file', logObject);
 
               // for upload to b2
+              // TODO: this is kind of ugly how since it's the same variable name (as the above variable which points towards the old video)
               fileInDirectory = `${channelUrlFolder}/${uniqueTag}.mp4`;
 
-              // TODO: ^ this fileInDirectory points to the path of the compressed/converted file
-              // we need to do an ffprobe here with this file, and then save the new
-              // maybe let's save both, originalFizeSizeInMb (make sure it's in MB I'm not sure what it is right now
+              // Save file size after compression.
+              const response = await ffmpegHelper.ffprobePromise(fileInDirectory);
+              upload.processedFileSizeInMb = bytesToMb(response.format.size);
+
+              await upload.save();
+
 
               uploadLogger.info('Completed video conversion', logObject);
             }
