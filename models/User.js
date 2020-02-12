@@ -8,7 +8,7 @@ const defaultMaxSizeUpload = process.env.DEFAULT_MAX_UPLOAD_SIZE_IN_MB;
 
 if(!defaultMaxSizeUpload){
   throw new Error('Default max size is not set properly on the Upload model file. ' +
-    'See DEFAULT_MAX_UPLOAD_SIZE_IN_MB in .env.settings.sample')
+    'See DEFAULT_MAX_UPLOAD_SIZE_IN_MB in .env.settings.sample');
 }
 
 const userSchema = new mongoose.Schema({
