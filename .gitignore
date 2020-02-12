@@ -2,6 +2,7 @@
 .env.private
 .env.settings
 public/ads.txt
+public/502.html
 
 uploadedRecordings
 recordings
