@@ -1,0 +1,92 @@
+script.
+
+  // SUBSCRIBE FUNCTIONALITY
+  var amountOfSubs = #{subscriberAmount}
+  var alreadySubbed = #{alreadySubbed}
+  var mediaUniqueTag = '#{upload.uniqueTag}'
+
+  //  console.log(alreadySubbed + ' already subbed');
+
+  $('.subscribe').on('touchstart click', function (e) {
+
+    // if user is not logged in
+    if (!user) {
+      return swal({
+        text: "Please register to subscribe to content",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sign Up Now'
+      }).then(function (result) {
+        if (result.value) {
+          window.location.href = "/signup";
+        }
+      })
+    }
+
+    var csrf = '#{_csrf}'
+
+    // dont move browser
+    e.preventDefault();
+
+
+    // TODO: these both have to be changed with proper values
+
+    var channelUrl = '#{upload.uploader.channelUrl}'
+    var userName = "#{upload.uploader.channelName || upload.uploader.channelUrl}"
+
+    var unsubbing = alreadySubbed
+
+    // switch value of alreadySubbed
+    if (alreadySubbed) {
+      amountOfSubs = amountOfSubs - 1
+      alreadySubbed = false;
+    } else {
+      amountOfSubs = amountOfSubs + 1
+      alreadySubbed = true;
+    }
+
+    // the user is unsubbing
+    if(unsubbing){
+      $('.subscribe').html(`Subscribe (${amountOfSubs})`)
+      // change from red to green
+
+      console.log('unsubscribing');
+      $('.subscribe').removeClass("btn-danger")
+      $('.subscribe').addClass("btn-success")
+
+
+      // remove class, add class
+
+      swal({ text: 'You have unsubscribed from ' + userName })
+
+    } else {
+      console.log('subscribing')
+
+      $('.subscribe').html(`Unsubscribe (${amountOfSubs})`)
+      $('.subscribe').removeClass("btn-success")
+      $('.subscribe').addClass("btn-danger")
+
+      // change from green to red
+      swal({ text: 'You have subscribed to ' + userName })
+    }
+
+
+    //
+    var data = {
+      _csrf: csrf,
+      channelUrl,
+      uniqueTag : mediaUniqueTag
+    }
+
+    $.ajax({
+      type: 'POST',
+      url: `/api/subscribe`,
+      data,
+      success: function (data) {
+        console.log(data);
+      },
+      error: function (err) {
+        console.log(err);
+      }
+    });
+  })
