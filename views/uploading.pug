@@ -137,7 +137,7 @@ block content
                       each category in categories
                         li(role='presentation')
                           // this is being added because allUploads is not a legitimate category, but this is a bit of a hack fix
-                          if category.displayName !== 'All Uploads'
+                          if category.displayName !== 'All Uploads' && category.displayName !== 'Category Overview'
                             a.categoryValue(style="cursor:pointer;" data-value=category.name data-displayname=category.displayName) #{category.displayName}
 
                   br
