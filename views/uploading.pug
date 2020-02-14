@@ -136,7 +136,7 @@ block content
                       each category in categories
                         li(role='presentation')
                           // this is being added because allUploads is not a legitimate category, but this is a bit of a hack fix
-                          if category.displayName !== 'All Uploads'
+                          if category.displayName !== 'All Uploads' && category.displayName !== 'Category Overview'
                             a.categoryValue(style="cursor:pointer;" data-value=category.name data-displayname=category.displayName) #{category.displayName}
 
                   br
@@ -199,9 +199,9 @@ block content
                 button.fw.btn.btn-primary.submit-button(style="border-radius:5px;font-size:18px;" type="submit") Upload
 
           div.upload-gif
-              h3.upload-title-name Your file is uploading
+              h3.fw.upload-title-name Your file is uploading
               br
-              h1(style="margin-bottom:19px;") Uploading...
+              h1.fw(style="margin-bottom:19px;") Uploading...
 
               div#myItem1.ldBar(data-preset="circle")
 

@@ -437,7 +437,6 @@ exports.postFileUpload = async(req, res) => {
             upload.fileType = 'convert';
           }
 
-
           /** TELL THE USER WE ARE CONVERTING / COMPRESSING THEIR VIDEO **/
           if(upload.fileType == 'convert' || bitrate > 2500 || upload.fileType == 'video'){
 
