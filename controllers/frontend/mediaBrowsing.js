@@ -24,8 +24,8 @@ async function getStats(){
   let views = await redisClient.getAsync('dailyStatsViews');
   viewStats = JSON.parse(views);
 
-  console.log('view stats');
-  console.log(viewStats);
+  // console.log('view stats');
+  // console.log(viewStats);
 
   // inflate by 100k
   viewStats.alltime = viewStats.alltime + 100000;
