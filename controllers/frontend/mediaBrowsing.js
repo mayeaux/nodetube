@@ -221,7 +221,7 @@ exports.popularUploads = async(req, res) => {
 
   let displayObject = [{ withinString: '1hour', englishString: 'Last Hour' }, { withinString : '24hour', englishString: 'Last Day'},
     {withinString: '1week', englishString: 'Last Week'}
-    , { withinString: '1month', englishString: 'Last Month' }];
+    , { withinString: '1month', englishString: 'Last Month' }, { withinString: 'alltime', englishString: 'All Time' }];
 
   // used for 'views per these returned items
   function calculateViewAmount(uploads){

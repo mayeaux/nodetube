@@ -1,3 +1,5 @@
+const instanceBrandName = process.env.INSTANCE_BRAND_NAME || 'NodeTube';
+
 const categories = [
   {
     name: 'all',
@@ -9,14 +11,15 @@ const categories = [
     displayName: 'Category Overview',
     subcategories: []
   },
+  // the two above don't display regularly they're their own thing
   {
-    name: 'howToAndEducation',
-    displayName: 'How To & Education',
+    name: 'nodeTube',
+    displayName: `${instanceBrandName} Related`,
     subcategories: []
   },
   {
-    name: 'nodeTube',
-    displayName: 'NodeTube Related',
+    name: 'howToAndEducation',
+    displayName: 'How To & Education',
     subcategories: []
   },
   {

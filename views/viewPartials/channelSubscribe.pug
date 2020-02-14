@@ -1,0 +1,60 @@
+script.
+  var amountOfSubs = #{subscriberAmount}
+  var alreadySubbed = #{alreadySubbed}
+
+  $('.subscribe').on('touchstart click', function (e) {
+
+    if (!user) {
+      return swal('Please register an account to subscribe')
+    }
+
+    var channelUrl = '#{channel.channelUrl}'
+    var csrf = '#{_csrf}'
+
+    // dont move browser
+    e.preventDefault();
+
+    if (alreadySubbed) {
+      amountOfSubs = amountOfSubs - 1
+      alreadySubbed = false;
+    } else {
+      amountOfSubs = amountOfSubs + 1
+      alreadySubbed = true;
+    }
+
+    var userName = "#{channel.channelName || channel.channelUrl}"
+
+    if (!alreadySubbed) {
+      $('.subscribe').html(`Subscribe (${amountOfSubs})`)
+
+      $('.subscribe').removeClass("btn-danger")
+      $('.subscribe').addClass("btn-success")
+
+      swal('You have unsubscribed from ' + userName)
+
+    } else {
+      $('.subscribe').html(`Unsubscribe (${amountOfSubs})`)
+
+      $('.subscribe').removeClass("btn-success")
+      $('.subscribe').addClass("btn-danger")
+      swal('You have subscribed to ' + userName )
+    }
+
+    //
+    var data = {
+      _csrf: csrf,
+      channelUrl
+    }
+
+    $.ajax({
+      type: 'POST',
+      url: `/api/subscribe`,
+      data,
+      success: function (data) {
+        console.log(data);
+      },
+      error: function (err) {
+        console.log(err);
+      }
+    });
+  })
