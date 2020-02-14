@@ -382,22 +382,26 @@ exports.postFileUpload = async(req, res) => {
         concat(fileNameArray, `${uploadPath}/convertedFile`, async function(err){
           if(err)throw err;
 
-          let bitrate;
-
           uploadLogger.info('Concat done', logObject);
 
-          const response = await ffmpegHelper.ffprobePromise(`${uploadPath}/convertedFile`);
+          let bitrate, codecName, codecProfile;
 
-          upload.durationInSeconds = Math.round(response.format.duration);
+          if(upload.fileType !== 'image'){
+            const response = await ffmpegHelper.ffprobePromise(`${uploadPath}/convertedFile`);
 
-          upload.formattedDuration = secondsToFormattedTime(Math.round(response.format.duration));
+            upload.durationInSeconds = Math.round(response.format.duration);
 
-          const { codecName, codecProfile } = response.streams[0];
+            upload.formattedDuration = secondsToFormattedTime(Math.round(response.format.duration));
 
-          // TODO: what are the units of measurement here?
-          bitrate = response.format.bit_rate / 1000;
+            codecProfile  = response.streams[0].codecProfile;
 
-          uploadLogger.info(`BITRATE: ${bitrate}`, logObject);
+            codecName  = response.streams[0].codecName;
+
+            // TODO: what are the units of measurement here?
+            bitrate = response.format.bit_rate / 1000;
+
+            uploadLogger.info(`BITRATE: ${bitrate}`, logObject);
+          }
 
           // where to save the files locally
           const channelUrlFolder = `${saveAndServeFilesDirectory}/${user.channelUrl}`;
