@@ -27,6 +27,9 @@ async function setIndexValues(){
   // TODO: have to implement this as real: true only when validation is done
   viewAmount = await  View.estimatedDocumentCount({});
 
+  // inflate by 100k
+  viewAmount = viewAmount + 100000
+
   if(logCaching == 'true'){
     console.log('View amount calculated, calculating channel amount');
   }
@@ -38,6 +41,8 @@ async function setIndexValues(){
   }
 
   mediaAmount = await Upload.estimatedDocumentCount({});
+
+  mediaAmount = mediaAmount + 500;
 
   if(logCaching == 'true'){
     console.log('Upload amount calculated, calculating view amount');
@@ -63,6 +68,9 @@ async function setIndexValues(){
 // }, 1000 * 60 * 20);
 
 // TODO: refactor to do via count
+
+/** THIS IS FOR DAILY STATS, VIEWS ALSO USED IN POPULAR **/
+
 async function getAmountsPerPeriods(Model, objectName){
 
   const totalDocumentAmount = await Model.estimatedDocumentCount({});
