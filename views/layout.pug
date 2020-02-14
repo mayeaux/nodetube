@@ -41,7 +41,8 @@ html
     link(rel='stylesheet', href='/css/loading-bar.css')
     script(src='/js/loading-bar.js')
 
-
+    if adsenseOn
+      script(data-ad-client=`${adsenseId}` async='' src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js")
 
     if recaptchaOn
       script(src='https://www.google.com/recaptcha/api.js')
