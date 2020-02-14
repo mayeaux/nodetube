@@ -38,7 +38,7 @@ async function getRecentUploads(){
     };
 
     const selectString = 'rating title views uploader fileType thumbnailUrl ' +
-      'uploadUrl uniqueTag customThumbnailUrl fileExtension thumbnails reacts uncurated category subcategory createdAt description';
+      'uploadUrl uniqueTag customThumbnailUrl fileExtension thumbnails reacts uncurated category subcategory createdAt description processingCompletedAt';
 
     let recentUploads = await Upload.find(searchQuery).select(selectString).populate('uploader reacts')
       .sort({ createdAt : - 1 })
@@ -68,7 +68,7 @@ async function setRecentUploads(){
 
     // console.log(`view amount ${upload.viewAmount}`);
 
-    upload.timeAgo = timeAgoEnglish.format( new Date(upload.createdAt) );
+    upload.timeAgo = timeAgoEnglish.format( new Date(upload.processingCompletedAt || upload.createdAt) );
 
     upload.viewsAllTime = await View.find({
       upload: upload._id

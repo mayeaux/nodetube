@@ -20,6 +20,8 @@ const uploadSchema = new mongoose.Schema({
   hostUrl: String, // (backblaze prepend)  TODO: can eventually delete this
   uniqueTag: { type: String, index: true, unique: true },
   fileType: { type: String, enum: ['video', 'image', 'audio', 'unknown', 'convert'] },
+  originalFileSizeInMb: Number,
+  processedFileSizeInMb: Number,
   fileSize: Number,  // TODO: should support highQualityFileSize as well for compressions
   views: {
     type: Number,
@@ -91,7 +93,12 @@ const uploadSchema = new mongoose.Schema({
   },
 
   subcategory: { type: String, enum: ['pranks', 'meditation', 'yoga', 'rightwing', 'leftwing', 'uncategorized', 'fitness',
-    'yogaAndMeditation', 'blockchain', 'internet', 'political', 'software'] }
+    'yogaAndMeditation', 'blockchain', 'internet', 'political', 'software'] },
+
+  durationInSeconds: Number ,
+  formattedDuration: String,
+
+  processingCompletedAt: Date
 
 }, {
   timestamps: true,
@@ -152,9 +159,11 @@ uploadSchema.virtual('lessThan24hOld').get(function(){
   return timeDiffInH > 24;
 });
 
+// TODO: eventually this can be simplified because we won't support createdAt anymore
+// can also be simplified in caching
 uploadSchema.virtual('timeAgo').get(function(){
 
-  return timeAgoEnglish.format( new Date(this.createdAt) );
+  return timeAgoEnglish.format( new Date(this.processingCompletedAt || this.createdAt) );
 });
 
 uploadSchema.virtual('viewsWithin1hour').get(function(){

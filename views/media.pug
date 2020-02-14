@@ -148,16 +148,22 @@ block content
                 // Upload View Amount
                 h3.fw #{upload.views} Views
 
-                // Upload time ago and uploader
+                // Upload time ago, duration and uploader
                 if upload.uploader
                     h4.fw
                         | Uploaded #{upload.timeAgo} &nbsp
+
+                    if upload.formattedDuration
+                        p.fw
+                            | Duration: #{upload.formattedDuration}
 
                     if upload.visibility == 'removed'
                         h2 Upload Deleted
 
                     if upload.fileType == 'video' || upload.fileType == 'audio'
-                        p.fw.fileSizeText(style="margin-top:15px") File Size: #{ ( upload.fileSize/ ( 1000 * 1000)).toFixed() } MB
+
+                        // TODO: at some point we should not support upload.fileSize and move to upload.originalFileSizeInMb instead
+                        p.fw.fileSizeText(style="margin-top:15px") File Size: #{ Math.round(upload.processedFileSizeInMb) || ( upload.fileSize/ ( 1000 * 1000)).toFixed() } MB
 
                     if upload.category
                         each category in categories

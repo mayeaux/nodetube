@@ -198,6 +198,23 @@ const testIsFileTypeUnknown = async function(upload, fileType, fileExtension, lo
 
 };
 
+const bytesToMb = (bytes, decimalPlaces = 4) => {
+  return(bytes / Math.pow(10,6)).toFixed(decimalPlaces);
+};
+
+function secondsToFormattedTime(durationInSeconds){
+  // Formatted time is in hh:mm:ss format with no leading zeroes.
+  const hours = Math.floor(durationInSeconds / 3600);
+  const minutes = Math.floor(durationInSeconds % 3600 / 60);
+  const seconds = Math.floor(durationInSeconds % 3600 % 60);
+
+  const formattedTime = `${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+  // https://stackoverflow.com/questions/42879023/remove-leading-zeros-from-time-format
+  const removeLeadingZeroesRegex = /^0(?:0:0?)?/;
+  return formattedTime.replace(removeLeadingZeroesRegex, '');
+}
+
 /**
  * POST /api/upload
  * File Upload API example.
@@ -253,6 +270,7 @@ exports.postFileUpload = async(req, res) => {
       let fileExtension = getExtensionString(filename);
 
       const fileSize = resumableTotalSize;
+      const originalFileSizeInMb = bytesToMb(resumableTotalSize);
 
       if(fileExtension == '.MP4'){
         fileExtension = '.mp4';
@@ -278,6 +296,7 @@ exports.postFileUpload = async(req, res) => {
         hostUrl,
         fileExtension,
         fileSize,
+        originalFileSizeInMb,
         category,
         subcategory,
         rating,
@@ -368,6 +387,10 @@ exports.postFileUpload = async(req, res) => {
           uploadLogger.info('Concat done', logObject);
 
           const response = await ffmpegHelper.ffprobePromise(`${uploadPath}/convertedFile`);
+
+          upload.durationInSeconds = Math.round(response.format.duration);
+
+          upload.formattedDuration = secondsToFormattedTime(Math.round(response.format.duration));
 
           const { codecName, codecProfile } = response.streams[0];
 
@@ -462,11 +485,14 @@ exports.postFileUpload = async(req, res) => {
               uploadLogger.info('Deleted unconverted file', logObject);
 
               // for upload to b2
+              // TODO: this is kind of ugly how since it's the same variable name (as the above variable which points towards the old video)
               fileInDirectory = `${channelUrlFolder}/${uniqueTag}.mp4`;
 
-              // TODO: ^ this fileInDirectory points to the path of the compressed/converted file
-              // we need to do an ffprobe here with this file, and then save the new
-              // maybe let's save both, originalFizeSizeInMb (make sure it's in MB I'm not sure what it is right now
+              // Save file size after compression.
+              const response = await ffmpegHelper.ffprobePromise(fileInDirectory);
+              upload.processedFileSizeInMb = bytesToMb(response.format.size);
+
+              await upload.save();
 
               uploadLogger.info('Completed video conversion', logObject);
             }
@@ -590,6 +616,7 @@ exports.adminUpload = async(req, res) => {
     // console.log(response);
 
     upload.fileSize = response.format.size;
+    upload.processedFileSizeInMb = bytesToMb(response.format.size);
 
     upload.bitrate = response.format.bit_rate / 1000;
 
