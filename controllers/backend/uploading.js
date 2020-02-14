@@ -471,6 +471,7 @@ exports.postFileUpload = async(req, res) => {
             if(upload.fileType == 'convert' || (bitrate > 2500 && fileExtension == '.mp4')){
               await ffmpegHelper.convertVideo({
                 uploadedPath: fileInDirectory,
+                upload,
                 title,
                 bitrate,
                 savePath,

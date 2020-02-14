@@ -98,7 +98,9 @@ const uploadSchema = new mongoose.Schema({
   durationInSeconds: Number ,
   formattedDuration: String,
 
-  processingCompletedAt: Date
+  processingCompletedAt: Date,
+
+  estimatedTimeRemainingConverting: Number
 
 }, {
   timestamps: true,
