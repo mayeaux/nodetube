@@ -6,6 +6,8 @@ var concat = require('concat-files');
 var B2 = require('easy-backblaze');
 const _ = require('lodash');
 const fs = require('fs-extra');
+const moment = require('moment');
+const momentDurationFormatSetup = require('moment-duration-format');
 const path = require('path');
 const mkdirp = Promise.promisifyAll(require('mkdirp'));
 var randomstring = require('randomstring');
@@ -198,23 +200,21 @@ const testIsFileTypeUnknown = async function(upload, fileType, fileExtension, lo
 
 };
 
-// TODO: this should be with decimal instead of binary
 const bytesToMb = (bytes, decimalPlaces = 4) => {
-  return+(bytes / Math.pow(2,20)).toFixed(decimalPlaces);
+  return(bytes / Math.pow(10,6)).toFixed(decimalPlaces);
 };
 
-// TODO: let's call this secondsToFormattedTime
-// we can add in a comment that it is hh:mm:ss
-// also let's use moment here, actually the moment API may be so easy that we can just drop it 'in place' when we instantiate the variable
-function secondsToHms(timeInSeconds){
-  const hours = Math.floor(timeInSeconds / 3600).toString().padStart(2, '0');
-  const minutes = Math.floor(timeInSeconds % 3600 / 60).toString().padStart(2, '0');
-  const seconds = Math.floor(timeInSeconds % 3600 % 60).toString().padStart(2, '0');
+function secondsToFormattedTime(durationInSeconds){
+  // Formatted time is in hh:mm:ss format with no leading zeroes.
+  const hours = Math.floor(durationInSeconds / 3600);
+  const minutes = Math.floor(durationInSeconds % 3600 / 60);
+  const seconds = Math.floor(durationInSeconds % 3600 % 60);
 
-  const hms = `${hours}:${minutes}:${seconds}`;
+  const formattedTime = `${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
   // https://stackoverflow.com/questions/42879023/remove-leading-zeros-from-time-format
   const removeLeadingZeroesRegex = /^0(?:0:0?)?/;
-  return hms.replace(removeLeadingZeroesRegex, '');
+  return formattedTime.replace(removeLeadingZeroesRegex, '');
 }
 
 /**
@@ -392,7 +392,7 @@ exports.postFileUpload = async(req, res) => {
 
           upload.durationInSeconds = Math.round(response.format.duration);
 
-          upload.formattedDuration = secondsToHms(Math.round(response.format.duration));
+          upload.formattedDuration = secondsToFormattedTime(Math.round(response.format.duration));
 
           const { codecName, codecProfile } = response.streams[0];
 
@@ -495,7 +495,6 @@ exports.postFileUpload = async(req, res) => {
               upload.processedFileSizeInMb = bytesToMb(response.format.size);
 
               await upload.save();
-
 
               uploadLogger.info('Completed video conversion', logObject);
             }
