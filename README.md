@@ -1,7 +1,7 @@
 # NodeTube
 NodeTube is an open-source YouTube alt that offers video, audio and image uploads, livestreaming and built-in monetization
 
-A live NodeTube instance is available to interact with at [https://nodetube.live](https://nodetube.live)
+A live NodeTube instance is available to interact with at [https://newtube.app](https://newtube.app)
 
 You can join the open-source community actively developing NodeTube on [Discord](https://discord.gg/ejGah8H), [Riot.im](https://riot.im/app/#/room/#nodetube:matrix.org) and [Reddit](https://reddit.com/r/nodetube)
 
@@ -107,7 +107,7 @@ Don't forget to join the open-source community developing NodeTube on [Discord](
 
 Domain | Registrations Open 
 :---: | :---: 
-https://nodetube.live | Yes 
+https://newtube.app | Yes 
 https://nullvideo.com| Yes 
 https://videoflicktube.com| Yes 
 https://xchtube.com| Yes 
