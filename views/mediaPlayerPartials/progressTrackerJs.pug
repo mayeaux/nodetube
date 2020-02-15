@@ -33,4 +33,7 @@ script.
     });
   }
 
-  setInterval(doThing, 1000 * 7)
+  var userIsOnNgrokDomain = document.URL.slice(-9, -1) === "ngrok.io";
+  var intervalSeconds = userIsOnNgrokDomain ? 7 : 1
+
+  setInterval(doThing, 1000 * intervalSeconds)
