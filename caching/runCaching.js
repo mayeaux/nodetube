@@ -34,7 +34,8 @@ mongoose.Promise = global.Promise;
 mongoose.Promise = global.Promise;
 mongoose.connect(database, {
   keepAlive: true,
-  reconnectTries: Number.MAX_VALUE
+  //reconnectTries: Number.MAX_VALUE,
+  connectTimeoutMS: 900*1000
 });
 
 if(process.env.MONGOOSE_DEBUG == 'true' || process.env.MONGOOSE_DEBUG == 'on'){
@@ -81,9 +82,14 @@ setInterval(cacheOnlyRecentUploads, cacheRecentIntervalInMs);
 
 async function cachePopularDailyStatsAndIndex(){
   try {
-    await cachePopularUploads();
-    await setCache.setDailyStats();
-    await setCache.setIndexValues();
+		Promise.all([
+			cachePopularUploads,
+			setCache.setDailyStats,
+			setCache.setIndexValues,
+		])
+    // await cachePopularUploads();
+    // await setCache.setDailyStats();
+    // await setCache.setIndexValues();
 
     // await cacheChannels();
   } catch(err){
