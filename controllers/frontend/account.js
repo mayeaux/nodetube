@@ -162,6 +162,14 @@ exports.getChannel = async(req, res) => {
     }).populate('receivedSubscriptions').lean()
       .exec();
 
+    // 404 if no user found
+    if(!user){
+      res.status(404);
+      return res.render('error/404', {
+        title: 'Not Found'
+      });
+    }
+
     let viewerIsMod = Boolean(req.user && (req.user.role == 'admin' || req.user.role == 'moderator'));
 
     let viewerIsOwner = (req.user && req.user.channelUrl) == user.channelUrl;
@@ -173,8 +181,8 @@ exports.getChannel = async(req, res) => {
 
     const channelIsRestrictedAndNotAMod = user.status == 'restricted' && !viewerIsAdminOrMod;
 
-    // 404 if nothing found or channel is restricted
-    if(!user || channelIsRestrictedAndNotAMod ){
+    //  404 if channel is restricted
+    if(channelIsRestrictedAndNotAMod ){
       res.status(404);
       return res.render('error/404', {
         title: 'Not Found'
