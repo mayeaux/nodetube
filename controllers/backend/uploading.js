@@ -13,6 +13,7 @@ var randomstring = require('randomstring');
 const redisClient = require('../../config/redis');
 
 const pagination = require('../../lib/helpers/pagination');
+const timeHelper = require('../../lib/helpers/time');
 
 const User = require('../../models/index').User;
 const Upload = require('../../models/index').Upload;
@@ -83,16 +84,16 @@ exports.getUploadProgress = async(req, res) => {
   // nuspa41uploadProgress
   const string = `${uniqueTag}uploadProgress`;
 
-  const value = await redisClient.getAsync(`${uniqueTag}uploadProgress`);
+  const conversionProgress = await redisClient.getAsync(`${uniqueTag}uploadProgress`);
+  const conversionTimeLeft = await redisClient.getAsync(`${uniqueTag}timeLeft`);
 
-  console.log(value);
+  console.log('Progress:', conversionProgress);
+  console.log('Time left:', conversionTimeLeft);
 
   // kind of an ugly workaround, if the upload is at 100% converted, mark it as 99%
   // just so backblaze and other things can finish before the frontend redirects
-  if(value == '100'){
+  if(conversionProgress == '100'){
     res.send('99');
-  } else {
-    return res.send(value);
   }
 
   // console.log(value);
@@ -103,7 +104,7 @@ exports.getUploadProgress = async(req, res) => {
   //
   // console.log(uniqueTag);
 
-  return res.send(value);
+  return res.send({conversionProgress, conversionTimeLeft});
 
 };
 
@@ -201,19 +202,6 @@ const testIsFileTypeUnknown = async function(upload, fileType, fileExtension, lo
 const bytesToMb = (bytes, decimalPlaces = 4) => {
   return(bytes / Math.pow(10,6)).toFixed(decimalPlaces);
 };
-
-function secondsToFormattedTime(durationInSeconds){
-  // Formatted time is in hh:mm:ss format with no leading zeroes.
-  const hours = Math.floor(durationInSeconds / 3600);
-  const minutes = Math.floor(durationInSeconds % 3600 / 60);
-  const seconds = Math.floor(durationInSeconds % 3600 % 60);
-
-  const formattedTime = `${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-
-  // https://stackoverflow.com/questions/42879023/remove-leading-zeros-from-time-format
-  const removeLeadingZeroesRegex = /^0(?:0:0?)?/;
-  return formattedTime.replace(removeLeadingZeroesRegex, '');
-}
 
 /**
  * POST /api/upload
@@ -390,7 +378,7 @@ exports.postFileUpload = async(req, res) => {
 
           upload.durationInSeconds = Math.round(response.format.duration);
 
-          upload.formattedDuration = secondsToFormattedTime(Math.round(response.format.duration));
+          upload.formattedDuration = timeHelper.secondsToFormattedTime(Math.round(response.format.duration));
 
           const { codecName, codecProfile } = response.streams[0];
 

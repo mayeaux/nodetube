@@ -20,7 +20,11 @@ script.
       success: function (data) {
         console.log(data);
 
-        $('#processing').text(`Your upload is currently ${data}% done being processed`);
+        $('#processing').text(`Your upload is currently ${data.conversionProgress}% done being processed`);
+
+        $('#processingTimeLeft').text(`Time to completion: ${data.conversionTimeLeft}`);
+
+
 
         if(parseInt(data) == 100){
           location.reload();
