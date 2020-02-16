@@ -1,5 +1,17 @@
 script.
 
+  var secondsToFormattedTime = #{secondsToFormattedTime}
+
+  var secondsFormatted = secondsToFormattedTime(204);
+
+  console.log(secondsFormatted)
+
+  //setInterval(function () {
+  //  console.log(secondHolder);
+  //  secondHolder = secondHolder - 1
+  //  $('#processingTimeLeft').text(`Time to completion: ${secondHolder}`);
+  //}, 1000 * 10)
+
   function doThing(){
     var csrf = '#{_csrf}'
 
@@ -13,6 +25,8 @@ script.
       channelUrl
     }
 
+    var secondHolder = 0;
+
     $.ajax({
       type: 'POST',
       url: `/user/${channelUrl}/${mediaUniqueTag}/progress`,
@@ -20,9 +34,14 @@ script.
       success: function (data) {
         console.log(data);
 
+        secondHolder = Number(data.conversionTimeLeft)
+
+
+
         $('#processing').text(`Your upload is currently ${data.conversionProgress}% done being processed`);
 
         $('#processingTimeLeft').text(`Time to completion: ${data.conversionTimeLeft}`);
+
 
 
 
@@ -37,4 +56,5 @@ script.
     });
   }
 
+  doThing();
   setInterval(doThing, 1000 * 7)

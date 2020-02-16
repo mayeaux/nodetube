@@ -1,6 +1,7 @@
 const Upload = require('../../models/index').Upload;
 const View = require('../../models/index').View;
 const Subscription = require('../../models/index').Subscription;
+const timeHelper = require('../../lib/helpers/time');
 
 const uploadHelpers = require('../../lib/helpers/settings');
 
@@ -26,6 +27,8 @@ function getParameterByName(name, url){
   if(!results[2])return'';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
+
+const secondsToFormattedTime = timeHelper.secondsToFormattedTime;
 
 const stripeToken = process.env.STRIPE_FRONTEND_TOKEN || 'pk_test_iIpX39D0QKD1cXh5CYNUw69B';
 
@@ -140,7 +143,8 @@ exports.getMedia = async(req, res) => {
       isUploader,
       getParameterByName,
       viewingUserIsBlocked,
-      brandName
+      brandName,
+      secondsToFormattedTime
     });
 
   } catch(err){
