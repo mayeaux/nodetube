@@ -1,6 +1,6 @@
 script.
 
-  function doThing(){
+  function getUpdateFromBackend(){
     var csrf = '#{_csrf}'
 
     var mediaUniqueTag = '#{upload.uniqueTag}'
@@ -34,6 +34,12 @@ script.
   }
 
   var userIsOnNgrokDomain = document.URL.slice(-9, -1) === "ngrok.io";
-  var intervalSeconds = userIsOnNgrokDomain ? 7 : 1
 
-  setInterval(doThing, 1000 * intervalSeconds)
+  // make the interval 7 seconds if the user is on ngrok to reduce timeout erros
+
+  var ngrokTimeoutAmountInSeconds = 7;
+  var normalNetworkTimeoutInSeconds = 2.5
+
+  var intervalSeconds = userIsOnNgrokDomain ? ngrokTimeoutAmountInSeconds : normalNetworkTimeoutInSeconds
+
+  setInterval(getUpdateFromBackend, 1000 * intervalSeconds)
