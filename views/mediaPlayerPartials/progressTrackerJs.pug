@@ -33,7 +33,7 @@ script.
     });
   }
 
-  var userIsOnNgrokDomain = document.URL.slice(-9, -1) === "ngrok.io";
+  var userIsOnNgrokDomain = new URL(document.URL).hostname.slice(-8) === "ngrok.io";
 
   // make the interval 7 seconds if the user is on ngrok to reduce timeout erros
 
