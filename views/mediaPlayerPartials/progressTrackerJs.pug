@@ -1,18 +1,5 @@
 script.
-
-  var secondsToFormattedTime = #{secondsToFormattedTime}
-
-  var secondsFormatted = secondsToFormattedTime(204);
-
-  console.log(secondsFormatted)
-
-  //setInterval(function () {
-  //  console.log(secondHolder);
-  //  secondHolder = secondHolder - 1
-  //  $('#processingTimeLeft').text(`Time to completion: ${secondHolder}`);
-  //}, 1000 * 10)
-
-  function doThing(){
+  function calculateAndSetProcessingTimeData(){
     var csrf = '#{_csrf}'
 
     var mediaUniqueTag = '#{upload.uniqueTag}'
@@ -34,16 +21,17 @@ script.
       success: function (data) {
         console.log(data);
 
-        secondHolder = Number(data.conversionTimeLeft)
+        secondHolder = Number(data.conversionTimeLeft);
+        setIntervalX(() => {
+          if (secondHolder !== 0) secondHolder -= 1
+          var secondsToFormattedTime = #{secondsToFormattedTime};
 
+          var conversionTimeLeftFormatted = secondsToFormattedTime(secondHolder);
 
+          $('#processingTimeLeft').text(`Time to completion: ${secondHolder === 0 ? "calculating ..." : conversionTimeLeftFormatted}`);
+        }, 1000 * 1, 7 - 1)
 
         $('#processing').text(`Your upload is currently ${data.conversionProgress}% done being processed`);
-
-        $('#processingTimeLeft').text(`Time to completion: ${data.conversionTimeLeft}`);
-
-
-
 
         if(parseInt(data) == 100){
           location.reload();
@@ -56,5 +44,17 @@ script.
     });
   }
 
-  doThing();
-  setInterval(doThing, 1000 * 7)
+  function setIntervalX(callback, delay, repetitions) {
+    var x = 0;
+    var intervalId = window.setInterval(function () {
+
+        callback();
+
+        if (++x === repetitions) {
+            window.clearInterval(intervalId);
+        }
+    }, delay);
+  }
+
+  calculateAndSetProcessingTimeData();
+  setInterval(calculateAndSetProcessingTimeData, 1000 * 7)
