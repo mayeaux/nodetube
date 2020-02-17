@@ -474,10 +474,27 @@ block content
 
             $('.file-progress').html('BEGINNING UPLOAD...');
           } else {
+            var secondsToFormattedTime = #{secondsToFormattedTime}
+            var throttle = #{throttle}
+            console.log("LODASH", throttle)
+            const throttled = () => console.log("Hi")
+            throttle(throttled, 100)
 
             $('.file-progress').html('PROGRESS: ' + progress + '%');
 
             bar1.set(progress);
+
+
+
+    //- const secondHolder = 10
+            //- console.log("sh", secondHolder, new Date().getSeconds());
+
+            //- $('.file-progress').html('PROGRESS: ' + progress + '%');
+            //- bar1.set(progress);
+            //- if(secondHolder === new Date().getSeconds()){
+
+              //- secondHolder += 1
+            //- }
           }
 
 
