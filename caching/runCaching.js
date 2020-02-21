@@ -34,7 +34,7 @@ mongoose.Promise = global.Promise;
 mongoose.Promise = global.Promise;
 mongoose.connect(database, {
   keepAlive: true,
-  //reconnectTries: Number.MAX_VALUE,
+  // reconnectTries: Number.MAX_VALUE,
   connectTimeoutMS: 900*1000
 });
 
@@ -82,11 +82,12 @@ setInterval(cacheOnlyRecentUploads, cacheRecentIntervalInMs);
 
 async function cachePopularDailyStatsAndIndex(){
   try {
-		Promise.all([
-			cachePopularUploads,
-			setCache.setDailyStats,
-			setCache.setIndexValues,
-		])
+    Promise.all([
+      cachePopularUploads,
+      setCache.setDailyStats,
+      setCache.setIndexValues
+    ]);
+		
     // await cachePopularUploads();
     // await setCache.setDailyStats();
     // await setCache.setIndexValues();
