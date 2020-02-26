@@ -144,15 +144,17 @@ function frontendRoutes(app){
   // behind admin auth atm, needs to use cache
   app.get('/channelsByReacts', authMiddleware.adminAuth, channelBrowsingController.channelsByReacts);
 
-  // media page
-
-  // TODO: add the ability to get progress here
-
+  // endpoint for processing progress
+  // TODO: should probably be renamed to note it's processing progress not necessarily upload progress
   app.all('/user/:channel/:media/progress', uploadingController.getUploadProgress);
 
+  // media page
   app.get('/user/:channel/:media', mediaPlayerController.getMedia);
 
-  /** user channel and individual media page */
+  // individual user rss feed
+  app.get('/user/:channel/rss', accountFrontendController.getChannel);
+
+  // individual user channel page
   app.get('/user/:channel', accountFrontendController.getChannel);
 
   /** rss feed routes **/

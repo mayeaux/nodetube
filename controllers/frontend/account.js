@@ -149,15 +149,13 @@ exports.getChannel = async(req, res) => {
   const limit = 51;
   const skipAmount = (page * limit) - limit;
 
-  const startingNumber = pagination.getMiddleNumber(page);
-  const numbersArray = pagination.createArray(startingNumber);
-  const previousNumber = pagination.getPreviousNumber(page);
-  const nextNumber = pagination.getNextNumber(page);
+  const { startingNumber, previousNumber, nextNumber, numbersArray } = pagination.buildPaginationObject(page);
 
   try {
 
     // find the user per channelUrl
     user = await User.findOne({
+      // regex for case insensitivity
       channelUrl:  new RegExp(['^', req.params.channel, '$'].join(''), 'i')
     }).populate('receivedSubscriptions').lean()
       .exec();
@@ -218,6 +216,7 @@ exports.getChannel = async(req, res) => {
 
     const searchQuery = {
       uploader: user._id,
+      // TODO: shouldn't really be using uploadUrl anymore
       $or : [ { status: 'completed' }, { uploadUrl: { $exists: true } } ]
       // uploadUrl: {$exists: true }
       // status: 'completed'
