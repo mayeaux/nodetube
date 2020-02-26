@@ -127,11 +127,54 @@ exports.subscriptions = async(req, res) => {
   }
 };
 
-// TODO: desperately needs a cleanup
 /**
- * GET /channel
- * Profile page.
+ * GET /user/$username/rss
+ * Channel rss page
  */
+exports.getChannelRss = async(req, res) => {
+  const channelUrl = req.params.channel;
+
+  try {
+    // find the user per channelUrl
+    user = await User.findOne({
+      // regex for case insensitivity
+      channelUrl:  new RegExp(['^', req.params.channel, '$'].join(''), 'i')
+    }).lean()
+      .exec();
+
+    // 404 if no user found
+    if(!user){
+      res.status(404);
+      return res.render('error/404', {
+        title: 'Not Found'
+      });
+    }
+
+    const searchQuery = {
+      uploader: user._id,
+      status: 'completed',
+      visibility: 'public'
+    };
+
+    /** DB CALL TO GET UPLOADS **/
+    let uploads = await Upload.find(searchQuery).sort({ createdAt : -1 });
+
+    console.log(uploads);
+
+    res.send(uploads);
+
+
+  } catch (err){
+
+  }
+};
+
+
+// TODO: desperately needs a cleanup
+  /**
+   * GET /user/$username
+   * Channel page
+   */
 exports.getChannel = async(req, res) => {
 
   let page = req.query.page;
