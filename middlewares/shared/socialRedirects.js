@@ -17,8 +17,11 @@ async function middleware(req, res, next){
     res.redirect('https://discord.gg/ejGah8H');
   }
 
-  next();
+  if(req.path == '/fosstodon'){
+    res.redirect('https://fosstodon.org/@nodetube');
+  }
 
+  next();
 }
 
 module.exports = middleware;
