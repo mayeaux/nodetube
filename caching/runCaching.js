@@ -82,15 +82,15 @@ setInterval(cacheOnlyRecentUploads, cacheRecentIntervalInMs);
 
 async function cachePopularDailyStatsAndIndex(){
   try {
-    Promise.all([
-      cachePopularUploads,
-      setCache.setDailyStats,
-      setCache.setIndexValues
-    ]);
+    // Promise.all([
+    //   cachePopularUploads,
+    //   setCache.setDailyStats,
+    //   setCache.setIndexValues
+    // ]);
 		
-    // await cachePopularUploads();
-    // await setCache.setDailyStats();
-    // await setCache.setIndexValues();
+    await cachePopularUploads();
+    await setCache.setDailyStats();
+    await setCache.setIndexValues();
 
     // await cacheChannels();
   } catch(err){
