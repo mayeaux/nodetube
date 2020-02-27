@@ -166,6 +166,7 @@ exports.getChannel = async(req, res) => {
     if(!user){
       res.status(404);
       return res.render('error/404', {
+        item: 'user',
         title: 'Not Found'
       });
     }
