@@ -216,6 +216,7 @@ block content
   script.
     $(document).ready(function () {
 
+
       // progress bar stuff
       var bar1 = new ldBar("#myItem1");
 
@@ -321,7 +322,7 @@ block content
           var title = $('#title').val();
           var description = $('#description').val();
 
-          var visibility = $(".visilibity label input[type='radio']:checked").val();
+          var visibility = $('input[name=visibility]:checked').val();
           var rating = $(".rating label input[type='radio']:checked").val();
 
           var subcategory = $(".subcategory label input[type='radio']:checked").val();
