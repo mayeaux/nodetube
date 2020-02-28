@@ -28,7 +28,7 @@ script.
 
           var conversionTimeLeftFormatted = secondsToFormattedTime(secondHolder);
 
-          $('#processingTimeLeft').text(`Time to completion: ${secondHolder === 0 ? "calculating ..." : conversionTimeLeftFormatted}`);
+          $('#processingTimeLeft').text(`Estimated time to completion: ${secondHolder === 0 ? "calculating ..." : conversionTimeLeftFormatted}`);
         }, 1000 * 1, 7 - 1)
 
         $('#processing').text(`Your upload is currently ${data.conversionProgress}% done being processed`);
