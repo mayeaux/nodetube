@@ -59,7 +59,7 @@ exports.recentRssFeed = async(req, res) => {
     feed.item({
       title,
       url, // link to the item
-      guid: item._id, // optional - defaults to url
+      guid: item.id, // optional - defaults to url
       categories, // optional - array of item categories
       author, // optional - defaults to feed author property
       date: item.createdAt // any format that js Date can parse.
