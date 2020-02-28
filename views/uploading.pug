@@ -205,6 +205,8 @@ block content
 
               div#myItem1.ldBar(data-preset="circle")
 
+              p.fw(id="uploadTimeLeft", style="margin-top:43px;") Estimated time to completion: calculating ...
+
 
 
 
@@ -288,6 +290,9 @@ block content
       if (!r.support) {
         swal('Sorry, your browser isn\'t supported currently, please update your browser');
       } else {
+        var setProgressAndTimeRemaining = null;
+        var barProgress = null;
+        var uploadTimeLeft = null;
 
         r.assignBrowse($('.resumable-browse')[0]);
 
@@ -471,39 +476,32 @@ block content
           const progress = Math.floor(file.progress() * 100);
 
           if (progress === 0 || progress === '0') {
-
+            uploadStartTime = new Date()
             $('.file-progress').html('BEGINNING UPLOAD...');
           } else {
-            var secondsToFormattedTime = #{secondsToFormattedTime}
-            var throttle = #{throttle}
-            console.log("LODASH", throttle)
-            const throttled = () => console.log("Hi")
-            throttle(throttled, 100)
+            const secondsElapsed = (new Date() - uploadStartTime) / 1000
+            const progressSpeed = (file.progress() * 100) / secondsElapsed
 
-            $('.file-progress').html('PROGRESS: ' + progress + '%');
+            uploadTimeLeft = Math.floor((100 - (file.progress() * 100)) /progressSpeed)
 
-            bar1.set(progress);
-
-
-
-    //- const secondHolder = 10
-            //- console.log("sh", secondHolder, new Date().getSeconds());
-
-            //- $('.file-progress').html('PROGRESS: ' + progress + '%');
-            //- bar1.set(progress);
-            //- if(secondHolder === new Date().getSeconds()){
-
-              //- secondHolder += 1
-            //- }
+            barProgress = progress
           }
-
-
         });
+
+        setInterval(function() {
+            if (barProgress) {
+            $('.file-progress').html('PROGRESS: ' + barProgress + '%');
+
+            bar1.set(barProgress);
+
+            var secondsToFormattedTime = #{secondsToFormattedTime}
+            uploadTimeLeft -= 1
+
+            $('#uploadTimeLeft').text(`Estimated time to completion: ${uploadTimeLeft ? secondsToFormattedTime(uploadTimeLeft - 1) : "calculating ..." }`);
+            }
+            }, 1000 * 1)
+
       }
-
-
-
-
 
     });
 
