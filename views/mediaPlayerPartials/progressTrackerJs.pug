@@ -12,7 +12,8 @@ script.
       channelUrl
     }
 
-    var secondHolder = 0;
+    var estimatedProcessingTimeLeft = null;
+    var processingStartTime = null
 
     $.ajax({
       type: 'POST',
@@ -20,18 +21,29 @@ script.
       data,
       success: function (data) {
         console.log(data);
+        processingStartTime = !processingStartTime ? new Date() : null;
 
-        secondHolder = Number(data.conversionTimeLeft);
+        estimatedProcessingTimeLeft = Number(data.conversionTimeLeft);
         setIntervalX(() => {
-          if (secondHolder !== 0) secondHolder -= 1
+          if (estimatedProcessingTimeLeft) estimatedProcessingTimeLeft -= 1
           var secondsToFormattedTime = #{secondsToFormattedTime};
 
-          var conversionTimeLeftFormatted = secondsToFormattedTime(secondHolder);
+          var secondsElapsed = processingStartTime ? Math.round((new Date() - processingStartTime) / 1000) : null;
 
-          $('#processingTimeLeft').text(`Estimated time to completion: ${secondHolder === 0 ? "calculating ..." : conversionTimeLeftFormatted}`);
+          var formattedSecondsElapsed = secondsElapsed && secondsToFormattedTime(secondsElapsed)
+          var formattedEstimatedProcessingTimeLeft = estimatedProcessingTimeLeft && secondsToFormattedTime(estimatedProcessingTimeLeft)
+          var formattedEstimatedTotalProcessingTime = secondsToFormattedTime(estimatedProcessingTimeLeft + secondsElapsed)
+
+          $('#processingTimeElapsed').text(`Time elapsed: ${formattedSecondsElapsed ? formattedSecondsElapsed : "calculating ..."}`)
+
+          $('#estimatedProcessingTimeLeft').text(`Estimated time to completion: ${formattedEstimatedProcessingTimeLeft ? formattedEstimatedProcessingTimeLeft : "calculating ..."}`);
+
+          $('#estimatedTotalProcessingTime').text(`Total estimated conversion time: ${formattedEstimatedTotalProcessingTime ? formattedEstimatedTotalProcessingTime : "calculating ..."}`)
+
         }, 1000 * 1, 7 - 1)
 
-        $('#processing').text(`Your upload is currently ${data.conversionProgress}% done being processed`);
+        // Shows undefined when at 100%
+        $('#processing').text(`Your upload is currently ${data.conversionProgress !== undefined ? data.conversionProgress : 100}% done being processed`);
 
         if(parseInt(data) == 100){
           location.reload();

@@ -205,7 +205,11 @@ block content
 
               div#myItem1.ldBar(data-preset="circle")
 
-              p.fw(id="uploadTimeLeft", style="margin-top:43px;") Estimated time to completion: calculating ...
+              p.fw(id="uploadTimeElapsed", style="margin-top:43px;") Time elapsed: calculating ...
+
+              p.fw(id="estimatedUploadTimeLeft") Estimated time to completion: calculating ...
+
+              p.fw(id="estimatedTotalUploadTime") Total estimated upload time: calculating ...
 
 
 
@@ -292,7 +296,8 @@ block content
       } else {
         var setProgressAndTimeRemaining = null;
         var barProgress = null;
-        var uploadTimeLeft = null;
+        var estimatedUploadTimeLeft = null;
+        var secondsElapsed = null;
 
         r.assignBrowse($('.resumable-browse')[0]);
 
@@ -479,10 +484,10 @@ block content
             uploadStartTime = new Date()
             $('.file-progress').html('BEGINNING UPLOAD...');
           } else {
-            const secondsElapsed = (new Date() - uploadStartTime) / 1000
+            secondsElapsed = Math.round((new Date() - uploadStartTime) / 1000)
             const progressSpeed = (file.progress() * 100) / secondsElapsed
 
-            uploadTimeLeft = Math.floor((100 - (file.progress() * 100)) /progressSpeed)
+            estimatedUploadTimeLeft = Math.ceil((100 - progress) / progressSpeed)
 
             barProgress = progress
           }
@@ -495,14 +500,20 @@ block content
             bar1.set(barProgress);
 
             var secondsToFormattedTime = #{secondsToFormattedTime}
-            uploadTimeLeft -= 1
+            estimatedUploadTimeLeft = estimatedUploadTimeLeft > 0 ? estimatedUploadTimeLeft - 1 : 0
+            secondsElapsed += 1
 
-            $('#uploadTimeLeft').text(`Estimated time to completion: ${uploadTimeLeft ? secondsToFormattedTime(uploadTimeLeft - 1) : "calculating ..." }`);
+            var formattedElapsedTime = secondsElapsed && secondsToFormattedTime(secondsElapsed)
+            var formattedTimeLeft = estimatedUploadTimeLeft !== null && secondsToFormattedTime(estimatedUploadTimeLeft)
+            var formattedTotalEstimatedProcessingTime = estimatedUploadTimeLeft !== null && secondsToFormattedTime(estimatedUploadTimeLeft + secondsElapsed)
+
+            $('#uploadTimeElapsed').text(`Time elapsed: ${formattedElapsedTime ? formattedElapsedTime : "calculating ..."}`)
+
+            $('#estimatedUploadTimeLeft').text(`Estimated time to completion: ${formattedTimeLeft ? formattedTimeLeft : "calculating ..." }`);
             }
+
+            $('#estimatedTotalUploadTime').text(`Total estimated upload time: ${formattedTotalEstimatedProcessingTime ? formattedTotalEstimatedProcessingTime : "calculating ..."}`)
+
             }, 1000 * 1)
-
       }
-
     });
-
-
