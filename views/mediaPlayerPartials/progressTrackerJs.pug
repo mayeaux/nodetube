@@ -1,5 +1,6 @@
 script.
-  function calculateAndSetProcessingTimeData(){
+
+  function getUpdateFromBackend(){
     var csrf = '#{_csrf}'
 
     var mediaUniqueTag = '#{upload.uniqueTag}'
@@ -40,7 +41,7 @@ script.
 
           $('#estimatedTotalProcessingTime').text(`Total estimated conversion time: ${formattedEstimatedTotalProcessingTime ? formattedEstimatedTotalProcessingTime : "calculating ..."}`)
 
-        }, 1000 * 1, 7 - 1)
+        }, 1000 * 1, intervalSeconds - 1)
 
         // Shows undefined when at 100%
         $('#processing').text(`Your upload is currently ${data.conversionProgress !== undefined ? data.conversionProgress : 100}% done being processed`);
@@ -68,5 +69,13 @@ script.
     }, delay);
   }
 
-  calculateAndSetProcessingTimeData();
-  setInterval(calculateAndSetProcessingTimeData, 1000 * 7)
+  var userIsOnNgrokDomain = new URL(document.URL).hostname.slice(-8) === "ngrok.io";
+
+  // make the interval 7 seconds if the user is on ngrok to reduce timeout erros
+  var ngrokTimeoutAmountInSeconds = 7;
+  var normalNetworkTimeoutInSeconds = 3
+
+  var intervalSeconds = userIsOnNgrokDomain ? ngrokTimeoutAmountInSeconds : normalNetworkTimeoutInSeconds
+
+  getUpdateFromBackend();
+  setInterval(getUpdateFromBackend, 1000 * intervalSeconds)
