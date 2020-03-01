@@ -488,7 +488,7 @@ block content
             secondsElapsed = Math.round((new Date() - uploadStartTime) / 1000)
             const progressSpeed = (file.progress() * 100) / secondsElapsed
 
-            estimatedUploadTimeLeft = Math.ceil((100 - progress) / progressSpeed)
+            estimatedUploadSecondsLeft = Math.ceil((100 - (file.progress() * 100)) / progressSpeed)
 
             barProgress = progress
           }
@@ -501,12 +501,12 @@ block content
             bar1.set(barProgress);
 
             var secondsToFormattedTime = #{secondsToFormattedTime}
-            estimatedUploadTimeLeft = estimatedUploadTimeLeft > 0 ? estimatedUploadTimeLeft - 1 : 0
+            estimatedUploadSecondsLeft = estimatedUploadSecondsLeft > 0 ? estimatedUploadSecondsLeft - 1 : 0
             secondsElapsed += 1
 
             var formattedElapsedTime = secondsElapsed && secondsToFormattedTime(secondsElapsed)
-            var formattedTimeLeft = estimatedUploadTimeLeft !== null && secondsToFormattedTime(estimatedUploadTimeLeft)
-            var formattedTotalEstimatedProcessingTime = estimatedUploadTimeLeft !== null && secondsToFormattedTime(estimatedUploadTimeLeft + secondsElapsed)
+            var formattedTimeLeft = estimatedUploadSecondsLeft !== null && secondsToFormattedTime(estimatedUploadSecondsLeft)
+            var formattedTotalEstimatedProcessingTime = estimatedUploadSecondsLeft !== null && secondsToFormattedTime(estimatedUploadSecondsLeft + secondsElapsed)
 
             $('#uploadTimeElapsed').text(`Time elapsed: ${formattedElapsedTime ? formattedElapsedTime : "calculating ..."}`)
 

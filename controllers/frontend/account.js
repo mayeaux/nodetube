@@ -65,8 +65,7 @@ exports.getFileUpload = async(req, res) => {
     title: 'File Upload',
     uploadUrl,
     categories,
-    secondsToFormattedTime,
-    throttle: _.throttle
+    secondsToFormattedTime
   });
 };
 
