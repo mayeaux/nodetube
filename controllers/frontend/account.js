@@ -58,10 +58,27 @@ exports.getFileUpload = async(req, res) => {
     await req.user.save();
   }
 
+  let maxRatingAllowed = null;
+  switch(process.env.MIN_AUDIENCE_TYPE_ALLOWED){
+  case'SFW':
+    maxRatingAllowed = 'allAges';
+    break;
+  case'NSFW':
+    maxRatingAllowed = 'mature';
+    break;
+  case'SENS':
+    maxRatingAllowed = 'sensitive';
+    break;
+  default:
+    maxRatingAllowed = 'allAges';
+    break;
+  }
+
   res.render('uploading', {
     title: 'File Upload',
     uploadUrl,
-    categories
+    categories,
+    maxRatingAllowed
   });
 };
 

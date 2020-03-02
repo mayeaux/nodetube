@@ -223,7 +223,15 @@ exports.postFileUpload = async(req, res) => {
 
   try {
 
-    const { description, visibility, title, uploadToken } = req.query;
+    const { description, visibility, title, uploadToken, rating } = req.query;
+
+    const ratingsEnum = [['SFW', 'allAges'],['NSFW', 'mature'], ['SENS', 'sensitive']];
+    const userCanViewContentOfThisRating = ratingsEnum.findIndex(ratingEnum => ratingEnum[1] === rating) <= ratingsEnum.findIndex(ratingEnum => ratingEnum[0] === process.env.MAX_RATING_ALLOWED);
+    if(!userCanViewContentOfThisRating){
+      throw new Error(
+        `user ${req.user._id} not allowed to upload content of this rating`
+      );
+    }
 
     // use an uploadToken if it exists but there is no req.user
     // load req.user with the found user

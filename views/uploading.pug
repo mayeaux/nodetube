@@ -92,7 +92,7 @@ block content
                 .form-group.center-block.text-center
                   br
                   a.resumable-browse
-                      button.fw.btn.btn-success.resumable-brwoser(style="font-size:19px;margin-bottom:-9px;border-radius:5px;") Select File
+                      button.fw.btn.btn-success.resumable-browser(style="font-size:19px;margin-bottom:-9px;border-radius:5px;") Select File
 
                   h3.fw OR
 
@@ -216,7 +216,6 @@ block content
   script.
     $(document).ready(function () {
 
-
       // progress bar stuff
       var bar1 = new ldBar("#myItem1");
 
@@ -329,6 +328,12 @@ block content
 
           if(!rating){
             return swal('Please select a rating')
+          }
+
+          const ratingsEnum = [['SFW', 'allAges'],['NSFW', 'mature'], ['SENS', 'sensitive']];
+          const userCanViewContentOfThisRating = ratingsEnum.findIndex(ratingEnum => ratingEnum[1] === rating) <= ratingsEnum.findIndex(ratingEnum => ratingEnum[0] === `#{maxRatingAllowed}`);
+          if(!userCanViewContentOfThisRating){
+            return swal('Your account does not have permission to upload content of this rating');
           }
 
           if(!visibility){
