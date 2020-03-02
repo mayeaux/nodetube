@@ -93,7 +93,8 @@ const uploadSchema = new mongoose.Schema({
     enum: categoriesConfig.map(category => category.name)
   },
 
-  subcategory: { type: String, enum: ['uncategorized', ...categoriesConfig.map(({ subcategories }) => subcategories).flat().map(({name}) => name)]
+  // It would be better to use Array.prototype.flat instead of the arr => [].concat(...arr) pattern except that it is not compatible with IE. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat
+  subcategory: { type: String, enum: ['uncategorized', ...[].concat(...categoriesConfig.map(({ subcategories }) => subcategories)).map(({name}) => name)]
   },
 
   durationInSeconds: Number ,
