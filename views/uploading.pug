@@ -172,27 +172,29 @@ block content
                     div.radio-buttons.rating(style="")
                       if user.privs.safeForWorkUpload
                         label.fw.radio-inline(style="font-size:18px;")
-                          input.radio-button(type='radio', name='rating' value="allAges")
+                          input.radio-button(type='radio', style="margin-bottom:3rem", name='rating' value="allAges" checked=maxRatingAllowed === "SFW")
                           | Safe For Work
-                          br
-                          br
-                      br
+                        br
+                        br
 
-
-                      if maxRatingAllowed === "NSFW" || maxRatingAllowed === "SENS"
+                      if maxRatingAllowed === "NSFW" || maxRatingAllowed === "SENSITIVE"
                         label.fw.radio-inline(style="font-size:18px;")
                           input.radio-button(type='radio', name='rating' value="mature")
                           | Not Safe For Work
-                      br
-                      br
+                        br
+                        br
 
-                      if maxRatingAllowed === "SENS"
+                      if maxRatingAllowed === "SENSITIVE"
                         label.fw.radio-inline(style="font-size:18px;")
                           input.radio-button(type='radio', name='rating' value="sensitive" required)
                           | Sensitive (Shocking content) 18+
 
-                      br
-                      br
+                        br
+                        br
+
+
+                      if maxRatingAllowed === "SFW"
+                        div.fw(style="width:400px;max-width:95%;margin:auto;") The instance host has chosen to make this instance Safe For Work only, please ensure that your upload is Safe For Work
 
                   br
                   label.fw(for="description" style="font-size:23px") Description
