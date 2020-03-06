@@ -50,9 +50,7 @@ const categories = [
     displayName: 'Health And Wellness',
     subcategories: [
       { name: 'yogaAndMeditation', displayName: 'Yoga & Meditation' },
-      { name: 'fitness', displayName: 'Fitness'},
-      { name: 'meditation', displayName: 'Meditation'},
-      { name: 'yoga', displayName: 'Yoga' }
+      { name: 'fitness', displayName: 'Fitness'}
     ]
   },
   {
