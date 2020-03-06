@@ -24,7 +24,12 @@ const getMediaType = require('../../lib/uploading/media');
 const { b2, bucket, hostUrl } = require('../../lib/uploading/backblaze');
 
 const ffmpegHelper = require('../../lib/uploading/ffmpeg');
-const uploadHelpers = require('../../lib/uploading/helpers');
+const {
+  markUploadAsComplete,
+  updateUsersUnreadSubscriptions,
+  runTimeoutFunction,
+  userCanUploadContentOfThisRating
+} = require('../../lib/uploading/helpers');
 const backblaze = require('../../lib/uploading/backblaze');
 
 // console.log(`SAVE AND SERVE FILES DIRECTORY: ${saveAndServeFilesDirectory}`);
@@ -225,12 +230,11 @@ exports.postFileUpload = async(req, res) => {
 
     const { description, visibility, title, uploadToken, rating } = req.query;
 
-    const ratingsEnum = [['SFW', 'allAges'],['NSFW', 'mature'], ['SENS', 'sensitive']];
-    const userCanViewContentOfThisRating = ratingsEnum.findIndex(ratingEnum => ratingEnum[1] === rating) <= ratingsEnum.findIndex(ratingEnum => ratingEnum[0] === process.env.MAX_RATING_ALLOWED);
-    if(!userCanViewContentOfThisRating){
-      throw new Error(
-        `user ${req.user._id} not allowed to upload content of this rating`
-      );
+    if(!userCanUploadContentOfThisRating(process.env.MAX_RATING_ALLOWED, rating)){
+      res.status(500);
+      res.send('Sorry this instance doesn\'t accept this type of upload');
+
+      return;
     }
 
     // use an uploadToken if it exists but there is no req.user
@@ -526,11 +530,11 @@ exports.postFileUpload = async(req, res) => {
             await backblaze.uploadToB2(upload, fileInDirectory, hostFilePath);
           }
 
-          await uploadHelpers.markUploadAsComplete(uniqueTag, channelUrl, user);
+          await markUploadAsComplete(uniqueTag, channelUrl, user);
 
           uploadLogger.info('Upload marked as complete', logObject);
 
-          uploadHelpers.updateUsersUnreadSubscriptions(user);
+          updateUsersUnreadSubscriptions(user);
 
           uploadLogger.info('Updated subscribed users subscriptions', logObject);
 

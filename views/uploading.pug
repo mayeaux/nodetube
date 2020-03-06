@@ -178,15 +178,18 @@ block content
                           br
                       br
 
-                      label.fw.radio-inline(style="font-size:18px;")
-                        input.radio-button(type='radio', name='rating' value="mature")
-                        | Not Safe For Work
+
+                      if maxRatingAllowed === "NSFW" || maxRatingAllowed === "SENS"
+                        label.fw.radio-inline(style="font-size:18px;")
+                          input.radio-button(type='radio', name='rating' value="mature")
+                          | Not Safe For Work
                       br
                       br
 
-                      label.fw.radio-inline(style="font-size:18px;")
-                        input.radio-button(type='radio', name='rating' value="sensitive" required)
-                        | Sensitive (Shocking content) 18+
+                      if maxRatingAllowed === "SENS"
+                        label.fw.radio-inline(style="font-size:18px;")
+                          input.radio-button(type='radio', name='rating' value="sensitive" required)
+                          | Sensitive (Shocking content) 18+
 
                       br
                       br
@@ -330,9 +333,8 @@ block content
             return swal('Please select a rating')
           }
 
-          const ratingsEnum = [['SFW', 'allAges'],['NSFW', 'mature'], ['SENS', 'sensitive']];
-          const userCanViewContentOfThisRating = ratingsEnum.findIndex(ratingEnum => ratingEnum[1] === rating) <= ratingsEnum.findIndex(ratingEnum => ratingEnum[0] === `#{maxRatingAllowed}`);
-          if(!userCanViewContentOfThisRating){
+          const userCanUploadContentOfThisRating = #{userCanUploadContentOfThisRating}
+          if (!userCanUploadContentOfThisRating(#{maxRatingAllowed}, rating)) {
             return swal('Your account does not have permission to upload content of this rating');
           }
 
