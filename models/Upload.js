@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const _ = require('lodash');
 const categoriesConfig = require('../config/categories');
 
+const { getAllCategories, getAllSubcategories } = require('../lib/helpers/categories');
+
 const javascriptTimeAgo = require('javascript-time-ago');
 javascriptTimeAgo.locale(require('javascript-time-ago/locales/en'));
 require('javascript-time-ago/intl-messageformat-global');
@@ -90,12 +92,11 @@ const uploadSchema = new mongoose.Schema({
   category: {
     type: String,
     default: 'uncategorized',
-    enum: categoriesConfig.map(category => category.name)
+    enum: getAllCategories()
   },
 
   // It would be better to use Array.prototype.flat instead of the arr => [].concat(...arr) pattern except that it is not compatible with IE. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat
-  subcategory: { type: String, enum: ['uncategorized', ...[].concat(...categoriesConfig.map(({ subcategories }) => subcategories)).map(({name}) => name)]
-  },
+  subcategory: { type: String, enum: getAllSubcategories() },
 
   durationInSeconds: Number ,
   formattedDuration: String,
