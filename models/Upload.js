@@ -95,7 +95,6 @@ const uploadSchema = new mongoose.Schema({
     enum: getAllCategories()
   },
 
-  // It would be better to use Array.prototype.flat instead of the arr => [].concat(...arr) pattern except that it is not compatible with IE. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat
   subcategory: { type: String, enum: getAllSubcategories() },
 
   durationInSeconds: Number ,
