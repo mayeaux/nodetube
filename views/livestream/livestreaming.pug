@@ -37,28 +37,21 @@ block content
 
         p Please stream to the following RTMP url (don't share this publicly):
 
-        p rtmp://broadcast.pewtube.com/live/#{user.channelUrl}?key=#{user.uploadToken}
+        p #{livestreamRtmpDomain}/live/#{user.channelUrl}?key=#{user.uploadToken}
 
         br
         br
 
         p You can view here (please give it about 10s to start)
 
-        //https://live.pewtube.com/live/newuser
-
-        a(href=`https://live.pewtube.com/live/${user.channelUrl}`)
-             p https://live.pewtube.com/live/#{user.channelUrl}
+        a(href=`${livestreamViewingDomain}/live/${user.channelUrl}`)
+             p #{livestreamViewingDomain}/live/#{user.channelUrl}
 
         if user
             script.
               var username = '#{user.channelUrl}'
               var uploadToken = '#{user.uploadToken}'
 
-              console.log(username, uploadToken)
-
-              $('.livestream-button').on('click', function () {
-                swal('Please stream to rtmp://broadcast.pewtube.com/live/' + username + '?key=' + uploadToken + ' \n\n You will be live at https://live.pewtube.com/User/' + username)
-              })
 
     else
         h5 Your livestreaming credentials will appear here upon purchasing Plus

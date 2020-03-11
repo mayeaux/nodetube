@@ -144,18 +144,18 @@ if(process.env.LIVESTREAM_APP == 'true')
   messagesObject = {};
 
   /** DECREMENT AMOUNT OF CONNECTED USERS ON CLOSE **/
-  ws.on('close', function(code, reason){
-
-    console.log(`closing socket: ${code}, ${reason}`);
-
-    connectedUsersAmount--;
-
-    for(const user of connectedUsers){
-      if(user.readyState == 1){
-        stringifyAndSend(user, { connectedUsersAmount });
-      }
-    }
-  });
+  // ws.onclose(function(code, reason){
+  //
+  //   console.log(`closing socket: ${code}, ${reason}`);
+  //
+  //   connectedUsersAmount--;
+  //
+  //   for(const user of connectedUsers){
+  //     if(user.readyState == 1){
+  //       stringifyAndSend(user, { connectedUsersAmount });
+  //     }
+  //   }
+  // });
 }
 
 /** CALLBACK TO SEND A MESSAGE **/

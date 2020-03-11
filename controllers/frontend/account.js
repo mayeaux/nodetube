@@ -752,7 +752,13 @@ exports.getLogin = (req, res) => {
  * Livestream info page
  */
 exports.livestreaming = async(req, res) => {
+
+  const livestreamRtmpDomain  = process.env.LIVESTREAM_RTMP_DOMAIN;
+  const livestreamViewingDomain = process.env.LIVESTREAM_VIEWING_DOMAIN;
+
   res.render('livestream/livestreaming', {
-    title: 'Livestreaming'
+    title: 'Livestreaming',
+    livestreamRtmpDomain,
+    livestreamViewingDomain
   });
 };
