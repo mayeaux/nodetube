@@ -180,6 +180,15 @@ function frontendRoutes(app){
   app.get('/search/:page', mediaBrowsingController.search);
 
   /** livestream routes **/
+
+  // routes for nginx-rtmp
+  app.post('/livestream/on-live-auth', livestreamBackendController.onLiveAuth);
+  app.post('/livestream/on-live-done', livestreamBackendController.onLiveDone);
+
+  // viewing page for rtmp streams
+  app.get('/live/:user', livestreamFrontendController.getLiveRTMP);
+
+
   // app.get(/\/user\/(.+)\/live/, livestreamController.getLive);
   // app.get(/\/user\/(.+)\/live\/staging/, livestreamController.getStaging)
   // app.get('/live', livestreamController.getLive);
