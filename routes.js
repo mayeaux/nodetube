@@ -104,12 +104,14 @@ function livestreamRoutes(app){
 
   app.get('/login', accountFrontendController.getLogin);
 
+  app.post('/login', accountBackendController.postLogin);
+
   app.get('/signup', accountFrontendController.getSignup);
 
+  app.post('/signup', accountBackendController.postSignup);
 
   app.get('/logout', accountFrontendController.logout);
 
-  app.post('/login', accountBackendController.postLogin);
 
   // kurento routes
   // app.get(/\/user\/(.+)\/live\/staging/, livestreamController.getStaging);
