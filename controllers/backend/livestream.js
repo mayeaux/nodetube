@@ -48,11 +48,17 @@ exports.onLiveAuth = async(req, res) => {
 
   const uploadToken = req.body.key;
 
+  console.log(uploadToken);
+
   const user = await User.findOne({ uploadToken });
+
+  // console.log(user);
 
   if(user && user.plan == 'plus'){
     console.log('authentication passed');
     console.log('found user: ' + user.channelUrl);
+
+    console.log(`Access the livestream at /live/${user.channelUrl}`)
 
     return res.send('working');
   } else {
@@ -75,7 +81,7 @@ let connectedUsers;
 let connectedUsersAmount;
 var messagesObject;
 
-if(process.env.LIVESTREAM_APP == 'true')
+if('true' == 'true')
 {
   app = express();
 
@@ -93,6 +99,15 @@ if(process.env.LIVESTREAM_APP == 'true')
 
   // object which will hold message data and boot up servers
   webSockets = {};
+
+  /** MESSAGES ENDPOINT **/
+
+  existingMessages = [];
+  connectedUsers = [];
+  connectedUsersAmount = 0;
+
+  // save already sent messages
+  messagesObject = {};
 
   // code to run when user connects to :8080
   server.on('upgrade', (request, socket, head) => {
@@ -134,32 +149,31 @@ if(process.env.LIVESTREAM_APP == 'true')
     }
   });
 
-  /** MESSAGES ENDPOINT **/
-
-  existingMessages = [];
-  connectedUsers = [];
-  connectedUsersAmount = 2;
-
-  // save already sent messages
-  messagesObject = {};
-
-  /** DECREMENT AMOUNT OF CONNECTED USERS ON CLOSE **/
-  // ws.onclose(function(code, reason){
-  //
-  //   console.log(`closing socket: ${code}, ${reason}`);
-  //
-  //   connectedUsersAmount--;
-  //
-  //   for(const user of connectedUsers){
-  //     if(user.readyState == 1){
-  //       stringifyAndSend(user, { connectedUsersAmount });
-  //     }
-  //   }
-  // });
 }
 
 /** CALLBACK TO SEND A MESSAGE **/
 function messageSocketCallback(ws){
+
+  /** DECREMENT AMOUNT OF CONNECTED USERS ON CLOSE **/
+  ws.on('close', function(code, reason){
+
+    console.log(`closing socket: ${code}, ${reason}`);
+
+    console.log(connectedUsers)
+
+    console.log(connectedUsersAmount);
+
+    connectedUsersAmount--;
+
+    console.log(connectedUsersAmount)
+
+    for(const user of connectedUsers){
+      if(user.readyState == 1){
+        // TODO: have to fix here for decrementing to work
+        stringifyAndSend(user, { connectedUsersAmount });
+      }
+    }
+  });
 
   ws.on('message', function(_message){
 
