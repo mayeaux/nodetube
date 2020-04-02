@@ -110,18 +110,19 @@ block content
 
                   // add endpoint for visibility
                   if user.plan == 'plus'
-                    label.fw(for='title') Visibility
+                    label.fw(for='title' style="font-size:20px") Visibility
                     br
                     div.radio-buttons.visibility
-                      label.radio-inline
+                      label.fw.radio-inline(style="font-size:15px;")
                         input.radio-button(type='radio', name='visibility' value="public" checked)
                         | Public
-                      label.radio-inline
+                      label.fw.radio-inline(style="font-size:15px;")
                         input.radio-button(type='radio', name='visibility' value="unlisted")
                         | Unlisted
-                      label.radio-inline
+                      label.fw.radio-inline(style="font-size:15px;")
                         input.radio-button(type='radio', name='visibility' value="private")
                         | Private
+                    br
                     br
 
                   label.fw(for='title' style="font-size:20px") Select A Category

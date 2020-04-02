@@ -37,6 +37,9 @@ const winston = require('winston');
 //
 const { createLogger, format, transports } = require('winston');
 
+// default max bitrate supported without conversion
+const maxBitrate = 4000;
+
 const uploadsOn = process.env.UPLOADS_ON;
 console.log(`UPLOADS ON: ${uploadsOn}\n`);
 
@@ -435,15 +438,15 @@ exports.postFileUpload = async(req, res) => {
 
           const specificMatches = ( codecName == 'hevc' || codecProfile == 'High 4:4:4 Predictive' );
 
-          if(specificMatches || bitrate > 2500){
+          if(specificMatches || bitrate > maxBitrate){
             upload.fileType = 'convert';
           }
 
           /** TELL THE USER WE ARE CONVERTING / COMPRESSING THEIR VIDEO **/
-          if(upload.fileType == 'convert' || bitrate > 2500 || upload.fileType == 'video'){
+          if(upload.fileType == 'convert' || bitrate > maxBitrate || upload.fileType == 'video'){
 
-            // if upload is a convert, or bitrate is over 2500, mark as processing and send response to user
-            if(upload.fileType == 'convert' || bitrate > 2500){
+            // if upload is a convert, or bitrate is over the maxBitrate (default 2500), mark as processing and send response to user
+            if(upload.fileType == 'convert' || bitrate > maxBitrate){
               upload.status = 'processing';
               await upload.save();
 
@@ -466,13 +469,13 @@ exports.postFileUpload = async(req, res) => {
 
             // TODO: savePath and fileInDirectory are the same thing, need to clean this code up
 
-            if(fileExtension == '.mp4' && bitrate > 2500){
+            if(fileExtension == '.mp4' && bitrate > maxBitrate){
               await fs.move(savePath, `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-old.mp4`);
 
               fileInDirectory = `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-old.mp4`;
             }
 
-            if(upload.fileType == 'convert' || (bitrate > 2500 && fileExtension == '.mp4')){
+            if(upload.fileType == 'convert' || (bitrate > maxBitrate && fileExtension == '.mp4')){
               await ffmpegHelper.convertVideo({
                 uploadedPath: fileInDirectory,
                 title,
