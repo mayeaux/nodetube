@@ -335,11 +335,6 @@ block content
             return swal('Please select a rating')
           }
 
-          const userCanUploadContentOfThisRating = #{userCanUploadContentOfThisRating}
-          if (!userCanUploadContentOfThisRating(#{maxRatingAllowed}, rating)) {
-            return swal('Your account does not have permission to upload content of this rating');
-          }
-
           if(!visibility){
             visibility = 'public'
           }
