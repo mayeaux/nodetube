@@ -121,6 +121,6 @@ exports.getDocs = async(req, res) => {
 
 
   res.render('public/docs', {
-
+    title: 'Docs'
   });
 };
