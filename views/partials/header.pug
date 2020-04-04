@@ -49,6 +49,9 @@ style.
             a(href=`/media/subscribed`) Subscribed (#{user.unseenSubscriptionUploads})
           else
             a(href=`/media/subscribed`) Subscribed (0)
+
+        li(class=(title == 'Docs') ? 'active' : undefined)
+          a(href=`/docs`) Docs
       ul.nav.navbar-nav.navbar-right
         if user
 

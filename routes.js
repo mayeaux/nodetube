@@ -123,6 +123,7 @@ function frontendRoutes(app){
   /** publicly available routes **/
   app.get('/', publicController.index);
   app.get('/about', publicController.about);
+  app.get('/docs', publicController.getDocs);
   app.get('/termsofservice', publicController.tos);
   app.get('/privacy', publicController.privacy);
   app.get('/embed/:uniqueTag', publicController.getEmbed);
