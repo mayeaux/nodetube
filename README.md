@@ -111,6 +111,8 @@ https://newtube.app | Yes
 https://nullvideo.com| Yes 
 https://videoflicktube.com| Yes 
 https://xchtube.com| Yes 
+https://vid8.poal.co| Yes 
+
 
 License
 -------
