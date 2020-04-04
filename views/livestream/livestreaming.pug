@@ -47,6 +47,13 @@ block content
         a(href=`${livestreamViewingDomain}`)
              p #{livestreamViewingDomain}
 
+        br
+        br
+
+        p Tip: If you have `ffmpeg` installed you can run the following command to stream a video from disk:
+        p ffmpeg -re -i PATH-TO-YOUR-VIDEO.mp4 -c copy -f flv #{livestreamRtmpDomain}
+
+
         if user
             script.
               var username = '#{user.channelUrl}'

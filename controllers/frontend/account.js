@@ -784,7 +784,7 @@ exports.livestreaming = async(req, res) =>
 
   console.log(req.originalUrl)
 
-  const viewingDomain =  req.protocol + '://' + req.get('host') + `/live/${req.user.channelUrl}`;
+  const viewingDomain =  'rtmp' + '://' + req.get('host') + `/live/${req.user.channelUrl}`;
 
 
   const livestreamRtmpDomain  = process.env.LIVESTREAM_RTMP_DOMAIN || rtmpUrl;
