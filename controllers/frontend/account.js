@@ -748,17 +748,54 @@ exports.getLogin = (req, res) => {
 };
 
 /**
- * GET /livestream
- * Livestream info page
+ * GET /live/$user
+ * Livestream account page
  */
-exports.livestreaming = async(req, res) => {
+exports.livestreaming = async(req, res) =>
 
-  const livestreamRtmpDomain  = process.env.LIVESTREAM_RTMP_DOMAIN;
-  const livestreamViewingDomain = process.env.LIVESTREAM_VIEWING_DOMAIN;
+{
+
+  var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+
+  var os = require("os");
+  os.hostname();
+
+  console.log(req.connection.remoteAddress, req.connection.remotePort, req.connection.localAddress,   req.connection.localPort)
+
+  var os = require( 'os' );
+
+  var networkInterfaces = os.networkInterfaces( );
+
+  const ipAddress = networkInterfaces.lo0 && networkInterfaces.lo0[0].address || networkInterfaces.eth0[0].address ;
+
+  const rtmpUrl = req.protocol + '://' + ipAddress + ':1935' + `/live/${req.user.channelUrl}?key=${req.user.uploadToken}`;
+
+  // var ip = require('os').networkInterfaces().eth0[0].address;
+  //
+  // console.log(ip);
+
+
+
+  console.log(req.ip)
+
+
+  console.log(req.socket.localPort);
+
+
+  console.log(req.originalUrl)
+
+  const viewingDomain =  req.protocol + '://' + req.get('host') + `/live/${req.user.channelUrl}`;
+
+
+  const livestreamRtmpDomain  = process.env.LIVESTREAM_RTMP_DOMAIN || rtmpUrl;
+  const livestreamViewingDomain = process.env.LIVESTREAM_VIEWING_DOMAIN || viewingDomain;
+
+  console.log(livestreamRtmpDomain, livestreamViewingDomain)
 
   res.render('livestream/livestreaming', {
     title: 'Livestreaming',
     livestreamRtmpDomain,
-    livestreamViewingDomain
+    livestreamViewingDomain,
+
   });
 };

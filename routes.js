@@ -188,11 +188,24 @@ function frontendRoutes(app){
   // viewing page for rtmp streams
   app.get('/live/:user', livestreamFrontendController.getLiveRTMP);
 
-
+  // kurento routes
   // app.get(/\/user\/(.+)\/live/, livestreamController.getLive);
   // app.get(/\/user\/(.+)\/live\/staging/, livestreamController.getStaging)
+
+
+  // old code
   // app.get('/live', livestreamController.getLive);
   // app.get('/staging', livestreamController.getStaging);
+
+  /** LIVESTREAM ROUTES **/
+  // routes for nginx-rtmp
+  app.post('/livestream/on-live-auth', livestreamBackendController.onLiveAuth);
+  app.post('/livestream/on-live-done', livestreamBackendController.onLiveDone);
+
+  // viewing page for rtmp streams
+  app.get('/live/:user', livestreamFrontendController.getLiveRTMP);
+
+
 
   /** recent action routes **/
   app.get('/media/recentComments/:page', authMiddleware.adminAuth, recentActionsController.recentComments);

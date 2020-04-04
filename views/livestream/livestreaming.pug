@@ -37,15 +37,15 @@ block content
 
         p Please stream to the following RTMP url (don't share this publicly):
 
-        p #{livestreamRtmpDomain}/live/#{user.channelUrl}?key=#{user.uploadToken}
+        p #{livestreamRtmpDomain}
 
         br
         br
 
         p You can view here (please give it about 10s to start)
 
-        a(href=`${livestreamViewingDomain}/live/${user.channelUrl}`)
-             p #{livestreamViewingDomain}/live/#{user.channelUrl}
+        a(href=`${livestreamViewingDomain}`)
+             p #{livestreamViewingDomain}
 
         if user
             script.
