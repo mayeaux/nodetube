@@ -1,3 +1,4 @@
+// TODO: this should pull from the same place as the uploading middleware
 const videoExtensions = ['.mp4', '.MP4'];
 const convertExtensions = ['.avi', '.flv', '.MOV', '.m4v', '.ogv', '.webm', '.wmv', '.mkv', '.mov', '.m2t', '.MTS', '.m2ts', '.MPG', '.AVI', '.mpg'];
 const imageExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.JPG', '.PNG'];

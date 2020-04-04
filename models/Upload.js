@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 const _ = require('lodash');
+const categoriesConfig = require('../config/categories');
+
+const { getAllCategories, getAllSubcategories } = require('../lib/helpers/categories');
 
 const javascriptTimeAgo = require('javascript-time-ago');
 javascriptTimeAgo.locale(require('javascript-time-ago/locales/en'));
@@ -89,11 +92,10 @@ const uploadSchema = new mongoose.Schema({
   category: {
     type: String,
     default: 'uncategorized',
-    enum: ['uncategorized', 'healthAndWellness', 'comedy', 'technologyAndScience', 'news', 'politics', 'music', 'gaming', 'howToAndEducation', 'nodeTube']
+    enum: getAllCategories()
   },
 
-  subcategory: { type: String, enum: ['pranks', 'meditation', 'yoga', 'rightwing', 'leftwing', 'uncategorized', 'fitness',
-    'yogaAndMeditation', 'blockchain', 'internet', 'political', 'software'] },
+  subcategory: { type: String, enum: getAllSubcategories() },
 
   durationInSeconds: Number ,
   formattedDuration: String,

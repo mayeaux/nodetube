@@ -21,6 +21,14 @@ async function middleware(req, res, next){
     res.redirect('https://fosstodon.org/@nodetube');
   }
 
+  if(req.path == '/github'){
+    res.redirect('https://github.com/mayeaux/nodetube');
+  }
+
+  if(req.path == '/wiki'){
+    res.redirect('https://github.com/mayeaux/nodetube/wiki');
+  }
+
   next();
 }
 
