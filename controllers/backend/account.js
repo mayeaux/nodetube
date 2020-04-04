@@ -149,10 +149,11 @@ exports.postSignup = async(req, res, next) => {
   });
 
   // make sure first user is admin, can refactor later
-  const numberOfUsers = await User.estimatedDocumentCount();
+  const numberOfUsers = await User.countDocuments();
 
   if(numberOfUsers == 0){
     user.role = 'admin';
+    user.plan = 'plus';
   }
 
   User.findOne({ channelUrl : req.body.channelUrl }, (err, existingUser) => {

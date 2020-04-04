@@ -1,11 +1,18 @@
 extends ../layout
 
 block content
+
+
+    style.
+      .container {
+        width: 100%; !important;
+      }
+
     body
         script(src='https://cdn.jsdelivr.net/npm/hls.js@latest')
-        video#video(controls)
+        video#video(controls style="max-width:100%;")
 
-        .container
+        .videoContainer(style="")
             .row
                 .col-md-12(style="margin-bottom:100px")
                     h2.userAmount Users In Room: 1
@@ -19,12 +26,22 @@ block content
         script.
           var channelUrl = '#{channelUrl}'
 
+          var video = document.getElementById('video');
+
+          var playlistFile = '/' + channelUrl + '.m3u8'
+
           if (Hls.isSupported()) {
-            var video = document.getElementById('video');
             var hls = new Hls();
-            hls.loadSource('/' + channelUrl + '.m3u8');
+            hls.loadSource(playlistFile);
             hls.attachMedia(video);
             hls.on(Hls.Events.MANIFEST_PARSED, function () {
+              video.play();
+            });
+          }
+
+          else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = playlistFile;
+            video.addEventListener('loadedmetadata', function () {
               video.play();
             });
           }
