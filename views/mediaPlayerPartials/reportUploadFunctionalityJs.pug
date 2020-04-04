@@ -9,6 +9,7 @@ script.
     });
   });
 
+  // TODO: this is broken
   var alreadyReported = '#{alreadyReported}'
 
   if(alreadyReported == 'true'){
@@ -37,6 +38,8 @@ script.
           });
         }
       }).then(function (result) {
+
+        if (!result.value) return
 
         var csrf = '#{_csrf}'
 
@@ -68,7 +71,6 @@ script.
 
         // send via ajax
 
-        if (!result.value) return
 
 
       })

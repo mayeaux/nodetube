@@ -16,6 +16,7 @@ const Subscription = require('../../models/index').Subscription;
 const { uploadServer, uploadUrl } = require('../../lib/helpers/settings');
 
 const { filterUploadsByMediaType } = require('../../lib/mediaBrowsing/helpers');
+const timeHelper = require('../../lib/helpers/time');
 
 const { URLSearchParams } = require('url');
 
@@ -39,6 +40,8 @@ require('javascript-time-ago/intl-messageformat-global');
 require('intl-messageformat/dist/locale-data/en');
 const timeAgoEnglish = new javascriptTimeAgo('en-US');
 
+const secondsToFormattedTime = timeHelper.secondsToFormattedTime;
+
 /**
  * GET /upload
  * Page to facilitate user uploads
@@ -61,7 +64,8 @@ exports.getFileUpload = async(req, res) => {
   res.render('uploading', {
     title: 'File Upload',
     uploadUrl,
-    categories
+    categories,
+    secondsToFormattedTime
   });
 };
 
@@ -166,6 +170,7 @@ exports.getChannel = async(req, res) => {
     if(!user){
       res.status(404);
       return res.render('error/404', {
+        item: 'user',
         title: 'Not Found'
       });
     }
