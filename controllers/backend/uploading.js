@@ -38,8 +38,8 @@ const winston = require('winston');
 //
 const { createLogger, format, transports } = require('winston');
 
-// default max bitrate supported without conversion
-const maxBitrate = 4000;
+// default max bitrate supported without conversion (2500 which is a bit above 720p)
+const maxBitrate = 3000;
 
 const uploadsOn = process.env.UPLOADS_ON;
 console.log(`UPLOADS ON: ${uploadsOn}\n`);
