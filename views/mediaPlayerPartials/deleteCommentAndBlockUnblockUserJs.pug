@@ -36,7 +36,7 @@ script.
 
     }
 
-    $('.delete-comment-button').on('touchstart click', function (e) {
+    $('.delete-comment-button').on('release click', function (e) {
 
       var commentThread = $(this).parent().parent().parent().parent();
 
@@ -94,7 +94,7 @@ script.
 
     }
 
-    $('.block-user-button').on('touchstart click', function (e) {
+    $('.block-user-button').on('release click', function (e) {
 
       // dont move browser
       e.preventDefault();
@@ -152,7 +152,7 @@ script.
 
     }
 
-    $('.unblock-user-button').on('touchstart click', function (e) {
+    $('.unblock-user-button').on('release click', function (e) {
 
       // dont move browser
       e.preventDefault();
