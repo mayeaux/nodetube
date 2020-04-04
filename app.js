@@ -63,6 +63,8 @@ if(cluster.isMaster){
 
   console.log(`SAVE AND SERVE FILES DIRECTORY: ${saveAndServeFilesDirectory}\n`);
 
+  console.log(`THE MOST CONTROVERSIAL UPLOAD RATING ALLOWED ON THIS INSTANCE IS: ${process.env.MAX_RATING_ALLOWED} \n`);
+
   for(let i = 0; i < amountOfProcesses; i++){
     // Create a worker
     cluster.fork();

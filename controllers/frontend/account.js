@@ -32,6 +32,8 @@ const uploadFilters = require('../../lib/mediaBrowsing/helpers');
 
 const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
 
+const { userCanUploadContentOfThisRating } = require('../../lib/uploading/helpers');
+
 const validator = require('email-validator');
 
 const javascriptTimeAgo = require('javascript-time-ago');
@@ -65,6 +67,8 @@ exports.getFileUpload = async(req, res) => {
     title: 'File Upload',
     uploadUrl,
     categories,
+    maxRatingAllowed: process.env.MAX_RATING_ALLOWED,
+    userCanUploadContentOfThisRating,
     secondsToFormattedTime
   });
 };
