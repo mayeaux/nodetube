@@ -49,6 +49,9 @@ style.
             a(href=`/media/subscribed`) Subscribed (#{user.unseenSubscriptionUploads})
           else
             a(href=`/media/subscribed`) Subscribed (0)
+
+        li(class=(title == 'Docs') ? 'active' : undefined)
+          a(href=`/docs`) Docs
       ul.nav.navbar-nav.navbar-right
         if user
 
@@ -145,7 +148,7 @@ style.
 
 if !user
   script.
-    $('.subscribed-link').on('touchstart click', function(e){
+    $('.subscribed-link').on('release click', function(e){
       e.preventDefault();
 
       swal({

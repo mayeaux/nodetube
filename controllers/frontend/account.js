@@ -16,6 +16,7 @@ const Subscription = require('../../models/index').Subscription;
 const { uploadServer, uploadUrl } = require('../../lib/helpers/settings');
 
 const { filterUploadsByMediaType } = require('../../lib/mediaBrowsing/helpers');
+const timeHelper = require('../../lib/helpers/time');
 
 const { URLSearchParams } = require('url');
 
@@ -31,6 +32,8 @@ const uploadFilters = require('../../lib/mediaBrowsing/helpers');
 
 const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
 
+const { userCanUploadContentOfThisRating } = require('../../lib/uploading/helpers');
+
 const validator = require('email-validator');
 
 const javascriptTimeAgo = require('javascript-time-ago');
@@ -38,6 +41,8 @@ javascriptTimeAgo.locale(require('javascript-time-ago/locales/en'));
 require('javascript-time-ago/intl-messageformat-global');
 require('intl-messageformat/dist/locale-data/en');
 const timeAgoEnglish = new javascriptTimeAgo('en-US');
+
+const secondsToFormattedTime = timeHelper.secondsToFormattedTime;
 
 /**
  * GET /upload
@@ -61,7 +66,10 @@ exports.getFileUpload = async(req, res) => {
   res.render('uploading', {
     title: 'File Upload',
     uploadUrl,
-    categories
+    categories,
+    maxRatingAllowed: process.env.MAX_RATING_ALLOWED,
+    userCanUploadContentOfThisRating,
+    secondsToFormattedTime
   });
 };
 
@@ -127,11 +135,54 @@ exports.subscriptions = async(req, res) => {
   }
 };
 
-// TODO: desperately needs a cleanup
 /**
- * GET /channel
- * Profile page.
+ * GET /user/$username/rss
+ * Channel rss page
  */
+exports.getChannelRss = async(req, res) => {
+  const channelUrl = req.params.channel;
+
+  try {
+    // find the user per channelUrl
+    user = await User.findOne({
+      // regex for case insensitivity
+      channelUrl:  new RegExp(['^', req.params.channel, '$'].join(''), 'i')
+    }).lean()
+      .exec();
+
+    // 404 if no user found
+    if(!user){
+      res.status(404);
+      return res.render('error/404', {
+        title: 'Not Found'
+      });
+    }
+
+    const searchQuery = {
+      uploader: user._id,
+      status: 'completed',
+      visibility: 'public'
+    };
+
+    /** DB CALL TO GET UPLOADS **/
+    let uploads = await Upload.find(searchQuery).sort({ createdAt : -1 });
+
+    console.log(uploads);
+
+    res.send(uploads);
+
+
+  } catch (err){
+
+  }
+};
+
+
+// TODO: desperately needs a cleanup
+  /**
+   * GET /user/$username
+   * Channel page
+   */
 exports.getChannel = async(req, res) => {
 
   let page = req.query.page;
@@ -149,15 +200,13 @@ exports.getChannel = async(req, res) => {
   const limit = 51;
   const skipAmount = (page * limit) - limit;
 
-  const startingNumber = pagination.getMiddleNumber(page);
-  const numbersArray = pagination.createArray(startingNumber);
-  const previousNumber = pagination.getPreviousNumber(page);
-  const nextNumber = pagination.getNextNumber(page);
+  const { startingNumber, previousNumber, nextNumber, numbersArray } = pagination.buildPaginationObject(page);
 
   try {
 
     // find the user per channelUrl
     user = await User.findOne({
+      // regex for case insensitivity
       channelUrl:  new RegExp(['^', req.params.channel, '$'].join(''), 'i')
     }).populate('receivedSubscriptions').lean()
       .exec();
@@ -166,6 +215,7 @@ exports.getChannel = async(req, res) => {
     if(!user){
       res.status(404);
       return res.render('error/404', {
+        item: 'user',
         title: 'Not Found'
       });
     }
@@ -218,6 +268,7 @@ exports.getChannel = async(req, res) => {
 
     const searchQuery = {
       uploader: user._id,
+      // TODO: shouldn't really be using uploadUrl anymore
       $or : [ { status: 'completed' }, { uploadUrl: { $exists: true } } ]
       // uploadUrl: {$exists: true }
       // status: 'completed'
@@ -747,11 +798,54 @@ exports.getLogin = (req, res) => {
 };
 
 /**
- * GET /livestream
- * Livestream info page
+ * GET /live/$user
+ * Livestream account page
  */
-exports.livestreaming = async(req, res) => {
+exports.livestreaming = async(req, res) =>
+
+{
+
+  var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+
+  var os = require("os");
+  os.hostname();
+
+  console.log(req.connection.remoteAddress, req.connection.remotePort, req.connection.localAddress,   req.connection.localPort)
+
+  var os = require( 'os' );
+
+  var networkInterfaces = os.networkInterfaces( );
+
+  const ipAddress = networkInterfaces.lo0 && networkInterfaces.lo0[0].address || networkInterfaces.eth0[0].address ;
+
+  const rtmpUrl = req.protocol + '://' + ipAddress + ':1935' + `/live/${req.user.channelUrl}?key=${req.user.uploadToken}`;
+
+  // var ip = require('os').networkInterfaces().eth0[0].address;
+  //
+  // console.log(ip);
+
+
+
+  console.log(req.ip)
+
+
+  console.log(req.socket.localPort);
+
+
+  console.log(req.originalUrl)
+
+  const viewingDomain =  'rtmp' + '://' + req.get('host') + `/live/${req.user.channelUrl}`;
+
+
+  const livestreamRtmpDomain  = process.env.LIVESTREAM_RTMP_DOMAIN || rtmpUrl;
+  const livestreamViewingDomain = process.env.LIVESTREAM_VIEWING_DOMAIN || viewingDomain;
+
+  console.log(livestreamRtmpDomain, livestreamViewingDomain)
+
   res.render('livestream/livestreaming', {
-    title: 'Livestreaming'
+    title: 'Livestreaming',
+    livestreamRtmpDomain,
+    livestreamViewingDomain,
+
   });
 };

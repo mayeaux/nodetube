@@ -13,6 +13,7 @@ var randomstring = require('randomstring');
 const redisClient = require('../../config/redis');
 
 const pagination = require('../../lib/helpers/pagination');
+const timeHelper = require('../../lib/helpers/time');
 
 const User = require('../../models/index').User;
 const Upload = require('../../models/index').Upload;
@@ -24,7 +25,12 @@ const getMediaType = require('../../lib/uploading/media');
 const { b2, bucket, hostUrl } = require('../../lib/uploading/backblaze');
 
 const ffmpegHelper = require('../../lib/uploading/ffmpeg');
-const uploadHelpers = require('../../lib/uploading/helpers');
+const {
+  markUploadAsComplete,
+  updateUsersUnreadSubscriptions,
+  runTimeoutFunction,
+  userCanUploadContentOfThisRating
+} = require('../../lib/uploading/helpers');
 const backblaze = require('../../lib/uploading/backblaze');
 
 // console.log(`SAVE AND SERVE FILES DIRECTORY: ${saveAndServeFilesDirectory}`);
@@ -36,6 +42,9 @@ const moderationUpdatesToDiscord = process.env.MODERATION_UPDATES_TO_DISCORD == 
 const winston = require('winston');
 //
 const { createLogger, format, transports } = require('winston');
+
+// default max bitrate supported without conversion (2500 which is a bit above 720p)
+const maxBitrate = 3000;
 
 const uploadsOn = process.env.UPLOADS_ON;
 console.log(`UPLOADS ON: ${uploadsOn}\n`);
@@ -83,16 +92,16 @@ exports.getUploadProgress = async(req, res) => {
   // nuspa41uploadProgress
   const string = `${uniqueTag}uploadProgress`;
 
-  const value = await redisClient.getAsync(`${uniqueTag}uploadProgress`);
+  const conversionProgress = await redisClient.getAsync(`${uniqueTag}uploadProgress`);
+  const conversionTimeLeft = await redisClient.getAsync(`${uniqueTag}timeLeft`);
 
-  console.log(value);
+  console.log('Progress:', conversionProgress);
+  console.log('Time left:', conversionTimeLeft);
 
   // kind of an ugly workaround, if the upload is at 100% converted, mark it as 99%
   // just so backblaze and other things can finish before the frontend redirects
-  if(value == '100'){
+  if(conversionProgress == '100'){
     res.send('99');
-  } else {
-    return res.send(value);
   }
 
   // console.log(value);
@@ -103,7 +112,7 @@ exports.getUploadProgress = async(req, res) => {
   //
   // console.log(uniqueTag);
 
-  return res.send(value);
+  return res.send({conversionProgress, conversionTimeLeft});
 
 };
 
@@ -202,19 +211,6 @@ const bytesToMb = (bytes, decimalPlaces = 4) => {
   return(bytes / Math.pow(10,6)).toFixed(decimalPlaces);
 };
 
-function secondsToFormattedTime(durationInSeconds){
-  // Formatted time is in hh:mm:ss format with no leading zeroes.
-  const hours = Math.floor(durationInSeconds / 3600);
-  const minutes = Math.floor(durationInSeconds % 3600 / 60);
-  const seconds = Math.floor(durationInSeconds % 3600 % 60);
-
-  const formattedTime = `${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-
-  // https://stackoverflow.com/questions/42879023/remove-leading-zeros-from-time-format
-  const removeLeadingZeroesRegex = /^0(?:0:0?)?/;
-  return formattedTime.replace(removeLeadingZeroesRegex, '');
-}
-
 /**
  * POST /api/upload
  * File Upload API example.
@@ -223,7 +219,14 @@ exports.postFileUpload = async(req, res) => {
 
   try {
 
-    const { description, visibility, title, uploadToken } = req.query;
+    const { description, visibility, title, uploadToken, rating } = req.query;
+
+    if(!userCanUploadContentOfThisRating(process.env.MAX_RATING_ALLOWED, rating)){
+      res.status(500);
+      res.send('Sorry this instance doesn\'t accept this type of upload');
+
+      return;
+    }
 
     // use an uploadToken if it exists but there is no req.user
     // load req.user with the found user
@@ -391,7 +394,7 @@ exports.postFileUpload = async(req, res) => {
 
             upload.durationInSeconds = Math.round(response.format.duration);
 
-            upload.formattedDuration = secondsToFormattedTime(Math.round(response.format.duration));
+            upload.formattedDuration = timeHelper.secondsToFormattedTime(Math.round(response.format.duration));
 
             codecProfile  = response.streams[0].codecProfile;
 
@@ -435,15 +438,15 @@ exports.postFileUpload = async(req, res) => {
 
           const specificMatches = ( codecName == 'hevc' || codecProfile == 'High 4:4:4 Predictive' );
 
-          if(specificMatches || bitrate > 2500){
+          if(specificMatches || bitrate > maxBitrate){
             upload.fileType = 'convert';
           }
 
           /** TELL THE USER WE ARE CONVERTING / COMPRESSING THEIR VIDEO **/
-          if(upload.fileType == 'convert' || bitrate > 2500 || upload.fileType == 'video'){
+          if(upload.fileType == 'convert' || bitrate > maxBitrate || upload.fileType == 'video'){
 
-            // if upload is a convert, or bitrate is over 2500, mark as processing and send response to user
-            if(upload.fileType == 'convert' || bitrate > 2500){
+            // if upload is a convert, or bitrate is over the maxBitrate (default 2500), mark as processing and send response to user
+            if(upload.fileType == 'convert' || bitrate > maxBitrate){
               upload.status = 'processing';
               await upload.save();
 
@@ -466,13 +469,13 @@ exports.postFileUpload = async(req, res) => {
 
             // TODO: savePath and fileInDirectory are the same thing, need to clean this code up
 
-            if(fileExtension == '.mp4' && bitrate > 2500){
+            if(fileExtension == '.mp4' && bitrate > maxBitrate){
               await fs.move(savePath, `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-old.mp4`);
 
               fileInDirectory = `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-old.mp4`;
             }
 
-            if(upload.fileType == 'convert' || (bitrate > 2500 && fileExtension == '.mp4')){
+            if(upload.fileType == 'convert' || (bitrate > maxBitrate && fileExtension == '.mp4')){
               await ffmpegHelper.convertVideo({
                 uploadedPath: fileInDirectory,
                 title,
@@ -518,11 +521,11 @@ exports.postFileUpload = async(req, res) => {
             await backblaze.uploadToB2(upload, fileInDirectory, hostFilePath);
           }
 
-          await uploadHelpers.markUploadAsComplete(uniqueTag, channelUrl, user);
+          await markUploadAsComplete(uniqueTag, channelUrl, user);
 
           uploadLogger.info('Upload marked as complete', logObject);
 
-          uploadHelpers.updateUsersUnreadSubscriptions(user);
+          updateUsersUnreadSubscriptions(user);
 
           uploadLogger.info('Updated subscribed users subscriptions', logObject);
 

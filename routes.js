@@ -99,10 +99,19 @@ function livestreamRoutes(app){
 
   // user's pages
   app.get('/account', passportConfig.isAuthenticated, accountFrontendController.getAccount);
+
+  app.get('/account/livestreaming', passportConfig.isAuthenticated, accountFrontendController.livestreaming);
+
   app.get('/login', accountFrontendController.getLogin);
-  app.get('/logout', accountFrontendController.logout);
 
   app.post('/login', accountBackendController.postLogin);
+
+  app.get('/signup', accountFrontendController.getSignup);
+
+  app.post('/signup', accountBackendController.postSignup);
+
+  app.get('/logout', accountFrontendController.logout);
+
 
   // kurento routes
   // app.get(/\/user\/(.+)\/live\/staging/, livestreamController.getStaging);
@@ -123,6 +132,7 @@ function frontendRoutes(app){
   /** publicly available routes **/
   app.get('/', publicController.index);
   app.get('/about', publicController.about);
+  app.get('/docs', publicController.getDocs);
   app.get('/termsofservice', publicController.tos);
   app.get('/privacy', publicController.privacy);
   app.get('/embed/:uniqueTag', publicController.getEmbed);
@@ -144,15 +154,17 @@ function frontendRoutes(app){
   // behind admin auth atm, needs to use cache
   app.get('/channelsByReacts', authMiddleware.adminAuth, channelBrowsingController.channelsByReacts);
 
-  // media page
-
-  // TODO: add the ability to get progress here
-
+  // endpoint for processing progress
+  // TODO: should probably be renamed to note it's processing progress not necessarily upload progress
   app.all('/user/:channel/:media/progress', uploadingController.getUploadProgress);
 
+  // individual user rss feed
+  app.get('/user/:channel/rss', accountFrontendController.getChannelRss);
+
+  // media page
   app.get('/user/:channel/:media', mediaPlayerController.getMedia);
 
-  /** user channel and individual media page */
+  // individual user channel page
   app.get('/user/:channel', accountFrontendController.getChannel);
 
   /** rss feed routes **/
@@ -171,10 +183,32 @@ function frontendRoutes(app){
   app.get('/search/:page', mediaBrowsingController.search);
 
   /** livestream routes **/
+
+  // routes for nginx-rtmp
+  app.post('/livestream/on-live-auth', livestreamBackendController.onLiveAuth);
+  app.post('/livestream/on-live-done', livestreamBackendController.onLiveDone);
+
+  // viewing page for rtmp streams
+  app.get('/live/:user', livestreamFrontendController.getLiveRTMP);
+
+  // kurento routes
   // app.get(/\/user\/(.+)\/live/, livestreamController.getLive);
   // app.get(/\/user\/(.+)\/live\/staging/, livestreamController.getStaging)
+
+
+  // old code
   // app.get('/live', livestreamController.getLive);
   // app.get('/staging', livestreamController.getStaging);
+
+  /** LIVESTREAM ROUTES **/
+  // routes for nginx-rtmp
+  app.post('/livestream/on-live-auth', livestreamBackendController.onLiveAuth);
+  app.post('/livestream/on-live-done', livestreamBackendController.onLiveDone);
+
+  // viewing page for rtmp streams
+  app.get('/live/:user', livestreamFrontendController.getLiveRTMP);
+
+
 
   /** recent action routes **/
   app.get('/media/recentComments/:page', authMiddleware.adminAuth, recentActionsController.recentComments);

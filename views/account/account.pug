@@ -115,11 +115,12 @@ block content
       //div.col-sm-2
       //      h4
       //        a(href="/" + `${user.channelUrl}` +  "/playlists") Playlists
-      //div.col-sm-2
-      //  h3.fw
-      //    a(href="/account/livestreaming") Livestreaming
-      //    //a.livestream-button Livestreaming
-      //    //a.livestreaming-link(href=`/user/${user.channelUrl}/live/staging`) Livestreaming
+      if user && user.plan == 'plus'
+        div.col-sm-2
+          h3.fw
+            a(href="/account/livestreaming") Livestreaming
+          //a.livestream-button Livestreaming
+          //a.livestreaming-link(href=`/user/${user.channelUrl}/live/staging`) Livestreaming
       //div.col-sm-2
       //  h3.fw Credit ($#{user.credit/100})
       //div.col-sm-2

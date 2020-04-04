@@ -63,6 +63,8 @@ if(cluster.isMaster){
 
   console.log(`SAVE AND SERVE FILES DIRECTORY: ${saveAndServeFilesDirectory}\n`);
 
+  console.log(`THE MOST CONTROVERSIAL UPLOAD RATING ALLOWED ON THIS INSTANCE IS: ${process.env.MAX_RATING_ALLOWED} \n`);
+
   for(let i = 0; i < amountOfProcesses; i++){
     // Create a worker
     cluster.fork();
@@ -390,7 +392,7 @@ if(cluster.isMaster){
 
     /** start server **/
     app.listen(app.get('port'), () => {
-      console.log('%s App is running at http://localhost:%d in %s mode', chalk.green('✓'), app.get('port'), app.get('env'));
+      console.log('\n %s App is running at http://localhost:%d in %s mode', chalk.green('✓'), app.get('port'), app.get('env'));
       console.log('  Press CTRL-C to stop\n');
     });
 

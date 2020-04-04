@@ -27,7 +27,7 @@ block content
 
     .ldBar-label {
       font-size: 2.1em;
-      font-weight: 900;
+      font-weight: 300;
     }
 
     .ldBar {
@@ -92,7 +92,7 @@ block content
                 .form-group.center-block.text-center
                   br
                   a.resumable-browse
-                      button.fw.btn.btn-success.resumable-brwoser(style="font-size:19px;margin-bottom:-9px;border-radius:5px;") Select File
+                      button.fw.btn.btn-success.resumable-browser(style="font-size:19px;margin-bottom:-9px;border-radius:5px;") Select File
 
                   h3.fw OR
 
@@ -110,18 +110,19 @@ block content
 
                   // add endpoint for visibility
                   if user.plan == 'plus'
-                    label.fw(for='title') Visibility
+                    label.fw(for='title' style="font-size:20px") Visibility
                     br
                     div.radio-buttons.visibility
-                      label.radio-inline
+                      label.fw.radio-inline(style="font-size:15px;")
                         input.radio-button(type='radio', name='visibility' value="public" checked)
                         | Public
-                      label.radio-inline
+                      label.fw.radio-inline(style="font-size:15px;")
                         input.radio-button(type='radio', name='visibility' value="unlisted")
                         | Unlisted
-                      label.radio-inline
+                      label.fw.radio-inline(style="font-size:15px;")
                         input.radio-button(type='radio', name='visibility' value="private")
                         | Private
+                    br
                     br
 
                   label.fw(for='title' style="font-size:20px") Select A Category
@@ -172,24 +173,29 @@ block content
                     div.radio-buttons.rating(style="")
                       if user.privs.safeForWorkUpload
                         label.fw.radio-inline(style="font-size:18px;")
-                          input.radio-button(type='radio', name='rating' value="allAges")
+                          input.radio-button(type='radio', style="margin-bottom:3rem", name='rating' value="allAges" checked=maxRatingAllowed === "SFW")
                           | Safe For Work
-                          br
-                          br
-                      br
+                        br
+                        br
 
-                      label.fw.radio-inline(style="font-size:18px;")
-                        input.radio-button(type='radio', name='rating' value="mature")
-                        | Not Safe For Work
-                      br
-                      br
+                      if maxRatingAllowed === "NSFW" || maxRatingAllowed === "SENSITIVE"
+                        label.fw.radio-inline(style="font-size:18px;")
+                          input.radio-button(type='radio', name='rating' value="mature")
+                          | Not Safe For Work
+                        br
+                        br
 
-                      label.fw.radio-inline(style="font-size:18px;")
-                        input.radio-button(type='radio', name='rating' value="sensitive" required)
-                        | Sensitive (Shocking content) 18+
+                      if maxRatingAllowed === "SENSITIVE"
+                        label.fw.radio-inline(style="font-size:18px;")
+                          input.radio-button(type='radio', name='rating' value="sensitive" required)
+                          | Sensitive (Shocking content) 18+
 
-                      br
-                      br
+                        br
+                        br
+
+
+                      if maxRatingAllowed === "SFW"
+                        div.fw(style="width:400px;max-width:95%;margin:auto;") The instance host has chosen to make this instance Safe For Work only, please ensure that your upload is Safe For Work
 
                   br
                   label.fw(for="description" style="font-size:23px") Description
@@ -204,6 +210,12 @@ block content
               h1.fw(style="margin-bottom:19px;") Uploading...
 
               div#myItem1.ldBar(data-preset="circle")
+
+              p.fw(id="uploadTimeElapsed", style="margin-top:77px;") Time elapsed: calculating ...
+
+              p.fw(id="estimatedUploadTimeLeft") Estimated time to completion: calculating ...
+
+              p.fw(id="estimatedTotalUploadTime") Total estimated upload time: calculating ...
 
 
 
@@ -288,6 +300,10 @@ block content
       if (!r.support) {
         swal('Sorry, your browser isn\'t supported currently, please update your browser');
       } else {
+        var setProgressAndTimeRemaining = null;
+        var barProgress = null;
+        var estimatedUploadTimeLeft = null;
+        var secondsElapsed = null;
 
         r.assignBrowse($('.resumable-browse')[0]);
 
@@ -321,7 +337,7 @@ block content
           var title = $('#title').val();
           var description = $('#description').val();
 
-          var visibility = $(".visilibity label input[type='radio']:checked").val();
+          var visibility = $('input[name=visibility]:checked').val();
           var rating = $(".rating label input[type='radio']:checked").val();
 
           var subcategory = $(".subcategory label input[type='radio']:checked").val();
@@ -471,23 +487,39 @@ block content
           const progress = Math.floor(file.progress() * 100);
 
           if (progress === 0 || progress === '0') {
-
+            uploadStartTime = new Date()
             $('.file-progress').html('BEGINNING UPLOAD...');
           } else {
+            secondsElapsed = Math.round((new Date() - uploadStartTime) / 1000)
+            const progressSpeed = (file.progress() * 100) / secondsElapsed
 
-            $('.file-progress').html('PROGRESS: ' + progress + '%');
+            estimatedUploadSecondsLeft = Math.ceil((100 - (file.progress() * 100)) / progressSpeed)
 
-            bar1.set(progress);
+            barProgress = progress
           }
-
-
         });
+
+        setInterval(function() {
+            if (barProgress) {
+            $('.file-progress').html('PROGRESS: ' + barProgress + '%');
+
+            bar1.set(barProgress);
+
+            var secondsToFormattedTime = #{secondsToFormattedTime}
+            estimatedUploadSecondsLeft = estimatedUploadSecondsLeft > 0 ? estimatedUploadSecondsLeft - 1 : 0
+            secondsElapsed += 1
+
+            var formattedElapsedTime = secondsElapsed && secondsToFormattedTime(secondsElapsed)
+            var formattedTimeLeft = estimatedUploadSecondsLeft !== null && secondsToFormattedTime(estimatedUploadSecondsLeft)
+            var formattedTotalEstimatedProcessingTime = estimatedUploadSecondsLeft !== null && secondsToFormattedTime(estimatedUploadSecondsLeft + secondsElapsed)
+
+            $('#uploadTimeElapsed').text(`Time elapsed: ${formattedElapsedTime ? formattedElapsedTime : "calculating ..."}`)
+
+            $('#estimatedUploadTimeLeft').text(`Estimated time to completion: ${formattedTimeLeft ? formattedTimeLeft : "calculating ..." }`);
+            }
+
+            $('#estimatedTotalUploadTime').text(`Total estimated upload time: ${formattedTotalEstimatedProcessingTime ? formattedTotalEstimatedProcessingTime : "calculating ..."}`)
+
+            }, 1000 * 1)
       }
-
-
-
-
-
     });
-
-
