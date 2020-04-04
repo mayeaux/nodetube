@@ -2,7 +2,7 @@ script.
   var amountOfSubs = #{subscriberAmount}
   var alreadySubbed = #{alreadySubbed}
 
-  $('.subscribe').on('touchstart click', function (e) {
+  $('.subscribe').on('release click', function (e) {
 
     if (!user) {
       return swal('Please register an account to subscribe')
