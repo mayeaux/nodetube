@@ -52,14 +52,31 @@ Promise.promisifyAll(redis.Multi.prototype);
 let messageCount = 0;
 
 subscriber.on("subscribe", function(channel, count) {
-  publisher.publish("a channel", "a message");
-  publisher.publish("a channel", "another message");
+  console.log(count);
+
+  const messageThings = [{
+    username: 'thing',
+    message: 'thing3'
+  }, {
+    username: 'thing',
+    message: 'thing3'
+  }, {
+    username: 'thing',
+    message: 'thing3'
+  }];
+
+  publisher.publish("a channel", JSON.stringify(messageThings));
+  // publisher.publish("a channel", "another message");
 });
 
 subscriber.on("message", function(channel, message) {
   messageCount += 1;
 
   console.log("Subscriber received message in channel '" + channel + "': " + message);
+
+  let updatedMessage = JSON.parse(message);
+
+  console.log(updatedMessage[2])
 
 });
 
