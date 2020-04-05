@@ -48,25 +48,21 @@ let subscriber = client2;
 Promise.promisifyAll(redis.RedisClient.prototype);
 Promise.promisifyAll(redis.Multi.prototype);
 
+const messageThings = [{
+  username: 'thing',
+  message: 'thing3'
+}, {
+  username: 'thing',
+  message: 'thing3'
+}, {
+  username: 'thing',
+  message: 'thing3'
+}];
 
 let messageCount = 0;
 
 subscriber.on("subscribe", function(channel, count) {
   console.log(count);
-
-  const messageThings = [{
-    username: 'thing',
-    message: 'thing3'
-  }, {
-    username: 'thing',
-    message: 'thing3'
-  }, {
-    username: 'thing',
-    message: 'thing3'
-  }];
-
-  publisher.publish("a channel", JSON.stringify(messageThings));
-  // publisher.publish("a channel", "another message");
 });
 
 subscriber.on("message", function(channel, message) {
@@ -265,6 +261,7 @@ function messageSocketCallback(ws){
 
   /** everytime the server receives a message from the client **/
   ws.on('message', function(_message){
+    // publisher.publish("a channel", "another message");
 
     // console.log(_message);
 
@@ -284,6 +281,7 @@ function messageSocketCallback(ws){
     // TODO: need to add a close message here
     // this is sent right before changing href location of client
     if(message == 'DISCONNECTING'){
+      // TODO: get from redis, change the amount, save to redis, send publish message
 
       messagesObject[streamingUser].connectedUsersCount--;
 
@@ -296,7 +294,11 @@ function messageSocketCallback(ws){
       // send all existing messages for streamer down to client
       // TODO: limit it to latest 200
 
-      // TODO: get messages from redis
+      // TODO: get messages, and current watching viewer amount from redis
+      // TODO: increment the viewer amount and save it
+      // TODO: send to pub/sub that a user event has happened
+
+      // TODO: replace with a pubsub publisher
       for(const message of messagesObject[streamingUser].messages){
         stringifyAndSend(ws, { message });
       }
@@ -304,13 +306,15 @@ function messageSocketCallback(ws){
       // increment amount of connected users
       messagesObject[streamingUser].connectedUsersCount++;
 
+      // TODO: update redis, and then send publish thing
+
       console.log('new user connected to chat of: ' + streamingUser);
 
       // TODO: this can remain, maybe a refactor
       // add websocket connection to object
       messagesObject[streamingUser].connectedUsers.push(ws);
 
-
+      // TODO: pull this out into a pubsub listener
       // send new message to already connected users
       for(const user of messagesObject[streamingUser].connectedUsers){
 
@@ -318,7 +322,6 @@ function messageSocketCallback(ws){
         if(user.readyState == 1){
 
           // update how many users are connected
-          // TODO: this can send provided the connectedUsersCount is updated from redis
           stringifyAndSend(user, { connectedUsersAmount: messagesObject[streamingUser].connectedUsersCount });
         }
       }
@@ -328,14 +331,20 @@ function messageSocketCallback(ws){
     }
 
     // sending keep alive as a hack to keep the socket open
-    /** this conditional means that a new message has been sent **/
+    /** WHEN A NEW MESSAGE SENT **/
     if(message !== 'KEEP-ALIVE' && message !== 'undefined' ){
+
+      // TODO: get from redis, add the message, save it, send message
+
+      publisher.publish("a channel", JSON.stringify(messageThings));
+
 
       // save message to existing sent messages
       messagesObject[streamingUser].messages.push(message);
 
       // TODO: have to update via redis here ^
 
+      // TODO: pull this out into a pubsub listener
       // push new message down to all still connected clients
       for(const user of messagesObject[streamingUser].connectedUsers){
 
