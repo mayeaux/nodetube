@@ -10,6 +10,63 @@ const ws = require('ws');
 
 const User = require('../../models/index').User;
 
+
+const publisher = require('../../config/redis');
+
+const Promise = require('bluebird');
+var redis = require('redis');
+
+
+let client2;
+if(process.env.REDIS_URL){
+
+  console.log(`CONNECTING TO REDIS_URL: ${process.env.REDIS_URL} \n`);
+  client2 = redis.createClient(process.env.REDIS_URL); // creates a new redisClient
+
+} else {
+  const redisHost = process.env.REDIS_HOST || '127.0.0.1';
+  const redisPort = process.env.REDIS_PORT || 6379;
+  const redisPassword =  process.env.REDIS_PASSWORD || '';
+
+  const options = {
+    host: redisHost,
+    port: redisPort
+  };
+
+  if(process.env.NODE_ENV == 'production'){
+    options.password = redisPassword;
+  }
+
+  console.log(`CONNECTING TO REDIS, HOST: ${redisHost}, PORT: ${redisPort}\n`);
+
+  client2 = redis.createClient(options); // creates a new redisClient
+
+}
+
+let subscriber = client2;
+
+Promise.promisifyAll(redis.RedisClient.prototype);
+Promise.promisifyAll(redis.Multi.prototype);
+
+
+let messageCount = 0;
+
+subscriber.on("subscribe", function(channel, count) {
+  publisher.publish("a channel", "a message");
+  publisher.publish("a channel", "another message");
+});
+
+subscriber.on("message", function(channel, message) {
+  messageCount += 1;
+
+  console.log("Subscriber received message in channel '" + channel + "': " + message);
+
+});
+
+subscriber.subscribe("a channel");
+
+
+
 // process.on('uncaughtException', (err) => {
 //   console.log(`Uncaught Exception: `, err);
 //   console.log(err.stack);
@@ -182,6 +239,14 @@ function messageSocketCallback(ws){
     }
   });
 
+  function instantiateNewStreamingUserObject(streamingUser){
+    messagesObject[streamingUser] = {};
+    messagesObject[streamingUser].messages = [];
+    messagesObject[streamingUser].connectedUsers = [];
+    messagesObject[streamingUser].connectedUsersCount = 0;
+  }
+
+  /** everytime the server receives a message from the client **/
   ws.on('message', function(_message){
 
     // console.log(_message);
@@ -194,10 +259,7 @@ function messageSocketCallback(ws){
 
     // code to run when a new user connects
     if(streamingUser && !messagesObject[streamingUser]){
-      messagesObject[streamingUser] = {};
-      messagesObject[streamingUser].messages = [];
-      messagesObject[streamingUser].connectedUsers = [];
-      messagesObject[streamingUser].connectedUsersCount = 0;
+      instantiateNewStreamingUserObject(streamingUser);
     }
 
     var message = message.message;
@@ -216,17 +278,21 @@ function messageSocketCallback(ws){
 
       // send all existing messages for streamer down to client
       // TODO: limit it to latest 200
+
+      // TODO: get messages from redis
       for(const message of messagesObject[streamingUser].messages){
         stringifyAndSend(ws, { message });
       }
 
-      // increment amount of connected users to streamer
+      // increment amount of connected users
       messagesObject[streamingUser].connectedUsersCount++;
 
       console.log('new user connected to chat of: ' + streamingUser);
 
+      // TODO: this can remain, maybe a refactor
       // add websocket connection to object
       messagesObject[streamingUser].connectedUsers.push(ws);
+
 
       // send new message to already connected users
       for(const user of messagesObject[streamingUser].connectedUsers){
@@ -235,6 +301,7 @@ function messageSocketCallback(ws){
         if(user.readyState == 1){
 
           // update how many users are connected
+          // TODO: this can send provided the connectedUsersCount is updated from redis
           stringifyAndSend(user, { connectedUsersAmount: messagesObject[streamingUser].connectedUsersCount });
         }
       }
@@ -244,11 +311,13 @@ function messageSocketCallback(ws){
     }
 
     // sending keep alive as a hack to keep the socket open
-    // this conditional means that a new message has been sent
+    /** this conditional means that a new message has been sent **/
     if(message !== 'KEEP-ALIVE' && message !== 'undefined' ){
 
       // save message to existing sent messages
       messagesObject[streamingUser].messages.push(message);
+
+      // TODO: have to update via redis here ^
 
       // push new message down to all still connected clients
       for(const user of messagesObject[streamingUser].connectedUsers){
