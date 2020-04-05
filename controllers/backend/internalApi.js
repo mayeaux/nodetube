@@ -448,10 +448,11 @@ exports.react = async(req, res, next)  => {
   }
 
   // if existing react, update or not
-  if(existingReact){
-    if(existingReact == req.body.emoji){
-      return res.end('no change');
-    } else {
+  if(existingReact){ // user selected the react that was already active (wants to remove)
+    if(existingReact.react == req.body.emoji){
+      await React.collection.deleteOne(existingReact);
+      return res.send('removed');
+    } else { // user changed the react
       existingReact.react = req.body.emoji;
       await existingReact.save();
       return res.send('changed');
