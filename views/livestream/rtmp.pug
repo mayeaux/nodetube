@@ -6,11 +6,13 @@ block content
     style.
       .container {
         width: 100%; !important;
+        text-align:center;
+
       }
 
     body
         script(src='https://cdn.jsdelivr.net/npm/hls.js@latest')
-        video#video(controls style="max-width:100%;")
+        video#video(controls style="max-width:100%;max-height: 800px;margin-top: 30px;")
 
         .videoContainer(style="")
             .row
@@ -63,8 +65,8 @@ block content
           // var webSocketUrl = 'wss://' + location.host + '/one2many';
 
           if (env == 'production') {
-            webSocketUrl = 'wss://' + 'live.pewtube.com' + '/stream/' + username;
-            messageUrl = 'wss://' + 'live.pewtube.com' + '/messages/' + username;
+            webSocketUrl = 'wss://' + 'newtube.app' + '/stream/' + username;
+            messageUrl = 'wss://' + 'newtube.app' + '/messages/' + username;
           } else {
             webSocketUrl = 'wss://' + 'localhost:8080' + '/stream/' + username;
             messageUrl = 'wss://' + 'localhost:8080' + '/messages/' + username;

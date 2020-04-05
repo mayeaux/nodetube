@@ -1,4 +1,5 @@
 div.search-upload-buttons-container.dropdown(style="display:inline")
+    // TODO: this should be updated to be smart enough to support MAX_RATING_ALLOWED env var (aka SFW doesn't even have a filter)
     if !user
         // show current loaded filter
         button#dropdownMenu1.fw.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
