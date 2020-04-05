@@ -68,8 +68,8 @@ block content
             webSocketUrl = 'wss://' + 'newtube.app:8443' + '/stream/' + username;
             messageUrl = 'wss://' + 'newtube.app:8443' + '/messages/' + username;
           } else {
-            webSocketUrl = 'wss://' + 'localhost:8080' + '/stream/' + username;
-            messageUrl = 'wss://' + 'localhost:8080' + '/messages/' + username;
+            webSocketUrl = 'ws://' + 'localhost:8443' + '/stream/' + username;
+            messageUrl = 'ws://' + 'localhost:8443' + '/messages/' + username;
           }
 
           console.log(messageUrl);

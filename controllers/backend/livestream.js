@@ -3,6 +3,9 @@ const url = require('url');
 const WebSocket = require('ws');
 const fs = require('fs');
 const https = require('https');
+const http = require('http');
+
+
 const ws = require('ws');
 
 const User = require('../../models/index').User;
@@ -93,8 +96,10 @@ if('true' == 'true')
     cert: fs.readFileSync('keys/server.crt')
   };
 
+  // TODO: if production do https otherwise do http
+
   // boot up express server to handle websocket connections
-  server = https.createServer(options, app).listen(8443, function(){
+  server = http.createServer(options, app).listen(8443, function(){
     console.log('Websockets server started on port 8443');
   });
 
@@ -108,6 +113,7 @@ if('true' == 'true')
   connectedUsersAmount = 0;
 
   // save already sent messages
+  // TODO: need to do this in redis
   messagesObject = {};
 
   // code to run when user connects to :8080
@@ -124,7 +130,7 @@ if('true' == 'true')
       // username succeeds :8080/messages/__
       const username = pathname.match(regexp1)[1];
 
-      // instantiate the username for the websockets object if it doesn't exist yet
+      // instantiate the username for the in memory object if it doesn't exist yet
       if(!webSockets[username]){
         webSockets[username] = {};
       }
@@ -208,13 +214,13 @@ function messageSocketCallback(ws){
     // code to run when a new user connects
     if(message == 'CONNECTING'){
 
-      // send all existing messages
+      // send all existing messages for streamer down to client
       // TODO: limit it to latest 200
       for(const message of messagesObject[streamingUser].messages){
         stringifyAndSend(ws, { message });
       }
 
-      // increment amount of connected users
+      // increment amount of connected users to streamer
       messagesObject[streamingUser].connectedUsersCount++;
 
       console.log('new user connected to chat of: ' + streamingUser);
