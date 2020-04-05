@@ -190,7 +190,7 @@ function messageSocketCallback(ws){
       messagesObject[streamingUser] = {};
       messagesObject[streamingUser].messages = [];
       messagesObject[streamingUser].connectedUsers = [];
-      messagesObject[streamingUser].connectedUsersCount = 2;
+      messagesObject[streamingUser].connectedUsersCount = 0;
     }
 
     var message = message.message;
