@@ -59,25 +59,10 @@ const messageThings = [{
   message: 'thing3'
 }];
 
-let messageCount = 0;
 
-subscriber.on("subscribe", function(channel, count) {
-  console.log(count);
-});
-
-subscriber.on("message", function(channel, message) {
-  messageCount += 1;
-
-  console.log("Subscriber received message in channel '" + channel + "': " + message);
-
-  let updatedMessage = JSON.parse(message);
-
-  console.log(updatedMessage[2])
-
-});
-
-subscriber.subscribe("a channel");
-
+// subscriber.on("subscribe", function(channel, count) {
+//   console.log(count);
+// });
 
 
 // process.on('uncaughtException', (err) => {
@@ -228,8 +213,23 @@ if('true' == 'true')
 
 }
 
+subscriber.on("message", function(channel, message) {
+
+  console.log(channel, message);
+
+  console.log("Subscriber received message in channel '" + channel + "': " + message);
+
+  let updatedMessage = JSON.parse(message);
+
+  console.log(updatedMessage[2])
+
+});
+
+
 /** CALLBACK TO SEND A MESSAGE **/
 function messageSocketCallback(ws){
+
+  subscriber.subscribe("usernameStreaming");
 
   /** DECREMENT AMOUNT OF CONNECTED USERS ON CLOSE **/
   ws.on('close', function(code, reason){
@@ -278,24 +278,35 @@ function messageSocketCallback(ws){
 
     var message = message.message;
 
-    // TODO: need to add a close message here
     // this is sent right before changing href location of client
     if(message == 'DISCONNECTING'){
-      // TODO: get from redis, change the amount, save to redis, send publish message
 
-      let amountOfConnectedUsers = await  redisClient.getAsync('connectedUsers');
+      let amountOfConnectedUsers = await  publisher.getAsync('connectedUsers');
 
-      amountOfConnectedUsers = amountOfConnectedUsers -1;
+      amountOfConnectedUsers = amountOfConnectedUsers - 1;
 
-      redisClient.setAsync('connectedUsers', amountOfConnectedUsers);
+      publisher.setAsync('connectedUsers', amountOfConnectedUsers);
 
       publisher.publish('usernameStreaming', 'userAmountEvent');
+
+
+      publisher.publish("a channel", JSON.stringify(messageThings));
 
       return'do something here';
     }
 
     // code to run when a new user connects
     if(message == 'CONNECTING'){
+
+      publisher.publish("a channel", JSON.stringify(messageThings));
+
+      publisher.publish("a channel", JSON.stringify(messageThings));
+
+
+      publisher.publish('usernameStreaming', JSON.stringify('userAmountEvent'));
+
+
+      console.log('new user connected to chat of: ' + streamingUser);
 
       // send all existing messages for streamer down to client
       // TODO: limit it to latest 200
@@ -309,19 +320,25 @@ function messageSocketCallback(ws){
         stringifyAndSend(ws, { message });
       }
 
-      // increment amount of connected users
-      messagesObject[streamingUser].connectedUsersCount++;
+      let amountOfConnectedUsers = await publisher.getAsync('connectedUsers');
 
-      // TODO: update redis, and then send publish thing
+      console.log(amountOfConnectedUsers + ' amount of things');
 
-      console.log('new user connected to chat of: ' + streamingUser);
+      amountOfConnectedUsers = amountOfConnectedUsers + 1;
 
-      // TODO: this can remain, maybe a refactor
+      publisher.setAsync('connectedUsers', amountOfConnectedUsers);
+
+      publisher.publish('usernameStreaming', 'userAmountEvent');
+
       // add websocket connection to object
       messagesObject[streamingUser].connectedUsers.push(ws);
 
       // TODO: pull this out into a pubsub listener
       // send new message to already connected users
+
+
+      // TODO: listen for that route, when it hits shoot it with the updated user amount
+
       for(const user of messagesObject[streamingUser].connectedUsers){
 
         // if the user is still connected
@@ -369,3 +386,13 @@ function stringifyAndSend(webSocketConnection, objectToSend){
   webSocketConnection.send( JSON.stringify( objectToSend ) );
 }
 
+
+//
+// subscriber.on("message", function(channel, message) {
+//   console.log("Subscriber received message in channel '" + channel + "': " + message);
+//
+//
+//   console.log(channel);
+//   console.log(message);
+//
+// });
