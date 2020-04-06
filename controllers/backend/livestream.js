@@ -227,15 +227,13 @@ subscriber.on("message", function(channel, message) {
 
   for(const user of messagesObject[channel].connectedUsers){
 
-    console.log(user);
-
-    console.log('HERE1234');
+    // console.log(user);
 
     // if the user is still connected
     if(user.readyState == 1){
 
       // update how many users are connected
-      stringifyAndSend(user, { connectedUsersAmount: 4 });
+      stringifyAndSend(user, { connectedUsersAmount: message });
     }
   }
 
@@ -247,26 +245,14 @@ subscriber.on("message", function(channel, message) {
 function messageSocketCallback(ws){
 
 
-  /** DECREMENT AMOUNT OF CONNECTED USERS ON CLOSE **/
-  ws.on('close', function(code, reason){
-
-    console.log(`closing socket: ${code}, ${reason}`);
-
-    console.log(connectedUsers)
-
-    console.log(connectedUsersAmount);
-
-    connectedUsersAmount--;
-
-    console.log(connectedUsersAmount)
-
-    for(const user of connectedUsers){
-      if(user.readyState == 1){
-        // TODO: have to fix here for decrementing to work
-        stringifyAndSend(user, { connectedUsersAmount });
-      }
-    }
-  });
+  // /** DECREMENT AMOUNT OF CONNECTED USERS ON CLOSE **/
+  // ws.on('close', function(code, reason){
+  //
+  //   console.log('THINGER 111');
+  //
+  //
+  //   // TODO: decrement here
+  // });
 
   function instantiateNewStreamingUserObject(streamingUser){
     messagesObject[streamingUser] = {};
@@ -298,10 +284,19 @@ function messageSocketCallback(ws){
 
     var message = message.message;
 
+    let amountOfConnectedUsers = await  publisher.getAsync('connectedUsers');
+
+    console.log('amount connected');
+    console.log(amountOfConnectedUsers);
+
+    if(!amountOfConnectedUsers){
+      amountOfConnectedUsers = 1;
+    }
+
     // this is sent right before changing href location of client
     if(message == 'DISCONNECTING'){
 
-      let amountOfConnectedUsers = await  publisher.getAsync('connectedUsers');
+      console.log('THINGER');
 
       amountOfConnectedUsers = amountOfConnectedUsers - 1;
 
@@ -309,36 +304,18 @@ function messageSocketCallback(ws){
 
       publisher.publish(streamingUser, amountOfConnectedUsers);
 
-
-      publisher.publish(streamingUser, JSON.stringify(messageThings));
-
       return'do something here';
     }
 
     // code to run when a new user connects
     if(message == 'CONNECTING'){
 
-      publisher.publish(streamingUser, JSON.stringify(messageThings));
-
-
-      publisher.publish(streamingUser, JSON.stringify('userAmountEvent'));
-
-
       console.log('new user connected to chat of: ' + streamingUser);
 
       // send all existing messages for streamer down to client
       // TODO: limit it to latest 200
 
-      // TODO: get messages, and current watching viewer amount from redis
-      // TODO: increment the viewer amount and save it
-      // TODO: send to pub/sub that a user event has happened
-
-      // TODO: replace with a pubsub publisher
-      for(const message of messagesObject[streamingUser].messages){
-        stringifyAndSend(ws, { message });
-      }
-
-      let amountOfConnectedUsers = await publisher.getAsync('connectedUsers');
+      // TODO: send message here
 
       console.log(amountOfConnectedUsers + ' amount of things');
 
@@ -351,22 +328,6 @@ function messageSocketCallback(ws){
       // add websocket connection to object
       messagesObject[streamingUser].connectedUsers.push(ws);
 
-      // TODO: pull this out into a pubsub listener
-      // send new message to already connected users
-
-
-      // TODO: listen for that route, when it hits shoot it with the updated user amount
-
-      for(const user of messagesObject[streamingUser].connectedUsers){
-
-        // if the user is still connected
-        if(user.readyState == 1){
-
-          // update how many users are connected
-          stringifyAndSend(user, { connectedUsersAmount: messagesObject[streamingUser].connectedUsersCount });
-        }
-      }
-
       console.log('connecting');
       return'do something here';
     }
@@ -377,24 +338,13 @@ function messageSocketCallback(ws){
 
       // TODO: get from redis, add the message, save it, send message
 
-      publisher.publish(streamingUser, JSON.stringify(messageThings));
+      // publisher.publish(streamingUser, JSON.stringify(messageThings));
 
+      // TODO: update here
 
       // save message to existing sent messages
       messagesObject[streamingUser].messages.push(message);
 
-      // TODO: have to update via redis here ^
-
-      // TODO: pull this out into a pubsub listener
-      // push new message down to all still connected clients
-      for(const user of messagesObject[streamingUser].connectedUsers){
-
-        // check if connection is still running
-        if(user.readyState == 1){
-
-          stringifyAndSend(user, { message });
-        }
-      }
     }
   });
 }
