@@ -171,7 +171,7 @@ if('true' == 'true')
   // TODO: need to do this in redis
   messagesObject = {};
 
-  // code to run when user connects to :8080
+  // code to run when user connects to :8443
   server.on('upgrade', (request, socket, head) => {
 
     // get the pathname that the individual is hitting
@@ -184,6 +184,9 @@ if('true' == 'true')
 
       // username succeeds :8080/messages/__
       const username = pathname.match(regexp1)[1];
+
+      // TODO: subscribe here
+      console.log(username + ' username here');
 
       // instantiate the username for the in memory object if it doesn't exist yet
       if(!webSockets[username]){
@@ -215,13 +218,15 @@ if('true' == 'true')
 
 subscriber.on("message", function(channel, message) {
 
+  // TODO: pass an object here where the streaming message and the message and stuff is passed
+
   console.log('channel message');
   console.log(channel, message);
 
   if(channel !== 'usernameStreaming'){
-    let updatedMessage = JSON.parse(message);
-
-    console.log(updatedMessage[2])
+    // let updatedMessage = JSON.parse(message);
+    //
+    // console.log(updatedMessage[2])
   } else {
 
     console.log('something here');
@@ -247,8 +252,6 @@ subscriber.on("message", function(channel, message) {
 
 /** CALLBACK TO SEND A MESSAGE **/
 function messageSocketCallback(ws){
-
-  subscriber.subscribe('usernameStreaming');
 
 
   /** DECREMENT AMOUNT OF CONNECTED USERS ON CLOSE **/
@@ -277,6 +280,8 @@ function messageSocketCallback(ws){
     messagesObject[streamingUser].messages = [];
     messagesObject[streamingUser].connectedUsers = [];
     messagesObject[streamingUser].connectedUsersCount = 0;
+    // TODO: finish this
+    subscriber.subscribe(streamingUser);
   }
 
   /** everytime the server receives a message from the client **/
@@ -291,7 +296,7 @@ function messageSocketCallback(ws){
     // get username that sent the message
     var streamingUser = message.username;
 
-    console.log('streaming user ' + streamingUser);
+    // console.log('streaming user ' + streamingUser);
 
     // code to run when a new user connects
     if(streamingUser && !messagesObject[streamingUser]){
@@ -309,10 +314,10 @@ function messageSocketCallback(ws){
 
       publisher.setAsync('connectedUsers', amountOfConnectedUsers);
 
-      publisher.publish('usernameStreaming', 'userAmountEvent');
+      publisher.publish(streamingUser, 'userAmountEvent');
 
 
-      publisher.publish("a channel", JSON.stringify(messageThings));
+      publisher.publish(streamingUser, JSON.stringify(messageThings));
 
       return'do something here';
     }
@@ -320,12 +325,10 @@ function messageSocketCallback(ws){
     // code to run when a new user connects
     if(message == 'CONNECTING'){
 
-      publisher.publish("a channel", JSON.stringify(messageThings));
-
-      publisher.publish("a channel", JSON.stringify(messageThings));
+      publisher.publish(streamingUser, JSON.stringify(messageThings));
 
 
-      publisher.publish('usernameStreaming', JSON.stringify('userAmountEvent'));
+      publisher.publish(streamingUser, JSON.stringify('userAmountEvent'));
 
 
       console.log('new user connected to chat of: ' + streamingUser);
@@ -350,7 +353,7 @@ function messageSocketCallback(ws){
 
       publisher.setAsync('connectedUsers', amountOfConnectedUsers);
 
-      publisher.publish('usernameStreaming', 'userAmountEvent');
+      publisher.publish(streamingUser, 'userAmountEvent');
 
       // add websocket connection to object
       messagesObject[streamingUser].connectedUsers.push(ws);
@@ -381,7 +384,7 @@ function messageSocketCallback(ws){
 
       // TODO: get from redis, add the message, save it, send message
 
-      publisher.publish("a channel", JSON.stringify(messageThings));
+      publisher.publish(streamingUser, JSON.stringify(messageThings));
 
 
       // save message to existing sent messages
