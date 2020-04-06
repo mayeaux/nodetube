@@ -12,6 +12,9 @@ const timeAgoEnglish = new javascriptTimeAgo('en-US');
 
 const domainNameAndTLD = process.env.DOMAIN_NAME_AND_TLD;
 
+const categories = require('../config/categories');
+const categorySlugs = categories.map(c => c.name);
+
 const uploadSchema = new mongoose.Schema({
   title: String,
   description: String,

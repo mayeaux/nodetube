@@ -166,7 +166,7 @@ exports.getChannelRss = async(req, res) => {
     };
 
     /** DB CALL TO GET UPLOADS **/
-    let uploads = await Upload.find(searchQuery).sort({ createdAt : -1 });
+    let uploads = await Upload.find(searchQuery).sort({ createdAt : -1 }).limit(20);
 
 		const feed = new RSS({
 			title: process.env.INSTANCE_BRAND_NAME,

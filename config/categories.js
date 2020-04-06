@@ -75,7 +75,12 @@ const categories = [
     name: 'uncategorized',
     displayName: 'Uncategorized',
     subcategories: []
-  }
+  },
+	{
+    name: 'coronavirus',
+    displayName: 'Corona Virus',
+    subcategories: []
+  },
 ];
 
 module.exports = categories;
