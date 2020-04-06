@@ -215,13 +215,32 @@ if('true' == 'true')
 
 subscriber.on("message", function(channel, message) {
 
+  console.log('channel message');
   console.log(channel, message);
 
-  console.log("Subscriber received message in channel '" + channel + "': " + message);
+  if(channel !== 'usernameStreaming'){
+    let updatedMessage = JSON.parse(message);
 
-  let updatedMessage = JSON.parse(message);
+    console.log(updatedMessage[2])
+  } else {
 
-  console.log(updatedMessage[2])
+    console.log('something here');
+
+    for(const user of messagesObject['1234'].connectedUsers){
+
+      console.log(user);
+
+      console.log('HERE1234');
+
+      // if the user is still connected
+      if(user.readyState == 1){
+
+        // update how many users are connected
+        stringifyAndSend(user, { connectedUsersAmount: 4 });
+      }
+    }
+
+  }
 
 });
 
@@ -229,7 +248,8 @@ subscriber.on("message", function(channel, message) {
 /** CALLBACK TO SEND A MESSAGE **/
 function messageSocketCallback(ws){
 
-  subscriber.subscribe("usernameStreaming");
+  subscriber.subscribe('usernameStreaming');
+
 
   /** DECREMENT AMOUNT OF CONNECTED USERS ON CLOSE **/
   ws.on('close', function(code, reason){
@@ -270,6 +290,8 @@ function messageSocketCallback(ws){
 
     // get username that sent the message
     var streamingUser = message.username;
+
+    console.log('streaming user ' + streamingUser);
 
     // code to run when a new user connects
     if(streamingUser && !messagesObject[streamingUser]){
