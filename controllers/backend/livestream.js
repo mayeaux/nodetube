@@ -260,7 +260,7 @@ function messageSocketCallback(ws){
   }
 
   /** everytime the server receives a message from the client **/
-  ws.on('message', function(_message){
+  ws.on('message', async function(_message){
     // publisher.publish("a channel", "another message");
 
     // console.log(_message);
@@ -283,7 +283,13 @@ function messageSocketCallback(ws){
     if(message == 'DISCONNECTING'){
       // TODO: get from redis, change the amount, save to redis, send publish message
 
-      messagesObject[streamingUser].connectedUsersCount--;
+      let amountOfConnectedUsers = await  redisClient.getAsync('connectedUsers');
+
+      amountOfConnectedUsers = amountOfConnectedUsers -1;
+
+      redisClient.setAsync('connectedUsers', amountOfConnectedUsers);
+
+      publisher.publish('usernameStreaming', 'userAmountEvent');
 
       return'do something here';
     }
