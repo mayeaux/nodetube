@@ -13,6 +13,9 @@ const uploadServer = uploadHelpers.uploadServer;
 const getFromCache = require('../../caching/getFromCache');
 const uploadFilters = require('../../lib/mediaBrowsing/helpers');
 
+const { getVideoDurationInSeconds } = require('get-video-duration')
+const { getAudioDurationInSeconds } = require('get-audio-duration')
+
 const getSensitivityFilter =  uploadFilters.getSensitivityFilter;
 const categories = require('../../config/categories');
 const logCaching = process.env.LOG_CACHING;
@@ -92,6 +95,38 @@ exports.recentUploads = async(req, res) => {
     const uploads = await getFromCache.getRecentUploads(limit, skipAmount, mediaType, filter, category, subcategory);
     const recentPopular = 'recent';
 
+    var durations = [];
+    var i = 0;
+    for(const upload of uploads) {
+      var duration
+      durations[i] = ""
+      var server = uploadServer
+      if(server.charAt(0) == "/") // the slash confuses the file reading, because host root directory is not the same as machine root directory
+        server = server.substr(1)
+      if(upload.fileType == "video")
+        duration = await getVideoDurationInSeconds(`${server}/${upload.uploader.channelUrl}/${upload.uniqueTag + upload.fileExtension}`);
+      else if(upload.fileType == "audio")
+        duration = await getAudioDurationInSeconds(`${server}/${upload.uploader.channelUrl}/${upload.uniqueTag + upload.fileExtension}`);
+      else
+        duration = 0;
+
+      var h = Math.round(duration / 3600)
+      if(h < 10)
+        h = `0${h}`
+      var m = Math.round(duration / 60)
+      if(m < 10)
+        m = `0${m}`
+      var s = Math.round(duration % 60)
+      if(s < 10)
+        s = `0${s}`
+      
+      if(h > 0)
+        durations[i] = `${h}:${m}:${s}`
+      else
+        durations[i] += `${m}:${s}`
+      i++;
+    }
+
     // console.log('rendering');
 
     res.render('mediaBrowsing/recentUploads', {
@@ -111,7 +146,8 @@ exports.recentUploads = async(req, res) => {
       addressPrepend,
       categoryObj,
       mediaBrowsingType,
-      mediaType
+      mediaType,
+      durations,
     });
 
   } catch(err){
@@ -275,6 +311,38 @@ exports.popularUploads = async(req, res) => {
     //
     // console.log('getting popular uploads');
 
+    var durations = [];
+    var i = 0;
+    for(const upload of uploads) {
+      var duration
+      durations[i] = ""
+      var server = uploadServer
+      if(server.charAt(0) == "/") // the slash confuses the file reading, because host root directory is not the same as machine root directory
+        server = server.substr(1)
+      if(upload.fileType == "video")
+        duration = await getVideoDurationInSeconds(`${server}/${upload.uploader.channelUrl}/${upload.uniqueTag + upload.fileExtension}`);
+      else if(upload.fileType == "audio")
+        duration = await getAudioDurationInSeconds(`${server}/${upload.uploader.channelUrl}/${upload.uniqueTag + upload.fileExtension}`);
+      else
+        duration = 0;
+
+      var h = Math.round(duration / 3600)
+      if(h < 10)
+        h = `0${h}`
+      var m = Math.round(duration / 60)
+      if(m < 10)
+        m = `0${m}`
+      var s = Math.round(duration % 60)
+      if(s < 10)
+        s = `0${s}`
+      
+      if(h > 0)
+        durations[i] = `${h}:${m}:${s}`
+      else
+        durations[i] += `${m}:${s}`
+      i++;
+    }
+
     res.render('mediaBrowsing/popularUploads', {
       title: 'Popular Uploads',
       uploads,
@@ -300,6 +368,7 @@ exports.popularUploads = async(req, res) => {
       popularTimeViews,
       mediaBrowsingType,
       mediaType,
+      durations,
       displayObject
       // viewsOnThisPage
     });

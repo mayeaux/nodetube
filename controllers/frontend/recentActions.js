@@ -99,6 +99,38 @@ exports.recentReacts = async(req, res) => {
     return react.upload.visibility == 'public' && react.upload.status !== 'processing';
   });
 
+  var durations = [];
+    var i = 0;
+    for(const upload of uploads) {
+      var duration
+      durations[i] = ""
+      var server = uploadServer
+      if(server.charAt(0) == "/") // the slash confuses the file reading, because host root directory is not the same as machine root directory
+        server = server.substr(1)
+      if(upload.fileType == "video")
+        duration = await getVideoDurationInSeconds(`${server}/${upload.uploader.channelUrl}/${upload.uniqueTag + upload.fileExtension}`);
+      else if(upload.fileType == "audio")
+        duration = await getAudioDurationInSeconds(`${server}/${upload.uploader.channelUrl}/${upload.uniqueTag + upload.fileExtension}`);
+      else
+        duration = 0;
+
+      var h = Math.round(duration / 3600)
+      if(h < 10)
+        h = `0${h}`
+      var m = Math.round(duration / 60)
+      if(m < 10)
+        m = `0${m}`
+      var s = Math.round(duration % 60)
+      if(s < 10)
+        s = `0${s}`
+      
+      if(h > 0)
+        durations[i] = `${h}:${m}:${s}`
+      else
+        durations[i] += `${m}:${s}`
+      i++;
+    }
+
   res.render('admin/recentReacts', {
     title: 'Recent Reacts',
     reacts,
@@ -109,6 +141,7 @@ exports.recentReacts = async(req, res) => {
     recentAction,
     uploadServer,
     documents: reacts,
+    durations: durations,
     recentActionDisplayName: 'Recent Reacts'
   });
 
@@ -149,6 +182,38 @@ exports.recentViews = async(req, res) => {
     return view.upload.visibility == 'public' && view.upload.status !== 'processing';
   });
 
+  var durations = [];
+    var i = 0;
+    for(const upload of uploads) {
+      var duration
+      durations[i] = ""
+      var server = uploadServer
+      if(server.charAt(0) == "/") // the slash confuses the file reading, because host root directory is not the same as machine root directory
+        server = server.substr(1)
+      if(upload.fileType == "video")
+        duration = await getVideoDurationInSeconds(`${server}/${upload.uploader.channelUrl}/${upload.uniqueTag + upload.fileExtension}`);
+      else if(upload.fileType == "audio")
+        duration = await getAudioDurationInSeconds(`${server}/${upload.uploader.channelUrl}/${upload.uniqueTag + upload.fileExtension}`);
+      else
+        duration = 0;
+
+      var h = Math.round(duration / 3600)
+      if(h < 10)
+        h = `0${h}`
+      var m = Math.round(duration / 60)
+      if(m < 10)
+        m = `0${m}`
+      var s = Math.round(duration % 60)
+      if(s < 10)
+        s = `0${s}`
+      
+      if(h > 0)
+        durations[i] = `${h}:${m}:${s}`
+      else
+        durations[i] += `${m}:${s}`
+      i++;
+    }
+
   res.render('admin/recentReacts', {
     title: 'Recent Views',
     views,
@@ -158,6 +223,7 @@ exports.recentViews = async(req, res) => {
     nextNumber,
     uploadServer,
     documents: views,
+    durations,
     recentActionDisplayName: 'Recent Views'
   });
 

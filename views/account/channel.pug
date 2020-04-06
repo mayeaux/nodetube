@@ -168,7 +168,7 @@ block content
     //UPLOAD DISPLAY SECTION
 
     div.container
-        each upload in channel.uploads
+        each upload, index in channel.uploads
             div.col-xs-12.col-sm-6.col-md-6.col-lg-4(style="text-align:center;height:330px")
                 if isUser || isAdmin || ( user && user.role == 'moderator' )
                     div.editFileButtons
