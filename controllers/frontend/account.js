@@ -17,6 +17,7 @@ const Subscription = require('../../models/index').Subscription;
 const { uploadServer, uploadUrl } = require('../../lib/helpers/settings');
 
 const { filterUploadsByMediaType } = require('../../lib/mediaBrowsing/helpers');
+const timeHelper = require('../../lib/helpers/time');
 
 const { URLSearchParams } = require('url');
 
@@ -32,6 +33,8 @@ const uploadFilters = require('../../lib/mediaBrowsing/helpers');
 
 const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
 
+const { userCanUploadContentOfThisRating } = require('../../lib/uploading/helpers');
+
 const validator = require('email-validator');
 
 const javascriptTimeAgo = require('javascript-time-ago');
@@ -39,6 +42,8 @@ javascriptTimeAgo.locale(require('javascript-time-ago/locales/en'));
 require('javascript-time-ago/intl-messageformat-global');
 require('intl-messageformat/dist/locale-data/en');
 const timeAgoEnglish = new javascriptTimeAgo('en-US');
+
+const secondsToFormattedTime = timeHelper.secondsToFormattedTime;
 
 /**
  * GET /upload
@@ -62,7 +67,10 @@ exports.getFileUpload = async(req, res) => {
   res.render('uploading', {
     title: 'File Upload',
     uploadUrl,
-    categories
+    categories,
+    maxRatingAllowed: process.env.MAX_RATING_ALLOWED,
+    userCanUploadContentOfThisRating,
+    secondsToFormattedTime
   });
 };
 
@@ -821,11 +829,54 @@ exports.getLogin = (req, res) => {
 };
 
 /**
- * GET /livestream
- * Livestream info page
+ * GET /live/$user
+ * Livestream account page
  */
-exports.livestreaming = async(req, res) => {
+exports.livestreaming = async(req, res) =>
+
+{
+
+  var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+
+  var os = require("os");
+  os.hostname();
+
+  console.log(req.connection.remoteAddress, req.connection.remotePort, req.connection.localAddress,   req.connection.localPort)
+
+  var os = require( 'os' );
+
+  var networkInterfaces = os.networkInterfaces( );
+
+  const ipAddress = networkInterfaces.lo0 && networkInterfaces.lo0[0].address || networkInterfaces.eth0[0].address ;
+
+  const rtmpUrl = 'rtmp' + '://' + ipAddress + ':1935' + `/live/${req.user.channelUrl}?key=${req.user.uploadToken}`;
+
+  // var ip = require('os').networkInterfaces().eth0[0].address;
+  //
+  // console.log(ip);
+
+
+
+  console.log(req.ip)
+
+
+  console.log(req.socket.localPort);
+
+
+  console.log(req.originalUrl)
+
+  const viewingDomain =  req.protocol + '://' + req.get('host') + `/live/${req.user.channelUrl}`;
+
+
+  const livestreamRtmpDomain  = process.env.LIVESTREAM_RTMP_DOMAIN || rtmpUrl;
+  const livestreamViewingDomain = process.env.LIVESTREAM_VIEWING_DOMAIN || viewingDomain;
+
+  console.log(livestreamRtmpDomain, livestreamViewingDomain)
+
   res.render('livestream/livestreaming', {
-    title: 'Livestreaming'
+    title: 'Livestreaming',
+    livestreamRtmpDomain,
+    livestreamViewingDomain,
+
   });
 };

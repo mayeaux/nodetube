@@ -3,6 +3,9 @@ const url = require('url');
 const WebSocket = require('ws');
 const fs = require('fs');
 const https = require('https');
+const http = require('http');
+
+
 const ws = require('ws');
 
 const User = require('../../models/index').User;
@@ -48,11 +51,17 @@ exports.onLiveAuth = async(req, res) => {
 
   const uploadToken = req.body.key;
 
+  console.log(uploadToken);
+
   const user = await User.findOne({ uploadToken });
+
+  // console.log(user);
 
   if(user && user.plan == 'plus'){
     console.log('authentication passed');
     console.log('found user: ' + user.channelUrl);
+
+    console.log(`Access the livestream at /live/${user.channelUrl}`)
 
     return res.send('working');
   } else {
@@ -75,7 +84,8 @@ let connectedUsers;
 let connectedUsersAmount;
 var messagesObject;
 
-if(process.env.LIVESTREAM_APP == 'true')
+// TODO: have to fix this
+if('true' == 'true')
 {
   app = express();
 
@@ -86,13 +96,25 @@ if(process.env.LIVESTREAM_APP == 'true')
     cert: fs.readFileSync('keys/server.crt')
   };
 
+  // TODO: if production do https otherwise do http
+
   // boot up express server to handle websocket connections
-  server = https.createServer(options, app).listen(8080, function(){
-    console.log('Websockets server started on port 8080');
+  server = http.createServer(options, app).listen(8443, function(){
+    console.log('Websockets server started on port 8443');
   });
 
   // object which will hold message data and boot up servers
   webSockets = {};
+
+  /** MESSAGES ENDPOINT **/
+
+  existingMessages = [];
+  connectedUsers = [];
+  connectedUsersAmount = 0;
+
+  // save already sent messages
+  // TODO: need to do this in redis
+  messagesObject = {};
 
   // code to run when user connects to :8080
   server.on('upgrade', (request, socket, head) => {
@@ -108,7 +130,7 @@ if(process.env.LIVESTREAM_APP == 'true')
       // username succeeds :8080/messages/__
       const username = pathname.match(regexp1)[1];
 
-      // instantiate the username for the websockets object if it doesn't exist yet
+      // instantiate the username for the in memory object if it doesn't exist yet
       if(!webSockets[username]){
         webSockets[username] = {};
       }
@@ -134,32 +156,31 @@ if(process.env.LIVESTREAM_APP == 'true')
     }
   });
 
-  /** MESSAGES ENDPOINT **/
+}
 
-  existingMessages = [];
-  connectedUsers = [];
-  connectedUsersAmount = 2;
-
-  // save already sent messages
-  messagesObject = {};
+/** CALLBACK TO SEND A MESSAGE **/
+function messageSocketCallback(ws){
 
   /** DECREMENT AMOUNT OF CONNECTED USERS ON CLOSE **/
   ws.on('close', function(code, reason){
 
     console.log(`closing socket: ${code}, ${reason}`);
 
+    console.log(connectedUsers)
+
+    console.log(connectedUsersAmount);
+
     connectedUsersAmount--;
+
+    console.log(connectedUsersAmount)
 
     for(const user of connectedUsers){
       if(user.readyState == 1){
+        // TODO: have to fix here for decrementing to work
         stringifyAndSend(user, { connectedUsersAmount });
       }
     }
   });
-}
-
-/** CALLBACK TO SEND A MESSAGE **/
-function messageSocketCallback(ws){
 
   ws.on('message', function(_message){
 
@@ -176,7 +197,7 @@ function messageSocketCallback(ws){
       messagesObject[streamingUser] = {};
       messagesObject[streamingUser].messages = [];
       messagesObject[streamingUser].connectedUsers = [];
-      messagesObject[streamingUser].connectedUsersCount = 2;
+      messagesObject[streamingUser].connectedUsersCount = 0;
     }
 
     var message = message.message;
@@ -193,13 +214,13 @@ function messageSocketCallback(ws){
     // code to run when a new user connects
     if(message == 'CONNECTING'){
 
-      // send all existing messages
+      // send all existing messages for streamer down to client
       // TODO: limit it to latest 200
       for(const message of messagesObject[streamingUser].messages){
         stringifyAndSend(ws, { message });
       }
 
-      // increment amount of connected users
+      // increment amount of connected users to streamer
       messagesObject[streamingUser].connectedUsersCount++;
 
       console.log('new user connected to chat of: ' + streamingUser);
