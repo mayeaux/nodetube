@@ -284,13 +284,19 @@ function messageSocketCallback(ws){
 
     var message = message.message;
 
-    let amountOfConnectedUsers = await  publisher.getAsync('connectedUsers');
+    let amountOfConnectedUsers;
 
-    console.log('amount connected');
-    console.log(amountOfConnectedUsers);
+    if(streamingUser){
+      amountOfConnectedUsers = await  publisher.getAsync('connectedUsers');
 
-    if(!amountOfConnectedUsers){
-      amountOfConnectedUsers = 1;
+      console.log('amount connected');
+      console.log(amountOfConnectedUsers);
+
+      if(!amountOfConnectedUsers){
+        amountOfConnectedUsers = 0;
+      } else {
+        amountOfConnectedUsers = Number(amountOfConnectedUsers);
+      }
     }
 
     // this is sent right before changing href location of client
