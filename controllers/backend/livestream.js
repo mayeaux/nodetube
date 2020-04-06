@@ -220,10 +220,7 @@ subscriber.on("message", function(channel, message) {
 
   // TODO: pass an object here where the streaming message and the message and stuff is passed
 
-  console.log('channel message');
   console.log(channel, message);
-
-  console.log('something here');
 
   for(const user of messagesObject[channel].connectedUsers){
 
@@ -302,8 +299,6 @@ function messageSocketCallback(ws){
     // this is sent right before changing href location of client
     if(message == 'DISCONNECTING'){
 
-      console.log('THINGER');
-
       amountOfConnectedUsers = amountOfConnectedUsers - 1;
 
       publisher.setAsync('connectedUsers', amountOfConnectedUsers);
@@ -321,7 +316,7 @@ function messageSocketCallback(ws){
       // send all existing messages for streamer down to client
       // TODO: limit it to latest 200
 
-      // TODO: send message here
+      // TODO: COMPILE AND SEND MESSAGES HERE
 
       console.log(amountOfConnectedUsers + ' amount of things');
 
@@ -350,6 +345,8 @@ function messageSocketCallback(ws){
 
       // save message to existing sent messages
       messagesObject[streamingUser].messages.push(message);
+
+      // TODO: update and save the messages object, push an update reminder thing to the frontend
 
     }
   });
