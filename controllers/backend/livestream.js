@@ -223,29 +223,22 @@ subscriber.on("message", function(channel, message) {
   console.log('channel message');
   console.log(channel, message);
 
-  if(channel !== 'usernameStreaming'){
-    // let updatedMessage = JSON.parse(message);
-    //
-    // console.log(updatedMessage[2])
-  } else {
+  console.log('something here');
 
-    console.log('something here');
+  for(const user of messagesObject[channel].connectedUsers){
 
-    for(const user of messagesObject['1234'].connectedUsers){
+    console.log(user);
 
-      console.log(user);
+    console.log('HERE1234');
 
-      console.log('HERE1234');
+    // if the user is still connected
+    if(user.readyState == 1){
 
-      // if the user is still connected
-      if(user.readyState == 1){
-
-        // update how many users are connected
-        stringifyAndSend(user, { connectedUsersAmount: 4 });
-      }
+      // update how many users are connected
+      stringifyAndSend(user, { connectedUsersAmount: 4 });
     }
-
   }
+
 
 });
 
@@ -314,7 +307,7 @@ function messageSocketCallback(ws){
 
       publisher.setAsync('connectedUsers', amountOfConnectedUsers);
 
-      publisher.publish(streamingUser, 'userAmountEvent');
+      publisher.publish(streamingUser, amountOfConnectedUsers);
 
 
       publisher.publish(streamingUser, JSON.stringify(messageThings));
@@ -353,7 +346,7 @@ function messageSocketCallback(ws){
 
       publisher.setAsync('connectedUsers', amountOfConnectedUsers);
 
-      publisher.publish(streamingUser, 'userAmountEvent');
+      publisher.publish(streamingUser, amountOfConnectedUsers);
 
       // add websocket connection to object
       messagesObject[streamingUser].connectedUsers.push(ws);
