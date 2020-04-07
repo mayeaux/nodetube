@@ -263,12 +263,13 @@ function messageSocketCallback(ws){
 
     let amountOfConnectedUsers, redisMessages;
 
+    /** if there is a streaming user in the message **/
     if(streamingUser){
-      // TODO: have to change this to user something like '$channelUrlConnectedUsers'
-      amountOfConnectedUsers = await  publisher.getAsync('connectedUsers');
+      // get connected user amount per streamer
+      amountOfConnectedUsers = await  publisher.getAsync(`${streamingUser}connectedUsers`);
 
-      // TODO: have to change this to user something like '$channelUrlConnectedUsers'
-      redisMessages = await publisher.getAsync('messages');
+      // get existing messages per streamer
+      redisMessages = await publisher.getAsync(`${streamingUser}messages`);
 
       redisMessages = JSON.parse(redisMessages);
 
@@ -287,16 +288,15 @@ function messageSocketCallback(ws){
       }
     }
 
-    /** working **/
-    // this is sent right before changing href location of client
+    /** when a viewer disconnect sent right before changing href location of client **/
     if(message == 'DISCONNECTING'){
 
       console.log('DISCONNECTING!');
 
       amountOfConnectedUsers = amountOfConnectedUsers - 1;
 
-      // TODO: have to change this to user something like '$channelUrlConnectedUsers'
-      publisher.setAsync('connectedUsers', amountOfConnectedUsers);
+      // set the amount of connected users per streamer with the updated (decremented) amount
+      publisher.setAsync(`${streamingUser}connectedUsers`, amountOfConnectedUsers);
 
       publisher.publish(streamingUser, JSON.stringify({
         eventType: 'userConnectedEvent',
@@ -307,7 +307,10 @@ function messageSocketCallback(ws){
       return'do something here';
     }
 
-    // code to run when a new user connects
+
+
+    /** when a new user connects **/
+
     if(message == 'CONNECTING'){
 
       console.log('new user connected to chat of: ' + streamingUser);
@@ -324,11 +327,8 @@ function messageSocketCallback(ws){
 
       amountOfConnectedUsers = amountOfConnectedUsers + 1;
 
-      /** working **/
-
-      // TODO: have to change this to user something like '$channelUrlConnectedUsers'
-      publisher.setAsync('connectedUsers', amountOfConnectedUsers);
-
+      // set the amount of connected users per streamer with the updated (incremented) amount
+      publisher.setAsync(`${streamingUser}connectedUsers`, amountOfConnectedUsers);
 
       // don't have to pass username because 'streamingUser' is specific already
       // that works because the channel name is what's being listened to
@@ -336,7 +336,6 @@ function messageSocketCallback(ws){
         eventType: 'userConnectedEvent',
         message: amountOfConnectedUsers
       }));
-
 
       // add websocket connection to object
       messagesObject[streamingUser].connectedUsers.push(ws);
@@ -367,7 +366,7 @@ function messageSocketCallback(ws){
       redisMessages.push(message);
 
       // TODO: have to change this to user something like '$channelUrlConnectedUsers'
-      publisher.setAsync('messages', JSON.stringify(redisMessages));
+      publisher.setAsync(`${streamingUser}messages`, JSON.stringify(redisMessages));
 
     }
   });
