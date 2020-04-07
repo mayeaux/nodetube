@@ -218,10 +218,21 @@ if('true' == 'true')
 
 subscriber.on("message", function(channel, message) {
 
+  const publishedMessage = JSON.parse(message);
+
+  // TODO: message should be an object in the form of
+  // var fred = {
+  //   eventType: 'userEvent', // or messageEvent
+  //   message: 'hello'
+  // };
+  //
+
+
   // TODO: pass an object here where the streaming message and the message and stuff is passed
 
   console.log(channel, message);
 
+  // loop through the
   for(const user of messagesObject[channel].connectedUsers){
 
     // console.log(user);
@@ -229,8 +240,13 @@ subscriber.on("message", function(channel, message) {
     // if the user is still connected
     if(user.readyState == 1){
 
-      // update how many users are connected
-      stringifyAndSend(user, { connectedUsersAmount: message });
+      if(message.eventType == 'publishedMessage'){
+        stringifyAndSend(user, { connectedUsersAmount: publishedMessage.message });
+      } else if(message.eventType == 'userEvent'){
+        stringifyAndSend(user, { message: publishedMessage.message });
+      } else {
+        console.log('UNRECOGNIZED EVENT THIS IS BAD')
+      }
     }
   }
 
@@ -240,7 +256,7 @@ subscriber.on("message", function(channel, message) {
 
 /** CALLBACK TO SEND A MESSAGE **/
 function messageSocketCallback(ws){
-  
+
   function instantiateNewStreamingUserObject(streamingUser){
     messagesObject[streamingUser] = {};
     messagesObject[streamingUser].messages = [];
@@ -279,6 +295,7 @@ function messageSocketCallback(ws){
       console.log('amount connected');
       console.log(amountOfConnectedUsers);
 
+      // if there's no amount of users yet, set it to 0
       if(!amountOfConnectedUsers){
         amountOfConnectedUsers = 0;
       } else {
@@ -286,6 +303,7 @@ function messageSocketCallback(ws){
       }
     }
 
+    /** working **/
     // this is sent right before changing href location of client
     if(message == 'DISCONNECTING'){
 
@@ -311,6 +329,8 @@ function messageSocketCallback(ws){
       console.log(amountOfConnectedUsers + ' amount of things');
 
       amountOfConnectedUsers = amountOfConnectedUsers + 1;
+
+      /** working **/
 
       publisher.setAsync('connectedUsers', amountOfConnectedUsers);
 
