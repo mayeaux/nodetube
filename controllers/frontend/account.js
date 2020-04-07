@@ -36,8 +36,8 @@ const { userCanUploadContentOfThisRating } = require('../../lib/uploading/helper
 
 const validator = require('email-validator');
 
-const { getVideoDurationInSeconds } = require('get-video-duration')
-const { getAudioDurationInSeconds } = require('get-audio-duration')
+const { getUploadDuration } = require('../../lib/mediaBrowsing/helpers')
+
 const javascriptTimeAgo = require('javascript-time-ago');
 javascriptTimeAgo.locale(require('javascript-time-ago/locales/en'));
 require('javascript-time-ago/intl-messageformat-global');
@@ -447,36 +447,25 @@ exports.getChannel = async(req, res) => {
 
     user.uploads = uploads;
 
-    var durations = [];
-    var i = 0;
-    for(const upload of uploads) {
-      var duration
-      durations[i] = ""
-      var server = uploadServer
-      if(server.charAt(0) == "/") // the slash confuses the file reading, because host root directory is not the same as machine root directory
-        server = server.substr(1)
-      if(upload.fileType == "video")
-        duration = await getVideoDurationInSeconds(`${server}/${req.user.channelUrl}/${upload.uniqueTag + upload.fileExtension}`);
-      else if(upload.fileType == "audio")
-        duration = await getAudioDurationInSeconds(`${server}/${req.user.channelUrl}/${upload.uniqueTag + upload.fileExtension}`);
-      else
-        duration = 0;
+    for(var upload of uploads) {
+      if((!upload.durationInSeconds || !upload.formattedDuration) && (upload.fileType == "video" || upload.fileType == "audio")) { // the fields don't exist or aren't initialized
 
-      var h = Math.round(duration / 3600)
-      if(h < 10)
-        h = `0${h}`
-      var m = Math.round(duration / 60)
-      if(m < 10)
-        m = `0${m}`
-      var s = Math.round(duration % 60)
-      if(s < 10)
-        s = `0${s}`
-      
-      if(h > 0)
-        durations[i] = `${h}:${m}:${s}`
-      else
-        durations[i] += `${m}:${s}`
-      i++;
+        var upload1 = await Upload.findOne({uniqueTag: upload.uniqueTag})
+
+        var server = uploadServer
+        if(server.charAt(0) == "/") // the slash confuses the file reading, because host root directory is not the same as machine root directory
+          server = server.substr(1)
+
+        var duration = await getUploadDuration(`${server}/${req.user.channelUrl}/${upload.uniqueTag + upload.fileExtension}`, upload.fileType);
+        
+        upload1.durationInSeconds = duration.seconds;
+        upload1.formattedDuration = duration.formattedTime;
+
+        upload.durationInSeconds = duration.seconds
+        upload.formattedDuration = duration.formattedTime
+
+        await upload1.save()
+      }
     }
 
     const siteVisitor = req.siteVisitor;
@@ -505,7 +494,6 @@ exports.getChannel = async(req, res) => {
       categories,
       joinedTimeAgo,
       media,
-      durations,
       page,
       orderBy
     });

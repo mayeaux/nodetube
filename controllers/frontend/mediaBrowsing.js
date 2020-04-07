@@ -13,8 +13,7 @@ const uploadServer = uploadHelpers.uploadServer;
 const getFromCache = require('../../caching/getFromCache');
 const uploadFilters = require('../../lib/mediaBrowsing/helpers');
 
-const { getVideoDurationInSeconds } = require('get-video-duration')
-const { getAudioDurationInSeconds } = require('get-audio-duration')
+const { getUploadDuration } = require('../../lib/mediaBrowsing/helpers')
 
 const getSensitivityFilter =  uploadFilters.getSensitivityFilter;
 const categories = require('../../config/categories');
@@ -95,36 +94,25 @@ exports.recentUploads = async(req, res) => {
     const uploads = await getFromCache.getRecentUploads(limit, skipAmount, mediaType, filter, category, subcategory);
     const recentPopular = 'recent';
 
-    var durations = [];
-    var i = 0;
-    for(const upload of uploads) {
-      var duration
-      durations[i] = ""
-      var server = uploadServer
-      if(server.charAt(0) == "/") // the slash confuses the file reading, because host root directory is not the same as machine root directory
-        server = server.substr(1)
-      if(upload.fileType == "video")
-        duration = await getVideoDurationInSeconds(`${server}/${upload.uploader.channelUrl}/${upload.uniqueTag + upload.fileExtension}`);
-      else if(upload.fileType == "audio")
-        duration = await getAudioDurationInSeconds(`${server}/${upload.uploader.channelUrl}/${upload.uniqueTag + upload.fileExtension}`);
-      else
-        duration = 0;
+    for(var upload of uploads) {
+      if((!upload.durationInSeconds || !upload.formattedDuration) && (upload.fileType == "video" || upload.fileType == "audio")) { // the fields don't exist or aren't initialized
 
-      var h = Math.round(duration / 3600)
-      if(h < 10)
-        h = `0${h}`
-      var m = Math.round(duration / 60)
-      if(m < 10)
-        m = `0${m}`
-      var s = Math.round(duration % 60)
-      if(s < 10)
-        s = `0${s}`
-      
-      if(h > 0)
-        durations[i] = `${h}:${m}:${s}`
-      else
-        durations[i] += `${m}:${s}`
-      i++;
+        var upload1 = await Upload.findOne({uniqueTag: upload.uniqueTag})
+
+        var server = uploadServer
+        if(server.charAt(0) == "/") // the slash confuses the file reading, because host root directory is not the same as machine root directory
+          server = server.substr(1)
+
+        var duration = await getUploadDuration(`${server}/${req.user.channelUrl}/${upload.uniqueTag + upload.fileExtension}`, upload.fileType);
+        
+        upload1.durationInSeconds = duration.seconds;
+        upload1.formattedDuration = duration.formattedTime;
+
+        upload.durationInSeconds = duration.seconds
+        upload.formattedDuration = duration.formattedTime
+
+        await upload1.save()
+      }
     }
 
     // console.log('rendering');
@@ -146,8 +134,7 @@ exports.recentUploads = async(req, res) => {
       addressPrepend,
       categoryObj,
       mediaBrowsingType,
-      mediaType,
-      durations,
+      mediaType
     });
 
   } catch(err){
@@ -311,36 +298,25 @@ exports.popularUploads = async(req, res) => {
     //
     // console.log('getting popular uploads');
 
-    var durations = [];
-    var i = 0;
-    for(const upload of uploads) {
-      var duration
-      durations[i] = ""
-      var server = uploadServer
-      if(server.charAt(0) == "/") // the slash confuses the file reading, because host root directory is not the same as machine root directory
-        server = server.substr(1)
-      if(upload.fileType == "video")
-        duration = await getVideoDurationInSeconds(`${server}/${upload.uploader.channelUrl}/${upload.uniqueTag + upload.fileExtension}`);
-      else if(upload.fileType == "audio")
-        duration = await getAudioDurationInSeconds(`${server}/${upload.uploader.channelUrl}/${upload.uniqueTag + upload.fileExtension}`);
-      else
-        duration = 0;
+    for(var upload of uploads) {
+      if((!upload.durationInSeconds || !upload.formattedDuration) && (upload.fileType == "video" || upload.fileType == "audio")) { // the fields don't exist or aren't initialized
 
-      var h = Math.round(duration / 3600)
-      if(h < 10)
-        h = `0${h}`
-      var m = Math.round(duration / 60)
-      if(m < 10)
-        m = `0${m}`
-      var s = Math.round(duration % 60)
-      if(s < 10)
-        s = `0${s}`
-      
-      if(h > 0)
-        durations[i] = `${h}:${m}:${s}`
-      else
-        durations[i] += `${m}:${s}`
-      i++;
+        var upload1 = await Upload.findOne({uniqueTag: upload.uniqueTag})
+
+        var server = uploadServer
+        if(server.charAt(0) == "/") // the slash confuses the file reading, because host root directory is not the same as machine root directory
+          server = server.substr(1)
+
+        var duration = await getUploadDuration(`${server}/${req.user.channelUrl}/${upload.uniqueTag + upload.fileExtension}`, upload.fileType);
+        
+        upload1.durationInSeconds = duration.seconds;
+        upload1.formattedDuration = duration.formattedTime;
+
+        upload.durationInSeconds = duration.seconds
+        upload.formattedDuration = duration.formattedTime
+
+        await upload1.save()
+      }
     }
 
     res.render('mediaBrowsing/popularUploads', {
@@ -368,7 +344,6 @@ exports.popularUploads = async(req, res) => {
       popularTimeViews,
       mediaBrowsingType,
       mediaType,
-      durations,
       displayObject
       // viewsOnThisPage
     });
