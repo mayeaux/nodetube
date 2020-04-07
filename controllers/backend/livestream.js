@@ -220,6 +220,8 @@ subscriber.on("message", function(channel, message) {
 
   const publishedMessage = JSON.parse(message);
 
+  console.log(publishedMessage.eventType);
+
   // TODO: message should be an object in the form of
   // var fred = {
   //   eventType: 'userEvent', // or messageEvent
@@ -240,9 +242,9 @@ subscriber.on("message", function(channel, message) {
     // if the user is still connected
     if(user.readyState == 1){
 
-      if(message.eventType == 'publishedMessage'){
+      if(publishedMessage.eventType == 'publishedMessage'){
         stringifyAndSend(user, { connectedUsersAmount: publishedMessage.message });
-      } else if(message.eventType == 'userEvent'){
+      } else if(publishedMessage.eventType == 'userConnectedEvent'){
         stringifyAndSend(user, { message: publishedMessage.message });
       } else {
         console.log('UNRECOGNIZED EVENT THIS IS BAD')
@@ -287,10 +289,14 @@ function messageSocketCallback(ws){
 
     var message = message.message;
 
-    let amountOfConnectedUsers;
+    let amountOfConnectedUsers, redisMessages;
 
     if(streamingUser){
       amountOfConnectedUsers = await  publisher.getAsync('connectedUsers');
+
+      redisMessages = await publisher.getAsync('messages');
+
+      redisMessages = JSON.parse(redisMessages)
 
       console.log('amount connected');
       console.log(amountOfConnectedUsers);
@@ -311,7 +317,10 @@ function messageSocketCallback(ws){
 
       publisher.setAsync('connectedUsers', amountOfConnectedUsers);
 
-      publisher.publish(streamingUser, amountOfConnectedUsers);
+      publisher.publish(streamingUser, {
+        eventType: 'userConnectedEvent',
+        message: amountOfConnectedUsers
+      });
 
       return'do something here';
     }
@@ -326,6 +335,16 @@ function messageSocketCallback(ws){
 
       // TODO: COMPILE AND SEND MESSAGES HERE
 
+      // for(const message of redisMessages){
+      //   let event = {
+      //     eventType: 'publishedMessage',
+      //     message: message.message
+      //
+      //   };
+      //
+      //   publisher.publish(streamingUser, event);
+      // }
+
       console.log(amountOfConnectedUsers + ' amount of things');
 
       amountOfConnectedUsers = amountOfConnectedUsers + 1;
@@ -334,8 +353,10 @@ function messageSocketCallback(ws){
 
       publisher.setAsync('connectedUsers', amountOfConnectedUsers);
 
-      publisher.publish(streamingUser, amountOfConnectedUsers);
-
+      publisher.publish(streamingUser, JSON.stringify({
+        eventType: 'userConnectedEvent',
+        message: amountOfConnectedUsers
+      }));
       // add websocket connection to object
       messagesObject[streamingUser].connectedUsers.push(ws);
 
