@@ -448,9 +448,10 @@ exports.react = async(req, res, next)  => {
   }
 
   // if existing react, update or not
-  if(existingReact){ // user selected the react that was already active (wants to remove)
+  if(existingReact && existingReact.active){ // user selected the react that was already active (wants to remove)
     if(existingReact.react == req.body.emoji){
-      await React.collection.deleteOne(existingReact);
+      existingReact.active = false
+      await existingReact.save();
       return res.send('removed');
     } else { // user changed the react
       existingReact.react = req.body.emoji;
@@ -461,16 +462,23 @@ exports.react = async(req, res, next)  => {
   // otherwise create a new react
   } else {
 
-    const newReact = new React({
-      upload: req.params.upload,
-      user: req.params.user,
-      react: req.body.emoji
-    });
+    if(!existingReact) { // never had a react
+      const newReact = new React({
+        upload: req.params.upload,
+        user: req.params.user,
+        react: req.body.emoji,
+        active: true
+      });
 
-    await newReact.save();
+      await newReact.save();
 
-    upload.reacts.push(newReact._id);
-    await upload.save();
+      upload.reacts.push(newReact._id);
+      await upload.save();
+    } else { // there is a react, but it is inactive
+      existingReact.active = true
+      existingReact.react = req.body.emoji
+      await existingReact.save()
+    }
 
     // add a notification
 
