@@ -218,6 +218,8 @@ if('true' == 'true')
 
 subscriber.on("message", function(channel, message) {
 
+  console.log(message);
+
   const publishedMessage = JSON.parse(message);
 
   console.log(publishedMessage.eventType);
@@ -292,11 +294,16 @@ function messageSocketCallback(ws){
     let amountOfConnectedUsers, redisMessages;
 
     if(streamingUser){
+      // TODO: have to change this to user something like '$channelUrlConnectedUsers'
       amountOfConnectedUsers = await  publisher.getAsync('connectedUsers');
 
       redisMessages = await publisher.getAsync('messages');
 
-      redisMessages = JSON.parse(redisMessages)
+      redisMessages = JSON.parse(redisMessages);
+
+      if(!redisMessages){
+        redisMessages = [];
+      }
 
       console.log('amount connected');
       console.log(amountOfConnectedUsers);
@@ -337,15 +344,23 @@ function messageSocketCallback(ws){
 
       // TODO: COMPILE AND SEND MESSAGES HERE
 
-      // for(const message of redisMessages){
-      //   let event = {
-      //     eventType: 'publishedMessage',
-      //     message: message.message
-      //
-      //   };
-      //
-      //   publisher.publish(streamingUser, event);
-      // }
+
+
+      for(const message of redisMessages){
+        if(message){
+          console.log('RUNNING!!');
+
+          let event = {
+            eventType: 'publishedMessage',
+            message: message
+
+          };
+
+          console.log(event);
+
+          publisher.publish(streamingUser, JSON.stringify(event));
+        }
+      }
 
       console.log(amountOfConnectedUsers + ' amount of things');
 
