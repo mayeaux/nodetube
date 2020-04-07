@@ -137,13 +137,13 @@ if('true' == 'true')
 
 
   // boot up express server to handle websocket connections
-  if(process.env.NODE.ENV == 'production'){
+  if(process.env.NODE_ENV == 'production'){
     server = https.createServer(options, app).listen(8443, function(){
-      console.log('Websockets server started on port 8443');
+      console.log('Websockets server started over https on port 8443 ');
     })
   } else {
     server = http.createServer(options, app).listen(8443, function(){
-      console.log('Websockets server started on port 8443');
+      console.log('Websockets server started over http on port 8443');
     });
   }
 
