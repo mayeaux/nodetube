@@ -277,7 +277,7 @@ function messageSocketCallback(ws){
     // console.log(_message);
 
     // parse stingified message sent from frontend
-    message = JSON.parse(_message);
+    let message = JSON.parse(_message);
 
     // get username that sent the message
     var streamingUser = message.username;
@@ -289,7 +289,7 @@ function messageSocketCallback(ws){
       instantiateNewStreamingUserObject(streamingUser);
     }
 
-    var message = message.message;
+    message = message.message;
 
     let amountOfConnectedUsers, redisMessages;
 
@@ -384,6 +384,8 @@ function messageSocketCallback(ws){
     // sending keep alive as a hack to keep the socket open
     /** WHEN A NEW MESSAGE SENT **/
     if(message !== 'KEEP-ALIVE' && message !== 'undefined' ){
+
+      console.log(message);
 
       // TODO: get from redis, add the message, save it, send message
 
