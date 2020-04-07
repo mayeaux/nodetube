@@ -243,9 +243,9 @@ subscriber.on("message", function(channel, message) {
     if(user.readyState == 1){
 
       if(publishedMessage.eventType == 'publishedMessage'){
-        stringifyAndSend(user, { connectedUsersAmount: publishedMessage.message });
-      } else if(publishedMessage.eventType == 'userConnectedEvent'){
         stringifyAndSend(user, { message: publishedMessage.message });
+      } else if(publishedMessage.eventType == 'userConnectedEvent'){
+        stringifyAndSend(user, { connectedUsersAmount: publishedMessage.message });
       } else {
         console.log('UNRECOGNIZED EVENT THIS IS BAD')
       }
@@ -313,14 +313,16 @@ function messageSocketCallback(ws){
     // this is sent right before changing href location of client
     if(message == 'DISCONNECTING'){
 
+      console.log('DISCONNECTING!');
+
       amountOfConnectedUsers = amountOfConnectedUsers - 1;
 
       publisher.setAsync('connectedUsers', amountOfConnectedUsers);
 
-      publisher.publish(streamingUser, {
+      publisher.publish(streamingUser, JSON.stringify({
         eventType: 'userConnectedEvent',
         message: amountOfConnectedUsers
-      });
+      }));
 
       return'do something here';
     }
