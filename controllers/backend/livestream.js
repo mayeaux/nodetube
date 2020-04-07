@@ -134,12 +134,16 @@ if('true' == 'true')
     cert: fs.readFileSync('keys/server.crt')
   };
 
-  // TODO: if production do https otherwise do http
-
   // boot up express server to handle websocket connections
-  server = http.createServer(options, app).listen(8443, function(){
-    console.log('Websockets server started on port 8443');
-  });
+  if(process.env.NODE.ENV == 'production'){
+    server = https.createServer(options, app).listen(8443, function(){
+      console.log('Websockets server started on port 8443');
+    })
+  } else {
+    server = http.createServer(options, app).listen(8443, function(){
+      console.log('Websockets server started on port 8443');
+    });
+  }
 
   // object which will hold message data and boot up servers
   webSockets = {};
