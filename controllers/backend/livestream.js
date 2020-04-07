@@ -387,6 +387,28 @@ function messageSocketCallback(ws){
 
       console.log(message);
 
+      let event = {
+        eventType: 'publishedMessage',
+        message: message
+
+      };
+
+      console.log(event);
+
+      publisher.publish(streamingUser, JSON.stringify(event));
+
+
+
+
+
+
+      redisMessages.push(message);
+
+      publisher.setAsync('messages', JSON.stringify(redisMessages));
+
+
+      // TODO: add to message array, JSON.stringify, save
+
       // TODO: get from redis, add the message, save it, send message
 
       // publisher.publish(streamingUser, JSON.stringify(messageThings));
