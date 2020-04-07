@@ -48,23 +48,6 @@ let subscriber = client2;
 Promise.promisifyAll(redis.RedisClient.prototype);
 Promise.promisifyAll(redis.Multi.prototype);
 
-const messageThings = [{
-  username: 'thing',
-  message: 'thing3'
-}, {
-  username: 'thing',
-  message: 'thing3'
-}, {
-  username: 'thing',
-  message: 'thing3'
-}];
-
-
-// subscriber.on("subscribe", function(channel, count) {
-//   console.log(count);
-// });
-
-
 // process.on('uncaughtException', (err) => {
 //   console.log(`Uncaught Exception: `, err);
 //   console.log(err.stack);
@@ -224,23 +207,10 @@ subscriber.on("message", function(channel, message) {
 
   console.log(publishedMessage.eventType);
 
-  // TODO: message should be an object in the form of
-  // var fred = {
-  //   eventType: 'userEvent', // or messageEvent
-  //   message: 'hello'
-  // };
-  //
-
-
-  // TODO: pass an object here where the streaming message and the message and stuff is passed
-
   console.log(channel, message);
 
   // loop through the
   for(const user of messagesObject[channel].connectedUsers){
-
-    // console.log(user);
-
     // if the user is still connected
     if(user.readyState == 1){
 
@@ -328,7 +298,8 @@ function messageSocketCallback(ws){
 
       publisher.publish(streamingUser, JSON.stringify({
         eventType: 'userConnectedEvent',
-        message: amountOfConnectedUsers
+        message: amountOfConnectedUsers,
+
       }));
 
       return'do something here';
@@ -348,17 +319,7 @@ function messageSocketCallback(ws){
 
       for(const message of redisMessages){
         if(message){
-          console.log('RUNNING!!');
-
-          let event = {
-            eventType: 'publishedMessage',
-            message: message
-
-          };
-
-          console.log(event);
-
-          publisher.publish(streamingUser, JSON.stringify(event));
+          stringifyAndSend(ws, { message: message });
         }
       }
 
