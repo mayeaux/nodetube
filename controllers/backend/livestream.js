@@ -240,17 +240,7 @@ subscriber.on("message", function(channel, message) {
 
 /** CALLBACK TO SEND A MESSAGE **/
 function messageSocketCallback(ws){
-
-
-  // /** DECREMENT AMOUNT OF CONNECTED USERS ON CLOSE **/
-  // ws.on('close', function(code, reason){
-  //
-  //   console.log('THINGER 111');
-  //
-  //
-  //   // TODO: decrement here
-  // });
-
+  
   function instantiateNewStreamingUserObject(streamingUser){
     messagesObject[streamingUser] = {};
     messagesObject[streamingUser].messages = [];
