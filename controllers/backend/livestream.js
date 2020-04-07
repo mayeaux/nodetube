@@ -310,20 +310,15 @@ function messageSocketCallback(ws){
 
       console.log('new user connected to chat of: ' + streamingUser);
 
-      // send all existing messages for streamer down to client
-      // TODO: limit it to latest 200
-
-      // TODO: COMPILE AND SEND MESSAGES HERE
-
-
-
+      /** send all existing messages for streamer down to client **/
+      // TODO: limit it to latest 20
       for(const message of redisMessages){
         if(message){
           stringifyAndSend(ws, { message: message });
         }
       }
 
-      console.log(amountOfConnectedUsers + ' amount of things');
+      console.log(amountOfConnectedUsers + ' amount of connected users');
 
       amountOfConnectedUsers = amountOfConnectedUsers + 1;
 
@@ -335,6 +330,8 @@ function messageSocketCallback(ws){
         eventType: 'userConnectedEvent',
         message: amountOfConnectedUsers
       }));
+
+
       // add websocket connection to object
       messagesObject[streamingUser].connectedUsers.push(ws);
 
@@ -356,30 +353,14 @@ function messageSocketCallback(ws){
 
       console.log(event);
 
+      // tell the listeners to push the message down
       publisher.publish(streamingUser, JSON.stringify(event));
 
 
-
-
-
-
+      // update redis messages in database
       redisMessages.push(message);
 
       publisher.setAsync('messages', JSON.stringify(redisMessages));
-
-
-      // TODO: add to message array, JSON.stringify, save
-
-      // TODO: get from redis, add the message, save it, send message
-
-      // publisher.publish(streamingUser, JSON.stringify(messageThings));
-
-      // TODO: update here
-
-      // save message to existing sent messages
-      messagesObject[streamingUser].messages.push(message);
-
-      // TODO: update and save the messages object, push an update reminder thing to the frontend
 
     }
   });
@@ -390,13 +371,3 @@ function stringifyAndSend(webSocketConnection, objectToSend){
   webSocketConnection.send( JSON.stringify( objectToSend ) );
 }
 
-
-//
-// subscriber.on("message", function(channel, message) {
-//   console.log("Subscriber received message in channel '" + channel + "': " + message);
-//
-//
-//   console.log(channel);
-//   console.log(message);
-//
-// });
