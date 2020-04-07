@@ -267,6 +267,7 @@ function messageSocketCallback(ws){
       // TODO: have to change this to user something like '$channelUrlConnectedUsers'
       amountOfConnectedUsers = await  publisher.getAsync('connectedUsers');
 
+      // TODO: have to change this to user something like '$channelUrlConnectedUsers'
       redisMessages = await publisher.getAsync('messages');
 
       redisMessages = JSON.parse(redisMessages);
@@ -294,6 +295,7 @@ function messageSocketCallback(ws){
 
       amountOfConnectedUsers = amountOfConnectedUsers - 1;
 
+      // TODO: have to change this to user something like '$channelUrlConnectedUsers'
       publisher.setAsync('connectedUsers', amountOfConnectedUsers);
 
       publisher.publish(streamingUser, JSON.stringify({
@@ -324,8 +326,12 @@ function messageSocketCallback(ws){
 
       /** working **/
 
+      // TODO: have to change this to user something like '$channelUrlConnectedUsers'
       publisher.setAsync('connectedUsers', amountOfConnectedUsers);
 
+
+      // don't have to pass username because 'streamingUser' is specific already
+      // that works because the channel name is what's being listened to
       publisher.publish(streamingUser, JSON.stringify({
         eventType: 'userConnectedEvent',
         message: amountOfConnectedUsers
@@ -360,6 +366,7 @@ function messageSocketCallback(ws){
       // update redis messages in database
       redisMessages.push(message);
 
+      // TODO: have to change this to user something like '$channelUrlConnectedUsers'
       publisher.setAsync('messages', JSON.stringify(redisMessages));
 
     }
