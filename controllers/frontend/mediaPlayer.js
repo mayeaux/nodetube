@@ -117,7 +117,7 @@ exports.getMedia = async(req, res) => {
 
     var formattedFileSize; // formatted string that will be shown in the page
     if(bytesToGb(upload.processedFileSizeInMb) >= 1)
-      formattedFileSize = bytesToGb(upload.processedFileSizeInMb).toFixed(2) || bytesToGb(upload.originalFileSizeInGb).toFixed(2) + ' GB';
+      formattedFileSize = bytesToGb(upload.processedFileSizeInMb).toFixed(2) || bytesToGb(upload.originalFileSizeInMb).toFixed(2) + ' GB';
     else
       formattedFileSize = Math.round(upload.processedFileSizeInMb) || Math.round(upload.originalFileSizeInMb) + ' MB';
 
