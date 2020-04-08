@@ -14,6 +14,7 @@ const redisClient = require('../../config/redis');
 
 const pagination = require('../../lib/helpers/pagination');
 const timeHelper = require('../../lib/helpers/time');
+const uploadingHelpers = require('../../lib/uploading/helpers');
 
 const User = require('../../models/index').User;
 const Upload = require('../../models/index').Upload;
@@ -207,10 +208,6 @@ const testIsFileTypeUnknown = async function(upload, fileType, fileExtension, lo
 
 };
 
-const bytesToMb = (bytes, decimalPlaces = 4) => {
-  return(bytes / Math.pow(10,6)).toFixed(decimalPlaces);
-};
-
 /**
  * POST /api/upload
  * File Upload API example.
@@ -273,7 +270,8 @@ exports.postFileUpload = async(req, res) => {
       let fileExtension = getExtensionString(filename);
 
       const fileSize = resumableTotalSize;
-      const originalFileSizeInMb = bytesToMb(resumableTotalSize);
+      const originalFileSizeInMb = uploadingHelpers.bytesToMb(resumableTotalSize);
+      const originalFileSizeInGb = uploadingHelpers.bytesToGb(resumableTotalSize);
 
       if(fileExtension == '.MP4'){
         fileExtension = '.mp4';
@@ -300,6 +298,7 @@ exports.postFileUpload = async(req, res) => {
         fileExtension,
         fileSize,
         originalFileSizeInMb,
+        originalFileSizeInGb,
         category,
         subcategory,
         rating,
@@ -497,7 +496,8 @@ exports.postFileUpload = async(req, res) => {
 
               // Save file size after compression.
               const response = await ffmpegHelper.ffprobePromise(fileInDirectory);
-              upload.processedFileSizeInMb = bytesToMb(response.format.size);
+              upload.processedFileSizeInMb = uploadingHelpers.bytesToMb(response.format.size);
+              upload.processedFileSizeInGb = uploadingHelpers.bytesToGb(response.format.size)
 
               await upload.save();
 
@@ -623,7 +623,8 @@ exports.adminUpload = async(req, res) => {
     // console.log(response);
 
     upload.fileSize = response.format.size;
-    upload.processedFileSizeInMb = bytesToMb(response.format.size);
+    upload.processedFileSizeInMb = uploadingHelpers.bytesToMb(response.format.size);
+    upload.processedFileSizeInGb = uploadingHelpers.bytesToGb(response.format.size);
 
     upload.bitrate = response.format.bit_rate / 1000;
 

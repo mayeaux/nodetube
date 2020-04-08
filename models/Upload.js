@@ -25,6 +25,8 @@ const uploadSchema = new mongoose.Schema({
   fileType: { type: String, enum: ['video', 'image', 'audio', 'unknown', 'convert'] },
   originalFileSizeInMb: Number,
   processedFileSizeInMb: Number,
+  originalFileSizeInGb: Number,
+  processedFileSizeInGb: Number,
   fileSize: Number,  // TODO: should support highQualityFileSize as well for compressions
   views: {
     type: Number,

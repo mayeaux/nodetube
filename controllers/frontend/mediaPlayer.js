@@ -5,6 +5,8 @@ const timeHelper = require('../../lib/helpers/time');
 
 const uploadHelpers = require('../../lib/helpers/settings');
 
+const { bytesToGb } = require('../../lib/uploading/helpers')
+
 const categories = require('../../config/categories');
 
 let uploadServer  = uploadHelpers.uploadServer;
@@ -110,8 +112,17 @@ exports.getMedia = async(req, res) => {
     await view.save();
     upload.checkedViews.push(view);
 
+    if(upload.originalFileSizeInGb == undefined || upload.originalFileSizeInGb == null) // older versions didn't had file size in GB
+      upload.originalFileSizeInGb = bytesToGb(upload.fileSize)
+
     // console.log(upload);
     await upload.save();
+
+    var formattedFileSize; // formatted string that will be shown in the page
+    if(upload.originalFileSizeInGb >= 1)
+      formattedFileSize = (upload.processedFileSizeInGb.toFixed(2)) || (upload.originalFileSizeInGb.toFixed(2)) + ' GB';
+    else
+      formattedFileSize = (Math.round(upload.processedFileSizeInMb)) || (Math.round(upload.originalFileSizeInMb)) + ' MB';
 
     // document is fine to be shown publicly
 
@@ -144,7 +155,8 @@ exports.getMedia = async(req, res) => {
       getParameterByName,
       viewingUserIsBlocked,
       brandName,
-      secondsToFormattedTime
+      secondsToFormattedTime,
+      formattedFileSize
     });
 
   } catch(err){
