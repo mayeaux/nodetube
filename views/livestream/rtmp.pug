@@ -12,19 +12,22 @@ block content
 
     body
         script(src='https://cdn.jsdelivr.net/npm/hls.js@latest')
-        video#video(controls style="max-width:100%;max-height: 800px;margin-top: 30px;")
+        .row
+          .col-md-9
+            video#video(controls style="width: 100%;margin-top: 30px;")
 
-        .videoContainer(style="")
-            .row
-                .col-md-12(style="margin-bottom:100px")
-                    h2.userAmount Users In Room: 1
-                    input.message-text(type='text', style='width:600px;margin-top:20px;')
-                    button.send-text Send Message
-                    p.countdown-timer Countdown to send new message : 10 seconds
-                    .messages
-                        h1 Messages:
-                        #messages-scrollview(style='max-height: 80vh; overflow-y: auto;')
-                            ul.message-list
+          .col-md-3
+            .videoContainer(style="")
+              .messages
+                  h4.userAmount Watching: 1
+                  #messages-scrollview(style='max-height: 75vh; overflow-y: auto;')
+                      ul.message-list.list-group
+              .form-inline
+                .form-group
+                  input.message-text.form-control(type='text', placeholder='Message')
+                .form-group
+                  button.send-text.btn.btn-primary Send
+              p.countdown-timer Countdown to send new message: 10 seconds
         script.
           var channelUrl = '#{channelUrl}'
 
@@ -157,13 +160,16 @@ block content
 
             var amountOfSeconds = 10;
 
+            $('.countdown-timer').hide()
             function runInterval(){
               var myTimer = setInterval(function () {
                 amountOfSeconds = amountOfSeconds - 1;
                 if (amountOfSeconds >= 0) {
-                  $('.countdown-timer').text('Countdown to send new message : ' + amountOfSeconds + ' seconds')
+                  $('.countdown-timer').show()
+                  $('.countdown-timer').text('Countdown to send new message: ' + amountOfSeconds + ' seconds')
                 } else {
-                  $('.countdown-timer').text('Countdown to send new message : ' + 10 + ' seconds')
+                  $('.countdown-timer').hide()
+                  $('.countdown-timer').text('Countdown to send new message: ' + 10 + ' seconds')
                   amountOfSeconds = 10
                   clearInterval(myTimer)
                 }
@@ -192,7 +198,7 @@ block content
                 runInterval()
               }
 
-              messageText = messagingUsername + ': ' + messageText;
+              messageText = '<b>' + escapeHtml(messagingUsername) + ':</b> ' + escapeHtml(messageText);
 
               // make sure this username is the username of the streamer
               var onSendMessage = {
@@ -231,11 +237,11 @@ block content
             // console.log(data);
 
             // if message, prepend it to messages list
-            if (data.message && data.message !== 'undefined: undefined') {
+            if (data.message && data.message !== '<b>undefined:</b> undefined') {
 
-              var escapedMessage = escapeHtml(data.message);
+              var escapedMessage = data.message;
 
-              $('.message-list').prepend('<li>' + escapedMessage + '</li>').html();
+              $('.message-list').prepend('<li class=\'list-group-item\'>' + escapedMessage + '</li>').html();
 
             }
 
@@ -243,7 +249,7 @@ block content
             if (data.connectedUsersAmount) {
               connectedUsersAmount = data.connectedUsersAmount;
 
-              $('.userAmount').text('Users In Room: ' + connectedUsersAmount);
+              $('.userAmount').text('Watching: ' + connectedUsersAmount);
 
               // console.log(connectedUsersAmount);
             }
