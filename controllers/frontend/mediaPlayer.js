@@ -112,17 +112,14 @@ exports.getMedia = async(req, res) => {
     await view.save();
     upload.checkedViews.push(view);
 
-    if(upload.originalFileSizeInGb == undefined || upload.originalFileSizeInGb == null) // older versions didn't had file size in GB
-      upload.originalFileSizeInGb = bytesToGb(upload.fileSize)
-
     // console.log(upload);
     await upload.save();
 
     var formattedFileSize; // formatted string that will be shown in the page
-    if(upload.originalFileSizeInGb >= 1)
-      formattedFileSize = (upload.processedFileSizeInGb.toFixed(2)) || (upload.originalFileSizeInGb.toFixed(2)) + ' GB';
+    if(bytesToGb(upload.processedFileSizeInMb) >= 1)
+      formattedFileSize = bytesToGb(upload.processedFileSizeInMb).toFixed(2) || bytesToGb(upload.originalFileSizeInGb).toFixed(2) + ' GB';
     else
-      formattedFileSize = (Math.round(upload.processedFileSizeInMb)) || (Math.round(upload.originalFileSizeInMb)) + ' MB';
+      formattedFileSize = Math.round(upload.processedFileSizeInMb) || Math.round(upload.originalFileSizeInMb) + ' MB';
 
     // document is fine to be shown publicly
 

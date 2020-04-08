@@ -271,7 +271,6 @@ exports.postFileUpload = async(req, res) => {
 
       const fileSize = resumableTotalSize;
       const originalFileSizeInMb = uploadingHelpers.bytesToMb(resumableTotalSize);
-      const originalFileSizeInGb = uploadingHelpers.bytesToGb(resumableTotalSize);
 
       if(fileExtension == '.MP4'){
         fileExtension = '.mp4';
@@ -298,7 +297,6 @@ exports.postFileUpload = async(req, res) => {
         fileExtension,
         fileSize,
         originalFileSizeInMb,
-        originalFileSizeInGb,
         category,
         subcategory,
         rating,
@@ -497,7 +495,6 @@ exports.postFileUpload = async(req, res) => {
               // Save file size after compression.
               const response = await ffmpegHelper.ffprobePromise(fileInDirectory);
               upload.processedFileSizeInMb = uploadingHelpers.bytesToMb(response.format.size);
-              upload.processedFileSizeInGb = uploadingHelpers.bytesToGb(response.format.size)
 
               await upload.save();
 
@@ -624,7 +621,6 @@ exports.adminUpload = async(req, res) => {
 
     upload.fileSize = response.format.size;
     upload.processedFileSizeInMb = uploadingHelpers.bytesToMb(response.format.size);
-    upload.processedFileSizeInGb = uploadingHelpers.bytesToGb(response.format.size);
 
     upload.bitrate = response.format.bit_rate / 1000;
 
