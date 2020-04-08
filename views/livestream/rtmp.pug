@@ -12,17 +12,17 @@ block content
 
     body
         script(src='https://cdn.jsdelivr.net/npm/hls.js@latest')
-        .row
+        .container
           .col-md-9
             video#video(controls style="width: 100%;margin-top: 30px;")
 
-          .col-md-3
+          .col-md-3.panel.panel-default
             .videoContainer(style="")
               .messages
                   h4.userAmount Watching: 1
-                  #messages-scrollview(style='max-height: 75vh; overflow-y: auto;')
+                  #messages-scrollview(style='max-height: 60vh; overflow-y: auto')
                       ul.message-list.list-group
-              .form-inline
+              .form-inline(style="margin: 10px")
                 .form-group
                   input.message-text.form-control(type='text', placeholder='Message')
                 .form-group
