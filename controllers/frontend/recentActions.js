@@ -44,6 +44,27 @@ exports.recentComments = async(req, res) => {
       return comment.upload && comment.upload.visibility == 'public';
     });
 
+    for(var comment of comments) {
+      if((!comment.upload.durationInSeconds || !comment.upload.formattedDuration) && (comment.upload.fileType == "video" || comment.upload.fileType == "audio")) { // the fields don't exist or aren't initialized
+  
+        var upload1 = await Upload.findOne({uniqueTag: comment.upload.uniqueTag})
+  
+        var server = uploadServer
+        if(server.charAt(0) == "/") // the slash confuses the file reading, because host root directory is not the same as machine root directory
+          server = server.substr(1)
+  
+        var duration = await getUploadDuration(`${server}/${req.user.channelUrl}/${upload.uniqueTag + upload.fileExtension}`, upload.fileType);
+        
+        upload1.durationInSeconds = duration.seconds;
+        upload1.formattedDuration = duration.formattedTime;
+  
+        comment.upload.durationInSeconds = duration.seconds
+        comment.upload.formattedDuration = duration.formattedTime
+  
+        await upload1.save()
+      }
+    }
+
     res.render('admin/recentReacts', {
       title: 'Recent Comments',
       comments,
@@ -64,7 +85,7 @@ exports.recentComments = async(req, res) => {
 };
 
 /**
- * GET /media/recentComments
+ * GET /media/recentReacts
  * Recent reacts
  */
 exports.recentReacts = async(req, res) => {
@@ -99,37 +120,26 @@ exports.recentReacts = async(req, res) => {
     return react.upload.visibility == 'public' && react.upload.status !== 'processing';
   });
 
-  var durations = [];
-    var i = 0;
-    for(const upload of uploads) {
-      var duration
-      durations[i] = ""
+  for(var react of reacts) {
+    if((!react.upload.durationInSeconds || !react.upload.formattedDuration) && (react.upload.fileType == "video" || react.upload.fileType == "audio")) { // the fields don't exist or aren't initialized
+
+      var upload1 = await Upload.findOne({uniqueTag: react.upload.uniqueTag})
+
       var server = uploadServer
       if(server.charAt(0) == "/") // the slash confuses the file reading, because host root directory is not the same as machine root directory
         server = server.substr(1)
-      if(upload.fileType == "video")
-        duration = await getVideoDurationInSeconds(`${server}/${upload.uploader.channelUrl}/${upload.uniqueTag + upload.fileExtension}`);
-      else if(upload.fileType == "audio")
-        duration = await getAudioDurationInSeconds(`${server}/${upload.uploader.channelUrl}/${upload.uniqueTag + upload.fileExtension}`);
-      else
-        duration = 0;
 
-      var h = Math.round(duration / 3600)
-      if(h < 10)
-        h = `0${h}`
-      var m = Math.round(duration / 60)
-      if(m < 10)
-        m = `0${m}`
-      var s = Math.round(duration % 60)
-      if(s < 10)
-        s = `0${s}`
+      var duration = await getUploadDuration(`${server}/${req.user.channelUrl}/${upload.uniqueTag + upload.fileExtension}`, upload.fileType);
       
-      if(h > 0)
-        durations[i] = `${h}:${m}:${s}`
-      else
-        durations[i] += `${m}:${s}`
-      i++;
+      upload1.durationInSeconds = duration.seconds;
+      upload1.formattedDuration = duration.formattedTime;
+
+      react.upload.durationInSeconds = duration.seconds
+      react.upload.formattedDuration = duration.formattedTime
+
+      await upload1.save()
     }
+  }
 
   res.render('admin/recentReacts', {
     title: 'Recent Reacts',
@@ -141,7 +151,6 @@ exports.recentReacts = async(req, res) => {
     recentAction,
     uploadServer,
     documents: reacts,
-    durations: durations,
     recentActionDisplayName: 'Recent Reacts'
   });
 
@@ -182,37 +191,26 @@ exports.recentViews = async(req, res) => {
     return view.upload.visibility == 'public' && view.upload.status !== 'processing';
   });
 
-  var durations = [];
-    var i = 0;
-    for(const upload of uploads) {
-      var duration
-      durations[i] = ""
+  for(var view of views) {
+    if((!view.upload.durationInSeconds || !view.upload.formattedDuration) && (view.upload.fileType == "video" || view.upload.fileType == "audio")) { // the fields don't exist or aren't initialized
+
+      var upload1 = await Upload.findOne({uniqueTag: view.upload.uniqueTag})
+
       var server = uploadServer
       if(server.charAt(0) == "/") // the slash confuses the file reading, because host root directory is not the same as machine root directory
         server = server.substr(1)
-      if(upload.fileType == "video")
-        duration = await getVideoDurationInSeconds(`${server}/${upload.uploader.channelUrl}/${upload.uniqueTag + upload.fileExtension}`);
-      else if(upload.fileType == "audio")
-        duration = await getAudioDurationInSeconds(`${server}/${upload.uploader.channelUrl}/${upload.uniqueTag + upload.fileExtension}`);
-      else
-        duration = 0;
 
-      var h = Math.round(duration / 3600)
-      if(h < 10)
-        h = `0${h}`
-      var m = Math.round(duration / 60)
-      if(m < 10)
-        m = `0${m}`
-      var s = Math.round(duration % 60)
-      if(s < 10)
-        s = `0${s}`
+      var duration = await getUploadDuration(`${server}/${req.user.channelUrl}/${upload.uniqueTag + upload.fileExtension}`, upload.fileType);
       
-      if(h > 0)
-        durations[i] = `${h}:${m}:${s}`
-      else
-        durations[i] += `${m}:${s}`
-      i++;
+      upload1.durationInSeconds = duration.seconds;
+      upload1.formattedDuration = duration.formattedTime;
+
+      view.upload.durationInSeconds = duration.seconds
+      view.upload.formattedDuration = duration.formattedTime
+
+      await upload1.save()
     }
+  }
 
   res.render('admin/recentReacts', {
     title: 'Recent Views',
@@ -223,7 +221,6 @@ exports.recentViews = async(req, res) => {
     nextNumber,
     uploadServer,
     documents: views,
-    durations,
     recentActionDisplayName: 'Recent Views'
   });
 
