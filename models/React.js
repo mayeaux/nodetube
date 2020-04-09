@@ -20,6 +20,9 @@ const reactSchema = new mongoose.Schema({
   react: {
     type: String,
     enum: ['like', 'dislike', 'laugh', 'sad', 'disgust', 'love']
+  },
+  active: {
+    type: Boolean
   }
   // RATHER THAN USE VIEWED-AT TIME WE WILL USE CREATED AT TIME AS A STAND-IN
 },{ timestamps: true,
