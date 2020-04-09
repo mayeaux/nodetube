@@ -1,19 +1,8 @@
 script.
 
-  $(".duration").hide()
-
-  function is_touch_screen() {
-    return 'ontouchstart' in window
-  }
-
-  if(is_touch_screen()) // always show duration on touch devices
-    $(".duration").show()
-
   $(document).on({
     mouseenter: function () {
       $(this).css('filter', 'brightness(1.25)')
-
-      $(this).find(".duration").show()
 
       //$(this).css("width", width * 1.10);
       //$(this).css("height", height * 1.10);
@@ -21,9 +10,6 @@ script.
     },
     mouseleave: function () {
       $(this).css('filter', 'brightness(1)')
-
-      $(this).find(".duration").hide()
-
 
       //$(this).css("width", width / 1.10);
       //$(this).css("height", height / 1.10);
