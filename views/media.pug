@@ -169,7 +169,7 @@ block content
                     if upload.fileType == 'video' || upload.fileType == 'audio'
 
                         // TODO: should be able to support MB and GB
-                        p.fw.fileSizeText(style="margin-top:15px") File Size: #{ Math.round(upload.processedFileSizeInMb) || ( upload.fileSize/ ( 1000 * 1000)).toFixed() } MB
+                        p.fw.fileSizeText(style="margin-top:15px") File Size: #{ formattedFileSize }
 
                     if upload.category
                         each category in categories
