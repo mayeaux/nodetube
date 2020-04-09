@@ -11,6 +11,8 @@ const categories = require('../../config/categories');
 
 let uploadServer  = uploadHelpers.uploadServer;
 
+const _ = require('lodash');
+
 const generateComments = require('../../lib/mediaPlayer/generateCommentsObjects');
 const generateReactInfo = require('../../lib/mediaPlayer/generateReactInfo');
 const saveMetaToResLocal = require('../../lib/mediaPlayer/generateMetatags');
@@ -115,11 +117,27 @@ exports.getMedia = async(req, res) => {
     // console.log(upload);
     await upload.save();
 
-    var formattedFileSize; // formatted string that will be shown in the page
-    if(bytesToGb(upload.processedFileSizeInMb) >= 1)
-      formattedFileSize = bytesToGb(upload.processedFileSizeInMb).toFixed(2) || bytesToGb(upload.originalFileSizeInMb).toFixed(2) + ' GB';
-    else
-      formattedFileSize = Math.round(upload.processedFileSizeInMb) || Math.round(upload.originalFileSizeInMb) + ' MB';
+
+    // originalFileSizeInMb: Number,
+    // processedFileSizeInMb: Number,
+
+    function getFormattedFileSize(upload){
+      const fileSizeInMb = upload.originalFileSizeInMb || upload.processedFileSizeInMb;
+
+
+      let formattedFileSizeString;
+
+      // if it's under one gig,
+      if(fileSizeInMb < 1000){
+        formattedFileSizeString = fileSizeInMb + ' MB'
+      } else {
+        formattedFileSizeString  = _.round(fileSizeInMb/1000, 1) + ' GB'
+      }
+
+      return formattedFileSizeString
+    }
+
+    const formattedFileSize = getFormattedFileSize(upload);
 
     // document is fine to be shown publicly
 
