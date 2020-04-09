@@ -94,26 +94,29 @@ exports.recentUploads = async(req, res) => {
     const uploads = await getFromCache.getRecentUploads(limit, skipAmount, mediaType, filter, category, subcategory);
     const recentPopular = 'recent';
 
-    for(var upload of uploads) {
-      if((!upload.durationInSeconds || !upload.formattedDuration) && (upload.fileType == "video" || upload.fileType == "audio")) { // the fields don't exist or aren't initialized
+    async function saveDurationToUploadIfDoesntExist(uploads){
+      for(var upload of uploads) {
+        if((!upload.durationInSeconds || !upload.formattedDuration) && (upload.fileType == "video" || upload.fileType == "audio")) { // the fields don't exist or aren't initialized
 
-        var upload1 = await Upload.findOne({uniqueTag: upload.uniqueTag})
+          var upload1 = await Upload.findOne({uniqueTag: upload.uniqueTag})
 
-        var server = uploadServer
-        if(server.charAt(0) == "/") // the slash confuses the file reading, because host root directory is not the same as machine root directory
-          server = server.substr(1)
+          var server = uploadServer
+          if(server.charAt(0) == "/") // the slash confuses the file reading, because host root directory is not the same as machine root directory
+            server = server.substr(1)
 
-        var duration = await getUploadDuration(`${server}/${req.user.channelUrl}/${upload.uniqueTag + upload.fileExtension}`, upload.fileType);
-        
-        upload1.durationInSeconds = duration.seconds;
-        upload1.formattedDuration = duration.formattedTime;
+          var duration = await getUploadDuration(`${server}/${req.user.channelUrl}/${upload.uniqueTag + upload.fileExtension}`, upload.fileType);
 
-        upload.durationInSeconds = duration.seconds
-        upload.formattedDuration = duration.formattedTime
+          upload1.durationInSeconds = duration.seconds;
+          upload1.formattedDuration = duration.formattedTime;
 
-        await upload1.save()
+          upload.durationInSeconds = duration.seconds
+          upload.formattedDuration = duration.formattedTime
+
+          await upload1.save()
+        }
       }
     }
+
 
     // console.log('rendering');
 
