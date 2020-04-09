@@ -16,6 +16,8 @@ const pagination = require('../../lib/helpers/pagination');
 const timeHelper = require('../../lib/helpers/time');
 const uploadingHelpers = require('../../lib/uploading/helpers');
 
+const bytesToMb = uploadingHelpers.bytesToMb;
+
 const User = require('../../models/index').User;
 const Upload = require('../../models/index').Upload;
 
@@ -270,7 +272,7 @@ exports.postFileUpload = async(req, res) => {
       let fileExtension = getExtensionString(filename);
 
       const fileSize = resumableTotalSize;
-      const originalFileSizeInMb = uploadingHelpers.bytesToMb(resumableTotalSize);
+      const originalFileSizeInMb = bytesToMb(resumableTotalSize);
 
       if(fileExtension == '.MP4'){
         fileExtension = '.mp4';
@@ -494,7 +496,7 @@ exports.postFileUpload = async(req, res) => {
 
               // Save file size after compression.
               const response = await ffmpegHelper.ffprobePromise(fileInDirectory);
-              upload.processedFileSizeInMb = uploadingHelpers.bytesToMb(response.format.size);
+              upload.processedFileSizeInMb = bytesToMb(response.format.size);
 
               await upload.save();
 
@@ -620,7 +622,7 @@ exports.adminUpload = async(req, res) => {
     // console.log(response);
 
     upload.fileSize = response.format.size;
-    upload.processedFileSizeInMb = uploadingHelpers.bytesToMb(response.format.size);
+    upload.processedFileSizeInMb = bytesToMb(response.format.size);
 
     upload.bitrate = response.format.bit_rate / 1000;
 
