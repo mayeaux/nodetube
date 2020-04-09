@@ -476,7 +476,7 @@ exports.getChannel = async(req, res) => {
 
           } catch (err) {
             /** if the file has been deleted then it won't blow up **/
-            console.log(err);
+            // console.log(err);
           }
 
           // console.log('have to add');

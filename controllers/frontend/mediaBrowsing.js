@@ -94,27 +94,46 @@ exports.recentUploads = async(req, res) => {
     const uploads = await getFromCache.getRecentUploads(limit, skipAmount, mediaType, filter, category, subcategory);
     const recentPopular = 'recent';
 
-    async function saveDurationToUploadIfDoesntExist(uploads){
-      for(var upload of uploads) {
-        if((!upload.durationInSeconds || !upload.formattedDuration) && (upload.fileType == "video" || upload.fileType == "audio")) { // the fields don't exist or aren't initialized
+    async function addValuesIfNecessary(upload) {
+      if (upload.fileType == 'video' || upload.fileType == 'audio') {
+        if (!upload.durationInSeconds || !upload.formattedDuration) {
 
-          var upload1 = await Upload.findOne({uniqueTag: upload.uniqueTag})
 
-          var server = uploadServer
-          if(server.charAt(0) == "/") // the slash confuses the file reading, because host root directory is not the same as machine root directory
-            server = server.substr(1)
+          // console.log(uploadDocument);
+          //
+          // console.log(uploadServer);
 
-          var duration = await getUploadDuration(`${server}/${req.user.channelUrl}/${upload.uniqueTag + upload.fileExtension}`, upload.fileType);
+          var server = uploadServer;
+          if (server.charAt(0) == "/") // the slash confuses the file reading, because host root directory is not the same as machine root directory
+            server = server.substr(1);
 
-          upload1.durationInSeconds = duration.seconds;
-          upload1.formattedDuration = duration.formattedTime;
+          const uploadLocation = `${server}/${req.user.channelUrl}/${upload.uniqueTag + upload.fileExtension}`;
 
-          upload.durationInSeconds = duration.seconds
-          upload.formattedDuration = duration.formattedTime
+          try {
+            const duration = await getUploadDuration(uploadLocation, upload.fileType);
+            console.log(duration);
 
-          await upload1.save()
+            let uploadDocument = await Upload.findOne({uniqueTag: upload.uniqueTag});
+
+            uploadDocument.durationInSeconds = Math.round(duration.seconds);
+            uploadDocument.formattedDuration = duration.formattedTime;
+
+            const saveDocument = await uploadDocument.save();
+            // console.log(saveDocument);
+
+
+          } catch (err) {
+            /** if the file has been deleted then it won't blow up **/
+            // console.log(err);
+          }
+
+          // console.log('have to add');
         }
       }
+    }
+
+    for(const upload of uploads) {
+      await addValuesIfNecessary(upload);
     }
 
 
@@ -301,25 +320,47 @@ exports.popularUploads = async(req, res) => {
     //
     // console.log('getting popular uploads');
 
-    for(var upload of uploads) {
-      if((!upload.durationInSeconds || !upload.formattedDuration) && (upload.fileType == "video" || upload.fileType == "audio")) { // the fields don't exist or aren't initialized
+    async function addValuesIfNecessary(upload) {
+      if (upload.fileType == 'video' || upload.fileType == 'audio') {
+        if (!upload.durationInSeconds || !upload.formattedDuration) {
 
-        var upload1 = await Upload.findOne({uniqueTag: upload.uniqueTag})
 
-        var server = uploadServer
-        if(server.charAt(0) == "/") // the slash confuses the file reading, because host root directory is not the same as machine root directory
-          server = server.substr(1)
+          // console.log(uploadDocument);
+          //
+          // console.log(uploadServer);
 
-        var duration = await getUploadDuration(`${server}/${req.user.channelUrl}/${upload.uniqueTag + upload.fileExtension}`, upload.fileType);
-        
-        upload1.durationInSeconds = duration.seconds;
-        upload1.formattedDuration = duration.formattedTime;
+          var server = uploadServer;
+          if (server.charAt(0) == "/") // the slash confuses the file reading, because host root directory is not the same as machine root directory
+            server = server.substr(1);
 
-        upload.durationInSeconds = duration.seconds
-        upload.formattedDuration = duration.formattedTime
+          const uploadLocation = `${server}/${req.user.channelUrl}/${upload.uniqueTag + upload.fileExtension}`;
 
-        await upload1.save()
+          try {
+            const duration = await getUploadDuration(uploadLocation, upload.fileType);
+            console.log(duration);
+
+            let uploadDocument = await Upload.findOne({uniqueTag: upload.uniqueTag});
+
+            uploadDocument.durationInSeconds = Math.round(duration.seconds);
+            uploadDocument.formattedDuration = duration.formattedTime;
+
+            const saveDocument = await uploadDocument.save();
+            // console.log(saveDocument);
+
+
+          } catch (err) {
+            /** if the file has been deleted then it won't blow up **/
+            // console.log(err);
+          }
+
+          // console.log('have to add');
+        }
       }
+    }
+
+    for(const upload in uploads) {
+      // console.log(upload);
+      await addValuesIfNecessary(upload);
     }
 
     res.render('mediaBrowsing/popularUploads', {
