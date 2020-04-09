@@ -147,9 +147,7 @@ if('true' == 'true')
     });
   }
 
-
   // boot up express server to handle websocket connections
-
 
   // object which will hold message data and boot up servers
   webSockets = {};
@@ -233,8 +231,13 @@ subscriber.on("message", function(channel, message) {
       }
     }
   }
+<<<<<<< HEAD
 
 
+=======
+
+
+>>>>>>> d2253822a6524fef0bc4b88bd265440e06ca2a5e
 });
 
 
@@ -270,6 +273,7 @@ function messageSocketCallback(ws){
     }
 
     message = message.message;
+<<<<<<< HEAD
 
     let amountOfConnectedUsers, redisMessages;
 
@@ -290,6 +294,28 @@ function messageSocketCallback(ws){
       console.log('amount connected');
       console.log(amountOfConnectedUsers);
 
+=======
+
+    let amountOfConnectedUsers, redisMessages;
+
+    /** if there is a streaming user in the message **/
+    if(streamingUser){
+      // get connected user amount per streamer
+      amountOfConnectedUsers = await  publisher.getAsync(`${streamingUser}connectedUsers`);
+
+      // get existing messages per streamer
+      redisMessages = await publisher.getAsync(`${streamingUser}messages`);
+
+      redisMessages = JSON.parse(redisMessages);
+
+      if(!redisMessages){
+        redisMessages = [];
+      }
+
+      console.log('amount connected');
+      console.log(amountOfConnectedUsers);
+
+>>>>>>> d2253822a6524fef0bc4b88bd265440e06ca2a5e
       // if there's no amount of users yet, set it to 0
       if(!amountOfConnectedUsers){
         amountOfConnectedUsers = 0;

@@ -14,6 +14,9 @@ const redisClient = require('../../config/redis');
 
 const pagination = require('../../lib/helpers/pagination');
 const timeHelper = require('../../lib/helpers/time');
+const uploadingHelpers = require('../../lib/uploading/helpers');
+
+const bytesToMb = uploadingHelpers.bytesToMb;
 
 const User = require('../../models/index').User;
 const Upload = require('../../models/index').Upload;
@@ -205,10 +208,6 @@ const testIsFileTypeUnknown = async function(upload, fileType, fileExtension, lo
 
   return false;
 
-};
-
-const bytesToMb = (bytes, decimalPlaces = 4) => {
-  return(bytes / Math.pow(10,6)).toFixed(decimalPlaces);
 };
 
 /**
