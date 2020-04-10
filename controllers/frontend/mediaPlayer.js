@@ -5,7 +5,7 @@ const timeHelper = require('../../lib/helpers/time');
 
 const uploadHelpers = require('../../lib/helpers/settings');
 
-const { bytesToGb, bytesToMb } = require('../../lib/uploading/helpers')
+const { bytesToGb, bytesToMb } = require('../../lib/uploading/helpers');
 
 const categories = require('../../config/categories');
 
@@ -117,7 +117,6 @@ exports.getMedia = async(req, res) => {
     // console.log(upload);
     await upload.save();
 
-
     // originalFileSizeInMb: Number,
     // processedFileSizeInMb: Number,
 
@@ -128,12 +127,12 @@ exports.getMedia = async(req, res) => {
 
       // if it's under one gig,
       if(fileSizeInMb < 1000){
-        formattedFileSizeString = _.round(fileSizeInMb) + ' MB'
+        formattedFileSizeString = _.round(fileSizeInMb) + ' MB';
       } else {
-        formattedFileSizeString  = _.round(fileSizeInMb/1000, 1) + ' GB'
+        formattedFileSizeString  = _.round(fileSizeInMb/1000, 1) + ' GB';
       }
 
-      return formattedFileSizeString
+      return formattedFileSizeString;
     }
 
     const formattedFileSize = getFormattedFileSize(upload);

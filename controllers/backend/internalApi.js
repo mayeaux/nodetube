@@ -480,23 +480,23 @@ exports.react = async(req, res, next)  => {
     }
 
   // otherwise create a new react
-  } else if(existingReact && !existingReact.active) {
+  } else if(existingReact && !existingReact.active){
     // there is a react, but it is inactive
     existingReact.active = true;
     existingReact.react = req.body.emoji;
-    await existingReact.save()
+    await existingReact.save();
   } else {
-    console.log('THIS SHOULDN\'T BE TRIGGERED, THE LOGIC IS OFF')
+    console.log('THIS SHOULDN\'T BE TRIGGERED, THE LOGIC IS OFF');
   }
 
-    // add a notification
+  // add a notification
 
-    // create notif for comment on your upload if its not your own thing
-    if(upload.uploader._id.toString() !== req.user._id.toString()){
-      await createNotification(upload.uploader._id, req.user._id, 'react', upload, newReact);
-    }
+  // create notif for comment on your upload if its not your own thing
+  if(upload.uploader._id.toString() !== req.user._id.toString()){
+    await createNotification(upload.uploader._id, req.user._id, 'react', upload, newReact);
+  }
 
-    res.send('new react created');
+  res.send('new react created');
 };
 
 /** POST EDIT UPLOAD **/

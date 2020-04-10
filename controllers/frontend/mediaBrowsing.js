@@ -36,7 +36,6 @@ if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false'){
 
 const pageLimit = 42;
 
-
 /**
  * GET /media/recent
  * Page displaying most recently uploaded content

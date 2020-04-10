@@ -111,14 +111,11 @@ exports.getEmbed = async function(req, res){
   });
 };
 
-
-
 /**
  * GET /docs
  * Docs page
  */
 exports.getDocs = async(req, res) => {
-
 
   res.render('public/docs', {
     title: 'Docs'
