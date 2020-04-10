@@ -549,9 +549,13 @@ exports.editUpload = async(req, res, next) => {
     // load upload changes
     upload.title = req.body.title;
     upload.description = req.body.description;
+    if(upload.uploader.plan == "plus")
+      upload.visibility = req.body.visibility;
     upload.rating = req.body.rating;
     upload.category = req.body.category;
     upload.subcategory = req.body.subcategory;
+
+    console.log(upload)
 
     // check if there's a thumbnail
     let filename, fileType, fileExtension;
