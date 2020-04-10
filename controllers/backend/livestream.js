@@ -300,8 +300,9 @@ function messageSocketCallback(ws){
       amountOfConnectedUsers = amountOfConnectedUsers - 1;
 
       // set the amount of connected users per streamer with the updated (decremented) amount
-      // TODO: add this syntax for all of them     redisClient.expireAsync(`${uniqueTag}timeLeft`, 5)
       publisher.setAsync(`${streamingUser}connectedUsers`, amountOfConnectedUsers);
+      console.log(publisher.expireAsync);
+      publisher.expireAsync(`${streamingUser}connectedUsers`, 30);
 
       publisher.publish(streamingUser, JSON.stringify({
         eventType: 'userConnectedEvent',
@@ -335,6 +336,9 @@ function messageSocketCallback(ws){
       // set the amount of connected users per streamer with the updated (incremented) amount
       publisher.setAsync(`${streamingUser}connectedUsers`, amountOfConnectedUsers);
 
+      publisher.expireAsync(`${streamingUser}connectedUsers`, 30);
+
+
       // don't have to pass username because 'streamingUser' is specific already
       // that works because the channel name is what's being listened to
       publisher.publish(streamingUser, JSON.stringify({
@@ -366,12 +370,13 @@ function messageSocketCallback(ws){
       // tell the listeners to push the message down
       publisher.publish(streamingUser, JSON.stringify(event));
 
-
       // update redis messages in database
       redisMessages.push(message);
 
-      // TODO: have to change this to user something like '$channelUrlConnectedUsers'
       publisher.setAsync(`${streamingUser}messages`, JSON.stringify(redisMessages));
+
+      publisher.expireAsync(`${streamingUser}messages`, 30);
+
 
     }
   });
