@@ -555,8 +555,6 @@ exports.editUpload = async(req, res, next) => {
     upload.category = req.body.category;
     upload.subcategory = req.body.subcategory;
 
-    console.log(upload)
-
     // check if there's a thumbnail
     let filename, fileType, fileExtension;
     if(req.files && req.files.filetoupload){
