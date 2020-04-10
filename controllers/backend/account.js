@@ -154,6 +154,10 @@ exports.postSignup = async(req, res, next) => {
   if(numberOfUsers == 0){
     user.role = 'admin';
     user.plan = 'plus';
+    user.privs.unlistedUpload = true;
+    user.privs.privateUpload = true;
+    user.privs.uploadSize = 2000;
+    user.privs.livestreaming = true;
   }
 
   User.findOne({ channelUrl : req.body.channelUrl }, (err, existingUser) => {

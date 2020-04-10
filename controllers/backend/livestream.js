@@ -300,6 +300,7 @@ function messageSocketCallback(ws){
       amountOfConnectedUsers = amountOfConnectedUsers - 1;
 
       // set the amount of connected users per streamer with the updated (decremented) amount
+      // TODO: add this syntax for all of them     redisClient.expireAsync(`${uniqueTag}timeLeft`, 5)
       publisher.setAsync(`${streamingUser}connectedUsers`, amountOfConnectedUsers);
 
       publisher.publish(streamingUser, JSON.stringify({
