@@ -95,7 +95,7 @@ exports.onLiveAuth = async(req, res) => {
 
   // console.log(user);
 
-  if(user && user.plan == 'plus'){
+  if(user && user.privs.livestreaming == true){
     console.log('authentication passed');
     console.log('found user: ' + user.channelUrl);
 
