@@ -172,7 +172,7 @@ exports.getChannelRss = async(req, res) => {
     res.send(uploads);
 
   } catch(err){
-
+    // console.log(err);
   }
 };
 

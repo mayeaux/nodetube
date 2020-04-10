@@ -120,7 +120,8 @@ let connectedUsersAmount;
 var messagesObject;
 
 // TODO: have to fix this
-if('true' == 'true')
+var variable = 'true';
+if(variable == 'true')
 {
   app = express();
 
