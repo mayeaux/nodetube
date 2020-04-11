@@ -45,7 +45,7 @@ if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false'){
 const pageLimit = 42;
 
 // TODO: pull this function out
-async function addValuesIfNecessary(upload, req) {
+async function addValuesIfNecessary(upload, channelUrl) {
   if (upload.fileType == 'video' || upload.fileType == 'audio') {
     if (!upload.durationInSeconds || !upload.formattedDuration) {
 
@@ -53,7 +53,7 @@ async function addValuesIfNecessary(upload, req) {
       if (server.charAt(0) == "/") // the slash confuses the file reading, because host root directory is not the same as machine root directory
         server = server.substr(1);
 
-      const uploadLocation = `${server}/${req.user.channelUrl}/${upload.uniqueTag + upload.fileExtension}`;
+      const uploadLocation = `${server}/${channelUrl}/${upload.uniqueTag + upload.fileExtension}`;
 
       try {
         const duration = await getUploadDuration(uploadLocation, upload.fileType);
@@ -134,7 +134,7 @@ exports.recentUploads = async(req, res) => {
     const recentPopular = 'recent';
 
     for(const upload of uploads) {
-      await addValuesIfNecessary(upload, req);
+      await addValuesIfNecessary(upload, user.channelUrl);
     }
 
 
@@ -323,7 +323,7 @@ exports.popularUploads = async(req, res) => {
 
     for(const upload in uploads) {
       // console.log(upload);
-      await addValuesIfNecessary(upload, req);
+      await addValuesIfNecessary(upload, user.channelUrl);
     }
 
     res.render('mediaBrowsing/popularUploads', {
