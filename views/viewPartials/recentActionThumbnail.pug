@@ -1,30 +1,25 @@
 a.title-anchor(href=`/user/${document.upload.uploader.channelUrl}/${document.upload.uniqueTag}` style="color:black" )
-    div.thumbnail(style="position: relative")
-        if document.upload.thumbnails && document.upload.thumbnails.custom
-            img.preview-image(src=`${uploadServer}/${document.upload.uploader.channelUrl}/${document.upload.thumbnails.custom}` style="width:inherit;max-width:302px;")
+    if document.upload.thumbnails && document.upload.thumbnails.custom
+        img.preview-image(src=`${uploadServer}/${document.upload.uploader.channelUrl}/${document.upload.thumbnails.custom}` style="width:inherit;max-width:302px;")
 
-        else if document.upload.fileType == 'video' && document.upload.thumbnails && document.upload.thumbnails.generated
-            img.preview-image(src=`${uploadServer}/${document.upload.uploader.channelUrl}/${document.upload.thumbnails.generated}` style="width:inherit;max-width:302px;")
+    else if document.upload.fileType == 'video' && document.upload.thumbnails && document.upload.thumbnails.generated
+        img.preview-image(src=`${uploadServer}/${document.upload.uploader.channelUrl}/${document.upload.thumbnails.generated}` style="width:inherit;max-width:302px;")
 
-        else if document.upload.fileType == 'video' && document.upload.thumbnails && document.upload.thumbnails.medium
-            img.preview-image(src=`${uploadServer}/${document.upload.uploader.channelUrl}/${document.upload.thumbnails.medium}` style="width:inherit;max-width:302px;")
+    else if document.upload.fileType == 'video' && document.upload.thumbnails && document.upload.thumbnails.medium
+        img.preview-image(src=`${uploadServer}/${document.upload.uploader.channelUrl}/${document.upload.thumbnails.medium}` style="width:inherit;max-width:302px;")
 
-        else if document.upload.fileType == 'video' && !document.upload.thumbnailUrl
-            img.preview-image(src="/images/no_img.png")
+    else if document.upload.fileType == 'video' && !document.upload.thumbnailUrl
+        img.preview-image(src="/images/no_img.png")
 
-        else if document.upload.fileType == 'image'
-            // TODO: have to fix this
-            img.preview-image(src=`${uploadServer}/${document.upload.uploader.channelUrl }/${document.upload.uniqueTag}${document.upload.fileExtension}` style="width:inherit;max-width:302px;")
+    else if document.upload.fileType == 'image'
+        // TODO: have to fix this
+        img.preview-image(src=`${uploadServer}/${document.upload.uploader.channelUrl }/${document.upload.uniqueTag}${document.upload.fileExtension}` style="width:inherit;max-width:302px;")
 
-        else if document.upload.fileType == 'audio'
-            img.preview-image(src='/images/audio.svg')
+    else if document.upload.fileType == 'audio'
+        img.preview-image(src='/images/audio.svg')
 
-        else if document.upload.fileType == 'unknown'
-            img.preview-image(src='/images/no_img.png')
-        
-        if document.upload.fileType == 'audio' || document.upload.fileType == 'video'
-            div.duration(style="position: absolute; bottom: 0; right: 0; background-color: black; opacity: 0.7; padding: 3px; margin: 5px; border-radius: 5px")
-                span(style="color: white") #{document.upload.formattedDuration}
+    else if document.upload.fileType == 'unknown'
+        img.preview-image(src='/images/no_img.png')
 
     div
         p.balance-text.upload-title-text(style="width:100%;margin:0 auto;margin-top:6px;") #{document.upload.title}
