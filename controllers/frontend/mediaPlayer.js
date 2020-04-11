@@ -169,7 +169,8 @@ exports.getMedia = async(req, res) => {
       viewingUserIsBlocked,
       brandName,
       secondsToFormattedTime,
-      formattedFileSize
+      formattedFileSize,
+      domainName: process.env.DOMAIN_NAME_AND_TLD
     });
 
   } catch(err){
