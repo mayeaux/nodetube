@@ -44,27 +44,6 @@ exports.recentComments = async(req, res) => {
       return comment.upload && comment.upload.visibility == 'public';
     });
 
-    for(var comment of comments) {
-      if((!comment.upload.durationInSeconds || !comment.upload.formattedDuration) && (comment.upload.fileType == "video" || comment.upload.fileType == "audio")) { // the fields don't exist or aren't initialized
-  
-        var upload1 = await Upload.findOne({uniqueTag: comment.upload.uniqueTag})
-  
-        var server = uploadServer
-        if(server.charAt(0) == "/") // the slash confuses the file reading, because host root directory is not the same as machine root directory
-          server = server.substr(1)
-  
-        var duration = await getUploadDuration(`${server}/${req.user.channelUrl}/${upload.uniqueTag + upload.fileExtension}`, upload.fileType);
-        
-        upload1.durationInSeconds = duration.seconds;
-        upload1.formattedDuration = duration.formattedTime;
-  
-        comment.upload.durationInSeconds = duration.seconds
-        comment.upload.formattedDuration = duration.formattedTime
-  
-        await upload1.save()
-      }
-    }
-
     res.render('admin/recentReacts', {
       title: 'Recent Comments',
       comments,
@@ -119,27 +98,6 @@ exports.recentReacts = async(req, res) => {
   reacts = _.filter(reacts, function(react){
     return react.upload.visibility == 'public' && react.upload.status !== 'processing';
   });
-
-  for(var react of reacts) {
-    if((!react.upload.durationInSeconds || !react.upload.formattedDuration) && (react.upload.fileType == "video" || react.upload.fileType == "audio")) { // the fields don't exist or aren't initialized
-
-      var upload1 = await Upload.findOne({uniqueTag: react.upload.uniqueTag})
-
-      var server = uploadServer
-      if(server.charAt(0) == "/") // the slash confuses the file reading, because host root directory is not the same as machine root directory
-        server = server.substr(1)
-
-      var duration = await getUploadDuration(`${server}/${req.user.channelUrl}/${upload.uniqueTag + upload.fileExtension}`, upload.fileType);
-      
-      upload1.durationInSeconds = duration.seconds;
-      upload1.formattedDuration = duration.formattedTime;
-
-      react.upload.durationInSeconds = duration.seconds
-      react.upload.formattedDuration = duration.formattedTime
-
-      await upload1.save()
-    }
-  }
 
   res.render('admin/recentReacts', {
     title: 'Recent Reacts',
