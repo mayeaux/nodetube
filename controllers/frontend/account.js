@@ -48,7 +48,7 @@ const secondsToFormattedTime = timeHelper.secondsToFormattedTime;
 
 
 // TODO: pull this function out
-async function addValuesIfNecessary(upload) {
+async function addValuesIfNecessary(upload, req) {
   if (upload.fileType == 'video' || upload.fileType == 'audio') {
     if (!upload.durationInSeconds || !upload.formattedDuration) {
 
@@ -481,7 +481,7 @@ exports.getChannel = async(req, res) => {
     user.uploads = uploads;
 
     for(const upload of uploads) {
-      await addValuesIfNecessary(upload, req;
+      await addValuesIfNecessary(upload, req);
     }
 
     const siteVisitor = req.siteVisitor;
