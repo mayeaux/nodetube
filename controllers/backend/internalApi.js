@@ -20,6 +20,7 @@ var concat = require('concat-files');
 var Busboy = require('busboy');
 const mkdirp = Promise.promisifyAll(require('mkdirp'));
 const mv = require('mv');
+const nodemailer = require('nodemailer');
 
 const backblaze = require('../../lib/uploading/backblaze');
 
@@ -406,6 +407,41 @@ exports.subscribeEndpoint = async function(req, res, next){
       console.log(notification);
 
       console.log('here');
+
+      if(receivingUser.email && receivingUser.emailConfirmed) {
+        var html = `<h1>New Subscriber</h1>`;
+
+        html += `<p>Hello, ${receivingUser.channelName}.<p>`
+
+        if(!upload)
+          html += "<div><b>A user has subscribed to your channel from your channel page.</b>";
+        else
+          html += `<div><b>A user has subscribed to your channel from your ${upload.fileType} <a href='${process.env.DOMAIN_NAME_AND_TLD}/user/${receivingUser.channelUrl}/${upload.uniqueTag}'>${upload.title}</a>.</b>`
+
+        html += `<br><small>${notification.timeAgo}</small></div><p>Congratulations, keep growing!</p><p>Best regards,<br><b>${process.env.INSTANCE_BRAND_NAME}</b>.</p>`;
+
+        var transporter = nodemailer.createTransport({
+          service: process.env.EMAIL_HOST,
+          auth: {
+            user: process.env.EMAIL_ADDRESS,
+            pass: process.env.EMAIL_PASSWORD
+          }
+        });
+
+        var mailOptions = {
+          from: process.env.EMAIL_ADDRESS,
+          to: receivingUser.email,
+          subject: 'New Subscriber - ' + process.env.INSTANCE_BRAND_NAME,
+          html
+        }
+
+        console.log(mailOptions);
+
+        transporter.sendMail(mailOptions, function(error, info) {
+          if(error) 
+            console.log("ERROR SENDING NOTIFICATION EMAIL - " + info)
+        })
+      }
 
     }
 
