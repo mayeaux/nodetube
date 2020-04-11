@@ -206,15 +206,13 @@ exports.getChannelRss = async(req, res) => {
 
     res.send(uploads);
 
-
-  } catch (err){
-
+  } catch(err){
+    // console.log(err);
   }
 };
 
-
 // TODO: desperately needs a cleanup
-  /**
+/**
    * GET /user/$username
    * Channel page
    */
@@ -846,10 +844,10 @@ exports.livestreaming = async(req, res) =>
 
   var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
 
-  var os = require("os");
+  var os = require('os');
   os.hostname();
 
-  console.log(req.connection.remoteAddress, req.connection.remotePort, req.connection.localAddress,   req.connection.localPort)
+  console.log(req.connection.remoteAddress, req.connection.remotePort, req.connection.localAddress,   req.connection.localPort);
 
   var os = require( 'os' );
 
@@ -863,28 +861,23 @@ exports.livestreaming = async(req, res) =>
   //
   // console.log(ip);
 
-
-
-  console.log(req.ip)
-
+  console.log(req.ip);
 
   console.log(req.socket.localPort);
 
-
-  console.log(req.originalUrl)
+  console.log(req.originalUrl);
 
   const viewingDomain =  req.protocol + '://' + req.get('host') + `/live/${req.user.channelUrl}`;
-
 
   const livestreamRtmpDomain  = process.env.LIVESTREAM_RTMP_DOMAIN || rtmpUrl;
   const livestreamViewingDomain = process.env.LIVESTREAM_VIEWING_DOMAIN || viewingDomain;
 
-  console.log(livestreamRtmpDomain, livestreamViewingDomain)
+  console.log(livestreamRtmpDomain, livestreamViewingDomain);
 
   res.render('livestream/livestreaming', {
     title: 'Livestreaming',
     livestreamRtmpDomain,
-    livestreamViewingDomain,
+    livestreamViewingDomain
 
   });
 };
