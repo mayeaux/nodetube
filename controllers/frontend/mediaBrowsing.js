@@ -13,6 +13,8 @@ const uploadServer = uploadHelpers.uploadServer;
 const getFromCache = require('../../caching/getFromCache');
 const uploadFilters = require('../../lib/mediaBrowsing/helpers');
 
+const { getUploadDuration } = require('../../lib/mediaBrowsing/helpers')
+
 const getSensitivityFilter =  uploadFilters.getSensitivityFilter;
 const categories = require('../../config/categories');
 const logCaching = process.env.LOG_CACHING;
@@ -35,6 +37,40 @@ if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false'){
 }
 
 const pageLimit = 42;
+
+// TODO: pull this function out
+async function addValuesIfNecessary(upload, req) {
+  if (upload.fileType == 'video' || upload.fileType == 'audio') {
+    if (!upload.durationInSeconds || !upload.formattedDuration) {
+
+      var server = uploadServer;
+      if (server.charAt(0) == "/") // the slash confuses the file reading, because host root directory is not the same as machine root directory
+        server = server.substr(1);
+
+      const uploadLocation = `${server}/${req.user.channelUrl}/${upload.uniqueTag + upload.fileExtension}`;
+
+      try {
+        const duration = await getUploadDuration(uploadLocation, upload.fileType);
+        console.log(duration);
+
+        let uploadDocument = await Upload.findOne({uniqueTag: upload.uniqueTag});
+
+        uploadDocument.durationInSeconds = Math.round(duration.seconds);
+        uploadDocument.formattedDuration = duration.formattedTime;
+
+        const saveDocument = await uploadDocument.save();
+        // console.log(saveDocument);
+
+
+      } catch (err) {
+        /** if the file has been deleted then it won't blow up **/
+        // console.log(err);
+      }
+
+      // console.log('have to add');
+    }
+  }
+}
 
 /**
  * GET /media/recent
@@ -90,6 +126,11 @@ exports.recentUploads = async(req, res) => {
 
     const uploads = await getFromCache.getRecentUploads(limit, skipAmount, mediaType, filter, category, subcategory);
     const recentPopular = 'recent';
+
+    for(const upload of uploads) {
+      await addValuesIfNecessary(upload, req);
+    }
+
 
     // console.log('rendering');
 
@@ -273,6 +314,11 @@ exports.popularUploads = async(req, res) => {
     // console.log(popularTimeViews);
     //
     // console.log('getting popular uploads');
+
+    for(const upload in uploads) {
+      // console.log(upload);
+      await addValuesIfNecessary(upload, req);
+    }
 
     res.render('mediaBrowsing/popularUploads', {
       title: 'Popular Uploads',
