@@ -481,7 +481,7 @@ exports.getChannel = async(req, res) => {
     user.uploads = uploads;
 
     for(const upload of uploads) {
-      await addValuesIfNecessary(upload);
+      await addValuesIfNecessary(upload, req;
     }
 
     const siteVisitor = req.siteVisitor;

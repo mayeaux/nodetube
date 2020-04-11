@@ -39,7 +39,7 @@ if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false'){
 const pageLimit = 42;
 
 // TODO: pull this function out
-async function addValuesIfNecessary(upload) {
+async function addValuesIfNecessary(upload, req) {
   if (upload.fileType == 'video' || upload.fileType == 'audio') {
     if (!upload.durationInSeconds || !upload.formattedDuration) {
 
@@ -128,7 +128,7 @@ exports.recentUploads = async(req, res) => {
     const recentPopular = 'recent';
 
     for(const upload of uploads) {
-      await addValuesIfNecessary(upload);
+      await addValuesIfNecessary(upload, req);
     }
 
 
@@ -317,7 +317,7 @@ exports.popularUploads = async(req, res) => {
 
     for(const upload in uploads) {
       // console.log(upload);
-      await addValuesIfNecessary(upload);
+      await addValuesIfNecessary(upload, req);
     }
 
     res.render('mediaBrowsing/popularUploads', {
