@@ -5,7 +5,7 @@ const timeHelper = require('../../lib/helpers/time');
 
 const uploadHelpers = require('../../lib/helpers/settings');
 
-const { bytesToGb, bytesToMb } = require('../../lib/uploading/helpers')
+const { bytesToGb, bytesToMb } = require('../../lib/uploading/helpers');
 
 const categories = require('../../config/categories');
 
@@ -35,6 +35,21 @@ function getParameterByName(name, url){
 const secondsToFormattedTime = timeHelper.secondsToFormattedTime;
 
 const stripeToken = process.env.STRIPE_FRONTEND_TOKEN || 'pk_test_iIpX39D0QKD1cXh5CYNUw69B';
+
+function getFormattedFileSize(upload){
+  const fileSizeInMb = upload.originalFileSizeInMb || upload.processedFileSizeInMb || bytesToMb(upload.fileSize);
+
+  let formattedFileSizeString;
+
+  // if it's under one gig,
+  if(fileSizeInMb < 1000){
+    formattedFileSizeString = _.round(fileSizeInMb) + ' MB';
+  } else {
+    formattedFileSizeString  = _.round(fileSizeInMb/1000, 1) + ' GB';
+  }
+
+  return formattedFileSizeString;
+}
 
 /**
  * GET /$user/$uploadUniqueTag
@@ -117,24 +132,8 @@ exports.getMedia = async(req, res) => {
     // console.log(upload);
     await upload.save();
 
-
     // originalFileSizeInMb: Number,
     // processedFileSizeInMb: Number,
-
-    function getFormattedFileSize(upload){
-      const fileSizeInMb = upload.originalFileSizeInMb || upload.processedFileSizeInMb || bytesToMb(upload.fileSize);
-
-      let formattedFileSizeString;
-
-      // if it's under one gig,
-      if(fileSizeInMb < 1000){
-        formattedFileSizeString = _.round(fileSizeInMb) + ' MB'
-      } else {
-        formattedFileSizeString  = _.round(fileSizeInMb/1000, 1) + ' GB'
-      }
-
-      return formattedFileSizeString
-    }
 
     const formattedFileSize = getFormattedFileSize(upload);
 

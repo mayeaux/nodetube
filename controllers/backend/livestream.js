@@ -5,17 +5,14 @@ const fs = require('fs');
 const https = require('https');
 const http = require('http');
 
-
 const ws = require('ws');
 
 const User = require('../../models/index').User;
-
 
 const publisher = require('../../config/redis');
 
 const Promise = require('bluebird');
 var redis = require('redis');
-
 
 let client2;
 if(process.env.REDIS_URL){
@@ -95,11 +92,11 @@ exports.onLiveAuth = async(req, res) => {
 
   // console.log(user);
 
-  if(user && user.plan == 'plus'){
+  if(user && user.privs.livestreaming == true){
     console.log('authentication passed');
     console.log('found user: ' + user.channelUrl);
 
-    console.log(`Access the livestream at /live/${user.channelUrl}`)
+    console.log(`Access the livestream at /live/${user.channelUrl}`);
 
     return res.send('working');
   } else {
@@ -123,7 +120,8 @@ let connectedUsersAmount;
 var messagesObject;
 
 // TODO: have to fix this
-if('true' == 'true')
+var variable = 'true';
+if(variable == 'true')
 {
   app = express();
 
@@ -140,7 +138,7 @@ if('true' == 'true')
   if(process.env.NODE_ENV == 'production'){
     server = https.createServer(options, app).listen(8443, function(){
       console.log('Websockets server started over https on port 8443 ');
-    })
+    });
   } else {
     server = http.createServer(options, app).listen(8443, function(){
       console.log('Websockets server started over http on port 8443');
@@ -207,7 +205,7 @@ if('true' == 'true')
 
 }
 
-subscriber.on("message", function(channel, message) {
+subscriber.on('message', function(channel, message){
 
   console.log(message);
 
@@ -227,12 +225,11 @@ subscriber.on("message", function(channel, message) {
       } else if(publishedMessage.eventType == 'userConnectedEvent'){
         stringifyAndSend(user, { connectedUsersAmount: publishedMessage.message });
       } else {
-        console.log('UNRECOGNIZED EVENT THIS IS BAD')
+        console.log('UNRECOGNIZED EVENT THIS IS BAD');
       }
     }
   }
 });
-
 
 /** CALLBACK TO SEND A MESSAGE **/
 function messageSocketCallback(ws){
@@ -303,17 +300,17 @@ function messageSocketCallback(ws){
 
       // set the amount of connected users per streamer with the updated (decremented) amount
       publisher.setAsync(`${streamingUser}connectedUsers`, amountOfConnectedUsers);
+      console.log(publisher.expireAsync);
+      publisher.expireAsync(`${streamingUser}connectedUsers`, 30);
 
       publisher.publish(streamingUser, JSON.stringify({
         eventType: 'userConnectedEvent',
-        message: amountOfConnectedUsers,
+        message: amountOfConnectedUsers
 
       }));
 
       return'do something here';
     }
-
-
 
     /** when a new user connects **/
 
@@ -335,6 +332,8 @@ function messageSocketCallback(ws){
 
       // set the amount of connected users per streamer with the updated (incremented) amount
       publisher.setAsync(`${streamingUser}connectedUsers`, amountOfConnectedUsers);
+
+      publisher.expireAsync(`${streamingUser}connectedUsers`, 30);
 
       // don't have to pass username because 'streamingUser' is specific already
       // that works because the channel name is what's being listened to
@@ -367,12 +366,12 @@ function messageSocketCallback(ws){
       // tell the listeners to push the message down
       publisher.publish(streamingUser, JSON.stringify(event));
 
-
       // update redis messages in database
       redisMessages.push(message);
 
-      // TODO: have to change this to user something like '$channelUrlConnectedUsers'
       publisher.setAsync(`${streamingUser}messages`, JSON.stringify(redisMessages));
+
+      publisher.expireAsync(`${streamingUser}messages`, 30);
 
     }
   });

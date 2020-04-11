@@ -36,6 +36,8 @@ const { userCanUploadContentOfThisRating } = require('../../lib/uploading/helper
 
 const validator = require('email-validator');
 
+const { getUploadDuration } = require('../../lib/mediaBrowsing/helpers')
+
 const javascriptTimeAgo = require('javascript-time-ago');
 javascriptTimeAgo.locale(require('javascript-time-ago/locales/en'));
 require('javascript-time-ago/intl-messageformat-global');
@@ -43,6 +45,39 @@ require('intl-messageformat/dist/locale-data/en');
 const timeAgoEnglish = new javascriptTimeAgo('en-US');
 
 const secondsToFormattedTime = timeHelper.secondsToFormattedTime;
+
+
+// TODO: pull this function out
+async function addValuesIfNecessary(upload, req) {
+  if (upload.fileType == 'video' || upload.fileType == 'audio') {
+    if (!upload.durationInSeconds || !upload.formattedDuration) {
+
+      var server = uploadServer;
+      if (server.charAt(0) == "/") // the slash confuses the file reading, because host root directory is not the same as machine root directory
+        server = server.substr(1);
+
+      const uploadLocation = `${server}/${req.user.channelUrl}/${upload.uniqueTag + upload.fileExtension}`;
+
+      try {
+        const duration = await getUploadDuration(uploadLocation, upload.fileType);
+        console.log(duration);
+
+        let uploadDocument = await Upload.findOne({uniqueTag: upload.uniqueTag});
+
+        uploadDocument.durationInSeconds = duration.seconds;
+        uploadDocument.formattedDuration = duration.formattedTime;
+
+        await uploadDocument.save();
+
+
+      } catch (err) {
+        /** if the file has been deleted then it won't blow up **/
+        // console.log(err);
+      }
+      // console.log('have to add');
+    }
+  }
+}
 
 /**
  * GET /upload
@@ -171,15 +206,13 @@ exports.getChannelRss = async(req, res) => {
 
     res.send(uploads);
 
-
-  } catch (err){
-
+  } catch(err){
+    // console.log(err);
   }
 };
 
-
 // TODO: desperately needs a cleanup
-  /**
+/**
    * GET /user/$username
    * Channel page
    */
@@ -444,6 +477,10 @@ exports.getChannel = async(req, res) => {
     user.totalViews = totalViews;
 
     user.uploads = uploads;
+
+    for(const upload of uploads) {
+      await addValuesIfNecessary(upload, req);
+    }
 
     const siteVisitor = req.siteVisitor;
 
@@ -807,10 +844,10 @@ exports.livestreaming = async(req, res) =>
 
   var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
 
-  var os = require("os");
+  var os = require('os');
   os.hostname();
 
-  console.log(req.connection.remoteAddress, req.connection.remotePort, req.connection.localAddress,   req.connection.localPort)
+  console.log(req.connection.remoteAddress, req.connection.remotePort, req.connection.localAddress,   req.connection.localPort);
 
   var os = require( 'os' );
 
@@ -824,28 +861,23 @@ exports.livestreaming = async(req, res) =>
   //
   // console.log(ip);
 
-
-
-  console.log(req.ip)
-
+  console.log(req.ip);
 
   console.log(req.socket.localPort);
 
-
-  console.log(req.originalUrl)
+  console.log(req.originalUrl);
 
   const viewingDomain =  req.protocol + '://' + req.get('host') + `/live/${req.user.channelUrl}`;
-
 
   const livestreamRtmpDomain  = process.env.LIVESTREAM_RTMP_DOMAIN || rtmpUrl;
   const livestreamViewingDomain = process.env.LIVESTREAM_VIEWING_DOMAIN || viewingDomain;
 
-  console.log(livestreamRtmpDomain, livestreamViewingDomain)
+  console.log(livestreamRtmpDomain, livestreamViewingDomain);
 
   res.render('livestream/livestreaming', {
     title: 'Livestreaming',
     livestreamRtmpDomain,
-    livestreamViewingDomain,
+    livestreamViewingDomain
 
   });
 };

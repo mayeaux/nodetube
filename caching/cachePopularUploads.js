@@ -36,7 +36,7 @@ async function getPopularUploads(){
     category : { $exists: true }
   };
 
-  const selectString = 'rating title views checkedViews uploader fileType thumbnailUrl ' +
+  const selectString = 'formattedDuration rating title views checkedViews uploader fileType thumbnailUrl ' +
     'uploadUrl uniqueTag customThumbnailUrl fileExtension thumbnails reacts uncurated category subcategory description';
 
   let popularUploads = await Upload.find(searchQuery).select(selectString).populate('uploader reacts')

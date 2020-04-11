@@ -63,6 +63,26 @@ block content
                                         br
                                         br
 
+            if upload.uploader.plan == "plus"
+                .form-group
+                    label.col-sm-3.control-label(for='visibility') Visibiliy
+                    .col-sm-7
+                        label.radio-inline
+                            input.radio-button(type='radio', name='visibility', value='public', checked=(upload.visibility == 'public' ? 'checked': undefined))
+                            | Public
+                        br
+                        br
+                        label.radio-inline
+                            input.radio-button(type='radio', name='visibility', value='unlisted', checked=(upload.visibility == 'unlisted' ? 'checked': undefined))
+                            | Unlisted (only users with the link can view the content)
+                        br
+                        br
+                        label.radio-inline
+                            input.radio-button(type='radio', name='visibility', value='private', checked=(upload.visibility == 'private' ? 'checked': undefined))
+                            | Private (only you can view the content)
+                        br
+                        br
+
             // dont show if its already moderated by admin or mod
             if !hideRatingFrontend
                 .form-group

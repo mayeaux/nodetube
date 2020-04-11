@@ -68,18 +68,22 @@ const userSchema = new mongoose.Schema({
 
   // privileges
   privs : {
+    // allow user to be trusted and not need moderation
     autoVisibleUpload: {
       type: Boolean,
       default: false
     },
+    // automatically mirror uploads from youtube
     mirrorFunctionality: {
       type: Boolean,
       default: false
     },
+    // unlisted uploads
     unlistedUpload: {
       type: Boolean,
       default: false
     },
+    // private uploads
     privateUpload: {
       type: Boolean,
       default: false
@@ -98,6 +102,11 @@ const userSchema = new mongoose.Schema({
     safeForWorkUpload: {
       type: Boolean,
       default: true
+    },
+    // if the user is allowed to stream to the backend
+    livestreaming: {
+      type: Boolean,
+      default: false
     }
   },
 
