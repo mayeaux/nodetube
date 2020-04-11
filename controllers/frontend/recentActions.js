@@ -149,27 +149,6 @@ exports.recentViews = async(req, res) => {
     return view.upload.visibility == 'public' && view.upload.status !== 'processing';
   });
 
-  for(var view of views) {
-    if((!view.upload.durationInSeconds || !view.upload.formattedDuration) && (view.upload.fileType == "video" || view.upload.fileType == "audio")) { // the fields don't exist or aren't initialized
-
-      var upload1 = await Upload.findOne({uniqueTag: view.upload.uniqueTag})
-
-      var server = uploadServer
-      if(server.charAt(0) == "/") // the slash confuses the file reading, because host root directory is not the same as machine root directory
-        server = server.substr(1)
-
-      var duration = await getUploadDuration(`${server}/${req.user.channelUrl}/${upload.uniqueTag + upload.fileExtension}`, upload.fileType);
-      
-      upload1.durationInSeconds = duration.seconds;
-      upload1.formattedDuration = duration.formattedTime;
-
-      view.upload.durationInSeconds = duration.seconds
-      view.upload.formattedDuration = duration.formattedTime
-
-      await upload1.save()
-    }
-  }
-
   res.render('admin/recentReacts', {
     title: 'Recent Views',
     views,
