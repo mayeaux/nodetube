@@ -7,6 +7,7 @@ const uploadServer = uploadHelpers.uploadServer;
 const Upload = require('../../models/index').Upload;
 
 const logCaching = process.env.LOG_CACHING;
+const sphereEnabled = process.env.HOME_SPHERE_ENABLED;
 
 // TODO: pull into its own func
 let indexResponse;
@@ -51,13 +52,16 @@ exports.index = async(req, res) => {
 
   // console.log('set index');
 
+  console.log(sphereEnabled);
+
   res.render('public/home', {
     title: 'Home',
     mediaAmount,
     channelAmount,
     viewAmount,
     uploadServer,
-    uploads
+    uploads,
+    sphereEnabled
   });
 };
 
