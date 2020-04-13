@@ -20,17 +20,20 @@ block content
 
   div.container(style="text-align:center")
 
-    div(style="z-index: 1; pointer-events: none; position: absolute; width: 100%")
-      h1.lead-header.fw Introducing #{brandName}
-      h2.tagline-header.fw An open-source YouTube alternative powered by Node.js
-      p.help
-        i Move around to explore
+    .row
+      .col-md-4
+        div(style="z-index: 1; pointer-events: none; position: absolute; width: 100%")
+          h1.lead-header.fw Introducing #{brandName}
+          h2.tagline-header.fw An open-source YouTube alternative powered by Node.js
+          p.help
+            i Move around to explore
 
-    div#container(style="position: absolute; top: 0")
-      each upload in uploads
-        if upload.uploader
-          div.upload(style="text-align: center")
-            include ../viewPartials/uploadThumbnail
+      .col
+        div#container(style="position: absolute; top: 0")
+          each upload in uploads
+            if upload.uploader
+              div.upload(style="text-align: center")
+                include ../viewPartials/uploadThumbnail
 
     script.
       var container = document.getElementById("container");
@@ -52,11 +55,18 @@ block content
     var objects = [];
     var targets = {helix: [], grid: [], sphere: []};
 
-    var x = 0;
+    var x = 0, maxZ = Number.MIN_SAFE_INTEGER;
 
     init();
     animate();
     // change(); // the thumbnails layout will changing every 10 seconds
+    // take camera outside the sphere
+    setTimeout(function() {
+      new TWEEN.Tween(camera.position)
+        .to({x: camera.position.x, y: camera.position.y, z: (maxZ * 1.5)}, 1000)
+        .easing(TWEEN.Easing.Exponential.InOut)
+        .start();
+    }, 3000);
 
     function init() {
 
@@ -117,6 +127,8 @@ block content
         var vector = new THREE.Vector3();
         
         vector.copy( object.position ).multiplyScalar( 2 );
+
+        vector.z > maxZ ? maxZ = vector.z : 
         
         object.lookAt( vector );
 
