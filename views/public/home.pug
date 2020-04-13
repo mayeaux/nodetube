@@ -4,97 +4,196 @@ block content
 
   style.
     .lead-header {
-      margin-top: 137px;
-      margin-bottom: 47px;
+      color: #444444;
+      font-size: 30px;
     }
 
     .tagline-header {
-      margin-bottom: 70px;
+      color: #777777;
+      font-size: 10px;
+      margin-bottom: 30px;
     }
 
-    .explainer {
-      margin-top: 15px;
-    }
-
-    .pitch-header {
-      font-size:30px;
-    }
-
-    .first-row {
-      margin-top:35px;
-    }
-
-    .second-row {
-      margin-top: 20px;
-    }
-
-    p.fw {
-      font-size: 15px;
-    }
-
-    /** Redesign for narrow devices **/
-
-    @media (max-width: 480px) {
-
-      .lead-header {
-        margin-top: 80px;
-      }
-
-      .pitch-header {
-        font-size: 22px;
-      }
-
-      .row .col-sm-4 {
-        margin-bottom:52px;
-      }
-
-      .first-row {
-        margin-bottom: 0px;
-      }
-
-      .second-row {
-        margin-top: 0px;
-      }
-      /* styles for mobile browsers smaller than 480px; (iPhone) */
+    .help {
+      color: #888888;
     }
 
   div.container(style="text-align:center")
 
-    h1.lead-header.fw Introducing #{brandName}
-    h2.tagline-header.fw An open-source YouTube alternative powered by Node.js
-    hr
+    div(style="z-index: 1; pointer-events: none; position: absolute; width: 100%")
+      h1.lead-header.fw Introducing #{brandName}
+      h2.tagline-header.fw An open-source YouTube alternative powered by Node.js
+      p.help
+        i Move around to explore
 
-    .row.first-row
-      .col-sm-4
-        h2.pitch-header.fw No Email Required &nbsp
-          i.fa.fa-bolt
-        p.explainer.fw Start your channel on #{brandName}
-        p.fw without having to verify your email
-      .col-sm-4
-        h2.pitch-header.fw Video, Audio, Images &nbsp
-          i.fa.fa-thumbs-o-up
-        p.explainer.fw Over 30 file formats are supported
-        p.fw between video, audio and image uploads
-      .col-sm-4
-        h2.pitch-header.fw 100% Open Source &nbsp
-          i.fa.fa-space-shuttle
-        p.explainer.fw Create your own #{brandName} instance
-        p.fw in just minutes following our tutorials
+    div#container(style="position: absolute; top: 0")
+      each upload in uploads
+        if upload.uploader
+          div.upload(style="text-align: center")
+            include ../viewPartials/uploadThumbnail
 
+    script.
+      var container = document.getElementById("container");
+      container.hidden = true;
 
-    .row.second-row
-      .col-sm-4
-        h2.pitch-header.fw #{channelAmount} Channels &nbsp
-          i.fa.fa-users
-        p.explainer.fw The number of creators who have
-        p.fw chosen #{brandName} for their media hosting
-      .col-sm-4
-        h2.pitch-header.fw #{mediaAmount} Uploads &nbsp
-          i.fa.fa-upload
-        p.explainer.fw The number of  times creators have
-        p.fw chosen #{brandName} for their content hosting
-      .col-sm-4
-        h2.pitch-header.fw #{viewAmount} Views &nbsp
-          i.fa.fa-video
-        p.explainer.fw The number of times people have
-        p.fw enjoyed the innovative new platform
+  script(type="module").
+
+    import * as THREE from '/js/three.js/three.module.js';
+    import { TWEEN } from '/js/three.js/tween.module.min.js';
+    import { TrackballControls } from '/js/three.js/TrackballControls.js';
+    import { CSS3DRenderer, CSS3DObject } from '/js/three.js/CSS3DRenderer.js';
+
+    var uploads = document.getElementsByClassName("upload");
+    var container = document.getElementById("container");
+
+    var camera, scene, renderer;
+    var controls;
+    
+    var objects = [];
+    var targets = {helix: [], grid: [], sphere: []};
+
+    var x = 0;
+
+    init();
+    animate();
+    // change(); // the thumbnails layout will changing every 10 seconds
+
+    function init() {
+
+      camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 10000);
+      camera.position.z = 1;
+
+      scene = new THREE.Scene();
+
+      for(var i = 0; i < uploads.length; i++) {
+
+        var object = new CSS3DObject(uploads[i]);
+        object.position.x = Math.random() * 4000 - 2000;
+        object.position.y = Math.random() * 4000 - 2000;
+        object.position.z = Math.random() * 4000 - 2000;
+        scene.add(object);
+
+        objects.push(object);
+
+        // grid
+
+        var object = new THREE.Object3D();
+        object.position.x = ((i % 5) * 400) - 800;
+        object.position.y = (-(Math.floor(i / 5) % 5) * 400) + 200;
+        object.position.z = (Math.floor(i / 25)) * 1000 - 2000;
+
+        targets.grid.push(object);
+
+        // helix 
+
+        var theta = i * 0.175 + Math.PI;
+        var y = - ( i * 8 ) + 450;
+        
+        var object = new THREE.Object3D();
+        
+        object.position.setFromCylindricalCoords( 2500, theta, y );
+
+        var vector = new THREE.Vector3();
+        
+        vector.x = object.position.x * 2;
+        vector.y = object.position.y;
+        vector.z = object.position.z * 2;
+        
+        object.lookAt(vector);
+        
+        targets.helix.push( object );
+
+        // sphere
+
+        var l = uploads.length;
+
+        var phi = Math.acos( - 1 + ( 2 * i ) / l );
+        var theta = Math.sqrt( l * Math.PI ) * phi;
+        
+        var object = new THREE.Object3D();
+        
+        object.position.setFromSphericalCoords( 800, phi, theta );
+
+        var vector = new THREE.Vector3();
+        
+        vector.copy( object.position ).multiplyScalar( 2 );
+        
+        object.lookAt( vector );
+
+        targets.sphere.push( object );
+      }
+
+      // 3D renderer
+      renderer = new CSS3DRenderer();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      container.hidden = false;
+      container.appendChild(renderer.domElement);
+
+      // camera controls
+      controls = new TrackballControls(camera, renderer.domElement);
+      controls.minDistance = 500;
+      controls.maxDistance = 6000;
+      controls.addEventListener('change', render);
+
+      transform(targets.sphere, 2000);
+
+      window.addEventListener('resize', onWindowResize, false);
+    }
+
+    function transform(targets, duration) {
+      
+      TWEEN.removeAll();
+
+      for (var i = 0; i < objects.length; i ++) {
+
+        var object = objects[i];
+        var target = targets[i];
+
+        new TWEEN.Tween(object.position)
+          .to({ x: target.position.x, y: target.position.y, z: target.position.z }, Math.random() * duration + duration)
+          .easing(TWEEN.Easing.Exponential.InOut)
+          .start();
+
+        new TWEEN.Tween(object.rotation)
+          .to({ x: target.rotation.x, y: target.rotation.y, z: target.rotation.z }, Math.random() * duration + duration)
+          .easing(TWEEN.Easing.Exponential.InOut)
+          .start();
+      }
+
+      new TWEEN.Tween(this)
+        .to({}, duration * 2)
+        .onUpdate(render)
+        .start();
+    }
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      render();
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      TWEEN.update();
+      controls.update();
+    }
+
+    function render() {
+      renderer.render(scene, camera);
+    }
+
+    function change() {
+      if(x == 0)
+        transform(targets.helix, 2000);
+      else if(x == 1)
+        transform(targets.grid, 2000);
+      else
+        transform(targets.sphere, 2000);
+      x++;
+      if(x == 3)
+        x = 0
+      setTimeout(change, 10000);
+    }

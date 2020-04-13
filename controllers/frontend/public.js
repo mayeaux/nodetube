@@ -1,5 +1,9 @@
 const redisClient = require('../../config/redis');
 
+const getFromCache = require('../../caching/getFromCache');
+const uploadHelpers = require('../../lib/helpers/settings');
+const uploadServer = uploadHelpers.uploadServer;
+
 const Upload = require('../../models/index').Upload;
 
 const logCaching = process.env.LOG_CACHING;
@@ -29,6 +33,7 @@ exports.index = async(req, res) => {
 
   const response = indexResponse;
   let mediaAmount, channelAmount, viewAmount;
+  let uploads;
 
   if(!response){
     mediaAmount = 0;
@@ -38,6 +43,8 @@ exports.index = async(req, res) => {
     mediaAmount = response.mediaAmount;
     channelAmount = response.channelAmount;
     viewAmount = response.viewAmount;
+
+    uploads = await getFromCache.getPopularUploads("24hour", 150, 0, "all", "SFW", "all", "");
   }
 
   // console.log(viewAmount);
@@ -48,7 +55,9 @@ exports.index = async(req, res) => {
     title: 'Home',
     mediaAmount,
     channelAmount,
-    viewAmount
+    viewAmount,
+    uploadServer,
+    uploads
   });
 };
 
