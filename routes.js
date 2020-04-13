@@ -130,6 +130,7 @@ function frontendRoutes(app){
 
   /** publicly available routes **/
   app.get('/', publicController.index);
+  app.get('/globe', publicController.globe);
   app.get('/about', publicController.about);
   app.get('/docs', publicController.getDocs);
   app.get('/termsofservice', publicController.tos);
