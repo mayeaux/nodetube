@@ -34,7 +34,18 @@ exports.index = async(req, res) => {
 
   const title = "Home";
 
-  if(defaultLandingPage == "default") {
+  if(defaultLandingPage == "globe") {
+
+    // get 150 most popular uploads in last 24h that are sfw and from any category
+    let uploads = await getFromCache.getPopularUploads("24hour", 150, 0, "all", "SFW", "all", "");
+
+    res.render('public/globe', {
+      title,
+      uploadServer,
+      uploads
+    });
+
+  } else {
 
     const response = indexResponse;
     let mediaAmount, channelAmount, viewAmount;
@@ -57,15 +68,6 @@ exports.index = async(req, res) => {
       uploadServer
     });
 
-  } else {
-
-    let uploads = await getFromCache.getPopularUploads("24hour", 150, 0, "all", "SFW", "all", "");
-
-    res.render('public/globe', {
-      title,
-      uploadServer,
-      uploads
-    });
   }
 };
 
