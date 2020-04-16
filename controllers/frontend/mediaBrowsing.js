@@ -134,7 +134,7 @@ exports.recentUploads = async(req, res) => {
     const recentPopular = 'recent';
 
     for(const upload of uploads) {
-      await addValuesIfNecessary(upload, user.channelUrl);
+      addValuesIfNecessary(upload, upload.uploader.channelUrl);
     }
 
 
@@ -321,9 +321,11 @@ exports.popularUploads = async(req, res) => {
     //
     // console.log('getting popular uploads');
 
-    for(const upload in uploads) {
-      // console.log(upload);
-      await addValuesIfNecessary(upload, user.channelUrl);
+    if(uploads && uploads.length){
+      for(const upload in uploads) {
+        console.log(upload);
+        addValuesIfNecessary(upload, upload.uploader && upload.uploader.channelUrl);
+      }
     }
 
     res.render('mediaBrowsing/popularUploads', {
