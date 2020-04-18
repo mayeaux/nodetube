@@ -14,7 +14,7 @@ block content
         script(src='https://cdn.jsdelivr.net/npm/hls.js@latest')
         .container
           .col-md-9
-            video#video(controls style="width: 100%;margin-top: 30px;")
+            video#media_player.display-element(controls='' style="width: 100%;margin-top: 30px;")
 
           .col-md-3.panel.panel-default
             .videoContainer(style="")
@@ -277,4 +277,12 @@ block content
             messageSocket.send(JSON.stringify({message: 'KEEP-ALIVE'}));
 
           }, 1000 * 10);
+  
+block extra_css
+  link(rel="stylesheet" href="https://cdn.plyr.io/3.5.10/plyr.css")
+
+block extra_footer_js
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/plyr/3.5.10/plyr.min.js")
+
+  include ../mediaPlayerPartials/livestreamPlyrFunctionalityJs
 
