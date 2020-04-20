@@ -10,7 +10,7 @@ a.title-anchor(href=`/user/${upload.uploader.channelUrl || channelUrl}/${upload.
             img.preview-image(src=`${uploadServer}/${channelUrl || upload.uploader.channelUrl}/${upload.thumbnails.medium}` style="")
 
         else if upload.fileType == 'video' && !upload.thumbnailUrl
-            img.preview-image(src="/no_img.png")
+            img.preview-image(src="/images/no_img.png")
 
         else if upload.fileType == 'image'
             // TODO: have to fix this

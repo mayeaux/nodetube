@@ -20,7 +20,7 @@ var concat = require('concat-files');
 var Busboy = require('busboy');
 const mkdirp = Promise.promisifyAll(require('mkdirp'));
 const mv = require('mv');
-const nodemailer = require('nodemailer');
+const { notificationsTransport } = require('../../config/nodemailer');
 
 const backblaze = require('../../lib/uploading/backblaze');
 
@@ -46,7 +46,7 @@ if(process.env.THUMBNAIL_SERVER){
 
 const frontendServer = process.env.FRONTEND_SERVER || '';
 
-const createNotification = require('../../lib/helpers/notifications');
+const { createNotification, generateNotificationHtml} = require('../../lib/helpers/notifications');
 
 // models
 const Upload = require('../../models/index').Upload;
@@ -409,24 +409,8 @@ exports.subscribeEndpoint = async function(req, res, next){
       console.log('here');
 
       if(receivingUser.email && receivingUser.emailConfirmed) {
-        var html = `<h1>New Subscriber</h1>`;
 
-        html += `<p>Hello, ${receivingUser.channelName}.<p>`
-
-        if(!upload)
-          html += "<div><b>A user has subscribed to your channel from your channel page.</b>";
-        else
-          html += `<div><b>A user has subscribed to your channel from your ${upload.fileType} <a href='${process.env.DOMAIN_NAME_AND_TLD}/user/${receivingUser.channelUrl}/${upload.uniqueTag}'>${upload.title}</a>.</b>`
-
-        html += `<br><small>${notification.timeAgo}</small></div><p>Congratulations, keep growing!</p><p>Best regards,<br><b>${process.env.INSTANCE_BRAND_NAME}</b>.</p>`;
-
-        var transporter = nodemailer.createTransport({
-          service: process.env.EMAIL_HOST,
-          auth: {
-            user: process.env.EMAIL_ADDRESS,
-            pass: process.env.EMAIL_PASSWORD
-          }
-        });
+        var html = generateNotificationHtml(notification);
 
         var mailOptions = {
           from: process.env.EMAIL_ADDRESS,
@@ -437,10 +421,10 @@ exports.subscribeEndpoint = async function(req, res, next){
 
         console.log(mailOptions);
 
-        transporter.sendMail(mailOptions, function(error, info) {
+        notificationsTransport.sendMail(mailOptions, function(error, info) {
           if(error) 
             console.log("ERROR SENDING NOTIFICATION EMAIL - " + info)
-        })
+        });
       }
 
     }
@@ -486,8 +470,10 @@ exports.react = async(req, res, next)  => {
     return res.send('Thing');
   }
 
+  var newReact;
+
   if(!existingReact){
-    const newReact = new React({
+    newReact = new React({
       upload: req.params.upload,
       user: req.params.user,
       react: req.body.emoji,
@@ -525,11 +511,29 @@ exports.react = async(req, res, next)  => {
     console.log('THIS SHOULDN\'T BE TRIGGERED, THE LOGIC IS OFF');
   }
 
-  // add a notification
-
   // create notif for comment on your upload if its not your own thing
   if(upload.uploader._id.toString() !== req.user._id.toString()){
-    await createNotification(upload.uploader._id, req.user._id, 'react', upload, newReact);
+    var notification = await createNotification(upload.uploader._id, req.user._id, 'react', upload, newReact, undefined);
+    if(req.user.email && req.user.emailConfirmed) {
+
+      var html = generateNotificationHtml(notification);
+  
+      var mailOptions = {
+        from: process.env.EMAIL_ADDRESS,
+        to: req.user.email,
+        subject: 'New React - ' + process.env.INSTANCE_BRAND_NAME,
+        html
+      }
+
+      console.log(mailOptions);
+
+      notificationsTransport.sendMail(mailOptions, function(error, info) {
+        if(error) 
+          console.log("ERROR SENDING NOTIFICATION EMAIL - " + info)
+        else
+          console.log("EMAIL NOTIFICATION SENT");
+      });
+    }
   }
 
   res.send('new react created');
@@ -777,7 +781,27 @@ exports.postComment = async(req, res) => {
 
     // create notif for comment on your upload if its not your own thing
     if(upload.uploader._id.toString() !== req.user._id.toString()){
-      await createNotification(upload.uploader._id, req.user._id, 'comment', upload, undefined, comment);
+      var notification = await createNotification(upload.uploader._id, req.user._id, 'comment', upload, undefined, comment);
+
+      if(req.user.email && req.user.emailConfirmed) {
+        var html = generateNotificationHtml(notification);
+  
+        var mailOptions = {
+          from: process.env.EMAIL_ADDRESS,
+          to: req.user.email,
+          subject: 'New Comment - ' + process.env.INSTANCE_BRAND_NAME,
+          html
+        }
+
+        console.log(mailOptions);
+
+        notificationsTransport.sendMail(mailOptions, function(error, info) {
+          if(error) 
+            console.log("ERROR SENDING NOTIFICATION EMAIL - " + info)
+          else
+            console.log("EMAIL NOTIFICATION SENT");
+        });
+      }
     }
 
     // if its a reply comment send a notification to the original commenter
@@ -790,7 +814,27 @@ exports.postComment = async(req, res) => {
       const user = repliedToComment.commenter;
 
       if(user._id.toString() !== req.user._id.toString()){
-        await createNotification(user._id, req.user._id, 'comment', upload, undefined, comment);
+        notification = await createNotification(user._id, req.user._id, 'comment', upload, undefined, comment);
+
+        if(req.user.email && req.user.emailConfirmed) {
+          var html = generateNotificationHtml(notification);
+    
+          var mailOptions = {
+            from: process.env.EMAIL_ADDRESS,
+            to: req.user.email,
+            subject: 'New Comment Response - ' + process.env.INSTANCE_BRAND_NAME,
+            html
+          }
+  
+          console.log(mailOptions);
+  
+          notificationsTransport.sendMail(mailOptions, function(error, info) {
+            if(error) 
+              console.log("ERROR SENDING NOTIFICATION EMAIL - " + info)
+            else
+              console.log("EMAIL NOTIFICATION SENT");
+          });
+        }
       }
     }
 
