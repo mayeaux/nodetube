@@ -126,7 +126,7 @@ exports.getMedia = async(req, res) => {
 
     const shouldCreateAView = await checkWhetherToCountView(siteVisitorId, uploadID);
 
-    console.log(shouldCreateAView);
+    // console.log(shouldCreateAView);
 
     if(shouldCreateAView){
       // get all the views for this upload for this user
