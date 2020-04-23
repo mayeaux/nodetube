@@ -46,6 +46,8 @@ html
 
         link(rel='stylesheet', href='/css/main.css')
         link(rel='stylesheet', href='/css/nodetube.css')
+        link(rel="stylesheet" href="https://cdn.plyr.io/3.5.10/plyr.css")
+
 
 
 
@@ -85,12 +87,19 @@ html
     body
         div.display-div
 
-            if upload.fileType == 'video'
-                video.display-element(poster=upload.thumbnailUrl controls='')
-                    // TODO: Sub out thumbnail here
 
-                    source(src=`${protocolDomainNameAndTLD}/uploads/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`, type='video/mp4')
-                    source(src=upload.uploadUrl, type='video/mp4')
+            if upload.fileType == 'video'
+
+                video#media_player.display-element(poster=`${'http://localhost:3000'}/uploads/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;")
+                    // to
+                    source.video-source(src=`${'http://localhost:3000'}/uploads/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`, type='video/mp4')
+
+
+                //video.display-element(poster=upload.thumbnailUrl controls='')
+                //    // TODO: Sub out thumbnail here
+                //
+                //    source(src=`${'http://localhost:3000'}/uploads/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`, type='video/mp4')
+                //    source(src=upload.uploadUrl, type='video/mp4')
             else if upload.fileType == 'image'
                 img.display-element(src=upload.uploadUrl style="height:100%;width:100%")
             else if upload.fileType == 'audio'
@@ -101,9 +110,39 @@ html
 
 
 
-        script(src="https://cdn.plyr.io/2.0.16/plyr.js")
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/plyr/3.5.10/plyr.min.js")
 
         script.
-          plyr.setup({
-            autoplay: false
-          });
+          var plyr_options = {
+            autoplay: true,
+            clickToPlay: true,
+            controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'fullscreen', 'download'],
+            settings: ['speed', 'captions', 'quality', 'speed', 'loop']
+          };
+
+          // Create the plyr instances - this defines players[0] as our primary player.
+          var players = Plyr.setup("#media_player", plyr_options);
+
+//          players[0].on('ready', function (event) {
+//            // set video max-height to 620px
+//            $('.display-element').css('max-height', '620px');
+//          });
+//
+//          players[0].on('enterfullscreen', function (event) {
+//
+//            $('.display-element').css('max-height', "")
+//
+//
+//            // remove video max-height
+//
+//          });
+//
+//          players[0].on('exitfullscreen', function (event) {
+//            // add max height
+//            $('.display-element').css('max-height', '620px')
+//          });
+//
+//          $("[data-plyr=seek]").css('cursor', 'pointer')
+//
+//          $("[data-plyr=volume]").css('cursor', 'pointer')
+
