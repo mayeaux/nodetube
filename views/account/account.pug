@@ -367,23 +367,23 @@ block content
           label.fw.col-sm-3.control-label(for='comments' style="font-size:16px") Comments
           .col-sm-1
             if user.emailNotifications.comments == true
-              input.form-control(type='checkbox', name='comments', id='comments', class='email-options', checked='true')
+              input.form-control(type='checkbox', name='comments', id='comments', class='email-options', data-toggle="toggle", checked='true')
             else
-              input.form-control(type='checkbox', name='comments', id='comments', class='email-options')
+              input.form-control(type='checkbox', name='comments', id='comments', class='email-options', data-toggle="toggle")
         .form-group
           label.fw.col-sm-3.control-label(for='reacts' style="font-size:16px") Reacts
           .col-sm-1
             if user.emailNotifications.reacts == true
-              input.form-control(type='checkbox', name='reacts', id='reacts', class='email-options', checked='true')
+              input.form-control(type='checkbox', name='reacts', id='reacts', class='email-options', data-toggle="toggle", checked='true')
             else
-              input.form-control(type='checkbox', name='reacts', id='reacts', class='email-options')
+              input.form-control(type='checkbox', name='reacts', id='reacts', class='email-options', data-toggle="toggle")
         .form-group
           label.fw.col-sm-3.control-label(for='subscriptions' style="font-size:16px") Subscriptions
           .col-sm-1
             if user.emailNotifications.subscriptions == true
-              input.form-control(type='checkbox', name='subscriptions', id='subscriptions', class='email-options', checked='true')
+              input.form-control(type='checkbox', name='subscriptions', id='subscriptions', class='email-options', data-toggle="toggle", checked='true')
             else
-              input.form-control(type='checkbox', name='subscriptions', id='subscriptions', class='email-options')
+              input.form-control(type='checkbox', name='subscriptions', id='subscriptions', class='email-options', data-toggle="toggle")
 
   script.
     //.delete-user-thumbnail-form
