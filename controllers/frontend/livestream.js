@@ -8,12 +8,17 @@ exports.getLiveRTMP = (req, res) => {
 
   const channelUrl = req.params.user;
 
+  const allowedToDoLivestreaming = req.user.privs.livestreaming;
+
+  console.log(req.user);
+
   console.log(channelUrl);
 
   res.render('livestream/rtmp', {
     channelUrl,
     title: 'Livestream ',
-    env: process.env.NODE_ENV
+    env: process.env.NODE_ENV,
+    allowedToDoLivestreaming
   });
 };
 

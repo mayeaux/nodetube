@@ -12,22 +12,28 @@ block content
 
     body
         script(src='https://cdn.jsdelivr.net/npm/hls.js@latest')
-        .container
-          .col-md-9
-            video#video(controls style="width: 100%;margin-top: 30px;")
 
-          .col-md-3.panel.panel-default
-            .videoContainer(style="")
-              .messages
-                  h4.userAmount Watching: 1
-                  #messages-scrollview(style='max-height: 60vh; overflow-y: auto')
-                      ul.message-list.list-group
-              .form-inline(style="margin: 10px")
-                .form-group
-                  input.message-text.form-control(type='text', placeholder='Message')
-                .form-group
-                  button.send-text.btn.btn-primary Send
-              p.countdown-timer Countdown to send new message: 10 seconds
+        if allowedToDoLivestreaming
+          .container
+            .col-md-9
+              video#video(controls style="width: 100%;margin-top: 30px;")
+
+            .col-md-3.panel.panel-default
+              .videoContainer(style="")
+                .messages
+                    h4.userAmount Watching: 1
+                    #messages-scrollview(style='max-height: 60vh; overflow-y: auto')
+                        ul.message-list.list-group
+                .form-inline(style="margin: 10px")
+                  .form-group
+                    input.message-text.form-control(type='text', placeholder='Message')
+                  .form-group
+                    button.send-text.btn.btn-primary Send
+                p.countdown-timer Countdown to send new message: 10 seconds
+        else
+          br
+          br
+          h3 Sorry this user doesn't have livestreaming credentials
         script.
           var channelUrl = '#{channelUrl}'
 

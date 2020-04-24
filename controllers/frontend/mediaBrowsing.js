@@ -57,7 +57,7 @@ async function addValuesIfNecessary(upload, channelUrl) {
 
       try {
         const duration = await getUploadDuration(uploadLocation, upload.fileType);
-        console.log(duration);
+        // console.log(duration);
 
         let uploadDocument = await Upload.findOne({uniqueTag: upload.uniqueTag});
 
@@ -323,7 +323,7 @@ exports.popularUploads = async(req, res) => {
 
     if(uploads && uploads.length){
       for(const upload in uploads) {
-        console.log(upload);
+        // console.log(upload);
         addValuesIfNecessary(upload, upload.uploader && upload.uploader.channelUrl);
       }
     }
