@@ -1,8 +1,13 @@
 const redisClient = require('../../config/redis');
 
+const getFromCache = require('../../caching/getFromCache');
+const uploadHelpers = require('../../lib/helpers/settings');
+const uploadServer = uploadHelpers.uploadServer;
+
 const Upload = require('../../models/index').Upload;
 
 const logCaching = process.env.LOG_CACHING;
+const defaultLandingPage = process.env.DEFAULT_LANDING_PAGE;
 
 // TODO: pull into its own func
 let indexResponse;
@@ -27,28 +32,57 @@ if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false'){
  */
 exports.index = async(req, res) => {
 
-  const response = indexResponse;
-  let mediaAmount, channelAmount, viewAmount;
+  const title = "Home";
 
-  if(!response){
-    mediaAmount = 0;
-    channelAmount = 0;
-    viewAmount = 0;
+  if(defaultLandingPage == "globe") {
+
+    // get 150 most popular uploads in last 24h that are sfw and from any category
+    let uploads = await getFromCache.getPopularUploads("24hour", 150, 0, "all", "SFW", "all", "");
+
+    res.render('public/globe', {
+      title,
+      uploadServer,
+      uploads
+    });
+
   } else {
-    mediaAmount = response.mediaAmount;
-    channelAmount = response.channelAmount;
-    viewAmount = response.viewAmount;
+
+    const response = indexResponse;
+    let mediaAmount, channelAmount, viewAmount;
+
+    if(!response){
+      mediaAmount = 0;
+      channelAmount = 0;
+      viewAmount = 0;
+    } else {
+      mediaAmount = response.mediaAmount;
+      channelAmount = response.channelAmount;
+      viewAmount = response.viewAmount;
+    }
+
+    res.render('public/home', {
+      title,
+      mediaAmount,
+      channelAmount,
+      viewAmount,
+      uploadServer
+    });
+
   }
+};
 
-  // console.log(viewAmount);
+/**
+ * GET /globe
+ * Globe page.
+ */
+exports.globe = async(req, res) => {
 
-  // console.log('set index');
+  let uploads = await getFromCache.getPopularUploads("24hour", 150, 0, "all", "SFW", "all", "");
 
-  res.render('public/home', {
-    title: 'Home',
-    mediaAmount,
-    channelAmount,
-    viewAmount
+  res.render('public/globe', {
+    title: 'Globe',
+    uploadServer,
+    uploads
   });
 };
 
@@ -107,7 +141,8 @@ exports.getEmbed = async function(req, res){
 
   res.render('public/embed', {
     title: 'Embed',
-    upload
+    upload,
+    protocolDomainNameAndTLD: process.env.DOMAIN_NAME_AND_TLD
   });
 };
 

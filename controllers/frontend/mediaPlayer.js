@@ -5,6 +5,8 @@ const timeHelper = require('../../lib/helpers/time');
 
 const uploadHelpers = require('../../lib/helpers/settings');
 
+const checkWhetherToCountView = require('../../middlewares/shared/viewCounting');
+
 const { bytesToGb, bytesToMb } = require('../../lib/uploading/helpers');
 
 const categories = require('../../config/categories');
@@ -119,18 +121,28 @@ exports.getMedia = async(req, res) => {
       upload: upload.id
     });
 
-    // TODO: do fraud detection
-    const view = new View({
-      siteVisitor : req.siteVisitor._id,
-      upload : upload._id,
-      validity: 'real'
-    });
+    const siteVisitorId = req.siteVisitor._id;
+    const uploadID = upload._id;
 
-    await view.save();
-    upload.checkedViews.push(view);
+    const shouldCreateAView = await checkWhetherToCountView(siteVisitorId, uploadID);
 
-    // console.log(upload);
-    await upload.save();
+    // console.log(shouldCreateAView);
+
+    if(shouldCreateAView){
+      // get all the views for this upload for this user
+      // TODO: add a rule to only get the last 24h of worth of views
+      const view = new View({
+        siteVisitor : req.siteVisitor._id,
+        upload : upload._id,
+        validity: 'real'
+      });
+
+      await view.save();
+      upload.checkedViews.push(view);
+
+      // console.log(upload);
+      await upload.save();
+    }
 
     // originalFileSizeInMb: Number,
     // processedFileSizeInMb: Number,
@@ -169,7 +181,8 @@ exports.getMedia = async(req, res) => {
       viewingUserIsBlocked,
       brandName,
       secondsToFormattedTime,
-      formattedFileSize
+      formattedFileSize,
+      domainName: process.env.DOMAIN_NAME_AND_TLD
     });
 
   } catch(err){

@@ -511,7 +511,9 @@ exports.react = async(req, res, next)  => {
     console.log('THIS SHOULDN\'T BE TRIGGERED, THE LOGIC IS OFF');
   }
 
-  // create notif for comment on your upload if its not your own thing
+  // add a notification
+
+  // create notif for comment on your upload if its not your own upload
   if(upload.uploader._id.toString() !== req.user._id.toString()){
     let notification = await createNotification(upload.uploader._id, req.user._id, 'react', upload, newReact, undefined);
     if(req.user.email && req.user.emailConfirmed && (req.user.emailNotifications.reacts == true || req.user.emailNotifications.reacts == undefined) && process.env.NOTIFICATION_EMAILS_ENABLED == "true") {
