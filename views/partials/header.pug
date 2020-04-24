@@ -59,14 +59,15 @@ style.
         if user
 
           // support dropdown
-          if user.role == 'support' || user.role == 'admin'
-            li.dropdown(class=(title == 'Admin Panel') ? 'active' : undefined)
-              a.dropdown-toggle(href='#', data-toggle='dropdown')
-                span= 'Support'
-                i.caret
-              ul.dropdown-menu(style="background-color:rgb(24,55,147);max-width: 100px;min-width:100px;margin-right: -6px;")
-                li(class=(title == 'Emails') ? 'active' : undefined)
-                  a.dropdown-anchors(href=`/support/emails`) Emails
+          // TODO: turning this off because it's not turned on atm
+          //if user.role == 'support' || user.role == 'admin'
+          //  li.dropdown(class=(title == 'Admin Panel') ? 'active' : undefined)
+          //    a.dropdown-toggle(href='#', data-toggle='dropdown')
+          //      span= 'Support'
+          //      i.caret
+          //    ul.dropdown-menu(style="background-color:rgb(24,55,147);max-width: 100px;min-width:100px;margin-right: -6px;")
+          //      li(class=(title == 'Emails') ? 'active' : undefined)
+          //        a.dropdown-anchors(href=`/support/emails`) Emails
 
           // moderator dropdown
           if user.role == 'moderator' || user.role == 'admin'
@@ -88,25 +89,28 @@ style.
                 i.caret
               ul.dropdown-menu(style="background-color:rgb(24,55,147);max-width: 159px;margin-right: -47px;")
                 li
-                  a.dropdown-anchors(href=`/admin/adminAudit`) Admin Audit
-                li(class=(title == 'Comments') ? 'active' : undefined)
-                  a.dropdown-anchors(href=`/admin/comments`) Comments
+                  a.dropdown-anchors(href=`/admin/dailyStats`) Daily Stats
+
                 li(class=(title == 'Uploads') ? 'active' : undefined)
                   a.dropdown-anchors(href=`/admin/uploads`) Uploads
                 li(class=(title == 'Users') ? 'active' : undefined)
                   a.dropdown-anchors(href=`/admin/users`) Users
+                li(class=(title == 'Comments') ? 'active' : undefined)
+                  a.dropdown-anchors(href=`/admin/comments`) Comments
                 li
                   a.dropdown-anchors(href=`/admin/siteVisitors`) Site Visitors
-                li
-                  a.dropdown-anchors(href=`/admin/dailyStats`) Daily Stats
                 li
                   a.dropdown-anchors(href=`/admin/reacts`) Reacts
                 li
                   a.dropdown-anchors(href=`/admin/subscriptions`) Subscriptions
                 li
-                  a.dropdown-anchors(href=`/admin/createSocialPost`) Create Social Post
-                li
-                  a.dropdown-anchors(href=`/admin/oneOffSocialPost`) One Off Social Post
+                  a.dropdown-anchors(href=`/admin/adminAudit`) Admin Audit
+
+                // TODO: turning this off because it's not turned on
+                //li
+                //  a.dropdown-anchors(href=`/admin/createSocialPost`) Create Social Post
+                //li
+                //  a.dropdown-anchors(href=`/admin/oneOffSocialPost`) One Off Social Post
 
         //li(class=(title == 'Features') ? 'active' : undefined)
         //  a(href=`/features`) Features
