@@ -410,9 +410,9 @@ exports.subscribeEndpoint = async function(req, res, next){
 
       if(receivingUser.email && receivingUser.emailConfirmed) {
 
-        var html = generateNotificationHtml(notification);
+        let html = generateNotificationHtml(notification);
 
-        var mailOptions = {
+        let mailOptions = {
           from: process.env.EMAIL_ADDRESS,
           to: receivingUser.email,
           subject: 'New Subscriber - ' + process.env.INSTANCE_BRAND_NAME,
@@ -470,7 +470,7 @@ exports.react = async(req, res, next)  => {
     return res.send('Thing');
   }
 
-  var newReact;
+  let newReact;
 
   if(!existingReact){
     newReact = new React({
@@ -513,12 +513,12 @@ exports.react = async(req, res, next)  => {
 
   // create notif for comment on your upload if its not your own thing
   if(upload.uploader._id.toString() !== req.user._id.toString()){
-    var notification = await createNotification(upload.uploader._id, req.user._id, 'react', upload, newReact, undefined);
+    let notification = await createNotification(upload.uploader._id, req.user._id, 'react', upload, newReact, undefined);
     if(req.user.email && req.user.emailConfirmed) {
 
-      var html = generateNotificationHtml(notification);
+      let html = generateNotificationHtml(notification);
   
-      var mailOptions = {
+      let mailOptions = {
         from: process.env.EMAIL_ADDRESS,
         to: req.user.email,
         subject: 'New React - ' + process.env.INSTANCE_BRAND_NAME,
@@ -781,12 +781,12 @@ exports.postComment = async(req, res) => {
 
     // create notif for comment on your upload if its not your own thing
     if(upload.uploader._id.toString() !== req.user._id.toString()){
-      var notification = await createNotification(upload.uploader._id, req.user._id, 'comment', upload, undefined, comment);
+      let notification = await createNotification(upload.uploader._id, req.user._id, 'comment', upload, undefined, comment);
 
       if(req.user.email && req.user.emailConfirmed) {
-        var html = generateNotificationHtml(notification);
+        let html = generateNotificationHtml(notification);
   
-        var mailOptions = {
+        let mailOptions = {
           from: process.env.EMAIL_ADDRESS,
           to: req.user.email,
           subject: 'New Comment - ' + process.env.INSTANCE_BRAND_NAME,
@@ -817,9 +817,9 @@ exports.postComment = async(req, res) => {
         notification = await createNotification(user._id, req.user._id, 'comment', upload, undefined, comment);
 
         if(req.user.email && req.user.emailConfirmed) {
-          var html = generateNotificationHtml(notification);
+          let html = generateNotificationHtml(notification);
     
-          var mailOptions = {
+          let mailOptions = {
             from: process.env.EMAIL_ADDRESS,
             to: req.user.email,
             subject: 'New Comment Response - ' + process.env.INSTANCE_BRAND_NAME,
