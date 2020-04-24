@@ -408,7 +408,7 @@ exports.subscribeEndpoint = async function(req, res, next){
 
       console.log('here');
 
-      if(receivingUser.email && receivingUser.emailConfirmed) {
+      if(receivingUser.email && receivingUser.emailConfirmed && (receivingUser.emailNotifications.subscriptions == true || receivingUser.emailNotifications.subscriptions == undefined) && process.env.NOTIFICATION_EMAILS_ENABLED == "true") {
 
         let html = generateNotificationHtml(notification);
 
@@ -514,7 +514,7 @@ exports.react = async(req, res, next)  => {
   // create notif for comment on your upload if its not your own thing
   if(upload.uploader._id.toString() !== req.user._id.toString()){
     let notification = await createNotification(upload.uploader._id, req.user._id, 'react', upload, newReact, undefined);
-    if(req.user.email && req.user.emailConfirmed) {
+    if(req.user.email && req.user.emailConfirmed && (req.user.emailNotifications.reacts == true || req.user.emailNotifications.reacts == undefined) && process.env.NOTIFICATION_EMAILS_ENABLED == "true") {
 
       let html = generateNotificationHtml(notification);
   
@@ -783,7 +783,7 @@ exports.postComment = async(req, res) => {
     if(upload.uploader._id.toString() !== req.user._id.toString()){
       let notification = await createNotification(upload.uploader._id, req.user._id, 'comment', upload, undefined, comment);
 
-      if(req.user.email && req.user.emailConfirmed) {
+      if(req.user.email && req.user.emailConfirmed && (req.user.emailNotifications.comments == true || req.user.emailNotifications.comments == undefined) && process.env.NOTIFICATION_EMAILS_ENABLED == "true") {
         let html = generateNotificationHtml(notification);
   
         let mailOptions = {
