@@ -487,10 +487,10 @@ exports.postEmailOptions = async(req, res, next) => {
       user.emailNotifications.subscriptions = req.body.subscriptions;
       user.save((err) => {
         if(err){ return next(err); }
-        res.redirect('/account');
+        res.send("email options updated");
       });
     });
   } catch(err) {
-
+    res.render('error/500');
   }
 }
