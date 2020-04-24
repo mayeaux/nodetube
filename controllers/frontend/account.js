@@ -855,7 +855,9 @@ exports.livestreaming = async(req, res) =>
 
   const ipAddress = networkInterfaces.lo0 && networkInterfaces.lo0[0].address || networkInterfaces.eth0[0].address ;
 
-  const rtmpUrl = 'rtmp' + '://' + ipAddress + ':1935' + `/live/${req.user.channelUrl}?key=${req.user.uploadToken}`;
+  const address = process.env.LIVESTREAM_RTMP_DOMAIN || ipAddress;
+
+  const rtmpUrl = 'rtmp' + '://' + address + ':1935' + `/live/${req.user.channelUrl}?key=${req.user.uploadToken}`;
 
   // var ip = require('os').networkInterfaces().eth0[0].address;
   //
@@ -869,7 +871,7 @@ exports.livestreaming = async(req, res) =>
 
   const viewingDomain =  req.protocol + '://' + req.get('host') + `/live/${req.user.channelUrl}`;
 
-  const livestreamRtmpDomain  = process.env.LIVESTREAM_RTMP_DOMAIN || rtmpUrl;
+  const livestreamRtmpDomain  = rtmpUrl;
   const livestreamViewingDomain = process.env.LIVESTREAM_VIEWING_DOMAIN || viewingDomain;
 
   console.log(livestreamRtmpDomain, livestreamViewingDomain);
