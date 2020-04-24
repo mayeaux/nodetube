@@ -141,7 +141,8 @@ exports.getEmbed = async function(req, res){
 
   res.render('public/embed', {
     title: 'Embed',
-    upload
+    upload,
+    protocolDomainNameAndTLD: process.env.DOMAIN_NAME_AND_TLD
   });
 };
 
