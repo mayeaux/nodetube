@@ -711,6 +711,8 @@ exports.getAccount = async(req, res) => {
 
   const plusEnabled = process.env.PLUS_ENABLED == 'true';
 
+  const verifyEmailFunctionalityOn = process.env.CONFIRM_EMAIL_FUNCTIONALITY_ON == 'true';
+
   // give user an upload token
   if(!req.user.uploadToken){
     const uploadToken = randomstring.generate(25);
@@ -728,7 +730,8 @@ exports.getAccount = async(req, res) => {
     stripeToken,
     uploadServer,
     thumbnailServer,
-    plusEnabled
+    plusEnabled,
+    verifyEmailFunctionalityOn
   });
 };
 
