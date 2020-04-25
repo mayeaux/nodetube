@@ -295,47 +295,52 @@ block content
             i.fa.fa-pencil
             | Delete
 
-    // IF USER HAS CONFIRMED EMAIL
-    if user.email && user.emailConfirmed
-      h2.fw.text-center Confirmed Email
-        br
-      form.form-horizontal(action='/account/email', method='POST')
-        input(type='hidden', name='_csrf', value=_csrf)
-        .form-group
-          label.col-sm-3.control-label(for='email') Email Address
-          .col-sm-7
-            h5 #{user.email}
+    // EMAIL FUNCTIONALITY
 
-    // Turning off for the time being, it should be conditional based on a flag
-    //if user.email && !user.emailConfirmed
-    //  h3.text-center Save Email
-    //    br
-    //  form.form-horizontal(action='/account/email', method='POST')
-    //    input(type='hidden', name='_csrf', value=_csrf)
-    //    .form-group
-    //      label.col-sm-3.control-label(for='email') Email Address
-    //      .col-sm-7
-    //        input.form-control(type='email', name='email', id='email' value=`${user.email}`)
-    //    .form-group
-    //      .col-sm-offset-3.col-sm-4
-    //        button.btn.btn-primary(type='submit')
-    //          i.fa.fa-envelope
-    //          | Resend Confirmation Email
+    if verifyEmailFunctionalityOn
 
-    //if !user.email
-    //  h3.text-center Save Email
-    //    br
-    //  form.form-horizontal(action='/account/email', method='POST')
-    //    input(type='hidden', name='_csrf', value=_csrf)
-    //    .form-group
-    //      label.col-sm-3.control-label(for='email') Email Address
-    //      .col-sm-7
-    //        input.form-control(type='email', name='email', id='email')
-    //    .form-group
-    //      .col-sm-offset-3.col-sm-4
-    //        button.btn.btn-primary(type='submit')
-    //          i.fa.fa-envelope
-    //          | Send Confirmation Email
+      // IF USER HAS CONFIRMED EMAIL
+      if user.email && user.emailConfirmed
+        h2.fw.text-center Confirmed Email
+          br
+        form.form-horizontal(action='/account/email', method='POST')
+          input(type='hidden', name='_csrf', value=_csrf)
+          .form-group
+            label.col-sm-3.control-label(for='email') Email Address
+            .col-sm-7
+              h5 #{user.email}
+
+      // IS USER HAS PENDING CONFIRMATION EMAIL
+      if user.email && !user.emailConfirmed
+        h3.fw.text-center Save Email
+          br
+        form.form-horizontal(action='/account/email', method='POST')
+          input(type='hidden', name='_csrf', value=_csrf)
+          .form-group
+            label.fw.col-sm-3.control-label(for='email') Email Address
+            .col-sm-7
+              input.form-control(type='email', name='email', id='email' value=`${user.email}`)
+          .form-group
+            .col-sm-offset-3.col-sm-4
+              button.btn.btn-primary(type='submit')
+                i.fa.fa-envelope
+                | Resend Confirmation Email
+
+      // IF USER HAS NOT SAVED EMAIL
+      if !user.email
+        h3.fw.text-center Save Email
+          br
+        form.form-horizontal(action='/account/email', method='POST')
+          input(type='hidden', name='_csrf', value=_csrf)
+          .form-group
+            label.fw.col-sm-3.control-label(for='email') Email Address
+            .col-sm-7
+              input.form-control(type='email', name='email', id='email')
+          .form-group
+            .col-sm-offset-3.col-sm-4
+              button.btn.btn-primary(type='submit')
+                i.fa.fa-envelope
+                | Send Confirmation Email
     br
     h3.fw.text-center Change Password
     br
