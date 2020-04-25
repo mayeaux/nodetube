@@ -34,6 +34,21 @@ const userSchema = new mongoose.Schema({
     default: false
   },
 
+  emailNotifications: {
+    comments: {
+      type: Boolean,
+      default: false
+    },
+    reacts: {
+      type: Boolean,
+      default: false
+    },
+    subscriptions: {
+      type: Boolean,
+      default: false
+    }
+  },
+
   userUploadServer: { type: String, enum: ['uploads1', 'uploads3' ] },
 
   usedUploadServers: Array,

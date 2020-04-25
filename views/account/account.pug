@@ -355,6 +355,35 @@ block content
           button.fw.btn.btn-primary(type='submit' style="margin-top:20px;border-radius:3px;")
             i.fa.fa-lock
             | Change Password
+    
+    if process.env.NOTIFICATION_EMAILS_ENABLED == "true"
+      br
+      h3.fw.text-center Email Notifications
+      br
+
+      form.form-horizontal(action='/account/emailNotifications', method='POST', autocomplete="off")
+        input(type='hidden', name='_csrf', value=_csrf)
+        .form-group
+          label.fw.col-sm-3.control-label(for='comments' style="font-size:16px") Comments
+          .col-sm-1
+            if user.emailNotifications.comments == true
+              input.form-control(type='checkbox', name='comments', id='comments', class='email-options', data-toggle="toggle", checked='true')
+            else
+              input.form-control(type='checkbox', name='comments', id='comments', class='email-options', data-toggle="toggle")
+        .form-group
+          label.fw.col-sm-3.control-label(for='reacts' style="font-size:16px") Reacts
+          .col-sm-1
+            if user.emailNotifications.reacts == true
+              input.form-control(type='checkbox', name='reacts', id='reacts', class='email-options', data-toggle="toggle", checked='true')
+            else
+              input.form-control(type='checkbox', name='reacts', id='reacts', class='email-options', data-toggle="toggle")
+        .form-group
+          label.fw.col-sm-3.control-label(for='subscriptions' style="font-size:16px") Subscriptions
+          .col-sm-1
+            if user.emailNotifications.subscriptions == true
+              input.form-control(type='checkbox', name='subscriptions', id='subscriptions', class='email-options', data-toggle="toggle", checked='true')
+            else
+              input.form-control(type='checkbox', name='subscriptions', id='subscriptions', class='email-options', data-toggle="toggle")
 
   script.
     //.delete-user-thumbnail-form
@@ -619,8 +648,32 @@ block content
             console.log(err);
           }
         });
-
-
-
       })
+    })
+
+    $('.email-options').change(function() {
+      var comments = $('.email-options#comments').is(':checked');
+      var reacts = $('.email-options#reacts').is(':checked');
+      var subscriptions = $('.email-options#subscriptions').is(':checked');
+
+      var csrf = '#{_csrf}';
+
+      var data = {
+        _csrf: csrf,
+        comments,
+        reacts,
+        subscriptions
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: '/account/emailNotifications',
+        data,
+        success: function(data) {
+          console.log(data);
+        },
+        error: function(err) {
+          console.log(err);
+        }
+      });
     })

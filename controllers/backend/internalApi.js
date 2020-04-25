@@ -20,6 +20,7 @@ var concat = require('concat-files');
 var Busboy = require('busboy');
 const mkdirp = Promise.promisifyAll(require('mkdirp'));
 const mv = require('mv');
+const { notificationsTransport } = require('../../config/nodemailer');
 
 const backblaze = require('../../lib/uploading/backblaze');
 
@@ -45,7 +46,7 @@ if(process.env.THUMBNAIL_SERVER){
 
 const frontendServer = process.env.FRONTEND_SERVER || '';
 
-const createNotification = require('../../lib/helpers/notifications');
+const { createNotification, generateNotificationHtml} = require('../../lib/helpers/notifications');
 
 // models
 const Upload = require('../../models/index').Upload;
@@ -407,6 +408,25 @@ exports.subscribeEndpoint = async function(req, res, next){
 
       console.log('here');
 
+      if(receivingUser.email && receivingUser.emailConfirmed && (receivingUser.emailNotifications.subscriptions == true || receivingUser.emailNotifications.subscriptions == undefined) && process.env.NOTIFICATION_EMAILS_ENABLED == "true") {
+
+        let html = generateNotificationHtml(notification);
+
+        let mailOptions = {
+          from: process.env.EMAIL_ADDRESS,
+          to: receivingUser.email,
+          subject: 'New Subscriber - ' + process.env.INSTANCE_BRAND_NAME,
+          html
+        }
+
+        console.log(mailOptions);
+
+        notificationsTransport.sendMail(mailOptions, function(error, info) {
+          if(error) 
+            console.log("ERROR SENDING NOTIFICATION EMAIL - " + info)
+        });
+      }
+
     }
 
     res.send('subscribed');
@@ -495,7 +515,27 @@ exports.react = async(req, res, next)  => {
 
   // create notif for comment on your upload if its not your own upload
   if(upload.uploader._id.toString() !== req.user._id.toString()){
-    await createNotification(upload.uploader._id, req.user._id, 'react', upload, newReact);
+    let notification = await createNotification(upload.uploader._id, req.user._id, 'react', upload, newReact, undefined);
+    if(req.user.email && req.user.emailConfirmed && (req.user.emailNotifications.reacts == true || req.user.emailNotifications.reacts == undefined) && process.env.NOTIFICATION_EMAILS_ENABLED == "true") {
+
+      let html = generateNotificationHtml(notification);
+  
+      let mailOptions = {
+        from: process.env.EMAIL_ADDRESS,
+        to: req.user.email,
+        subject: 'New React - ' + process.env.INSTANCE_BRAND_NAME,
+        html
+      }
+
+      console.log(mailOptions);
+
+      notificationsTransport.sendMail(mailOptions, function(error, info) {
+        if(error) 
+          console.log("ERROR SENDING NOTIFICATION EMAIL - " + info)
+        else
+          console.log("EMAIL NOTIFICATION SENT");
+      });
+    }
   }
 
   res.send('new react created');
@@ -743,7 +783,27 @@ exports.postComment = async(req, res) => {
 
     // create notif for comment on your upload if its not your own thing
     if(upload.uploader._id.toString() !== req.user._id.toString()){
-      await createNotification(upload.uploader._id, req.user._id, 'comment', upload, undefined, comment);
+      let notification = await createNotification(upload.uploader._id, req.user._id, 'comment', upload, undefined, comment);
+
+      if(req.user.email && req.user.emailConfirmed && (req.user.emailNotifications.comments == true || req.user.emailNotifications.comments == undefined) && process.env.NOTIFICATION_EMAILS_ENABLED == "true") {
+        let html = generateNotificationHtml(notification);
+  
+        let mailOptions = {
+          from: process.env.EMAIL_ADDRESS,
+          to: req.user.email,
+          subject: 'New Comment - ' + process.env.INSTANCE_BRAND_NAME,
+          html
+        }
+
+        console.log(mailOptions);
+
+        notificationsTransport.sendMail(mailOptions, function(error, info) {
+          if(error) 
+            console.log("ERROR SENDING NOTIFICATION EMAIL - " + info)
+          else
+            console.log("EMAIL NOTIFICATION SENT");
+        });
+      }
     }
 
     // if its a reply comment send a notification to the original commenter
@@ -756,7 +816,27 @@ exports.postComment = async(req, res) => {
       const user = repliedToComment.commenter;
 
       if(user._id.toString() !== req.user._id.toString()){
-        await createNotification(user._id, req.user._id, 'comment', upload, undefined, comment);
+        notification = await createNotification(user._id, req.user._id, 'comment', upload, undefined, comment);
+
+        if(req.user.email && req.user.emailConfirmed) {
+          let html = generateNotificationHtml(notification);
+    
+          let mailOptions = {
+            from: process.env.EMAIL_ADDRESS,
+            to: req.user.email,
+            subject: 'New Comment Response - ' + process.env.INSTANCE_BRAND_NAME,
+            html
+          }
+  
+          console.log(mailOptions);
+  
+          notificationsTransport.sendMail(mailOptions, function(error, info) {
+            if(error) 
+              console.log("ERROR SENDING NOTIFICATION EMAIL - " + info)
+            else
+              console.log("EMAIL NOTIFICATION SENT");
+          });
+        }
       }
     }
 

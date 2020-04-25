@@ -723,6 +723,8 @@ exports.getAccount = async(req, res) => {
     req.user.email = undefined;
   }
 
+  res.set("Cache-Control", "no-store"); // disable cache on firefox (disables checkbox autocomplete)
+
   res.render('account/account', {
     title: 'Account Management',
     stripeToken,

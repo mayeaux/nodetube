@@ -473,3 +473,24 @@ exports.postConfirmEmail = async(req, res, next) => {
     }
   }
 };
+
+/**
+ * POST /account/emailNotifications
+ * Change email notifications options
+ */
+exports.postEmailOptions = async(req, res, next) => {
+  try {
+    User.findById(req.user.id, (err, user) => {
+      if(err){ return next(err); }
+      user.emailNotifications.comments = req.body.comments;
+      user.emailNotifications.reacts = req.body.reacts;
+      user.emailNotifications.subscriptions = req.body.subscriptions;
+      user.save((err) => {
+        if(err){ return next(err); }
+        res.send("email options updated");
+      });
+    });
+  } catch(err) {
+    res.render('error/500');
+  }
+}

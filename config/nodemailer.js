@@ -23,7 +23,16 @@ if(process.env.FORGOT_PASSWORD_EMAIL_FUNCTIONALITY_ON == 'true'){
   }));
 }
 
+const notificationsTransport = nodemailer.createTransport({
+  service: process.env.EMAIL_HOST,
+  auth: {
+    user: process.env.EMAIL_ADDRESS,
+    pass: process.env.EMAIL_PASSWORD
+  }
+});
+
 module.exports = {
   mailgunTransport,
-  zohoTransport
+  zohoTransport,
+  notificationsTransport
 };
