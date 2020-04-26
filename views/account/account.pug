@@ -145,20 +145,24 @@ block content
           p Thank you so much for subscribing!
           p This area is currently being expanded
           p In the meantime enjoy your new features:
-          h4 Automatic YouTube backup functionality, unlisted uploads, private uploads, 2GB upload size
+          //h4 Automatic YouTube backup functionality, unlisted uploads, private uploads, 2GB upload size
+          h4 Livestreaming, unlisted uploads, private uploads, 2GB upload size
+
         else
+          //  - Unlisted, private and scheduled uploads
+            - Built in monetization via direct payments (COMING SOON)
+            - One-click complete YouTube backup (including future uploads)
+            - Access to NodeTube Recording Studio (COMING EVENTUALLY)
+
+
           p(style="white-space:pre-line;margin-bottom:19px;").
             - Upload file-size limit raised to 2GB
 
-            - Unlisted, private and scheduled uploads
+            - Unlisted and private uploads
 
-            - Livestream video, audio or screensharing
+            - Livestreaming with live chat
 
-            - Built in monetization via direct payments (COMING SOON)
-
-            - Access to NodeTube Recording Studio (COMING SOON)
-
-            - One-click complete YouTube backup (including future uploads)
+            - YouTube Backup Functionality (COMING SOON)
 
             - Early access to all beta features
 
@@ -171,8 +175,8 @@ block content
         br
 
 
-
-    if user.plan == 'plus' || user.youtubeChannelId
+    // if you're allowed to
+    if  user.plan == 'plus' &&  user.privs.youtubeBackup
       h3.ytBackup
         br
         br
