@@ -241,7 +241,7 @@ block content
                 i.fa.fa-info.fw
                 | Copy Details
 
-            button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} by ${upload.uploader.channelName} \n\n ${url} \n\n #${brandName}`)
+            button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} by ${upload.uploader.channelName || upload.uploader.channelUrl} \n\n ${url} \n\n #${brandName}`)
                 i.fa.fa-info.fw
                 | With User Info
 
