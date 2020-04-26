@@ -581,6 +581,7 @@ exports.editUpload = async(req, res, next) => {
       // gotta save and upload image
     } else if(fileIsImage){
 
+      // TODO: req.user.channel is the bug here, should be the user of the upload so that admins can change them
       await fs.move(req.files.filetoupload.path, `${saveAndServeFilesDirectory}/${req.user.channelUrl}/${upload.uniqueTag}-custom${fileExtension}`, {overwrite: true});
 
       upload.thumbnails.custom = `${upload.uniqueTag}-custom${fileExtension}`;
