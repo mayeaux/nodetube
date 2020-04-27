@@ -1,6 +1,6 @@
 div.row
     each dobj in displayObject
-        div.col-sm-2
+        div.col-xs-6.col-sm-4.col-sm-2.col-md-2
             h3.fw
                 if category == 'overview' || category == 'all'
                     a(href=`/media/popular/${page}?media=${mediaType}&category=${category}&within=${dobj.withinString}`) #{dobj.englishString}
@@ -8,11 +8,11 @@ div.row
                     a(href=`/media/popular/${page}?media=${mediaType}&category=${category}&within=${dobj.withinString}`) #{dobj.englishString}
 
     if category == 'overview'
-        div.col-sm-2
+        div.col-xs-6.col-sm-4.col-sm-2.col-md-2
             h3.fw
                 a(href=`/media/popular/${page}?media=${mediaType}&category=all&within=24hour`) All Uploads
     if category == 'all'
-        div.col-sm-2
+        div.col-xs-6.col-sm-4.col-sm-2.col-md-2
             h3.fw
                 a(href=`/media/popular/${page}?media=${mediaType}&category=overview`) Categories
 
