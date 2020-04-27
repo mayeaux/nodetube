@@ -32,14 +32,14 @@ block content
             div.display-div(style="min-width:50%;min-height:50%;margin:0 auto;")
                 // TODO: Sub out thumbnail here
 
-                video#media_player.display-element(poster=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;")
+                video#media_player.display-element(playsinline poster=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;")
                     // to
                     source.video-source(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`, type='video/mp4')
                     //source(src=upload.uploadUrl, type='video/mp4')
 
         else if upload.fileType === 'audio'
             div
-                audio#media_player.my_audio(style="width:80%;" controls='', preload='none')
+                audio#media_player.my_audio(playsinline style="width:80%;" controls='', preload='none')
 
                     if upload.fileExtension == '.m4a'
                         source(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`, type='audio/mp4')
