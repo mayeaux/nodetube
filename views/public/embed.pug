@@ -86,7 +86,7 @@ html
         div.display-div
 
             if upload.fileType == 'video'
-                video.display-element(poster=upload.thumbnailUrl controls='')
+                video.display-element(poster=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.custom || upload.thumbnails.generated || upload.thumbnails.medium}` controls='')
                     // TODO: Sub out thumbnail here
 
                     source(src=`${protocolDomainNameAndTLD}/uploads/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`, type='video/mp4')
