@@ -24,7 +24,7 @@ if(process.env.FORGOT_PASSWORD_EMAIL_FUNCTIONALITY_ON == 'true'){
 }
 
 const notificationsTransport = nodemailer.createTransport({
-  service: process.env.EMAIL_HOST,
+  service: process.env.EMAIL_HOST, // Gmail, Hotmail, Yahoo, etc.
   auth: {
     user: process.env.EMAIL_ADDRESS,
     pass: process.env.EMAIL_PASSWORD
