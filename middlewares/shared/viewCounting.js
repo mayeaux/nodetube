@@ -8,7 +8,7 @@ async function checkWhetherToCountView(siteVisitorId, uploadID){
     upload : uploadID //upload._id
   });
 
-  console.log(existingViewsForThisUpload.length)
+  // console.log(existingViewsForThisUpload.length)
 
 
 // calculate if doing fraud helper
@@ -66,7 +66,7 @@ async function checkWhetherToCountView(siteVisitorId, uploadID){
     // console.log('dont count');
   }
 
-  console.log(countViewCount);
+  // console.log(countViewCount);
 
   return countViewCount
 
