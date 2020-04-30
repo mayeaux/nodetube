@@ -55,7 +55,7 @@ block content
                     each notification in notifications
                         if notification.read == true
                             // react notification
-                            if notification.action == 'react'
+                            if notification.action == 'react' && notification.react
                                 p(style="display:inline") A user has reacted with a #{notification.react.react} to your #{notification.upload.fileType} &nbsp
                                     a(href=`/user/${user.channelUrl}/${notification.upload.uniqueTag}`) #{notification.upload.title}
                                     p(style="display:inline") &nbsp #{notification.timeAgo}
