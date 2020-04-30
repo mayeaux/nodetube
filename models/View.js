@@ -43,6 +43,7 @@ viewSchema.index({upload: 1, validity: 1, createdAt: 1}, {name: 'Real View Count
 
 viewSchema.index({upload: 1, siteVisitor: 1, createdAt: 1}, {name: 'View Count Within Timeframe Per Site Visitor'});
 
+viewSchema.index({upload: 1, siteVisitor: 1}, {name: 'Views Per Upload And Site Visitor'});
 
 const View = mongoose.model('View', viewSchema);
 
