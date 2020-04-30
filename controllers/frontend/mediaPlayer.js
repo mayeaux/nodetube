@@ -138,10 +138,10 @@ exports.getMedia = async(req, res) => {
       });
 
       await view.save();
-      upload.checkedViews.push(view);
 
-      // console.log(upload);
-      await upload.save();
+      await Upload.findOneAndUpdate({ uniqueTag: media },
+        {$push: { checkedViews: view._id}},
+        {new: true});
     }
 
     // originalFileSizeInMb: Number,
