@@ -5,7 +5,7 @@ script(src=`${process.env.DOMAIN_NAME_AND_TLD}/js/lib/bootstrap.min.js`)
 
 if notification.action == "subscription"
     h1 New Subscriber
-    p Hello, #{notification.upload.uploader.channelName}.
+    p Hello.
     if !notification.upload
         div
             b A user has subscribed to your channel from your channel page.
@@ -17,13 +17,10 @@ if notification.action == "subscription"
             br
             small #{notification.timeAgo}
 
-        include ../viewPartials/uploadThumbnail
-
-        include ../viewPartials/uploadDetails
 
 else if notification.action == "comment"
     h1 New Comment
-    p Hello, #{notification.upload.uploader.channelname}.
+    p Hello.
 
     if !notification.comment.inResponseTo
         div
@@ -35,20 +32,15 @@ else if notification.action == "comment"
             b #{notification.sender.channelName || notification.sender.channelUrl} has responded "#{notification.comment.text}" to your comment on the #{notification.upload.fileType}. 
             br
             small #{notification.timeAgo}
-        
-        include ../viewPartials/uploadThumbnail
-        
-        include ../viewPartials/uploadDetails
 
 else if notification.action == "react"
+    h1 New React
+    p Hello.
+
     div
         b A user has reacted with a #{notification.react.react} to your #{notification.upload.fileType}.
         br
         small #{notification.timeAgo}
-    
-    include ../viewPartials/uploadThumbnail
-    
-    include ../viewPartials/uploadDetails
 
 p Best regards,
 b #{process.env.INSTANCE_BRAND_NAME}
