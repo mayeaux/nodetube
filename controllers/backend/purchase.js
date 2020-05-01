@@ -14,6 +14,7 @@ exports.purchasePlus = async function(req, res){
     const userDescriptor = req.user.channelName || req.user.channelUrl;
 
     // what is this token?
+    // it's passed back from stripe after getting hit via the frontend
 
     const customer = await stripe.createCustomerWithToken(req.body.token.id, userDescriptor);
     console.log(`Customer created: ${customer.id}`);
