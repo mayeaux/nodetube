@@ -3,6 +3,9 @@ const subscriptions = require('../../lib/helpers/subscriptions');
 
 const brandName = process.env.INSTANCE_BRAND_NAME;
 
+const planName = process.env.STRIPE_PLAN_NAME;
+
+// HIT FROM THE ACCOUNT PAGE
 exports.purchasePlus = async function(req, res){
 
   console.log(req.body);
@@ -10,13 +13,15 @@ exports.purchasePlus = async function(req, res){
   try {
     const userDescriptor = req.user.channelName || req.user.channelUrl;
 
+    // what is this token?
+
     const customer = await stripe.createCustomerWithToken(req.body.token.id, userDescriptor);
     console.log(`Customer created: ${customer.id}`);
 
-    const subscription = await stripe.subscribeUser(customer.id, `${brandName}Plus`);
+    const subscription = await stripe.subscribeUser(customer.id, planName || `${brandName}Plus`);
     console.log(`Subsription created: ${subscription.id}`);
 
-    const updatedUser = await subscriptions.grantUserPlus(req.user);
+    const updatedUser = await subscriptions.grantUserPlus(req.user, customer.id);
     console.log(`UPDATED ${req.user.channelUrl} TO PLUS`);
     console.log(updatedUser.privs);
 
