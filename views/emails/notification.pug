@@ -1,0 +1,54 @@
+
+link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css')
+link(rel='stylesheet', href=`${process.env.DOMAIN_NAME_AND_TLD}/css/main.css`)
+script(src=`${process.env.DOMAIN_NAME_AND_TLD}/js/lib/bootstrap.min.js`)
+
+if notification.action == "subscription"
+    h1 New Subscriber
+    p Hello, #{notification.upload.uploader.channelName}.
+    if !notification.upload
+        div
+            b A user has subscribed to your channel from your channel page.
+            br
+            small #{notification.timeAgo}
+    else
+        div
+            b A user has subscribed to your channel from your #{upload.fileType}.
+            br
+            small #{notification.timeAgo}
+
+        include ../viewPartials/uploadThumbnail
+
+        include ../viewPartials/uploadDetails
+
+else if notification.action == "comment"
+    h1 New Comment
+    p Hello, #{notification.upload.uploader.channelname}.
+
+    if !notification.comment.inResponseTo
+        div
+            b #{notification.sender.channelName || notification.sender.channelUrl} has commented "#{notification.comment.text}" on your #{notification.upload.fileType}.
+            br
+            small #{notification.timeAgo}
+    else
+        div
+            b #{notification.sender.channelName || notification.sender.channelUrl} has responded "#{notification.comment.text}" to your comment on the #{notification.upload.fileType}. 
+            br
+            small #{notification.timeAgo}
+        
+        include ../viewPartials/uploadThumbnail
+        
+        include ../viewPartials/uploadDetails
+
+else if notification.action == "react"
+    div
+        b A user has reacted with a #{notification.react.react} to your #{notification.upload.fileType}.
+        br
+        small #{notification.timeAgo}
+    
+    include ../viewPartials/uploadThumbnail
+    
+    include ../viewPartials/uploadDetails
+
+p Best regards,
+b #{process.env.INSTANCE_BRAND_NAME}
