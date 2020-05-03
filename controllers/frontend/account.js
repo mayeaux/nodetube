@@ -888,7 +888,7 @@ exports.livestreaming = async(req, res) =>
 
   var networkInterfaces = os.networkInterfaces( );
 
-  const ipAddress = networkInterfaces.lo0 && networkInterfaces.lo0[0].address || networkInterfaces.eth0[0].address ;
+  const ipAddress = networkInterfaces.lo0 && networkInterfaces.lo0[0].address || networkInterfaces.eth0 && networkInterfaces.eth0[0].address;
 
   const address = process.env.LIVESTREAM_RTMP_DOMAIN || ipAddress;
 
