@@ -89,6 +89,7 @@ html
 
 
             if upload.fileType == 'video'
+                video.display-element(poster=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.custom || upload.thumbnails.generated || upload.thumbnails.medium}` controls='')
 
                 video#media_player.display-element(poster=`${'http://localhost:3000'}/uploads/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;")
                     // to

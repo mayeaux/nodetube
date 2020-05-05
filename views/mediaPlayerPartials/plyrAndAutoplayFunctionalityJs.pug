@@ -64,8 +64,9 @@ script.
   var plyr_options = {
     autoplay: autoplay,
     clickToPlay: true,
-    controls: ['play-large', 'play','progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'fullscreen', 'download'],
-    settings: ['speed', 'captions', 'quality', 'speed', 'loop']
+    speed: {selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]},
+    controls: ['play-large', 'play','progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'fullscreen'],
+    settings: ['speed', 'captions', 'quality', 'loop']
   };
 
   // Create the plyr instances - this defines players[0] as our primary player.

@@ -64,7 +64,7 @@ exports.recentComments = async(req, res) => {
 };
 
 /**
- * GET /media/recentComments
+ * GET /media/recentReacts
  * Recent reacts
  */
 exports.recentReacts = async(req, res) => {

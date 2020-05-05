@@ -123,6 +123,8 @@ var messagesObject;
 var variable = 'true';
 if(variable == 'true')
 {
+  // boot up express server to handle websocket connections
+
   app = express();
 
   // default certs that came with I believe Kurento

@@ -32,14 +32,14 @@ block content
             div.display-div(style="min-width:50%;min-height:50%;margin:0 auto;")
                 // TODO: Sub out thumbnail here
 
-                video#media_player.display-element(poster=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;")
+                video#media_player.display-element(playsinline poster=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;")
                     // to
                     source.video-source(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`, type='video/mp4')
                     //source(src=upload.uploadUrl, type='video/mp4')
 
         else if upload.fileType === 'audio'
             div
-                audio#media_player.my_audio(style="width:80%;" controls='', preload='none')
+                audio#media_player.my_audio(playsinline style="width:80%;" controls='', preload='none')
 
                     if upload.fileExtension == '.m4a'
                         source(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`, type='audio/mp4')
@@ -129,21 +129,21 @@ block content
             // EXTRA BUTTONS
             div
                 if upload.fileType == 'image' || upload.fileType == 'video'
-                    div.change-size-button.increase-size
-                        h1(style="cursor:pointer") +
-                    div.change-size-button.decrease-size
-                        h1(style="cursor:pointer") -
+                    //div.change-size-button.increase-size
+                    //    h1(style="cursor:pointer") +
+                    //div.change-size-button.decrease-size
+                    //    h1(style="cursor:pointer") -
                 div.change-size-button
                     h2.download-button
                         i.download-icon.fa.fa-download(aria-hidden="true" style="cursor:pointer")
-                div.change-size-button
+                div.change-size-button(style="margin-left:0px;")
                     h2.share-button
-                        i.share-icon.fa.fa-share(aria-hidden="true" style="cursor:pointer")
+                        i.share-icon.fas.fa-code(aria-hidden="true" style="cursor:pointer;font-size:27px;margin-left:0px;")
                 if upload.fileType == 'video' || upload.fileType == 'audio'
                     div.change-size-button(style="margin-left:0px")
                         h2.repeat-div(style="opacity:0.4")
                             i.repeat-icon.fa.fa-repeat(aria-hidden="true" style="cursor:pointer")
-                div.change-size-button(style="cursor:pointer")
+                div.change-size-button(style="cursor:pointer;margin-left:0px;")
                     h2.report-button(style="")
                         i.share-icon.fa.fa-exclamation-triangle(aria-hidden="true" style="cursor:pointer;font-size:19px;")
 
@@ -242,10 +242,9 @@ block content
                 i.fa.fa-info.fw
                 | Copy Details
 
-            button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} by ${upload.uploader.channelName} \n\n ${url} \n\n #${brandName}`)
+            button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} by ${upload.uploader.channelName || upload.uploader.channelUrl} \n\n ${url} \n\n #${brandName}`)
                 i.fa.fa-info.fw
                 | With User Info
-
 
             // COMMENT SECTION AND FORM
             div

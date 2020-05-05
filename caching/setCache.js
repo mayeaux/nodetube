@@ -62,6 +62,8 @@ async function setIndexValues(){
 //   setIndexValues()
 // }, 1000 * 60 * 20);
 
+/** THIS IS FOR DAILY STATS, VIEWS ALSO USED IN POPULAR **/
+
 // TODO: refactor to do via count
 async function getAmountsPerPeriods(Model, objectName){
 

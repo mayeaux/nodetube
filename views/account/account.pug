@@ -143,41 +143,49 @@ block content
       div.nt-plus.center-div.text-center
         if user.plan == 'plus'
           p Thank you so much for subscribing!
-          p This area is currently being expanded
-          p In the meantime enjoy your new features:
-          h4 Automatic YouTube backup functionality, unlisted uploads, private uploads, 2GB upload size
+          p Your support makes NewTube possible
+          p Please enjoy your new features:
+          //h4 Automatic YouTube backup functionality, unlisted uploads, private uploads, 2GB upload size
+          h4 Livestreaming, unlisted uploads, private uploads, 2GB upload size
+
+
         else
-          p(style="white-space:pre-line;margin-bottom:19px;").
+          //  - Unlisted, private and scheduled uploads
+            - Built in monetization via direct payments (COMING SOON)
+            - One-click complete YouTube backup (including future uploads)
+            - Access to NodeTube Recording Studio (COMING EVENTUALLY)
+
+
+          p.fw(style="white-space:pre-line;margin-bottom:19px;font-size:17px;margin-top:23px;").
             - Upload file-size limit raised to 2GB
 
-            - Unlisted, private and scheduled uploads
+            - Unlisted and private uploads
 
-            - Livestream video, audio or screensharing
+            - Livestreaming with live chat
 
-            - Built in monetization via direct payments (COMING SOON)
-
-            - Access to NodeTube Recording Studio (COMING SOON)
-
-            - One-click complete YouTube backup (including future uploads)
+            - NewTube Recording Studio (Coming Soon)
 
             - Early access to all beta features
 
             - $4.95/month, cancel at any time
+
+            - Support alternative tech that values your speech and privacy
 
           button.stripe-button-el#customButton(type="submit" class="stripe-button-el" style="visibility: visible;")
             span(style="display: block; min-height: 30px;") Buy Now
 
         br
         br
+        br
 
 
-
-    if user.plan == 'plus' || user.youtubeChannelId
+      // if you're allowed to
+    if  user.plan == 'plus' &&  user.privs.youtubeBackup
       h3.ytBackup
         br
         br
         br
-        h3.fw.text-center YouTube Backup
+        h3.fw.text-center(style="") YouTube Backup
         br
 
         //form
@@ -295,47 +303,52 @@ block content
             i.fa.fa-pencil
             | Delete
 
-    // IF USER HAS CONFIRMED EMAIL
-    if user.email && user.emailConfirmed
-      h2.fw.text-center Confirmed Email
-        br
-      form.form-horizontal(action='/account/email', method='POST')
-        input(type='hidden', name='_csrf', value=_csrf)
-        .form-group
-          label.col-sm-3.control-label(for='email') Email Address
-          .col-sm-7
-            h5 #{user.email}
+    // EMAIL FUNCTIONALITY
 
-    // Turning off for the time being, it should be conditional based on a flag
-    //if user.email && !user.emailConfirmed
-    //  h3.text-center Save Email
-    //    br
-    //  form.form-horizontal(action='/account/email', method='POST')
-    //    input(type='hidden', name='_csrf', value=_csrf)
-    //    .form-group
-    //      label.col-sm-3.control-label(for='email') Email Address
-    //      .col-sm-7
-    //        input.form-control(type='email', name='email', id='email' value=`${user.email}`)
-    //    .form-group
-    //      .col-sm-offset-3.col-sm-4
-    //        button.btn.btn-primary(type='submit')
-    //          i.fa.fa-envelope
-    //          | Resend Confirmation Email
+    if verifyEmailFunctionalityOn
 
-    //if !user.email
-    //  h3.text-center Save Email
-    //    br
-    //  form.form-horizontal(action='/account/email', method='POST')
-    //    input(type='hidden', name='_csrf', value=_csrf)
-    //    .form-group
-    //      label.col-sm-3.control-label(for='email') Email Address
-    //      .col-sm-7
-    //        input.form-control(type='email', name='email', id='email')
-    //    .form-group
-    //      .col-sm-offset-3.col-sm-4
-    //        button.btn.btn-primary(type='submit')
-    //          i.fa.fa-envelope
-    //          | Send Confirmation Email
+      // IF USER HAS CONFIRMED EMAIL
+      if user.email && user.emailConfirmed
+        h2.fw.text-center Confirmed Email
+          br
+        form.form-horizontal(action='/account/email', method='POST')
+          input(type='hidden', name='_csrf', value=_csrf)
+          .form-group
+            label.col-sm-3.control-label(for='email') Email Address
+            .col-sm-7
+              h5 #{user.email}
+
+      // IS USER HAS PENDING CONFIRMATION EMAIL
+      if user.email && !user.emailConfirmed
+        h3.fw.text-center Save Email
+          br
+        form.form-horizontal(action='/account/email', method='POST')
+          input(type='hidden', name='_csrf', value=_csrf)
+          .form-group
+            label.fw.col-sm-3.control-label(for='email') Email Address
+            .col-sm-7
+              input.form-control(type='email', name='email', id='email' value=`${user.email}`)
+          .form-group
+            .col-sm-offset-3.col-sm-4
+              button.btn.btn-primary(type='submit')
+                i.fa.fa-envelope
+                | Resend Confirmation Email
+
+      // IF USER HAS NOT SAVED EMAIL
+      if !user.email
+        h3.fw.text-center Save Email
+          br
+        form.form-horizontal(action='/account/email', method='POST')
+          input(type='hidden', name='_csrf', value=_csrf)
+          .form-group
+            label.fw.col-sm-3.control-label(for='email') Email Address
+            .col-sm-7
+              input.form-control(type='email', name='email', id='email')
+          .form-group
+            .col-sm-offset-3.col-sm-4
+              button.btn.btn-primary(type='submit')
+                i.fa.fa-envelope
+                | Send Confirmation Email
     br
     h3.fw.text-center Change Password
     br
@@ -438,7 +451,7 @@ block content
         swal('Please stream to rtmp://broadcast.nodetube.live/live/' + username  + '?key=' + uploadToken + ' \n\n You will be live at https://live.nodetube.live/User/' + username)
       })
 
-
+  // stripe functionality
   if process.env.PLUS_ENABLED == 'true'
     script(src='https://checkout.stripe.com/checkout.js')
 
@@ -447,6 +460,7 @@ block content
 
       var csrf = '#{_csrf}'
 
+      /** CONFIGURE STRIPE HANDLER **/
       var handler = StripeCheckout.configure({
         key: stripeToken,
         image: 'https://newtube.app/images/full_size_logo.png',
@@ -461,6 +475,7 @@ block content
 
           $.ajax({
             type: 'POST',
+            // what is at this backend?
             url: `/api/purchase/plus`,
             data,
             success: function (data) {
@@ -478,11 +493,12 @@ block content
           }
         });
 
+      // CLICK HANDLER
       document.getElementById('customButton').addEventListener('click', function (e) {
         // Open Checkout with further options:
         handler.open({
-          name: 'NodeTube, Inc.',
-          description: 'One Month Of NodeTube Plus',
+          name: 'NewTube.',
+          description: 'One Month Of NewTube Plus',
           amount: 495,
           allowRememberMe: false
           // email: "customer@email.com"

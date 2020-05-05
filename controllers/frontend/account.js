@@ -12,6 +12,7 @@ const React = require('../../models/index').React;
 const Notification = require('../../models/index').Notification;
 const SocialPost = require('../../models/index').SocialPost;
 const Subscription = require('../../models/index').Subscription;
+const RSS = require('rss');
 
 const { uploadServer, uploadUrl } = require('../../lib/helpers/settings');
 
@@ -36,6 +37,8 @@ const { userCanUploadContentOfThisRating } = require('../../lib/uploading/helper
 
 const validator = require('email-validator');
 
+const { getUploadDuration } = require('../../lib/mediaBrowsing/helpers')
+
 const javascriptTimeAgo = require('javascript-time-ago');
 javascriptTimeAgo.locale(require('javascript-time-ago/locales/en'));
 require('javascript-time-ago/intl-messageformat-global');
@@ -43,6 +46,39 @@ require('intl-messageformat/dist/locale-data/en');
 const timeAgoEnglish = new javascriptTimeAgo('en-US');
 
 const secondsToFormattedTime = timeHelper.secondsToFormattedTime;
+
+
+// TODO: pull this function out
+async function addValuesIfNecessary(upload, channelUrl) {
+  if (upload.fileType == 'video' || upload.fileType == 'audio') {
+    if (!upload.durationInSeconds || !upload.formattedDuration) {
+
+      var server = uploadServer;
+      if (server.charAt(0) == "/") // the slash confuses the file reading, because host root directory is not the same as machine root directory
+        server = server.substr(1);
+
+      const uploadLocation = `${server}/${channelUrl}/${upload.uniqueTag + upload.fileExtension}`;
+
+      try {
+        const duration = await getUploadDuration(uploadLocation, upload.fileType);
+        console.log(duration);
+
+        let uploadDocument = await Upload.findOne({uniqueTag: upload.uniqueTag});
+
+        uploadDocument.durationInSeconds = duration.seconds;
+        uploadDocument.formattedDuration = duration.formattedTime;
+
+        await uploadDocument.save();
+
+
+      } catch (err) {
+        /** if the file has been deleted then it won't blow up **/
+        // console.log(err);
+      }
+      // console.log('have to add');
+    }
+  }
+}
 
 /**
  * GET /upload
@@ -165,14 +201,45 @@ exports.getChannelRss = async(req, res) => {
     };
 
     /** DB CALL TO GET UPLOADS **/
-    let uploads = await Upload.find(searchQuery).sort({ createdAt : -1 });
+    let uploads = await Upload.find(searchQuery).sort({ createdAt : -1 }).limit(20);
 
-    console.log(uploads);
+    const feed = new RSS({
+      title: process.env.INSTANCE_BRAND_NAME,
+      description: process.env.META_DESCRIPTION,
+      feed_url: `${process.env.DOMAIN_NAME_AND_TLD}/user/${encodeURIComponent(user.channelUrl)}/rss`,
+      site_url: process.env.DOMAIN_NAME_AND_TLD,
+      image_url: process.env.META_IMAGE,
+      copyright: `2020 ${process.env.INSTANCE_DOMAIN_NAME}`,
+      language: 'en',
+      pubDate: new Date(),
+      ttl: '60'
+    });
 
-    res.send(uploads);
+    uploads.map(item => {
+      const { title, category } = item;
+      const categories = [category];
+      const author = encodeURIComponent(user.channelUrl);
+      const url = `${process.env.DOMAIN_NAME_AND_TLD}/user/${author}/${item.uniqueTag}`;
+
+      feed.item({
+        title,
+        url, // link to the item
+        guid: item.id, // optional - defaults to url
+        categories, // optional - array of item categories
+        author, // optional - defaults to feed author property
+        date: item.createdAt // any format that js Date can parse.
+      });
+    });
+
+    const xml = feed.xml({indent: true});
+    res.send(xml);
+
+    //res.send(uploads);
+
+
 
   } catch(err){
-    // console.log(err);
+    console.log(err);
   }
 };
 
@@ -443,6 +510,10 @@ exports.getChannel = async(req, res) => {
 
     user.uploads = uploads;
 
+    for(const upload of uploads) {
+      addValuesIfNecessary(upload, user.channelUrl);
+    }
+
     const siteVisitor = req.siteVisitor;
 
     const joinedTimeAgo = timeAgoEnglish.format(user.createdAt);
@@ -640,6 +711,8 @@ exports.getAccount = async(req, res) => {
 
   const plusEnabled = process.env.PLUS_ENABLED == 'true';
 
+  const verifyEmailFunctionalityOn = process.env.CONFIRM_EMAIL_FUNCTIONALITY_ON == 'true';
+
   // give user an upload token
   if(!req.user.uploadToken){
     const uploadToken = randomstring.generate(25);
@@ -657,7 +730,8 @@ exports.getAccount = async(req, res) => {
     stripeToken,
     uploadServer,
     thumbnailServer,
-    plusEnabled
+    plusEnabled,
+    verifyEmailFunctionalityOn
   });
 };
 
@@ -814,9 +888,11 @@ exports.livestreaming = async(req, res) =>
 
   var networkInterfaces = os.networkInterfaces( );
 
-  const ipAddress = networkInterfaces.lo0 && networkInterfaces.lo0[0].address || networkInterfaces.eth0[0].address ;
+  const ipAddress = networkInterfaces.lo0 && networkInterfaces.lo0[0].address || networkInterfaces.eth0 && networkInterfaces.eth0[0].address;
 
-  const rtmpUrl = 'rtmp' + '://' + ipAddress + ':1935' + `/live/${req.user.channelUrl}?key=${req.user.uploadToken}`;
+  const address = process.env.LIVESTREAM_RTMP_DOMAIN || ipAddress;
+
+  const rtmpUrl = 'rtmp' + '://' + address + ':1935' + `/live/${req.user.channelUrl}?key=${req.user.uploadToken}`;
 
   // var ip = require('os').networkInterfaces().eth0[0].address;
   //
@@ -830,15 +906,19 @@ exports.livestreaming = async(req, res) =>
 
   const viewingDomain =  req.protocol + '://' + req.get('host') + `/live/${req.user.channelUrl}`;
 
-  const livestreamRtmpDomain  = process.env.LIVESTREAM_RTMP_DOMAIN || rtmpUrl;
+  const livestreamRtmpDomain  = rtmpUrl;
   const livestreamViewingDomain = process.env.LIVESTREAM_VIEWING_DOMAIN || viewingDomain;
 
   console.log(livestreamRtmpDomain, livestreamViewingDomain);
 
+  const obsServer = 'rtmp' + '://' + address + ':1935/live';
+  const obsStreamKey = `/${req.user.channelUrl}?key=${req.user.uploadToken}`;
+
   res.render('livestream/livestreaming', {
     title: 'Livestreaming',
     livestreamRtmpDomain,
-    livestreamViewingDomain
-
+    livestreamViewingDomain,
+    obsServer,
+    obsStreamKey
   });
 };

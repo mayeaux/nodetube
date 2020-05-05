@@ -57,6 +57,8 @@ const portNumber =  process.env.PORT || 3000;
 if(cluster.isMaster){
   console.log('BOOTING APP...\n');
 
+  console.log(`PLUS ENABLED: ${process.env.PLUS_ENABLED}\n`);
+
   console.log(`NODE_ENV: ${process.env.NODE_ENV}\n`);
 
   console.log(`RUNNING WITH THIS MANY PROCESSES: ${amountOfProcesses}\n`);
