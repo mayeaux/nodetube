@@ -1,18 +1,24 @@
 const domainNameAndTLD = process.env.DOMAIN_NAME_AND_TLD;
+const User = require('../../models/index').User;
+
 
 /**
- * GET /live/${username}
- * Get staging page.
+ * GET /live/${channelUrl}
+ * Get RTMP viewing page (current livestream page)
  */
-exports.getLiveRTMP = (req, res) => {
+exports.getLiveRTMP = async (req, res) => {
 
   const channelUrl = req.params.user;
 
-  const allowedToDoLivestreaming = req.user.privs.livestreaming;
-
-  console.log(req.user);
-
   console.log(channelUrl);
+
+  const user = await User.findOne({ channelUrl });
+
+  const allowedToDoLivestreaming = user && user.privs && user.privs.livestreaming;
+
+  // console.log(req.user);
+
+  // console.log(channelUrl);
 
   res.render('livestream/rtmp', {
     channelUrl,
