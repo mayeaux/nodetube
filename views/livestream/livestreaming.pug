@@ -54,6 +54,16 @@ block content
         p ffmpeg -re -i PATH-TO-YOUR-VIDEO.mp4 -c copy -f flv #{livestreamRtmpDomain}
 
 
+        br
+        br
+
+        p Otherwise if you are streaming with OBS you can use the following:
+        p Server: #{obsServer}
+        p Stream Key: #{obsStreamKey}
+
+
+
+
         if user
             script.
               var username = '#{user.channelUrl}'

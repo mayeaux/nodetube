@@ -911,10 +911,14 @@ exports.livestreaming = async(req, res) =>
 
   console.log(livestreamRtmpDomain, livestreamViewingDomain);
 
+  const obsServer = 'rtmp' + '://' + address + ':1935';
+  const obsStreamKey = `/${req.user.channelUrl}?key=${req.user.uploadToken}`;
+
   res.render('livestream/livestreaming', {
     title: 'Livestreaming',
     livestreamRtmpDomain,
-    livestreamViewingDomain
-
+    livestreamViewingDomain,
+    obsServer,
+    obsStreamKey
   });
 };
