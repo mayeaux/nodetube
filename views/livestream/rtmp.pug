@@ -74,8 +74,8 @@ block content
           // var webSocketUrl = 'wss://' + location.host + '/one2many';
 
           if (env == 'production') {
-            webSocketUrl = 'wss://' + 'newtube.app:8443' + '/stream/' + username;
-            messageUrl = 'wss://' + 'newtube.app:8443' + '/messages/' + username;
+            webSocketUrl = 'wss://' +   location.host + ':8443' + '/stream/' + username;
+            messageUrl = 'wss://' + location.host + ':8443' + '/messages/' + username;
           } else {
             webSocketUrl = 'ws://' + 'localhost:8443' + '/stream/' + username;
             messageUrl = 'ws://' + 'localhost:8443' + '/messages/' + username;
