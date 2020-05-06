@@ -36,7 +36,7 @@ style.
             if popularDefault == 'all'
               a(href=`/media/popular/1?within=24hour&category=all`) Popular
             else if popularDefault == 'overview'
-              a(href=`/media/popular/1?within=24hour&category=overview`) Popular
+              a(href=`/media/popular/1?category=overview&within=1week`) Popular
           li(class=(title == 'Recent Uploads') ? 'active' : undefined)
             a(href=`/media/recent?category=all`) Recent
           //li(class=(title == 'Channels') ? 'active' : undefined)

@@ -7,6 +7,7 @@ div.row
                 else
                     a(href=`/media/popular/${page}?media=${mediaType}&category=${category}&within=${dobj.withinString}`) #{dobj.englishString}
 
+    // last button is determined by whether is all uploads or category currently
     if category == 'overview'
         div.col-xs-6.col-sm-4.col-sm-2.col-md-2
             h3.fw
@@ -14,6 +15,6 @@ div.row
     if category == 'all'
         div.col-xs-6.col-sm-4.col-sm-2.col-md-2
             h3.fw
-                a(href=`/media/popular/${page}?media=${mediaType}&category=overview&within=24hour`) Categories
+                a(href=`/media/popular/${page}?media=${mediaType}&category=overview&within=1week`) Categories
 
 hr
