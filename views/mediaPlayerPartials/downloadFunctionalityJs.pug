@@ -11,7 +11,7 @@ script.
   }
 
   function downloadIt() {
-    var name = "#{upload.title}"
+    var name = "#{upload.title}#{upload.fileExtension}"
     if (name && name !== '') {
       var link = document.createElement('a');
       link.download = name;

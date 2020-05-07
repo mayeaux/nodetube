@@ -112,7 +112,6 @@ function livestreamRoutes(app){
 
   app.get('/logout', accountFrontendController.logout);
 
-
   // kurento routes
   // app.get(/\/user\/(.+)\/live\/staging/, livestreamController.getStaging);
   // app.get(/\/user\/(.+)\/live/, livestreamController.getLive);
@@ -131,6 +130,7 @@ function frontendRoutes(app){
 
   /** publicly available routes **/
   app.get('/', publicController.index);
+  app.get('/globe', publicController.globe);
   app.get('/about', publicController.about);
   app.get('/docs', publicController.getDocs);
   app.get('/termsofservice', publicController.tos);
@@ -195,7 +195,6 @@ function frontendRoutes(app){
   // app.get(/\/user\/(.+)\/live/, livestreamController.getLive);
   // app.get(/\/user\/(.+)\/live\/staging/, livestreamController.getStaging)
 
-
   // old code
   // app.get('/live', livestreamController.getLive);
   // app.get('/staging', livestreamController.getStaging);
@@ -207,8 +206,6 @@ function frontendRoutes(app){
 
   // viewing page for rtmp streams
   app.get('/live/:user', livestreamFrontendController.getLiveRTMP);
-
-
 
   /** recent action routes **/
   app.get('/media/recentComments/:page', authMiddleware.adminAuth, recentActionsController.recentComments);

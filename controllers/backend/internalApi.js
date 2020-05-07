@@ -430,15 +430,18 @@ exports.subscribeEndpoint = async function(req, res, next){
 exports.react = async(req, res, next)  => {
   // console.log(`${req.user._id}` , req.params.user);
 
+  // if the user is not authenticated to act on behalf of that user
   if(`${req.user._id}` !== req.params.user){
     return res.send('Not authorized');
   }
 
+  // find an existing react per that user and upload
   const existingReact = await React.findOne({
     upload: req.params.upload,
     user: req.params.user
   }).populate('upload user');
 
+  // find the upload for that react
   const upload = await Upload.findOne({
     _id : req.params.upload
   }).populate('uploader');
@@ -447,24 +450,14 @@ exports.react = async(req, res, next)  => {
     return res.send('Thing');
   }
 
-  // if existing react, update or not
-  if(existingReact){ // user selected the react that was already active (wants to remove)
-    if(existingReact.react == req.body.emoji){
-      await React.collection.deleteOne(existingReact);
-      return res.send('removed');
-    } else { // user changed the react
-      existingReact.react = req.body.emoji;
-      await existingReact.save();
-      return res.send('changed');
-    }
+  let newReact;
 
-  // otherwise create a new react
-  } else {
-
-    const newReact = new React({
+  if(!existingReact){
+    newReact = new React({
       upload: req.params.upload,
       user: req.params.user,
-      react: req.body.emoji
+      react: req.body.emoji,
+      active: true
     });
 
     await newReact.save();
@@ -472,15 +465,40 @@ exports.react = async(req, res, next)  => {
     upload.reacts.push(newReact._id);
     await upload.save();
 
-    // add a notification
+  // if existing react, update or not
+  } else if(existingReact && existingReact.active){
 
-    // create notif for comment on your upload if its not your own thing
-    if(upload.uploader._id.toString() !== req.user._id.toString()){
-      await createNotification(upload.uploader._id, req.user._id, 'react', upload, newReact);
+    // user selected the react that was already active (wants to remove)
+    if(existingReact.react == req.body.emoji){
+      existingReact.active = false;
+      await existingReact.save();
+      return res.send('removed');
+    } else {
+
+      // user changed the react
+      existingReact.react = req.body.emoji;
+      await existingReact.save();
+      return res.send('changed');
     }
 
-    res.send('new react created');
+  // otherwise create a new react
+  } else if(existingReact && !existingReact.active){
+    // there is a react, but it is inactive
+    existingReact.active = true;
+    existingReact.react = req.body.emoji;
+    await existingReact.save();
+  } else {
+    console.log('THIS SHOULDN\'T BE TRIGGERED, THE LOGIC IS OFF');
   }
+
+  // add a notification
+
+  // create notif for comment on your upload if its not your own upload
+  if(upload.uploader._id.toString() !== req.user._id.toString()){
+    await createNotification(upload.uploader._id, req.user._id, 'react', upload, newReact);
+  }
+
+  res.send('new react created');
 };
 
 /** POST EDIT UPLOAD **/
@@ -533,6 +551,8 @@ exports.editUpload = async(req, res, next) => {
     // load upload changes
     upload.title = req.body.title;
     upload.description = req.body.description;
+    if(upload.uploader.plan == "plus")
+      upload.visibility = req.body.visibility;
     upload.rating = req.body.rating;
     upload.category = req.body.category;
     upload.subcategory = req.body.subcategory;

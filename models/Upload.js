@@ -100,7 +100,7 @@ const uploadSchema = new mongoose.Schema({
 
   subcategory: { type: String, enum: getAllSubcategories() },
 
-  durationInSeconds: Number ,
+  durationInSeconds: Number,
   formattedDuration: String,
 
   processingCompletedAt: Date

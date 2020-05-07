@@ -38,11 +38,35 @@ script.
     autoplay = true;
   }
 
+  // Available controls:
+  /*
+    controls: [
+    'play-large', // The large play button in the center
+    'restart', // Restart playback
+    'rewind', // Rewind by the seek time (default 10 seconds)
+    'play', // Play/pause playback
+    'fast-forward', // Fast forward by the seek time (default 10 seconds)
+    'progress', // The progress bar and scrubber for playback and buffering
+    'current-time', // The current time of playback
+    'duration', // The full duration of the media
+    'mute', // Toggle mute
+    'volume', // Volume control
+    'captions', // Toggle captions
+    'settings', // Settings menu
+    'pip', // Picture-in-picture (currently Safari only)
+    'airplay', // Airplay (currently Safari only)
+    'download', // Show a download button with a link to either the current source or a custom URL you specify in your options
+    'fullscreen', // Toggle fullscreen
+    ];
+  */
+  // The order you pass them is the order they appear
+
   var plyr_options = {
     autoplay: autoplay,
     clickToPlay: true,
-    controls: ['mute', 'progress', 'play', 'fullscreen', 'volume', 'play-large', 'current-time', 'settings'],
-    settings: ['speed'],
+    speed: {selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]},
+    controls: ['play-large', 'play','progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'fullscreen'],
+    settings: ['speed', 'captions', 'quality', 'loop']
   };
 
   // Create the plyr instances - this defines players[0] as our primary player.
@@ -66,3 +90,7 @@ script.
     // add max height
     $('.display-element').css('max-height','620px')
   });
+
+  $("[data-plyr=seek]").css('cursor','pointer')
+
+  $("[data-plyr=volume]").css('cursor','pointer')

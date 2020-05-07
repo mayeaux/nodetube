@@ -35,7 +35,9 @@ function buildObjects(uploads){
       customThumbnailUrl: upload.customThumbnailUrl,
       thumbnails: upload.thumbnails,
       rating: upload.rating,
-      reacts: upload.reacts
+      reacts: upload.reacts,
+
+      formattedDuration: upload.formattedDuration
 
     };
 

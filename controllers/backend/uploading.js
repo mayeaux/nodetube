@@ -14,6 +14,9 @@ const redisClient = require('../../config/redis');
 
 const pagination = require('../../lib/helpers/pagination');
 const timeHelper = require('../../lib/helpers/time');
+const uploadingHelpers = require('../../lib/uploading/helpers');
+
+const bytesToMb = uploadingHelpers.bytesToMb;
 
 const User = require('../../models/index').User;
 const Upload = require('../../models/index').Upload;
@@ -207,10 +210,6 @@ const testIsFileTypeUnknown = async function(upload, fileType, fileExtension, lo
 
 };
 
-const bytesToMb = (bytes, decimalPlaces = 4) => {
-  return(bytes / Math.pow(10,6)).toFixed(decimalPlaces);
-};
-
 /**
  * POST /api/upload
  * File Upload API example.
@@ -341,7 +340,7 @@ exports.postFileUpload = async(req, res) => {
 
         // TODO: make this smarter, url etc
         if(requireModeration && moderationUpdatesToDiscord){
-          await sendMessageToDiscord(`Pending upload requires moderation on NodeTube.live. ${new Date()}`);
+          await sendMessageToDiscord(`Pending upload requires moderation on NodeTube.live. https://newtube.app/user/test/${upload.uniqueTag} https://newtube.app/pending ${new Date()}`);
         }
 
         /** FILE PROCESSING */

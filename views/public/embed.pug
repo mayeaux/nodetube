@@ -86,10 +86,10 @@ html
         div.display-div
 
             if upload.fileType == 'video'
-                video.display-element(poster=upload.thumbnailUrl controls='')
+                video.display-element(poster=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.custom || upload.thumbnails.generated || upload.thumbnails.medium}` controls='')
                     // TODO: Sub out thumbnail here
 
-                    source(src=`https://nodetube.live/uploads/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`, type='video/mp4')
+                    source(src=`${protocolDomainNameAndTLD}/uploads/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`, type='video/mp4')
                     source(src=upload.uploadUrl, type='video/mp4')
             else if upload.fileType == 'image'
                 img.display-element(src=upload.uploadUrl style="height:100%;width:100%")

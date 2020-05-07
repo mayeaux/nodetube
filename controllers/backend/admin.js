@@ -271,7 +271,7 @@ exports.postPending = async(req, res) => {
     await user.save();
   }
 
-  req.flash('success', {msg: `${upload.title} by ${user.channelName} moderated, thank you.`});
+  req.flash('success', {msg: `${upload.title} by ${user.channelUrl} moderated, thank you.`});
 
   if(fromUploads){
     res.redirect('/admin/uploads');

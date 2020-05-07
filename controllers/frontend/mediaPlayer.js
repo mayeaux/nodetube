@@ -5,9 +5,15 @@ const timeHelper = require('../../lib/helpers/time');
 
 const uploadHelpers = require('../../lib/helpers/settings');
 
+const checkWhetherToCountView = require('../../middlewares/shared/viewCounting');
+
+const { bytesToGb, bytesToMb } = require('../../lib/uploading/helpers');
+
 const categories = require('../../config/categories');
 
 let uploadServer  = uploadHelpers.uploadServer;
+
+const _ = require('lodash');
 
 const generateComments = require('../../lib/mediaPlayer/generateCommentsObjects');
 const generateReactInfo = require('../../lib/mediaPlayer/generateReactInfo');
@@ -31,6 +37,21 @@ function getParameterByName(name, url){
 const secondsToFormattedTime = timeHelper.secondsToFormattedTime;
 
 const stripeToken = process.env.STRIPE_FRONTEND_TOKEN || 'pk_test_iIpX39D0QKD1cXh5CYNUw69B';
+
+function getFormattedFileSize(upload){
+  const fileSizeInMb = upload.originalFileSizeInMb || upload.processedFileSizeInMb || bytesToMb(upload.fileSize);
+
+  let formattedFileSizeString;
+
+  // if it's under one gig,
+  if(fileSizeInMb < 1000){
+    formattedFileSizeString = _.round(fileSizeInMb) + ' MB';
+  } else {
+    formattedFileSizeString  = _.round(fileSizeInMb/1000, 1) + ' GB';
+  }
+
+  return formattedFileSizeString;
+}
 
 /**
  * GET /$user/$uploadUniqueTag
@@ -100,18 +121,33 @@ exports.getMedia = async(req, res) => {
       upload: upload.id
     });
 
-    // TODO: do fraud detection
-    const view = new View({
-      siteVisitor : req.siteVisitor._id,
-      upload : upload._id,
-      validity: 'real'
-    });
+    const siteVisitorId = req.siteVisitor._id;
+    const uploadID = upload._id;
 
-    await view.save();
-    upload.checkedViews.push(view);
+    const shouldCreateAView = await checkWhetherToCountView(siteVisitorId, uploadID);
 
-    // console.log(upload);
-    await upload.save();
+    // console.log(shouldCreateAView);
+
+    if(shouldCreateAView){
+      // get all the views for this upload for this user
+      // TODO: add a rule to only get the last 24h of worth of views
+      const view = new View({
+        siteVisitor : req.siteVisitor._id,
+        upload : upload._id,
+        validity: 'real'
+      });
+
+      await view.save();
+
+      await Upload.findOneAndUpdate({ uniqueTag: media },
+        {$push: { checkedViews: view._id}},
+        {new: true});
+    }
+
+    // originalFileSizeInMb: Number,
+    // processedFileSizeInMb: Number,
+
+    const formattedFileSize = getFormattedFileSize(upload);
 
     // document is fine to be shown publicly
 
@@ -144,7 +180,9 @@ exports.getMedia = async(req, res) => {
       getParameterByName,
       viewingUserIsBlocked,
       brandName,
-      secondsToFormattedTime
+      secondsToFormattedTime,
+      formattedFileSize,
+      domainName: process.env.DOMAIN_NAME_AND_TLD
     });
 
   } catch(err){
