@@ -2,23 +2,21 @@ const View = require('../../models').View;
 
 async function checkWhetherToCountView(siteVisitorId, uploadID){
 
-
   const existingViewsForThisUpload = await View.find({
     siteVisitor : siteVisitorId, // req.siteVisitor._id,
-    upload : uploadID //upload._id
+    upload : uploadID  // upload._id
   });
 
   // console.log(existingViewsForThisUpload.length)
-
-
-// calculate if doing fraud helper
+ 
+  // calculate if doing fraud helper
 
   let countViewCount = false;
 
   let last1hViews = 0;
   let last24hViews = 0;
 
-// console.log(existingViewsForThisUpload);
+  // console.log(existingViewsForThisUpload);
 
   // loop through all views for the upload per that user
   for(const view of existingViewsForThisUpload){
@@ -47,11 +45,11 @@ async function checkWhetherToCountView(siteVisitorId, uploadID){
       // if it has happened within the last 24h
     }
 
-    if (timeDiffInH < 24 ) {
+    if(timeDiffInH < 24 ){
 
-      // console.log('less than 24h')
+    // console.log('less than 24h')
 
-      last24hViews++
+      last24hViews++;
     }
   }
 
@@ -68,8 +66,7 @@ async function checkWhetherToCountView(siteVisitorId, uploadID){
 
   // console.log(countViewCount);
 
-  return countViewCount
-
+  return countViewCount;
 
 }
 

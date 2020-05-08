@@ -27,11 +27,11 @@ block content
                             input(type='hidden', name='_csrf', value=_csrf)
                             input(type='hidden', name='user', value=`${comment.commenter._id}`)
                             input(type='hidden', name='comment', value=`${comment._id}`)
-                            button.btn.btn-success(name="commentChangeValue" value="reinstateComment" type="submit" ) Reinstate Comment
+                            button.btn.btn-success(name="commentChangeValue" value="reinstateComment" type="submit" style="border:none;") Reinstate Comment
                             br
                             br
-                            button.btn.btn-danger(name="commentChangeValue" value="deleteComment" type="submit" ) Delete Comment
+                            button.btn.btn-danger(name="commentChangeValue" value="deleteComment" type="submit"  style="border:none;") Delete Comment
                             br
                             br
-                            button.btn.btn-danger(name="commentChangeValue" value="deleteCommentBanUser" type="submit" ) Delete Comment/Ban User
+                            button.btn.btn-danger(name="commentChangeValue" value="deleteCommentBanUser" type="submit"  style="border:none;") Delete Comment/Ban User
 

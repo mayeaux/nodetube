@@ -68,9 +68,9 @@ block content
 
                 div(style="height:10px;")
                 if alreadySubbed
-                    button(style="display:inherit;margin:0 auto;border-radius:3px;").fw.subscribe.btn.btn-danger Unsubscribe (#{subscriberAmount})
+                    button(style="display:inherit;margin:0 auto;border:none;").fw.subscribe.btn.btn-danger Unsubscribe #{subscriberAmount}
                 else
-                    button(style="display:inherit;margin:0 auto;border-radius:3px;").fw.subscribe.btn.btn-success Subscribe (#{subscriberAmount})
+                    button(style="display:inherit;margin:0 auto;border:none;").fw.subscribe.btn.btn-success Subscribe #{subscriberAmount}
 
 
 
@@ -83,7 +83,7 @@ block content
                     h4.fw Joined: #{joinedTimeAgo}
                 if channel.receivedSubscriptions
                     div.col-sm-3
-                        h4.fw(style="border-radius:5px;") Subscribers : #{channel.receivedSubscriptions.length}
+                        h4.fw(style="border-radius:5px;") Subscribers: #{channel.receivedSubscriptions.length}
                 else
                     div.col-sm-3
                         h4.fw(style="border-radius:5px;") Subscribers : 0
@@ -101,19 +101,19 @@ block content
                     if user && ( user.role == 'admin' || user.role == 'moderator') && channel.status !== 'restricted'
                         br
                         br
-                        button.delete-account.btn.btn-danger Delete Account
+                        button.delete-account.btn.btn-danger(style="border:none;") Delete Account
                         //button.delete-account.btn.btn-danger Delete Account And Ban Ip
                         if user.role == 'admin'
-                            button.delete-ips.btn.btn-danger Delete All Accounts / Ips
+                            button.delete-ips.btn.btn-danger(style="border:none;") Delete All Accounts / Ips
 
                     if user && ( user.role == 'admin' || user.role == 'moderator') && channel.status == 'restricted'
 
                         br
                         h3 ACCOUNT DELETED
-                        button.undelete-account.btn.btn-warning Undelete Account
+                        button.undelete-account.btn.btn-warning(style="border:none;") Undelete Account
                         //button.undelete-account.btn.btn-warning Undelete Account And Unban Ip
                         if user.role == 'admin'
-                            button.delete-ips.btn.btn-warning Undelete All Accounts / Unban All Ips
+                            button.delete-ips.btn.btn-warning(style="border:none;") Undelete All Accounts / Unban All Ips
 
         div
 
@@ -169,16 +169,16 @@ block content
 
     div.container
         each upload in channel.uploads
-            div.col-xs-12.col-sm-6.col-md-6.col-lg-4(style="text-align:center;height:330px;margin-top:30px;")
+            div.col-xs-12.col-sm-6.col-md-6.col-lg-4(style="text-align:center;height:330px")
                 if isUser || isAdmin || ( user && user.role == 'moderator' )
                     div.editFileButtons
                         form.editLink(action="/api/upload/delete" method="POST" style="display:inline-block")
                             input(type='hidden', name='_csrf', value=_csrf)
                             input(type='hidden', name='videoId', value=upload.uniqueTag)
-                            button.btn.btn-danger.delete-media Delete
+                            button.btn.btn-danger.delete-media(style="border:none;") Delete
                         if isUser || isAdmin || user.role == 'moderator'
                             a.editLink(href=`/user/${channel.channelUrl}/${upload.uniqueTag}/edit` style="display:inline-block")
-                                button.btn.btn-primary Edit
+                                button.btn.btn-primary(style="border:none;") Edit
 
 
                 include ../viewPartials/uploadThumbnail
@@ -286,7 +286,7 @@ block content
               type: "warning",
               showCancelButton: true,
               confirmButtonColor: "#DD6B55",
-              confirmButtonText: "Yes, delete it"
+              confirmButtonText: "Yes, undelete it"
             }).then(function (result) {
               if (result.value !== true) {
                 return

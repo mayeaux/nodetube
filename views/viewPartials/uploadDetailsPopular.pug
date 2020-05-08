@@ -16,7 +16,7 @@ div.upload-details
 
         // capitalize media type
     div.uploaded-by #{upload.fileType.charAt(0).toUpperCase() + upload.fileType.slice(1)} uploaded by
-        a.upload-user-text(href=`/user/${upload.uploader.channelUrl}`)
+        a.upload-user-text(href=`/user/${upload.uploader.channelUrl}` target="_parent")
             p(style="font-size:15px") #{upload.uploader.channelName || upload.uploader.channelUrl}
                 if upload.uploader.verified == true
                     img(src="/images/verified.jpg" width="19px" height="19px" style="margin-left:3px;margin-top:-2px;")

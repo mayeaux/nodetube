@@ -1,0 +1,118 @@
+extends ../layoutEmbed
+
+block content
+    div.container(style="background-color:transparent !important;")
+        // include ../viewPartials/categoryDropdown
+        h3(style="text-align:center !important;") Recommended For You
+        div.uploads
+            if !isACategory || category == 'overview'
+            else
+
+                each upload in uploads
+                    div.col-xs-12.col-sm-6.col-md-6.col-lg-4(style="text-align:center;height:353px;")
+
+                        include ../viewPartials/uploadThumbnail
+
+                        include ../viewPartials/uploadDetails
+    if uploads
+    script.
+      $(document).ready(function (event) {
+
+        var filter = '#{filter}';
+
+        console.log(filter)
+
+        var filterLabel = $('.' + filter);
+        filterLabel.addClass('selected');
+        $('form > div').css('transform', 'translateX(' + $(filterLabel.children(0)).data('location') + ')');
+
+
+
+        $('form input').click(function (event) {
+          $('form > div').css('transform', 'translateX(' + $(this).data('location') + ')');
+          $(this).parent().siblings().removeClass('selected');
+          $(this).parent().addClass('selected');
+
+
+          var label = $(this).parent();
+
+          var classes = label.attr('class');
+
+          console.log(classes);
+
+          var classList = classes.split(/\s+/);
+
+          console.log(classList);
+
+          var data = {}
+
+          $.each(classList, function (index, item) {
+            if (item === 'allAges') {
+              data.filter = 'allAges'
+
+              $.ajax({
+                type: 'POST',
+                url: `/api/changeUserFilter`,
+                data,
+                success: function (data) {
+                  window.location.reload(true);
+
+                  console.log(data);
+                },
+                error: function (err) {
+                  console.log(err);
+                }
+              });
+
+              console.log('all ages')
+            } else if (item == 'mature'){
+              data.filter = 'mature'
+
+
+              $.ajax({
+                type: 'POST',
+                url: `/api/changeUserFilter`,
+                data,
+                success: function (data) {
+                  window.location.reload(true);
+
+                  console.log(data);
+                },
+                error: function (err) {
+                  console.log(err);
+                }
+              });
+
+              console.log('mature')
+
+            } else if (item == 'sensitive'){
+
+              data.filter = 'sensitive'
+
+
+              $.ajax({
+                type: 'POST',
+                url: `/api/changeUserFilter`,
+                data,
+                success: function (data) {
+                  window.location.reload(true);
+
+                  console.log(data);
+                },
+                error: function (err) {
+                  console.log(err);
+                }
+              });
+
+              console.log('sensitive')
+
+            }
+          });
+
+
+
+        });
+      });
+
+    script.
+      balanceText();

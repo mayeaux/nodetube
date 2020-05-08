@@ -104,7 +104,7 @@ block content
   .container
     div.row
       div.col-sm-2
-        h3.fw
+        h5.fw(style="font-weight:bold;")
           a(href=`/user/${user.channelUrl}`) Channel Page
       //div.col-sm-2
       //  h3.fw
@@ -117,7 +117,7 @@ block content
       //        a(href="/" + `${user.channelUrl}` +  "/playlists") Playlists
       if user && user.plan == 'plus'
         div.col-sm-2
-          h3.fw
+          h5.fw(style="font-weight:bold;")
             a(href="/account/livestreaming") Livestreaming
           //a.livestream-button Livestreaming
           //a.livestreaming-link(href=`/user/${user.channelUrl}/live/staging`) Livestreaming
@@ -143,7 +143,7 @@ block content
       div.nt-plus.center-div.text-center
         if user.plan == 'plus'
           p Thank you so much for subscribing!
-          p Your support makes NewTube possible
+          p Your support makes #{brandName} possible
           p Please enjoy your new features:
           //h4 Automatic YouTube backup functionality, unlisted uploads, private uploads, 2GB upload size
           h4 Livestreaming, unlisted uploads, private uploads, 2GB upload size
@@ -156,21 +156,13 @@ block content
             - Access to NodeTube Recording Studio (COMING EVENTUALLY)
 
 
-          p.fw(style="white-space:pre-line;margin-bottom:19px;font-size:17px;margin-top:23px;").
+          p.fw(style="white-space:pre-line;font-size:17px;").
             - Upload file-size limit raised to 2GB
-
             - Unlisted and private uploads
-
             - Livestreaming with live chat
-
             - NewTube Recording Studio (Coming Soon)
-
             - Early access to all beta features
-
             - $4.95/month, cancel at any time
-
-            - Support alternative tech that values your speech and privacy
-
           button.stripe-button-el#customButton(type="submit" class="stripe-button-el" style="visibility: visible;")
             span(style="display: block; min-height: 30px;") Buy Now
 
@@ -179,13 +171,13 @@ block content
         br
 
 
-      // if you're allowed to
+    // if you're allowed to
     if  user.plan == 'plus' &&  user.privs.youtubeBackup
       h3.ytBackup
         br
         br
         br
-        h3.fw.text-center(style="") YouTube Backup
+        h3.fw.text-center YouTube Backup
         br
 
         //form
@@ -206,7 +198,7 @@ block content
               input.form-control(type='youtubeChannelId', name='youtubeChannelId', id='youtubeChannelId')
           .form-group
             .col-sm-offset-3.col-sm-4
-              button.btn.btn-primary.saveChannelId(type='submit')
+              button.btn.btn-primary.saveChannelId(type='submit' style="border:none;")
                 i.fa.fa-pencil
                 | Save Channel Username
 
@@ -272,7 +264,7 @@ block content
 
       .form-group
         .col-sm-offset-3.col-sm-4
-          button.fw.btn.btn.btn-primary(type='submit' style="font-size:16px;border-radius:5px;")
+          button.fw.btn.btn.btn-primary(type='submit' style="font-size:16px;border:none;")
             i.fa.fa-pencil
             | Update Profile
 
@@ -289,7 +281,7 @@ block content
         // TODO: Sub out thumbnail here
 
         if user.customThumbnail
-          img.center-block.text-center(src=`${uploadServer}/${user.channelUrl}/${user.customThumbnail}` width="256px" height="168px")
+          img.center-block.text-center(src=`${uploadServer}/${user.channelUrl}/${user.customThumbnail}` width="256px" height="auto" style="border-radius:6px")
         else
           img.center-block.text-center(src=`${uploadServer}/${user._id}/unique.png` width="256px" height="168px")
 
@@ -299,7 +291,7 @@ block content
           input(type="hidden" name="channelUrl" value=`${user.channelUrl}`)
           input(type="hidden" name="uploadToken" value=`${user.uploadToken}`)
 
-          button.fw.btn.btn.btn-danger.center-block.text-center(type='submit' style="margin-top:20px;border-radius:3px;")
+          button.fw.btn.btn.btn-danger.center-block.text-center(type='submit' style="margin-top:20px;border:none;")
             i.fa.fa-pencil
             | Delete
 
@@ -365,7 +357,7 @@ block content
           input.form-control(type='password', name='confirmPassword', id='confirmPassword' style="max-width:513px;")
       .form-group
         .col-sm-offset-3.col-sm-4
-          button.fw.btn.btn-primary(type='submit' style="margin-top:20px;border-radius:3px;")
+          button.fw.btn.btn-primary(type='submit' style="margin-top:20px;border:none;")
             i.fa.fa-lock
             | Change Password
 

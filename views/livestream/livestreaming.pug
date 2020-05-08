@@ -35,37 +35,23 @@ block content
 
         hr
 
-        h4.fw Please stream to the following RTMP url (don't share this publicly):
+        p Please stream to the following RTMP url (don't share this publicly):
 
-        h4.fw(style="text-decoration:underline") #{livestreamRtmpDomain}
+        p #{livestreamRtmpDomain}
 
         br
         br
 
-        h4.fw You can view here (please give it about 10s to start)
+        p You can view here (please give it about 10s to start)
 
         a(href=`${livestreamViewingDomain}`)
-            h4.fw #{livestreamViewingDomain}
+             p #{livestreamViewingDomain}
 
         br
         br
 
-        h4.fw Tip: If you have `ffmpeg` installed you can run the following command to stream a video from disk:
-        h4.fw(style="text-decoration:underline") ffmpeg -re -i PATH-TO-YOUR-VIDEO.mp4 -c copy -f flv #{livestreamRtmpDomain}
-
-
-        br
-        br
-
-        h4.fw Otherwise if you are streaming with OBS you can use the following:
-        h4.fw(style="display:inline;") Server: &nbsp
-        h4.fw(style="display:inline;text-decoration:underline") #{obsServer}
-        div(style="margin-top:7px")
-            h4.fw(style="display:inline;") Stream Key: &nbsp
-            h4.fw(style="display:inline;text-decoration:underline") #{obsStreamKey}
-
-
-
+        p Tip: If you have `ffmpeg` installed you can run the following command to stream a video from disk:
+        p ffmpeg -re -i PATH-TO-YOUR-VIDEO.mp4 -c copy -f flv #{livestreamRtmpDomain}
 
 
         if user

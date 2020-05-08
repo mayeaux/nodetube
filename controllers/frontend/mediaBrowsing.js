@@ -13,7 +13,7 @@ const uploadServer = uploadHelpers.uploadServer;
 const getFromCache = require('../../caching/getFromCache');
 const uploadFilters = require('../../lib/mediaBrowsing/helpers');
 
-const { getUploadDuration } = require('../../lib/mediaBrowsing/helpers')
+const { getUploadDuration } = require('../../lib/mediaBrowsing/helpers');
 
 const getSensitivityFilter =  uploadFilters.getSensitivityFilter;
 const categories = require('../../config/categories');
@@ -39,12 +39,12 @@ if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false'){
 const pageLimit = 42;
 
 // TODO: pull this function out
-async function addValuesIfNecessary(upload, channelUrl) {
-  if (upload.fileType == 'video' || upload.fileType == 'audio') {
-    if (!upload.durationInSeconds || !upload.formattedDuration) {
+async function addValuesIfNecessary(upload, channelUrl){
+  if(upload.fileType == 'video' || upload.fileType == 'audio'){
+    if(!upload.durationInSeconds || !upload.formattedDuration){
 
       var server = uploadServer;
-      if (server.charAt(0) == "/") // the slash confuses the file reading, because host root directory is not the same as machine root directory
+      if(server.charAt(0) == '/') // the slash confuses the file reading, because host root directory is not the same as machine root directory
         server = server.substr(1);
 
       const uploadLocation = `${server}/${channelUrl}/${upload.uniqueTag + upload.fileExtension}`;
@@ -61,8 +61,7 @@ async function addValuesIfNecessary(upload, channelUrl) {
         const saveDocument = await uploadDocument.save();
         // console.log(saveDocument);
 
-
-      } catch (err) {
+      } catch(err){
         /** if the file has been deleted then it won't blow up **/
         // console.log(err);
       }
@@ -127,10 +126,9 @@ exports.recentUploads = async(req, res) => {
     const uploads = await getFromCache.getRecentUploads(limit, skipAmount, mediaType, filter, category, subcategory);
     const recentPopular = 'recent';
 
-    for(const upload of uploads) {
+    for(const upload of uploads){
       addValuesIfNecessary(upload, upload.uploader.channelUrl);
     }
-
 
     // console.log('rendering');
 
@@ -316,7 +314,7 @@ exports.popularUploads = async(req, res) => {
     // console.log('getting popular uploads');
 
     if(uploads && uploads.length){
-      for(const upload in uploads) {
+      for(const upload in uploads){
         // console.log(upload);
         addValuesIfNecessary(upload, upload.uploader && upload.uploader.channelUrl);
       }
@@ -609,4 +607,212 @@ exports.recentRssFeed = async(req, res) => {
   res.send(xml);
 
   // TOOD: incorporate rss feed here and send it as response
+};
+
+// -------------------------------------------------------------------------------------------------------------------------------------------------
+//
+// Suggested -- this is for the media page when loading videos on the right column
+// 
+// -------------------------------------------------------------------------------------------------------------------------------------------------
+
+exports.suggested = async(req, res) => {
+
+  // console.log('getting popular uploads');
+
+  const mediaBrowsingType = 'Popular';
+
+  const addressPrepend = '/media/suggested';
+
+  // get media page, either video, image, audio or all
+  let media = req.query.media || 'all';
+
+  // TODO: pull this into a process var
+
+  let category = req.query.category || 'all';
+
+  // let 'overview' be passed as a category
+
+  // let category = req.query.category || 'all';
+
+  let subcategory = req.query.subcategory || '';
+
+  let within = req.query.within;
+
+  // get a random time   
+  var random_times = ['1hour', '24hour', '1week', '1month', 'alltime']; 
+     
+  var random_time = random_times[Math.floor(Math.random() * random_times.length)]; 
+
+  if(!within){
+    within = random_time;
+  }
+
+  // setup page
+  let page = req.params.page;
+  if(!page){ page = 1; }
+  page = parseInt(page);
+
+  let limit = pageLimit;
+
+  if(!category || category == 'overview'){
+    limit = 6;
+  }
+
+  const skipAmount = (page * limit) - limit;
+
+  // TODO: pull this out and export a function that returns an object with these values
+  // then use ES6 syntax to declare them {}
+  const startingNumber = pagination.getMiddleNumber(page);
+  const numbersArray = pagination.createArray(startingNumber);
+  const previousNumber = pagination.getPreviousNumber(page);
+  const nextNumber = pagination.getNextNumber(page);
+
+  const withinString = pagination.createWithinString(req.query.within);
+
+  const englishString = pagination.createEnglishString(req.query.within);
+
+  // console.log(englishString)
+
+  //  amount to show in brackets that equals view amount in time period
+  let viewAmountInPeriod;
+
+  // console.log(`WITHIN: ${within}`);
+
+  let displayObject = [{ withinString: '1hour', englishString: '' }, { withinString : '24hour', englishString: ''},
+    {withinString: '1week', englishString: ''}
+    , { withinString: '1month', englishString: '' }, { withinString: 'alltime', englishString: '' }];
+
+  // used for 'views per these returned items
+  function calculateViewAmount(uploads){
+    let viewCounter = 0;
+
+    for(const checkUpload of uploads){
+      // console.log(checkUpload);
+
+      let stringToCheck;
+      if(within == 'alltime'){
+        stringToCheck = 'viewsAllTime';
+      } else {
+        stringToCheck = `viewsWithin${within}`;
+      }
+      const forThisUpload = checkUpload[stringToCheck];
+      viewCounter = viewCounter + forThisUpload;
+    }
+    return viewCounter;
+  }
+
+  try {
+
+    switch(englishString){
+    case'':
+      viewAmountInPeriod = viewStats.hour;
+      break;
+    case' ':
+      viewAmountInPeriod = viewStats.day;
+      break;
+    case'  ':
+      viewAmountInPeriod = viewStats.week;
+      break;
+    case'   ':
+      viewAmountInPeriod = viewStats.month;
+      break;
+    case'    ':
+      viewAmountInPeriod = viewStats.alltime;
+      break;
+    }
+
+    const timeRange = req.query.within;
+    const mediaType = media;
+
+    let filter = getSensitivityFilter(req.user, req.siteVisitor);
+
+    let uploads = await getFromCache.getPopularUploads(timeRange, limit, skipAmount, mediaType, filter, category, subcategory);
+
+    // show the view amount per the particular page
+    // let viewsOnThisPage;
+    // if(category){
+    //   viewsOnThisPage = calculateViewAmount(uploads);
+    // }
+
+    // get the full category object from categories
+    let categoryObj;
+    for(const cat of categories){
+      if(cat.name == category){
+        categoryObj = cat;
+      }
+    }
+
+    // TODO: create into its own function and import it
+
+    // add the within string per the time overview
+    let withinDisplayString = '';
+    if(within == '1hour'){
+      withinDisplayString = 'last hour';
+    } else if(within == '24hour'){
+      withinDisplayString = 'last 24 hours';
+    } else if(within == '1week'){
+      withinDisplayString = 'last week';
+    } else if(within == '1month'){
+      withinDisplayString = 'last month';
+    } 
+
+    withinDisplayString = 'views ' + withinDisplayString;
+
+    if(within == 'alltime'){
+      withinDisplayString = '';
+    }
+    // TODO:
+
+    const popularTimeViews = 'viewsWithin' + within;
+
+    // console.log(popularTimeViews);
+    //
+    // console.log('getting popular uploads');
+
+    if(uploads && uploads.length){
+      for(const upload in uploads){
+        // console.log(upload);
+        addValuesIfNecessary(upload, upload.uploader && upload.uploader.channelUrl);
+      }
+    }
+
+    res.render('mediaBrowsing/suggested', {
+      title: 'Suggested',
+      uploads,
+      numbersArray,
+      highlightedNumber: page,
+      page,
+      previousNumber,
+      nextNumber,
+      withinString,
+      englishString,
+      viewAmountInPeriod,
+      uploadServer,
+      filter,
+      siteVisitor : req.siteVisitor,
+      categories,
+      category,
+      isACategory : category,
+      media,
+      addressPrepend,
+      categoryObj,
+      within,
+      withinDisplayString,
+      popularTimeViews,
+      mediaBrowsingType,
+      mediaType,
+      displayObject
+      // viewsOnThisPage
+    });
+
+  } catch(err){
+    console.log('ERR:');
+    console.log(err);
+
+    res.status(500);
+    return res.render('error/500', {
+      title: 'Server Error'
+    });
+  }
+
 };

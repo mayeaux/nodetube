@@ -175,6 +175,8 @@ function frontendRoutes(app){
   app.get('/media/recent/:page', mediaBrowsingController.recentUploads);
   app.get('/media/popular',  mediaBrowsingController.popularUploads);
   app.get('/media/popular/:page', mediaBrowsingController.popularUploads);
+  app.get('/media/suggested',  mediaBrowsingController.suggested);
+  app.get('/media/suggested/:page', mediaBrowsingController.suggested);
 
   app.get('/media/popularByReacts', authMiddleware.plusAuth, mediaBrowsingController.popularByReacts);
 

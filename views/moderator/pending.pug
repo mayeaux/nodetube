@@ -26,14 +26,14 @@ block content
                         form(action="/pending" method="POST")
                             input(type='hidden', name='_csrf', value=_csrf)
                             input(type='hidden', name='uniqueTag', value=`${upload.uniqueTag}`)
-                            button.btn.btn-success(name="moderationValue" value="approve" type="submit") Approve
+                            button.btn.btn-success(name="moderationValue" value="approve" type="submit" style="border:none;") Approve
                             br
                             br
-                            button.btn.btn-success(name="moderationValue" value="approveAndTrustUser" type="submit") Approve And Trust User
+                            button.btn.btn-success(name="moderationValue" value="approveAndTrustUser" type="submit" style="border:none;") Approve And Trust User
                             br
                             br
-                            button.btn.btn-danger(name="moderationValue" value="banVideo" type="submit" ) Ban Video
+                            button.btn.btn-danger(name="moderationValue" value="banVideo" type="submit"  style="border:none;") Ban Video
                             br
                             br
-                            button.btn.btn-danger(name="moderationValue" value="banVideoAndUser" type="submit") Ban Video And User
+                            button.btn.btn-danger(name="moderationValue" value="banVideoAndUser" type="submit" style="border:none;") Ban Video And User
 

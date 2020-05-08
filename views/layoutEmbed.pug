@@ -23,7 +23,6 @@ html
     title #{title} - #{brandName}
     link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@7.33.1/dist/sweetalert2.css')
     link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css')
-    link(rel='stylesheet', href='/css/main.css')
     link(rel='shortcut icon', href='/favicon.ico')
     link(rel='apple-touch-icon', href='/images/app-icon-512x512.png')
     link(rel='manifest', href='/manifest.json')
@@ -51,17 +50,12 @@ html
     block extra_js
 
 
-  body(style="overflow-x:hidden;touch-action: manipulation;" id="body")
+  body(style="overflow-x:hidden;touch-action: manipulation;")
     include nodeTubeCss
-
-    //layout.pug
-    include partials/header
 
     .container(style="max-width:100%;padding-left: 0px; padding-right: 0px;")
       include partials/flash
       block content
-
-    include partials/footer
 
     if coinhiveOn
       include widgets/coinhive
@@ -72,7 +66,6 @@ html
     if googleAnalyticsOn
       include widgets/google-analytics
 
-    script(src='/js/main.js')
     block extra_footer_js
 
 

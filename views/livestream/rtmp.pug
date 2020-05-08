@@ -28,7 +28,7 @@ block content
                   .form-group
                     input.message-text.form-control(type='text', placeholder='Message')
                   .form-group
-                    button.send-text.btn.btn-primary Send
+                    button.send-text.btn.btn-primary( style="border:none;") Send
                 p.countdown-timer Countdown to send new message: 10 seconds
         else
           br
@@ -74,8 +74,8 @@ block content
           // var webSocketUrl = 'wss://' + location.host + '/one2many';
 
           if (env == 'production') {
-            webSocketUrl = 'wss://' +   location.host + ':8443' + '/stream/' + username;
-            messageUrl = 'wss://' + location.host + ':8443' + '/messages/' + username;
+            webSocketUrl = 'wss://' + 'newtube.app:8443' + '/stream/' + username;
+            messageUrl = 'wss://' + 'newtube.app:8443' + '/messages/' + username;
           } else {
             webSocketUrl = 'ws://' + 'localhost:8443' + '/stream/' + username;
             messageUrl = 'ws://' + 'localhost:8443' + '/messages/' + username;

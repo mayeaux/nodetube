@@ -434,7 +434,7 @@ async function runNgrok(){
 
   const url = await ngrok.connect(ngrokOptions);
 
-  console.log(`Access NodeTube on the public web via ${url}. This link will be changed if you restart the app, to
+  console.log(`Access NodeTube on the public web via ${url} . This link will be changed if you restart the app, to
   use Ngrok with a permanent subdomain please purchase a token and update the settings in .env.private (see runNgrok function in app.js)`);
 }
 

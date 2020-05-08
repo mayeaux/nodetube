@@ -88,7 +88,7 @@ exports.getMedia = async(req, res) => {
       // its the same user
       isUser =  ( req.user._id.toString() == upload.uploader._id.toString()  );
 
-      // the requesting user is an adming
+      // the requesting user is an admin
       isAdmin = req.user.role == 'admin';
     }
 

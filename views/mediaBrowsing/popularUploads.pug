@@ -2,176 +2,176 @@ extends ../layout
 
 block content
 
-    div.container
-        include ../viewPartials/popularUploadsNavbar
+        div.container(id="darkMode")
+            include ../viewPartials/popularUploadsNavbar
 
-    // show view amount and time period like: Last Day (294)
-    h2.fw.center-block.text-center #{englishString} (#{viewAmountInPeriod})
+        // show view amount and time period like: Last Day (294)
+        h2.fw.center-block.text-center #{englishString} (#{viewAmountInPeriod})
 
-    // it's a pretty big change so turn off for now
-    if category & 1 == 2
-        h3.center-block.text-center Views On This Page: (#{viewsOnThisPage})
+        // it's a pretty big change so turn off for now
+        if category & 1 == 2
+            h3.center-block.text-center Views On This Page: (#{viewsOnThisPage})
 
-    div.container
+        div.container(class="iLikeDark")
 
-        h2.center-block.text-center #{timeAgoEnglish}
+            h2.center-block.text-center #{timeAgoEnglish}
 
-        div.center-block.text-center.col-sm-12
+            div.center-block.text-center.col-sm-12
+
+
+                br
+
+                //br
+
+                // Non-video stuff (orderBy, sensitivity dropdowns,
+
+                // CATEGORY DROPDOWN
+                div.search-upload-buttons-container
+                    include ../viewPartials/categoryDropdown
+
+                    include ../viewPartials/popularUploadsMediaDropdown
+
+                    include ../viewPartials/sensitivityFilterDropdown
+
+
+            include ../viewPartials/popularUploadsPagination
 
 
             br
+            div.uploads
+                // CATEGORY OVERVIEW PAGE IF NOT A CATEGORY
+                if !isACategory || category == 'overview'
+                    include ../viewPartials/categoryOverviews
 
-            //br
+                else
 
-            // Non-video stuff (orderBy, sensitivity dropdowns,
-
-            // CATEGORY DROPDOWN
-            div.search-upload-buttons-container
-                include ../viewPartials/categoryDropdown
-
-                include ../viewPartials/popularUploadsMediaDropdown
-
-                include ../viewPartials/sensitivityFilterDropdown
+                    div.category.col-sm-12
+                        h1.fw.categoryDisplayName(style="font-size:42px") #{categoryObj.displayName}
+                        br
 
 
-        include ../viewPartials/popularUploadsPagination
+                    each upload in uploads
+                        div.col-xs-12.col-sm-6.col-md-6.col-lg-4(style="text-align:center;height:353px;")
+
+                            include ../viewPartials/uploadThumbnail
+
+                            include ../viewPartials/uploadDetails
+
+                            // include ../viewPartials/uploadDetailsPopular
 
 
-        br
-        div.uploads
-            // CATEGORY OVERVIEW PAGE IF NOT A CATEGORY
-            if !isACategory || category == 'overview'
-                include ../viewPartials/categoryOverviews
-
-            else
-
-                div.category.col-sm-12
-                    h1.fw.categoryDisplayName(style="font-size:42px") #{categoryObj.displayName}
-                    br
+                //include ../viewPartials/adminSensitivityButtons
 
 
-                each upload in uploads
-                    div.col-xs-12.col-sm-6.col-md-6.col-lg-4(style="text-align:center;height:353px;")
+        if uploads
 
-                        include ../viewPartials/uploadThumbnail
-
-                        include ../viewPartials/uploadDetails
-
-                        // include ../viewPartials/uploadDetailsPopular
-
-
-            //include ../viewPartials/adminSensitivityButtons
-
-
-    if uploads
-
-        include ../viewPartials/popularUploadsPagination
+            include ../viewPartials/popularUploadsPagination
 
 
 
-    script.
-      $(document).ready(function (event) {
+        script.
+          $(document).ready(function (event) {
 
-        var filter = '#{filter}';
+            var filter = '#{filter}';
 
-        console.log(filter)
+            console.log(filter)
 
-        var filterLabel = $('.' + filter);
-        filterLabel.addClass('selected');
-        $('form > div').css('transform', 'translateX(' + $(filterLabel.children(0)).data('location') + ')');
-
-
-
-        $('form input').click(function (event) {
-          $('form > div').css('transform', 'translateX(' + $(this).data('location') + ')');
-          $(this).parent().siblings().removeClass('selected');
-          $(this).parent().addClass('selected');
+            var filterLabel = $('.' + filter);
+            filterLabel.addClass('selected');
+            $('form > div').css('transform', 'translateX(' + $(filterLabel.children(0)).data('location') + ')');
 
 
-          var label = $(this).parent();
 
-          var classes = label.attr('class');
+            $('form input').click(function (event) {
+              $('form > div').css('transform', 'translateX(' + $(this).data('location') + ')');
+              $(this).parent().siblings().removeClass('selected');
+              $(this).parent().addClass('selected');
 
-          console.log(classes);
 
-          var classList = classes.split(/\s+/);
+              var label = $(this).parent();
 
-          console.log(classList);
+              var classes = label.attr('class');
 
-          var data = {}
+              console.log(classes);
 
-          $.each(classList, function (index, item) {
-            if (item === 'allAges') {
-              data.filter = 'allAges'
+              var classList = classes.split(/\s+/);
 
-              $.ajax({
-                type: 'POST',
-                url: `/api/changeUserFilter`,
-                data,
-                success: function (data) {
-                  window.location.reload(true);
+              console.log(classList);
 
-                  console.log(data);
-                },
-                error: function (err) {
-                  console.log(err);
+              var data = {}
+
+              $.each(classList, function (index, item) {
+                if (item === 'allAges') {
+                  data.filter = 'allAges'
+
+                  $.ajax({
+                    type: 'POST',
+                    url: `/api/changeUserFilter`,
+                    data,
+                    success: function (data) {
+                      window.location.reload(true);
+
+                      console.log(data);
+                    },
+                    error: function (err) {
+                      console.log(err);
+                    }
+                  });
+
+                  console.log('all ages')
+                } else if (item == 'mature'){
+                  data.filter = 'mature'
+
+
+                  $.ajax({
+                    type: 'POST',
+                    url: `/api/changeUserFilter`,
+                    data,
+                    success: function (data) {
+                      window.location.reload(true);
+
+                      console.log(data);
+                    },
+                    error: function (err) {
+                      console.log(err);
+                    }
+                  });
+
+                  console.log('mature')
+
+                } else if (item == 'sensitive'){
+
+                  data.filter = 'sensitive'
+
+
+                  $.ajax({
+                    type: 'POST',
+                    url: `/api/changeUserFilter`,
+                    data,
+                    success: function (data) {
+                      window.location.reload(true);
+
+                      console.log(data);
+                    },
+                    error: function (err) {
+                      console.log(err);
+                    }
+                  });
+
+                  console.log('sensitive')
+
                 }
               });
 
-              console.log('all ages')
-            } else if (item == 'mature'){
-              data.filter = 'mature'
 
 
-              $.ajax({
-                type: 'POST',
-                url: `/api/changeUserFilter`,
-                data,
-                success: function (data) {
-                  window.location.reload(true);
-
-                  console.log(data);
-                },
-                error: function (err) {
-                  console.log(err);
-                }
-              });
-
-              console.log('mature')
-
-            } else if (item == 'sensitive'){
-
-              data.filter = 'sensitive'
-
-
-              $.ajax({
-                type: 'POST',
-                url: `/api/changeUserFilter`,
-                data,
-                success: function (data) {
-                  window.location.reload(true);
-
-                  console.log(data);
-                },
-                error: function (err) {
-                  console.log(err);
-                }
-              });
-
-              console.log('sensitive')
-
-            }
+            });
           });
 
 
+        include ../viewPartials/changeSensitivityFilterJs
 
-        });
-      });
+        script.
+          balanceText();
 
-
-    include ../viewPartials/changeSensitivityFilterJs
-
-    script.
-      balanceText();
-
-    include ../viewPartials/mouseOverJavascript
+        include ../viewPartials/mouseOverJavascript

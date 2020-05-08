@@ -47,7 +47,7 @@ script.
 
     // the user is unsubbing
     if(unsubbing){
-      $('.subscribe').html(`Subscribe (${amountOfSubs})`)
+      $('.subscribe').html(`subscribe • #{subscriberAmount}`)
       // change from red to green
 
       console.log('unsubscribing');
@@ -62,7 +62,7 @@ script.
     } else {
       console.log('subscribing')
 
-      $('.subscribe').html(`Unsubscribe (${amountOfSubs})`)
+      $('.subscribe').html(`unsubscribe • #{subscriberAmount}`)
       $('.subscribe').removeClass("btn-success")
       $('.subscribe').addClass("btn-danger")
 

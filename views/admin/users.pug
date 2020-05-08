@@ -23,17 +23,17 @@ block content
                         form(action="/admin/users" method="POST")
                             input(type='hidden', name='_csrf', value=_csrf)
                             input(type='hidden', name='user', value=`${user._id}`)
-                            //button.btn.btn-success(name="userChangeValue" value="approve" type="submit") Approve
+                            //button.btn.btn-success(name="userChangeValue" value="approve" type="submit" style="border:none;") Approve
                             //br
                             //br
-                            button.btn.btn-primary(name="userChangeValue" value="trustUser" type="submit" ) Trust User
+                            button.btn.btn-primary(name="userChangeValue" value="trustUser" type="submit"  style="border:none;") Trust User
                             br
                             br
-                            button.btn.btn-danger(name="userChangeValue" value="untrustUser" type="submit" ) Untrust User
+                            button.btn.btn-danger(name="userChangeValue" value="untrustUser" type="submit"  style="border:none;") Untrust User
                             br
                             br
-                            button.btn.btn-success(name="userChangeValue" value="unbanUser" type="submit" ) Unban User
+                            button.btn.btn-success(name="userChangeValue" value="unbanUser" type="submit"  style="border:none;") Unban User
                             br
                             br
-                            button.btn.btn-danger(name="userChangeValue" value="banUser" type="submit") Ban User
+                            button.btn.btn-danger(name="userChangeValue" value="banUser" type="submit" style="border:none;") Ban User
 

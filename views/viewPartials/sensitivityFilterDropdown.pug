@@ -1,8 +1,8 @@
-div.search-upload-buttons-container.dropdown(style="display:inline")
+div.search-upload-buttons-container.dropdown(style="display:inline;border:none")
     // TODO: this should be updated to be smart enough to support MAX_RATING_ALLOWED env var (aka SFW doesn't even have a filter)
     if !user
         // show current loaded filter
-        button#dropdownMenu1.fw.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
+        button#dropdownMenu1.fw.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border:none;")
             if siteVisitor.filter == 'allAges'
                 | Rating: SFW &nbsp
                 span.caret
@@ -19,7 +19,7 @@ div.search-upload-buttons-container.dropdown(style="display:inline")
                     a.changeFilterButton(value="mature" href="#") SFW/NSFW
 
     else
-        button#dropdownMenu1.fw.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
+        button#dropdownMenu1.fw.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border:none;")
             if user.filter == 'allAges'
                 | Rating: SFW &nbsp
                 span.caret

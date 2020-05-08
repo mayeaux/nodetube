@@ -5,11 +5,11 @@ script.
   var upload = '#{upload._id}'
   var csrf = '#{_csrf}'
 
-  var height = 50;
-  var width = 50;
-  var duration = 400;
+  var height = 25;
+  var width = 25;
+  var duration = 300;
 
-  var changeSize = 0.33
+  var changeSize = 0.01
 
   $('.react img').on('mouseover', function() {
 
@@ -64,7 +64,7 @@ script.
 
     // change opacities
     $('.react img').css({
-      opacity: '0.565'
+      opacity: '0.8'
     })
     $(this).css({
       opacity: 1

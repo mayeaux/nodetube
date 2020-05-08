@@ -8,10 +8,17 @@ block content
             margin: 0 auto;
             margin-top: 30px;
         }
+        .row {
+            display: flex;
+        }
+
+        .column {
+            flex: 40%;
+        }
 
 
     br
-    div.center-block.text-center.col-sm-12
+    div(style="margin-left:10px;text-align:left;")
         if upload.status == 'processing'
 
             div(style="max-width:443px;margin:0 auto;")
@@ -28,336 +35,381 @@ block content
 
         br
         br
-        if upload.fileType === 'video' && !upload.status !== 'processing'
-            div.display-div(style="min-width:50%;min-height:50%;margin:0 auto;")
-                // TODO: Sub out thumbnail here
+        div(style="padding-botton:10px;")
+            if upload.fileType === 'video' && !upload.status !== 'processing'
+                div.display-div(style="min-width:50%;min-height:50%;margin:0 auto;")
+                    // TODO: Sub out thumbnail here
 
-                video#media_player.display-element(playsinline poster=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;")
-                    // to
-                    source.video-source(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`, type='video/mp4')
-                    //source(src=upload.uploadUrl, type='video/mp4')
+                    video#media_player.display-element(playsinline poster=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;")
+                        // to
+                        source.video-source(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`, type='video/mp4')
+                        //source(src=upload.uploadUrl, type='video/mp4')
 
-        else if upload.fileType === 'audio'
-            div
-                audio#media_player.my_audio(playsinline style="width:80%;" controls='', preload='none')
+            else if upload.fileType === 'audio'
+                div
+                    audio#media_player.my_audio(playsinline style="width:80%;" controls='', preload='none')
 
-                    if upload.fileExtension == '.m4a'
-                        source(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`, type='audio/mp4')
-                    if upload.fileExtension == '.oga' || upload.fileExtension == '.ogg'
-                        source(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`, type='audio/ogg')
-                    else
-                        source(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`, type='audio/mp3')
-
-
-                    //source(src=upload.uploadUrl, type='audio/mp3')
-
-        else if upload.fileType === 'image'
-            div.display-div(style="")
-                a(href=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`)
-                    img.display-element(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="border-radius:13px;max-width:80%;min-width:50%;min-height:50%;max-height:620px;")
+                        if upload.fileExtension == '.m4a'
+                            source(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`, type='audio/mp4')
+                        if upload.fileExtension == '.oga' || upload.fileExtension == '.ogg'
+                            source(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`, type='audio/ogg')
+                        else
+                            source(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`, type='audio/mp3')
 
 
-        div.non-player-content(style="position:relative;")
+                        //source(src=upload.uploadUrl, type='audio/mp3')
 
-            br
-            br
+            else if upload.fileType === 'image'
+                div.display-div(style="").center-block.text-center.col-sm-12
+                    a(href=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`)
+                        img.display-element(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="border-radius:13px;max-width:80%;min-width:50%;min-height:50%;max-height:620px;padding-bottom:20px;")
+
+        div.non-player-content(style="position:relative;padding-bottom:10px;")
             // Upload Title
-            //h2(class="upload-title-value" style="align-content:center;justify-content:normal;width:60%;margin: 0 auto;")=upload.title
-            h2.balance-text(class="upload-title-value" style="text-wrap:balance;width:80%;margin:0 auto;font-weight:300")=upload.title
+            h2(class="upload-title-value" style="text-align:left;margin-top:20px;")=upload.title
+                        // Upload View Amount and sub amount
+                        // react functionality
+            
+            if upload.uploader
+                p(style="float:left;") #{upload.timeAgo} &nbsp;•&nbsp;#{upload.views} views
+            div.react(style="padding-botttom:10px;")
+                        br
+                        each emoji in emojis
+                            div(style="padding-right:15px;display:inline-block;float:right;")
+                                a(href="#")
+                                    if currentReact
+                                        if currentReact == emoji.name
+                                            div.clicked-emoji
+                                                img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="25px" )
 
+                                        else
+                                            div.unclicked-emoji
+                                                img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="25px" )
+
+                                    else
+                                        div.clicked-emoji
+                                            img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="25px" )
+
+                                p.fw(class=emoji.name style="text-align:center;margin-bottom:10px;") #{emoji.amount}
+                        if upload.fileType == 'image' || upload.fileType == 'video'
+                            //div.change-size-button.increase-size
+                            //    h1(style="cursor:pointer") +
+                            //div.change-size-button.decrease-size
+                            //    h1(style="cursor:pointer") -
+                        //div.change-size-button
+                            h6.download-button
+                                h5.fw #{upload.views} views | #{subscriberAmount} subscribers | 
+                        div.change-size-button(style="float:right;margin-left:10px;")
+                            h6.download-button
+                                    i.download-icon.fas.fa-file-download(aria-hidden="true" style="cursor:pointer;font-size:15px;")
+                        div.change-size-button(style="float:right")
+                            h6.share-button
+                                i.share-icon.fas.fa-code(aria-hidden="true" style="cursor:pointer;font-size:15px;")
+                        if upload.fileType == 'video' || upload.fileType == 'audio'
+                            div.change-size-button(style="float:right")
+                                h6.repeat-div(style="opacity:0.4")
+                                    i.repeat-icon.fas.fa-redo(aria-hidden="true" style="cursor:pointer;font-size:15px;")
+                        div.change-size-button(style="float:right")
+                            h6.report-button(style="")
+                                i.share-icon.fa.fa-exclamation-triangle(aria-hidden="true" style="cursor:pointer;font-size:15px;")
+                                
             if upload.visibility == 'pending' && upload.status !== 'processing'
                 h3.pending-string Your video is currently pending moderator approval. If it's still pending after several minutes please contact a mod at
                     a(href="/discord")  Discord
 
-            br
-            // uploader byline
-            h3.uploader-name(style="margin-top:25px;font-size:26px;")
-                if upload.uploader.customThumbnail
-                    a(href=`/user/${upload.uploader.channelUrl}`)
+        div(class="")
+            div(style="margin-left:10px;text-align:left;" class="column")
+                // uploader byline
+                h3.uploader-name(style="margin-top:25px;font-size:26px;")
+                    //if upload.uploader.customThumbnail
+                        a(href=`/user/${upload.uploader.channelUrl}`)
 
-                        img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` style="border-radius:13px;width:159px;height:159px;")
-                        br
-                        br
-                else if upload.uploader.thumbnailUrl
-                    a(href=`/user/${upload.uploader.channelUrl}`)
+                            img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` style="border-radius:13px;width:159px;height:159px;")
+                            br
+                            br
+                    if upload.uploader.thumbnailUrl
+                        a(href=`/user/${upload.uploader.channelUrl}`)
 
-                        img(src=`${uploadServer}/${upload.uploader._id}/unique.png` style="border-radius:13px;width:159px;height:159px;")
-                        br
-                        br
-
-                a(href=`/user/${upload.uploader.channelUrl}` style="color:rgb(51, 51, 51);font-weight:300") #{upload.uploader.channelName || upload.uploader.channelUrl}
-                    if upload.uploader.verified == true
-                        img(src="/images/verified.jpg" width="25px" height="25px" style="margin-left:3px;margin-top:-2px;margin-right:5px;")
-                    if upload.uploader.plan == 'plus'
-                        span.nodetube-pro PLUS
-
-
-            if upload.visibility != 'pending'
-                if alreadySubbed
-                    button.subscribe.btn.fw.btn-danger(style="border-radius:4px") Unsubscribe (#{subscriberAmount})
-                else
-                    button.subscribe.btn.fw.btn-success(style="border-radius:4px") Subscribe (#{subscriberAmount})
-                br
-                br
-
-            // REMOVE QUALITY THING, EVERYONE CAN STAY LOW QUALITY
-            // also have to add .fw to this thing when take it live
-            //if upload.quality && upload.quality.high
-            //    div.dropdown
-            //        button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:4px;" quality="low")
-            //            | Quality: Low
-            //            span.caret
-            //
-            //        ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1' style="cursor:pointer;")
-            //            li(role='presentation')
-            //                a.low-quality Low
-            //            li(role='presentation')
-            //                a.high-quality High
-
-            //if upload.uploader.plan == 'plus'
-            //    br
-            //    button.donate.btn.btn-success(style="margin-bottom:-10px") Donate
-
-            div
-                // edit button
-                if ( user && user.channelUrl == upload.uploader.channelUrl ) ||  ( user && user.role == 'admin' )
+                            img(src=`${uploadServer}/${upload.uploader._id}/unique.png` style="border-radius:13px;width:159px;height:159px;")
+                            br
+                            br
+                    if upload.uploader.customThumbnail
+                        img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` style="border-radius:25px;width:45px;height:45px;margin-right:10px;")
                     br
-                    a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}/edit`)
-                        button.fw.btn.btn-success(style="margin-bottom:-10px;border-radius:5px;") Edit
+                    a(href=`/user/${upload.uploader.channelUrl}` style="color:darkgray;font-weight:300;font-size:20px;margin-top:10px") #{upload.uploader.channelName || upload.uploader.channelUrl}
+                    
+                        if upload.uploader.verified == true
+                            img(src="/images/verified.jpg" width="20px" height="20px" style="margin-left:3px;margin-top:-2px;margin-right:5px;")
+                        if upload.uploader.plan == 'plus'
+                            span.nodetube-pro PLUS
+                    
+                    if upload.visibility != 'pending'
+                        if alreadySubbed
+                            button.subscribe.btn.fw.btn-danger(style="margin-left:10px;border-radius: 6px;font-weight:bold;float:right;") unsubscribe • #{subscriberAmount}
+                        else
+                            button.subscribe.btn.fw.btn-success(style="margin-left:10px;border-radius: 6px;font-weight:bold;float:right;") subscribe • #{subscriberAmount}
+                    //h6(style="font-size:13px;padding-top:-10px;") #{subscriberAmount} subscribers
+
+                        //hr
+                        //br
+                        //br
+                    if ( user && user.channelUrl == upload.uploader.channelUrl ) ||  ( user && user.role == 'admin' )
+                        //br
+                        a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}/edit`)
+                            button.fw.btn.btn-success(style="margin-left:20px;border-radius: 6px;font-weight:bold;float:right;") edit
 
 
-            // EXTRA BUTTONS
-            div
-                if upload.fileType == 'image' || upload.fileType == 'video'
-                    //div.change-size-button.increase-size
-                    //    h1(style="cursor:pointer") +
-                    //div.change-size-button.decrease-size
-                    //    h1(style="cursor:pointer") -
-                div.change-size-button
-                    h2.download-button
-                        i.download-icon.fa.fa-download(aria-hidden="true" style="cursor:pointer")
-                div.change-size-button(style="margin-left:0px;")
-                    h2.share-button
-                        i.share-icon.fas.fa-code(aria-hidden="true" style="cursor:pointer;font-size:27px;margin-left:0px;")
-                if upload.fileType == 'video' || upload.fileType == 'audio'
-                    div.change-size-button(style="margin-left:0px")
-                        h2.repeat-div(style="opacity:0.4")
-                            i.repeat-icon.fa.fa-repeat(aria-hidden="true" style="cursor:pointer")
-                div.change-size-button(style="cursor:pointer;margin-left:0px;")
-                    h2.report-button(style="")
-                        i.share-icon.fa.fa-exclamation-triangle(aria-hidden="true" style="cursor:pointer;font-size:19px;")
+                // REMOVE QUALITY THING, EVERYONE CAN STAY LOW QUALITY
+                // also have to add .fw to this thing when take it live
+                //if upload.quality && upload.quality.high
+                //    div.dropdown
+                //        button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:4px;" quality="low")
+                //            | Quality: Low
+                //            span.caret
+                //
+                //        ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1' style="cursor:pointer;")
+                //            li(role='presentation')
+                //                a.low-quality Low
+                //            li(role='presentation')
+                //                a.high-quality High
+
+                //if upload.uploader.plan == 'plus'
+                //    br
+                //    button.donate.btn.btn-success(style="margin-bottom:-10px") Donate
+
+                //div
+                    // edit button
+                    /////////
 
 
-
-            // More Upload Details
-            div.col-sm-12
-                // Upload View Amount
-                h3.fw #{upload.views} Views
-
-                // Upload time ago, duration and uploader
-                if upload.uploader
-                    h4.fw
-                        | Uploaded #{upload.timeAgo} &nbsp
-
-                    if upload.formattedDuration
-                        p.fw
-                            | Duration: #{upload.formattedDuration}
-
-                    if upload.visibility == 'removed'
-                        h2 Upload Deleted
-
+                // EXTRA BUTTONS
+                //div
+                    if upload.fileType == 'image' || upload.fileType == 'video'
+                        //div.change-size-button.increase-size
+                        //    h1(style="cursor:pointer") +
+                        //div.change-size-button.decrease-size
+                        //    h1(style="cursor:pointer") -
+                    div.change-size-button
+                        h2.download-button
+                            i.download-icon.fa.fa-download(aria-hidden="true" style="cursor:pointer")
+                    div.change-size-button
+                        h2.share-button
+                            i.share-icon.fa.fa-share(aria-hidden="true" style="cursor:pointer")
                     if upload.fileType == 'video' || upload.fileType == 'audio'
-
-                        // TODO: should be able to support MB and GB
-                        p.fw.fileSizeText(style="margin-top:15px") File Size: #{ formattedFileSize }
-
-                    if upload.category
-                        each category in categories
-                            if category.name == upload.category
-                                p.fw(style="margin-top:15px;font-size:12px;") Category: #{category.displayName}
-
-                                if upload.subcategory
-
-                                    each subcategory in category.subcategories
-
-                                        if upload.subcategory == subcategory.name
-                                            p.fw(style="margin-top:15px;font-size:12px;") Subcategory: #{subcategory.displayName}
+                        div.change-size-button(style="margin-left:0px")
+                            h2.repeat-div(style="opacity:0.4")
+                                i.repeat-icon.fa.fa-repeat(aria-hidden="true" style="cursor:pointer")
+                    div.change-size-button(style="cursor:pointer")
+                        h2.report-button(style="")
+                            i.share-icon.fa.fa-exclamation-triangle(aria-hidden="true" style="cursor:pointer;font-size:25px;")
+                        
 
 
-                    if upload.rating
-                        if upload.rating == 'allAges'
-                            p.fw(style="margin-top:15px;font-size:12px;") Rating: Safe For Work
-                        if upload.rating == 'mature'
-                            p.fw(style="margin-top:15px;font-size:12px;") Rating: Not Safe For Work
-                        if upload.rating == 'sensitive'
-                            p.fw(style="margin-top:15px;font-size:12px;") Rating: Sensitive (18+)
+                // More Upload Details
+                div
+                    // Upload time ago, duration and uploader
+                    h4(style="font-weight:lighter;font-size:15px")
+                        //| <strong>uploaded:</strong> 
+                                
+                        //p.fw(style="text-align: left;margin: 0 auto;white-space:pre-line;word-wrap:break-word;min-width:240px;")
+                        if upload.formattedDuration
+                            p.fw
+                                | duration: #{upload.formattedDuration}
 
+                        if upload.visibility == 'removed'
+                            h2 upload deleted
 
-                    br
+                        if upload.fileType == 'video' || upload.fileType == 'audio'
 
+                            // TODO: should be able to support MB and GB
+                            //p.fw.fileSizeText(style="margin-top:15px;font-size:15px;font-weight:bold;") file size: #{ formattedFileSize }
 
-                // react functionality
-                div.react(style="width:39%;background-color:white;margin:0 auto;border-radius:10px;margin-bottom:21px;padding-bottom:12px;max-width:453px;min-width:247px;")
-                    br
-                    each emoji in emojis
-                        div(style="padding-right:15px;display:inline-block;")
-                            a(href="#")
-                                if currentReact
-                                    if currentReact == emoji.name
-                                        div.clicked-emoji
-                                            img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
+                        div(style="text-align:left;")    
+                            // Upload Description
+                            if upload.description
+                                h4.fw(class="upload-description-value" style="font-size:15px;font-weight:bold;float:left;width:79%;") Description:
+                                    p.fw(style="text-align: left;margin: 0 auto;white-space:pre-line;word-wrap:break-word;min-width:240px;" id="descriptionText") #{upload.description}
 
+                            if upload.rating
+                                if upload.rating == 'allAges'
+                                    if upload.category
+                                        each category in categories
+                                            if category.name == upload.category
+                                                h4.fw(style="font-size:13px;font-weight:lighter;float:right;margin-right:2px;") <b>Category:</b> <a href="/media/popular/1?category=#{category.name}">#{category.displayName}</a>
+                                                    p.fw(style="font-size:13px;font-weight:bold;margin-right:2px;font-weight:lighter;") <b>File Size:</b> #{ formattedFileSize }
+                                                    p.fw(style="font-size:13px;font-weight:bold;margin-right:2px;font-weight:lighter;margin-top:-10px;")
                                     else
-                                        div.unclicked-emoji
-                                            img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
+                                        h4.fw(style="font-size:13px;font-weight:lighter;float:right;margin-right:2px;") <b>Rating:</b> Safe For Work
 
-                                else
-                                    div.clicked-emoji
-                                        img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
-
-                            p.fw(class=emoji.name) #{emoji.amount}
-
-
-
-                // Upload Description
-                if upload.description
-                    h4.fw(class="upload-description-value") Description
-                    p.fw(style="width:36%;text-align: center;margin: 0 auto;white-space:pre-line;word-wrap:break-word;min-width:240px;" id="descriptionText") #{upload.description}
-
+                                if upload.rating == 'mature'
+                                    if upload.category
+                                        each category in categories
+                                            if category.name == upload.category
+                                                h4.fw(style="font-size:13px;font-weight:lighter;float:right;margin-right:2px;") <b>Category:</b> <a href="/media/popular/1?category=#{category.name}">#{category.displayName}</a>
+                                                    p.fw(style="font-size:13px;font-weight:bold;margin-right:2px;font-weight:lighter;") <b>File Size:</b> #{ formattedFileSize }
+                                                    p.fw(style="font-size:13px;font-weight:bold;margin-right:2px;font-weight:lighter;margin-top:-10px;")
+                                    else
+                                        h4.fw(style="font-size:13px;font-weight:lighter;float:right;margin-right:2px;") <b>Rating:</b> Not Safe For Work
+                                if upload.rating == 'sensitive'
+                                    if upload.category
+                                        each category in categories
+                                            if category.name == upload.category
+                                                h4.fw(style="font-size:13px;font-weight:lighter;float:right;margin-right:2px;") <b>Category:</b> <a href="/media/popular/1?category=#{category.name}">#{category.displayName}</a>
+                                                    p.fw(style="font-size:13px;font-weight:bold;margin-right:2px;font-weight:lighter;") <b>File Size:</b> #{ formattedFileSize }
+                                                    p.fw(style="font-size:13px;font-weight:bold;margin-right:2px;font-weight:lighter;margin-top:-10px;")
+                                    else
+                                        h4.fw(style="font-size:13px;font-weight:lighter;float:right;margin-right:2px;") <b>Rating:</b> Sensitive (18+)
+                            
                 br
                 br
+                br
+                // SHARING BUTTONS
+                div(style="float:right;")
 
-            // SHARING BUTTONS
-            div
+                    a(href=`https://www.facebook.com/sharer/sharer.php?u=${url}` target="_blank")
+                        img(src='/images/facebook-share.jpg' style="width:30px;")
+                    a(href=`https://twitter.com/share?url=${url}` target="_blank")
+                        img(src='/images/twitter-share.jpg' style="margin-left:10px;width:30px;")
+                    a(href=`mailto:?subject=Check out this ${upload.fileType}&body=Check out this ${upload.fileType} on ${brandName}: ${url}`, title='Share by Email')
+                        img(src='/images/email-share.jpg' style="margin-left:10px;width:30px;margin-right:10px;")
 
-                a(href=`https://www.facebook.com/sharer/sharer.php?u=${url}` target="_blank")
-                    img(src='/images/facebook-share.jpg', width='100', height='30', alt='Share on Twitter')
-                a(href=`https://twitter.com/share?url=${url}` target="_blank")
-                    img(src='/images/twitter-share.jpg', width='100', height='30', alt='Share on Twitter')
-                a(href=`mailto:?subject=Check out this ${upload.fileType}&body=Check out this ${upload.fileType} on ${brandName}: ${url}`, title='Share by Email')
-                    img(src='/images/email-share.jpg')
+                //br
+                //button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} \n\n${url}`)
+                    i.fa.fa-info.fw
+                    | Copy Details
 
+                //button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} by ${upload.uploader.channelName || upload.uploader.channelUrl} \n\n ${url} \n\n #${brandName}`)
+                    i.fa.fa-info.fw
+                    | With User Info
+
+            div(style="margin-right:10px;text-align:right;" id="suggested" class="column")
+                if upload.category
+                    each category in categories
+                        if category.name == upload.category
+                            // iframe(style="height:600px;width:550px;border:none;padding-top:0" src=`/media/suggested/?category=${category.name}` target=_self)
+        br
+        hr
+
+        // COMMENT SECTION AND FORM
+        div(style="ttext-align:center;")
             br
-            button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} \n\n${url}`)
-                i.fa.fa-info.fw
-                | Copy Details
-
-            button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} by ${upload.uploader.channelName || upload.uploader.channelUrl} \n\n ${url} \n\n #${brandName}`)
-                i.fa.fa-info.fw
-                | With User Info
-
-            // COMMENT SECTION AND FORM
-            div
-                br
-                br
-                br
-                div.col-sm-12
+            div.col-md-12
                 if user
                     if !viewingUserIsBlocked
                         // comment form
                         div.comment-form.form-group
-                            form.form-horizontal.overall-comment-form(class="comment-form" action='/api/comment', method='post')
-                                input(type='hidden', name='_csrf', value=_csrf)
-                                label.fw(for="comment" style="font-size:20px;") Enter Comment
+                                form.form-horizontal.overall-comment-form(class="comment-form" action='/api/comment', method='post')
+                                    input(type='hidden', name='_csrf', value=_csrf)
+                                    label.fw(for="comment" style="font-size:20px;") comments
+                                    br
+                                    input(type="hidden" name="upload" id="upload" value=upload._id)
+                                    textarea.fw(name="comment" id="comment" minlength="2" style="width:400px;max-width:100%" placeholder="write a comment")
+                                    br
+                                    input.fw.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border:none")
+                    else
+                        div.comment-form.form-group.no-user-comment-form
+                            form.form-horizontal.overall-comment-form(class="comment-form")
+                                label.fw(for="comment" style="font-size:17px;") comments
                                 br
-                                input(type="hidden" name="upload" id="upload" value=upload._id)
-                                textarea.fw(name="comment" id="comment" minlength="2" style="width:400px;max-width:100%")
+                                textarea.fw(name="comment" id="comment" minlength="2" style="width:400px;max-width:100%" placeholder="write a comment")
                                 br
-                                input.fw.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
-                else
-                    div.comment-form.form-group.no-user-comment-form
-                        form.form-horizontal.overall-comment-form(class="comment-form")
-                            label.fw(for="comment" style="font-size:17px;") Enter Comment
-                            br
-                            textarea.fw(name="comment" id="comment" minlength="2" style="width:400px;max-width:100%")
-                            br
-                            input.fw.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
+                                input.fw.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border:none")
+                                hr
 
+                    // DISPLAY COMMENTS
+                    // otherwise display all comments
+                    if commentCount == 0
+                        div.comment-containing-div(style="margin:0 auto;margin-top:70px;")
+                            div(style="display:block")
+                                h3.fw.no-comments-header(style="text-align:left;font-size:22px;") no comments yet
 
-                // DISPLAY COMMENTS
+                                div.comment-thread
+                                    div.original-comment.no-comments-div(style="display:block;padding-bottom:15px;padding-top:10px;")
 
-                // otherwise display all comments
-                if commentCount == 0
-                    div.comment-containing-div(style="width:400px;margin:0 auto;margin-top:70px;")
-                        div(style="display:block")
-                            h3.fw.no-comments-header(style="text-decoration:underline;text-align:left;font-size:22px;") No Comments Yet
-
-                            div.comment-thread
-                                div.original-comment.no-comments-div(style="display:block;padding-bottom:15px;padding-top:10px;")
-
-                else
-                    if commentCount > 0
-                        div.comment-containing-div.col-sm-6.col-sm-offset-3(style="margin-top:60px;text-align:center")
-                            if commentCount == 1
-                                div(style="display:block")
-                                    h3.fw(style="text-align:left;font-size:28px;margin-bottom:14px;") #{commentCount} Comment
-                            else
-                                div(style="display:block")
-                                    h3.fw(style="text-align:left;font-size:28px;margin-bottom:14px;") #{commentCount} Comments
-                            each comment in comments
-                                if comment.commenter
-                                    div.comment-thread
-                                        div.original-comment(style="display:block;padding-bottom:15px;padding-top:10px;")
-                                            // TODO: Add it here
-                                            div.top-line(style="text-align:left;")
-                                                p.fw(style="text-align:left;display:inline-block;")
-                                                    a(href=`/user/${comment.commenter.channelUrl}` style="color:black;margin-right:5px;") #{comment.commenter.channelName || comment.commenter.channelUrl}
-                                                p.fw(style="display:inline-block;") - #{comment.timeAgo} &nbsp
-                                                    if user && !viewingUserIsBlocked
-                                                        a.reply-link(style="cursor:pointer") Reply
-                                                    // delete button
-                                                    // if uploader or admin or commenter, let them delete comment
-                                                    if isUploaderOrAdmin || ( user && comment.commenter._id == user._id )
-                                                        a.delete-comment-button(style="margin-left:9px;cursor:pointer;" commentId=comment._id) Delete
-
-                                                    if isUploader && !comment.commenter.isBlocked
-                                                        a.block-user-button(style="margin-left:9px;cursor:pointer;" blockedusername=comment.commenter.channelUrl) Block User
-                                                    if isUploader && comment.commenter.isBlocked
-                                                        a.unblock-user-button(style="margin-left:9px;cursor:pointer;" blockedusername=comment.commenter.channelUrl) Unblock User
-
-
-                                            p.fw(style="text-align:left;font-size:16px;") #{comment.text}
-
-                                            // container that appears after you hit Reply
-                                            div.reply-container(style="display:none")
-                                                form.form-horizontal.reply-comment-form(class="comment-form" action='/api/comment', method='post')
-                                                    input(type='hidden', name='_csrf', value=_csrf)
-                                                    input(type="hidden" name="upload" id="upload" value=upload._id)
-                                                    input(type="hidden" name="commentId" id="commentId" value=comment.id)
-                                                    textarea.fw(name="comment" id="comment" minlength="2" style="width:400px;max-width:100%;")
-                                                    br
-                                                    input.fw.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
-                                                    br
-                                                    br
-
-                                        div.responses
-                                            each responseComment in comment.responses
-                                                if responseComment.visibility !== 'removed'
-                                                    div(style="display:block;padding-bottom:15px;padding-left:40px;")
-                                                        div.top-line(style="text-align:left;")
-                                                            p.fw(style="text-align:left;display:inline-block;")
-                                                                a(href=`/user/${responseComment.commenter.channelUrl}` style="color:black;margin-right:5px;") #{responseComment.commenter.channelName || responseComment.commenter.channelUrl}
-                                                            p.fw(style="display:inline-block;") - #{responseComment.timeAgo} &nbsp
-                                                        p.fw(style="text-align:left;") #{responseComment.text}
-
-                                                    //div.reply-container(style="display:none")
-                                                    //    form.form-horizontal.reply-form(class="comment-form" action='/api/comment', method='post')
-                                                    //        input(type='hidden', name='_csrf', value=_csrf)
-                                                    //        input(type="hidden" name="upload" id="upload" value=upload._id)
-                                                    //        input(type="hidden" name="commentId" id="commentId" value=responseComment.id)
-                                                    //        textarea(name="comment" id="comment" style="width:400px;")
-                                                    //        br
-                                                    //        input.btn.btn-md.btn-success(type='submit' value="Post Comment")
-                                                    //        br
-                                                    //        br
-
-
-
-
-
-
+                    else
+                        if commentCount > 0
+                            div.comment-containing-div(style="margin-top:60px;text-align:left")
+                                if commentCount == 1
+                                    div(style="display:block")
+                                        h3.fw(style="text-align:left;font-size:28px;margin-bottom:14px;") #{commentCount} comment
                                 else
-                                    p No commenter
+                                    div(style="display:block")
+                                        h3.fw(style="text-align:left;font-size:28px;margin-bottom:14px;") #{commentCount} comments
+                                each comment in comments
+                                    if comment.commenter
+                                        div.comment-thread
+                                            div.original-comment(style="display:block;padding-bottom:15px;padding-top:10px;")
+                                                // TODO: Add it here
+                                                div.top-line(style="text-align:left;")
+                                                    //if upload.uploader.customThumbnail
+                                                        img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` style="border-radius:25px;width:25px;height:25px;margin-right:10px;") 
+                                                    p.fw(style="text-align:left;display:inline-block;")                                                   
+                                                    a(href=`/user/${comment.commenter.channelUrl}` style="color:black;margin-right:5px;") #{comment.commenter.channelName || comment.commenter.channelUrl}
+                                                    p.fw(style="display:inline-block;") - #{comment.timeAgo} &nbsp
+                                                        if user && !viewingUserIsBlocked
+                                                            a.reply-link(style="cursor:pointer") reply
+                                                        // delete button
+                                                        // if uploader or admin or commenter, let them delete comment
+                                                        if isUploaderOrAdmin || ( user && comment.commenter._id == user._id )
+                                                            a.delete-comment-button(style="margin-left:9px;cursor:pointer;" commentId=comment._id) delete
+
+                                                        if isUploader && !comment.commenter.isBlocked
+                                                            a.block-user-button(style="margin-left:9px;cursor:pointer;" blockedusername=comment.commenter.channelUrl) block user
+                                                        if isUploader && comment.commenter.isBlocked
+                                                            a.unblock-user-button(style="margin-left:9px;cursor:pointer;" blockedusername=comment.commenter.channelUrl) unblock user
+
+
+                                                p.fw(style="text-align:left;font-size:16px;") #{comment.text}
+
+                                                hr
+
+                                                // container that appears after you hit Reply
+                                                div.reply-container(style="display:none")
+                                                    form.form-horizontal.reply-comment-form(class="comment-form" action='/api/comment', method='post')
+                                                        input(type='hidden', name='_csrf', value=_csrf)
+                                                        input(type="hidden" name="upload" id="upload" value=upload._id)
+                                                        input(type="hidden" name="commentId" id="commentId" value=comment.id)
+                                                        textarea.fw(name="comment" id="comment" minlength="2" style="width:400px;max-width:100%;")
+                                                        br
+                                                        input.fw.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border:none")
+                                                        br
+                                                        br
+
+                                            div.responses
+                                                each responseComment in comment.responses
+                                                    if responseComment.visibility !== 'removed'
+                                                        div(style="display:block;padding-bottom:15px;padding-left:40px;")
+                                                            div.top-line(style="text-align:left;")
+                                                                //if upload.uploader.customThumbnail
+                                                                    img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` style="border-radius:25px;width:25px;height:25px;margin-right:10px;")
+                                                                p.fw(style="text-align:left;display:inline-block;")
+                                                                    a(href=`/user/${responseComment.commenter.channelUrl}` style="color:black;margin-right:5px;") #{responseComment.commenter.channelName || responseComment.commenter.channelUrl}
+                                                                p.fw(style="display:inline-block;") - #{responseComment.timeAgo} &nbsp
+                                                            p.fw(style="text-align:left;") #{responseComment.text}
+
+                                                            hr
+
+                                                        //div.reply-container(style="display:none")
+                                                        //    form.form-horizontal.reply-form(class="comment-form" action='/api/comment', method='post')
+                                                        //        input(type='hidden', name='_csrf', value=_csrf)
+                                                        //        input(type="hidden" name="upload" id="upload" value=upload._id)
+                                                        //        input(type="hidden" name="commentId" id="commentId" value=responseComment.id)
+                                                        //        textarea(name="comment" id="comment" style="width:400px;")
+                                                        //        br
+                                                        //        input.btn.btn-md.btn-success(type='submit' value="Post Comment")
+                                                        //        br
+                                                        //        br
+                                    else
+                                        p No commenter
+                                    //embed(src="public/popularByReactsEmbed.pug")
+
+
+
+
+                //div(style="margin-left:10px;text-align:left;").center-block.text-center.col-sm-18
+                        iframe(src="/media/popular")
+
+            
 
 
 block extra_js
@@ -419,6 +471,12 @@ block extra_footer_js
     balanceText();
 
   // reportUploadFunctionalityJs
+
+  // include viewPartials/uploadThumbnail
+
+  // include viewPartials/uploadDetails
+
+  // iframe(src="mediaBrowsing/popularUploads.pug")
 
   include ./mediaPlayerPartials/reportUploadFunctionalityJs
 
