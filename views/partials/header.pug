@@ -1,9 +1,9 @@
 style.
   .dropdown-anchors {
-    font-size: 12px;
-    font-weight: 500;
-    text-transform: uppercase;
-    transition: all 0.2s linear;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    text-transform: uppercase !important;
+    transition: all 0.2s linear !important;
     color: white !important;
     font-weight:500 !important;
   }
@@ -15,6 +15,32 @@ style.
 
   .brandName {
     font-size:19px;
+  }
+
+  /* Dark mode: */
+  .dark-mode {
+    background-color: #111 !important; //#1a1a1c; //rgba(11, 11, 12, 1); //#181817; //#292322; //rgb(40,44,52); rgb(33,37,43);
+    color: darkgray !important;
+  }
+
+  /* Light mode: */
+  .light-mode {
+    background-color: #fff !important; //#1a1a1c; //rgba(11, 11, 12, 1); //#181817; //#292322; //rgb(40,44,52); rgb(33,37,43);
+    color: black !important;
+  }
+
+  /* changes the dark mode button to look like a link*/
+  .link-button {
+    background: none!important;
+    border: none;
+    padding: 0!important;
+    outline:none;
+    /*optional*/
+    /*font-family: arial, sans-serif;*/
+    /*input has OS specific font-family*/
+    /*color: #069;*/
+    /*text-decoration: underline;*/
+    cursor: pointer;
   }
 
 .navbar.navbar-default.navbar-fixed-top(style="background-color:rgb(24,55,147)")
@@ -44,6 +70,11 @@ style.
 
         li(class=(title == 'Search') ? 'active' : undefined)
           a(href=`/search`) Search
+        
+        li(class=(title == 'Dark'))
+          a
+            button(onclick="toggleDarkLight()" class="link-button") DARK MODE
+            
         li.subscribed-link(class=(title == 'Subscriptions') ? 'active' : undefined)
           if user && user.unseenSubscriptionUploads || user && user.unseenSubscriptionUploads == 0
             a(href=`/media/subscribed`) Subscribed (#{user.unseenSubscriptionUploads})
@@ -171,3 +202,13 @@ if !user
 
 
     })
+
+if 1==1 
+script.
+  document.getElementById("body").className = localStorage.getItem("darkLight");
+  function toggleDarkLight() {
+    var body = document.getElementById("body");
+    var currentClass = body.className;
+    body.className = currentClass == "dark-mode" ? "light-mode" : "dark-mode";
+    localStorage.setItem('darkLight', body.className);
+  }
