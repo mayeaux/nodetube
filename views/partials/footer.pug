@@ -29,7 +29,8 @@ footer
 
     a.pull-left(style="color:#aaa;margin-right:10px;" href="/termsofservice") Terms Of Service
 
-
-
-
-
+if 1==1
+  script.
+    if (document.getElementById("body").className == "dark-mode") {
+      document.getElementById("dark-mode-button").innerHTML = "[Light Mode]"
+    }
