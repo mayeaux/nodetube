@@ -8,6 +8,7 @@ const User = require('../../models/index').User;
  */
 exports.getLiveRTMP = async (req, res) => {
 
+  // TODO: this is backwards
   const channelUrl = req.params.user;
 
   console.log(channelUrl);
