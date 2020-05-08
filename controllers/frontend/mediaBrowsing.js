@@ -201,7 +201,7 @@ exports.popularUploads = async(req, res) => {
   let limit = pageLimit;
 
   if(!category || category == 'overview'){
-    limit = 6;
+    limit = 3;
   }
 
   const skipAmount = (page * limit) - limit;
