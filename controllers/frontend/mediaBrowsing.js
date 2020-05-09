@@ -99,8 +99,8 @@ exports.recentUploads = async(req, res) => {
     // limit amount to list per page
     let limit = pageLimit;
 
-    if(!category){
-      limit = 6;
+    if(!category || category == 'overview'){
+      limit = 3;
     }
 
     const skipAmount = (page * limit) - limit;
@@ -119,24 +119,22 @@ exports.recentUploads = async(req, res) => {
         categoryObj = cat;
       }
     }
-
     // console.log(`CATEGORY: ${category}`);
 
     const mediaType = media;
 
     const uploads = await getFromCache.getRecentUploads(limit, skipAmount, mediaType, filter, category, subcategory);
-    const recentPopular = 'recent';
 
-    for(const upload of uploads) {
-      addValuesIfNecessary(upload, upload.uploader.channelUrl);
+    if(category && category !== 'overview'){
+      for(const upload of uploads) {
+        addValuesIfNecessary(upload, upload.uploader.channelUrl);
+      }
     }
-
 
     // console.log('rendering');
 
     res.render('mediaBrowsing/recentUploads', {
       title: 'Recent Uploads',
-      recentPopular,
       uploads,
       numbersArray,
       highlightedNumber: page,

@@ -41,7 +41,7 @@ block content
 
         hr
         div.uploads.container
-            if !isACategory
+            if !isACategory || category == 'overview'
                 include ../viewPartials/categoryOverviews
 
             else
