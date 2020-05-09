@@ -18,7 +18,9 @@ const uploadSchema = new mongoose.Schema({
   originalFileName: String,
   fileExtension: String,
 
-  uploadServer: { type: String, enum: ['uploads1', 'uploads3' ] },
+  // should be in the format of https://domain.com/path, and will have the channelUrl and unique tag added in media.pug,
+  // such as https://domain.com/path/$channelUrl/$uniqueTag.$fileExtension
+  uploadServer: { type: String },
 
   hostUrl: String, // (backblaze prepend)  TODO: can eventually delete this
   uniqueTag: { type: String, index: true, unique: true },
