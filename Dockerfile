@@ -10,7 +10,7 @@ WORKDIR /app/
 #RUN rm -rf ./node_modules
 #RUN npm cache clean --force
 #RUN npm i --production
-RUN npm i
+RUN npm ci
 #RUN npm rebuild node-sass
 
 COPY . .
