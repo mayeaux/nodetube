@@ -53,8 +53,6 @@ function getFormattedFileSize(upload){
   return formattedFileSizeString;
 }
 
-
-
 /**
  * GET /$user/$uploadUniqueTag
  * Media player page

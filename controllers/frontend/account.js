@@ -37,7 +37,7 @@ const { userCanUploadContentOfThisRating } = require('../../lib/uploading/helper
 
 const validator = require('email-validator');
 
-const { getUploadDuration } = require('../../lib/mediaBrowsing/helpers')
+const { getUploadDuration } = require('../../lib/mediaBrowsing/helpers');
 
 const javascriptTimeAgo = require('javascript-time-ago');
 javascriptTimeAgo.locale(require('javascript-time-ago/locales/en'));
@@ -47,14 +47,13 @@ const timeAgoEnglish = new javascriptTimeAgo('en-US');
 
 const secondsToFormattedTime = timeHelper.secondsToFormattedTime;
 
-
 // TODO: pull this function out
-async function addValuesIfNecessary(upload, channelUrl) {
-  if (upload.fileType == 'video' || upload.fileType == 'audio') {
-    if (!upload.durationInSeconds || !upload.formattedDuration) {
+async function addValuesIfNecessary(upload, channelUrl){
+  if(upload.fileType == 'video' || upload.fileType == 'audio'){
+    if(!upload.durationInSeconds || !upload.formattedDuration){
 
       var server = uploadServer;
-      if (server.charAt(0) == "/") // the slash confuses the file reading, because host root directory is not the same as machine root directory
+      if(server.charAt(0) == '/') // the slash confuses the file reading, because host root directory is not the same as machine root directory
         server = server.substr(1);
 
       const uploadLocation = `${server}/${channelUrl}/${upload.uniqueTag + upload.fileExtension}`;
@@ -70,8 +69,7 @@ async function addValuesIfNecessary(upload, channelUrl) {
 
         await uploadDocument.save();
 
-
-      } catch (err) {
+      } catch(err){
         /** if the file has been deleted then it won't blow up **/
         // console.log(err);
       }
@@ -234,9 +232,7 @@ exports.getChannelRss = async(req, res) => {
     const xml = feed.xml({indent: true});
     res.send(xml);
 
-    //res.send(uploads);
-
-
+    // res.send(uploads);
 
   } catch(err){
     console.log(err);
@@ -510,7 +506,7 @@ exports.getChannel = async(req, res) => {
 
     user.uploads = uploads;
 
-    for(const upload of uploads) {
+    for(const upload of uploads){
       addValuesIfNecessary(upload, user.channelUrl);
     }
 

@@ -184,7 +184,6 @@ async function getRecentUploads(limit, offset, mediaType, filter, category, subc
 
     uploads = filterUploadsByCategory(uploads, category);
 
-
     // IF THERE IS NO CATEGORY
   } else {
 

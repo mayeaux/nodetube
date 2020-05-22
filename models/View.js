@@ -47,7 +47,6 @@ viewSchema.index({upload: 1, siteVisitor: 1}, {name: 'Views Per Upload And Site 
 
 viewSchema.index({upload: 1 }, {name: 'View Count'});
 
-
 const View = mongoose.model('View', viewSchema);
 
 module.exports = View;
