@@ -37,7 +37,6 @@ async function middleware(req, res, next){
     res.redirect('https://www.facebook.com/NewTube-114869126871911');
   }
 
-
   next();
 }
 

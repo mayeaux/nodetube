@@ -1,6 +1,11 @@
+#failing with a weird bug, see:
+#see: https://travis-ci.org/github/mayeaux/nodetube/builds/689876390
 language: node_js
 node_js:
   - "8"
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install ffmpeg
 cache:
   directories:
     - "node_modules"

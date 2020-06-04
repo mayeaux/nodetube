@@ -162,6 +162,11 @@ async function getRecentUploads(limit, offset, mediaType, filter, category, subc
 
   uploads = filterUploadsBySensitivity(uploads, filter);
 
+  // if category is overview act like no category is given (triggers category frontend)
+  if(category == 'overview'){
+    category = '';
+  }
+
   if(category){
 
     if(category == 'all'){
@@ -178,7 +183,11 @@ async function getRecentUploads(limit, offset, mediaType, filter, category, subc
     }
 
     uploads = filterUploadsByCategory(uploads, category);
+
+    // IF THERE IS NO CATEGORY
   } else {
+
+    // BUILDING THE CATEGORY OVERVIEW  OBJECT
     let categoryFormattedUploads = {};
 
     for(const category of categories){

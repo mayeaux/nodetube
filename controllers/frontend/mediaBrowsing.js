@@ -13,7 +13,7 @@ const uploadServer = uploadHelpers.uploadServer;
 const getFromCache = require('../../caching/getFromCache');
 const uploadFilters = require('../../lib/mediaBrowsing/helpers');
 
-const { getUploadDuration } = require('../../lib/mediaBrowsing/helpers')
+const { getUploadDuration } = require('../../lib/mediaBrowsing/helpers');
 
 const getSensitivityFilter =  uploadFilters.getSensitivityFilter;
 const categories = require('../../config/categories');
@@ -39,12 +39,12 @@ if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false'){
 const pageLimit = 42;
 
 // TODO: pull this function out
-async function addValuesIfNecessary(upload, channelUrl) {
-  if (upload.fileType == 'video' || upload.fileType == 'audio') {
-    if (!upload.durationInSeconds || !upload.formattedDuration) {
+async function addValuesIfNecessary(upload, channelUrl){
+  if(upload.fileType == 'video' || upload.fileType == 'audio'){
+    if(!upload.durationInSeconds || !upload.formattedDuration){
 
       var server = uploadServer;
-      if (server.charAt(0) == "/") // the slash confuses the file reading, because host root directory is not the same as machine root directory
+      if(server.charAt(0) == '/') // the slash confuses the file reading, because host root directory is not the same as machine root directory
         server = server.substr(1);
 
       const uploadLocation = `${server}/${channelUrl}/${upload.uniqueTag + upload.fileExtension}`;
@@ -61,8 +61,7 @@ async function addValuesIfNecessary(upload, channelUrl) {
         const saveDocument = await uploadDocument.save();
         // console.log(saveDocument);
 
-
-      } catch (err) {
+      } catch(err){
         /** if the file has been deleted then it won't blow up **/
         // console.log(err);
       }
@@ -99,8 +98,8 @@ exports.recentUploads = async(req, res) => {
     // limit amount to list per page
     let limit = pageLimit;
 
-    if(!category){
-      limit = 6;
+    if(!category || category == 'overview'){
+      limit = 3;
     }
 
     const skipAmount = (page * limit) - limit;
@@ -119,24 +118,22 @@ exports.recentUploads = async(req, res) => {
         categoryObj = cat;
       }
     }
-
     // console.log(`CATEGORY: ${category}`);
 
     const mediaType = media;
 
     const uploads = await getFromCache.getRecentUploads(limit, skipAmount, mediaType, filter, category, subcategory);
-    const recentPopular = 'recent';
 
-    for(const upload of uploads) {
-      addValuesIfNecessary(upload, upload.uploader.channelUrl);
+    if(category && category !== 'overview'){
+      for(const upload of uploads){
+        addValuesIfNecessary(upload, upload.uploader.channelUrl);
+      }
     }
-
 
     // console.log('rendering');
 
     res.render('mediaBrowsing/recentUploads', {
       title: 'Recent Uploads',
-      recentPopular,
       uploads,
       numbersArray,
       highlightedNumber: page,
@@ -316,7 +313,7 @@ exports.popularUploads = async(req, res) => {
     // console.log('getting popular uploads');
 
     if(uploads && uploads.length){
-      for(const upload in uploads) {
+      for(const upload in uploads){
         // console.log(upload);
         addValuesIfNecessary(upload, upload.uploader && upload.uploader.channelUrl);
       }

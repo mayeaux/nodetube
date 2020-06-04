@@ -18,7 +18,14 @@ const uploadSchema = new mongoose.Schema({
   originalFileName: String,
   fileExtension: String,
 
-  uploadServer: { type: String, enum: ['uploads1', 'uploads3' ] },
+  // should be in the format of https://domain.com/path, and will have the channelUrl and unique tag added in media.pug,
+  // such as https://domain.com/path/$channelUrl/$uniqueTag.$fileExtension
+  uploadServer: { type: String },
+
+  // viralServer follows the same pattern as uploadServer (https://domain.com/path/) and supercedes uploadServer
+  // meant to be used to send the most popular uploads to another server for bandwidth
+  viralServerOn: Boolean,
+  viralServer: String,
 
   hostUrl: String, // (backblaze prepend)  TODO: can eventually delete this
   uniqueTag: { type: String, index: true, unique: true },
@@ -101,7 +108,6 @@ const uploadSchema = new mongoose.Schema({
   formattedDuration: String,
 
   processingCompletedAt: Date
-
 }, {
   timestamps: true,
   toObject: {

@@ -115,7 +115,7 @@ block content
       //div.col-sm-2
       //      h4
       //        a(href="/" + `${user.channelUrl}` +  "/playlists") Playlists
-      if user && user.plan == 'plus'
+      if user && user.privs && user.privs.livestreaming
         div.col-sm-2
           h3.fw
             a(href="/account/livestreaming") Livestreaming
@@ -155,6 +155,8 @@ block content
             - One-click complete YouTube backup (including future uploads)
             - Access to NodeTube Recording Studio (COMING EVENTUALLY)
 
+            //- NewTube Recording Studio (Coming Soon)
+
 
           p.fw(style="white-space:pre-line;margin-bottom:19px;font-size:17px;margin-top:23px;").
             - Upload file-size limit raised to 2GB
@@ -162,8 +164,6 @@ block content
             - Unlisted and private uploads
 
             - Livestreaming with live chat
-
-            - NewTube Recording Studio (Coming Soon)
 
             - Early access to all beta features
 
@@ -173,6 +173,19 @@ block content
 
           button.stripe-button-el#customButton(type="submit" class="stripe-button-el" style="visibility: visible;")
             span(style="display: block; min-height: 30px;") Buy Now
+
+          //br
+          //br
+          //
+          //button.stripe-button-el#customButton(type="submit" class="stripe-button-el" style="visibility: visible;")
+          //  span(style="display: block; min-height: 30px;") Buy Month Subscription
+
+          //br
+          //br
+          //
+          //button.stripe-button-el#customButton(type="submit" class="stripe-button-el" style="visibility: visible;")
+          //  span(style="display: block; min-height: 30px;") Buy Year Subscription
+
 
         br
         br

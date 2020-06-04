@@ -32,9 +32,9 @@ block content
             div.display-div(style="min-width:50%;min-height:50%;margin:0 auto;")
                 // TODO: Sub out thumbnail here
 
-                video#media_player.display-element(playsinline poster=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;")
+                video#media_player.display-element(playsinline poster=`${serverToUse}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;")
                     // to
-                    source.video-source(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`, type='video/mp4')
+                    source.video-source(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`, type='video/mp4')
                     //source(src=upload.uploadUrl, type='video/mp4')
 
         else if upload.fileType === 'audio'
@@ -42,19 +42,19 @@ block content
                 audio#media_player.my_audio(playsinline style="width:80%;" controls='', preload='none')
 
                     if upload.fileExtension == '.m4a'
-                        source(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`, type='audio/mp4')
+                        source(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`, type='audio/mp4')
                     if upload.fileExtension == '.oga' || upload.fileExtension == '.ogg'
-                        source(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`, type='audio/ogg')
+                        source(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`, type='audio/ogg')
                     else
-                        source(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`, type='audio/mp3')
+                        source(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`, type='audio/mp3')
 
 
                     //source(src=upload.uploadUrl, type='audio/mp3')
 
         else if upload.fileType === 'image'
             div.display-div(style="")
-                a(href=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`)
-                    img.display-element(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="border-radius:13px;max-width:80%;min-width:50%;min-height:50%;max-height:620px;")
+                a(href=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`)
+                    img.display-element(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="border-radius:13px;max-width:80%;min-width:50%;min-height:50%;max-height:620px;")
 
 
         div.non-player-content(style="position:relative;")
@@ -75,13 +75,13 @@ block content
                 if upload.uploader.customThumbnail
                     a(href=`/user/${upload.uploader.channelUrl}`)
 
-                        img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` style="border-radius:13px;width:159px;height:159px;")
+                        img(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` style="border-radius:13px;width:159px;height:159px;")
                         br
                         br
                 else if upload.uploader.thumbnailUrl
                     a(href=`/user/${upload.uploader.channelUrl}`)
 
-                        img(src=`${uploadServer}/${upload.uploader._id}/unique.png` style="border-radius:13px;width:159px;height:159px;")
+                        img(src=`${serverToUse}/${upload.uploader._id}/unique.png` style="border-radius:13px;width:159px;height:159px;")
                         br
                         br
 

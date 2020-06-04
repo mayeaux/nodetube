@@ -1,13 +1,13 @@
 const domainNameAndTLD = process.env.DOMAIN_NAME_AND_TLD;
 const User = require('../../models/index').User;
 
-
 /**
  * GET /live/${channelUrl}
  * Get RTMP viewing page (current livestream page)
  */
-exports.getLiveRTMP = async (req, res) => {
+exports.getLiveRTMP = async(req, res) => {
 
+  // TODO: this is backwards
   const channelUrl = req.params.user;
 
   console.log(channelUrl);
