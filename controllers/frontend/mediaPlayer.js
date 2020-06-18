@@ -69,6 +69,7 @@ exports.getMedia = async(req, res) => {
       uniqueTag: media
     }).populate({path: 'uploader comments blockedUsers', populate: {path: 'commenter'}}).exec();
 
+    // either use viral server, the uploadServer on the server or the general uploadServer
     const serverToUse = upload.viralServerOn && upload.viralServer || upload.uploadServer || uploadServer;
 
     // even though this is named 'hide upload' it should really be named return 404

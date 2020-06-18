@@ -97,7 +97,7 @@ let cacheIntervalInMinutes = parseInt(process.env.CACHE_INTERVAL_IN_MINUTES) || 
 
 const cacheIntervalInMs = cacheIntervalInMinutes * ( 1000 * 60 );
 
-console.log(`CACHE INTERVAL IN MINUTES: ${cacheIntervalInMinutes} \n`);
+console.log(`CACHE POPULAR, DAILY STATS AND INDEXES INTERVAL IN MINUTES: ${cacheIntervalInMinutes} \n`);
 
 setInterval(cachePopularDailyStatsAndIndex, cacheIntervalInMs);
 
