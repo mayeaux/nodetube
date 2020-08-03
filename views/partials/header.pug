@@ -1,48 +1,3 @@
-style.
-  .dropdown-anchors {
-    font-size: 12px !important;
-    font-weight: 500 !important;
-    text-transform: uppercase !important;
-    transition: all 0.2s linear !important;
-    color: white !important;
-    font-weight:500 !important;
-  }
-
-  .dropdown-anchors:hover {
-    color: #4da5f4 !important;
-    background-color: transparent;
-  }
-
-  .brandName {
-    font-size:19px;
-  }
-
-  /* Dark mode: */
-  .dark-mode {
-    background-color: #111 !important; //#1a1a1c; //rgba(11, 11, 12, 1); //#181817; //#292322; //rgb(40,44,52); rgb(33,37,43);
-    color: darkgray !important;
-  }
-
-  /* Light mode: */
-  .light-mode {
-    background-color: #fff !important; //#1a1a1c; //rgba(11, 11, 12, 1); //#181817; //#292322; //rgb(40,44,52); rgb(33,37,43);
-    color: black !important;
-  }
-
-  /* changes the dark mode button to look like a link*/
-  .link-button {
-    background: none!important;
-    border: none;
-    padding: 0!important;
-    outline:none;
-    /*optional*/
-    /*font-family: arial, sans-serif;*/
-    /*input has OS specific font-family*/
-    /*color: #069;*/
-    /*text-decoration: underline;*/
-    cursor: pointer;
-  }
-
 .navbar.navbar-default.navbar-fixed-top(style="" id="header-color-blue")
   .container
     .navbar-header
@@ -210,27 +165,3 @@ if !user
 
     })
 
-if 1==1 
-script.
-  document.getElementById("body").className = localStorage.getItem("darkLight");
-  if (body.className === "light-mode") {
-    document.getElementById("header-color-blue").style.backgroundColor = "rgb(24,55,147)";
-  } else {
-    document.getElementById("header-color-blue").style.backgroundColor = "#1c1c1c";
-  }
-  function toggleDarkLight() {
-    var body = document.getElementById("body");
-    var currentClass = body.className;
-    body.className = currentClass == "dark-mode" ? "light-mode" : "dark-mode";
-    localStorage.setItem('darkLight', body.className);
-    if (localStorage.getItem("darkLight") === "dark-mode") {
-      document.getElementById("dark-mode-button").innerHTML = "[Light Mode]"
-    } else  if (localStorage.getItem("darkLight") === "light-mode") {
-      document.getElementById("dark-mode-button").innerHTML = "[Dark Mode]"
-    }
-    if (body.className === "light-mode") {
-      document.getElementById("header-color-blue").style.backgroundColor = "rgb(24,55,147)";
-    } else {
-    document.getElementById("header-color-blue").style.backgroundColor = "#1c1c1c";
-    }
-  }
