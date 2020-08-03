@@ -3,6 +3,7 @@
 .env.settings
 public/ads.txt
 public/502.html
+public/css/custom.css
 
 uploadedRecordings
 recordings

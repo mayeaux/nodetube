@@ -1,6 +1,7 @@
 /** UNFINISHED **/
 /* eslint-disable no-unused-vars */
 
+const RSS = require('rss');
 const randomstring = require('randomstring');
 const _ = require('lodash');
 const User = require('../../models/index').User;
@@ -201,36 +202,37 @@ exports.getChannelRss = async(req, res) => {
     /** DB CALL TO GET UPLOADS **/
     let uploads = await Upload.find(searchQuery).sort({ createdAt : -1 }).limit(20);
 
-    const feed = new RSS({
-      title: process.env.INSTANCE_BRAND_NAME,
-      description: process.env.META_DESCRIPTION,
-      feed_url: `${process.env.DOMAIN_NAME_AND_TLD}/user/${encodeURIComponent(user.channelUrl)}/rss`,
-      site_url: process.env.DOMAIN_NAME_AND_TLD,
-      image_url: process.env.META_IMAGE,
-      copyright: `2020 ${process.env.INSTANCE_DOMAIN_NAME}`,
-      language: 'en',
-      pubDate: new Date(),
-      ttl: '60'
-    });
+		const feed = new RSS({
+			title: process.env.INSTANCE_BRAND_NAME,
+			description: process.env.META_DESCRIPTION,
+			feed_url: `${process.env.DOMAIN_NAME_AND_TLD}/user/${encodeURIComponent(user.channelUrl)}/rss`,
+			site_url: process.env.DOMAIN_NAME_AND_TLD,
+			image_url: process.env.META_IMAGE,
+			copyright: `2020 ${process.env.INSTANCE_DOMAIN_NAME}`,
+			language: 'en',
+			pubDate: new Date(),
+			ttl: '60'
+		});
 
-    uploads.map(item => {
-      const { title, category } = item;
-      const categories = [category];
-      const author = encodeURIComponent(user.channelUrl);
-      const url = `${process.env.DOMAIN_NAME_AND_TLD}/user/${author}/${item.uniqueTag}`;
+		uploads.map(item => {
+			const { title, category } = item;
+			const categories = [category];
+			const author = encodeURIComponent(user.channelUrl);
+			const url = `${process.env.DOMAIN_NAME_AND_TLD}/user/${author}/${item.uniqueTag}`; 
 
-      feed.item({
-        title,
-        url, // link to the item
-        guid: item.id, // optional - defaults to url
-        categories, // optional - array of item categories
-        author, // optional - defaults to feed author property
-        date: item.createdAt // any format that js Date can parse.
-      });
-    });
+			feed.item({
+				title,
+				url, // link to the item
+				guid: item.id, // optional - defaults to url
+				categories, // optional - array of item categories
+				author, // optional - defaults to feed author property
+				date: item.createdAt // any format that js Date can parse.
+			});
+		});
 
-    const xml = feed.xml({indent: true});
-    res.send(xml);
+		const xml = feed.xml({indent: true});
+		res.send(xml);
+
 
     // res.send(uploads);
 

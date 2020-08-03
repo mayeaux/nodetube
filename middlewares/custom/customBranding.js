@@ -1,5 +1,6 @@
 async function customBranding(req, res, next){
   res.locals.brandName = process.env.INSTANCE_BRAND_NAME;
+  res.locals.brandDescription = process.env.META_DESCRIPTION;
   res.locals.instanceDomainName = process.env.INSTANCE_DOMAIN_NAME;
   res.locals.instanceContactEmail = process.env.INSTANCE_CONTACT_EMAIL;
   res.locals.adsenseOn = Boolean(process.env.ADSENSE_ID);

@@ -126,8 +126,9 @@ if(cluster.isMaster){
 
     mongoose.connect(mongoUri, {
       keepAlive: true,
-      reconnectTries: Number.MAX_VALUE,
-      useNewUrlParser: true
+      // reconnectTries: Number.MAX_VALUE,
+      useNewUrlParser: true,
+      connectTimeoutMS: 900*1000
     });
 
     if(process.env.MONGOOSE_DEBUG == 'true' || process.env.MONGOOSE_DEBUG == 'on' || 1 == 2){

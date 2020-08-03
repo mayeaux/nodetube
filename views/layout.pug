@@ -39,9 +39,10 @@ html
     script(src='https://cdn.jsdelivr.net/npm/sweetalert2@7.33.1/dist/sweetalert2.js')
 
     link(rel='stylesheet', href='/css/loading-bar.css')
+    link(rel='stylesheet', href='/css/custom.css')
     script(src='/js/loading-bar.js')
 
-    if adsenseOn
+    if adsenseOn && (!user || user.plan === 'free')
       script(data-ad-client=`${adsenseId}` async='' src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js")
 
     if recaptchaOn
