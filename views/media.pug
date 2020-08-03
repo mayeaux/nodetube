@@ -85,7 +85,7 @@ block content
                         br
                         br
 
-                a(href=`/user/${upload.uploader.channelUrl}` style="color:rgb(51, 51, 51);font-weight:300") #{upload.uploader.channelName || upload.uploader.channelUrl}
+                a(href=`/user/${upload.uploader.channelUrl}` style="color:gray;font-weight:300") #{upload.uploader.channelName || upload.uploader.channelUrl}
                     if upload.uploader.verified == true
                         img(src="/images/verified.jpg" width="25px" height="25px" style="margin-left:3px;margin-top:-2px;margin-right:5px;")
                     if upload.uploader.plan == 'plus'
