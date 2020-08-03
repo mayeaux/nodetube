@@ -51,11 +51,14 @@ html
     block extra_js
 
 
-  body(style="overflow-x:hidden;touch-action: manipulation;" id="body")
+  body(style="overflow-x:hidden;touch-action: manipulation;" id="body" class="dark-mode")
     include nodeTubeCss
+
 
     //layout.pug
     include partials/header
+
+    include viewPartials/darkLightMode
 
     .container(style="max-width:100%;padding-left: 0px; padding-right: 0px;")
       include partials/flash
@@ -69,30 +72,12 @@ html
     if googleAnalyticsOn
       include widgets/google-analytics
 
+
+
     script(src='/js/main.js')
-    script.
-      document.getElementById("body").className = localStorage.getItem("darkLight");
-      if (body.className === "light-mode") {
-        document.getElementById("header-color-blue").style.backgroundColor = "rgb(24,55,147)";
-      } else {
-        document.getElementById("header-color-blue").style.backgroundColor = "#1c1c1c";
-      }
-      function toggleDarkLight() {
-        var body = document.getElementById("body");
-        var currentClass = body.className;
-        body.className = currentClass == "dark-mode" ? "light-mode" : "dark-mode";
-        localStorage.setItem('darkLight', body.className);
-        if (localStorage.getItem("darkLight") === "dark-mode") {
-          document.getElementById("dark-mode-button").innerHTML = "[Light Mode]"
-        } else if (localStorage.getItem("darkLight") === "light-mode") {
-          document.getElementById("dark-mode-button").innerHTML = "[Dark Mode]"
-        }
-        if (body.className === "light-mode") {
-          document.getElementById("header-color-blue").style.backgroundColor = "rgb(24,55,147)";
-        } else {
-          document.getElementById("header-color-blue").style.backgroundColor = "#1c1c1c";
-        }
-      }
+
     block extra_footer_js
+
+
 
 

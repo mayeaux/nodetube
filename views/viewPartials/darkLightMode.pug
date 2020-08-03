@@ -1,24 +1,82 @@
 script.
-  document.getElementById("body").className = localStorage.getItem("darkLight");
-  if (body.className === "light-mode") {
-    document.getElementById("header-color-blue").style.backgroundColor = "rgb(24,55,147)";
-  } else {
-    document.getElementById("header-color-blue").style.backgroundColor = "#1c1c1c";
+
+  /** colors **/
+  var blueNavbarHeader = "rgb(24,55,147)";
+  var blackNavbarHeader = "#1c1c1c";
+
+  /** two modes : light-mode || dark-mode **/
+
+    // get current setting from localstorage
+  var darkLightInMemory = localStorage.getItem("darkLight");
+
+  // if it's not set yet set it as dark-mode
+  if(!darkLightInMemory){
+    localStorage.setItem('darkLight', 'dark-mode');
+    darkLightInMemory = 'dark-mode';
   }
 
+  console.log(darkLightInMemory)
+
+  // get class name from the body
+  var currentClassNameOfBody = document.getElementById("body").className;
+
+  var navbarBackgroundColor = document.getElementById("header-color-blue").style.backgroundColor;
+
+
+  // if memory says dark mode, no need to do anything since it's set to dark by default
+  if(darkLightInMemory == 'dark-mode'){
+    console.log('running here!');
+    document.getElementById("header-color-blue").style.backgroundColor = blackNavbarHeader;
+    // switch over
+  } else if(darkLightInMemory == 'light-mode' && currentClassNameOfBody == 'dark-mode') {
+    document.getElementById("header-color-blue").style.backgroundColor = blueNavbarHeader;
+    document.getElementById("body").className = 'light-mode';
+    // switch over
+  }
+
+
+
+  console.log(darkLightInMemory, currentClassNameOfBody);
+
+
+
+  // js that runs when button is clicked
   function toggleDarkLight() {
+
+    var darkLightInMemory = localStorage.getItem("darkLight");
+
     var body = document.getElementById("body");
-    var currentClass = body.className;
-    body.className = currentClass == "dark-mode" ? "light-mode" : "dark-mode";
-    localStorage.setItem('darkLight', body.className);
+
+    // switch body.className
+    if(darkLightInMemory == 'light-mode'){
+      document.getElementById("body").className = 'light-mode';
+    } else {
+      document.getElementById("body").className = 'dark-mode';
+    }
+
+    var modeToChangeTo;
+
+    // switch body.className
+    if (darkLightInMemory == 'light-mode') {
+      modeToChangeTo = 'dark-mode'
+    } else {
+      modeToChangeTo = 'light-mode'
+    }
+
+    // set the value in localstorage
+    localStorage.setItem('darkLight', modeToChangeTo);
+
+    // change footer text
     if (localStorage.getItem("darkLight") === "dark-mode") {
       document.getElementById("dark-mode-button").innerHTML = "[Light Mode]"
-    } else  if (localStorage.getItem("darkLight") === "light-mode") {
+    } else if (localStorage.getItem("darkLight") === "light-mode") {
       document.getElementById("dark-mode-button").innerHTML = "[Dark Mode]"
     }
+
+
     if (body.className === "light-mode") {
-      document.getElementById("header-color-blue").style.backgroundColor = "rgb(24,55,147)";
+      document.getElementById("header-color-blue").style.backgroundColor = blueNavbarHeader;
     } else {
-      document.getElementById("header-color-blue").style.backgroundColor = "#1c1c1c";
+      document.getElementById("header-color-blue").style.backgroundColor = blackNavbarHeader;
     }
   }
