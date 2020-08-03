@@ -3,9 +3,10 @@ for category in categories
     // if there's more than one per category
     if uploads[category.name] && uploads[category.name].length && uploads[category.name].length > 0
         div.category.col-sm-12
-            a.upload-user-text(href=`${addressPrepend}/1?category=${category.name}&within=${within}&media=${mediaType || ''}`)
-                h1.fw(style="font-size:41px") #{category.displayName}
-                br
+            div.col-xs-12.col-sm-6.col-md-6.col-lg-4(style="text-align:center;")
+                a.upload-user-text(href=`${addressPrepend}/1?category=${category.name}&within=${within}&media=${mediaType || ''}`)
+                    h1.fw(style="font-size:41px") #{category.displayName}
+                    br
 
             // begin individual upload section
             each upload in uploads[category.name]
