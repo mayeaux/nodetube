@@ -3,7 +3,7 @@ for category in categories
     // if there's more than one per category
     if uploads[category.name] && uploads[category.name].length && uploads[category.name].length > 0
         div.category.col-sm-12
-            div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style="text-align:center;")
+            div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style="text-align:left;")
                 a.upload-user-text(style="font-size:41px;color:#c1baba;" href=`${addressPrepend}/1?category=${category.name}&within=${within}&media=${mediaType || ''}`)
                     h1.fw(style="font-size:41px;color:#c1baba;") #{category.displayName}
                     br
