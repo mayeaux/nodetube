@@ -93,10 +93,12 @@ block content
 
 
                 div.col-sm-12(style="margin-top:30px;")
-                    p.fw(style="font-size:18px" id="descriptionText") Description: #{channel.channelDescription}
-                    if user && user.role == 'admin'
-                        each ip in ips
-                            p= ip
+                    if channel.channelDescription
+                        p.fw(style="font-size:18px" id="descriptionText") Description: #{channel.channelDescription}
+
+                    //if user && user.role == 'admin'
+                    //    each ip in ips
+                    //        p= ip
 
                     if user && ( user.role == 'admin' || user.role == 'moderator') && channel.status !== 'restricted'
                         br
