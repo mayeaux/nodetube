@@ -9,6 +9,7 @@ html
     meta(name='csrf-token', content=_csrf)
     meta(name="description", content=meta.description)
 
+    // TODO: kind of want to remove the - Brandname, it doesn't look great
     meta(property='og:title', content=(meta.title || title) + ` - ${brandName}`)
     meta(property='og:image', content=meta.image)
     meta(property='og:description', content=meta.description)
