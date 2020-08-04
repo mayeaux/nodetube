@@ -10,26 +10,26 @@
         h5.brandName(style="color:white;margin-right:-10px;margin-top:0px;") #{brandName}
     .collapse.navbar-collapse
       ul.nav.navbar-nav.front-header
-        li(class=(title == 'Home') ? 'active' : undefined)
-          a(href=`/`) Home
-          li(class=(title == 'Popular Uploads') ? 'active' : undefined)
-            // category set to overview to trigger overview functionality by default
+        //li(class=(title == 'Home') ? 'active' : undefined)
+        //  a(href=`/`) Home
+        li(class=(title == 'Popular Uploads') ? 'active' : undefined)
+          // category set to overview to trigger overview functionality by default
 
-            // POPULAR SECTION
-            if popularDefault == 'all'
-              a(href=`/media/popular/1?within=24hour&category=all`) Popular
-            else if popularDefault == 'overview'
-              a(href=`/media/popular/1?category=overview&within=1week`) Popular
+          // POPULAR SECTION
+          if popularDefault == 'all'
+            a(href=`/media/popular/1?within=24hour&category=all`) Popular
+          else if popularDefault == 'overview'
+            a(href=`/media/popular/1?category=overview&within=1week`) Popular
 
 
 
-          li(class=(title == 'Recent Uploads') ? 'active' : undefined)
+        li(class=(title == 'Recent Uploads') ? 'active' : undefined)
 
-            // RECENT SECTION
-            if popularDefault == 'all'
-              a(href=`/media/recent?category=all`) Recent
-            else if popularDefault == 'overview'
-              a(href=`/media/recent?category=overview`) Recent
+          // RECENT SECTION
+          if popularDefault == 'all'
+            a(href=`/media/recent?category=all`) Recent
+          else if popularDefault == 'overview'
+            a(href=`/media/recent?category=overview`) Recent
 
           //li(class=(title == 'Channels') ? 'active' : undefined)
           //  a(href=`/channels?within=24hour`) Channels
