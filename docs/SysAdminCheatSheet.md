@@ -8,3 +8,6 @@ nload eth0
 
 # show live connections on port 80
 netstat -anp | grep :80 | wc -l
+
+# start caching with forever
+forever start -c "npm run cache" ./
