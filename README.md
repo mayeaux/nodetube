@@ -105,13 +105,10 @@ Don't forget to join the open-source community developing NodeTube on [Discord](
 
 ## Live NodeTube Instances
 
-Domain | Registrations Open 
-:---: | :---: 
-https://newtube.app | Yes 
-https://nullvideo.com| Yes 
-https://videoflicktube.com| Yes 
-https://xchtube.com| Yes 
-https://vid8.poal.co| Yes 
+Domain | Registrations Open | Ratings Allowed 
+:---: | :---: | :---: 
+https://newtube.app | Yes | SFW Only
+https://vid8.poal.co| Yes | SFW/NSFW/Sensitive
 
 
 License
