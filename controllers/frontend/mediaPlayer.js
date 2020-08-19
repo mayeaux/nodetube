@@ -69,9 +69,6 @@ exports.getMedia = async(req, res) => {
       uniqueTag: media
     }).populate({path: 'uploader comments blockedUsers', populate: {path: 'commenter'}}).exec();
 
-    // either use viral server, the uploadServer on the document or the general uploadServer
-    const serverToUse = upload.viralServerOn && upload.viralServer || upload.uploadServer || uploadServer;
-
     // even though this is named 'hide upload' it should really be named return 404
     // because it will return true even if there is no upload
     const return404 = hideUpload(upload, req.user, res);
@@ -82,6 +79,9 @@ exports.getMedia = async(req, res) => {
         title: 'Not Found'
       });
     }
+
+    // either use viral server, the uploadServer on the document or the general uploadServer
+    const serverToUse = upload.viralServerOn && upload.viralServer || upload.uploadServer || uploadServer;
 
     /** determine relationship between current viewer and upload **/
     // determine if its the user of the channel
