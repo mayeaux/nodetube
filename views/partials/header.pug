@@ -1,4 +1,4 @@
-.navbar.navbar-default.navbar-fixed-top(style="" id="header-color-blue")
+header.navbar.navbar-default.navbar-fixed-top(style="" id="header-color-blue")
   .container
     .navbar-header
       button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
@@ -36,7 +36,7 @@
 
         li(class=(title == 'Search') ? 'active' : undefined)
           a(href=`/search`) Search
-            
+
         li.subscribed-link(class=(title == 'Subscriptions') ? 'active' : undefined)
           if user && user.unseenSubscriptionUploads || user && user.unseenSubscriptionUploads == 0
             a(href=`/media/subscribed`) Subscribed (#{user.unseenSubscriptionUploads})
@@ -166,3 +166,16 @@ if !user
 
     })
 
+script.
+  $(document).ready(function () {
+    // grab an element
+    var myElement = document.querySelector('.navbar');
+    // construct an instance of Headroom, passing the element
+    var headroom = new Headroom(myElement);
+    // initialise
+    headroom.init();
+
+    console.log(headroom);
+
+    console.log("ready!");
+  });
