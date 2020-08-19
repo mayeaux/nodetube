@@ -9,13 +9,9 @@ block content
             margin-top: 30px;
         }
 
-        .container {
-            overflow-x: hidden;
-        }
-
 
     br
-    div.center-block.text-center.col-sm-12
+    div.center-block.text-center.col-sm-12(style="overflow-x: hidden;")
         if upload.status == 'processing'
 
             div(style="max-width:443px;margin:0 auto;")
