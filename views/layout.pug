@@ -41,68 +41,6 @@ html
     script(src='https://cdn.jsdelivr.net/npm/sweetalert2@7.33.1/dist/sweetalert2.js')
 
     script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js')
-    script.
-      /*
-       magneticScroll v1.0
-       by Maxime Gaul
-       https://github.com/maximegaul/magnetic-scroll
-       */
-      jQuery.fn.reverse = [].reverse, function (t) {
-        t.magneticScroll = function (o) {
-          var e = {
-            selector: ".magnetic",
-            easing: "swing",
-            speed: 500,
-            timeout: 200,
-            beforeScroll: t.noop,
-            afterScroll: t.noop
-          }, a = t.extend(e, o), r = {
-            animateScroll: function (o, e, r) {
-              a.beforeScroll(), t("html, body").stop().animate({scrollTop: e + "px"}, a.speed, a.easing, function () {
-                setTimeout(function () {
-                  t("html,body").stop().removeClass("scrolling"), a.afterScroll(o, r)
-                }, a.timeout)
-              })
-            }
-          };
-          t(document).ready(function () {
-            t(a.selector).each(function () {
-              t(this).attr("data-offset", t(this).offset().top)
-            });
-            var o = /Firefox/i.test(navigator.userAgent) ? "DOMMouseScroll" : "mousewheel";
-            t("body:not(.scrolling)").bind(o, function (o) {
-              if (o.preventDefault(), t(this).hasClass("scrolling")) o.preventDefault(); else {
-                t(this).addClass("scrolling");
-                var e = t(window).scrollTop(), s = window.event || o;
-                s = s.originalEvent ? s.originalEvent : s;
-                var l = s.detail ? -40 * s.detail : s.wheelDelta;
-                if (l > 0) t(window).scrollTop() > 0 ? t(a.selector).reverse().each(function () {
-                  var o = 0;
-                  return Math.round(t(this).attr("data-offset")) < Math.round(e) ? (r.animateScroll(t(this), t(this).attr("data-offset"), "up"), o = 1, !1) : void(0 === o && r.animateScroll(t(this), 0, "up"))
-                }) : t("html,body").stop().removeClass("scrolling"); else {
-                  var n = !0;
-                  t(a.selector).each(function () {
-                    return Math.round(t(this).attr("data-offset")) > Math.round(e) ? (n = !1, r.animateScroll(t(this), t(this).attr("data-offset"), "down"), !1) : void 0
-                  }), n && t("html,body").stop().removeClass("scrolling")
-                }
-              }
-              o.stopPropagation()
-            })
-          }).keydown(function (o) {
-            var e = t(window).scrollTop(), s = o.which;
-            if (38 == s) o.preventDefault(), t("body").hasClass("scrolling") || (t("body").addClass("scrolling"), t(a.selector).reverse().each(function () {
-              return Math.round(t(this).attr("data-offset")) < Math.round(e) ? (r.animateScroll(t(this), t(this).attr("data-offset"), "up"), !1) : void 0
-            })); else if (40 == s && (o.preventDefault(), !t("body").hasClass("scrolling"))) {
-              t("body").addClass("scrolling");
-              var l = !0;
-              t(a.selector).each(function () {
-                return Math.round(t(this).attr("data-offset")) > Math.round(e) ? (l = !1, r.animateScroll(t(this), t(this).attr("data-offset"), "down"), !1) : void 0
-              }), l && t("html,body").stop().removeClass("scrolling")
-            }
-          })
-        }
-      }(jQuery);
-
 
 
     link(rel='stylesheet', href='/css/loading-bar.css')
