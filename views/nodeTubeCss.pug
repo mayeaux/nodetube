@@ -270,3 +270,15 @@ style.
     .headroom--unpinned {
         display: none;
     }
+
+    .upload-thumbnail:hover {
+        transform: scale(1.5); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+    }
+
+    .upload-thumbnail {
+        transition: transform .7s ease;
+    }
+
+    .holder {
+        overflow: hidden; /* [1.2] Hide the overflowing of child elements */
+    }
