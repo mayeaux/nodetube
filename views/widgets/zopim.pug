@@ -1,3 +1,11 @@
 // Start of  Zendesk Widget script
 script#ze-snippet(src=`https://static.zdassets.com/ekr/snippet.js?key=${zopimIdentifier}`)
+
+script.
+  setTimeout(function(){
+    // TODO: thing here
+    $zopim(function () {
+      $zopim.livechat.window.hide();
+    });
+  }, 2000)
 // End of  Zendesk Widget script
