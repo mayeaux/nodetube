@@ -272,8 +272,14 @@ style.
     }
 
     .upload-thumbnail:hover {
+
         transform: scale(1.5); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
-        -webkit-filter: brightness(130%);
+
+        transform: scaleY(3);
+
+        transform: scale(1.5) translate(0px, 30px);
+
+        -webkit-filter: brightness(120%);
     }
 
     .upload-thumbnail {
