@@ -468,11 +468,14 @@ block extra_footer_js
           }
         }, 1000); // 1 minute
 
-        // when user moves the mouse
-        $(this).mousemove(function (e) {
+        /** WHEN USER MAKES A MOVEMENT **/
+        $(this).on('keypress mousemove scroll', function (e) {
           secondsElapsedSinceLastMove = 0;
 
+          // turn off theatre mode if it's on
           if(theatreModeOn){
+
+            addStyleAttribute($('body'), 'background-color: rgb(28,28,28)');
 
             addStyleAttribute($('body'), 'background-color: rgb(28,28,28)');
             $('header, footer, .non-player-content').show();
