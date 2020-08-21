@@ -404,12 +404,29 @@ block extra_footer_js
 
   script(src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js")
   script(src="https://cdnjs.cloudflare.com/ajax/libs/plyr/3.5.10/plyr.min.js")
+  // script(src="//cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.5.1/jquery.nicescroll.min.js")
+
+
   script.
     var clipboard = new ClipboardJS('.copy-button');
 
     clipboard.on('success', function (e) {
       swal('The text has been copied to your clipboard')
     });
+
+
+  script.
+    $(document).ready(function () {
+
+
+
+    // Handler for .ready() called.
+    });
+
+        // scroll to put the viewer in view
+      setTimeout(function(){
+        // window.scrollBy(0,65);
+      }, 1000)
 
 
   //COMMENT FUNCTIONALITY CONTAINED HERE

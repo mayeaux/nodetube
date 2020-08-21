@@ -40,6 +40,9 @@ html
     script(src='https://cdnjs.cloudflare.com/ajax/libs/balance-text/3.2.0/balancetext.min.js')
     script(src='https://cdn.jsdelivr.net/npm/sweetalert2@7.33.1/dist/sweetalert2.js')
 
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js')
+
+
     link(rel='stylesheet', href='/css/loading-bar.css')
     script(src='/js/loading-bar.js')
 
@@ -75,10 +78,24 @@ html
       include widgets/google-analytics
 
 
-
     script(src='/js/main.js')
 
     block extra_footer_js
+
+    script.
+
+      $(document).ready(function () {
+        $("body").niceScroll({
+          cursorcolor: "aquamarine",
+          cursorwidth: "16px",
+          'zindex' : 999999999999999,
+          scrollspeed: 1,
+          smoothscroll: true,
+          mousescrollstep: 38
+        });
+
+
+      });
 
 
 
