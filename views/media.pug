@@ -462,6 +462,9 @@ block extra_footer_js
             console.log('TURNING ON THEATRE MODE!')
 
             addStyleAttribute($('body'), 'background-color: black !important');
+            $('body').css('cursor', 'none')
+
+
             $('header, footer, .non-player-content').hide();
             theatreModeOn = true;
 
@@ -474,8 +477,9 @@ block extra_footer_js
 
           // turn off theatre mode if it's on
           if(theatreModeOn){
+            console.log('TURNING OFF THEATRE MODE');
 
-            addStyleAttribute($('body'), 'background-color: rgb(28,28,28)');
+            $('body').css('cursor','inherit')
 
             addStyleAttribute($('body'), 'background-color: rgb(28,28,28)');
             $('header, footer, .non-player-content').show();
