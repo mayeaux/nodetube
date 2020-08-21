@@ -444,39 +444,43 @@ block extra_footer_js
       var theatreModeOn = false;
       var idleTime = 0;
       $(document).ready(function () {
-        //Increment the idle time counter every minute.
-        var idleInterval = setInterval(timerIncrement, 4500); // 1 minute
 
-        //Zero the idle timer on mouse movement.
+
+        /** THEATRE MODE FUNCTIONALITY **/
+        //Increment the idle time counter every minute.
+
+        var timerSeconds = 4;
+
+        var secondsElapsedSinceLastMove = 0;
+
+        // increment and check if it's over time
+        setInterval(function(){
+          secondsElapsedSinceLastMove = secondsElapsedSinceLastMove + 1
+
+          if(secondsElapsedSinceLastMove >= timerSeconds && !theatreModeOn){
+
+            console.log('TURNING ON THEATRE MODE!')
+
+            addStyleAttribute($('body'), 'background-color: black !important');
+            $('header, footer, .non-player-content').hide();
+            theatreModeOn = true;
+
+          }
+        }, 1000); // 1 minute
+
+        // when user moves the mouse
         $(this).mousemove(function (e) {
-          idleTime = 0;
+          secondsElapsedSinceLastMove = 0;
 
           if(theatreModeOn){
-            addStyleAttribute($('body'), 'background-color: black');
-            $('header, footer, .non-player-content').show();
-          }
 
-        });
-        $(this).keypress(function (e) {
-          idleTime = 0;
-
-          if (theatreModeOn) {
-            addStyleAttribute($('body'), 'background-color: black');
+            addStyleAttribute($('body'), 'background-color: rgb(28,28,28)');
             $('header, footer, .non-player-content').show();
+            theatreModeOn = false;
           }
         });
+
       });
-
-      function timerIncrement() {
-        idleTime = idleTime + 1;
-        if (idleTime > 1) { // 20 minutes
-          console.log('hello');
-
-          theatreModeOn = true;
-          addStyleAttribute($('body'), 'background-color: black !important');
-          $('header, footer, .non-player-content').hide();
-        }
-      }
 
 
 
