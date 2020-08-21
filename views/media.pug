@@ -458,7 +458,17 @@ block extra_footer_js
         setInterval(function(){
           secondsElapsedSinceLastMove = secondsElapsedSinceLastMove + 1
 
-          if(secondsElapsedSinceLastMove >= timerSeconds && !theatreModeOn){
+          const dontDoTheatreModeBelowThisFar = 270;
+
+          const currentYOffset = window.pageYOffset;
+
+          console.log(dontDoTheatreModeBelowThisFar, currentYOffset)
+
+          // don't do it above 270 px
+          const shouldDoIt = currentYOffset < dontDoTheatreModeBelowThisFar;
+
+
+          if(secondsElapsedSinceLastMove >= timerSeconds && !theatreModeOn && shouldDoIt){
 
             console.log('TURNING ON THEATRE MODE!')
 
@@ -475,7 +485,7 @@ block extra_footer_js
         }, 1000); // 1 minute
 
         /** WHEN USER MAKES A MOVEMENT, TURN OFF THEATRE MODE IF IT'S ON  **/
-        $(this).on('keypress mousemove scroll', function (e) {
+        $(this).on('keypress mousemove scroll click', function (e) {
           secondsElapsedSinceLastMove = 0;
 
           // turn off theatre mode if it's on
