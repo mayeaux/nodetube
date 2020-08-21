@@ -418,6 +418,8 @@ block extra_footer_js
   script.
     $(document).ready(function () {
 
+      $('.plyr').focus()
+
       function addStyleAttribute($element, styleAttribute) {
         $element.attr('style', $element.attr('style') + '; ' + styleAttribute);
       }
@@ -453,6 +455,8 @@ block extra_footer_js
 
             console.log('TURNING ON THEATRE MODE!')
 
+            window.scrollTo(0, 67);
+
             $('.plyr').css('height','100vh')
 
             addStyleAttribute($('body'), 'background-color: black !important');
@@ -472,21 +476,30 @@ block extra_footer_js
         }, 1000); // 1 minute
 
         /** WHEN USER MAKES A MOVEMENT, TURN OFF THEATRE MODE IF IT'S ON  **/
-        $(this).on('keypress mousemove scroll click', function (e) {
+        $(this).on('keypress mousemove click scroll', function (e) {
 
           secondsElapsedSinceLastMove = 0;
 
-          // turn off theatre mode if it's on
-          if(theatreModeOn){
-            console.log('TURNING OFF THEATRE MODE');
+          const mouseMoveWithTheatreOn = e.handleObj.type == 'mousemove' && theatreModeOn;
 
-            $('.plyr').css('height','82vh')
+          if(mouseMoveWithTheatreOn){
+            $('body').css('cursor', 'inherit')
+          } else {
+            // don't pop out on mousemove
+            // if(theatreModeOn) &&
 
-            $('body').css('cursor','inherit')
+            // turn off theatre mode if it's on
+            if (theatreModeOn) {
+              console.log('TURNING OFF THEATRE MODE');
 
-            addStyleAttribute($('body'), 'background-color: rgb(28,28,28)');
-            $('header, footer, .non-player-content').show();
-            theatreModeOn = false;
+              $('.plyr').css('height', '82vh')
+
+              $('body').css('cursor', 'inherit')
+
+              addStyleAttribute($('body'), 'background-color: rgb(28,28,28)');
+              $('header, footer, .non-player-content').show();
+              theatreModeOn = false;
+            }
           }
         });
 
