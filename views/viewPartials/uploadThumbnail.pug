@@ -22,9 +22,6 @@ div.holder
         else if upload.fileType == 'unknown'
             img.upload-thumbnail.preview-image(src='/images/no_img.png')
 
-if ( upload.fileType == 'audio' || upload.fileType == 'video') && upload.formattedDuration
-    div.duration(style="height:26px;max-width:70px;text-align:center;position:relative;bottom:0;right:0;background-color:black;opacity:0.5; padding: 3px; margin: 0 auto; border-radius: 5px")
-        span(style="color: white") #{upload.formattedDuration}
 
 
     // almost working code
