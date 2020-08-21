@@ -418,6 +418,66 @@ block extra_footer_js
   script.
     $(document).ready(function () {
 
+      function addStyleAttribute($element, styleAttribute) {
+        $element.attr('style', $element.attr('style') + '; ' + styleAttribute);
+      }
+
+
+    //      setTimeout(function(){
+    //        addStyleAttribute($('body'), 'background-color: black !important');
+    //
+    //          $('header, footer, .non-player-content').hide();
+    //
+    //
+    //        }, 100);
+    //
+    //
+    //      setTimeout(function () {
+    //        addStyleAttribute($('body'), 'background-color: black');
+    //
+    //        $('header, footer, .non-player-content').show();
+    //
+    //
+    //      }, 1000);
+
+
+      var theatreModeOn = false;
+      var idleTime = 0;
+      $(document).ready(function () {
+        //Increment the idle time counter every minute.
+        var idleInterval = setInterval(timerIncrement, 4500); // 1 minute
+
+        //Zero the idle timer on mouse movement.
+        $(this).mousemove(function (e) {
+          idleTime = 0;
+
+          if(theatreModeOn){
+            addStyleAttribute($('body'), 'background-color: black');
+            $('header, footer, .non-player-content').show();
+          }
+
+        });
+        $(this).keypress(function (e) {
+          idleTime = 0;
+
+          if (theatreModeOn) {
+            addStyleAttribute($('body'), 'background-color: black');
+            $('header, footer, .non-player-content').show();
+          }
+        });
+      });
+
+      function timerIncrement() {
+        idleTime = idleTime + 1;
+        if (idleTime > 1) { // 20 minutes
+          console.log('hello');
+
+          theatreModeOn = true;
+          addStyleAttribute($('body'), 'background-color: black !important');
+          $('header, footer, .non-player-content').hide();
+        }
+      }
+
 
 
     // Handler for .ready() called.
@@ -463,6 +523,7 @@ block extra_footer_js
   include ./mediaPlayerPartials/reactFunctionalityJs
 
   script.
+    // Turn description urls into clickable anchor links
     var myTextEl = document.getElementById('descriptionText');
     if (myTextEl)
     {
