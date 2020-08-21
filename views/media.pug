@@ -418,6 +418,75 @@ block extra_footer_js
   script.
     $(document).ready(function () {
 
+      function addStyleAttribute($element, styleAttribute) {
+        $element.attr('style', $element.attr('style') + '; ' + styleAttribute);
+      }
+
+      var theatreModeOn = false;
+      var idleTime = 0;
+      $(document).ready(function () {
+
+
+        /** THEATRE MODE FUNCTIONALITY **/
+        //Increment the idle time counter every minute.
+
+        var timerSeconds = 3;
+
+        var secondsElapsedSinceLastMove = 0;
+
+        // increment and check if it's over time
+        /** CHECK EVERY SECOND TO SEE IF IT'S TIME TO TURN ON THEATRE MODE  **/
+        setInterval(function(){
+          secondsElapsedSinceLastMove = secondsElapsedSinceLastMove + 1
+
+          const dontDoTheatreModeBelowThisFar = 270;
+
+          const currentYOffset = window.pageYOffset;
+
+          console.log(dontDoTheatreModeBelowThisFar, currentYOffset)
+
+          // don't do it above 270 px
+          const shouldDoIt = currentYOffset < dontDoTheatreModeBelowThisFar;
+
+
+          if(secondsElapsedSinceLastMove >= timerSeconds && !theatreModeOn && shouldDoIt){
+
+            console.log('TURNING ON THEATRE MODE!')
+
+            $('.plyr').css('height','100vh')
+
+            addStyleAttribute($('body'), 'background-color: black !important');
+            $('body').css('cursor', 'none')
+
+
+            $('header, footer, .non-player-content').hide();
+            theatreModeOn = true;
+
+          }
+        }, 1000); // 1 minute
+
+        /** WHEN USER MAKES A MOVEMENT, TURN OFF THEATRE MODE IF IT'S ON  **/
+        $(this).on('keypress mousemove scroll click', function (e) {
+          secondsElapsedSinceLastMove = 0;
+
+          // turn off theatre mode if it's on
+          if(theatreModeOn){
+            console.log('TURNING OFF THEATRE MODE');
+
+            $('.plyr').css('height','82vh')
+
+            window.scrollTo(0, 67);
+
+            $('body').css('cursor','inherit')
+
+            addStyleAttribute($('body'), 'background-color: rgb(28,28,28)');
+            $('header, footer, .non-player-content').show();
+            theatreModeOn = false;
+          }
+        });
+
+      });
+
 
 
     // Handler for .ready() called.
@@ -463,6 +532,7 @@ block extra_footer_js
   include ./mediaPlayerPartials/reactFunctionalityJs
 
   script.
+    // Turn description urls into clickable anchor links
     var myTextEl = document.getElementById('descriptionText');
     if (myTextEl)
     {
