@@ -11,7 +11,7 @@ block content
 
 
     br
-    div.center-block.text-center.col-sm-12(style="overflow-x: hidden;")
+    div.center-block.text-center.col-sm-12(style="overflow-x: hidden;margin-top:-51px;")
         if upload.status == 'processing'
 
             div(style="max-width:443px;margin:0 auto;")
@@ -29,7 +29,7 @@ block content
         br
         br
         if upload.fileType === 'video' && !upload.status !== 'processing'
-            div.display-div.magnetic(style="min-width:50%;min-height:50%;margin:0 auto;margin-top:-32px;")
+            div.display-div.magnetic(style="min-width:50%;min-height:50%;margin:0 auto;")
 
                 video#media_player.display-element(playsinline poster=`${serverToUse}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;max-height:100vh")
                     // to
