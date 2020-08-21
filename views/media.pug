@@ -459,14 +459,21 @@ block extra_footer_js
             $('body').css('cursor', 'none')
 
 
+
             $('header, footer, .non-player-content').hide();
-            theatreModeOn = true;
+
+            setTimeout(function(){
+              theatreModeOn = true;
+            }, 600)
+
+
 
           }
         }, 1000); // 1 minute
 
         /** WHEN USER MAKES A MOVEMENT, TURN OFF THEATRE MODE IF IT'S ON  **/
         $(this).on('keypress mousemove scroll click', function (e) {
+
           secondsElapsedSinceLastMove = 0;
 
           // turn off theatre mode if it's on
@@ -474,8 +481,6 @@ block extra_footer_js
             console.log('TURNING OFF THEATRE MODE');
 
             $('.plyr').css('height','82vh')
-
-            window.scrollTo(0, 67);
 
             $('body').css('cursor','inherit')
 
