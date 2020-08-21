@@ -29,10 +29,9 @@ block content
         br
         br
         if upload.fileType === 'video' && !upload.status !== 'processing'
-            div.display-div(style="min-width:50%;min-height:50%;margin:0 auto;")
-                // TODO: Sub out thumbnail here
+            div.display-div(style="min-width:50%;min-height:50%;margin:0 auto;margin-top:-32px;")
 
-                video#media_player.display-element(playsinline poster=`${serverToUse}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;")
+                video#media_player.display-element(playsinline poster=`${serverToUse}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;max-height:100vh")
                     // to
                     source.video-source(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`, type='video/mp4')
                     //source(src=upload.uploadUrl, type='video/mp4')
