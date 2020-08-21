@@ -454,6 +454,7 @@ block extra_footer_js
         var secondsElapsedSinceLastMove = 0;
 
         // increment and check if it's over time
+        /** CHECK EVERY SECOND TO SEE IF IT'S TIME TO TURN ON THEATRE MODE  **/
         setInterval(function(){
           secondsElapsedSinceLastMove = secondsElapsedSinceLastMove + 1
 
@@ -473,7 +474,7 @@ block extra_footer_js
           }
         }, 1000); // 1 minute
 
-        /** WHEN USER MAKES A MOVEMENT **/
+        /** WHEN USER MAKES A MOVEMENT, TURN OFF THEATRE MODE IF IT'S ON  **/
         $(this).on('keypress mousemove scroll', function (e) {
           secondsElapsedSinceLastMove = 0;
 
