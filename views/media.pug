@@ -449,7 +449,7 @@ block extra_footer_js
         /** THEATRE MODE FUNCTIONALITY **/
         //Increment the idle time counter every minute.
 
-        var timerSeconds = 4;
+        var timerSeconds = 3;
 
         var secondsElapsedSinceLastMove = 0;
 
@@ -460,6 +460,8 @@ block extra_footer_js
           if(secondsElapsedSinceLastMove >= timerSeconds && !theatreModeOn){
 
             console.log('TURNING ON THEATRE MODE!')
+
+            $('.plyr').css('height','100vh')
 
             addStyleAttribute($('body'), 'background-color: black !important');
             $('body').css('cursor', 'none')
@@ -478,6 +480,10 @@ block extra_footer_js
           // turn off theatre mode if it's on
           if(theatreModeOn){
             console.log('TURNING OFF THEATRE MODE');
+
+            $('.plyr').css('height','82vh')
+
+            window.scrollTo(0, 67);
 
             $('body').css('cursor','inherit')
 
