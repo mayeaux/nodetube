@@ -9,6 +9,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const mkdirp = Promise.promisifyAll(require('mkdirp'));
 var randomstring = require('randomstring');
+var CombinedStream = require('combined-stream');
 
 const redisClient = require('../../config/redis');
 
@@ -381,8 +382,15 @@ exports.postFileUpload = async(req, res) => {
         // I feel like I pulled this into a promise once and it didn't work
 
         /** CONCATENATE FILES AND BEGIN PROCESSING **/
-        concat(fileNameArray, `${uploadPath}/convertedFile`, async function(err){
-          if(err)throw err;
+        var combinedStream = CombinedStream.create();
+
+        for(const fileChunk of fileNameArray){
+          combinedStream.append(function(next) {
+            next(fs.createReadStream(fileChunk));
+          });
+        }
+
+        combinedStream.pipe(fs.createWriteStream(`${uploadPath}/convertedFile`));
 
           uploadLogger.info('Concat done', logObject);
 
@@ -532,7 +540,6 @@ exports.postFileUpload = async(req, res) => {
             responseSent = true;
             aboutToProcess(res, channelUrl, uniqueTag);
           }
-        });
       }
     });
   } catch(err){

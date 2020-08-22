@@ -37,6 +37,7 @@
     "cheerio": "^0.22.0",
     "clockwork": "^0.1.4",
     "clone": "^2.1.2",
+    "combined-stream": "^1.0.8",
     "command-exists": "^1.2.8",
     "compression": "^1.7.4",
     "concat-files": "^0.1.1",
