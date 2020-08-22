@@ -410,6 +410,38 @@ block extra_footer_js
   script(src="https://cdnjs.cloudflare.com/ajax/libs/plyr/3.5.10/plyr.min.js")
   // script(src="//cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.5.1/jquery.nicescroll.min.js")
 
+  script.
+
+    $(document).ready(function () {
+        $('.plyr').focus()
+
+      const dontDoTheatreModeBelowThisFar = 270;
+
+      const currentYOffset = window.pageYOffset;
+
+      console.log(dontDoTheatreModeBelowThisFar, currentYOffset)
+
+      // don't do it above 270 px
+      const shouldDoIt = currentYOffset < dontDoTheatreModeBelowThisFar;
+
+      players[0].on('controlshidden', function () {
+        if (shouldDoIt) {
+          $('.plyr').css('cursor', 'none')
+          $('body').css('cursor', 'none')
+
+          console.log('hidden')
+        }
+
+      })
+
+      players[0].on('controlsshown', function () {
+        $('.plyr').css('cursor', 'inherit')
+        $('body').css('cursor', 'inherit')
+        console.log('hidden')
+      })
+    })
+
+
 
   script.
 
