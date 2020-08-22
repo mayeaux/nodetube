@@ -11,6 +11,7 @@ const mkdirp = Promise.promisifyAll(require('mkdirp'));
 var randomstring = require('randomstring');
 var CombinedStream = require('combined-stream');
 
+
 const redisClient = require('../../config/redis');
 
 const pagination = require('../../lib/helpers/pagination');
@@ -42,6 +43,12 @@ const backblaze = require('../../lib/uploading/backblaze');
 var resumable = require('../../lib/uploading/resumable.js')(__dirname +  '/upload');
 
 const moderationUpdatesToDiscord = process.env.MODERATION_UPDATES_TO_DISCORD == 'true';
+
+process.on('warning', (warning) => {
+  console.warn(warning.name);    // Print the warning name
+  console.warn(warning.message); // Print the warning message
+  console.warn(warning.stack);   // Print the stack trace
+});
 
 const winston = require('winston');
 //
@@ -379,9 +386,6 @@ exports.postFileUpload = async(req, res) => {
           fileNameArray.push(`${uploadPath}/${x}`);
         }
 
-        // I feel like I pulled this into a promise once and it didn't work
-
-        /** CONCATENATE FILES AND BEGIN PROCESSING **/
         var combinedStream = CombinedStream.create();
 
         for(const fileChunk of fileNameArray){
@@ -391,6 +395,12 @@ exports.postFileUpload = async(req, res) => {
         }
 
         combinedStream.pipe(fs.createWriteStream(`${uploadPath}/convertedFile`));
+
+
+        combinedStream.on('end', async function(){
+          /** CONCATENATE FILES AND BEGIN PROCESSING **/
+          // concat(fileNameArray, `${uploadPath}/convertedFile`, async function(err){
+          //   if(err)throw err;
 
           uploadLogger.info('Concat done', logObject);
 
@@ -540,6 +550,10 @@ exports.postFileUpload = async(req, res) => {
             responseSent = true;
             aboutToProcess(res, channelUrl, uniqueTag);
           }
+        });
+
+
+        // });
       }
     });
   } catch(err){
