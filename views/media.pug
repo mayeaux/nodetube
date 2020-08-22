@@ -408,6 +408,9 @@ block extra_footer_js
 
 
   script.
+
+
+
     var clipboard = new ClipboardJS('.copy-button');
 
     clipboard.on('success', function (e) {
@@ -416,7 +419,24 @@ block extra_footer_js
 
   <!-- only do all the theatre stuff if it's a video, otherwise leave it as is-->
   if upload.fileType == 'video'
+
+
+
       script.
+        (function ($) {
+          $.fn.invisible = function () {
+            return this.each(function () {
+              $(this).css("visibility", "hidden");
+            });
+          };
+          $.fn.visible = function () {
+            return this.each(function () {
+              $(this).css("visibility", "visible");
+            });
+          };
+        }(jQuery));
+
+
         $(document).ready(function () {
 
           // focus on plyr so spacebar works
@@ -457,27 +477,32 @@ block extra_footer_js
 
                 console.log('TURNING ON THEATRE MODE!')
 
-                window.scrollTo(0, 67);
+                 window.scrollTo(0, 0);
 
-                $('.plyr').css('height','100vh')
+
+                // window.scrollTo(0, 67);
+
+                // $('.plyr').css('height','100vh')
 
                 addStyleAttribute($('body'), 'background-color: black !important');
 
                 players[0].on('controlshidden', function () {
                   $('.plyr').css('cursor', 'none')
+                   $('body').css('cursor', 'none')
+
                   console.log('hidden')
                 })
 
                 players[0].on('controlsshown', function () {
                   $('.plyr').css('cursor', 'inherit')
+                  $('body').css('cursor', 'inherit')
                   console.log('hidden')
                 })
 
-                // $('body').css('cursor', 'none')
 
 
 
-                $('header, footer, .non-player-content').hide();
+                $('header, footer, .non-player-content').invisible();
 
                 setTimeout(function(){
                   theatreModeOn = true;
@@ -505,9 +530,13 @@ block extra_footer_js
 
               const mouseMoveWithTheatreOn = e.handleObj.type == 'mousemove' && theatreModeOn;
 
+              // if mousemove and theatre on, don't do anything
               if(mouseMoveWithTheatreOn){
                 $('body').css('cursor', 'inherit')
+
+                
                 // turn off theatre mode
+
               } else if (plyrIsAParent && isAClick && theatreModeOn){
                 $('body').css('cursor', 'inherit')
                 // don't do anything special
@@ -519,12 +548,15 @@ block extra_footer_js
                 if (theatreModeOn) {
                   console.log('TURNING OFF THEATRE MODE');
 
-                  $('.plyr').css('height', '82vh')
+                  // $('.plyr').css('height', '82vh')
 
                   $('body').css('cursor', 'inherit')
 
                   addStyleAttribute($('body'), 'background-color: rgb(28,28,28)');
-                  $('header, footer, .non-player-content').show();
+
+                  // TODO: bug here
+                  // $('header').css('display', '')
+                  $('header, footer, .non-player-content').visible();
                   theatreModeOn = false;
                 }
               }
