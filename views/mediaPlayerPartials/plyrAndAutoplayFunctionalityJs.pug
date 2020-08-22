@@ -27,9 +27,9 @@ script.
     return decodeURIComponent(results[2].replace(/\+/g, " "));
   }
 
-  var autoplay = getParameterByName('autoplay');
-
   var sensitive = #{upload.sensitive}
+
+  var autoplay = getParameterByName('autoplay');
 
   var autoplay;
   if(sensitive || autoplay == 'off'){
@@ -73,6 +73,7 @@ script.
   var players = Plyr.setup("#media_player", plyr_options);
 
   players[0].on('ready', function (event) {
+    players[0].play()
     // set video max-height to 620px
     // $('.display-element').css('max-height', '620px');
   });

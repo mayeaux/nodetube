@@ -418,6 +418,7 @@ block extra_footer_js
   script.
     $(document).ready(function () {
 
+      // focus on plyr so spacebar works
       $('.plyr').focus()
 
       function addStyleAttribute($element, styleAttribute) {
@@ -460,7 +461,18 @@ block extra_footer_js
             $('.plyr').css('height','100vh')
 
             addStyleAttribute($('body'), 'background-color: black !important');
-            $('body').css('cursor', 'none')
+
+            players[0].on('controlshidden', function () {
+              $('.plyr').css('cursor', 'none')
+              console.log('hidden')
+            })
+
+            players[0].on('controlsshown', function () {
+              $('.plyr').css('cursor', 'pointer')
+              console.log('hidden')
+            })
+
+            // $('body').css('cursor', 'none')
 
 
 
@@ -476,14 +488,45 @@ block extra_footer_js
         }, 1000); // 1 minute
 
         /** WHEN USER MAKES A MOVEMENT, TURN OFF THEATRE MODE IF IT'S ON  **/
-        $(this).on('keypress mousemove click scroll', function (e) {
+
+        // $(this).on('keyup mousemove click scroll', function (e) {
+
+        $(this).on('keyup click scroll', function (e) {
 
           secondsElapsedSinceLastMove = 0;
+
+
+          console.log(e.target);
+
+          const targetElement = $('.display-element')[0]
+
+          console.log(targetElement);
+
+          var sameElement = targetElement == e.target;
+
+          const isAClick = e.handleObj.type == 'click'
+
+          if(sameElement && isAClick && theatreModeOn){
+
+          }
+
+
+
+          console.log(sameElement + ' same element');
+
+          // video#media_player.display-element
+
+
+          console.log(e)
 
           const mouseMoveWithTheatreOn = e.handleObj.type == 'mousemove' && theatreModeOn;
 
           if(mouseMoveWithTheatreOn){
             $('body').css('cursor', 'inherit')
+            // turn off theatre mode
+          } else if (sameElement && isAClick && theatreModeOn){
+            $('body').css('cursor', 'inherit')
+            // don't do anything special
           } else {
             // don't pop out on mousemove
             // if(theatreModeOn) &&
