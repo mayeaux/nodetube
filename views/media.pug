@@ -495,36 +495,19 @@ block extra_footer_js
 
           secondsElapsedSinceLastMove = 0;
 
+          const plyrIsAParent = e.target.closest && e.target.closest(".plyr");
 
-          console.log(e.target);
-
-          const targetElement = $('.display-element')[0]
-
-          console.log(targetElement);
-
-          var sameElement = targetElement == e.target;
+          console.log(plyrIsAParent);
 
           const isAClick = e.handleObj.type == 'click'
 
-          if(sameElement && isAClick && theatreModeOn){
-
-          }
-
-
-
-          console.log(sameElement + ' same element');
-
-          // video#media_player.display-element
-
-
-          console.log(e)
 
           const mouseMoveWithTheatreOn = e.handleObj.type == 'mousemove' && theatreModeOn;
 
           if(mouseMoveWithTheatreOn){
             $('body').css('cursor', 'inherit')
             // turn off theatre mode
-          } else if (sameElement && isAClick && theatreModeOn){
+          } else if (plyrIsAParent && isAClick && theatreModeOn){
             $('body').css('cursor', 'inherit')
             // don't do anything special
           } else {
