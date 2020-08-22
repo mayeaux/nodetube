@@ -73,7 +73,9 @@ script.
   var players = Plyr.setup("#media_player", plyr_options);
 
   players[0].on('ready', function (event) {
-    players[0].play()
+    // disabling this play because it's playing on autoplay when uploading
+    // players[0].play()
+
     // set video max-height to 620px
     // $('.display-element').css('max-height', '620px');
   });

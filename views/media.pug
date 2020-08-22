@@ -414,133 +414,128 @@ block extra_footer_js
       swal('The text has been copied to your clipboard')
     });
 
+  <!-- only do all the theatre stuff if it's a video, otherwise leave it as is-->
+  if upload.fileType == 'video'
+      script.
+        $(document).ready(function () {
 
-  script.
-    $(document).ready(function () {
+          // focus on plyr so spacebar works
+          $('.plyr').focus()
 
-      // focus on plyr so spacebar works
-      $('.plyr').focus()
-
-      function addStyleAttribute($element, styleAttribute) {
-        $element.attr('style', $element.attr('style') + '; ' + styleAttribute);
-      }
-
-      var theatreModeOn = false;
-      var idleTime = 0;
-      $(document).ready(function () {
-
-
-        /** THEATRE MODE FUNCTIONALITY **/
-        //Increment the idle time counter every minute.
-
-        var timerSeconds = 3;
-
-        var secondsElapsedSinceLastMove = 0;
-
-        // increment and check if it's over time
-        /** CHECK EVERY SECOND TO SEE IF IT'S TIME TO TURN ON THEATRE MODE  **/
-        setInterval(function(){
-          secondsElapsedSinceLastMove = secondsElapsedSinceLastMove + 1
-
-          const dontDoTheatreModeBelowThisFar = 270;
-
-          const currentYOffset = window.pageYOffset;
-
-          console.log(dontDoTheatreModeBelowThisFar, currentYOffset)
-
-          // don't do it above 270 px
-          const shouldDoIt = currentYOffset < dontDoTheatreModeBelowThisFar;
-
-
-          if(secondsElapsedSinceLastMove >= timerSeconds && !theatreModeOn && shouldDoIt){
-
-            console.log('TURNING ON THEATRE MODE!')
-
-            window.scrollTo(0, 67);
-
-            $('.plyr').css('height','100vh')
-
-            addStyleAttribute($('body'), 'background-color: black !important');
-
-            players[0].on('controlshidden', function () {
-              $('.plyr').css('cursor', 'none')
-              console.log('hidden')
-            })
-
-            players[0].on('controlsshown', function () {
-              $('.plyr').css('cursor', 'inherit')
-              console.log('hidden')
-            })
-
-            // $('body').css('cursor', 'none')
-
-
-
-            $('header, footer, .non-player-content').hide();
-
-            setTimeout(function(){
-              theatreModeOn = true;
-            }, 600)
-
-
-
+          function addStyleAttribute($element, styleAttribute) {
+            $element.attr('style', $element.attr('style') + '; ' + styleAttribute);
           }
-        }, 1000); // 1 minute
 
-        /** WHEN USER MAKES A MOVEMENT, TURN OFF THEATRE MODE IF IT'S ON  **/
-
-          $(this).on('keyup mousemove click scroll', function (e) {
-
-          // $(this).on('keyup click scroll', function (e) {
-
-          secondsElapsedSinceLastMove = 0;
-
-          const plyrIsAParent = e.target.closest && e.target.closest(".plyr");
-
-          console.log(plyrIsAParent);
-
-          const isAClick = e.handleObj.type == 'click'
+          var theatreModeOn = false;
+          var idleTime = 0;
+          $(document).ready(function () {
 
 
-          const mouseMoveWithTheatreOn = e.handleObj.type == 'mousemove' && theatreModeOn;
+            /** THEATRE MODE FUNCTIONALITY **/
+            //Increment the idle time counter every minute.
 
-          if(mouseMoveWithTheatreOn){
-            $('body').css('cursor', 'inherit')
-            // turn off theatre mode
-          } else if (plyrIsAParent && isAClick && theatreModeOn){
-            $('body').css('cursor', 'inherit')
-            // don't do anything special
-          } else {
-            // don't pop out on mousemove
-            // if(theatreModeOn) &&
+            var timerSeconds = 3;
 
-            // turn off theatre mode if it's on
-            if (theatreModeOn) {
-              console.log('TURNING OFF THEATRE MODE');
+            var secondsElapsedSinceLastMove = 0;
 
-              $('.plyr').css('height', '82vh')
+            // increment and check if it's over time
+            /** CHECK EVERY SECOND TO SEE IF IT'S TIME TO TURN ON THEATRE MODE  **/
+            setInterval(function(){
+              secondsElapsedSinceLastMove = secondsElapsedSinceLastMove + 1
 
-              $('body').css('cursor', 'inherit')
+              const dontDoTheatreModeBelowThisFar = 270;
 
-              addStyleAttribute($('body'), 'background-color: rgb(28,28,28)');
-              $('header, footer, .non-player-content').show();
-              theatreModeOn = false;
-            }
-          }
+              const currentYOffset = window.pageYOffset;
+
+              console.log(dontDoTheatreModeBelowThisFar, currentYOffset)
+
+              // don't do it above 270 px
+              const shouldDoIt = currentYOffset < dontDoTheatreModeBelowThisFar;
+
+
+              if(secondsElapsedSinceLastMove >= timerSeconds && !theatreModeOn && shouldDoIt){
+
+                console.log('TURNING ON THEATRE MODE!')
+
+                window.scrollTo(0, 67);
+
+                $('.plyr').css('height','100vh')
+
+                addStyleAttribute($('body'), 'background-color: black !important');
+
+                players[0].on('controlshidden', function () {
+                  $('.plyr').css('cursor', 'none')
+                  console.log('hidden')
+                })
+
+                players[0].on('controlsshown', function () {
+                  $('.plyr').css('cursor', 'inherit')
+                  console.log('hidden')
+                })
+
+                // $('body').css('cursor', 'none')
+
+
+
+                $('header, footer, .non-player-content').hide();
+
+                setTimeout(function(){
+                  theatreModeOn = true;
+                }, 600)
+
+
+
+              }
+            }, 1000); // 1 minute
+
+            /** WHEN USER MAKES A MOVEMENT, TURN OFF THEATRE MODE IF IT'S ON  **/
+
+              $(this).on('keyup mousemove click scroll', function (e) {
+
+              // $(this).on('keyup click scroll', function (e) {
+
+              secondsElapsedSinceLastMove = 0;
+
+              const plyrIsAParent = e.target.closest && e.target.closest(".plyr");
+
+              console.log(plyrIsAParent);
+
+              const isAClick = e.handleObj.type == 'click'
+
+
+              const mouseMoveWithTheatreOn = e.handleObj.type == 'mousemove' && theatreModeOn;
+
+              if(mouseMoveWithTheatreOn){
+                $('body').css('cursor', 'inherit')
+                // turn off theatre mode
+              } else if (plyrIsAParent && isAClick && theatreModeOn){
+                $('body').css('cursor', 'inherit')
+                // don't do anything special
+              } else {
+                // don't pop out on mousemove
+                // if(theatreModeOn) &&
+
+                // turn off theatre mode if it's on
+                if (theatreModeOn) {
+                  console.log('TURNING OFF THEATRE MODE');
+
+                  $('.plyr').css('height', '82vh')
+
+                  $('body').css('cursor', 'inherit')
+
+                  addStyleAttribute($('body'), 'background-color: rgb(28,28,28)');
+                  $('header, footer, .non-player-content').show();
+                  theatreModeOn = false;
+                }
+              }
+            });
+
+          });
+
+
+
+        // Handler for .ready() called.
         });
-
-      });
-
-
-
-    // Handler for .ready() called.
-    });
-
-        // scroll to put the viewer in view
-      setTimeout(function(){
-        // window.scrollBy(0,65);
-      }, 1000)
-
 
   //COMMENT FUNCTIONALITY CONTAINED HERE
   script(src="/js/media.js")
