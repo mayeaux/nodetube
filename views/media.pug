@@ -42,6 +42,7 @@ block content
                     source.video-source(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`, type='video/mp4')
                     //source(src=upload.uploadUrl, type='video/mp4')
 
+            // if it's an audio
         else if upload.fileType === 'audio'
             div
                 audio#media_player.my_audio(playsinline style="width:80%;" controls='', preload='none')
@@ -56,12 +57,16 @@ block content
 
                     //source(src=upload.uploadUrl, type='audio/mp3')
 
+            // if it's an image
         else if upload.fileType === 'image'
             div.display-div(style="")
                 a(href=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`)
                     img.display-element(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="border-radius:13px;max-width:80%;min-width:50%;min-height:50%;max-height:620px;")
 
 
+        // todo: pull this out into its own include
+        //- NON PLAYER CONTENT
+            hello something
         div.non-player-content(style="position:relative;")
 
             br

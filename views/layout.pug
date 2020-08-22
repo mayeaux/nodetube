@@ -61,16 +61,16 @@ html
 
 
     //layout.pug
-    include partials/header
+    include layoutPartials/header
 
     // I feel like this is here and breaks if you move it
     include viewPartials/darkLightMode
 
     .container(style="max-width:100%;padding-left: 0px; padding-right: 0px;")
-      include partials/flash
+      include layoutPartials/flash
       block content
 
-    include partials/footer
+    include layoutPartials/footer
 
     if zopimOn
       include widgets/zopim

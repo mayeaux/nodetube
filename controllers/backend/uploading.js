@@ -11,7 +11,6 @@ const mkdirp = Promise.promisifyAll(require('mkdirp'));
 var randomstring = require('randomstring');
 var CombinedStream = require('combined-stream');
 
-
 const redisClient = require('../../config/redis');
 
 const pagination = require('../../lib/helpers/pagination');
@@ -389,13 +388,12 @@ exports.postFileUpload = async(req, res) => {
         var combinedStream = CombinedStream.create();
 
         for(const fileChunk of fileNameArray){
-          combinedStream.append(function(next) {
+          combinedStream.append(function(next){
             next(fs.createReadStream(fileChunk));
           });
         }
 
         combinedStream.pipe(fs.createWriteStream(`${uploadPath}/convertedFile`));
-
 
         combinedStream.on('end', async function(){
           /** CONCATENATE FILES AND BEGIN PROCESSING **/
@@ -551,7 +549,6 @@ exports.postFileUpload = async(req, res) => {
             aboutToProcess(res, channelUrl, uniqueTag);
           }
         });
-
 
         // });
       }
