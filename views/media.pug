@@ -30,8 +30,10 @@ block content
                 h4.fw(style="font-size:22px;margin-top:30px;") If your upload is stuck on processing, let an admin know via the social links at the bottom of the page and we'll take a look.
 
 
+        <!-- DISPLAYING CONTENT -->
         br
         br
+        // if it's a video that's finished processing
         if upload.fileType === 'video' && !upload.status !== 'processing'
             div.display-div.magnetic(style="min-width:50%;min-height:50%;margin:0 auto;")
 
@@ -424,15 +426,16 @@ block extra_footer_js
       // don't do it above 270 px
       const shouldDoIt = currentYOffset < dontDoTheatreModeBelowThisFar;
 
-      players[0].on('controlshidden', function () {
-        if (shouldDoIt) {
-          $('.plyr').css('cursor', 'none')
-          $('body').css('cursor', 'none')
-
-          console.log('hidden')
-        }
-
-      })
+      // turning this off because it's not working properly
+        //      players[0].on('controlshidden', function () {
+        //        if (shouldDoIt & 1 == 2) {
+        //          $('.plyr').css('cursor', 'none')
+        //          $('body').css('cursor', 'none')
+        //
+        //          console.log('hidden')
+        //        }
+        //
+        //      })
 
       players[0].on('controlsshown', function () {
         $('.plyr').css('cursor', 'inherit')

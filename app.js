@@ -258,6 +258,8 @@ if(cluster.isMaster){
 
       res.locals.nodeEnv = process.env.NODE_ENV;
 
+      res.locals.maxRating = process.env.MAX_RATING_ALLOWED;
+
       next();
     });
 
