@@ -106,7 +106,7 @@ block content
 
 
             br
-            // uploader details section
+            // UPLOADER DETAILS SECTION
             div.col-sm-4
                 h3.uploader-name(style="margin-top:25px;font-size:26px;")
                     if upload.uploader.customThumbnail
@@ -137,6 +137,13 @@ block content
                     br
                     br
 
+                div
+                    // edit button
+                    if ( user && user.channelUrl == upload.uploader.channelUrl ) || ( user && user.role == 'admin' )
+                        br
+                        a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}/edit`)
+                            button.fw.btn.btn-success(style="margin-bottom:-10px;border-radius:5px;") Edit
+
             // REMOVE QUALITY THING, EVERYONE CAN STAY LOW QUALITY
             // also have to add .fw to this thing when take it live
             //if upload.quality && upload.quality.high
@@ -155,17 +162,12 @@ block content
             //    br
             //    button.donate.btn.btn-success(style="margin-bottom:-10px") Donate
 
-            div
-                // edit button
-                if ( user && user.channelUrl == upload.uploader.channelUrl ) ||  ( user && user.role == 'admin' )
-                    br
-                    a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}/edit`)
-                        button.fw.btn.btn-success(style="margin-bottom:-10px;border-radius:5px;") Edit
 
 
 
             // UPLOAD DETAILS SECTION WITH VIEWS, UPLOADED DAYS AGO, DURATION ETC
             div.col-sm-4
+
                 // Upload View Amount
                 h3.fw #{upload.views} Views
 
@@ -251,7 +253,7 @@ block content
                                 div.clicked-emoji
                                     img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
 
-                        p.fw(class=emoji.name) #{emoji.amount}
+                        p.fw(class=emoji.name style="font-weight:400;") #{emoji.amount}
 
             // COMMENT SECTION AND FORM
             div
@@ -427,6 +429,12 @@ block extra_footer_js
 
       // don't do it above 270 px
       const shouldDoIt = currentYOffset < dontDoTheatreModeBelowThisFar;
+
+      function addStyleAttribute($element, styleAttribute) {
+        $element.attr('style', $element.attr('style') + '; ' + styleAttribute);
+      }
+
+      addStyleAttribute($('body'), 'background-color: black !important');
 
       // turning this off because it's not working properly
         //      players[0].on('controlshidden', function () {
