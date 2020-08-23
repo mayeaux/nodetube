@@ -15,6 +15,9 @@ script.
 
   $(document).ready(function () {
 
+    var isSmall = document.innerHtml
+    var isLarge = '';
+
     // focus on plyr so spacebar works
     $('.plyr').focus()
 
@@ -61,6 +64,8 @@ script.
           // $('.plyr').css('height','100vh')
 
           addStyleAttribute($('body'), 'background-color: black !important');
+
+
 
           players[0].on('controlshidden', function () {
             $('.plyr').css('cursor', 'none')

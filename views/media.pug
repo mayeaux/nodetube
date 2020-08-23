@@ -9,7 +9,7 @@ block content
             margin-top: 30px;
         }
 
-        body header {
+        body footer header {
             background-color: black !important;
         }
 
@@ -64,51 +64,78 @@ block content
                     img.display-element(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="border-radius:13px;max-width:80%;min-width:50%;min-height:50%;max-height:620px;")
 
 
+
+
         // todo: pull this out into its own include
         //- NON PLAYER CONTENT
             hello something
-        div.non-player-content(style="position:relative;")
+        div.non-player-content(style="position:relative;max-width:1451px;margin:0 auto;")
 
             br
             br
             // Upload Title
-            //h2(class="upload-title-value" style="align-content:center;justify-content:normal;width:60%;margin: 0 auto;")=upload.title
-            h2.balance-text(class="upload-title-value" style="text-wrap:balance;width:80%;margin:0 auto;font-weight:300")=upload.title
+            div.col-sm-8
+                h2.balance-text(class="upload-title-value" style="text-wrap:balance;width:80%;margin:0 auto;font-weight:300")=upload.title
 
-            if upload.visibility == 'pending' && upload.status !== 'processing'
-                h3.pending-string Your video is currently pending moderator approval. If it's still pending after several minutes please contact a mod at
-                    a(href="/discord")  Discord
+                if upload.visibility == 'pending' && upload.status !== 'processing'
+                    h3.pending-string Your video is currently pending moderator approval. If it's still pending after several minutes please contact a mod at
+                        a(href="/discord")  Discord
+
+            // DOWNLOAD,EMBED, REPEAT AND REPORT BUTTONS
+            div.col-sm-4
+                // download button
+                div.change-size-button
+                    h2.download-button
+                        i.download-icon.fa.fa-download(aria-hidden="true" style="cursor:pointer")
+
+                // embed button
+                div.change-size-button(style="margin-left:0px;")
+                    h2.share-button
+                        i.share-icon.fas.fa-code(aria-hidden="true" style="cursor:pointer;font-size:27px;margin-left:0px;")
+
+                // only do repeat button if it's audio or video
+                if upload.fileType == 'video' || upload.fileType == 'audio'
+                    div.change-size-button(style="margin-left:0px")
+                        h2.repeat-div(style="opacity:0.4")
+                            i.repeat-icon.fa.fa-repeat(aria-hidden="true" style="cursor:pointer")
+
+                // report upload button
+                div.change-size-button(style="cursor:pointer;margin-left:0px;")
+                    h2.report-button(style="")
+                        i.share-icon.fa.fa-exclamation-triangle(aria-hidden="true" style="cursor:pointer;font-size:19px;")
+
 
             br
-            // uploader byline
-            h3.uploader-name(style="margin-top:25px;font-size:26px;")
-                if upload.uploader.customThumbnail
-                    a(href=`/user/${upload.uploader.channelUrl}`)
+            // uploader details section
+            div.col-sm-4
+                h3.uploader-name(style="margin-top:25px;font-size:26px;")
+                    if upload.uploader.customThumbnail
+                        a(href=`/user/${upload.uploader.channelUrl}`)
 
-                        img(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` style="border-radius:13px;width:159px;height:159px;")
-                        br
-                        br
-                else if upload.uploader.thumbnailUrl
-                    a(href=`/user/${upload.uploader.channelUrl}`)
+                            img(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` style="border-radius:13px;width:159px;height:159px;")
+                            br
+                            br
+                    else if upload.uploader.thumbnailUrl
+                        a(href=`/user/${upload.uploader.channelUrl}`)
 
-                        img(src=`${serverToUse}/${upload.uploader._id}/unique.png` style="border-radius:13px;width:159px;height:159px;")
-                        br
-                        br
+                            img(src=`${serverToUse}/${upload.uploader._id}/unique.png` style="border-radius:13px;width:159px;height:159px;")
+                            br
+                            br
 
-                a(href=`/user/${upload.uploader.channelUrl}` style="color:gray;font-weight:300") #{upload.uploader.channelName || upload.uploader.channelUrl}
-                    if upload.uploader.verified == true
-                        img(src="/images/verified.jpg" width="25px" height="25px" style="margin-left:3px;margin-top:-2px;margin-right:5px;")
-                    if upload.uploader.plan == 'plus'
-                        span.nodetube-pro PLUS
+                    a(href=`/user/${upload.uploader.channelUrl}` style="color:gray;font-weight:300") #{upload.uploader.channelName || upload.uploader.channelUrl}
+                        if upload.uploader.verified == true
+                            img(src="/images/verified.jpg" width="25px" height="25px" style="margin-left:3px;margin-top:-2px;margin-right:5px;")
+                        if upload.uploader.plan == 'plus'
+                            span.nodetube-pro PLUS
 
 
-            if upload.visibility != 'pending'
-                if alreadySubbed
-                    button.subscribe.btn.fw.btn-danger(style="border-radius:4px") Unsubscribe (#{subscriberAmount})
-                else
-                    button.subscribe.btn.fw.btn-success(style="border-radius:4px") Subscribe (#{subscriberAmount})
-                br
-                br
+                if upload.visibility != 'pending'
+                    if alreadySubbed
+                        button.subscribe.btn.fw.btn-danger(style="border-radius:4px") Unsubscribe (#{subscriberAmount})
+                    else
+                        button.subscribe.btn.fw.btn-success(style="border-radius:4px") Subscribe (#{subscriberAmount})
+                    br
+                    br
 
             // REMOVE QUALITY THING, EVERYONE CAN STAY LOW QUALITY
             // also have to add .fw to this thing when take it live
@@ -136,31 +163,9 @@ block content
                         button.fw.btn.btn-success(style="margin-bottom:-10px;border-radius:5px;") Edit
 
 
-            // EXTRA BUTTONS
-            div
-                if upload.fileType == 'image' || upload.fileType == 'video'
-                    //div.change-size-button.increase-size
-                    //    h1(style="cursor:pointer") +
-                    //div.change-size-button.decrease-size
-                    //    h1(style="cursor:pointer") -
-                div.change-size-button
-                    h2.download-button
-                        i.download-icon.fa.fa-download(aria-hidden="true" style="cursor:pointer")
-                div.change-size-button(style="margin-left:0px;")
-                    h2.share-button
-                        i.share-icon.fas.fa-code(aria-hidden="true" style="cursor:pointer;font-size:27px;margin-left:0px;")
-                if upload.fileType == 'video' || upload.fileType == 'audio'
-                    div.change-size-button(style="margin-left:0px")
-                        h2.repeat-div(style="opacity:0.4")
-                            i.repeat-icon.fa.fa-repeat(aria-hidden="true" style="cursor:pointer")
-                div.change-size-button(style="cursor:pointer;margin-left:0px;")
-                    h2.report-button(style="")
-                        i.share-icon.fa.fa-exclamation-triangle(aria-hidden="true" style="cursor:pointer;font-size:19px;")
 
-
-
-            // More Upload Details
-            div.col-sm-12
+            // UPLOAD DETAILS SECTION WITH VIEWS, UPLOADED DAYS AGO, DURATION ETC
+            div.col-sm-4
                 // Upload View Amount
                 h3.fw #{upload.views} Views
 
@@ -193,49 +198,18 @@ block content
                                         if upload.subcategory == subcategory.name
                                             p.fw(style="margin-top:15px;font-size:12px;") Subcategory: #{subcategory.displayName}
 
-
-                    if upload.rating
-                        if upload.rating == 'allAges'
-                            p.fw(style="margin-top:15px;font-size:12px;") Rating: Safe For Work
-                        if upload.rating == 'mature'
-                            p.fw(style="margin-top:15px;font-size:12px;") Rating: Not Safe For Work
-                        if upload.rating == 'sensitive'
-                            p.fw(style="margin-top:15px;font-size:12px;") Rating: Sensitive (18+)
+                    if maxRatingAllowed !== 'SFW'
+                        if upload.rating
+                            if upload.rating == 'allAges'
+                                p.fw(style="margin-top:15px;font-size:12px;") Rating: Safe For Work
+                            if upload.rating == 'mature'
+                                p.fw(style="margin-top:15px;font-size:12px;") Rating: Not Safe For Work
+                            if upload.rating == 'sensitive'
+                                p.fw(style="margin-top:15px;font-size:12px;") Rating: Sensitive (18+)
 
 
                     br
 
-
-                // react functionality
-                div.react(style="width:39%;background-color:white;margin:0 auto;border-radius:10px;margin-bottom:21px;padding-bottom:12px;max-width:453px;min-width:247px;")
-                    br
-                    each emoji in emojis
-                        div(style="padding-right:15px;display:inline-block;")
-                            a(href="#")
-                                if currentReact
-                                    if currentReact == emoji.name
-                                        div.clicked-emoji
-                                            img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
-
-                                    else
-                                        div.unclicked-emoji
-                                            img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
-
-                                else
-                                    div.clicked-emoji
-                                        img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
-
-                            p.fw(class=emoji.name) #{emoji.amount}
-
-
-
-                // Upload Description
-                if upload.description
-                    h4.fw(class="upload-description-value") Description
-                    p.fw(style="width:36%;text-align: center;margin: 0 auto;white-space:pre-line;word-wrap:break-word;min-width:240px;" id="descriptionText") #{upload.description}
-
-                br
-                br
 
             // SHARING BUTTONS
             div
@@ -247,6 +221,8 @@ block content
                 a(href=`mailto:?subject=Check out this ${upload.fileType}&body=Check out this ${upload.fileType} on ${brandName}: ${url}`, title='Share by Email')
                     img(src='/images/email-share.jpg')
 
+
+
             br
             button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} \n\n${url}`)
                 i.fa.fa-info.fw
@@ -255,6 +231,27 @@ block content
             button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} by ${upload.uploader.channelName || upload.uploader.channelUrl} \n\n ${url} \n\n #${brandName}`)
                 i.fa.fa-info.fw
                 | With User Info
+
+            //  REACTS WITH LIKES, DISLIKE, DISGUST, ETC
+            div.react(style="width:39%;background-color:white;margin:0 auto;border-radius:10px;margin-bottom:21px;margin-top:133px;padding-bottom:12px;max-width:453px;min-width:247px;")
+                br
+                each emoji in emojis
+                    div(style="padding-right:15px;display:inline-block;")
+                        a(href="#")
+                            if currentReact
+                                if currentReact == emoji.name
+                                    div.clicked-emoji
+                                        img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
+
+                                else
+                                    div.unclicked-emoji
+                                        img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
+
+                            else
+                                div.clicked-emoji
+                                    img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
+
+                        p.fw(class=emoji.name) #{emoji.amount}
 
             // COMMENT SECTION AND FORM
             div
@@ -271,7 +268,7 @@ block content
                                 label.fw(for="comment" style="font-size:20px;") Enter Comment
                                 br
                                 input(type="hidden" name="upload" id="upload" value=upload._id)
-                                textarea.fw(name="comment" id="comment" minlength="2" style="width:400px;max-width:100%")
+                                textarea.fw(name="comment" id="comment" minlength="2" style="width:800px;height:129px;max-width:100%")
                                 br
                                 input.fw.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
                 else
@@ -279,7 +276,7 @@ block content
                         form.form-horizontal.overall-comment-form(class="comment-form")
                             label.fw(for="comment" style="font-size:17px;") Enter Comment
                             br
-                            textarea.fw(name="comment" id="comment" minlength="2" style="width:400px;max-width:100%")
+                            textarea.fw(name="comment" id="comment" minlength="2" style="width:800px;height:129px;max-width:100%")
                             br
                             input.fw.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
 

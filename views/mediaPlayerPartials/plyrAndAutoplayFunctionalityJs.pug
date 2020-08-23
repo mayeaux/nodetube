@@ -80,9 +80,27 @@ script.
     // $('.display-element').css('max-height', '620px');
   });
 
+  var savedMaxHeight = 0;
+
   players[0].on('enterfullscreen', function (event) {
 
-    // $('.display-element').css('max-height', "100vh")
+    savedMaxHeight = $('.plyr').css('max-height')
+
+    console.log(savedMaxHeight)
+
+    function addStyleAttribute($element, styleAttribute) {
+      $element.attr('style', $element.attr('style') + '; ' + styleAttribute);
+    }
+
+    addStyleAttribute($('.plyr'), 'max-height: 100vh !important');
+    addStyleAttribute($('.plyr'), 'height: 100vh !important');
+
+
+
+
+
+
+
 
 
     // remove video max-height
@@ -91,7 +109,8 @@ script.
 
   players[0].on('exitfullscreen', function (event) {
     // add max height
-     // $('.display-element').css('max-height','100vh')
+      $('.plyr').css('max-height', savedMaxHeight)
+      $('.plyr').css('height', savedMaxHeight)
   });
 
   $("[data-plyr=seek]").css('cursor','pointer')
