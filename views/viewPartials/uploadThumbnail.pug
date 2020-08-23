@@ -17,7 +17,7 @@ div.holder
             img.upload-thumbnail.preview-image(src=`${uploadServer}/${channelUrl|| upload.uploader.channelUrl }/${upload.uniqueTag}${upload.fileExtension}` style="")
 
         else if upload.fileType == 'audio'
-            img.upload-thumbnail.preview-image(src='/images/audio.svg')
+            img.upload-thumbnail.preview-image(src='/images/headphone.png')
 
         else if upload.fileType == 'unknown'
             img.upload-thumbnail.preview-image(src='/images/no_img.png')
