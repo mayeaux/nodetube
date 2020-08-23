@@ -37,11 +37,11 @@ header.navbar.navbar-default.navbar-fixed-top(style="" id="header-color-blue")
         li(class=(title == 'Search') ? 'active' : undefined)
           a(href=`/search`) Search
 
-        li.subscribed-link(class=(title == 'Subscriptions') ? 'active' : undefined)
-          if user && user.unseenSubscriptionUploads || user && user.unseenSubscriptionUploads == 0
-            a(href=`/media/subscribed`) Subscribed (#{user.unseenSubscriptionUploads})
-          else
-            a(href=`/media/subscribed`) Subscribed (0)
+        //li.subscribed-link(class=(title == 'Subscriptions') ? 'active' : undefined)
+        //  if user && user.unseenSubscriptionUploads || user && user.unseenSubscriptionUploads == 0
+        //    a(href=`/media/subscribed`) Subscribed (#{user.unseenSubscriptionUploads})
+        //  else
+        //    a(href=`/media/subscribed`) Subscribed (0)
 
         // DOCS SECTION
         //li(class=(title == 'Docs') ? 'active' : undefined)
