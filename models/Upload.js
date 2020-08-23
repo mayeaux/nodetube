@@ -33,6 +33,11 @@ const uploadSchema = new mongoose.Schema({
   originalFileSizeInMb: Number,
   processedFileSizeInMb: Number,
   fileSize: Number,  // TODO: should support highQualityFileSize as well for compressions
+  fileQuality: Array,
+  fileResolutions: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Resolution'
+  },
   views: {
     type: Number,
     default: 0
