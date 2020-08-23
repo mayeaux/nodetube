@@ -14,6 +14,15 @@ block content
         }
 
 
+        .navbar li a {
+            color: rgb(95 95 95) !important;
+        }
+
+        .brandName {
+            color: rgb(95 95 95) !important;
+        }
+
+
     br
     div.center-block.text-center.col-sm-12(style="overflow-x: hidden;margin-top:-51px;background-color:black;")
         if upload.status == 'processing'
@@ -75,7 +84,7 @@ block content
             br
             // Upload Title
             div.col-sm-8
-                h2.balance-text(class="upload-title-value" style="text-wrap:balance;width:80%;margin:0 auto;font-weight:300")=upload.title
+                h2.balance-text(class="upload-title-value" style="text-wrap:balance;width:80%;margin:0 auto;font-weight:300;color: rgb(121 119 119) !important;")=upload.title
 
                 if upload.visibility == 'pending' && upload.status !== 'processing'
                     h3.pending-string Your video is currently pending moderator approval. If it's still pending after several minutes please contact a mod at
@@ -86,21 +95,21 @@ block content
                 // download button
                 div.change-size-button
                     h2.download-button
-                        i.download-icon.fa.fa-download(aria-hidden="true" style="cursor:pointer")
+                        i.download-icon.fa.fa-download(aria-hidden="true" style="cursor:pointer;color: rgb(121 119 119) !important;")
 
                 // embed button
-                div.change-size-button(style="margin-left:0px;")
+                div.change-size-button(style="margin-left:0px;color: rgb(121 119 119) !important;")
                     h2.share-button
                         i.share-icon.fas.fa-code(aria-hidden="true" style="cursor:pointer;font-size:27px;margin-left:0px;")
 
                 // only do repeat button if it's audio or video
                 if upload.fileType == 'video' || upload.fileType == 'audio'
-                    div.change-size-button(style="margin-left:0px")
+                    div.change-size-button(style="margin-left:0px;")
                         h2.repeat-div(style="opacity:0.4")
                             i.repeat-icon.fa.fa-repeat(aria-hidden="true" style="cursor:pointer")
 
                 // report upload button
-                div.change-size-button(style="cursor:pointer;margin-left:0px;")
+                div.change-size-button(style="cursor:pointer;margin-left:0px;color: rgb(121 119 119) !important;")
                     h2.report-button(style="")
                         i.share-icon.fa.fa-exclamation-triangle(aria-hidden="true" style="cursor:pointer;font-size:19px;")
 
