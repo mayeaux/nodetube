@@ -27,6 +27,18 @@ block content
             color: rgb(95 95 95) !important;
         }
 
+        .navbar-toggle .icon-bar .navbar-default {
+            background-color: rgb(95 95 95) !important;
+            border-color: rgb(95 95 95) !important;
+        }
+
+        .navbar-default .navbar-toggle {
+            border-color: rgb(95 95 95) !important;
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
 
     br
     div.center-block.text-center.col-sm-12(style="overflow-x: hidden;margin-top:-51px;background-color:black;")
@@ -432,9 +444,6 @@ block extra_footer_js
 
   script.
 
-    window.scrollTo(0, 21);
-
-
     $(document).ready(function () {
       window.scrollTo(0, 21);
 
@@ -468,8 +477,8 @@ block extra_footer_js
         //      })
 
       players[0].on('controlsshown', function () {
-        $('.plyr').css('cursor', 'inherit')
-        $('body').css('cursor', 'inherit')
+       //$('.plyr').css('cursor', 'inherit')
+        // $('body').css('cursor', 'inherit')
         console.log('hidden')
       })
     })
