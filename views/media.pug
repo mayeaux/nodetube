@@ -49,7 +49,7 @@ block content
         br
         // if it's a video that's finished processing
         if upload.fileType === 'video' && !upload.status !== 'processing'
-            div.display-div.magnetic(style="min-width:50%;min-height:50%;margin:0 auto;")
+            div.display-div.magnetic(style="min-width:50%;min-height:50%;margin:0 auto;margin-top:46px;")
 
                 video#media_player.display-element(playsinline poster=`${serverToUse}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;max-height:100vh")
                     // to
@@ -83,7 +83,7 @@ block content
         // todo: pull this out into its own include
         //- NON PLAYER CONTENT
             hello something
-        div.non-player-content(style="position:relative;max-width:1451px;margin:0 auto;")
+        div.non-player-content(style="position:relative;max-width:1451px;margin:0 auto;margin-top:120px;")
 
             br
             br
@@ -432,8 +432,14 @@ block extra_footer_js
 
   script.
 
+    window.scrollTo(0, 21);
+
+
     $(document).ready(function () {
-        $('.plyr').focus()
+      window.scrollTo(0, 21);
+
+
+      $('.plyr').focus()
 
       const dontDoTheatreModeBelowThisFar = 270;
 
@@ -490,6 +496,59 @@ block extra_footer_js
 
   //COMMENT FUNCTIONALITY CONTAINED HERE
   script(src="/js/media.js")
+
+  script.
+      setTimeout(function(){
+        window.scrollTo(0, 22);
+
+
+      }, 1000)
+
+      $(function () {
+        var timer;
+        var fadeInBuffer = false;
+
+        function runBufferThing(){
+          if (!fadeInBuffer) {
+            if (timer) {
+              console.log("clearTimer");
+              clearTimeout(timer);
+              timer = 0;
+            }
+
+            console.log("fadeIn");
+            $('html').css({
+              cursor: ''
+            });
+          } else {
+            $('.plyr').css({
+              cursor: 'default'
+            });
+            fadeInBuffer = false;
+          }
+
+
+          timer = setTimeout(function () {
+            console.log("fadeout");
+            $('.plyr').css({
+              cursor: 'none'
+            });
+
+            fadeInBuffer = true;
+          }, 2030)
+        }
+
+        runBufferThing()
+
+        $('.plyr').click();
+
+        $(document).mousemove(function () {
+          runBufferThing();
+        });
+
+
+      });
+
 
   script.
     balanceText();

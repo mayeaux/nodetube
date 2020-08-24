@@ -128,6 +128,8 @@ exports.getEmbed = async function(req, res){
 
   const uniqueTag = req.params.uniqueTag;
 
+  // TODO: need to increment an embed there
+
   let upload = await Upload.findOne({
     uniqueTag,
     visibility: { $ne: 'removed' }
