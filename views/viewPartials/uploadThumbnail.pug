@@ -1,26 +1,27 @@
-div.holder
-    a.title-anchor(href=`/user/${upload.uploader.channelUrl || channelUrl}/${upload.uniqueTag}` style="color:black" )
-        if upload.thumbnails && upload.thumbnails.custom
-            img.upload-thumbnail.preview-image(src=`${uploadServer}/${channelUrl || upload.uploader.channelUrl}/${upload.thumbnails.custom}` style="")
+div.holder(style="border:")
+    a.title-anchor(href=`/user/${upload.uploader.channelUrl || channelUrl}/${upload.uniqueTag}` style="color:black;" )
+        div.image-container(style="")
+            if upload.thumbnails && upload.thumbnails.custom
+                img.upload-thumbnail.preview-image(src=`${uploadServer}/${channelUrl || upload.uploader.channelUrl}/${upload.thumbnails.custom}` style="")
 
-        else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.generated
-            img.upload-thumbnail.preview-image(src=`${uploadServer}/${channelUrl || upload.uploader.channelUrl}/${upload.thumbnails.generated}` style="")
+            else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.generated
+                img.upload-thumbnail.preview-image(src=`${uploadServer}/${channelUrl || upload.uploader.channelUrl}/${upload.thumbnails.generated}` style="")
 
-        else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.medium
-            img.upload-thumbnail.preview-image(src=`${uploadServer}/${channelUrl || upload.uploader.channelUrl}/${upload.thumbnails.medium}` style="")
+            else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.medium
+                img.upload-thumbnail.preview-image(src=`${uploadServer}/${channelUrl || upload.uploader.channelUrl}/${upload.thumbnails.medium}` style="")
 
-        else if upload.fileType == 'video' && !upload.thumbnailUrl
-            img.upload-thumbnail.preview-image(src="/no_img.png")
+            else if upload.fileType == 'video' && !upload.thumbnailUrl
+                img.upload-thumbnail.preview-image(src="/no_img.png")
 
-        else if upload.fileType == 'image'
-            // TODO: have to fix this
-            img.upload-thumbnail.preview-image(src=`${uploadServer}/${channelUrl|| upload.uploader.channelUrl }/${upload.uniqueTag}${upload.fileExtension}` style="")
+            else if upload.fileType == 'image'
+                // TODO: have to fix this
+                img.upload-thumbnail.preview-image(src=`${uploadServer}/${channelUrl|| upload.uploader.channelUrl }/${upload.uniqueTag}${upload.fileExtension}` style="")
 
-        else if upload.fileType == 'audio'
-            img.upload-thumbnail.preview-image(src='/images/headphone.png')
+            else if upload.fileType == 'audio'
+                img.upload-thumbnail.preview-image(src='/images/headphone.png')
 
-        else if upload.fileType == 'unknown'
-            img.upload-thumbnail.preview-image(src='/images/no_img.png')
+            else if upload.fileType == 'unknown'
+                img.upload-thumbnail.preview-image(src='/images/no_img.png')
 
 
 

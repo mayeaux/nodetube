@@ -150,7 +150,8 @@ style.
         height: 250px;
         max-height: 250px;
         border-radius: 7px;
-        max-width:100%
+        max-width:100%;
+        /*border:1px solid white;*/
     }
 
     /* translate thing to make it centered even with overflow*/
@@ -272,6 +273,20 @@ style.
         display: none;
     }
 
+    .upload-thumbnail {
+        display: block;
+    }
+
+    .image-container {
+        display:inline-block;
+        border:1px solid white;
+        margin:0 auto;
+        overflow:hidden;
+        border-radius:13px;
+    }
+
+
+
     .upload-thumbnail:hover {
 
         /*transform: scale(1.05) translate(0px, 30px);*/
@@ -343,4 +358,8 @@ style.
 
     .brandName {
         font-family: inherit;
+    }
+
+    .display-element {
+        border: 1px solid white;
     }
