@@ -31,6 +31,7 @@ const { b2, bucket, hostUrl } = require('../../lib/uploading/backblaze');
 const ffmpegHelper = require('../../lib/uploading/ffmpeg');
 const {
   markUploadAsComplete,
+  markConvertAsComplete,
   updateUsersUnreadSubscriptions,
   runTimeoutFunction,
   userCanUploadContentOfThisRating
@@ -520,7 +521,6 @@ exports.postFileUpload = async(req, res) => {
             }
 
             upload.fileType = 'video';
-
             upload = await upload.save();
           }
 
@@ -548,6 +548,41 @@ exports.postFileUpload = async(req, res) => {
             responseSent = true;
             aboutToProcess(res, channelUrl, uniqueTag);
           }
+          // TODO: put qualities somewhere else
+          const qualities = [
+            { name: '256 x 144p', quality: 144, bitrate: 80 },
+            { name: '426 x 240p', quality: 240, bitrate: 300 },
+            { name: '640 x 360p', quality: 360, bitrate: 400 },
+            { name: '854 x 480p', quality: 480, bitrate: 500 },
+            { name: '1280 x 720p', quality: 720, bitrate: 2250 }
+          ];
+          // TODO: Do quality stuff
+          // TODO: loop quality stuff
+          // video will be available in original quality while this is happening in the background
+          // TODO: make a quality conversion counter 
+          for(var i = 0; i < qualities.length; i = i + 1){
+            // TODO: this is kind of ugly lmao
+            qualitySavePath = `${channelUrlFolder}/${uniqueTag}-${qualities[i].quality}.mp4`;
+            await ffmpegHelper.convertVideo({
+              uploadedPath: fileInDirectory,
+              title,
+              bitrate: qualities[i].bitrate,
+              savePath: qualitySavePath,
+              uniqueTag: uniqueTag + '-' + qualities[i].quality,
+              quality: qualities[i].quality
+            });
+
+            // Save file size after compression.
+            const response = await ffmpegHelper.ffprobePromise(qualitySavePath);
+            // upload.processedFileSizeInMb = bytesToMb(response.format.size);
+
+            // await upload.save();
+          }
+
+          await markConvertAsComplete(uniqueTag, channelUrl, user);
+
+          uploadLogger.info('Quality all qualities are converted', logObject);
+
         });
 
         // });
