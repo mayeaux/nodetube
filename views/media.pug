@@ -61,7 +61,8 @@ block content
         br
         // if it's a video that's finished processing
         if upload.fileType === 'video' && !upload.status !== 'processing'
-            div.display-div.magnetic(style="min-width:50%;min-height:50%;margin:0 auto;margin-top:46px;")
+            div.display-div.magnetic(style="min-width:50%;min-height:50%;margin:0 auto;")
+                // margin-top:46px;
 
                 video#media_player.display-element(playsinline poster=`${serverToUse}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;max-height:100vh")
                     // to
@@ -95,7 +96,8 @@ block content
         // todo: pull this out into its own include
         //- NON PLAYER CONTENT
             hello something
-        div.non-player-content(style="position:relative;max-width:1451px;margin:0 auto;margin-top:120px;")
+        div.non-player-content(style="position:relative;max-width:1451px;margin:0 auto;")
+            // add margin-top 120 on margin-top:120px;"
 
             br
             br
@@ -261,7 +263,8 @@ block content
                 | With User Info
 
             //  REACTS WITH LIKES, DISLIKE, DISGUST, ETC
-            div.react(style="width:39%;background-color:white;margin:0 auto;border-radius:10px;margin-bottom:21px;margin-top:133px;padding-bottom:12px;max-width:453px;min-width:247px;")
+            div.react(style="width:39%;background-color:white;margin:0 auto;border-radius:10px;margin-bottom:21px;margin-top:60px;padding-bottom:12px;max-width:453px;min-width:247px;")
+                // margin-top:133px
                 br
                 each emoji in emojis
                     div(style="padding-right:15px;display:inline-block;")
