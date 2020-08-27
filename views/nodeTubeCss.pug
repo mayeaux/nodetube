@@ -147,8 +147,8 @@ style.
     .preview-image {
         width: inherit;
         max-width: 405px;
-        height: 250px;
-        max-height: 250px;
+        height: 210px;
+        max-height: 210px;
         border-radius: 7px;
         max-width:100%;
         /*border:1px solid white;*/
@@ -302,7 +302,7 @@ style.
 
     .holder {
         overflow: hidden; /* [1.2] Hide the overflowing of child elements */
-        max-width:450px;
+        /*max-width:450px;*/
     }
 
     @media (max-width: 767px) {
@@ -315,7 +315,8 @@ style.
 
 
     .plyr.plyr--video {
-        /*resize: both;*/
+        resize: both;
+        height: 625px;
 
         /*0.2*/
         /*max-width: 97.5vw;*/
@@ -360,9 +361,11 @@ style.
     }
 
     .display-element {
+        /*TODO: this should be the height of the */
+        /*max-height: 625px;*/
+
         border: 1px solid #5b5a5a;
-        max-height: 625px;
-        resize: both;
+
     }
 
     .editFileButtons {
