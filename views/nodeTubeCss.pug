@@ -34,7 +34,7 @@ style.
 
     .upload-title-text {
         max-height: 53px;
-        color: black;
+        color: #b0aeae;
         font-size: 20px;
         text-align: center;
         margin: 0;
@@ -147,10 +147,11 @@ style.
     .preview-image {
         width: inherit;
         max-width: 405px;
-        height: 250px;
-        max-height: 250px;
+        height: 210px;
+        max-height: 210px;
         border-radius: 7px;
-        max-width:100%
+        max-width:100%;
+        /*border:1px solid white;*/
     }
 
     /* translate thing to make it centered even with overflow*/
@@ -272,6 +273,20 @@ style.
         display: none;
     }
 
+    .upload-thumbnail {
+        display: block;
+    }
+
+    .image-container {
+        display:inline-block;
+        border:1px solid #5b5a5a;
+        margin:0 auto;
+        overflow:hidden;
+        border-radius:13px;
+    }
+
+
+
     .upload-thumbnail:hover {
 
         /*transform: scale(1.05) translate(0px, 30px);*/
@@ -287,13 +302,10 @@ style.
 
     .holder {
         overflow: hidden; /* [1.2] Hide the overflowing of child elements */
-        max-width:450px;
+        /*max-width:450px;*/
     }
 
     @media (max-width: 767px) {
-        .plyr {
-            max-height: 40vh !important
-        }
 
         .holder {
             overflow: visible;
@@ -304,18 +316,21 @@ style.
 
     .plyr.plyr--video {
         resize: both;
+        height: 625px;
 
-        max-width: 97.5vw;
-        max-height: 98vh;
+        /*0.2*/
+        /*max-width: 97.5vw;*/
+        /*max-height: 98vh;*/
 
-        height: 82vh;
+        /*height: 82vh;*/
 
+        /* 0.1 */
         /*width: 1409px;*/
         /*height: 799px;*/
     }
 
     .container {
-        max-width: 80%;
+
     }
 
     @media (min-width: 900px) {
@@ -343,4 +358,16 @@ style.
 
     .brandName {
         font-family: inherit;
+    }
+
+    .display-element {
+        /*TODO: this should be the height of the */
+        /*max-height: 625px;*/
+
+        border: 1px solid #5b5a5a;
+
+    }
+
+    .editFileButtons {
+        margin-top: 30px;
     }

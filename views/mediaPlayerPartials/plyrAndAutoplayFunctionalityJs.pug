@@ -81,19 +81,23 @@ script.
   });
 
   var savedMaxHeight = 0;
+  var savedHeight = 0;
 
   players[0].on('enterfullscreen', function (event) {
 
-    savedMaxHeight = $('.plyr').css('max-height')
+    console.log('HEY SOMETHING!');
 
-    console.log(savedMaxHeight)
+    // savedMaxHeight = $('.plyr').css('max-height')
+    // savedHeight = $('.plyr').css('height')
+
+    // console.log(savedMaxHeight)
 
     function addStyleAttribute($element, styleAttribute) {
       $element.attr('style', $element.attr('style') + '; ' + styleAttribute);
     }
 
-    addStyleAttribute($('.plyr'), 'max-height: 100vh !important');
-    addStyleAttribute($('.plyr'), 'height: 100vh !important');
+    //addStyleAttribute($('.plyr'), 'max-height: 100vh !important');
+    //addStyleAttribute($('.plyr'), 'height: 100vh !important');
 
 
 
@@ -107,10 +111,18 @@ script.
 
   });
 
+  players[0].on('play', function (event) {
+
+    // $('.plyr').focus()
+    // add max height
+    // $('.plyr').css('cursor', 'none')
+
+  });
+
   players[0].on('exitfullscreen', function (event) {
     // add max height
-      $('.plyr').css('max-height', savedMaxHeight)
-      $('.plyr').css('height', savedMaxHeight)
+      //$('.plyr').css('max-height', savedMaxHeight)
+      //$('.plyr').css('height', savedHeight)
   });
 
   $("[data-plyr=seek]").css('cursor','pointer')

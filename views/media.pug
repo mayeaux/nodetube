@@ -27,6 +27,18 @@ block content
             color: rgb(95 95 95) !important;
         }
 
+        .navbar-toggle .icon-bar .navbar-default {
+            background-color: rgb(95 95 95) !important;
+            border-color: rgb(95 95 95) !important;
+        }
+
+        .navbar-default .navbar-toggle {
+            border-color: rgb(95 95 95) !important;
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
 
     br
     div.center-block.text-center.col-sm-12(style="overflow-x: hidden;margin-top:-51px;background-color:black;")
@@ -50,8 +62,9 @@ block content
         // if it's a video that's finished processing
         if upload.fileType === 'video' && !upload.status !== 'processing'
             div.display-div.magnetic(style="min-width:50%;min-height:50%;margin:0 auto;")
+                // margin-top:46px;
 
-                video#media_player.display-element(playsinline poster=`${serverToUse}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;max-height:100vh")
+                video#media_player.display-element(playsinline poster=`${serverToUse}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;")
                     // to
                     source.video-source(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`, type='video/mp4')
                     //source(src=upload.uploadUrl, type='video/mp4')
@@ -84,6 +97,7 @@ block content
         //- NON PLAYER CONTENT
             hello something
         div.non-player-content(style="position:relative;max-width:1451px;margin:0 auto;")
+            // add margin-top 120 on margin-top:120px;"
 
             br
             br
@@ -249,7 +263,8 @@ block content
                 | With User Info
 
             //  REACTS WITH LIKES, DISLIKE, DISGUST, ETC
-            div.react(style="width:39%;background-color:white;margin:0 auto;border-radius:10px;margin-bottom:21px;margin-top:133px;padding-bottom:12px;max-width:453px;min-width:247px;")
+            div.react(style="width:39%;background-color:white;margin:0 auto;border-radius:10px;margin-bottom:21px;margin-top:60px;padding-bottom:12px;max-width:453px;min-width:247px;")
+                // margin-top:133px
                 br
                 each emoji in emojis
                     div(style="padding-right:15px;display:inline-block;")
@@ -433,7 +448,10 @@ block extra_footer_js
   script.
 
     $(document).ready(function () {
-        $('.plyr').focus()
+      window.scrollTo(0, 21);
+
+
+      $('.plyr').focus()
 
       const dontDoTheatreModeBelowThisFar = 270;
 
@@ -462,8 +480,8 @@ block extra_footer_js
         //      })
 
       players[0].on('controlsshown', function () {
-        $('.plyr').css('cursor', 'inherit')
-        $('body').css('cursor', 'inherit')
+       //$('.plyr').css('cursor', 'inherit')
+        // $('body').css('cursor', 'inherit')
         console.log('hidden')
       })
     })
@@ -490,6 +508,59 @@ block extra_footer_js
 
   //COMMENT FUNCTIONALITY CONTAINED HERE
   script(src="/js/media.js")
+
+  script.
+      setTimeout(function(){
+        window.scrollTo(0, 22);
+
+
+      }, 1000)
+
+      $(function () {
+        var timer;
+        var fadeInBuffer = false;
+
+        function runBufferThing(){
+          if (!fadeInBuffer) {
+            if (timer) {
+              // console.log("clearTimer");
+              clearTimeout(timer);
+              timer = 0;
+            }
+
+            // console.log("fadeIn");
+            $('html').css({
+              cursor: ''
+            });
+          } else {
+            $('.plyr').css({
+              cursor: 'default'
+            });
+            fadeInBuffer = false;
+          }
+
+
+          timer = setTimeout(function () {
+            // console.log("fadeout");
+            $('.plyr').css({
+              cursor: 'none'
+            });
+
+            fadeInBuffer = true;
+          }, 2030)
+        }
+
+        runBufferThing()
+
+        $('.plyr').click();
+
+        $(document).mousemove(function () {
+          runBufferThing();
+        });
+
+
+      });
+
 
   script.
     balanceText();
