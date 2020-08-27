@@ -523,12 +523,12 @@ block extra_footer_js
         function runBufferThing(){
           if (!fadeInBuffer) {
             if (timer) {
-              console.log("clearTimer");
+              // console.log("clearTimer");
               clearTimeout(timer);
               timer = 0;
             }
 
-            console.log("fadeIn");
+            // console.log("fadeIn");
             $('html').css({
               cursor: ''
             });
@@ -541,7 +541,7 @@ block extra_footer_js
 
 
           timer = setTimeout(function () {
-            console.log("fadeout");
+            // console.log("fadeout");
             $('.plyr').css({
               cursor: 'none'
             });
