@@ -106,19 +106,19 @@ html
       script.
           var sidebarClosed = true;
 
-        function toggleNav() {
-          if (sidebarClosed) {
-            document.getElementById("mySidebar").style.width = "253px";
-            document.getElementById("main").style.marginLeft = "253px";
+          function toggleNav() {
+            if (sidebarClosed) {
+              document.getElementById("mySidebar").style.width = "253px";
+              // document.getElementById("main").style.marginLeft = "253px";
 
-            sidebarClosed = false;
-          } else if (!sidebarClosed) {
-            document.getElementById("mySidebar").style.width = "0";
-            document.getElementById("main").style.marginLeft = "0";
+              sidebarClosed = false;
+            } else if (!sidebarClosed) {
+              document.getElementById("mySidebar").style.width = "0";
+              // document.getElementById("main").style.marginLeft = "0";
 
-            sidebarClosed = true;
+              sidebarClosed = true;
+            }
           }
-        }
 
     //script.
     //  $.magneticScroll({
