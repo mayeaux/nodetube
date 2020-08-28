@@ -1,0 +1,292 @@
+style.
+    /* The sidebar menu */
+    .sidebar {
+        /*height: 100%; !* 100% Full-height *!*/
+        /*margin-top: 30px;*/
+        width: 0; /* 0 width - change this with JavaScript */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Stay on top */
+        top: 0;
+        left: 0;
+        background-color: white; /* Black*/
+        overflow-x: hidden; /* Disable horizontal scroll */
+        /*padding-top: 60px; !* Place content 60px from the top *!*/
+        transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
+
+        /* added */
+        border: 1.2px solid rgb(179, 177, 177);
+        margin-top: 50px;
+        padding: 0px;
+        height: 469px;
+
+        box-shadow: rgba(0, 0, 0, 0.51) 15px 17px 10px -10px
+    }
+
+    /* The sidebar links */
+    .sidebar a {
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 14px;
+        color: #818181;
+        display: block;
+        transition: 0.3s;
+
+        /* custom */
+        margin-left: 5px;
+        white-space:nowrap
+    }
+
+    /* Position and style the close button (top right corner) */
+    .sidebar .closebtn {
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px;
+        margin-left: 50px;
+    }
+
+    /* The button used to open the sidebar */
+    .openbtn {
+        font-size: 20px;
+        cursor: pointer;
+        background-color: #111;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+    }
+
+    .openbtn:hover {
+        background-color: #444;
+    }
+
+    /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+    #main {
+        transition: margin-left .5s; /* If you want a transition effect */
+        padding: 20px;
+    }
+
+    /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+    @media screen and (max-height: 450px) {
+        /*.sidebar {*/
+        /*padding-top: 15px;*/
+        /*}*/
+
+        /*.sidebar a {*/
+        /*font-size: 18px;*/
+        /*}*/
+    }
+
+    /* The sidebar menu */
+    .permBar {
+        height: 100%; /* Full-height: remove this if you want "auto" height */
+        width: 160px; /* Set the width of the sidebar */
+        position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+        z-index: 1; /* Stay on top */
+        top: 0; /* Stay at the top */
+        left: 0;
+        background-color: white; /* Black */
+        overflow-x: hidden; /* Disable horizontal scroll */
+        padding-top: 20px;
+    }
+
+    /* The navigation menu links */
+    .permBar a {
+        padding: 6px 8px 6px 0px;
+        text-decoration: none;
+        font-size: 11px;
+        color: black;
+        display: block;
+        width: 110px;
+
+    }
+
+    /* The sidebar menu */
+    .accountDropdown {
+        height: 366px; /* Full-height: remove this if you want "auto" height */
+        width: 208px; /* Set the width of the sidebar */
+        position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+        top: 64px; /* Stay at the top */
+        right: 93px;
+        background-color: white; /* Black */
+        text-align: left;
+        border: 1px solid #cec0c0;
+        box-shadow: -8px -9px 10px -10px rgba(0, 0, 0, 0.51);
+        border-radius: 2px;
+
+        /*overflow: hidden;*/
+        z-index: 9999999; /* Stay on top */
+    }
+
+    .accountDropdown:after,
+    .accountDropdown:after {
+        z-index: -1;
+        position: absolute;
+        top: -3.9%;
+        left: 100%;
+        margin-left: -25%;
+        content: '';
+        width: 0;
+        height: 0;
+        border-bottom: solid 15px #ffffff;
+        border-left: solid 15px transparent;
+        border-right: solid 15px transparent;
+    }
+
+    .accountDropdown:before,
+    .accountDropdown:before {
+        z-index: -1;
+        position: absolute;
+        top: -3.9%;
+        left: 100%;
+        margin-left: -25%;
+        content: '';
+        width: 0;
+        height: 0;
+        border-bottom: solid 15px #908e8e;
+        border-left: solid 15px transparent;
+        border-right: solid 15px transparent;
+
+    }
+
+    /* The navigation menu links */
+    .accountDropdown a {
+        padding: 6px 8px 6px 0px;
+        text-decoration: none;
+        font-size: 13px;
+        color: #828282;
+        display: block;
+        width: 100%;
+        margin-left:25px;
+    }
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 23px;
+    }
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 15px;
+        width: 15px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    input:checked + .slider {
+        background-color: #2196F3;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+        border-radius: 34px;
+    }
+
+    .slider.round:before {
+        border-radius: 50%;
+    }
+
+.permBar(style="margin-top:50px;overflow:hidden;width:103px;background-color:#efefef")
+    a(href='/news')
+        img(src="/news.png" style="width:48px;display:inline-block;margin-top:20px;")
+        p News
+
+    a(href='/youtube')
+        img(src="/youtube-old.png" style="width:74px;display:inline-block;margin-top:-13px;")
+        p YouTube
+
+    //a(href='/instagram')
+    //    img(src="/instagram.png" style="width:54px;display:inline-block;")
+    //    p Instagram
+
+    a(href='/reddit')
+        img(src="/reddit-blank.svg" style="width:43px;display:inline-block;")
+        p Reddit
+
+    a(href='/twitter')
+        img(src="/twitter-logo.png" style="width:58px;display:inline-block;")
+        p Twitter
+
+
+
+#mySidebar.sidebar(style="text-align:left;margin-left:-2px;overflow-y: hidden;")
+    a(href='#' style="margin-top:38px;color:#007bff;") Upgrade
+    a(href='#') Bookmarks
+    a(href='#') Explore
+    hr
+    a(style="color:#818181;") Social Media Integrations
+    a(href="/youtube")
+        .youtubeSidebar(style="white-space:nowrap")
+            img(src="/youtube-old.png" style="width:53px;display:inline-block;")
+            p(style="padding-left:0px;margin:0;display:inline-block;margin-left:-6px;") YouTube
+    a(href="/reddit")
+        .redditSidebar(style="white-space:nowrap")
+            img(src="/reddit-logo.png" style="width:25px;display:inline-block;")
+            p(style="padding-left:0px;margin:0;display:inline-block;margin-left:2px;") Reddit
+    a(href="/twitter")
+        .twitterSidebar(style="white-space:nowrap")
+            img(src="/twitter-logo.png" style="width:28px;display:inline-block;")
+            p(style="padding-left:0px;margin:0;display:inline-block;") Twitter
+
+    hr
+    .nightMode(style="white-space:nowrap")
+        a(href="#" style="display:inline-block;") Night Mode
+        label.switch
+            input(type='checkbox')
+            span.slider.round
+
+    a(href="#") About us
+
+
+.accountDropdown#accountDropdown(style="display:none;text-align:left;border: 1px solid #cec0c0;box-shadow:-8px -9px 10px -10px rgba(0,0,0,0.51);border-radius:3px;")
+    .userDetails
+        if user
+            img(src=user.gravatar() style="width: 34px;display:inline-block;margin-left:15px;border-radius:15px;position: absolute;top: 15px;right: 149px;")
+            p(style="font-size: 13px;position: absolute;left:65px;top: 15px;") #{user.displayName}
+            p(style="font-size: 12px;position: absolute;top: 32px;color: grey;left:63px;") #{user.email}
+        a(href="#" style="color:#007bff")
+            h7(style="position: absolute;top: 60px;right: 132px;font-size: 13px;") Upgrade
+    div(style="padding-top:57px")
+    hr
+    a(href='#') New post
+    a(href='#') Bookmarks
+    a(href='#') All social media posts
+    hr
+    a(href='/profile') Profile
+    a(href='#') Settings
+    a(href='#') Help
+    a(href='/logout') Sign out
+
