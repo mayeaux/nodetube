@@ -559,24 +559,51 @@ exports.postFileUpload = async(req, res) => {
           // TODO: Do quality stuff
           // TODO: loop quality stuff
           // video will be available in original quality while this is happening in the background
-          // TODO: make a quality conversion counter 
+          // TODO: make a quality conversion counter/progress bar
           for(var i = 0; i < qualities.length; i = i + 1){
             // TODO: this is kind of ugly lmao
             qualitySavePath = `${channelUrlFolder}/${uniqueTag}-${qualities[i].quality}.mp4`;
-            await ffmpegHelper.convertVideo({
-              uploadedPath: fileInDirectory,
-              title,
-              bitrate: qualities[i].bitrate,
-              savePath: qualitySavePath,
-              uniqueTag: uniqueTag + '-' + qualities[i].quality,
-              quality: qualities[i].quality
-            });
+
+            let qualityExists = upload.videoQualities.find(o => o.quality === qualities[i].quality);
+            if(!qualityExists){
+              // TODO: add if it exists but still pending in case server was shut down or something else
+              // qualityExists.status !== 'complete'
+              await ffmpegHelper.convertVideo({
+                uploadedPath: fileInDirectory,
+                title,
+                bitrate: qualities[i].bitrate,
+                savePath: qualitySavePath,
+                uniqueTag: uniqueTag + '-' + qualities[i].quality,
+                quality: qualities[i].quality
+              });
+
+              // const response = await ffmpegHelper.ffprobePromise(qualitySavePath);
+
+              upload.videoQualities.push({
+                quality: qualities[i].quality,
+                bitrate: qualities[i].bitrate,
+                fileSizeInMb: 1,
+                status: 'complete' // TODO: use enum here not string
+              });
+
+              await upload.save();
+
+            }
+            // await ffmpegHelper.convertVideo({
+            //   uploadedPath: fileInDirectory,
+            //   title,
+            //   bitrate: qualities[i].bitrate,
+            //   savePath: qualitySavePath,
+            //   uniqueTag: uniqueTag + '-' + qualities[i].quality,
+            //   quality: qualities[i].quality
+            // });
 
             // Save file size after compression.
-            const response = await ffmpegHelper.ffprobePromise(qualitySavePath);
+            // const response = await ffmpegHelper.ffprobePromise(qualitySavePath);
             // upload.processedFileSizeInMb = bytesToMb(response.format.size);
 
-            // await upload.save();
+            upload.videoQualities
+            await upload.save();
           }
 
           await markConvertAsComplete(uniqueTag, channelUrl, user);

@@ -33,17 +33,19 @@ const uploadSchema = new mongoose.Schema({
   originalFileSizeInMb: Number,
   processedFileSizeInMb: Number,
   fileSize: Number,  // TODO: should support highQualityFileSize as well for compressions
-  videoQuality: {
-    quality: String, enum: ['240p', '360p', '480p', '720p', '1080p'],
-    fileSizeInMb:  Number,
-    bitrate: Number
-  },
-  // videoQualities: [
-  //   { quality: 'String',
-  //     fileSizeInMb : Number ,
-  //     bitrate: Number,
-  //     status: String, enum: ['pending', 'converting', 'complete'], default: 'pending' }
-  // ],
+  // videoQuality: {
+  //   quality: String, enum: ['240p', '360p', '480p', '720p', '1080p'],
+  //   fileSizeInMb:  Number,
+  //   bitrate: Number
+  // },
+  videoQualities: [
+    {
+      quality: 'String',
+      fileSizeInMb: Number,
+      bitrate: Number,
+      status: {type: String, enum: ['pending', 'converting', 'complete'], default: 'pending'}
+    }
+  ],
   views: {
     type: Number,
     default: 0
