@@ -345,14 +345,14 @@ script.
     div.searchPlaceHolder(style="height:56px;display:inline-block;display:none;")
       a(href="#")
         i.fas.fa-search.searchExpander.searchExpanderButton
-        i.fas.fa-arrow-left.searchExpander.backButtonIcon(style="left:0px;display:none;width:70px;")
+        i.fas.fa-arrow-left.searchExpander.backButtonIcon(style="left:17px;display:none;width:70px;")
 
 
     div.search-bar(style="width:45%;margin-left:200px;")
       form.search-form(name="searchForm" method='POST' action="/search")
         input(type='hidden', name='_csrf', value=_csrf)
         input(type='text', placeholder='Search' name='searchValue' value=searchValue || "")
-        button.searchButton
+        button.searchButton(style="right:76px")
           i.fas.fa-search.searchIcon
 
     // UPGRADE ICON
@@ -360,6 +360,10 @@ script.
     //    h7(style="font-size:15px") Upgrade
 
     if !user
+      a.signInAnchor(href="/login" style="background-color:white;")
+        div.signInDiv(style="")
+          h7(style="display:inline-block;color:black;") Sign in
+
       a.signInAnchor(href="/login" style="background-color:white;")
         div.signInDiv(style="")
           h7(style="display:inline-block;color:black;") Sign in
@@ -375,7 +379,7 @@ script.
           h7(style="display:inline-block;color:black;") Donate
 
         div.postIcon(style="display:none;" data-toggle='modal', data-target='#exampleModal')
-          img(src="/plusIcon.png" style="width:25px;margin-top:9px;")
+          img(src="/images/whiteDollarIcon.png" style="width:25px;margin-top:9px;")
           //h7(style="display:inline-block;color:black;") Post
 
         a.userImage(href="#" style="position: absolute;top: 20px;right: 29px;")

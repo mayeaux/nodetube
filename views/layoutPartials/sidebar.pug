@@ -197,7 +197,10 @@ style.
 
 
 #mySidebar.sidebar(style="text-align:left;margin-left:-2px;overflow-y: hidden;")
-    a(href='#' style="margin-top:38px;color:#007bff;") Upgrade
+    if user
+        a(href='/account' style="margin-top:38px;color:#007bff;") Upgrade
+    else
+        a(href='/signup' style="margin-top:38px;color:#007bff;") Sign Up
     a(href='#') Bookmarks
     a(href='#') Explore
     hr
@@ -231,8 +234,15 @@ style.
             img(src=user.gravatar() style="width: 34px;display:inline-block;margin-left:15px;border-radius:15px;position: absolute;top: 15px;right: 149px;")
             p(style="font-size: 13px;position: absolute;left:65px;top: 15px;") #{user.displayName}
             p(style="font-size: 12px;position: absolute;top: 32px;color: grey;left:63px;") #{user.channelName}
-        a(href="#" style="color:#007bff")
-            h7(style="position: absolute;top: 60px;right: 132px;font-size: 13px;") Upgrade
+
+        // if there's no user, prompt them to sign up, otherwise prompt them to upgrade to plus
+        if !user
+            a(href="/signup" style="color:#007bff")
+                h7(style="position: absolute;top: 60px;right: 132px;font-size: 13px;") Sign Up
+            // otherwise prompt them to upgrade to plus
+        else
+            a(href="/account?to=nt-plus" style="color:#007bff")
+                h7(style="position: absolute;top: 60px;right: 132px;font-size: 13px;") Upgrade
     div(style="padding-top:57px")
     hr
     a(href='#') New post
