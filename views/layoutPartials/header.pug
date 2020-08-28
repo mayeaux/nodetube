@@ -34,9 +34,9 @@ style.
   .singleLetter {
     display: none;
     color: #0FDA01;
-    font-size: 37px;
+    font-size: 30px;
     font-weight: 900;
-    margin-top: 26px;
+    margin-top: 28px;
     position: absolute;
     top: -30px;
   }
@@ -339,8 +339,8 @@ script.
       img(src="/images/white-burger.jpg" style="width:52px;display:inline-block;" onclick='toggleNav()')
 
     a(href="/" style="position:absolute;left:99px;top:12px;")
-      p.fullTitle(style="display:inline-block;color:#0FDA01;font-size:25px;font-weight:900;") NEWTUBE
-      p.singleLetter() NEWTUBE
+      p.fullTitle(style="text-transform:uppercase;display:inline-block;color:#0FDA01;font-size:25px;font-weight:900;") #{brandName}
+      p.singleLetter(style="text-transform:uppercase;") #{brandName}
 
     div.searchPlaceHolder(style="height:56px;display:inline-block;display:none;")
       a(href="#")
@@ -360,7 +360,7 @@ script.
     //    h7(style="font-size:15px") Upgrade
 
     if !user
-      a.signInAnchor(href="/login" style="")
+      a.signInAnchor(href="/login" style="background-color:white;")
         div.signInDiv(style="")
           h7(style="display:inline-block;color:black;") Sign in
 
