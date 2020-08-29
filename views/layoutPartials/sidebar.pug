@@ -199,11 +199,18 @@ style.
 #mySidebar.sidebar(style="text-align:left;margin-left:-2px;overflow-y: hidden;")
     div(style="margin-top:27px")
 
-    a(href='https://newtube.app/paypal' style="color:#007bff;") Donate
+    a(href='https://newtube.app/paypal' style="color:#007bff;") Donate &nbsp
+        i.fas.fa-dollar-sign
+
+
 
     if user
-        a(href='/account?to=nt-plus' style="color:#007bff;") Upgrade
+        a(href='/account?to=nt-plus' style="color:#007bff;") Upgrade &nbsp
+
+            i.fas.fa-plus
+
     else
+
         a(href='/signin' style="color:#007bff;") Sign In
 
         //a(href='/newtube.app/paypal' style="color:#007bff;") Sign Up
@@ -211,13 +218,26 @@ style.
 
     hr
 
-    a(href='/media/popular/1?media=all&category=all&within=24hour' style="") Popular - Categories
+    a(href='/media/popular/1?media=all&category=all&within=24hour' style="")
+        i.fas.fa-fire-alt
 
-    a(href='/media/popular/1?media=all&category=all&within=24hour' style="") Popular - All Uploads
+        p Popular - Categories
 
-    a(href='/media/recent?category=all' style="") Recent - Categories
 
-    a(href='/media/recent?category=all' style="") Recent - All Uploads
+    a(href='/media/popular/1?media=all&category=all&within=24hour' style="")
+        i.fas.fa-fire-alt
+
+
+        p    Popular - All Uploads
+
+    a(href='/media/recent?category=all' style="")
+
+        i.fas.fa-clock
+        p Recent - Categories
+
+    a(href='/media/recent?category=all' style="")
+        i.i.fas.fa-clock
+        p Recent - All Uploads
 
     hr
     // turn off until implemented
