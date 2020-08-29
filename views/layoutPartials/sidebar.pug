@@ -257,9 +257,9 @@ style.
 .accountDropdown#accountDropdown(style="display:none;text-align:left;border: 1px solid #cec0c0;box-shadow:-8px -9px 10px -10px rgba(0,0,0,0.51);border-radius:3px;")
     .userDetails
         if user
-            img(src=user.gravatar() style="width: 34px;display:inline-block;margin-left:15px;border-radius:15px;position: absolute;top: 15px;right: 149px;")
+            img(src="/images/gravatar.png" style="width: 34px;display:inline-block;margin-left:15px;border-radius:15px;position: absolute;top: 15px;right: 149px;")
             p(style="font-size: 13px;position: absolute;left:65px;top: 15px;") #{user.displayName}
-            p(style="font-size: 12px;position: absolute;top: 32px;color: grey;left:63px;") #{user.channelName}
+            p(style="font-size: 12px;position: absolute;top: 32px;color: grey;left:63px;") #{user.channelUrl || user.channelName}
 
         // if there's no user, prompt them to sign up, otherwise prompt them to upgrade to plus
         if !user
@@ -270,13 +270,13 @@ style.
             a(href="/account?to=nt-plus" style="color:#007bff")
                 h7(style="position: absolute;top: 60px;right: 132px;font-size: 13px;") Upgrade
     div(style="padding-top:57px")
-    hr
-    a(href='#') New post
-    a(href='#') Bookmarks
-    a(href='#') All social media posts
-    hr
-    a(href='/profile') Profile
-    a(href='#') Settings
-    a(href='#') Help
-    a(href='/logout') Sign out
+
+    if user
+        hr
+        a(href='/upload') New Upload
+        hr
+        a(href='/account') Account
+        a(href='/user/' + user.channelUrl) Channel
+        //a(href='#') Help
+        a(href='/logout') Sign out
 
