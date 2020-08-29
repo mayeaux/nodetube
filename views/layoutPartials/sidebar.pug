@@ -197,35 +197,37 @@ style.
 
 
 #mySidebar.sidebar(style="text-align:left;margin-left:-2px;overflow-y: hidden;")
+    div(style="margin-top:27px")
+
+    a(href='https://newtube.app/paypal' style="color:#007bff;") Donate
+
     if user
-        a(href='/account' style="margin-top:38px;color:#007bff;") Upgrade
+        a(href='/account?to=nt-plus' style="color:#007bff;") Upgrade
     else
-        a(href='/signup' style="margin-top:38px;color:#007bff;") Sign Up
-    a(href='#') Bookmarks
-    a(href='#') Explore
-    hr
-    a(style="color:#818181;") Social Media Integrations
-    a(href="/youtube")
-        .youtubeSidebar(style="white-space:nowrap")
-            img(src="/youtube-old.png" style="width:53px;display:inline-block;")
-            p(style="padding-left:0px;margin:0;display:inline-block;margin-left:-6px;") YouTube
-    a(href="/reddit")
-        .redditSidebar(style="white-space:nowrap")
-            img(src="/reddit-logo.png" style="width:25px;display:inline-block;")
-            p(style="padding-left:0px;margin:0;display:inline-block;margin-left:2px;") Reddit
-    a(href="/twitter")
-        .twitterSidebar(style="white-space:nowrap")
-            img(src="/twitter-logo.png" style="width:28px;display:inline-block;")
-            p(style="padding-left:0px;margin:0;display:inline-block;") Twitter
+        a(href='/signin' style="color:#007bff;") Sign In
+
+        //a(href='/newtube.app/paypal' style="color:#007bff;") Sign Up
+
 
     hr
-    .nightMode(style="white-space:nowrap")
-        a(href="#" style="display:inline-block;") Night Mode
-        label.switch
-            input(type='checkbox')
-            span.slider.round
 
-    a(href="#") About us
+    a(href='/media/popular/1?media=all&category=all&within=24hour' style="") Popular - Categories
+
+    a(href='/media/popular/1?media=all&category=all&within=24hour' style="") Popular - All Uploads
+
+    a(href='/media/recent?category=all' style="") Recent - Categories
+
+    a(href='/media/recent?category=all' style="") Recent - All Uploads
+
+    hr
+    // turn off until implemented
+    //.nightMode(style="white-space:nowrap")
+    //    a(href="#" style="display:inline-block;") Night Mode
+    //    label.switch
+    //        input(type='checkbox')
+    //        span.slider.round
+
+    a(href="/about") About us
 
 
 .accountDropdown#accountDropdown(style="display:none;text-align:left;border: 1px solid #cec0c0;box-shadow:-8px -9px 10px -10px rgba(0,0,0,0.51);border-radius:3px;")
