@@ -126,7 +126,7 @@ style.
 
     /* The navigation menu links */
     .accountDropdown a {
-        padding: 6px 8px 6px 0px;
+        padding: 3px 8px 6px 0px;
         text-decoration: none;
         font-size: 13px;
         color: #828282;
@@ -206,7 +206,7 @@ style.
 
 
 // LEFT SIDEBAR
-#mySidebar.sidebar(style="text-align:left;margin-left:-2px;overflow-y: hidden;")
+#mySidebar.sidebar(style="text-align:left;margin-left:-2px;overflow-y: hidden;border-radius:6px;")
     div(style="margin-top:27px")
 
     // user signed in but not paid, prompt to pay
@@ -319,6 +319,9 @@ style.
                     i.ib.fas.fa-plus
                     p.ib &nbsp Upgrade &nbsp
 
+
+
+    // other pages section
     div(style="padding-top:57px")
 
     if user
@@ -335,8 +338,22 @@ style.
             i.ib.fa.fa-video
             p.ib &nbsp Channel
 
+        a(href='/notifications')
+            i.ib.fas.fa-bell
+            if unreadNotifAmount > 0
+                p.ib &nbsp Notifications (#{unreadNotifAmount})
+            else
+                p.ib &nbsp Notifications
 
-        hr
+        a(href='/media/subscribed')
+            i.ib.fa.fa-video
+            if user.unseenSubscriptionUploads > 0
+                p.ib &nbsp Subscriptions (#{user.unseenSubscriptionUploads})
+            else
+                p.ib &nbsp Subscriptions
+
+
+        hr(style="margin-top:10px;margin-bottom:10px")
 
         //a(href='#') Help
         //a(href='/logout') Sign out
