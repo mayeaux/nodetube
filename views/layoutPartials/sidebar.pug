@@ -218,23 +218,25 @@ style.
 
     hr
 
-    a(href='/media/popular/1?media=all&category=all&within=24hour' style="")
+    // link to popular by categories
+    a(href='/media/popular/1?media=all&category=overview&within=24hour' style="")
         i.fas.fa-fire-alt
 
         p Popular - Categories
 
-
+    // link to popular uncategorized
     a(href='/media/popular/1?media=all&category=all&within=24hour' style="")
         i.fas.fa-fire-alt
 
-
         p    Popular - All Uploads
 
-    a(href='/media/recent?category=all' style="")
+    // recent by category
+    a(href='/media/recent?category=overview' style="")
 
         i.fas.fa-clock
         p Recent - Categories
 
+    // recent uncategorized
     a(href='/media/recent?category=all' style="")
         i.i.fas.fa-clock
         p Recent - All Uploads
@@ -247,7 +249,9 @@ style.
     //        input(type='checkbox')
     //        span.slider.round
 
-    a(href="/about") About us
+    a(href="/about") About Us &nbsp
+        i.fa.fa-question-circle(aria-hidden='true')
+
 
 
 .accountDropdown#accountDropdown(style="display:none;text-align:left;border: 1px solid #cec0c0;box-shadow:-8px -9px 10px -10px rgba(0,0,0,0.51);border-radius:3px;")
