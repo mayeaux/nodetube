@@ -373,8 +373,16 @@ if(cluster.isMaster){
 
     app.use(function(err, req, res){
       console.log(err.stack);
-      res.status(500);
-      res.render('error/500');
+      if(res.status){
+        res.status(500);
+        res.render('error/500');
+
+        // for some reason, res is actually 'next'?
+      } else {
+        console.log(res.toString());
+        res()
+      }
+
     });
 
     /** error handler **/

@@ -9,7 +9,7 @@ block content
             margin-top: 30px;
         }
 
-        body footer header {
+        body footer {
             background-color: black !important;
         }
 
@@ -41,7 +41,7 @@ block content
         }
 
     br
-    div.center-block.text-center.col-sm-12(style="overflow-x: hidden;margin-top:-51px;background-color:black;")
+    div.center-block.text-center.col-sm-12(style="overflow-x: hidden;margin-top:-21px;background-color:black;")
         if upload.status == 'processing'
 
             div(style="max-width:443px;margin:0 auto;")
@@ -403,6 +403,40 @@ block extra_js
   //script(src='https://checkout.stripe.com/checkout.js')
   script(src="https://cdnjs.cloudflare.com/ajax/libs/autolinker/1.4.4/Autolinker.js")
 
+  script.
+    var accountOpen = false;
+
+    function toggleAccount() {
+      // account closed, open div
+      if (!accountOpen) {
+        document.getElementById("accountDropdown").style.display = "";
+        accountOpen = true;
+
+        // account open, close div
+      } else if (accountOpen) {
+        document.getElementById("accountDropdown").style.display = "none";
+
+        accountOpen = false;
+      }
+    }
+
+
+    var sidebarClosed = true;
+
+    function toggleNav() {
+      if (sidebarClosed) {
+        document.getElementById("mySidebar").style.width = "253px";
+        // document.getElementById("main").style.marginLeft = "253px";
+
+        sidebarClosed = false;
+      } else if (!sidebarClosed) {
+        document.getElementById("mySidebar").style.width = "0";
+        // document.getElementById("main").style.marginLeft = "0";
+
+        sidebarClosed = true;
+      }
+    }
+
 
 block extra_css
   link(rel="stylesheet" href="https://cdn.plyr.io/3.5.10/plyr.css")
@@ -448,7 +482,8 @@ block extra_footer_js
   script.
 
     $(document).ready(function () {
-      window.scrollTo(0, 21);
+      // old scroll down to change the header
+      //window.scrollTo(0, 21);
 
 
       $('.plyr').focus()
@@ -511,7 +546,8 @@ block extra_footer_js
 
   script.
       setTimeout(function(){
-        window.scrollTo(0, 22);
+        // old code to change scroll to
+        // window.scrollTo(0, 22);
 
 
       }, 1000)
