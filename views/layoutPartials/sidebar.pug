@@ -209,7 +209,7 @@ style.
 
 
 
-    if user
+    if user && user.plan == 'free'
         a(href='/account?to=nt-plus' style="color:#007bff;")
 
             i.ib.fas.fa-plus
@@ -259,10 +259,6 @@ style.
         i.ib.fa.fa-question-circle(aria-hidden='true')
         p.ib About Us &nbsp
 
-if user.customThumbnail
-    img.center-block.text-center(src=`${uploadServer}/${user.channelUrl}/${user.customThumbnail}` width="256px" height="168px")
-else
-    img.center-block.text-center(src=`${uploadServer}/${user._id}/unique.png` width="256px" height="168px")
 
 // ACCOUNT DROPDOWN FUNCTIONALITY
 .accountDropdown#accountDropdown(style="display:none;text-align:left;border: 1px solid #cec0c0;box-shadow:-8px -9px 10px -10px rgba(0,0,0,0.51);border-radius:3px;")
@@ -277,6 +273,7 @@ else
                 p(style="font-size: 13px;position: absolute;left:65px;top: 15px;") #{user.displayName}
                 p(style="font-size: 18px;position: absolute;top: 32px;color: grey;left:63px;") #{user.channelUrl || user.channelName}
 
+
         // if there's no user, prompt them to sign up, otherwise prompt them to upgrade to plus
         if !user
             a(href="/signup" style="color:#007bff")
@@ -284,15 +281,16 @@ else
             // otherwise prompt them to upgrade to plus
         else
             a(href="/account?to=nt-plus" style="color:#007bff")
-                h7(style="position: absolute;top: 60px;right: 132px;font-size: 13px;") Upgrade
+                h7(style="position: absolute;top: 70px;right: 132px;font-size: 13px;") Upgrade
     div(style="padding-top:57px")
 
     if user
         hr
         a(href='/upload') New Upload
-        hr
         a(href='/account') Account
         a(href='/user/' + user.channelUrl) Channel
+        hr
+
         //a(href='#') Help
         a(href='/logout') Sign out
 
