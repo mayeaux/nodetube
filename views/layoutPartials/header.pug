@@ -5,7 +5,7 @@ style.
   /*margin: 30px;*/
   /*}*/
 
-  .container {
+  .headerContainer {
     padding: 0px;
   }
 
@@ -202,13 +202,13 @@ style.
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, .4);
   }
 
-  button {
+  .searchButton {
     position: absolute;
     width: 14%;
     height: 33px;
     border: 1px solid #BEBEBE;
     border-left: 0;
-    top: 12px;
+    top: 11px;
     right: 0;
     border-radius: 0px 2px 2px 0;
     cursor: pointer;
@@ -260,6 +260,73 @@ style.
     top: 13px;
     right: 10px;
   }
+
+  .secondLine {
+    margin-top: -54px !important;
+    padding-left: 56px;
+  }
+
+
+
+.container.headerContainer.fixed-top(style="opacity:1;background-color:white;margin:0;max-width:100%;padding:0")
+  //.search1
+  //    form.search-form
+  //        input(type='text', placeholder='Search for books, authors, categories and more..')
+  //        input(type='submit', value='Submit')
+
+
+
+  div.secondLine(style="float:left;margin-top:8px;border-bottom: 1px solid #cec0c0;width:100%;box-shadow:-3px 11px 10px -10px rgba(0,0,0,0.51);")
+
+    a.hamburgerDropdown(href="#" style="position:absolute;left:28px;")
+      img(src="/images/white-burger.jpg" style="width:52px;display:inline-block;" onclick='toggleNav()')
+
+    a(href="/" style="position:absolute;left:99px;top:12px;")
+      p.fullTitle(style="text-transform:uppercase;display:inline-block;color:#0FDA01;font-size:25px;font-weight:900;") #{brandName}
+      p.singleLetter(style="text-transform:uppercase;") #{brandName}
+
+    div.searchPlaceHolder(style="height:56px;display:inline-block;display:none;")
+      a(href="#")
+        i.fas.fa-search.searchExpander.searchExpanderButton
+        i.fas.fa-arrow-left.searchExpander.backButtonIcon(style="left:17px;display:none;width:70px;")
+
+
+    div.search-bar(style="width:45%;margin-left:200px;")
+      input(type='hidden', name='_csrf', value=_csrf)
+      input.search-query-input(type='text', placeholder='Search' name='searchValue' value=searchValue || "")
+      button.search-uploads-button.searchButton(style="right:108px")
+        i.fas.fa-search.searchIcon
+
+    // UPGRADE ICON
+    //a(href="#" style="position: absolute;top: 21px;right: 325px;")
+    //    h7(style="font-size:15px") Upgrade
+
+    if !user
+      a.signInAnchor(href="/login" style="background-color:white;")
+        div.signInDiv(style="")
+          h7(style="display:inline-block;color:black;") Sign in
+
+      a.signInAnchor(href="/login" style="background-color:white;")
+        div.signInDiv(style="")
+          h7(style="display:inline-block;color:black;") Sign in
+
+    if user
+      // BELL ICON
+      //a(href="#" style="position: absolute;top: 19px;right: 280px;")
+      //    img(src="/bell-angle.png" style="width:29px;display:inline-block;margin-left:15px;")
+
+      a(href="#" style="position: absolute;top: 13px;right: 79px;")
+        div.postButton(style="display:inline-block;border: 1px solid black;padding: 9px 36px;margin-left:15px;border-radius: 3px;background-color: white;" data-toggle='modal', data-target='#exampleModal')
+          //a(href="/donate")
+          h7(style="display:inline-block;color:black;") Donate
+
+        div.postIcon(style="display:none;" data-toggle='modal', data-target='#exampleModal')
+          img(src="/images/whiteDollarIcon.png" style="width:25px;margin-top:9px;")
+          //h7(style="display:inline-block;color:black;") Post
+
+        a.userImage(href="#" style="position: absolute;top: 20px;right: 29px;")
+          img(onclick='toggleAccount()' src=user.gravatar() style="width: 27px;display:inline-block;margin-left:15px;border-radius:15px;")
+
 
 script.
 
@@ -324,71 +391,6 @@ script.
     })
 
   });
-
-.container.fixed-top(style="opacity:1;background-color:white;margin:0;max-width:100%;padding:0")
-  //.search1
-  //    form.search-form
-  //        input(type='text', placeholder='Search for books, authors, categories and more..')
-  //        input(type='submit', value='Submit')
-
-
-
-  div.secondLine(style="float:left;margin-top:8px;border-bottom: 1px solid #cec0c0;width:100%;box-shadow:-3px 11px 10px -10px rgba(0,0,0,0.51);")
-
-    a.hamburgerDropdown(href="#" style="position:absolute;left:28px;")
-      img(src="/images/white-burger.jpg" style="width:52px;display:inline-block;" onclick='toggleNav()')
-
-    a(href="/" style="position:absolute;left:99px;top:12px;")
-      p.fullTitle(style="text-transform:uppercase;display:inline-block;color:#0FDA01;font-size:25px;font-weight:900;") #{brandName}
-      p.singleLetter(style="text-transform:uppercase;") #{brandName}
-
-    div.searchPlaceHolder(style="height:56px;display:inline-block;display:none;")
-      a(href="#")
-        i.fas.fa-search.searchExpander.searchExpanderButton
-        i.fas.fa-arrow-left.searchExpander.backButtonIcon(style="left:17px;display:none;width:70px;")
-
-
-    div.search-bar(style="width:45%;margin-left:200px;")
-      input(type='hidden', name='_csrf', value=_csrf)
-      input.search-query-input(type='text', placeholder='Search' name='searchValue' value=searchValue || "")
-      button.search-uploads-button.searchButton(style="right:76px")
-        i.fas.fa-search.searchIcon
-
-    // UPGRADE ICON
-    //a(href="#" style="position: absolute;top: 21px;right: 325px;")
-    //    h7(style="font-size:15px") Upgrade
-
-    if !user
-      a.signInAnchor(href="/login" style="background-color:white;")
-        div.signInDiv(style="")
-          h7(style="display:inline-block;color:black;") Sign in
-
-      a.signInAnchor(href="/login" style="background-color:white;")
-        div.signInDiv(style="")
-          h7(style="display:inline-block;color:black;") Sign in
-
-    if user
-      // BELL ICON
-      //a(href="#" style="position: absolute;top: 19px;right: 280px;")
-      //    img(src="/bell-angle.png" style="width:29px;display:inline-block;margin-left:15px;")
-
-      a(href="#" style="position: absolute;top: 13px;right: 79px;")
-        div.postButton(style="display:inline-block;border: 1px solid black;padding: 9px 36px;margin-left:15px;border-radius: 3px;background-color: white;" data-toggle='modal', data-target='#exampleModal')
-          //a(href="/donate")
-          h7(style="display:inline-block;color:black;") Donate
-
-        div.postIcon(style="display:none;" data-toggle='modal', data-target='#exampleModal')
-          img(src="/images/whiteDollarIcon.png" style="width:25px;margin-top:9px;")
-          //h7(style="display:inline-block;color:black;") Post
-
-        a.userImage(href="#" style="position: absolute;top: 20px;right: 29px;")
-          img(onclick='toggleAccount()' src=user.gravatar() style="width: 27px;display:inline-block;margin-left:15px;border-radius:15px;")
-
-style.
-  .secondLine {
-    margin-top: -54px !important;
-    padding-left: 56px;
-  }
 
 if !user
   script.
@@ -455,3 +457,4 @@ script.
     });
 
   });
+
