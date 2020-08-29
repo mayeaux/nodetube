@@ -7,19 +7,19 @@ block content
             h2.fw(style="display:inline;") Search For Keyword
             br
             br
-            div(style="margin: 0 auto;")
-                input(type='hidden', name='_csrf', value=_csrf )
-                input.search-query-input.form-control(style="margin: 0 auto;width:400px;max-width:100%" type='search', name='search', id='search' placeholder=`${searchQuery !== 'undefined' ? searchQuery: ''}`)
-                br
-                // NOTE this does not work by sending a post, rather see the JS it only sends a GET request
-                div.search-upload-buttons-container
-                    button.fw.search-uploads-button.btn-lg.btn.btn-primary(type='submit' name="type" value="upload")
-                        //i.fa.fa-lock
-                        | Search For Media
-
-                    button.fw.search-users-button.btn-lg.btn.btn-primary(type='submit' name="type" value="user")
-                        //i.fa.fa-lock
-                        | Search For User
+            //div(style="margin: 0 auto;")
+            //    input(type='hidden', name='_csrf', value=_csrf )
+            //    input.search-query-input.form-control(style="margin: 0 auto;width:400px;max-width:100%" type='search', name='search', id='search' placeholder=`${searchQuery !== 'undefined' ? searchQuery: ''}`)
+            //    br
+            //    // NOTE this does not work by sending a post, rather see the JS it only sends a GET request
+            //    div.search-upload-buttons-container
+            //        button.fw.search-uploads-button.btn-lg.btn.btn-primary(type='submit' name="type" value="upload")
+            //            //i.fa.fa-lock
+            //            | Search For Media
+            //
+            //        button.fw.search-users-button.btn-lg.btn.btn-primary(type='submit' name="type" value="user")
+            //            //i.fa.fa-lock
+            //            | Search For User
 
 
 
