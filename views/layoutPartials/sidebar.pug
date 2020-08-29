@@ -195,6 +195,10 @@ style.
         border-radius: 50%;
     }
 
+    .ib {
+        display: inline-block;
+    }
+
 
 #mySidebar.sidebar(style="text-align:left;margin-left:-2px;overflow-y: hidden;")
     div(style="margin-top:27px")
@@ -220,26 +224,26 @@ style.
 
     // link to popular by categories
     a(href='/media/popular/1?media=all&category=overview&within=24hour' style="")
-        i.fas.fa-fire-alt
+        i.ib.fas.fa-fire-alt
 
-        p Popular - Categories
+        p.ib &nbsp Popular - Categories
 
     // link to popular uncategorized
     a(href='/media/popular/1?media=all&category=all&within=24hour' style="")
-        i.fas.fa-fire-alt
+        i.ib.fas.fa-fire-alt
 
-        p    Popular - All Uploads
+        p.ib &nbsp Popular - All Uploads
 
     // recent by category
     a(href='/media/recent?category=overview' style="")
 
-        i.fas.fa-clock
-        p Recent - Categories
+        i.ib.fas.fa-clock
+        p.ib &nbsp Recent - Categories
 
     // recent uncategorized
     a(href='/media/recent?category=all' style="")
-        i.i.fas.fa-clock
-        p Recent - All Uploads
+        i.ib.i.fas.fa-clock
+        p.ib &nbsp Recent - All Uploads
 
     hr
     // turn off until implemented
@@ -249,8 +253,9 @@ style.
     //        input(type='checkbox')
     //        span.slider.round
 
-    a(href="/about") About Us &nbsp
-        i.fa.fa-question-circle(aria-hidden='true')
+    a(href="/about")
+        i.ib.fa.fa-question-circle(aria-hidden='true')
+        p.ib About Us &nbsp
 
 
 
