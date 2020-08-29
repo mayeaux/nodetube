@@ -66,11 +66,11 @@ block content
 
                 video#media_player.display-element(playsinline poster=`${serverToUse}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;")
                     // to
-
-                    source(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}-144.mp4`, size='144', type='video/mp4')
-                    source(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}-360.mp4`, size='360', type='video/mp4')
-                    //source.video-source(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`, type='video/mp4')
-                    //source(src=upload.uploadUrl, type='video/mp4')
+                    each val in upload.videoQualities
+                        if val.status === 'complete'
+                            source(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}-${val.quality}.mp4`, size=`${val.quality}`, type='video/mp4')
+                            //source.video-source(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`, type='video/mp4')
+                            //source(src=upload.uploadUrl, type='video/mp4')
 
             // if it's an audio
         else if upload.fileType === 'audio'
