@@ -328,7 +328,10 @@ style.
           //h7(style="display:inline-block;color:black;") Post
 
         a.userImage(href="#" style="position: absolute;top: 20px;right: 29px;")
-          img(onclick='toggleAccount()' src=user.gravatar() style="width: 27px;display:inline-block;margin-left:15px;border-radius:15px;")
+          if user.customThumbnail
+            img.center-block.text-center(onclick='toggleAccount()' src=`${uploadServer}/${user.channelUrl}/${user.customThumbnail}` style="width: 27px;display:inline-block;margin-left:15px;border-radius:15px;")
+          else
+            img.center-block.text-center(onclick='toggleAccount()' src=`${uploadServer}/${user._id}/unique.png` style="width: 27px;display:inline-block;margin-left:15px;border-radius:15px;")
 
 
 script.

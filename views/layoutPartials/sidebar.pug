@@ -203,15 +203,17 @@ style.
 #mySidebar.sidebar(style="text-align:left;margin-left:-2px;overflow-y: hidden;")
     div(style="margin-top:27px")
 
-    a(href='https://newtube.app/paypal' style="color:#007bff;") Donate &nbsp
-        i.fas.fa-dollar-sign
+    a(href='https://newtube.app/paypal' style="color:#007bff;")
+        i.ib.fas.fa-dollar-sign
+        p.ib &nbsp Donate &nbsp
 
 
 
     if user
-        a(href='/account?to=nt-plus' style="color:#007bff;") Upgrade &nbsp
+        a(href='/account?to=nt-plus' style="color:#007bff;")
 
-            i.fas.fa-plus
+            i.ib.fas.fa-plus
+            p.ib &nbsp Upgrade &nbsp
 
     else
 
@@ -257,14 +259,23 @@ style.
         i.ib.fa.fa-question-circle(aria-hidden='true')
         p.ib About Us &nbsp
 
+if user.customThumbnail
+    img.center-block.text-center(src=`${uploadServer}/${user.channelUrl}/${user.customThumbnail}` width="256px" height="168px")
+else
+    img.center-block.text-center(src=`${uploadServer}/${user._id}/unique.png` width="256px" height="168px")
 
-
+// ACCOUNT DROPDOWN FUNCTIONALITY
 .accountDropdown#accountDropdown(style="display:none;text-align:left;border: 1px solid #cec0c0;box-shadow:-8px -9px 10px -10px rgba(0,0,0,0.51);border-radius:3px;")
     .userDetails
         if user
-            img(src="/images/gravatar.png" style="width: 34px;display:inline-block;margin-left:15px;border-radius:15px;position: absolute;top: 15px;right: 149px;")
-            p(style="font-size: 13px;position: absolute;left:65px;top: 15px;") #{user.displayName}
-            p(style="font-size: 12px;position: absolute;top: 32px;color: grey;left:63px;") #{user.channelUrl || user.channelName}
+            a(href='/user/' + user.channelUrl)
+                if user.customThumbnail
+                    img.center-block.text-center(src=`${uploadServer}/${user.channelUrl}/${user.customThumbnail}` style="width: 34px;display:inline-block;margin-left:15px;border-radius:15px;position: absolute;top: 15px;right: 149px;")
+                else
+                    img.center-block.text-center(src=`${uploadServer}/${user._id}/unique.png` style="width: 34px;display:inline-block;margin-left:15px;border-radius:15px;position: absolute;top: 15px;right: 149px;")
+
+                p(style="font-size: 13px;position: absolute;left:65px;top: 15px;") #{user.displayName}
+                p(style="font-size: 18px;position: absolute;top: 32px;color: grey;left:63px;") #{user.channelUrl || user.channelName}
 
         // if there's no user, prompt them to sign up, otherwise prompt them to upgrade to plus
         if !user
