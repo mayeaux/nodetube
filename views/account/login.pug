@@ -3,6 +3,13 @@ extends ../layout
 block content
   .container
     .page-header
+      div.needAnAccount(style="text-align:center")
+        h3.fw.text-center(style="display:inline-block") Still need an account? Try:
+        a(href="/signup")
+          h3.fw.text-center(style="display:inline-block;margin-left:5px;") Here
+        br
+        br
+
       h3.center-block.text-center.fw Login To #{brandName}
     form.form-horizontal(method='POST')
       input(type='hidden', name='_csrf', value=_csrf)
