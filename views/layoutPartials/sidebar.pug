@@ -216,6 +216,11 @@ style.
             i.ib.fas.fa-plus
             p.ib &nbsp Upgrade &nbsp
 
+        a(href='/account?to=nt-plus' style="color:#007bff;")
+
+            i.ib.fas.fa-plus
+            p.ib &nbsp Upg12341234rade &nbsp
+
     else if user && user.plan !== 'free'
         // dont do anything, user is signed in and free
     else
@@ -298,7 +303,7 @@ style.
                 if user.customThumbnail
                     img.center-block.text-center(src=`${uploadServer}/${user.channelUrl}/${user.customThumbnail}` style="width: 34px;display:inline-block;margin-left:15px;border-radius:15px;position: absolute;top: 15px;right: 149px;")
                 else
-                    img.center-block.text-center(src=`${uploadServer}/${user._id}/unique.png` style="width: 34px;display:inline-block;margin-left:15px;border-radius:15px;position: absolute;top: 15px;right: 149px;")
+                    img.center-block.text-center(src =`/images/default_user_image.png` style="width: 34px;display:inline-block;margin-left:15px;border-radius:15px;position: absolute;top: 15px;right: 149px;")
 
                 p(style="font-size: 13px;position: absolute;left:65px;top: 15px;") #{user.displayName}
                 p(style="font-size: 18px;position: absolute;top: 19px;color: grey;left:63px;") #{user.channelUrl || user.channelName}
@@ -319,13 +324,21 @@ style.
                     i.ib.fas.fa-plus
                     p.ib &nbsp Upgrade &nbsp
 
+            a(href="https://newtube.app/paypal" style="color:#007bff")
+
+
+                h7.ib(style="position: absolute;top: 97px;right: 113px; 50px;font-size: 13px;")
+                    i.ib.fas.fa-dollar
+                    p.ib &nbsp Donate &nbsp
+
+
 
 
     // other pages section
     div(style="padding-top:57px")
 
     if user
-        hr
+        hr(style="margin-top:45px")
         a(href='/upload')
             i.ib.fas.fa-upload
             p.ib &nbsp New Upload
