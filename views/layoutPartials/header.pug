@@ -284,7 +284,7 @@ style.
     a.hamburgerDropdown(href="#" style="position:absolute;left:28px;")
       img(src="/images/white-burger.jpg" style="width:52px;display:inline-block;" onclick='toggleNav()')
 
-    a(href="/" style="position:absolute;left:99px;top:12px;")
+    a(href="/" style="position:absolute;left:99px;top:15px;")
       p.fullTitle(style="text-transform:uppercase;display:inline-block;color:#0FDA01;font-size:25px;font-weight:900;") #{brandName}
       p.singleLetter(style="text-transform:uppercase;") #{brandName}
 
@@ -331,7 +331,8 @@ style.
           if user.customThumbnail
             img.center-block.text-center(onclick='toggleAccount()' src=`${uploadServer}/${user.channelUrl}/${user.customThumbnail}` style="width: 27px;display:inline-block;margin-left:15px;border-radius:15px;")
           else
-            img.center-block.text-center(onclick='toggleAccount()' src=`${uploadServer}/${user._id}/unique.png` style="width: 27px;display:inline-block;margin-left:15px;border-radius:15px;")
+            img.center-block.text-center(onclick='toggleAccount()' src=`/images/default_user_image.png` style="width: 27px;display:inline-block;margin-left:15px;border-radius:15px;")
+            //img.center-block.text-center(onclick='toggleAccount()' src=`${uploadServer}/${user._id}/unique.png` style="width: 27px;display:inline-block;margin-left:15px;border-radius:15px;")
 
 
 script.
