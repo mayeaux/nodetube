@@ -253,7 +253,7 @@ style.
     top: 29%;
   }
 
-  .searchExpander {
+  .searchExpander, .uploadButton {
     position: absolute;
     top: 24px;
     right: 111px;
@@ -334,8 +334,12 @@ style.
           //a(href="/donate")
           h7(style="display:inline-block;color:black;") Upload
 
-        div.postIcon(style="display:none;" data-toggle='modal', data-target='#exampleModal')
-          img(src="/images/whiteDollarIcon.png" style="width:25px;margin-top:9px;")
+      a(href="/upload" style="position: absolute;top: 13px;right: 79px;")
+        div.postIcon
+          i.fas.fa-upload.uploadButton(style="top: 11px;right: -6px;")
+
+        //div.postIcon(style="display:none;" data-toggle='modal', data-target='#exampleModal')
+        //  img(src="/images/whiteDollarIcon.png" style="width:25px;margin-top:9px;")
           //h7(style="display:inline-block;color:black;") Post
 
         a.userImage(href="#" style="position: absolute;top: 20px;right: 29px;")
