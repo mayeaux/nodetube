@@ -298,7 +298,7 @@ style.
 
     div.search-bar(style="width:45%;margin-left:200px;")
       input(type='hidden', name='_csrf', value=_csrf)
-      input.search-query-input(type='text', placeholder='Search' name='searchValue' value=searchValue || "")
+      input.search-query-input(type='text', placeholder='Search' name='searchValue' value=searchValue || "" style="position:absolute;top:13px;")
       button.search-uploads-button.searchButton(style="right:108px")
         i.fas.fa-search.searchIcon
 
@@ -345,8 +345,14 @@ style.
 script.
 
   $(document).ready(function () {
+
+
+    // turn on the
     $('.searchExpander').click(function () {
       console.log('something')
+
+
+      // show the back button
       $('.backButtonIcon').css({
         display: 'block'
       });
@@ -386,7 +392,7 @@ script.
       console.log('something')
 
       $('.backButtonIcon, .singleLetter, .search-bar, .search-form').css({
-        display: 'none'
+        visibility: 'hidden'
       });
 
       $('.hamburgerDropdown, .searchExpanderButton, .userImage').css({
@@ -398,7 +404,7 @@ script.
       });
 
       $('.searchPlaceHolder').css({
-        display: 'inline-block'
+        visibility: 'visible'
       });
 
 
