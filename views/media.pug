@@ -13,6 +13,22 @@ block content
             background-color: black !important;
         }
 
+        /* anything below this width */
+        @media (min-width: 1250px) {
+            body {
+                zoom: 1;
+            }
+
+            .non-player-content, .something {
+                zoom: 1.10;
+                /*font-size:20px;*/
+            }
+
+            /*.postButton {*/
+            /*display: none !important;*/
+            /*}*/
+        }
+
         .navbar {
             background-color: #0c0c0c !important;
         }
