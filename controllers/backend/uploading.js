@@ -548,6 +548,20 @@ exports.postFileUpload = async(req, res) => {
             responseSent = true;
             aboutToProcess(res, channelUrl, uniqueTag);
           }
+          /*
+          all values in Kbps (kilobits per seconds)
+          2160p (4k) -> 13000
+          1440p 6000
+          1080p 3000
+          720p 2250
+          480p 500
+          360p 400
+          240p 300
+          144p 80
+
+          0-80 144p
+          81-299 360p
+          */
           // TODO: put qualities somewhere else
           const qualities = [
             { name: '256 x 144p', quality: 144, bitrate: 80 },
@@ -561,49 +575,56 @@ exports.postFileUpload = async(req, res) => {
           // video will be available in original quality while this is happening in the background
           // TODO: make a quality conversion counter/progress bar
           for(var i = 0; i < qualities.length; i = i + 1){
-            // TODO: this is kind of ugly lmao
-            qualitySavePath = `${channelUrlFolder}/${uniqueTag}-${qualities[i].quality}.mp4`;
+            if(bitrate >= qualities[i].bitrate){
+              // TODO: this is kind of ugly lmao
+              qualitySavePath = `${channelUrlFolder}/${uniqueTag}-${qualities[i].quality}.mp4`;
 
-            let qualityExists = upload.videoQualities.find(o => o.quality === qualities[i].quality);
-            if(!qualityExists){
-              // TODO: add if it exists but still pending in case server was shut down or something else
-              // qualityExists.status !== 'complete'
-              await ffmpegHelper.convertVideo({
-                uploadedPath: fileInDirectory,
-                title,
-                bitrate: qualities[i].bitrate,
-                savePath: qualitySavePath,
-                uniqueTag: uniqueTag + '-' + qualities[i].quality,
-                quality: qualities[i].quality
-              });
+              let qualityExists = upload.videoQualities.find(o => o.quality === qualities[i].quality);
+              if(!qualityExists){
+                // TODO: add if it exists but still pending in case server was shut down or something else
+                // qualityExists.status !== 'complete'
+                await ffmpegHelper.convertVideo({
+                  uploadedPath: fileInDirectory,
+                  title,
+                  bitrate: qualities[i].bitrate,
+                  savePath: qualitySavePath,
+                  uniqueTag: uniqueTag + '-' + qualities[i].quality,
+                  quality: qualities[i].quality
+                });
 
+                // const response = await ffmpegHelper.ffprobePromise(qualitySavePath);
+
+                upload.videoQualities.push({
+                  quality: qualities[i].quality,
+                  bitrate: qualities[i].bitrate,
+                  fileSizeInMb: 1,
+                  status: 'complete' // TODO: use enum here not string
+                });
+
+                await upload.save();
+
+              }
+              // await ffmpegHelper.convertVideo({
+              //   uploadedPath: fileInDirectory,
+              //   title,
+              //   bitrate: qualities[i].bitrate,
+              //   savePath: qualitySavePath,
+              //   uniqueTag: uniqueTag + '-' + qualities[i].quality,
+              //   quality: qualities[i].quality
+              // });
+
+              // Save file size after compression.
               // const response = await ffmpegHelper.ffprobePromise(qualitySavePath);
+              // upload.processedFileSizeInMb = bytesToMb(response.format.size);
 
-              upload.videoQualities.push({
-                quality: qualities[i].quality,
-                bitrate: qualities[i].bitrate,
-                fileSizeInMb: 1,
-                status: 'complete' // TODO: use enum here not string
-              });
-
+              upload.videoQualities
               await upload.save();
-
             }
-            // await ffmpegHelper.convertVideo({
-            //   uploadedPath: fileInDirectory,
-            //   title,
-            //   bitrate: qualities[i].bitrate,
-            //   savePath: qualitySavePath,
-            //   uniqueTag: uniqueTag + '-' + qualities[i].quality,
-            //   quality: qualities[i].quality
-            // });
+            else {
+              // do max possible conversion with the biggest bitrate left? then break;
+              break;
+            }
 
-            // Save file size after compression.
-            // const response = await ffmpegHelper.ffprobePromise(qualitySavePath);
-            // upload.processedFileSizeInMb = bytesToMb(response.format.size);
-
-            upload.videoQualities
-            await upload.save();
           }
 
           await markConvertAsComplete(uniqueTag, channelUrl, user);
