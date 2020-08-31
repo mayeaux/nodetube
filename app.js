@@ -380,7 +380,7 @@ if(cluster.isMaster){
         // for some reason, res is actually 'next'?
       } else {
         console.log(res.toString());
-        res()
+        res();
       }
 
     });
