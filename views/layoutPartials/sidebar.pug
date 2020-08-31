@@ -78,7 +78,7 @@ style.
 
     /* The sidebar menu */
     .accountDropdown {
-        height: 366px; /* Full-height: remove this if you want "auto" height */
+        height: 392px; /* Full-height: remove this if you want "auto" height */
         width: 208px; /* Set the width of the sidebar */
         position: fixed; /* Fixed Sidebar (stay in place on scroll) */
         top: 64px; /* Stay at the top */
@@ -269,7 +269,7 @@ style.
 
     a(href='https://newtube.app/paypal' style="color:#007bff;")
         i.ib.fas.fa-dollar-sign
-        p.ib &nbsp Donate &nbsp
+        p.ib &nbsp Support NewTube
 
     if user
         hr
@@ -315,23 +315,38 @@ style.
                     p.ib Sign Up &nbsp
             // otherwise prompt them to upgrade to plus
         else
-            a(href="/account?to=nt-plus" style="color:#007bff")
-                h7.ib(style="position: absolute;top: 70px;right: 105px;font-size: 13px;")
-                    i.ib.fas.fa-plus
-                    p.ib &nbsp Upgrade &nbsp
+
+            // if the user has a free plan, prompt them to get plus
+            if user && user.plan == 'free'
+                a(href="/account?to=nt-plus" style="color:#007bff")
+                    h7.ib(style="position: absolute;top: 70px;right: 78px;font-size: 13px;")
+                        i.ib.fas.fa-plus
+                        p.ib  &nbsp NewTube Plus
+
+
 
             a(href="https://newtube.app/paypal" style="color:#007bff")
 
+                if user && user.plan == 'plus'
+                    h7.ib(style="position: absolute;top: 62px;right: 50px; 50px;font-size: 13px;")
 
-                h7.ib(style="position: absolute;top: 97px;right: 113px; 50px;font-size: 13px;")
-                    i.ib.fas.fa-dollar
-                    p.ib &nbsp Donate &nbsp
+                        i.ib.fas.fa-dollar
+                        p.ib &nbsp Support NewTube &nbsp
+                else
+                    h7.ib(style="position: absolute;top:97px;right: 50px; 50px;font-size: 13px;")
+
+                        i.ib.fas.fa-dollar
+                        p.ib &nbsp Support NewTube &nbsp
 
 
+    // top = 62px;
 
+    if user && user.plan == 'plus'
+        // other pages section
+        div(style="padding-top:27px")
+    else
+        div(style="padding-top:57px")
 
-    // other pages section
-    div(style="padding-top:57px")
 
     if user
         hr(style="margin-top:45px")
