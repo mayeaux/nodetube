@@ -481,6 +481,17 @@ script.
     $('.search-query-input').focus();
 
 
+    // TODO: how to capture enter from input
+    $(".search-query-input").on('keyup', function (e) {
+      if (e.key === 'Enter' || e.keyCode === 13) {
+        var userSearchQuery = $('.search-query-input').val()
+
+        window.location = '/search?orderBy=' + orderBy + '&mediaType=' + mediaType + '&searchQuery=' + userSearchQuery + '&searchType=' + searchType
+        // Do something
+      }
+    });
+
+
     // capture submit
     $('.search-uploads-button').click(function () {
 
