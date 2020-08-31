@@ -84,6 +84,7 @@ style.
 
   /* when plus button starts to hit search bar */
   @media (max-width: 593px) {
+
     .fullTitle {
       display: none !important;
     }
@@ -108,6 +109,7 @@ style.
   }
 
   /* when plus button starts to hit search bar */
+  /* everything under 439px  */
   @media (max-width: 439px) {
     .fullTitle {
       display: none !important;
@@ -187,13 +189,12 @@ style.
 
   .search-bar {
     width: 55%;
-    line-height: 56px;
     position: relative;
     margin: 0 auto;
   }
 
   input[type="text"] {
-    width: 73%;
+    width: 88%;
     height: 33px;
     padding: 0 10px;
     color: #000;
@@ -298,8 +299,8 @@ style.
 
     div.search-bar(style="width:45%;margin-left:200px;")
       input(type='hidden', name='_csrf', value=_csrf)
-      input.search-query-input(type='text', placeholder='Search' name='searchValue' value=searchValue || "")
-      button.search-uploads-button.searchButton(style="right:108px")
+      input.search-query-input(style="margin-top:11px;margin-bottom:10px;" type='text', placeholder='Search' name='searchValue' value=searchValue || "")
+      button.search-uploads-button.searchButton(style="right:-6px")
         i.fas.fa-search.searchIcon
 
     // UPGRADE ICON
@@ -345,13 +346,18 @@ style.
 script.
 
   $(document).ready(function () {
+
+    // whatever search expander is
     $('.searchExpander').click(function () {
       console.log('something')
+
+
+      // show the back button
       $('.backButtonIcon').css({
         display: 'block'
       });
 
-      // hide single letter
+      // hide single letter (now just says newtube)
       var elem = $('.singleLetter');
       elem[0].style.removeProperty('display');
       elem[0].style.setProperty('display', 'none', 'important');
@@ -362,15 +368,22 @@ script.
       elem2[0].style.removeProperty('display');
       elem2[0].style.setProperty('display', 'inline', 'important');
 
+      // post icon probably now upload button
       var elem1 = $('.postIcon');
       if(elem1[0]){
         elem1[0].style.removeProperty('display');
         elem1[0].style.setProperty('display', 'none', 'important');
       }
 
+      // shwo the search bar again
       $('.search-bar, .search-form').css({
         display: 'inline'
       });
+
+      $('.search-query-input').css({
+        'margin-left' : '-61px'
+      });
+
 
       $('.hamburgerDropdown, .userImage, .searchExpanderButton').css({
         display: 'none'
