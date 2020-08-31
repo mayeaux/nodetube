@@ -187,13 +187,12 @@ style.
 
   .search-bar {
     width: 55%;
-    line-height: 56px;
     position: relative;
     margin: 0 auto;
   }
 
   input[type="text"] {
-    width: 73%;
+    width: 88%;
     height: 33px;
     padding: 0 10px;
     color: #000;
@@ -298,8 +297,8 @@ style.
 
     div.search-bar(style="width:45%;margin-left:200px;")
       input(type='hidden', name='_csrf', value=_csrf)
-      input.search-query-input(type='text', placeholder='Search' name='searchValue' value=searchValue || "")
-      button.search-uploads-button.searchButton(style="right:108px")
+      input.search-query-input(style="margin-top:11px;margin-bottom:10px;" type='text', placeholder='Search' name='searchValue' value=searchValue || "")
+      button.search-uploads-button.searchButton(style="right:-6px")
         i.fas.fa-search.searchIcon
 
     // UPGRADE ICON
