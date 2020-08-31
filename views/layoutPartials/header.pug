@@ -312,9 +312,6 @@ style.
         div.signInDiv(style="")
           h7(style="display:inline-block;color:black;") Sign in
 
-      a.signInAnchor(href="/login" style="background-color:white;")
-        div.signInDiv(style="")
-          h7(style="display:inline-block;color:black;") Sign in
 
     if user
       // BELL ICON
@@ -350,6 +347,9 @@ script.
     // whatever search expander is
     $('.searchExpander').click(function () {
       console.log('something')
+
+      // hide the sign in div
+      $('.signInDiv').hide();
 
 
       // show the back button
@@ -394,9 +394,15 @@ script.
       })
     })
 
+
+
+
+    // REVERSE EFFECT
     // show the old header
     $('.backButtonIcon').click(function () {
-      console.log('something')
+      console.log('something else ')
+
+      $('.signInDiv').show();
 
       $('.backButtonIcon, .singleLetter, .search-bar, .search-form').css({
         display: 'none'
