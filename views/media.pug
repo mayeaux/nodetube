@@ -128,33 +128,6 @@ block content
             div.col-sm-12
                 h2.balance-text(class="upload-title-value" style="text-wrap:balance;width:80%;margin:0 auto;font-weight:300;color: rgb(121 119 119) !important;")=upload.title
 
-                //REACTS WITH LIKES, DISLIKE, DISGUST, ETC
-                div.col-sm-12.react(style="background-color:white;margin:0 auto;border-radius:10px;margin-bottom:21px;margin-top:60px;padding-bottom:12px;min-width:247px;")
-                    // margin-top:133px
-                    br
-                    each emoji in emojis
-                        div(style="padding-right:15px;display:inline-block;")
-                            a(href="#")
-                                if currentReact
-                                    if currentReact == emoji.name
-                                        div.clicked-emoji
-                                            img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
-
-                                    else
-                                        div.unclicked-emoji
-                                            img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
-
-                                else
-                                    div.clicked-emoji
-                                        img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
-
-                            p.fw(class=emoji.name style="font-weight:400;") #{emoji.amount}
-
-
-                if upload.visibility == 'pending' && upload.status !== 'processing'
-                    h3.pending-string Your video is currently pending moderator approval. If it's still pending after several minutes please contact a mod at
-                        a(href="/discord")  Discord
-
             // DOWNLOAD,EMBED, REPEAT AND REPORT BUTTONS
             div.col-sm-4
                 // download button
@@ -307,16 +280,42 @@ block content
 
                     br
 
-            div
-                br
-                br
-                br
-                div.col-sm-12
-                    p #{upload.description}
 
+            div.col-sm-12
 
+                p #{upload.description}
 
             hr
+
+
+            div.col-sm-12
+
+                //REACTS WITH LIKES, DISLIKE, DISGUST, ETC
+                div.col-sm-12.react(style="background-color:white;margin:0 auto;border-radius:10px;margin-bottom:21px;margin-top:60px;padding-bottom:12px;min-width:247px;")
+                    // margin-top:133px
+                    br
+                    each emoji in emojis
+                        div(style="padding-right:15px;display:inline-block;")
+                            a(href="#")
+                                if currentReact
+                                    if currentReact == emoji.name
+                                        div.clicked-emoji
+                                            img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
+
+                                    else
+                                        div.unclicked-emoji
+                                            img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
+
+                                else
+                                    div.clicked-emoji
+                                        img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
+
+                            p.fw(class=emoji.name style="font-weight:400;") #{emoji.amount}
+
+
+                if upload.visibility == 'pending' && upload.status !== 'processing'
+                    h3.pending-string Your video is currently pending moderator approval. If it's still pending after several minutes please contact a mod at
+                        a(href="/discord")  Discord
 
             // ** COMMENT SECTION AND FORM **
             div
