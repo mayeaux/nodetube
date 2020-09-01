@@ -126,51 +126,42 @@ block content
             br
             // UPLOAD TITLE
             div.col-sm-12
-                h2.balance-text(class="upload-title-value" style="text-wrap:balance;width:80%;margin:0 auto;font-weight:300;color: rgb(121 119 119) !important;")=upload.title
+                .row
+                    .col-sm-8
 
-            // DOWNLOAD,EMBED, REPEAT AND REPORT BUTTONS
-            div.col-sm-4
-                // download button
-                div.change-size-button
-                    h2.download-button
-                        i.download-icon.fa.fa-download(aria-hidden="true" style="cursor:pointer;color: rgb(121 119 119) !important;")
+                        h2.balance-text(class="upload-title-value" style="display:inline;text-wrap:balance;width:80%;margin:0 auto;font-weight:300;color: rgb(121 119 119) !important;") #{upload.title}
+                        if upload.formattedDuration
+                            h2.fw(style="display:inline;color: rgb(121 119 119) !important;").
+                                &nbsp - #{upload.formattedDuration}
 
-                // embed button
-                div.change-size-button(style="margin-left:0px;color: rgb(121 119 119) !important;")
-                    h2.share-button
-                        i.share-icon.fas.fa-code(aria-hidden="true" style="cursor:pointer;font-size:27px;margin-left:0px;")
+                    .col-sm-4
 
-                // only do repeat button if it's audio or video
-                if upload.fileType == 'video' || upload.fileType == 'audio'
-                    div.change-size-button(style="margin-left:0px;")
-                        h2.repeat-div(style="opacity:0.4")
-                            i.repeat-icon.fa.fa-repeat(aria-hidden="true" style="cursor:pointer")
+                        // download button
+                        div.change-size-button
+                            h2.download-button
+                                i.download-icon.fa.fa-download(aria-hidden="true" style="cursor:pointer;color: rgb(121 119 119) !important;")
 
-                // report upload button
-                div.change-size-button(style="cursor:pointer;margin-left:0px;color: rgb(121 119 119) !important;")
-                    h2.report-button(style="")
-                        i.share-icon.fa.fa-exclamation-triangle(aria-hidden="true" style="cursor:pointer;font-size:19px;")
+                        // embed button
+                        div.change-size-button(style="margin-left:0px;color: rgb(121 119 119) !important;")
+                            h2.share-button
+                                i.share-icon.fas.fa-code(aria-hidden="true" style="cursor:pointer;font-size:27px;margin-left:0px;")
 
-                // SHARING BUTTONS
-                div
+                        // only do repeat button if it's audio or video
+                        if upload.fileType == 'video' || upload.fileType == 'audio'
+                            div.change-size-button(style="margin-left:0px;")
+                                h2.repeat-div(style="opacity:0.4")
+                                    i.repeat-icon.fa.fa-repeat(aria-hidden="true" style="cursor:pointer")
 
-                    a(href=`https://www.facebook.com/sharer/sharer.php?u=${url}` target="_blank")
-                        img(src='/images/facebook-share.jpg', width='100', height='30', alt='Share on Twitter')
-                    a(href=`https://twitter.com/share?url=${url}` target="_blank")
-                        img(src='/images/twitter-share.jpg', width='100', height='30', alt='Share on Twitter')
-                    a(href=`mailto:?subject=Check out this ${upload.fileType}&body=Check out this ${upload.fileType} on ${brandName}: ${url}`, title='Share by Email')
-                        img(src='/images/email-share.jpg')
+                        // report upload button
+                        div.change-size-button(style="cursor:pointer;margin-left:0px;color: rgb(121 119 119) !important;")
+                            h2.report-button(style="")
+                                i.share-icon.fa.fa-exclamation-triangle(aria-hidden="true" style="cursor:pointer;font-size:19px;")
 
 
 
-                br
-                button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} \n\n${url}`)
-                    i.fa.fa-info.fw
-                    | Copy Details
 
-                button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} by ${upload.uploader.channelName || upload.uploader.channelUrl} \n\n ${url} \n\n #${brandName}`)
-                    i.fa.fa-info.fw
-                    | With User Info
+
+
 
 
             br
@@ -189,12 +180,19 @@ block content
                             img(src=`${serverToUse}/${upload.uploader._id}/unique.png` style="border-radius:13px;width:159px;height:159px;")
                             br
                             br
+                    else
+                        a(href=`/user/${upload.uploader.channelUrl}`)
+
+                            img(src=`/images/default_user_image.png` style="border-radius:13px;width:159px;height:159px;")
+                            br
+                            br
 
                     a(href=`/user/${upload.uploader.channelUrl}` style="color:gray;font-weight:300") #{upload.uploader.channelName || upload.uploader.channelUrl}
                         if upload.uploader.verified == true
                             img(src="/images/verified.jpg" width="25px" height="25px" style="margin-left:3px;margin-top:-2px;margin-right:5px;")
                         if upload.uploader.plan == 'plus'
                             span.nodetube-pro PLUS
+
 
 
                 if upload.visibility != 'pending'
@@ -211,6 +209,11 @@ block content
                         br
                         a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}/edit`)
                             button.fw.btn.btn-success(style="margin-bottom:-10px;border-radius:5px;") Edit
+            // UPLOADER DETAILS SECTION END
+
+            div.col-sm-4
+
+                p.fw(style="font-size:18px") #{upload.description}
 
             // REMOVE QUALITY THING, EVERYONE CAN STAY LOW QUALITY
             // also have to add .fw to this thing when take it live
@@ -229,10 +232,6 @@ block content
             //if upload.uploader.plan == 'plus'
             //    br
             //    button.donate.btn.btn-success(style="margin-bottom:-10px") Donate
-
-
-
-
             // UPLOAD DETAILS SECTION WITH VIEWS, UPLOADED DAYS AGO, DURATION ETC
             div.col-sm-4
 
@@ -243,10 +242,6 @@ block content
                 if upload.uploader
                     h4.fw
                         | Uploaded #{upload.timeAgo} &nbsp
-
-                    if upload.formattedDuration
-                        p.fw
-                            | Duration: #{upload.formattedDuration}
 
                     if upload.visibility == 'removed'
                         h2 Upload Deleted
@@ -281,9 +276,10 @@ block content
                     br
 
 
-            div.col-sm-12
 
-                p.fw(style="font-size:18px") #{upload.description}
+
+
+
 
             hr
 
@@ -291,7 +287,7 @@ block content
             div.col-sm-12
 
                 //REACTS WITH LIKES, DISLIKE, DISGUST, ETC
-                div.col-sm-12.react(style="background-color:white;margin:0 auto;border-radius:10px;margin-bottom:21px;margin-top:60px;padding-bottom:12px;min-width:247px;")
+                div.react(style="max-width:600px;background-color:white;margin:0 auto;border-radius:10px;margin-bottom:21px;margin-top:60px;padding-bottom:12px;min-width:247px;")
                     // margin-top:133px
                     br
                     each emoji in emojis
@@ -317,6 +313,30 @@ block content
                     h3.pending-string Your video is currently pending moderator approval. If it's still pending after several minutes please contact a mod at
                         a(href="/discord")  Discord
 
+
+            // DOWNLOAD,EMBED, REPEAT AND REPORT BUTTONS
+            div.col-sm-12
+                // SHARING BUTTONS
+                div
+
+                    a(href=`https://www.facebook.com/sharer/sharer.php?u=${url}` target="_blank")
+                        img(src='/images/facebook-share.jpg', width='100', height='30', alt='Share on Twitter')
+                    a(href=`https://twitter.com/share?url=${url}` target="_blank")
+                        img(src='/images/twitter-share.jpg', width='100', height='30', alt='Share on Twitter')
+                    a(href=`mailto:?subject=Check out this ${upload.fileType}&body=Check out this ${upload.fileType} on ${brandName}: ${url}`, title='Share by Email')
+                        img(src='/images/email-share.jpg')
+
+
+
+                br
+                button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} \n\n${url}`)
+                    i.fa.fa-info.fw
+                    | Copy Details
+
+                button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} by ${upload.uploader.channelName || upload.uploader.channelUrl} \n\n ${url} \n\n #${brandName}`)
+                    i.fa.fa-info.fw
+                    | With User Info
+
             hr
 
             // ** COMMENT SECTION AND FORM **
@@ -325,113 +345,114 @@ block content
                 br
                 br
                 div.col-sm-12
-                if user
-                    if !viewingUserIsBlocked
-                        // comment form
-                        div.comment-form.form-group
-                            form.form-horizontal.overall-comment-form(class="comment-form" action='/api/comment', method='post')
-                                input(type='hidden', name='_csrf', value=_csrf)
-                                label.fw(for="comment" style="font-size:20px;") Enter Comment
+                    if user
+                        if !viewingUserIsBlocked
+                            // comment form
+                            div.comment-form.form-group
+                                form.form-horizontal.overall-comment-form(class="comment-form" action='/api/comment', method='post')
+                                    input(type='hidden', name='_csrf', value=_csrf)
+                                    label.fw(for="comment" style="font-size:20px;") Enter Comment
+                                    br
+                                    input(type="hidden" name="upload" id="upload" value=upload._id)
+                                    textarea.fw(name="comment" id="comment" minlength="2" style="width:800px;height:129px;max-width:100%")
+                                    br
+                                    input.fw.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
+                    else
+                        div.comment-form.form-group.no-user-comment-form
+                            form.form-horizontal.overall-comment-form(class="comment-form")
+                                label.fw(for="comment" style="font-size:17px;") Enter Comment
                                 br
-                                input(type="hidden" name="upload" id="upload" value=upload._id)
                                 textarea.fw(name="comment" id="comment" minlength="2" style="width:800px;height:129px;max-width:100%")
                                 br
                                 input.fw.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
-                else
-                    div.comment-form.form-group.no-user-comment-form
-                        form.form-horizontal.overall-comment-form(class="comment-form")
-                            label.fw(for="comment" style="font-size:17px;") Enter Comment
-                            br
-                            textarea.fw(name="comment" id="comment" minlength="2" style="width:800px;height:129px;max-width:100%")
-                            br
-                            input.fw.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
 
 
                 // ** COMMENT DISPLAY **
                 // todo: pull this out into its own partial
 
-                // otherwise display all comments
-                if commentCount == 0
-                    div.comment-containing-div(style="width:400px;margin:0 auto;margin-top:70px;")
-                        div(style="display:block")
-                            h3.fw.no-comments-header(style="text-decoration:underline;text-align:left;font-size:22px;") No Comments Yet
+                div.col-sm-12
+                    // otherwise display all comments
+                    if commentCount == 0
+                        div.col-sm-12.comment-containing-div(style="width:400px;margin:0 auto;margin-top:70px;")
+                            div(style="display:block")
+                                h3.fw.no-comments-header(style="text-decoration:underline;text-align:left;font-size:22px;") No Comments Yet
 
-                            div.comment-thread
-                                div.original-comment.no-comments-div(style="display:block;padding-bottom:15px;padding-top:10px;")
+                                div.comment-thread
+                                    div.original-comment.no-comments-div(style="display:block;padding-bottom:15px;padding-top:10px;")
 
-                else
-                    if commentCount > 0
-                        div.comment-containing-div.col-sm-6.col-sm-offset-3(style="margin-top:60px;text-align:center")
-                            if commentCount == 1
-                                div(style="display:block")
-                                    h3.fw(style="text-align:left;font-size:28px;margin-bottom:14px;") #{commentCount} Comment
-                            else
-                                div(style="display:block")
-                                    h3.fw(style="text-align:left;font-size:28px;margin-bottom:14px;") #{commentCount} Comments
-                            each comment in comments
-                                if comment.commenter
-                                    div.comment-thread
-                                        div.original-comment(style="display:block;padding-bottom:15px;padding-top:10px;")
-                                            // TODO: Add it here
-                                            div.top-line(style="text-align:left;")
-                                                p.fw(style="text-align:left;display:inline-block;")
-                                                    a(href=`/user/${comment.commenter.channelUrl}` style="color:#d2d2d2;margin-right:5px;") #{comment.commenter.channelName || comment.commenter.channelUrl}
-                                                p.fw(style="display:inline-block;") - #{comment.timeAgo} &nbsp
-                                                    if user && !viewingUserIsBlocked
-                                                        a.reply-link(style="cursor:pointer") Reply
-                                                    // delete button
-                                                    // if uploader or admin or commenter, let them delete comment
-                                                    if isUploaderOrAdmin || ( user && comment.commenter._id == user._id )
-                                                        a.delete-comment-button(style="margin-left:9px;cursor:pointer;" commentId=comment._id) Delete
-
-                                                    if isUploader && !comment.commenter.isBlocked
-                                                        a.block-user-button(style="margin-left:9px;cursor:pointer;" blockedusername=comment.commenter.channelUrl) Block User
-                                                    if isUploader && comment.commenter.isBlocked
-                                                        a.unblock-user-button(style="margin-left:9px;cursor:pointer;" blockedusername=comment.commenter.channelUrl) Unblock User
-
-
-                                            p.fw(style="text-align:left;font-size:16px;") #{comment.text}
-
-                                            // container that appears after you hit Reply
-                                            div.reply-container(style="display:none")
-                                                form.form-horizontal.reply-comment-form(class="comment-form" action='/api/comment', method='post')
-                                                    input(type='hidden', name='_csrf', value=_csrf)
-                                                    input(type="hidden" name="upload" id="upload" value=upload._id)
-                                                    input(type="hidden" name="commentId" id="commentId" value=comment.id)
-                                                    textarea.fw(name="comment" id="comment" minlength="2" style="width:400px;max-width:100%;")
-                                                    br
-                                                    input.fw.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
-                                                    br
-                                                    br
-
-                                        div.responses
-                                            each responseComment in comment.responses
-                                                if responseComment.visibility !== 'removed'
-                                                    div(style="display:block;padding-bottom:15px;padding-left:40px;")
-                                                        div.top-line(style="text-align:left;")
-                                                            p.fw(style="text-align:left;display:inline-block;")
-                                                                a(href=`/user/${responseComment.commenter.channelUrl}` style="color:#d2d2d2;margin-right:5px;") #{responseComment.commenter.channelName || responseComment.commenter.channelUrl}
-                                                            p.fw(style="display:inline-block;") - #{responseComment.timeAgo} &nbsp
-                                                        p.fw(style="text-align:left;") #{responseComment.text}
-
-                                                    //div.reply-container(style="display:none")
-                                                    //    form.form-horizontal.reply-form(class="comment-form" action='/api/comment', method='post')
-                                                    //        input(type='hidden', name='_csrf', value=_csrf)
-                                                    //        input(type="hidden" name="upload" id="upload" value=upload._id)
-                                                    //        input(type="hidden" name="commentId" id="commentId" value=responseComment.id)
-                                                    //        textarea(name="comment" id="comment" style="width:400px;")
-                                                    //        br
-                                                    //        input.btn.btn-md.btn-success(type='submit' value="Post Comment")
-                                                    //        br
-                                                    //        br
-
-
-
-
-
-
+                    else
+                        if commentCount > 0
+                            div.comment-containing-div.col-sm-6.col-sm-offset-3(style="margin-top:60px;text-align:center")
+                                if commentCount == 1
+                                    div(style="display:block")
+                                        h3.fw(style="text-align:left;font-size:28px;margin-bottom:14px;") #{commentCount} Comment
                                 else
-                                    p No commenter
+                                    div(style="display:block")
+                                        h3.fw(style="text-align:left;font-size:28px;margin-bottom:14px;") #{commentCount} Comments
+                                each comment in comments
+                                    if comment.commenter
+                                        div.comment-thread
+                                            div.original-comment(style="display:block;padding-bottom:15px;padding-top:10px;")
+                                                // TODO: Add it here
+                                                div.top-line(style="text-align:left;")
+                                                    p.fw(style="text-align:left;display:inline-block;")
+                                                        a(href=`/user/${comment.commenter.channelUrl}` style="color:#d2d2d2;margin-right:5px;") #{comment.commenter.channelName || comment.commenter.channelUrl}
+                                                    p.fw(style="display:inline-block;") - #{comment.timeAgo} &nbsp
+                                                        if user && !viewingUserIsBlocked
+                                                            a.reply-link(style="cursor:pointer") Reply
+                                                        // delete button
+                                                        // if uploader or admin or commenter, let them delete comment
+                                                        if isUploaderOrAdmin || ( user && comment.commenter._id == user._id )
+                                                            a.delete-comment-button(style="margin-left:9px;cursor:pointer;" commentId=comment._id) Delete
+
+                                                        if isUploader && !comment.commenter.isBlocked
+                                                            a.block-user-button(style="margin-left:9px;cursor:pointer;" blockedusername=comment.commenter.channelUrl) Block User
+                                                        if isUploader && comment.commenter.isBlocked
+                                                            a.unblock-user-button(style="margin-left:9px;cursor:pointer;" blockedusername=comment.commenter.channelUrl) Unblock User
+
+
+                                                p.fw(style="text-align:left;font-size:16px;") #{comment.text}
+
+                                                // container that appears after you hit Reply
+                                                div.reply-container(style="display:none")
+                                                    form.form-horizontal.reply-comment-form(class="comment-form" action='/api/comment', method='post')
+                                                        input(type='hidden', name='_csrf', value=_csrf)
+                                                        input(type="hidden" name="upload" id="upload" value=upload._id)
+                                                        input(type="hidden" name="commentId" id="commentId" value=comment.id)
+                                                        textarea.fw(name="comment" id="comment" minlength="2" style="width:400px;max-width:100%;")
+                                                        br
+                                                        input.fw.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
+                                                        br
+                                                        br
+
+                                            div.responses
+                                                each responseComment in comment.responses
+                                                    if responseComment.visibility !== 'removed'
+                                                        div(style="display:block;padding-bottom:15px;padding-left:40px;")
+                                                            div.top-line(style="text-align:left;")
+                                                                p.fw(style="text-align:left;display:inline-block;")
+                                                                    a(href=`/user/${responseComment.commenter.channelUrl}` style="color:#d2d2d2;margin-right:5px;") #{responseComment.commenter.channelName || responseComment.commenter.channelUrl}
+                                                                p.fw(style="display:inline-block;") - #{responseComment.timeAgo} &nbsp
+                                                            p.fw(style="text-align:left;") #{responseComment.text}
+
+                                                        //div.reply-container(style="display:none")
+                                                        //    form.form-horizontal.reply-form(class="comment-form" action='/api/comment', method='post')
+                                                        //        input(type='hidden', name='_csrf', value=_csrf)
+                                                        //        input(type="hidden" name="upload" id="upload" value=upload._id)
+                                                        //        input(type="hidden" name="commentId" id="commentId" value=responseComment.id)
+                                                        //        textarea(name="comment" id="comment" style="width:400px;")
+                                                        //        br
+                                                        //        input.btn.btn-md.btn-success(type='submit' value="Post Comment")
+                                                        //        br
+                                                        //        br
+
+
+
+
+
+
+                                    else
+                                        p No commenter
 
 
 
