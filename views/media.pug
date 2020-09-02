@@ -136,7 +136,7 @@ block content
             // UPLOAD TITLE
             div.col-sm-12
                 .row
-                    .col-sm-9
+                    .col-sm-6.col-sm-offset-3
 
                         h2.balance-text(class="upload-title-value" style="display:inline;text-wrap:balance;width:80%;margin:0 auto;font-weight:300;color: rgb(121 119 119) !important;") #{upload.title}
                         if upload.formattedDuration
@@ -223,7 +223,7 @@ block content
             div.col-sm-6(style="margin-top:30px")
 
                 //REACTS WITH LIKES, DISLIKE, DISGUST, ETC
-                div.react(style="max-width:420px;background-color:white;margin:0 auto;border-radius:10px;margin-bottom:21px;padding-bottom:12px;min-width:247px;")
+                div.react(style="max-width:375px;background-color:white;margin:0 auto;border-radius:10px;margin-bottom:21px;padding-bottom:12px;min-width:247px;")
                     // margin-top:133px
                     br
                     each emoji in emojis
