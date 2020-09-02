@@ -86,6 +86,34 @@ exports.globe = async(req, res) => {
   });
 };
 
+
+/**
+ * GET /random
+ * Random redirect page page.
+ */
+exports.random = async(req, res) => {
+   // and not deleted
+    let upload = await Upload.aggregate([
+      { $match: { visibility: 'public' } },
+      { $sample: { size: 1 } }
+    ]);
+
+  upload = upload[0];
+
+  return res.redirect(`/user/v/${upload.uniqueTag}/`);
+
+  // /user/v/Kqd5SfS
+
+  console.log(upload);
+
+  console.log(upload.uniqueTag)
+
+  res.send('hello');
+
+
+};
+
+
 /**
  * GET /
  * About page.
