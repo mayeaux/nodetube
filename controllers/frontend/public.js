@@ -86,17 +86,16 @@ exports.globe = async(req, res) => {
   });
 };
 
-
 /**
  * GET /random
  * Random redirect page page.
  */
 exports.random = async(req, res) => {
-   // and not deleted
-    let upload = await Upload.aggregate([
-      { $match: { visibility: 'public', status: 'completed' } },
-      { $sample: { size: 1 } }
-    ]);
+  // and not deleted
+  let upload = await Upload.aggregate([
+    { $match: { visibility: 'public', status: 'completed' } },
+    { $sample: { size: 1 } }
+  ]);
 
   upload = upload[0];
 
@@ -106,13 +105,11 @@ exports.random = async(req, res) => {
 
   console.log(upload);
 
-  console.log(upload.uniqueTag)
+  console.log(upload.uniqueTag);
 
   res.send('hello');
 
-
 };
-
 
 /**
  * GET /

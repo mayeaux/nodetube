@@ -138,7 +138,6 @@ function frontendRoutes(app){
   // app.get('/contact', contactController.getContact);
   // app.post('/contact', contactController.postContact);
 
-
   app.get('/globe', publicController.globe);
   app.get('/random', publicController.random);
 
