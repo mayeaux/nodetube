@@ -94,7 +94,7 @@ exports.globe = async(req, res) => {
 exports.random = async(req, res) => {
    // and not deleted
     let upload = await Upload.aggregate([
-      { $match: { visibility: 'public' } },
+      { $match: { visibility: 'public', status: 'completed' } },
       { $sample: { size: 1 } }
     ]);
 
