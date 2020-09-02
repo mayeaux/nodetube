@@ -213,7 +213,10 @@ block content
 
             div.col-sm-4
 
-                p.fw(style="font-size:18px") #{upload.description}
+                if upload.description
+                    p.fw(style="font-size:18px") #{upload.description}
+                else
+                    p.fw(style="font-size:18px") No Description
 
             // REMOVE QUALITY THING, EVERYONE CAN STAY LOW QUALITY
             // also have to add .fw to this thing when take it live
