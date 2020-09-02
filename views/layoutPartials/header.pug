@@ -272,6 +272,15 @@ style.
     padding-left: 56px;
   }
 
+  @media (max-width: 750px) {
+    .diceIcon {
+      visibility: hidden;
+    }
+
+  }
+  
+  
+
 
 
 .container.headerContainer.fixed-top(style="opacity:1;background-color:white;margin:0;max-width:100%;padding:0")
@@ -310,7 +319,7 @@ style.
     if !user
 
 
-      a.signInAnchor(href="/random" style="background-color:white;right:121px;")
+      a.diceIcon.signInAnchor(href="/random" style="background-color:white;right:121px;")
         img(src="/images/dice.png" style="height:40px;")
 
 
