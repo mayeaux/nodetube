@@ -428,6 +428,9 @@ exports.subscribeEndpoint = async function(req, res, next){
 
 /** handle react creation/updating **/
 exports.react = async(req, res, next)  => {
+
+  // console.log(req.body);
+
   // console.log(`${req.user._id}` , req.params.user);
 
   // if the user is not authenticated to act on behalf of that user

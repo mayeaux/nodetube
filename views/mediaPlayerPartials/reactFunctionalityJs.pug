@@ -5,44 +5,6 @@ script.
   var upload = '#{upload._id}'
   var csrf = '#{_csrf}'
 
-  var height = 50;
-  var width = 50;
-  var duration = 400;
-
-  var changeSize = 0.33
-
-  $('.react img').on('mouseover', function() {
-
-    $(this).animate({
-      width: width + (width * changeSize)
-    },{
-      duration, queue: false
-    });
-
-    $(this).animate({
-      height: height + (height * changeSize )
-    },{
-      duration, queue: false
-    });
-  })
-
-  $('.react img').on('mouseout', function () {
-
-    $(this).animate({
-      width
-    }, {
-      duration, queue: false
-    });
-
-    $(this).animate({
-      height
-    }, {
-      duration, queue: false
-    });
-
-  })
-
-
   $('.react img').on('release click', function (e) {
 
     // dont move browser
@@ -72,7 +34,7 @@ script.
 
     // note active emoji
     var oldEmoji = activeEmoji
-    var emoji = $(this).attr('class')
+    var emoji = $(this).attr('id')
     activeEmoji = emoji;
     var unreact = (oldEmoji == activeEmoji) // the old react is the same as the new (user wants to remove react)
 
@@ -86,12 +48,15 @@ script.
 
     }
 
-    if(unreact) { // if the user removed the react, there is no active emoji
+    // if the user removed the react, there is no active emoji
+    if(unreact) {
       activeEmoji = null
       $(".react img").css({ // reset all reacts opacity
         opacity: 1
       })
-    } else { // if user chose a different react, update the new react value
+
+      // if user chose a different react, update the new react value
+    } else {
       var newEmojiValue = $('p.' + emoji).text()
       var incrementedValue = parseInt(newEmojiValue) + 1
       console.log(newEmojiValue)
