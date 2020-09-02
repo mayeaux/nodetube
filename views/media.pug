@@ -127,14 +127,14 @@ block content
             // UPLOAD TITLE
             div.col-sm-12
                 .row
-                    .col-sm-8
+                    .col-sm-9
 
                         h2.balance-text(class="upload-title-value" style="display:inline;text-wrap:balance;width:80%;margin:0 auto;font-weight:300;color: rgb(121 119 119) !important;") #{upload.title}
                         if upload.formattedDuration
                             h2.fw(style="display:inline;color: rgb(121 119 119) !important;").
                                 &nbsp - #{upload.formattedDuration}
 
-                    .col-sm-4
+                    .col-sm-3
 
                         // download button
                         div.change-size-button
@@ -166,7 +166,7 @@ block content
 
             br
             // UPLOADER DETAILS SECTION
-            div.col-sm-4
+            div.col-sm-3
                 h3.uploader-name(style="margin-top:25px;font-size:26px;")
                     if upload.uploader.customThumbnail
                         a(href=`/user/${upload.uploader.channelUrl}`)
@@ -211,12 +211,34 @@ block content
                             button.fw.btn.btn-success(style="margin-bottom:-10px;border-radius:5px;") Edit
             // UPLOADER DETAILS SECTION END
 
-            div.col-sm-4
+            div.col-sm-6(style="margin-top:30px")
 
-                if upload.description
-                    p.fw(style="font-size:18px") #{upload.description}
-                else
-                    p.fw(style="font-size:18px") No Description
+                //REACTS WITH LIKES, DISLIKE, DISGUST, ETC
+                div.react(style="max-width:420px;background-color:white;margin:0 auto;border-radius:10px;margin-bottom:21px;padding-bottom:12px;min-width:247px;")
+                    // margin-top:133px
+                    br
+                    each emoji in emojis
+                        div(style="padding-right:15px;display:inline-block;")
+                            a(href="#")
+                                if currentReact
+                                    if currentReact == emoji.name
+                                        div.clicked-emoji
+                                            img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
+
+                                    else
+                                        div.unclicked-emoji
+                                            img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
+
+                                else
+                                    div.clicked-emoji
+                                        img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
+
+                            p.fw(class=emoji.name style="font-weight:400;") #{emoji.amount}
+
+
+                if upload.visibility == 'pending' && upload.status !== 'processing'
+                    h3.pending-string Your video is currently pending moderator approval. If it's still pending after several minutes please contact a mod at
+                        a(href="/discord")  Discord
 
             // REMOVE QUALITY THING, EVERYONE CAN STAY LOW QUALITY
             // also have to add .fw to this thing when take it live
@@ -236,7 +258,7 @@ block content
             //    br
             //    button.donate.btn.btn-success(style="margin-bottom:-10px") Donate
             // UPLOAD DETAILS SECTION WITH VIEWS, UPLOADED DAYS AGO, DURATION ETC
-            div.col-sm-4
+            div.col-sm-3
 
                 // Upload View Amount
                 h3.fw #{upload.views} Views
@@ -287,34 +309,11 @@ block content
             hr
 
 
-            div.col-sm-12
-
-                //REACTS WITH LIKES, DISLIKE, DISGUST, ETC
-                div.react(style="max-width:600px;background-color:white;margin:0 auto;border-radius:10px;margin-bottom:21px;margin-top:60px;padding-bottom:12px;min-width:247px;")
-                    // margin-top:133px
-                    br
-                    each emoji in emojis
-                        div(style="padding-right:15px;display:inline-block;")
-                            a(href="#")
-                                if currentReact
-                                    if currentReact == emoji.name
-                                        div.clicked-emoji
-                                            img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
-
-                                    else
-                                        div.unclicked-emoji
-                                            img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
-
-                                else
-                                    div.clicked-emoji
-                                        img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
-
-                            p.fw(class=emoji.name style="font-weight:400;") #{emoji.amount}
-
-
-                if upload.visibility == 'pending' && upload.status !== 'processing'
-                    h3.pending-string Your video is currently pending moderator approval. If it's still pending after several minutes please contact a mod at
-                        a(href="/discord")  Discord
+            div.col-sm-6
+                if upload.description
+                    p.fw(style="font-size:18px") #{upload.description}
+                else
+                    p.fw(style="font-size:18px") No Description
 
 
             // DOWNLOAD,EMBED, REPEAT AND REPORT BUTTONS
