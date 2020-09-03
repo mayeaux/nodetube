@@ -80,6 +80,13 @@ block content
             color: black;
         }
 
+        .uploadDescriptionDiv {
+            max-height: 199px;
+            overflow: hidden;
+            font-size:18px;
+            white-space:pre-wrap
+        }
+
 
     br
     div.center-block.text-center.col-sm-12(style="overflow-x: hidden;margin-top:-21px;background-color:black;")
@@ -231,9 +238,9 @@ block content
             div.col-sm-6
                 .uploadDescriptionDiv
                     if upload.description
-                        p.fw(style="font-size:18px") #{upload.description}
+                        p.fw(style="") #{upload.description}
                     else
-                        p.fw(style="font-size:18px") No Description
+                        p.fw(style="") No Description
 
             // REMOVE QUALITY THING, EVERYONE CAN STAY LOW QUALITY
             // also have to add .fw to this thing when take it live
