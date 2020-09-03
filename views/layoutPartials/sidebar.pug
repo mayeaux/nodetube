@@ -334,7 +334,7 @@ style.
                         p.ib  &nbsp NewTube Plus
 
 
-
+            // support newtube link
             a(href="https://newtube.app/paypal" style="color:#007bff")
 
                 if user && user.plan == 'plus'
@@ -348,8 +348,6 @@ style.
                         i.ib.fas.fa-dollar
                         p.ib &nbsp Support NewTube &nbsp
 
-
-    // top = 62px;
 
     if user && user.plan == 'plus'
         // other pages section
@@ -370,7 +368,7 @@ style.
 
         a(href='/user/' + user.channelUrl)
             i.ib.fa.fa-video
-            p.ib &nbsp Channel
+            p.ib Channel
 
         a(href='/notifications')
             i.ib.fas.fa-bell
