@@ -238,9 +238,9 @@ block content
             div.col-sm-6
                 .uploadDescriptionDiv
                     if upload.description
-                        p.fw(style="") #{upload.description}
+                        p#uploadDescriptionText.fw.uploadDescriptionText(style="") #{upload.description}
                     else
-                        p.fw(style="") No Description
+                        p#uploadDescriptionText.fw.uploadDescriptionText(style="") No Description
 
             // REMOVE QUALITY THING, EVERYONE CAN STAY LOW QUALITY
             // also have to add .fw to this thing when take it live
@@ -728,7 +728,7 @@ block extra_footer_js
 
   script.
     // Turn description urls into clickable anchor links
-    var myTextEl = document.getElementById('descriptionText');
+    var myTextEl = document.getElementById('uploadDescriptionText');
     if (myTextEl)
     {
       myTextEl.innerHTML = Autolinker.link(myTextEl.innerHTML);
