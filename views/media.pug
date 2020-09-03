@@ -75,6 +75,11 @@ block content
             transform: scale(1.3);
         }
 
+        .commentInput {
+            font-size: 19px;
+            color: black;
+        }
+
 
     br
     div.center-block.text-center.col-sm-12(style="overflow-x: hidden;margin-top:-21px;background-color:black;")
@@ -157,16 +162,18 @@ block content
                             h2.download-button
                                 i.download-icon.fa.fa-download(aria-hidden="true" style="cursor:pointer;color: rgb(121 119 119) !important;")
 
-                        // embed button
-                        div.change-size-button(style="margin-left:0px;color: rgb(121 119 119) !important;")
-                            h2.share-button
-                                i.share-icon.fas.fa-code(aria-hidden="true" style="cursor:pointer;font-size:27px;margin-left:0px;")
-
                         // only do repeat button if it's audio or video
                         if upload.fileType == 'video' || upload.fileType == 'audio'
                             div.change-size-button(style="margin-left:0px;")
                                 h2.repeat-div(style="opacity:0.4")
                                     i.repeat-icon.fa.fa-repeat(aria-hidden="true" style="cursor:pointer")
+
+
+                        // embed button
+                        div.change-size-button(style="margin-left:0px;color: rgb(121 119 119) !important;")
+                            h2.share-button
+                                i.share-icon.fas.fa-code(aria-hidden="true" style="cursor:pointer;font-size:27px;margin-left:0px;")
+
 
                         // report upload button
                         div.change-size-button(style="cursor:pointer;margin-left:0px;color: rgb(121 119 119) !important;")
@@ -381,7 +388,7 @@ block content
                                     label.fw(for="comment" style="font-size:20px;") Enter Comment
                                     br
                                     input(type="hidden" name="upload" id="upload" value=upload._id)
-                                    textarea.fw(name="comment" id="comment" minlength="2" style="width:800px;height:129px;max-width:100%")
+                                    textarea.commentInput.fw(name="comment" id="comment" minlength="2" style="width:800px;height:129px;max-width:100%")
                                     br
                                     input.fw.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
                     else
@@ -389,7 +396,7 @@ block content
                             form.form-horizontal.overall-comment-form(class="comment-form")
                                 label.fw(for="comment" style="font-size:17px;") Enter Comment
                                 br
-                                textarea.fw(name="comment" id="comment" minlength="2" style="width:800px;height:129px;max-width:100%")
+                                textarea.commentInput.fw(name="comment" id="comment" minlength="2" style="width:800px;height:129px;max-width:100%")
                                 br
                                 input.fw.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
 
