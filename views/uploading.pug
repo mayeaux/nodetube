@@ -105,6 +105,8 @@ block content
                   br
                   br
 
+                  div(id="scrollTo")
+
                   h3.fw(style="font-size:30px;margin-bottom:15px;" id="uploadDetails") Upload Details
 
                   label.fw(style="font-size: 23px;" for='title') Title (*)
@@ -316,7 +318,8 @@ block content
 
         r.on('fileAdded', function (file) {
 
-          document.getElementById('uploadDetails').scrollIntoView({ behavior: 'smooth' });
+          // scroll to the div when file selected
+          document.getElementById('scrollTo').scrollIntoView({ behavior: 'smooth' });
 
 
           // replace underlines with spaces just to be nice
