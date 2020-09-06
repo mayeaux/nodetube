@@ -225,7 +225,7 @@ block content
 
                         // only do repeat button if it's audio or video
                         if upload.fileType == 'video'
-                            div.change-size-button(style="margin-left:0px;")
+                            div.change-size-button.theatre-mode-button(style="margin-left:0px;")
                                 h2(style="")
                                     i.fa.fa-tv(aria-hidden="true" style="cursor:pointer")
 
@@ -570,7 +570,7 @@ block extra_js
     $(document).ready(function () {
       $('.theatre-mode-button').click(function () {
         window.scrollTo(0, 67);
-        $('.plyr').css('height', '0.98vh')
+        $('.plyr').css('height', '98.5vh')
       })
     })
 
