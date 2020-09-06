@@ -273,6 +273,8 @@ block content
                     if upload.visibility == 'removed'
                         h2 Upload Deleted
 
+                    p Bitrate: #{upload.bitrate}
+
                     if upload.fileType == 'video' || upload.fileType == 'audio'
 
                         // TODO: should be able to support MB and GB

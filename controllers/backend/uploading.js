@@ -43,6 +43,7 @@ var resumable = require('../../lib/uploading/resumable.js')(__dirname +  '/uploa
 
 const moderationUpdatesToDiscord = process.env.MODERATION_UPDATES_TO_DISCORD == 'true';
 
+
 process.on('warning', (warning) => {
   console.warn(warning.name);    // Print the warning name
   console.warn(warning.message); // Print the warning message
@@ -415,8 +416,23 @@ exports.postFileUpload = async(req, res) => {
 
             codecName  = response.streams[0].codecName;
 
-            // TODO: what are the units of measurement here?
+            const width = response.streams[0].width;
+            const height = response.streams[0].height;
+
+            // bitrate in kbps
             bitrate = response.format.bit_rate / 1000;
+
+            upload.bitrateInKbps = bitrate;
+
+
+
+            upload.dimensions.height = height;
+            upload.dimensions.width = width;
+            upload.dimensions.aspectRatio = height/width;
+
+            console.log(response);
+            //
+            // console.log('')
 
             uploadLogger.info(`BITRATE: ${bitrate}`, logObject);
           }

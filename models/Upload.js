@@ -28,11 +28,25 @@ const uploadSchema = new mongoose.Schema({
   viralServer: String,
 
   hostUrl: String, // (backblaze prepend)  TODO: can eventually delete this
+
   uniqueTag: { type: String, index: true, unique: true },
   fileType: { type: String, enum: ['video', 'image', 'audio', 'unknown', 'convert'] },
+
+  // info about original file
   originalFileSizeInMb: Number,
   processedFileSizeInMb: Number,
   fileSize: Number,  // TODO: should support highQualityFileSize as well for compressions
+  bitrateInKbps: Number,
+  dimensions: {
+    height: String,
+    width: String,
+
+    // height divided by width
+    aspectRatio: String
+  },
+
+
+
   views: {
     type: Number,
     default: 0
