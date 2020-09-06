@@ -45,8 +45,6 @@ const uploadSchema = new mongoose.Schema({
     aspectRatio: String
   },
 
-
-
   views: {
     type: Number,
     default: 0

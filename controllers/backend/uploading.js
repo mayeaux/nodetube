@@ -43,7 +43,6 @@ var resumable = require('../../lib/uploading/resumable.js')(__dirname +  '/uploa
 
 const moderationUpdatesToDiscord = process.env.MODERATION_UPDATES_TO_DISCORD == 'true';
 
-
 process.on('warning', (warning) => {
   console.warn(warning.name);    // Print the warning name
   console.warn(warning.message); // Print the warning message
@@ -423,8 +422,6 @@ exports.postFileUpload = async(req, res) => {
             bitrate = response.format.bit_rate / 1000;
 
             upload.bitrateInKbps = bitrate;
-
-
 
             upload.dimensions.height = height;
             upload.dimensions.width = width;
