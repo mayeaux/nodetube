@@ -224,11 +224,17 @@ block content
                                 i.download-icon.fa.fa-download(aria-hidden="true" style="cursor:pointer;color: rgb(121 119 119) !important;")
 
                         // only do repeat button if it's audio or video
+                        if upload.fileType == 'video'
+                            div.change-size-button(style="margin-left:0px;")
+                                h2(style="")
+                                    i.fa.fa-tv(aria-hidden="true" style="cursor:pointer")
+
+
+                        // only do repeat button if it's audio or video
                         if upload.fileType == 'video' || upload.fileType == 'audio'
                             div.change-size-button(style="margin-left:0px;")
                                 h2.repeat-div(style="opacity:0.4")
                                     i.repeat-icon.fa.fa-repeat(aria-hidden="true" style="cursor:pointer")
-
 
                         // embed button
                         div.change-size-button(style="margin-left:0px;color: rgb(121 119 119) !important;")
@@ -559,6 +565,14 @@ block content
 block extra_js
   //script(src='https://checkout.stripe.com/checkout.js')
   script(src="https://cdnjs.cloudflare.com/ajax/libs/autolinker/1.4.4/Autolinker.js")
+
+  script.
+    $(document).ready(function () {
+      $('.theatre-mode-button').click(function () {
+        window.scrollTo(0, 67);
+        $('.plyr').css('height', '0.98vh')
+      })
+    })
 
   script.
     var accountOpen = false;
