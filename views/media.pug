@@ -2,6 +2,27 @@ extends layout
 
 block content
 
+    if 1 == 1
+        style.
+            /** everything 650 and below */
+            /* on mobile we dont do a max height in other words */
+            @media (min-width: 668px) {
+
+                .plyr {
+                    height: 770px;
+                }
+            }
+    else
+        style.
+            /** everything 650 and below */
+            /* on mobile we dont do a max height in other words */
+            @media (min-width: 668px) {
+
+                .plyr {
+                    height: 625px;
+                }
+            }
+
     style.
         .pending-string {
             max-width: 400px;
@@ -86,6 +107,39 @@ block content
             font-size:18px;
             white-space:pre-wrap
         }
+
+
+
+        /* anything above this width */
+        @media (min-width: 900px) {
+            h2 {
+                font-size: 36px;
+            }
+
+            /*.postButton {*/
+            /*display: none !important;*/
+            /*}*/
+        }
+
+        /* anything above this width */
+        @media (min-width: 768px) {
+            .uploader-details-section {
+                margin-top: -140px;
+            }
+
+            /*.postButton {*/
+            /*display: none !important;*/
+            /*}*/
+        }
+
+
+        /* anything above this width */
+
+
+        /*media query if it's over 860 px or whatever, make .h2 a certain size */
+
+
+
 
 
     br
@@ -196,7 +250,7 @@ block content
 
             br
             // UPLOADER DETAILS SECTION
-            div.col-sm-3
+            div.col-sm-3.uploader-details-section
                 h3.uploader-name(style="margin-top:25px;font-size:26px;")
                     if upload.uploader.customThumbnail
                         a(href=`/user/${upload.uploader.channelUrl}`)
@@ -273,7 +327,10 @@ block content
                     if upload.visibility == 'removed'
                         h2 Upload Deleted
 
-                    p Bitrate: #{upload.bitrate}
+                    p
+
+                    if upload.bitrateInKbps
+                        p.fw.fileSizeText(style="margin-top:15px") Bitrate in kbps: #{upload.bitrateInKbps}
 
                     if upload.fileType == 'video' || upload.fileType == 'audio'
 
