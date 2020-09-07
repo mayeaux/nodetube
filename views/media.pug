@@ -135,7 +135,11 @@ block content
         /* anything above this width */
         @media (min-width: 900px) {
             .uploader-details-section {
-                margin-top: -130px;
+                margin-top: -81px;
+            }
+
+            .uploadDetailsColumn {
+                margin-top:-22px;
             }
 
             /*.postButton {*/
@@ -227,7 +231,8 @@ block content
                             h2.fw(style="display:inline;color: rgb(121 119 119) !important;").
                                 &nbsp - #{upload.formattedDuration}
 
-                    .col-sm-3
+                    // download and whatever else buttons
+                    .col-sm-3(style="margin-top:-31px")
 
                         // download button
                         div.change-size-button
@@ -330,7 +335,7 @@ block content
             //    br
             //    button.donate.btn.btn-success(style="margin-bottom:-10px") Donate
             // UPLOAD DETAILS SECTION WITH VIEWS, UPLOADED DAYS AGO, DURATION ETC
-            div.col-sm-3
+            div.col-sm-3.uploadDetailsColumn(style="")
 
                 // Upload View Amount
                 h3.fw(style="color:grey") #{upload.views} Views
@@ -400,7 +405,7 @@ block content
 
             // UPLOADER DETAILS SECTION END
 
-            div.col-sm-6.col-sm-offset-3.reactColumn(style="")
+            div.col-sm-6.reactColumn(style="")
                 //REACTS WITH LIKES, DISLIKE, DISGUST, ETC
                 div.react(style="max-width:375px;background-color:white;margin:0 auto;border-radius:10px;margin-bottom:21px;padding-bottom:12px;min-width:247px;")
                     // margin-top:133px
@@ -488,7 +493,7 @@ block content
                 div.col-sm-12
                     // otherwise display all comments
                     if commentCount == 0
-                        div.comment-containing-div(style="width:400px;margin:0 auto;margin-top:70px;")
+                        div.comment-containing-div(style="width:600px;margin:0 auto;margin-top:70px;")
                             div(style="display:block")
                                 h3.fw.no-comments-header(style="text-decoration:underline;text-align:left;font-size:22px;") No Comments Yet
 
