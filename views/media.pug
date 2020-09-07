@@ -135,7 +135,7 @@ block content
         /* anything above this width */
         @media (min-width: 900px) {
             .uploader-details-section {
-                margin-top: -140px;
+                margin-top: -130px;
             }
 
             /*.postButton {*/
@@ -238,7 +238,7 @@ block content
                         if upload.fileType == 'video'
                             div.change-size-button.theatre-mode-button(style="margin-left:0px;")
                                 h2(style="")
-                                    i.fa.fa-tv(aria-hidden="true" style="cursor:pointer")
+                                    i.fa.fa-tv(aria-hidden="true" style="cursor:pointer;color:grey;")
 
 
                         // only do repeat button if it's audio or video
@@ -272,19 +272,19 @@ block content
                     if upload.uploader.customThumbnail
                         a(href=`/user/${upload.uploader.channelUrl}`)
 
-                            img(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` style="border-radius:13px;width:159px;height:159px;")
+                            img(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` style="border-radius:13px;width:140px;height:140px;")
                             br
                             br
                     else if upload.uploader.thumbnailUrl
                         a(href=`/user/${upload.uploader.channelUrl}`)
 
-                            img(src=`${serverToUse}/${upload.uploader._id}/unique.png` style="border-radius:13px;width:159px;height:159px;")
+                            img(src=`${serverToUse}/${upload.uploader._id}/unique.png` style="border-radius:13px;width:140px;height:140px;")
                             br
                             br
                     else
                         a(href=`/user/${upload.uploader.channelUrl}`)
 
-                            img(src=`/images/default_user_image.png` style="border-radius:13px;width:159px;height:159px;")
+                            img(src=`/images/default_user_image.png` style="border-radius:13px;width:140px;height:140px;")
                             br
                             br
 
@@ -310,7 +310,7 @@ block content
                 if upload.description
                     .uploadDescriptionDiv
 
-                        p#uploadDescriptionText.fw.uploadDescriptionText(style="") #{upload.description}
+                        p#uploadDescriptionText.fw.uploadDescriptionText(style="color:grey") #{upload.description}
 
             // REMOVE QUALITY THING, EVERYONE CAN STAY LOW QUALITY
             // also have to add .fw to this thing when take it live
@@ -333,11 +333,11 @@ block content
             div.col-sm-3
 
                 // Upload View Amount
-                h3.fw #{upload.views} Views
+                h3.fw(style="color:grey") #{upload.views} Views
 
                 // Upload time ago, duration and uploader
                 if upload.uploader
-                    h4.fw
+                    h4.fw(style="color:grey")
                         | Uploaded #{upload.timeAgo} &nbsp
 
                     if upload.visibility == 'removed'
