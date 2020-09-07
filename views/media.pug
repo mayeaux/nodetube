@@ -2,6 +2,15 @@ extends layout
 
 block content
 
+    if !upload.description
+        style.
+            @media (min-width: 900px) {
+
+                .reactColumn {
+                    margin-top: -174px !important;
+                }
+            }
+
     if upload.bitrateInKbps > 1500
         style.
             /** everything 650 and below */
@@ -112,9 +121,11 @@ block content
 
         /* anything above this width */
         @media (min-width: 900px) {
-            h2 {
-                font-size: 36px;
-            }
+
+            /* make the title larger, turning it off */
+            /*h2 {*/
+                /*font-size: 36px;*/
+            /*}*/
 
             /*.postButton {*/
             /*display: none !important;*/
@@ -295,12 +306,11 @@ block content
 
 
 
-            div.col-sm-6
-                .uploadDescriptionDiv
-                    if upload.description
+            div.col-sm-6.uploadDescriptionColumn
+                if upload.description
+                    .uploadDescriptionDiv
+
                         p#uploadDescriptionText.fw.uploadDescriptionText(style="") #{upload.description}
-                    else
-                        p#uploadDescriptionText.fw.uploadDescriptionText(style="") No Description
 
             // REMOVE QUALITY THING, EVERYONE CAN STAY LOW QUALITY
             // also have to add .fw to this thing when take it live
@@ -367,7 +377,6 @@ block content
                     div
                         // edit button
                         if ( user && user.channelUrl == upload.uploader.channelUrl ) || ( user && user.role == 'admin' )
-                            br
                             a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}/edit`)
                                 button.fw.btn.btn-success(style="margin-bottom:-10px;border-radius:5px;") Edit
 
@@ -391,7 +400,7 @@ block content
 
             // UPLOADER DETAILS SECTION END
 
-            div.col-sm-6.col-sm-offset-3(style="margin-top:30px")
+            div.col-sm-6.col-sm-offset-3.reactColumn(style="")
                 //REACTS WITH LIKES, DISLIKE, DISGUST, ETC
                 div.react(style="max-width:375px;background-color:white;margin:0 auto;border-radius:10px;margin-bottom:21px;padding-bottom:12px;min-width:247px;")
                     // margin-top:133px
