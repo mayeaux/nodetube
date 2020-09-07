@@ -212,9 +212,18 @@ style.
     z-index: 1
   }
 
+  .search-uploads-button {
+    border: 1px solid #c5c5c5;
+    z-index: 99999999
+  }
+
+  .search-uploads-button:hover {
+    background-color: blue;
+  }
+
   .search-uploads-button i {
     opacity: .5;
-    transition: all .07s ease-in-out
+    transition: all .07s ease-in-out;
   }
 
   .search-uploads-button:hover i {
@@ -232,6 +241,7 @@ style.
     position: absolute;
     left: 44%;
     top: 29%;
+    color: #a7a3a3;
   }
 
   .searchExpander, .uploadButton {
@@ -296,8 +306,8 @@ style.
 
     div.search-bar(style="width:45%;margin-left:200px;")
       input(type='hidden', name='_csrf', value=_csrf)
-      input.search-query-input(style="margin-top:11px;margin-bottom:10px;" type='text', placeholder='Search' name='searchValue' value=searchValue || "")
-      button.search-uploads-button.searchButton(style="right:-6px")
+      input.search-query-input(style="margin-top:11px;margin-bottom:10px;background-color:black;" type='text', placeholder='Search' name='searchValue' value=searchValue || "")
+      button.search-uploads-button.searchButton(style="right:-6px;background-color:black;")
         i.fas.fa-search.searchIcon
 
     // UPGRADE ICON
