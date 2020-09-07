@@ -142,6 +142,11 @@ block content
                 margin-top:-22px;
             }
 
+            .uploadButtonsColumn {
+                margin-top:-31px
+            }
+
+
             /*.postButton {*/
             /*display: none !important;*/
             /*}*/
@@ -232,7 +237,7 @@ block content
                                 &nbsp - #{upload.formattedDuration}
 
                     // download and whatever else buttons
-                    .col-sm-3(style="margin-top:-31px")
+                    .col-sm-3.uploadButtonsColumn(style="")
 
                         // download button
                         div.change-size-button
@@ -252,16 +257,16 @@ block content
                                 h2.repeat-div(style="opacity:0.4")
                                     i.repeat-icon.fa.fa-repeat(aria-hidden="true" style="cursor:pointer")
 
-                        // embed button
-                        div.change-size-button(style="margin-left:0px;color: rgb(121 119 119) !important;")
-                            h2.share-button
-                                i.share-icon.fas.fa-code(aria-hidden="true" style="cursor:pointer;font-size:27px;margin-left:0px;")
-
-
-                        // report upload button
-                        div.change-size-button(style="cursor:pointer;margin-left:0px;color: rgb(121 119 119) !important;")
-                            h2.report-button(style="")
-                                i.share-icon.fa.fa-exclamation-triangle(aria-hidden="true" style="cursor:pointer;font-size:19px;")
+                        //// embed button
+                        //div.change-size-button(style="margin-left:0px;color: rgb(121 119 119) !important;")
+                        //    h2.share-button
+                        //        i.share-icon.fas.fa-code(aria-hidden="true" style="cursor:pointer;font-size:27px;margin-left:0px;")
+                        //
+                        //
+                        //// report upload button
+                        //div.change-size-button(style="cursor:pointer;margin-left:0px;color: rgb(121 119 119) !important;")
+                        //    h2.report-button(style="")
+                        //        i.share-icon.fa.fa-exclamation-triangle(aria-hidden="true" style="cursor:pointer;font-size:19px;")
 
 
 
@@ -434,7 +439,6 @@ block content
                         a(href="/discord")  Discord
 
 
-            // DOWNLOAD,EMBED, REPEAT AND REPORT BUTTONS
             div.col-sm-12
                 // SHARING BUTTONS
                 div
