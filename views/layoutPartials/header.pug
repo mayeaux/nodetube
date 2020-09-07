@@ -222,17 +222,17 @@ style.
     color:white !important;
   }
 
+  .search-query-input::placeholder { /* Most modern browsers support this now. */
+    color: grey;
+  }
+
   .search-uploads-button:hover {
     background-color: blue;
   }
 
-  .search-uploads-button i {
-    opacity: .5;
-    transition: all .07s ease-in-out;
-  }
-
   .search-uploads-button:hover i {
-    opacity: .95
+    opacity: .95;
+    color: white;
   }
 
   .search-uploads-button:hover {
@@ -323,7 +323,7 @@ style.
 
 
       a.diceIcon.signInAnchor(href="/random" style="right:121px;")
-        img(src="/images/dice.png" style="height:28px;margin-top:7px;")
+        img(src="/images/random.png" style="height:39px;margin-top:2px;")
 
 
 
@@ -339,7 +339,7 @@ style.
     if user
 
       a.diceIcon.signInAnchor(href="/random" style="right:212px;")
-        img(src="/images/dice.png" style="height:28px;margin-top:7px")
+        img(src="/images/random.png" style="height:39px;margin-top:2px")
 
       // BELL ICON
       //a(href="#" style="position: absolute;top: 19px;right: 280px;")
