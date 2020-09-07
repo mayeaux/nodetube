@@ -158,6 +158,10 @@ block content
             /*}*/
         }
 
+        .secondLine {
+            border-bottom: 1px solid #5b5a5a !important;
+        }
+
 
         /* anything above this width */
 
@@ -405,7 +409,7 @@ block content
 
             div.col-sm-6.reactColumn(style="")
                 //REACTS WITH LIKES, DISLIKE, DISGUST, ETC
-                div.react(style="max-width:375px;background-color:white;margin:0 auto;border-radius:10px;margin-bottom:21px;padding-bottom:12px;min-width:247px;")
+                div.react(style="max-width:375px;background-color:black;margin:0 auto;border-radius:10px;margin-bottom:21px;padding-bottom:12px;min-width:247px;")
                     // margin-top:133px
                     br
                     each emoji in emojis
@@ -471,7 +475,7 @@ block content
                                     label.fw(for="comment" style="font-size:20px;") Enter Comment
                                     br
                                     input(type="hidden" name="upload" id="upload" value=upload._id)
-                                    textarea.commentInput.fw(name="comment" id="comment" minlength="2" style="width:800px;height:129px;max-width:100%")
+                                    textarea.commentInput.fw(name="comment" id="comment" minlength="2" style="width:800px;height:129px;max-width:100%;background-color:black;color:white;")
                                     br
                                     input.fw.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
                     else
@@ -479,7 +483,7 @@ block content
                             form.form-horizontal.overall-comment-form(class="comment-form")
                                 label.fw(for="comment" style="font-size:17px;") Enter Comment
                                 br
-                                textarea.commentInput.fw(name="comment" id="comment" minlength="2" style="width:800px;height:129px;max-width:100%")
+                                textarea.commentInput.fw(name="comment" id="comment" minlength="2" style="width:800px;height:129px;max-width:100%;background-color:black;color:white;")
                                 br
                                 input.fw.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
 
