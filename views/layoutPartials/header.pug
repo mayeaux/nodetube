@@ -214,20 +214,18 @@ style.
 
   .search-uploads-button {
     border: 1px solid #5b5a5a;
-    z-index: 99999999
+    z-index: 99999999;
+    background-color: #313131 !important;
   }
 
   .search-query-input {
     border: 1px solid #5b5a5a !important;
     color:white !important;
+    background-color:#313131;
   }
 
   .search-query-input::placeholder { /* Most modern browsers support this now. */
     color: grey;
-  }
-
-  .search-uploads-button:hover {
-    background-color: blue;
   }
 
   .search-uploads-button:hover i {
@@ -235,12 +233,6 @@ style.
     color: white;
   }
 
-  .search-uploads-button:hover {
-    background-color: #E4E4E4;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, .15),
-    inset 0 0 2px rgba(0, 0, 0, .05);
-    transition: all .07s ease-in-out
-  }
 
   .searchIcon {
     position: absolute;
@@ -311,7 +303,7 @@ style.
 
     div.search-bar(style="width:45%;margin-left:200px;")
       input(type='hidden', name='_csrf', value=_csrf)
-      input.search-query-input(style="margin-top:11px;margin-bottom:10px;background-color:black;" type='text', placeholder='Search' name='searchValue' value=searchValue || "")
+      input.search-query-input(style="margin-top:11px;margin-bottom:10px;" type='text', placeholder='Search' name='searchValue' value=searchValue || "")
       button.search-uploads-button.searchButton(style="right:-6px;background-color:black;")
         i.fas.fa-search.searchIcon
 
