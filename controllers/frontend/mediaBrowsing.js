@@ -124,11 +124,11 @@ exports.recentUploads = async(req, res) => {
 
     const uploads = await getFromCache.getRecentUploads(limit, skipAmount, mediaType, filter, category, subcategory);
 
-    if(category && category !== 'overview'){
-      for(const upload of uploads){
-        addValuesIfNecessary(upload, upload.uploader.channelUrl);
-      }
-    }
+    // if(category && category !== 'overview'){
+    //   for(const upload of uploads){
+    //     addValuesIfNecessary(upload, upload.uploader.channelUrl);
+    //   }
+    // }
 
     // console.log('rendering');
 
