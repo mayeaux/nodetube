@@ -827,6 +827,10 @@ block extra_footer_js
               visibility: 'visible'
             });
 
+            $('.display-element').css({
+              border: '1px solid #5b5a5a'
+            });
+
             fadeInBuffer = false;
           }
 
@@ -848,6 +852,12 @@ block extra_footer_js
             $('.headerContainer').css({
               visibility: 'hidden'
             });
+
+
+            $('.display-element').css({
+              border: '0px solid #5b5a5a'
+            });
+
 
 
             fadeInBuffer = true;
