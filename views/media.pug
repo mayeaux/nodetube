@@ -803,88 +803,88 @@ block extra_footer_js
       });
 
 
-  script.
-
-      // auto theatre mode functionality
-      $(function () {
-        var timer;
-        var fadeInBuffer = false;
-
-        function runBufferThing() {
-          if (!fadeInBuffer) {
-            if (timer) {
-              console.log("clearTimer");
-              clearTimeout(timer);
-              timer = 0;
-            }
-
-            console.log("fadeIn");
-
-          } else {
-            $('.non-player-content').css({
-              visibility: 'visible'
-            });
-            $('.headerContainer').css({
-              visibility: 'visible'
-            });
-
-            // also hide and show video border
-            $('.display-element').css({
-              border: '1px solid #5b5a5a'
-            });
-
-            fadeInBuffer = false;
-          }
-
-
-          timer = setTimeout(function () {
-            console.log("fadeout");
-
-            // only hide div if the document is in focus
-            // turning off so people can be on another tab
-            //            if(document.hasFocus()){
-            //              $('.non-player-content').css({
-            //                visibility: 'hidden'
-            //              });
-            //
-            //            }
-
-            const yOffset = window.pageYOffset;
-
-            if(yOffset < 9){
-              $('.non-player-content').css({
-                visibility: 'hidden'
-              });
-
-              $('.headerContainer').css({
-                visibility: 'hidden'
-              });
-
-
-              $('.display-element').css({
-                border: '0px solid #5b5a5a'
-              });
-            }
-
-
-
-
-            fadeInBuffer = true;
-
-            // run every 5000 seconds
-          }, 5000)
-        }
-
-        runBufferThing()
-
-        $('.plyr').click();
-
-        $(document).mousemove(function () {
-          runBufferThing();
-        });
-
-
-      });
+  //script.
+  //
+  //    // auto theatre mode functionality
+  //    $(function () {
+  //      var timer;
+  //      var fadeInBuffer = false;
+  //
+  //      function runBufferThing() {
+  //        if (!fadeInBuffer) {
+  //          if (timer) {
+  //            console.log("clearTimer");
+  //            clearTimeout(timer);
+  //            timer = 0;
+  //          }
+  //
+  //          console.log("fadeIn");
+  //
+  //        } else {
+  //          $('.non-player-content').css({
+  //            visibility: 'visible'
+  //          });
+  //          $('.headerContainer').css({
+  //            visibility: 'visible'
+  //          });
+  //
+  //          // also hide and show video border
+  //          $('.display-element').css({
+  //            border: '1px solid #5b5a5a'
+  //          });
+  //
+  //          fadeInBuffer = false;
+  //        }
+  //
+  //
+  //        timer = setTimeout(function () {
+  //          console.log("fadeout");
+  //
+  //          // only hide div if the document is in focus
+  //          // turning off so people can be on another tab
+  //          //            if(document.hasFocus()){
+  //          //              $('.non-player-content').css({
+  //          //                visibility: 'hidden'
+  //          //              });
+  //          //
+  //          //            }
+  //
+  //          const yOffset = window.pageYOffset;
+  //
+  //          if(yOffset < 9){
+  //            $('.non-player-content').css({
+  //              visibility: 'hidden'
+  //            });
+  //
+  //            $('.headerContainer').css({
+  //              visibility: 'hidden'
+  //            });
+  //
+  //
+  //            $('.display-element').css({
+  //              border: '0px solid #5b5a5a'
+  //            });
+  //          }
+  //
+  //
+  //
+  //
+  //          fadeInBuffer = true;
+  //
+  //          // run every 5000 seconds
+  //        }, 5000)
+  //      }
+  //
+  //      runBufferThing()
+  //
+  //      $('.plyr').click();
+  //
+  //      $(document).mousemove(function () {
+  //        runBufferThing();
+  //      });
+  //
+  //
+  //    });
 
 
   script.
