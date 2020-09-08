@@ -739,6 +739,15 @@ block extra_footer_js
   script(src="/js/media.js")
 
   script.
+
+      setInterval(function(){
+        if (document.hasFocus()){
+          console.log('Tab is active')
+        } else {
+          console.log('tab not active');
+        }
+      }, 3000);
+
       setTimeout(function(){
         // old code to change scroll to
         // window.scrollTo(0, 22);
@@ -753,12 +762,14 @@ block extra_footer_js
         function runBufferThing(){
           if (!fadeInBuffer) {
             if (timer) {
-              // console.log("clearTimer");
+               console.log("clearTimer");
               clearTimeout(timer);
               timer = 0;
             }
 
-            // console.log("fadeIn");
+             console.log("fadeIn");
+
+            // what's going on here?
             $('html').css({
               cursor: ''
             });
@@ -771,13 +782,76 @@ block extra_footer_js
 
 
           timer = setTimeout(function () {
-            // console.log("fadeout");
+             console.log("fadeout");
             $('.plyr').css({
               cursor: 'none'
             });
 
             fadeInBuffer = true;
           }, 2030)
+        }
+
+        runBufferThing()
+
+        $('.plyr').click();
+
+        $(document).mousemove(function () {
+          runBufferThing();
+        });
+
+
+      });
+
+
+  script.
+
+      $(function () {
+        var timer;
+        var fadeInBuffer = false;
+
+        function runBufferThing() {
+          if (!fadeInBuffer) {
+            if (timer) {
+              console.log("clearTimer");
+              clearTimeout(timer);
+              timer = 0;
+            }
+
+            console.log("fadeIn");
+
+          } else {
+            $('.non-player-content').css({
+              visibility: 'visible'
+            });
+            $('.headerContainer').css({
+              visibility: 'visible'
+            });
+
+            fadeInBuffer = false;
+          }
+
+
+          timer = setTimeout(function () {
+            console.log("fadeout");
+
+            //            if(document.hasFocus()){
+            //              $('.non-player-content').css({
+            //                visibility: 'hidden'
+            //              });
+            //
+            //            }
+
+            $('.non-player-content').css({
+              visibility: 'hidden'
+            });
+
+            $('.headerContainer').css({
+              visibility: 'hidden'
+            });
+
+
+            fadeInBuffer = true;
+          }, 5000)
         }
 
         runBufferThing()
