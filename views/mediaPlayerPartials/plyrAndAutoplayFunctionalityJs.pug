@@ -38,6 +38,10 @@ script.
     autoplay = true;
   }
 
+  console.log('should autoplay ' + autoplay)
+
+
+
   // Available controls:
   /*
     controls: [
@@ -62,7 +66,6 @@ script.
   // The order you pass them is the order they appear
 
   var plyr_options = {
-    autoplay: autoplay,
     clickToPlay: true,
     speed: {selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]},
     controls: ['play-large', 'play','progress', 'current-time', 'duration', 'rewind', 'fast-forward', 'mute', 'volume', 'settings', 'fullscreen'],
@@ -72,7 +75,23 @@ script.
   // Create the plyr instances - this defines players[0] as our primary player.
   var players = Plyr.setup("#media_player", plyr_options);
 
+  var player = player[0];
+
   players[0].on('ready', function (event) {
+
+    if(autoplay){
+      var playPromise = player.play();
+
+      if (playPromise !== undefined) {
+        playPromise.then(function () {
+          console.log('thing');
+        }).catch(function (error) {// Auto-play was prevented
+          console.log(error);
+          // Show paused UI.
+        });
+      }
+    }
+
     // disabling this play because it's playing on autoplay when uploading
     // players[0].play()
 
