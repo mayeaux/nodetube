@@ -3,10 +3,10 @@ extends ../layout
 block content
     div.container
         div.col-sm-12.text-center(style="margin:0 auto;")
-            h2
-            h2.fw(style="display:inline;") Search For Keyword
-            br
-            br
+            //h2
+            //h2.fw(style="display:inline;") Search For Keyword
+            //br
+            //br
             //div(style="margin: 0 auto;")
             //    input(type='hidden', name='_csrf', value=_csrf )
             //    input.search-query-input.form-control(style="margin: 0 auto;width:400px;max-width:100%" type='search', name='search', id='search' placeholder=`${searchQuery !== 'undefined' ? searchQuery: ''}`)
@@ -24,7 +24,7 @@ block content
 
 
         // UPLOADS RESULTS
-        br
+        //br
         div.col-sm-12.text-center(style="margin:0 auto;margin-top:50px;")
             if uploads
                 div.text-center.center-div
@@ -97,7 +97,7 @@ block content
         console.log(orderBy, mediaType, searchQuery, searchType)
 
         // no need to autofocus
-        //        $('.search-query-input').focus();
+        $('.search-query-input').focus();
 
 
         // capture submit
