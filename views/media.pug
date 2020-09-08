@@ -805,6 +805,7 @@ block extra_footer_js
 
   script.
 
+      // auto theatre mode functionality
       $(function () {
         var timer;
         var fadeInBuffer = false;
@@ -827,6 +828,7 @@ block extra_footer_js
               visibility: 'visible'
             });
 
+            // also hide and show video border
             $('.display-element').css({
               border: '1px solid #5b5a5a'
             });
@@ -838,6 +840,8 @@ block extra_footer_js
           timer = setTimeout(function () {
             console.log("fadeout");
 
+            // only hide div if the document is in focus
+            // turning off so people can be on another tab
             //            if(document.hasFocus()){
             //              $('.non-player-content').css({
             //                visibility: 'hidden'
@@ -845,22 +849,29 @@ block extra_footer_js
             //
             //            }
 
-            $('.non-player-content').css({
-              visibility: 'hidden'
-            });
+            const yOffset = window.pageYOffset;
 
-            $('.headerContainer').css({
-              visibility: 'hidden'
-            });
+            if(yOffset < 2){
+              $('.non-player-content').css({
+                visibility: 'hidden'
+              });
+
+              $('.headerContainer').css({
+                visibility: 'hidden'
+              });
 
 
-            $('.display-element').css({
-              border: '0px solid #5b5a5a'
-            });
+              $('.display-element').css({
+                border: '0px solid #5b5a5a'
+              });
+            }
+
 
 
 
             fadeInBuffer = true;
+
+            // run every 5000 seconds
           }, 5000)
         }
 
