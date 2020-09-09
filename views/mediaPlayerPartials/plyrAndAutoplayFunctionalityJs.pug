@@ -87,6 +87,8 @@ script.
         playPromise.then(function () {
           console.log('thing');
         }).catch(function (error) {// Auto-play was prevented
+          console.log('thing2');
+          player.play();
           console.log(error);
           // Show paused UI.
         });

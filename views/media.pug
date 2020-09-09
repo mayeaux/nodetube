@@ -740,13 +740,13 @@ block extra_footer_js
 
   script.
 
-      setInterval(function(){
-        if (document.hasFocus()){
-          console.log('Tab is active')
-        } else {
-          console.log('tab not active');
-        }
-      }, 3000);
+    //      setInterval(function(){
+    //        if (document.hasFocus()){
+    //          console.log('Tab is active')
+    //        } else {
+    //          console.log('tab not active');
+    //        }
+    //      }, 3000);
 
       setTimeout(function(){
         // old code to change scroll to
@@ -762,12 +762,12 @@ block extra_footer_js
         function runBufferThing(){
           if (!fadeInBuffer) {
             if (timer) {
-               console.log("clearTimer");
+               // console.log("clearTimer");
               clearTimeout(timer);
               timer = 0;
             }
 
-             console.log("fadeIn");
+             // console.log("fadeIn");
 
             // what's going on here?
             $('html').css({
