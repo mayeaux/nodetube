@@ -249,9 +249,9 @@ block content
                 .row
                     .col-sm-6.col-sm-offset-3
 
-                        h2.balance-text(class="upload-title-value" style="display:inline;text-wrap:balance;width:80%;margin:0 auto;font-weight:300;color: rgb(121 119 119) !important;") #{upload.title}
+                        h2.balance-text(class="upload-title-value" style="display:inline;text-wrap:balance;width:80%;margin:0 auto;font-weight:300;color: rgb(185 185 185) !important;") #{upload.title}
                         if upload.formattedDuration
-                            h2.fw(style="display:inline;color: rgb(121 119 119) !important;").
+                            h2.fw(style="display:inline;color: rgb(185 185 185) !important;").
                                 &nbsp - #{upload.formattedDuration}
 
                     // download and whatever else buttons
@@ -260,13 +260,13 @@ block content
                         // download button
                         div.change-size-button
                             h2.download-button
-                                i.download-icon.fa.fa-download(aria-hidden="true" style="cursor:pointer;color: rgb(121 119 119) !important;")
+                                i.download-icon.fa.fa-download(aria-hidden="true" style="cursor:pointer;color:#a5a5a5;")
 
                         // only do repeat button if it's audio or video
                         if upload.fileType == 'video'
                             div.change-size-button.theatre-mode-button(style="margin-left:0px;")
                                 h2(style="")
-                                    i.fa.fa-tv(aria-hidden="true" style="cursor:pointer;color:grey;")
+                                    i.fa.fa-tv(aria-hidden="true" style="cursor:pointer;color:#a5a5a5;")
 
 
                         // only do repeat button if it's audio or video
@@ -300,23 +300,23 @@ block content
                     if upload.uploader.customThumbnail
                         a(href=`/user/${upload.uploader.channelUrl}`)
 
-                            img(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` style="border-radius:13px;width:140px;height:140px;")
+                            img(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` style="border-radius:13px;width:110px;height:110px;")
                             br
                             br
                     else if upload.uploader.thumbnailUrl
                         a(href=`/user/${upload.uploader.channelUrl}`)
 
-                            img(src=`${serverToUse}/${upload.uploader._id}/unique.png` style="border-radius:13px;width:140px;height:140px;")
+                            img(src=`${serverToUse}/${upload.uploader._id}/unique.png` style="border-radius:13px;width:110px;height:110px;")
                             br
                             br
                     else
                         a(href=`/user/${upload.uploader.channelUrl}`)
 
-                            img(src=`/images/default_user_image.png` style="border-radius:13px;width:140px;height:140px;")
+                            img(src=`/images/default_user_image.png` style="border-radius:13px;width:110px;height:110px;")
                             br
                             br
 
-                    a(href=`/user/${upload.uploader.channelUrl}` style="color:gray;font-weight:300") #{upload.uploader.channelName || upload.uploader.channelUrl}
+                    a(href=`/user/${upload.uploader.channelUrl}` style="color:#a5a5a5;font-weight:300") #{upload.uploader.channelName || upload.uploader.channelUrl}
                         if upload.uploader.verified == true
                             img(src="/images/verified.jpg" width="25px" height="25px" style="margin-left:3px;margin-top:-2px;margin-right:5px;")
                         if upload.uploader.plan == 'plus'
@@ -338,7 +338,7 @@ block content
                 if upload.description
                     .uploadDescriptionDiv
 
-                        p#uploadDescriptionText.fw.uploadDescriptionText(style="color:grey") #{upload.description}
+                        p#uploadDescriptionText.fw.uploadDescriptionText(style="color:#a5a5a5") #{upload.description}
 
 
             //if upload.uploader.plan == 'plus'
@@ -348,11 +348,11 @@ block content
             div.col-sm-3.uploadDetailsColumn(style="")
 
                 // Upload View Amount
-                h3.fw(style="color:grey") #{upload.views} Views
+                h3.fw(style="color:a5a5a5") #{upload.views} Views
 
                 // Upload time ago, duration and uploader
                 if upload.uploader
-                    h4.fw(style="color:grey")
+                    h4.fw(style="color:a5a5a5")
                         | Uploaded #{upload.timeAgo} &nbsp
 
                     if upload.visibility == 'removed'
@@ -366,12 +366,12 @@ block content
                     if upload.fileType == 'video' || upload.fileType == 'audio'
 
                         // TODO: should be able to support MB and GB
-                        p.fw.fileSizeText(style="margin-top:15px") File Size: #{ formattedFileSize }
+                        p.fw.fileSizeText(style="margin-top:15px;color:a5a5a5;") File Size: #{ formattedFileSize }
 
                     if upload.category
                         each category in categories
                             if category.name == upload.category
-                                p.fw(style="margin-top:15px;font-size:12px;") Category: #{category.displayName}
+                                p.fw(style="margin-top:15px;font-size:12px;color:a5a5a5;") Category: #{category.displayName}
 
                                 //if upload.subcategory
                                 //
@@ -483,7 +483,7 @@ block content
                                     label.fw(for="comment" style="font-size:20px;") Enter Comment
                                     br
                                     input(type="hidden" name="upload" id="upload" value=upload._id)
-                                    textarea.commentInput.fw(name="comment" id="comment" minlength="2" style="width:800px;height:129px;max-width:100%;background-color:black;color:white;")
+                                    textarea.commentInput.fw(name="comment" id="comment" minlength="2" style="width:800px;height:129px;max-width:100%;background-color:#151515;color:white;")
                                     br
                                     input.fw.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
                     else
@@ -491,7 +491,7 @@ block content
                             form.form-horizontal.overall-comment-form(class="comment-form")
                                 label.fw(for="comment" style="font-size:17px;") Enter Comment
                                 br
-                                textarea.commentInput.fw(name="comment" id="comment" minlength="2" style="width:800px;height:129px;max-width:100%;background-color:black;color:white;")
+                                textarea.commentInput.fw(name="comment" id="comment" minlength="2" style="width:800px;height:129px;max-width:100%;background-color:#151515;color:white;")
                                 br
                                 input.fw.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
 
