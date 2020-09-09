@@ -93,6 +93,16 @@ script.
           // Show paused UI.
         });
       }
+    } else {
+      console.log('dont run')
+
+
+
+      var playPromise = player.pause();
+
+      setTimeout(function(){
+        player.pause()
+      }, 150)
     }
 
     // disabling this play because it's playing on autoplay when uploading
