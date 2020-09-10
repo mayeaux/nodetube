@@ -696,9 +696,15 @@ block extra_footer_js
       $('.lampIconDiv').click(function(){
 
         if(lampHidden == false){
-          $('.non-player-content, .headerContainer').css({
+          $('.headerContainer').css({
+            display: 'none'
+          })
+
+          $('.non-player-content').css({
             visibility: 'hidden'
           })
+
+
 
           $('.lampIconDiv').css({
             visibility: 'visible'
@@ -708,6 +714,10 @@ block extra_footer_js
         } else {
           $('.headerContainer, .non-player-content').css({
             visibility: 'visible'
+          })
+
+          $('.headerContainer').css({
+            display: 'inherit'
           })
 
           lampHidden = false;
