@@ -597,15 +597,30 @@ block content
 
 
 
+
 block extra_js
+
+
+
   //script(src='https://checkout.stripe.com/checkout.js')
   script(src="https://cdnjs.cloudflare.com/ajax/libs/autolinker/1.4.4/Autolinker.js")
 
   script.
     $(document).ready(function () {
+      var theatreModeOn = false;
+
       $('.theatre-mode-button').click(function () {
-        window.scrollTo(0, 67);
-        $('.plyr').css('height', '98.5vh')
+
+        if(theatreModeOn == false){
+          window.scrollTo(0, 67);
+          $('.plyr').css('height', '98.5vh')
+          theatreModeOn = true;
+        } else {
+          window.scrollTo(0, 0);
+          $('.plyr').css('height', '68.5vh')
+          theatreModeOn = false;
+        }
+
       })
     })
 
