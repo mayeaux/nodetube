@@ -691,9 +691,28 @@ block extra_footer_js
       // old scroll down to change the header
       //window.scrollTo(0, 21);
 
+      var lampHidden = false;
 
       $('.lampIconDiv').click(function(){
-        console.log('clicked!');
+
+        if(lampHidden == false){
+          $('.non-player-content, .headerContainer').css({
+            visibility: 'hidden'
+          })
+
+          $('.lampIconDiv').css({
+            visibility: 'visible'
+          })
+
+          lampHidden = true;
+        } else {
+          $('.headerContainer, .non-player-content').css({
+            visibility: 'visible'
+          })
+
+          lampHidden = false;
+        }
+
       })
 
 
