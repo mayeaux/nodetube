@@ -64,46 +64,26 @@ npm install
 #  start
 npm start
 
-# logging
-sudo vnstat -u -i eth0
-sudo tcptrack -i eth0 port 80
-sudo nethogs eth0
-
-sudo easy_install pip
-
-sudo pip install --upgrade b2
-
-sudo npm install -g pm2
-
-
-
-
-
-
-
 
 
 
 
 # NGINX
 
-
 cd /etc/nginx/
-sudo cp nginx.conf nginx.conf1
+sudo mv nginx.conf nginx.conf1
+# copy to nginx.conf
 
-# USE NANO TO COPY IN THE FILE, BEST METHOD?
-# COPY IN NGXINX.CONF
+cd /etc/nginx/sites-available
+sudo mv default default1
+# copy to default
 
-cd sites-enabled
-
-# copy over nginx.conf
-# copy over /etc/nginx/sites-enabled (make sure it's executable)
+# test setup
 sudo nginx -t
+
+# restart nginx with new setup
 sudo service nginx restart
 
-curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
-sudo apt-get install -y nodejs
-sudo npm rebuild node-sass --force
 
 
 
