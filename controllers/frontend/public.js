@@ -184,3 +184,16 @@ exports.getDocs = async(req, res) => {
     title: 'Docs'
   });
 };
+
+
+/**
+ * GET /donate
+ * Donation page
+ */
+exports.getDonate = async(req, res) => {
+
+  res.render('public/donate', {
+    title: 'Donate'
+  });
+};
+
