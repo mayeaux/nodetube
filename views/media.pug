@@ -63,14 +63,15 @@ block content
             background-color: #0c0c0c !important;
         }
 
+        .uploadDescriptionDiv {
+            margin-top: 23px;
+            /* hack solution to get this trash to work */
+        }
+
         @media (min-width:900px){
-            .uploadDescriptionDiv {
-                margin-top: 50px;
-                /* hack solution to get this trash to work */
-            }
 
             .uploadDescriptionColumn {
-                max-height:199px;
+                /*max-height:199px;*/
                 overflow: hidden;
             }
         }
@@ -118,7 +119,7 @@ block content
         }
 
         .uploadDescriptionDiv {
-            max-height: 199px;
+            /*max-height: 199px;*/
             overflow: hidden;
             font-size:18px;
             white-space:pre-wrap
@@ -149,7 +150,7 @@ block content
         /* anything above this width */
         @media (min-width: 900px) {
             .uploader-details-section {
-                margin-top: -81px;
+                margin-top: -38px;
             }
 
             .uploadDetailsColumn {
@@ -160,11 +161,28 @@ block content
                 margin-top:-31px
             }
 
+            /*.postButton {*/
+            /*display: none !important;*/
+            /*}*/
+        }
+
+        /* anything above this width */
+        @media (max-width: 900px) {
+
+            .lampIcon {
+                display: none;
+            }
+
+            .theatre-mode-button {
+                display: none;
+            }
 
             /*.postButton {*/
             /*display: none !important;*/
             /*}*/
         }
+
+
 
         .secondLine {
             border-bottom: 1px solid #5b5a5a !important;
@@ -172,7 +190,7 @@ block content
 
         .lampIcon {
             filter: invert(75%) sepia(0%) saturate(511%) hue-rotate(232deg) brightness(90%) contrast(82%);
-            height: 52px;
+            height: 43px;
             margin-top: -7px;
             cursor: pointer;
         }
@@ -244,68 +262,29 @@ block content
         // todo: pull this out into its own include
         //- NON PLAYER CONTENT
             hello something
-        div.non-player-content(style="position:relative;max-width:1451px;margin:0 auto;")
+        div.non-player-content(style="position:relative;max-width:1182px;margin:0 auto;")
             // add margin-top 120 on margin-top:120px;"
 
 
 
             br
             br
-            // UPLOAD TITLE
-            div.col-sm-12
-                .row
-                    .col-sm-6.col-sm-offset-3
 
-                        h2.balance-text(class="upload-title-value" style="display:inline;text-wrap:balance;width:80%;margin:0 auto;font-weight:300;color: #a9a9a9 !important;") #{upload.title}
-                        if upload.formattedDuration
-                            h2.fw(style="display:inline;color: #a9a9a9; !important;").
-                                &nbsp - #{upload.formattedDuration}
-
-                    // download and whatever else buttons
-                    .col-sm-3.uploadButtonsColumn(style="")
-
-                        // download button
-                        div.change-size-button
-                            h2.download-button
-                                i.download-icon.fa.fa-download(aria-hidden="true" style="cursor:pointer;color:#a5a5a5;")
-
-                        // only do repeat button if it's audio or video
-                        if upload.fileType == 'video'
-                            div.change-size-button.theatre-mode-button(style="margin-left:0px;")
-                                h2(style="")
-                                    i.fa.fa-tv(aria-hidden="true" style="cursor:pointer;color:#a5a5a5;")
-
-                        // only do repeat button if it's audio or video
-                        if upload.fileType == 'video'
-                            div.change-size-button.lampIconDiv(style="margin-left:0px;")
-                                img.lampIcon(src="/images/lamp.png")
-
-
-                        // only do repeat button if it's audio or video
-                        if upload.fileType == 'video' || upload.fileType == 'audio'
-                            div.change-size-button(style="margin-left:0px;")
-                                h2.repeat-div(style="opacity:0.4")
-                                    i.repeat-icon.fa.fa-repeat(aria-hidden="true" style="cursor:pointer")
-
-                        //// embed button
-                        //div.change-size-button(style="margin-left:0px;color: rgb(121 119 119) !important;")
-                        //    h2.share-button
-                        //        i.share-icon.fas.fa-code(aria-hidden="true" style="cursor:pointer;font-size:27px;margin-left:0px;")
-                        //
-                        //
-                        //// report upload button
-                        //div.change-size-button(style="cursor:pointer;margin-left:0px;color: rgb(121 119 119) !important;")
-                        //    h2.report-button(style="")
-                        //        i.share-icon.fa.fa-exclamation-triangle(aria-hidden="true" style="cursor:pointer;font-size:19px;")
+            //// embed button
+            //div.change-size-button(style="margin-left:0px;color: rgb(121 119 119) !important;")
+            //    h2.share-button
+            //        i.share-icon.fas.fa-code(aria-hidden="true" style="cursor:pointer;font-size:27px;margin-left:0px;")
+            //
+            //
+            //// report upload button
+            //div.change-size-button(style="cursor:pointer;margin-left:0px;color: rgb(121 119 119) !important;")
+            //    h2.report-button(style="")
+            //        i.share-icon.fa.fa-exclamation-triangle(aria-hidden="true" style="cursor:pointer;font-size:19px;")
 
 
 
 
 
-
-
-
-            br
             // UPLOADER DETAILS SECTION
             div.col-sm-3.uploader-details-section(style="margin-bottom:30px")
                 h3.uploader-name(style="margin-top:25px;font-size:26px;")
@@ -345,12 +324,50 @@ block content
                     br
 
 
-
             div.col-sm-6.uploadDescriptionColumn
+
+                div.uploadTitle
+
+                    h2.balance-text(class="upload-title-value" style="display:inline;text-wrap:balance;width:80%;margin:0 auto;font-weight:300;color: #a9a9a9 !important;") #{upload.title}
+                        if upload.formattedDuration
+                            h2.fw(style="display:inline;color: #a9a9a9; !important;").
+                                &nbsp - #{upload.formattedDuration}
+
+
                 if upload.description
                     .uploadDescriptionDiv
 
                         p#uploadDescriptionText.fw.uploadDescriptionText(style="color:#a5a5a5") #{upload.description}
+
+
+                //REACTS WITH LIKES, DISLIKE, DISGUST, ETC
+                div.react(style="max-width:375px;background-color:black;margin:0 auto;border-radius:10px;margin-bottom:21px;padding-bottom:12px;min-width:247px;")
+                    // margin-top:133px
+                    br
+                    each emoji in emojis
+                        div(style="padding-right:12px;display:inline-block;")
+                            a(href="#")
+                                if currentReact
+                                    if currentReact == emoji.name
+                                        div.clicked-emoji
+                                            img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
+
+                                    else
+                                        div.unclicked-emoji
+                                            img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
+
+                                else
+                                    div.clicked-emoji
+                                        img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
+
+                            p.fw(class=emoji.name style="font-weight:400;") #{emoji.amount}
+
+
+                if upload.visibility == 'pending' && upload.status !== 'processing'
+                    h3.pending-string Your video is currently pending moderator approval. If it's still pending after several minutes please contact a mod at
+                        a(href="/discord")  Discord
+
+
 
 
             //if upload.uploader.plan == 'plus'
@@ -358,6 +375,32 @@ block content
             //    button.donate.btn.btn-success(style="margin-bottom:-10px") Donate
             // UPLOAD DETAILS SECTION WITH VIEWS, UPLOADED DAYS AGO, DURATION ETC
             div.col-sm-3.uploadDetailsColumn(style="")
+
+                // download and whatever else buttons
+                .col-sm-12(style="")
+
+                    // download button
+                    div.change-size-button
+                        h2.download-button
+                            i.download-icon.fa.fa-download(aria-hidden="true" style="cursor:pointer;color:#a5a5a5;")
+
+                    // only do repeat button if it's audio or video
+                    if upload.fileType == 'video'
+                        div.change-size-button.theatre-mode-button(style="margin-left:0px;")
+                            h2(style="")
+                                i.fa.fa-tv(aria-hidden="true" style="cursor:pointer;color:#a5a5a5;")
+
+                    // only do repeat button if it's audio or video
+                    if upload.fileType == 'video'
+                        div.change-size-button.lampIconDiv(style="margin-left:0px;")
+                            img.lampIcon(src="/images/lamp.png")
+
+
+                    // only do repeat button if it's audio or video
+                    if upload.fileType == 'video' || upload.fileType == 'audio'
+                        div.change-size-button(style="margin-left:0px;")
+                            h2.repeat-div(style="opacity:0.4")
+                                i.repeat-icon.fa.fa-repeat(aria-hidden="true" style="cursor:pointer")
 
                 // Upload View Amount
                 h3.fw(style="color:a5a5a5") #{upload.views} Views
@@ -425,35 +468,6 @@ block content
 
 
 
-            // UPLOADER DETAILS SECTION END
-
-            div.col-sm-6.reactColumn(style="")
-                //REACTS WITH LIKES, DISLIKE, DISGUST, ETC
-                div.react(style="max-width:375px;background-color:black;margin:0 auto;border-radius:10px;margin-bottom:21px;padding-bottom:12px;min-width:247px;")
-                    // margin-top:133px
-                    br
-                    each emoji in emojis
-                        div(style="padding-right:12px;display:inline-block;")
-                            a(href="#")
-                                if currentReact
-                                    if currentReact == emoji.name
-                                        div.clicked-emoji
-                                            img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
-
-                                    else
-                                        div.unclicked-emoji
-                                            img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
-
-                                else
-                                    div.clicked-emoji
-                                        img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
-
-                            p.fw(class=emoji.name style="font-weight:400;") #{emoji.amount}
-
-
-                if upload.visibility == 'pending' && upload.status !== 'processing'
-                    h3.pending-string Your video is currently pending moderator approval. If it's still pending after several minutes please contact a mod at
-                        a(href="/discord")  Discord
 
 
             div.col-sm-12
@@ -710,6 +724,7 @@ block extra_footer_js
 
       $('.lampIconDiv').click(function(){
 
+        // if lamp functionality is not turned on we need to turn it on
         if(lampHidden == false){
           $('.headerContainer').css({
             display: 'none'
@@ -720,12 +735,16 @@ block extra_footer_js
           })
 
 
-
+          // make the lamp icon visible, because the rest of the div will be turned off
+          // also opacity 0.54
           $('.lampIconDiv').css({
-            visibility: 'visible'
+            visibility: 'visible',
+            opacity: 0.54
           })
 
           lampHidden = true;
+
+          // otherwise the functionality has already been turned on, so we turn it off
         } else {
           $('.headerContainer, .non-player-content').css({
             visibility: 'visible'
@@ -733,6 +752,11 @@ block extra_footer_js
 
           $('.headerContainer').css({
             display: 'inherit'
+          })
+
+          $('.lampIconDiv').css({
+            visibility: 'visible',
+            opacity: 1
           })
 
           lampHidden = false;
