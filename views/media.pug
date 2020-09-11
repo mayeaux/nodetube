@@ -137,6 +137,10 @@ block content
         /* anything above this width */
         @media (min-width: 900px) {
 
+            .desktopTitle {
+                display: block !important;
+            }
+
             /* make the title larger, turning it off */
             /*h2 {*/
                 /*font-size: 36px;*/
@@ -161,13 +165,21 @@ block content
                 margin-top:-31px
             }
 
+            .desktopReactDiv {
+                display: block !important;
+            }
+
             /*.postButton {*/
             /*display: none !important;*/
             /*}*/
         }
 
-        /* anything above this width */
+        /* anything below this width */
         @media (max-width: 900px) {
+
+            .mobileTitle {
+                display: block !important;
+            }
 
             .lampIcon {
                 display: none;
@@ -175,6 +187,10 @@ block content
 
             .theatre-mode-button {
                 display: none;
+            }
+
+            .mobileReactDiv {
+                display: block !important;
             }
 
             /*.postButton {*/
@@ -193,6 +209,16 @@ block content
             height: 43px;
             margin-top: -7px;
             cursor: pointer;
+        }
+
+        .reactDiv {
+            max-width:375px;
+            background-color:black;
+            margin:0 auto;
+            border-radius:10px;
+            margin-bottom:21px;
+            padding-bottom:12px;
+            min-width:247px;
         }
 
 
@@ -282,6 +308,16 @@ block content
             //        i.share-icon.fa.fa-exclamation-triangle(aria-hidden="true" style="cursor:pointer;font-size:19px;")
 
 
+            div.col-sm-12
+                div.uploadTitle.mobileTitle(style="display:none")
+
+                    h2.balance-text(class="upload-title-value" style="display:inline;text-wrap:balance;width:80%;margin:0 auto;font-weight:300;color: #a9a9a9 !important;") #{upload.title}
+                        if upload.formattedDuration
+                            h2.fw(style="display:inline;color: #a9a9a9; !important;").
+                                &nbsp - #{upload.formattedDuration}
+
+
+
 
 
 
@@ -326,7 +362,7 @@ block content
 
             div.col-sm-6.uploadDescriptionColumn
 
-                div.uploadTitle
+                div.uploadTitle.desktopTitle(style="display:none")
 
                     h2.balance-text(class="upload-title-value" style="display:inline;text-wrap:balance;width:80%;margin:0 auto;font-weight:300;color: #a9a9a9 !important;") #{upload.title}
                         if upload.formattedDuration
@@ -341,7 +377,7 @@ block content
 
 
                 //REACTS WITH LIKES, DISLIKE, DISGUST, ETC
-                div.react(style="max-width:375px;background-color:black;margin:0 auto;border-radius:10px;margin-bottom:21px;padding-bottom:12px;min-width:247px;")
+                div.react.reactDiv.desktopReactDiv(style="display:none;")
                     // margin-top:133px
                     br
                     each emoji in emojis
@@ -452,6 +488,28 @@ block content
 
 
                     br
+
+
+            div.react.reactDiv.mobileReactDiv(style="display:none;")
+                // margin-top:133px
+                br
+                each emoji in emojis
+                    div(style="padding-right:12px;display:inline-block;")
+                        a(href="#")
+                            if currentReact
+                                if currentReact == emoji.name
+                                    div.clicked-emoji
+                                        img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
+
+                                else
+                                    div.unclicked-emoji
+                                        img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
+
+                            else
+                                div.clicked-emoji
+                                    img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
+
+                        p.fw(class=emoji.name style="font-weight:400;") #{emoji.amount}
 
 
 
