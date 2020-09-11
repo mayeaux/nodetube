@@ -428,13 +428,13 @@ block content
 
                     // only do repeat button if it's audio or video
                     if upload.fileType == 'video'
-                        div.change-size-button.lampIconDiv(style="margin-left:0px;")
+                        div.change-size-button.lampIconDiv(style="margin-left:-16px;margin-right:-3px;")
                             img.lampIcon(src="/images/lamp.png")
 
 
                     // only do repeat button if it's audio or video
                     if upload.fileType == 'video' || upload.fileType == 'audio'
-                        div.change-size-button(style="margin-left:0px;")
+                        div.change-size-button(style="")
                             h2.repeat-div(style="opacity:0.4")
                                 i.repeat-icon.fa.fa-repeat(aria-hidden="true" style="cursor:pointer")
 
@@ -480,11 +480,11 @@ block content
                             if upload.rating == 'sensitive'
                                 p.fw(style="margin-top:15px;font-size:12px;") Rating: Sensitive (18+)
 
-                    //div.editButtonDiv
-                    //    // edit button
-                    //    if ( user && user.channelUrl == upload.uploader.channelUrl ) || ( user && user.role == 'admin' )
-                    //        a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}/edit`)
-                    //            button.fw.btn.btn-success(style="margin-bottom:-10px;border-radius:5px;") Edit
+                    div.editButtonDiv
+                        // edit button
+                        if ( user && user.channelUrl == upload.uploader.channelUrl ) || ( user && user.role == 'admin' )
+                            a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}/edit`)
+                                button.fw.btn.btn-success(style="margin-bottom:-10px;border-radius:5px;") Edit
 
 
                     br
