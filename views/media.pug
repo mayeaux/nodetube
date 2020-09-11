@@ -480,14 +480,22 @@ block content
                             if upload.rating == 'sensitive'
                                 p.fw(style="margin-top:15px;font-size:12px;") Rating: Sensitive (18+)
 
-                    div
-                        // edit button
-                        if ( user && user.channelUrl == upload.uploader.channelUrl ) || ( user && user.role == 'admin' )
-                            a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}/edit`)
-                                button.fw.btn.btn-success(style="margin-bottom:-10px;border-radius:5px;") Edit
+                    //div.editButtonDiv
+                    //    // edit button
+                    //    if ( user && user.channelUrl == upload.uploader.channelUrl ) || ( user && user.role == 'admin' )
+                    //        a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}/edit`)
+                    //            button.fw.btn.btn-success(style="margin-bottom:-10px;border-radius:5px;") Edit
 
 
                     br
+
+
+
+
+
+
+
+
 
 
             div.react.reactDiv.mobileReactDiv(style="display:none;")
@@ -510,14 +518,6 @@ block content
                                     img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
 
                         p.fw(class=emoji.name style="font-weight:400;") #{emoji.amount}
-
-
-
-
-
-
-
-            hr
 
 
 
@@ -550,13 +550,12 @@ block content
                     i.fa.fa-info.fw
                     | With User Info
 
+            br
+
             hr
 
             // ** COMMENT SECTION AND FORM **
             div
-                br
-                br
-                br
                 div.col-sm-12(style="margin-top:50px")
                     if user
                         if !viewingUserIsBlocked
