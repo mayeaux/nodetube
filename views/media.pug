@@ -177,6 +177,11 @@ block content
         /* anything below this width */
         @media (max-width: 900px) {
 
+            .uploadTitle {
+                margin-top: 15px;
+                margin-bottom: -37px;
+            }
+
             .mobileTitle {
                 display: block !important;
             }
@@ -725,6 +730,10 @@ block extra_js
         unmatch: function () {
           // when going below 900px
           console.log('RUNNING 4321')
+
+          $('.uploadTitle').prependTo('.uploadDescriptionColumn')
+
+          $('.reactDiv').appendTo('.uploadDescriptionColumn')
         },
 
         // OPTIONAL
