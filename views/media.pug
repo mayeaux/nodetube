@@ -255,7 +255,7 @@ block content
             div.display-div.magnetic(style="min-width:50%;min-height:50%;margin:0 auto;margin-top: -25px;")
                 // margin-top:46px;
 
-                video#media_player.display-element(playsinline poster=`${serverToUse}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;")
+                video#media_player.display-element(playsinline poster=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;")
                     // to
                     source.video-source(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`, type='video/mp4')
                     //source(src=upload.uploadUrl, type='video/mp4')
@@ -327,13 +327,13 @@ block content
                     if upload.uploader.customThumbnail
                         a(href=`/user/${upload.uploader.channelUrl}`)
 
-                            img(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` style="border-radius:13px;width:110px;height:110px;")
+                            img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` style="border-radius:13px;width:110px;height:110px;")
                             br
                             br
                     else if upload.uploader.thumbnailUrl
                         a(href=`/user/${upload.uploader.channelUrl}`)
 
-                            img(src=`${serverToUse}/${upload.uploader._id}/unique.png` style="border-radius:13px;width:110px;height:110px;")
+                            img(src=`${uploadServer}/${upload.uploader._id}/unique.png` style="border-radius:13px;width:110px;height:110px;")
                             br
                             br
                     else

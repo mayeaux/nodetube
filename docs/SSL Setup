@@ -1,0 +1,41 @@
+1) Point your domain towards your IP
+
+1) Generate a CSR
+https://www.namecheap.com/support/knowledgebase/article.aspx/9446/14/generating-csr-on-apache--opensslmodsslnginx--heroku/
+
+2) Activate your CSR
+https://www.namecheap.com/support/knowledgebase/article.aspx/794/67/how-do-i-activate-an-ssl-certificate
+
+Amazingly, for namecheap, they give you the wrong host value, see the note about not including the domain name in the host value here:
+https://www.namecheap.com/support/knowledgebase/article.aspx/9637/68/how-can-i-complete-the-domain-control-validation-dcv-for-my-ssl-certificate/#dns
+
+
+Generate the whatever thing
+https://www.namecheap.com/support/knowledgebase/article.aspx/9419/33/installing-an-ssl-certificate-on-nginx/
+
+This line is also bugged, it will put the END CERTIFICATE and BEGIN CERTIFICIATE on the same line
+
+It should instead look like this:
+-----END CERTIFICATE-----
+-----BEGIN CERTIFICATE-----
+
+
+$ cat your_domain.crt your_domain.ca-bundle >> your_domain_chain.crt
+
+
+Add to server block:
+
+
+server {
+    	listen 80 default_server;
+    	listen [::]:80 default_server;
+
+    	server_name _;
+
+        ## THESE PARTS HERE
+        listen 443 ssl;
+
+        ssl_certificate /home/fred/asdf/uploads3_newtube_app_chain.crt;
+        ssl_certificate_key /home/fred/asdf/server.key;
+
+
