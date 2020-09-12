@@ -296,25 +296,14 @@ block content
             br
             br
 
-            //// embed button
-            //div.change-size-button(style="margin-left:0px;color: rgb(121 119 119) !important;")
-            //    h2.share-button
-            //        i.share-icon.fas.fa-code(aria-hidden="true" style="cursor:pointer;font-size:27px;margin-left:0px;")
+
+            //div.col-sm-12
+            //    div.uploadTitle.mobileTitle(style="")
             //
-            //
-            //// report upload button
-            //div.change-size-button(style="cursor:pointer;margin-left:0px;color: rgb(121 119 119) !important;")
-            //    h2.report-button(style="")
-            //        i.share-icon.fa.fa-exclamation-triangle(aria-hidden="true" style="cursor:pointer;font-size:19px;")
-
-
-            div.col-sm-12
-                div.uploadTitle.mobileTitle(style="display:none")
-
-                    h2.balance-text(class="upload-title-value" style="display:inline;text-wrap:balance;width:80%;margin:0 auto;font-weight:300;color: #a9a9a9 !important;") #{upload.title}
-                        if upload.formattedDuration
-                            h2.fw(style="display:inline;color: #a9a9a9; !important;").
-                                &nbsp - #{upload.formattedDuration}
+            //        h2.balance-text(class="upload-title-value" style="display:inline;text-wrap:balance;width:80%;margin:0 auto;font-weight:300;color: #a9a9a9 !important;") #{upload.title}
+            //            if upload.formattedDuration
+            //                h2.fw(style="display:inline;color: #a9a9a9; !important;").
+            //                    &nbsp - #{upload.formattedDuration}
 
 
 
@@ -362,7 +351,7 @@ block content
 
             div.col-sm-6.uploadDescriptionColumn
 
-                div.uploadTitle.desktopTitle(style="display:none")
+                div.uploadTitle.desktopTitle(style="")
 
                     h2.balance-text(class="upload-title-value" style="display:inline;text-wrap:balance;width:80%;margin:0 auto;font-weight:300;color: #a9a9a9 !important;") #{upload.title}
                         if upload.formattedDuration
@@ -377,26 +366,26 @@ block content
 
 
                 //REACTS WITH LIKES, DISLIKE, DISGUST, ETC
-                //div.react.reactDiv.desktopReactDiv(style=";")
-                //    // margin-top:133px
-                //    br
-                //    each emoji in emojis
-                //        div(style="padding-right:12px;display:inline-block;")
-                //            a(href="#")
-                //                if currentReact
-                //                    if currentReact == emoji.name
-                //                        div.clicked-emoji
-                //                            img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
-                //
-                //                    else
-                //                        div.unclicked-emoji
-                //                            img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
-                //
-                //                else
-                //                    div.clicked-emoji
-                //                        img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
-                //
-                //            p.fw(class=emoji.name style="font-weight:400;") #{emoji.amount}
+                div.react.reactDiv.desktopReactDiv(style=";")
+                    // margin-top:133px
+                    br
+                    each emoji in emojis
+                        div(style="padding-right:12px;display:inline-block;")
+                            a(href="#")
+                                if currentReact
+                                    if currentReact == emoji.name
+                                        div.clicked-emoji
+                                            img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
+
+                                    else
+                                        div.unclicked-emoji
+                                            img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
+
+                                else
+                                    div.clicked-emoji
+                                        img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
+
+                            p.fw(class=emoji.name style="font-weight:400;") #{emoji.amount}
 
 
                 if upload.visibility == 'pending' && upload.status !== 'processing'
@@ -498,26 +487,26 @@ block content
 
 
 
-            div.react.reactDiv.mobileReactDiv(style=";")
-                // margin-top:133px
-                br
-                each emoji in emojis
-                    div(style="padding-right:12px;display:inline-block;")
-                        a(href="#")
-                            if currentReact
-                                if currentReact == emoji.name
-                                    div.clicked-emoji
-                                        img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
-
-                                else
-                                    div.unclicked-emoji
-                                        img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
-
-                            else
-                                div.clicked-emoji
-                                    img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
-
-                        p.fw(class=emoji.name style="font-weight:400;") #{emoji.amount}
+            //div.react.reactDiv.mobileReactDiv(style=";")
+            //    // margin-top:133px
+            //    br
+            //    each emoji in emojis
+            //        div(style="padding-right:12px;display:inline-block;")
+            //            a(href="#")
+            //                if currentReact
+            //                    if currentReact == emoji.name
+            //                        div.clicked-emoji
+            //                            img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
+            //
+            //                    else
+            //                        div.unclicked-emoji
+            //                            img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
+            //
+            //                else
+            //                    div.clicked-emoji
+            //                        img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
+            //
+            //            p.fw(class=emoji.name style="font-weight:400;") #{emoji.amount}
 
 
 
@@ -549,6 +538,19 @@ block content
                 button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} by ${upload.uploader.channelName || upload.uploader.channelUrl} \n\n ${url} \n\n #${brandName}`)
                     i.fa.fa-info.fw
                     | With User Info
+
+                br
+
+                //// embed button
+                div.change-size-button(style="margin-left:0px;color: rgb(121 119 119) !important;")
+                   h2.share-button
+                       i.share-icon.fas.fa-code(aria-hidden="true" style="cursor:pointer;font-size:27px;margin-left:0px;")
+
+
+                // report upload button
+                div.change-size-button(style="cursor:pointer;margin-left:0px;color: rgb(121 119 119) !important;")
+                   h2.report-button(style="")
+                       i.share-icon.fa.fa-exclamation-triangle(aria-hidden="true" style="cursor:pointer;font-size:19px;")
 
             br
 
