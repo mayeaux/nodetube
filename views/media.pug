@@ -377,26 +377,26 @@ block content
 
 
                 //REACTS WITH LIKES, DISLIKE, DISGUST, ETC
-                //div.react.reactDiv.desktopReactDiv(style=";")
-                //    // margin-top:133px
-                //    br
-                //    each emoji in emojis
-                //        div(style="padding-right:12px;display:inline-block;")
-                //            a(href="#")
-                //                if currentReact
-                //                    if currentReact == emoji.name
-                //                        div.clicked-emoji
-                //                            img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
-                //
-                //                    else
-                //                        div.unclicked-emoji
-                //                            img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
-                //
-                //                else
-                //                    div.clicked-emoji
-                //                        img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
-                //
-                //            p.fw(class=emoji.name style="font-weight:400;") #{emoji.amount}
+                div.react.reactDiv.desktopReactDiv(style="display:none;")
+                    // margin-top:133px
+                    br
+                    each emoji in emojis
+                        div(style="padding-right:12px;display:inline-block;")
+                            a(href="#")
+                                if currentReact
+                                    if currentReact == emoji.name
+                                        div.clicked-emoji
+                                            img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
+
+                                    else
+                                        div.unclicked-emoji
+                                            img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
+
+                                else
+                                    div.clicked-emoji
+                                        img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
+
+                            p.fw.desktopThing(class=emoji.name style="font-weight:400;") #{emoji.amount}
 
 
                 if upload.visibility == 'pending' && upload.status !== 'processing'

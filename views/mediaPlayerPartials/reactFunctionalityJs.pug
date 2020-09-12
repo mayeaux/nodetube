@@ -1,6 +1,6 @@
 script.
   // REACT FUNCTIONALITY
-  var activeEmoji = '#{currentReact}'
+  var currentReact = '#{currentReact}'
 
   var upload = '#{upload._id}'
   var csrf = '#{_csrf}'
@@ -24,36 +24,56 @@ script.
     }
 
 
-    // change opacities
+    // make all emojis dark
     $('.react img').css({
       opacity: '0.4'
     })
+
+    // make the clicked emoji bright
     $(this).css({
       opacity: 0.85
     })
 
     // note active emoji
-    var oldEmoji = activeEmoji
-    var emoji = $(this).attr('id')
-    activeEmoji = emoji;
+    var oldEmoji = currentReact
 
-    var unreact = (oldEmoji == activeEmoji) // the old react is the same as the new (user wants to remove react)
+    // clicked emoji
+    var clickedEmoji = $(this).attr('id')
 
-    // decrement old emoji if needed
+    currentReact = clickedEmoji;
+
+    // the old react is the same as the new (user wants to remove react)
+    var unreactEmoji = (oldEmoji == currentReact)
+
+    // decrement old emoji if the content has already been reacted to
     if(oldEmoji){
-      var oldEmojiValue = $('p.' + oldEmoji).text()
+
+      //      var divs = $('p.' + oldEmoji);
+      //
+      //      console.log(divs);
+      //
+      //      var div = $('p.' + currentReact).filter("[class~='desktopThing']").text()
+      //
+      //      console.log(div);
+
+      var oldEmojiValue = $('p.' + oldEmoji).filter("[class~='desktopThing']").text()
       console.log(oldEmojiValue)
 
       console.log('running!');
 
       var decrementedValue = parseInt(oldEmojiValue) - 1
-      var updateEmoji = $('p.' + oldEmoji).text(decrementedValue)
+
+      // update emoji value
+      var updateEmoji = $('p.' + oldEmoji).filter("[class~='desktopThing']").text(decrementedValue)
 
     }
 
+
+
+
     // if the user removed the react, there is no active emoji
-    if(unreact) {
-      activeEmoji = null
+    if(unreactEmoji) {
+      currentReact = null
       $(".react img").css({ // reset all reacts opacity
         opacity: 0.85
       })
@@ -63,15 +83,30 @@ script.
 
       console.log('running!!!');
 
-      var newEmojiValue = $('p.' + emoji).text()
+      console.log(clickedEmoji);
+
+      var divs = $('p.' + clickedEmoji)
+
+      console.log(divs);
+
+      var div  = $('p.' + clickedEmoji).filter("[class~='desktopThing']")
+
+      console.log(div);
+
+      var newEmojiValue = $('p.' + clickedEmoji).filter("[class~='desktopThing']").text()
+      console.log('about to increment the value ' + newEmojiValue )
+
+
       var incrementedValue = parseInt(newEmojiValue) + 1
       console.log(newEmojiValue)
-      var updatedEmojiValue = $('p.' + emoji).text(incrementedValue)
+
+
+      var updatedEmojiValue = $('p.' + clickedEmoji).filter("[class~='desktopThing']").text(incrementedValue)
     }
 
     var data = {
       _csrf : csrf,
-      emoji
+      clickedEmoji
     }
 
     $.ajax({
