@@ -36,6 +36,7 @@ script.
     var oldEmoji = activeEmoji
     var emoji = $(this).attr('id')
     activeEmoji = emoji;
+
     var unreact = (oldEmoji == activeEmoji) // the old react is the same as the new (user wants to remove react)
 
     // decrement old emoji if needed
@@ -43,7 +44,9 @@ script.
       var oldEmojiValue = $('p.' + oldEmoji).text()
       console.log(oldEmojiValue)
 
-      var decrementedValue = oldEmojiValue - 1
+      console.log('running!');
+
+      var decrementedValue = parseInt(oldEmojiValue) - 1
       var updateEmoji = $('p.' + oldEmoji).text(decrementedValue)
 
     }
@@ -57,6 +60,9 @@ script.
 
       // if user chose a different react, update the new react value
     } else {
+
+      console.log('running!!!');
+
       var newEmojiValue = $('p.' + emoji).text()
       var incrementedValue = parseInt(newEmojiValue) + 1
       console.log(newEmojiValue)
