@@ -19,12 +19,13 @@ block content
         br
 
         div.center-block.text-center.col-sm-12
-            h1.fw Recently Uploaded
+            .col-sm-4
+                h1.fw Recently Uploaded
 
             br
 
             // CATEGORY DROPDOWN
-            .search-upload-buttons-container
+            .search-upload-buttons-container.col-sm-4
                 if category
                     include ../viewPartials/categoryDropdown
 
@@ -34,12 +35,12 @@ block content
                 // SENSITIVITY TYPE DROPDOWN
                 include ../viewPartials/sensitivityFilterDropdown
 
+            .col-sm-4
                 // 5 LINK PAGINATION
-            include ../viewPartials/pagination
+                include ../viewPartials/pagination
 
-            br
+                br
 
-        hr
         div.uploads.container
             if !isACategory || category == 'overview'
                 include ../viewPartials/categoryOverviews
