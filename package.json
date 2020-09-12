@@ -84,7 +84,7 @@
     "mv": "^2.1.1",
     "ngrok": "^3.2.2",
     "node-cache": "^4.2.0",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "node-ffprobe": "^1.2.2",
     "node-sass": "^4.13.1",
     "node-sass-middleware": "^0.11.0",
