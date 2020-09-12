@@ -679,6 +679,77 @@ block extra_js
   script(src="https://cdnjs.cloudflare.com/ajax/libs/autolinker/1.4.4/Autolinker.js")
 
   script.
+
+    $(document).ready(function () {
+
+      function getWidth() {
+        return Math.max(
+          document.body.scrollWidth,
+          document.documentElement.scrollWidth,
+          document.body.offsetWidth,
+          document.documentElement.offsetWidth,
+          document.documentElement.clientWidth
+        );
+      }
+
+      console.log('Width:  ' + getWidth());
+
+      var width = getWidth();
+
+      if(width < 900){
+        $('.uploadTitle').prependTo('.non-player-content')
+
+        $('.reactDiv').appendTo('.uploadDetailsColumn')
+      }
+
+      console.log(width);
+
+      enquire.register("screen and (max-width:900px)", {
+
+        // OPTIONAL
+        // If supplied, triggered when a media query matches.
+        match: function () {
+          // when going below 900px
+          console.log('RUNNING 1234')
+
+          $('.uploadTitle').prependTo('.non-player-content')
+
+          $('.reactDiv').appendTo('.uploadDetailsColumn')
+
+
+        },
+
+        // OPTIONAL
+        // If supplied, triggered when the media query transitions
+        // *from a matched state to an unmatched state*.
+        unmatch: function () {
+          // when going below 900px
+          console.log('RUNNING 4321')
+        },
+
+        // OPTIONAL
+        // If supplied, triggered once, when the handler is registered.
+        setup: function () {
+        },
+
+        // OPTIONAL, defaults to false
+        // If set to true, defers execution of the setup function
+        // until the first time the media query is matched
+        deferSetup: false,
+
+        // OPTIONAL
+        // If supplied, triggered when handler is unregistered.
+        // Place cleanup code here
+        destroy: function () {
+        }
+
+      });
+
+    });
+
+
+
+  script.
     $(document).ready(function () {
       var theatreModeOn = false;
 
