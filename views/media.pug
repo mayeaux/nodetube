@@ -169,6 +169,14 @@ block content
                 display: block !important;
             }
 
+            /*.reactDiv {*/
+                /*margin-top: 25px !important;*/
+            /*}*/
+
+            .extraButtonsDiv {
+                /*margin-top: -27px;*/
+            }
+
             /*.postButton {*/
             /*display: none !important;*/
             /*}*/
@@ -356,9 +364,9 @@ block content
 
             div.col-sm-6.uploadDescriptionColumn
 
-                div.uploadTitle.desktopTitle(style="")
+                div.uploadTitle.desktopTitle(style="margin-bottom:20px;")
 
-                    h2.balance-text(class="upload-title-value" style="display:inline;text-wrap:balance;width:80%;margin:0 auto;font-weight:300;color: #a9a9a9 !important;") #{upload.title}
+                    h2.balance-text(class="upload-title-value" style="display:inline;text-wrap:balance;width:80%;margin:0 auto;font-weight:300;color: #a9a9a9 !important;margin-bottom:20px;") #{upload.title}
                         if upload.formattedDuration
                             h2.fw(style="display:inline;color: #a9a9a9; !important;").
                                 &nbsp - #{upload.formattedDuration}
@@ -522,7 +530,7 @@ block content
 
 
 
-            div.col-sm-12
+            div.col-sm-12.extraButtonsDiv
                 // SHARING BUTTONS
                 div
 
