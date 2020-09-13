@@ -698,6 +698,8 @@ block extra_js
 
     $(document).ready(function () {
 
+
+
       function getWidth() {
         return Math.max(
           document.body.scrollWidth,
@@ -1152,6 +1154,14 @@ block extra_footer_js
   include ./mediaPlayerPartials/repeatFunctionalityJs
 
   include ./mediaPlayerPartials/reactFunctionalityJs
+
+  script.
+    $(' button[data-plyr="fast-forward"], button[data-plyr="rewind"]').click(function () {
+      player.toggleControls(true);
+      setTimeout(function(){
+        player.toggleControls(true);
+      }, 80)
+    })
 
   script.
     // Turn description urls into clickable anchor links
