@@ -230,7 +230,7 @@ block content
             margin:0 auto;
             border-radius:10px;
             margin-bottom:21px;
-            padding-bottom:12px;
+            padding-bottom:5px;
             min-width:247px;
         }
 
@@ -378,7 +378,7 @@ block content
                         p#uploadDescriptionText.fw.uploadDescriptionText(style="color:#a5a5a5") #{upload.description}
 
 
-                //REACTS WITH LIKES, DISLIKE, DISGUST, ETC
+                //REACTS WITH LIKES, DISLIKE, DISGUST., ETC
                 div.react.reactDiv.desktopReactDiv(style=";")
                     // margin-top:133px
                     br
@@ -399,6 +399,7 @@ block content
                                         img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
 
                             p.fw(class=emoji.name style="font-weight:400;") #{emoji.amount}
+
 
 
                 if upload.visibility == 'pending' && upload.status !== 'processing'
@@ -530,7 +531,7 @@ block content
 
 
 
-            div.col-sm-12.extraButtonsDiv
+            div.col-sm-12.extraButtonsDiv(style="border-bottom: 1px solid #8e8d8d;")
                 // SHARING BUTTONS
                 div
 
@@ -554,16 +555,18 @@ block content
 
                 br
 
-                //// embed button
-                div.change-size-button(style="margin-left:0px;color: rgb(121 119 119) !important;")
-                   h2.share-button
-                       i.share-icon.fas.fa-code(aria-hidden="true" style="cursor:pointer;font-size:27px;margin-left:0px;")
+                div.bottomButtons(style="margin-top:-21px;padding-bottom:10px;")
+
+                    //// embed button
+                    div.change-size-button(style="margin-left:0px;color: rgb(121 119 119) !important;")
+                       h2.share-button
+                           i.share-icon.fas.fa-code(aria-hidden="true" style="cursor:pointer;font-size:19px;margin-left:0px;")
 
 
-                // report upload button
-                div.change-size-button(style="cursor:pointer;margin-left:0px;color: rgb(121 119 119) !important;")
-                   h2.report-button(style="")
-                       i.share-icon.fa.fa-exclamation-triangle(aria-hidden="true" style="cursor:pointer;font-size:19px;")
+                    // report upload button
+                    div.change-size-button(style="cursor:pointer;margin-left:0px;color: rgb(121 119 119) !important;")
+                       h2.report-button(style="font-size:19px;")
+                           i.share-icon.fa.fa-exclamation-triangle(aria-hidden="true" style="cursor:pointer;font-size:17px;")
 
             br
 
