@@ -234,6 +234,29 @@ block content
             min-width:247px;
         }
 
+        /* change plyr color per : https://github.com/sampotts/plyr/issues/662 */
+        .plyr--full-ui input[type=range] {
+            color: #0FDA01;
+        }
+
+        .plyr__control--overlaid {
+            background-color: #0FDA01;
+        }
+
+        .plyr--video .plyr__control.plyr__tab-focus,
+        .plyr--video .plyr__control:hover,
+        .plyr--video .plyr__control[aria-expanded=true] {
+            background: #0FDA01;
+        }
+
+        .plyr__control.plyr__tab-focus {
+            box-shadow: 0 0 0 5px rgba(#0FDA01, .5);
+        }
+
+        .plyr__menu__container .plyr__control[role=menuitemradio][aria-checked=true]::before {
+            background: #0FDA01;
+        }
+
 
         /* anything above this width */
 
