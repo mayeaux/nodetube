@@ -796,7 +796,7 @@ block extra_js
 
           console.log("RUNNING HERE!");
 
-          $('.display-element').css('border', '1px solid #5b5a5a;')
+          $('.display-element').css('border', '1px solid #5b5a5a')
 
           // note that theatre mode is off again
           theatreModeOn = false;
@@ -894,7 +894,7 @@ block extra_footer_js
         // if lamp functionality is not turned on we need to turn it on
         if(lampHidden == false){
 
-          $('.display-element').css('border', '0px solid white')
+          $('.display-element').css('border', '1px solid black')
 
           $('.headerContainer').css({
             display: 'none'
@@ -917,7 +917,7 @@ block extra_footer_js
           // otherwise the functionality has already been turned on, so we turn it off
         } else {
 
-          $('.display-element').css('border', '1px solid black')
+          $('.display-element').css('border', '1px solid #5b5a5a')
 
           $('.headerContainer, .non-player-content').css({
             visibility: 'visible'
