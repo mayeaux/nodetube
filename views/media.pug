@@ -771,17 +771,27 @@ block extra_js
 
   script.
     $(document).ready(function () {
+      // start with theatre mode off by default
       var theatreModeOn = false;
 
+      // when user clicks theatre icon
       $('.theatre-mode-button').click(function () {
 
+        // if the theatre mode is off, scroll to where the header ends, and go large screen
         if(theatreModeOn == false){
           window.scrollTo(0, 67);
           $('.plyr').css('height', '98.5vh')
+
+          // note that theatre mode is on
           theatreModeOn = true;
+
         } else {
+
+          // theatre mode is being turned back off, scroll up and 68.5% vh
           window.scrollTo(0, 0);
           $('.plyr').css('height', '68.5vh')
+
+          // note that theatre mode is off again
           theatreModeOn = false;
         }
 
