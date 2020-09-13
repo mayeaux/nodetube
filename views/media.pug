@@ -781,6 +781,9 @@ block extra_js
         if(theatreModeOn == false){
           window.scrollTo(0, 67);
           $('.plyr').css('height', '98.5vh')
+          console.log('HIT!')
+
+          $('.display-element').css('border', '0px solid white')
 
           // note that theatre mode is on
           theatreModeOn = true;
@@ -790,6 +793,10 @@ block extra_js
           // theatre mode is being turned back off, scroll up and 68.5% vh
           window.scrollTo(0, 0);
           $('.plyr').css('height', '68.5vh')
+
+          console.log("RUNNING HERE!");
+
+          $('.display-element').css('border', '1px solid #5b5a5a;')
 
           // note that theatre mode is off again
           theatreModeOn = false;
@@ -886,6 +893,9 @@ block extra_footer_js
 
         // if lamp functionality is not turned on we need to turn it on
         if(lampHidden == false){
+
+          $('.display-element').css('border', '0px solid white')
+
           $('.headerContainer').css({
             display: 'none'
           })
@@ -906,6 +916,9 @@ block extra_footer_js
 
           // otherwise the functionality has already been turned on, so we turn it off
         } else {
+
+          $('.display-element').css('border', '1px solid black')
+
           $('.headerContainer, .non-player-content').css({
             visibility: 'visible'
           })
