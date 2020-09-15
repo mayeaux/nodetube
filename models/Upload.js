@@ -77,6 +77,8 @@ const uploadSchema = new mongoose.Schema({
 
   youTubeData: mongoose.Schema.Types.Mixed,
 
+  youTubeDLData: mongoose.Schema.Types.Mixed,
+
   status: String,
   sensitive: {
     type: Boolean,

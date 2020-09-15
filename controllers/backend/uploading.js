@@ -464,6 +464,8 @@ exports.postFileUpload = async(req, res) => {
 
           console.log('done moving file');
 
+
+
           const specificMatches = ( codecName == 'hevc' || codecProfile == 'High 4:4:4 Predictive' );
 
           if(specificMatches || bitrate > maxBitrate){
@@ -497,13 +499,16 @@ exports.postFileUpload = async(req, res) => {
 
             // TODO: savePath and fileInDirectory are the same thing, need to clean this code up
 
-            if(fileExtension == '.mp4' && bitrate > maxBitrate){
+            if(fileExtension == '.mp4' && bitrate > maxBitrate || specificMatches){
               await fs.move(savePath, `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-old.mp4`);
 
               fileInDirectory = `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-old.mp4`;
             }
 
             if(upload.fileType == 'convert' || (bitrate > maxBitrate && fileExtension == '.mp4')){
+
+              console.log(fileInDirectory);
+
               await ffmpegHelper.convertVideo({
                 uploadedPath: fileInDirectory,
                 title,
