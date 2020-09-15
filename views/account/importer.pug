@@ -71,8 +71,26 @@ block content
     script.
         $(document).ready(function(){
           $('.submit-button').click(function () {
+
+            var data = {
+              _csrf: csrf,
+              emoji
+            }
+
             var thing = $('.importInput').val()
             if(thing){
+              $.ajax({
+                type: 'POST',
+                url: `/api/react/${upload}/${user}`,
+                data,
+                success: function (data) {
+                  console.log(data);
+                },
+                error: function (err) {
+                  console.log(err);
+                }
+              });
+
               alert(thing);
             }
             console.log('hit!');
