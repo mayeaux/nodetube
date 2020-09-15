@@ -918,3 +918,25 @@ exports.livestreaming = async(req, res) =>
     obsStreamKey
   });
 };
+
+
+
+/**
+ * GET /importer
+ * Importer page.
+ */
+exports.getImporter = (req, res) => {
+
+  const recaptchaPublicKey = process.env.RECAPTCHA_SITEKEY;
+
+  const captchaOn = process.env.RECAPTCHA_ON == 'true';
+
+  if(!req.user){
+    return res.redirect('/login');
+  }
+  res.render('account/importer', {
+    title: 'Create Account',
+    recaptchaPublicKey,
+    captchaOn
+  });
+};
