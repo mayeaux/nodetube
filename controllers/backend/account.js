@@ -18,6 +18,13 @@ const randomstring = require('randomstring');
 
 const mailTransports = require('../../config/nodemailer');
 
+const importerDownloadFunction = require('../../lib/uploading/importer');
+
+importerDownloadFunction('anthony', 'https://www.youtube.com/watch?v=vLJgAAIfKEc')
+
+console.log('importer')
+console.log(importerDownloadFunction)
+
 const mailgunTransport = mailTransports.mailgunTransport;
 
 const User = require('../../models/index').User;
