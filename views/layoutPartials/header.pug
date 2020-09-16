@@ -1,151 +1,399 @@
-header.navbar.navbar-default.navbar-fixed-top(style="" id="header-color-blue")
-  .container
-    .navbar-header
-      button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
-        span.sr-only Toggle navigation
-        span.icon-bar
-        span.icon-bar
-        span.icon-bar
-      a.navbar-brand(href=`/`)
-        h5.brandName(style="color:white;margin-right:3px;margin-top:-3px;font-size:26px;") #{brandName}
-    .collapse.navbar-collapse
-      ul.nav.navbar-nav.front-header
-        //li(class=(title == 'Home') ? 'active' : undefined)
-        //  a(href=`/`) Home
-        li(class=(title == 'Popular Uploads') ? 'active' : undefined)
-          // category set to overview to trigger overview functionality by default
+style.
+  @import url("//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css");
 
-          // POPULAR SECTION
-          if popularDefault == 'all'
-            a(href=`/media/popular/1?within=24hour&category=all`) Popular
-          else if popularDefault == 'overview'
-            a(href=`/media/popular/1?category=overview&within=24hour`) Popular
+  /*body {*/
+  /*margin: 30px;*/
+  /*}*/
+
+  .headerContainer {
+    padding: 0px;
+  }
+
+  .search {
+    position: relative;
+    color: #aaa;
+    font-size: 16px;
+  }
+
+  .search input {
+    width: 600px;
+    height: 36px;
+
+    background: #fcfcfc;
+    border: 1px solid #aaa;
+  }
+
+  .search input {
+    text-indent: 9px;
+  }
+
+  .search .fa-search {
+
+  }
+
+  .singleLetter {
+    display: none;
+    color: #0FDA01;
+    font-size: 30px;
+    font-weight: 900;
+    margin-top: 28px;
+    position: absolute;
+    top: -30px;
+  }
+
+  /*.formSpan {*/
+  /*color: grey;*/
+  /*position: absolute;*/
+  /*right: -78px;*/
+  /*top: -1px;*/
+  /*background-color: #eaeaea;*/
+  /*padding: 10px 26px;*/
+  /*border: 1px solid #cec0c0;*/
+  /*}*/
+
+  /* ===========================
+     ====== Medua Query for Search Box ======
+     =========================== */
 
 
 
-        li(class=(title == 'Recent Uploads') ? 'active' : undefined)
+  /** post button starts to hit search bar **/
+  @media (max-width: 753px){
+    /*input[name="searchValue"] {*/
+    /*display: none;*/
+    /*}*/
 
-          // RECENT SECTION
-          if popularDefault == 'all'
-            a(href=`/media/recent?category=all`) Recent
-          else if popularDefault == 'overview'
-            a(href=`/media/recent?category=overview`) Recent
+    .postButton {
+      display: none !important;
+    }
 
-          //li(class=(title == 'Channels') ? 'active' : undefined)
-          //  a(href=`/channels?within=24hour`) Channels
+    .postIcon {
+      display: inline !important;
+    }
+  }
 
-        li(class=(title == 'Search') ? 'active' : undefined)
-          a(href=`/search`) Search
+  /* when plus button starts to hit search bar */
+  @media (max-width: 593px) {
+    .fullTitle {
+      display: none !important;
+    }
 
-        //li.subscribed-link(class=(title == 'Subscriptions') ? 'active' : undefined)
-        //  if user && user.unseenSubscriptionUploads || user && user.unseenSubscriptionUploads == 0
-        //    a(href=`/media/subscribed`) Subscribed (#{user.unseenSubscriptionUploads})
-        //  else
-        //    a(href=`/media/subscribed`) Subscribed (0)
+    .singleLetter {
+      display: inline !important;
+      left: -32px;
+    }
 
-        // DOCS SECTION
-        //li(class=(title == 'Docs') ? 'active' : undefined)
-        //  a(href=`/docs`) Docs
+    .search-bar {
+      width: 57% !important;
+      margin-left: 70px !important;
+    }
+
+    .hamburgerDropdown {
+      left: 11px !important;
+    }
+
+    .permBar {
+      display: none;
+    }
+  }
+
+  /* when plus button starts to hit search bar */
+  @media (max-width: 439px) {
+    .fullTitle {
+      display: none !important;
+    }
+
+    .singleLetter {
+      display: inline !important;
+    }
+
+    .search-bar {
+      display: none;
+    }
+
+    .searchPlaceHolder {
+      display: block !important;
+    }
+
+  }
+
+  /* anything below this width */
+  @media (min-width: 1250px) {
+    body {
+      zoom: 1.15;
+    }
+    /*.postButton {*/
+    /*display: none !important;*/
+    /*}*/
+  }
+
+  /*@media (min-width: 320px) {*/
+  /*!* smartphones, iPhone, portrait 480x320 phones *!*/
+  /*input[name="searchValue"] {*/
+  /*background: pink;*/
+  /*}*/
+
+  /*}*/
+
+  /*@media (min-width: 481px) {*/
+  /*!* portrait e-readers (Nook/Kindle), smaller tablets @ 600 or @ 640 wide. *!*/
+  /*input[name="searchValue"] {*/
+  /*background: yellow;*/
+  /*}*/
+
+  /*}*/
+
+  /*@media (min-width: 641px) {*/
+  /*!* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones *!*/
+  /*input[name="searchValue"] {*/
+  /*background: purple;*/
+  /*}*/
+
+  /*!*.postButton {*!*/
+  /*!*display:none !important;*!*/
+  /*!*}*!*/
+
+  /*}*/
+
+  /*@media (min-width: 961px) {*/
+  /*!* tablet, landscape iPad, lo-res laptops ands desktops *!*/
+  /*input[name="searchValue"] {*/
+  /*background: green;*/
+  /*}*/
+
+  /*}*/
+
+  /*@media (min-width: 1025px) {*/
+  /*!* big landscape tablets, laptops, and desktops *!*/
+  /*input[name="searchValue"] {*/
+  /*background: blue;*/
+  /*}*/
+
+  /*}*/
+
+  /*@media (min-width: 1281px) {*/
+  /*!* hi-res laptops and desktops *!*/
+  /*input[name="searchValue"] {*/
+  /*background: red;*/
+  /*}*/
+  /*}*/
 
 
-      ul.nav.navbar-nav.navbar-right
-        if user
+  .box {
+    width: 80%;
+  }
 
-          // support dropdown
-          // TODO: turning this off because it's not turned on atm
-          //if user.role == 'support' || user.role == 'admin'
-          //  li.dropdown(class=(title == 'Admin Panel') ? 'active' : undefined)
-          //    a.dropdown-toggle(href='#', data-toggle='dropdown')
-          //      span= 'Support'
-          //      i.caret
-          //    ul.dropdown-menu(style="background-color:rgb(24,55,147);max-width: 100px;min-width:100px;margin-right: -6px;")
-          //      li(class=(title == 'Emails') ? 'active' : undefined)
-          //        a.dropdown-anchors(href=`/support/emails`) Emails
+  .search-bar {
+    width: 55%;
+    line-height: 56px;
+    position: relative;
+    margin: 0 auto;
+  }
 
-          // moderator dropdown
-          if user.role == 'moderator' || user.role == 'admin'
-            li.dropdown(class=(title == 'Admin Panel') ? 'active' : undefined)
-              a.dropdown-toggle(href='#', data-toggle='dropdown')
-                span= 'Mod'
-                i.caret
-              ul.dropdown-menu(style="background-color:rgb(24,55,147);max-width: 100px;min-width:100px;margin-right: -19px;")
-                li(class=(title == 'Reports') ? 'active' : undefined)
-                  a.dropdown-anchors(href=`/support/reports`) Reports
-                li(class=(title == 'Pending') ? 'active' : undefined)
-                  a.dropdown-anchors(href=`/pending`) Pending
+  input[type="text"] {
+    width: 73%;
+    height: 33px;
+    padding: 0 10px;
+    color: #000;
+    border: 1px solid #BEBEBE;
+    border-radius: 2px 0 0 2px;
+    z-index: 2;
+  }
 
-          // admin dropdown
-          if user.role == 'admin'
-            li.dropdown(class=(title == 'Admin') ? 'active' : undefined)
-              a.dropdown-toggle(href='#', data-toggle='dropdown')
-                span= 'Admin'
-                i.caret
-              ul.dropdown-menu(style="background-color:rgb(24,55,147);max-width: 159px;margin-right: -47px;")
-                li
-                  a.dropdown-anchors(href=`/admin/dailyStats`) Daily Stats
+  input:focus {
+    border: 1.1px solid #1c62b9;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, .4);
+  }
 
-                li(class=(title == 'Uploads') ? 'active' : undefined)
-                  a.dropdown-anchors(href=`/admin/uploads`) Uploads
-                li(class=(title == 'Users') ? 'active' : undefined)
-                  a.dropdown-anchors(href=`/admin/users`) Users
-                li(class=(title == 'Comments') ? 'active' : undefined)
-                  a.dropdown-anchors(href=`/admin/comments`) Comments
-                li
-                  a.dropdown-anchors(href=`/admin/siteVisitors`) Site Visitors
-                li
-                  a.dropdown-anchors(href=`/admin/reacts`) Reacts
-                li
-                  a.dropdown-anchors(href=`/admin/subscriptions`) Subscriptions
-                li
-                  a.dropdown-anchors(href=`/admin/adminAudit`) Admin Audit
-                li
-                  a.dropdown-anchors(href=`/media/recentComments`) Recent Comments
-                // TODO: turning this off because it's not turned on
-                //li
-                //  a.dropdown-anchors(href=`/admin/createSocialPost`) Create Social Post
-                //li
-                //  a.dropdown-anchors(href=`/admin/oneOffSocialPost`) One Off Social Post
+  .searchButton {
+    position: absolute;
+    width: 14%;
+    height: 33px;
+    border: 1px solid #BEBEBE;
+    border-left: 0;
+    top: 11px;
+    right: 0;
+    border-radius: 0px 2px 2px 0;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: center;
+    background-color: #f0f0f0;
+    z-index: 1
+  }
 
-        //li(class=(title == 'Features') ? 'active' : undefined)
-        //  a(href=`/features`) Features
-        li(class=(title == 'About') ? 'active' : undefined)
-          a(href=`/about`) About
+  button i {
+    opacity: .5;
+    transition: all .07s ease-in-out
+  }
 
-        // if user not logged in
-        if !user
-          li(class=(title == 'Login') ? 'active' : undefined)
-            a(href=`/login`) Login
-          li(class=(title == 'Create Account') ? 'active' : undefined)
-            a(href=`/signup`) Create Account
-        else
-          // if user logged in
-          li(class=(title == 'Upload') ? 'active' : undefined)
-            a(href=`/upload`) Upload
-          li.hidden-md.hidden-lg.hidden-sm
-            a(href=`/notifications`) Notifications (#{unreadNotifAmount})
-          li.hidden-md.hidden-lg.hidden-sm
-            a(href=`/user/` + user.channelUrl) My Channel
-          li.hidden-md.hidden-lg.hidden-sm
-            a(href=`/account`) My Account
-          li.hidden-md.hidden-lg.hidden-sm
-            a(href=`/logout`) Logout
-          li.dropdown(class=(title == 'Account Management') ? 'active' : undefined)
-            a.dropdown-toggle(href='#', data-toggle='dropdown')
-              span #{user.channelName || user.channelUrl } (#{unreadNotifAmount}) &nbsp
-              i.caret
-            ul.dropdown-menu(style="background-color:rgb(24,55,147);max-width: 147px;")
-              li
-                a.dropdown-anchors(href=`/notifications` style="color:white;") Notifications (#{unreadNotifAmount})
-              li
-                a.dropdown-anchors(href=`/user/` + user.channelUrl style="color:white;") My Channel
-              li
-                a.dropdown-anchors(href=`/account` style="color:white;") My Account
+  button:hover i {
+    opacity: .95
+  }
 
-              li(class=(title == 'Upload') ? 'active' : undefined)
-                a.dropdown-anchors(href=`/upload` style="color:white;") Upload
-              li.divider
-              li
-                a.dropdown-anchors(href=`/logout` style="color:white;") Logout
+  button:hover {
+    background-color: #E4E4E4;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .15),
+    inset 0 0 2px rgba(0, 0, 0, .05);
+    transition: all .07s ease-in-out
+  }
+
+  .searchIcon {
+    position: absolute;
+    left: 44%;
+    top: 29%;
+  }
+
+  .searchExpander {
+    position: absolute;
+    top: 24px;
+    right: 111px;
+    font-size: 22px;
+    color: grey;
+  }
+
+  .signInDiv {
+    display: inline-block;
+    border: 2px solid black;
+    padding: 9px 23px;
+    border-radius: 3px;
+  }
+
+  .signInAnchor {
+    position: absolute;
+    top: 13px;
+    right: 10px;
+  }
+
+  .secondLine {
+    margin-top: -54px !important;
+    padding-left: 56px;
+  }
+
+
+
+.container.headerContainer.fixed-top(style="opacity:1;background-color:white;margin:0;max-width:100%;padding:0")
+  //.search1
+  //    form.search-form
+  //        input(type='text', placeholder='Search for books, authors, categories and more..')
+  //        input(type='submit', value='Submit')
+
+
+
+  div.secondLine(style="float:left;margin-top:8px;border-bottom: 1px solid #cec0c0;width:100%;box-shadow:-3px 11px 10px -10px rgba(0,0,0,0.51);")
+
+    a.hamburgerDropdown(href="#" style="position:absolute;left:28px;")
+      img(src="/images/white-burger.jpg" style="width:52px;display:inline-block;" onclick='toggleNav()')
+
+    a(href="/" style="position:absolute;left:99px;top:12px;")
+      p.fullTitle(style="text-transform:uppercase;display:inline-block;color:#0FDA01;font-size:25px;font-weight:900;") #{brandName}
+      p.singleLetter(style="text-transform:uppercase;") #{brandName}
+
+    div.searchPlaceHolder(style="height:56px;display:inline-block;display:none;")
+      a(href="#")
+        i.fas.fa-search.searchExpander.searchExpanderButton
+        i.fas.fa-arrow-left.searchExpander.backButtonIcon(style="left:17px;display:none;width:70px;")
+
+
+    div.search-bar(style="width:45%;margin-left:200px;")
+      input(type='hidden', name='_csrf', value=_csrf)
+      input.search-query-input(type='text', placeholder='Search' name='searchValue' value=searchValue || "")
+      button.search-uploads-button.searchButton(style="right:108px")
+        i.fas.fa-search.searchIcon
+
+    // UPGRADE ICON
+    //a(href="#" style="position: absolute;top: 21px;right: 325px;")
+    //    h7(style="font-size:15px") Upgrade
+
+    if !user
+      a.signInAnchor(href="/login" style="background-color:white;")
+        div.signInDiv(style="")
+          h7(style="display:inline-block;color:black;") Sign in
+
+      a.signInAnchor(href="/login" style="background-color:white;")
+        div.signInDiv(style="")
+          h7(style="display:inline-block;color:black;") Sign in
+
+    if user
+      // BELL ICON
+      //a(href="#" style="position: absolute;top: 19px;right: 280px;")
+      //    img(src="/bell-angle.png" style="width:29px;display:inline-block;margin-left:15px;")
+
+      a(href="https://newtube.app/paypal" style="position: absolute;top: 13px;right: 79px;")
+        div.postButton(style="display:inline-block;border: 1px solid black;padding: 9px 36px;margin-left:15px;border-radius: 3px;background-color: white;" data-toggle='modal', data-target='#exampleModal')
+          //a(href="/donate")
+          h7(style="display:inline-block;color:black;") Donate
+
+        div.postIcon(style="display:none;" data-toggle='modal', data-target='#exampleModal')
+          img(src="/images/whiteDollarIcon.png" style="width:25px;margin-top:9px;")
+          //h7(style="display:inline-block;color:black;") Post
+
+        a.userImage(href="#" style="position: absolute;top: 20px;right: 29px;")
+          img(onclick='toggleAccount()' src=user.gravatar() style="width: 27px;display:inline-block;margin-left:15px;border-radius:15px;")
+
+
+script.
+
+  $(document).ready(function () {
+    $('.searchExpander').click(function () {
+      console.log('something')
+      $('.backButtonIcon').css({
+        display: 'block'
+      });
+
+      // hide single letter
+      var elem = $('.singleLetter');
+      elem[0].style.removeProperty('display');
+      elem[0].style.setProperty('display', 'none', 'important');
+
+      // hide single letter
+      var elem2 = $('.searchPlaceHolder');
+      console.log(elem2[0]);
+      elem2[0].style.removeProperty('display');
+      elem2[0].style.setProperty('display', 'inline', 'important');
+
+      var elem1 = $('.postIcon');
+      if(elem1[0]){
+        elem1[0].style.removeProperty('display');
+        elem1[0].style.setProperty('display', 'none', 'important');
+      }
+
+      $('.search-bar, .search-form').css({
+        display: 'inline'
+      });
+
+      $('.hamburgerDropdown, .userImage, .searchExpanderButton').css({
+        display: 'none'
+      });
+
+      $('.searchButton').css({
+        top: '-8px'
+      })
+    })
+
+    // show the old header
+    $('.backButtonIcon').click(function () {
+      console.log('something')
+
+      $('.backButtonIcon, .singleLetter, .search-bar, .search-form').css({
+        display: 'none'
+      });
+
+      $('.hamburgerDropdown, .searchExpanderButton, .userImage').css({
+        display: 'block'
+      });
+
+      $('.postIcon').css({
+        display: 'inline'
+      });
+
+      $('.searchPlaceHolder').css({
+        display: 'inline-block'
+      });
+
+
+    })
+
+  });
 
 if !user
   script.
@@ -179,3 +427,37 @@ script.
 
     console.log("ready!");
   });
+
+
+script.
+  $(document).ready(function () {
+
+    console.log('lets')
+
+    var orderBy = '#{orderBy}'
+    var mediaType = '#{mediaType}'
+    var searchQuery = '#{searchQuery}'
+    var searchType = '#{searchType}' // upload or user
+
+    console.log(orderBy, mediaType, searchQuery, searchType)
+
+    if (!orderBy) {
+      orderBy = 'newToOld'
+    }
+
+
+    console.log(orderBy, mediaType, searchQuery, searchType)
+
+    $('.search-query-input').focus();
+
+
+    // capture submit
+    $('.search-uploads-button').click(function () {
+
+      var userSearchQuery = $('.search-query-input').val()
+
+      window.location = '/search?orderBy=' + orderBy + '&mediaType=' + mediaType + '&searchQuery=' + userSearchQuery + '&searchType=' + searchType
+    });
+
+  });
+

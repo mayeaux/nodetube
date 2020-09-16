@@ -1,0 +1,282 @@
+style.
+    /* The sidebar menu */
+    .sidebar {
+        /*height: 100%; !* 100% Full-height *!*/
+        /*margin-top: 30px;*/
+        width: 0; /* 0 width - change this with JavaScript */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Stay on top */
+        top: 0;
+        left: 0;
+        background-color: white; /* Black*/
+        overflow-x: hidden; /* Disable horizontal scroll */
+        /*padding-top: 60px; !* Place content 60px from the top *!*/
+        transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
+
+        /* added */
+        border: 1.2px solid rgb(179, 177, 177);
+        margin-top: 50px;
+        padding: 0px;
+        height: 469px;
+
+        box-shadow: rgba(0, 0, 0, 0.51) 15px 17px 10px -10px
+    }
+
+    /* The sidebar links */
+    .sidebar a {
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 14px;
+        color: #818181;
+        display: block;
+        transition: 0.3s;
+
+        /* custom */
+        margin-left: 5px;
+        white-space:nowrap
+    }
+
+    /* Position and style the close button (top right corner) */
+    .sidebar .closebtn {
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px;
+        margin-left: 50px;
+    }
+
+    /* The button used to open the sidebar */
+    .openbtn {
+        font-size: 20px;
+        cursor: pointer;
+        background-color: #111;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+    }
+
+    .openbtn:hover {
+        background-color: #444;
+    }
+
+    /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+    #main {
+        transition: margin-left .5s; /* If you want a transition effect */
+        padding: 20px;
+    }
+
+    /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+    @media screen and (max-height: 450px) {
+        /*.sidebar {*/
+        /*padding-top: 15px;*/
+        /*}*/
+
+        /*.sidebar a {*/
+        /*font-size: 18px;*/
+        /*}*/
+    }
+
+    /* The sidebar menu */
+    .accountDropdown {
+        height: 366px; /* Full-height: remove this if you want "auto" height */
+        width: 208px; /* Set the width of the sidebar */
+        position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+        top: 64px; /* Stay at the top */
+        right: 6px;
+        background-color: white; /* Black */
+        text-align: left;
+        border: 1px solid #cec0c0;
+        box-shadow: -8px -9px 10px -10px rgba(0, 0, 0, 0.51);
+        border-radius: 2px;
+
+        /*overflow: hidden;*/
+        z-index: 9999999; /* Stay on top */
+    }
+
+    .accountDropdown:after,
+    .accountDropdown:after {
+        z-index: -1;
+        position: absolute;
+        top: -3.9%;
+        left: 100%;
+        margin-left: -25%;
+        content: '';
+        width: 0;
+        height: 0;
+        border-bottom: solid 15px #ffffff;
+        border-left: solid 15px transparent;
+        border-right: solid 15px transparent;
+    }
+
+    .accountDropdown:before,
+    .accountDropdown:before {
+        z-index: -1;
+        position: absolute;
+        top: -3.9%;
+        left: 100%;
+        margin-left: -25%;
+        content: '';
+        width: 0;
+        height: 0;
+        border-bottom: solid 15px #908e8e;
+        border-left: solid 15px transparent;
+        border-right: solid 15px transparent;
+
+    }
+
+    /* The navigation menu links */
+    .accountDropdown a {
+        padding: 6px 8px 6px 0px;
+        text-decoration: none;
+        font-size: 13px;
+        color: #828282;
+        display: block;
+        width: 100%;
+        margin-left:25px;
+    }
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 23px;
+    }
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 15px;
+        width: 15px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    input:checked + .slider {
+        background-color: #2196F3;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+        border-radius: 34px;
+    }
+
+    .slider.round:before {
+        border-radius: 50%;
+    }
+
+
+#mySidebar.sidebar(style="text-align:left;margin-left:-2px;overflow-y: hidden;")
+    div(style="margin-top:27px")
+
+    a(href='https://newtube.app/paypal' style="color:#007bff;") Donate &nbsp
+        i.fas.fa-dollar-sign
+
+
+
+    if user
+        a(href='/account?to=nt-plus' style="color:#007bff;") Upgrade &nbsp
+
+            i.fas.fa-plus
+
+    else
+
+        a(href='/signin' style="color:#007bff;") Sign In
+
+        //a(href='/newtube.app/paypal' style="color:#007bff;") Sign Up
+
+
+    hr
+
+    // link to popular by categories
+    a(href='/media/popular/1?media=all&category=overview&within=24hour' style="")
+        i.fas.fa-fire-alt
+
+        p Popular - Categories
+
+    // link to popular uncategorized
+    a(href='/media/popular/1?media=all&category=all&within=24hour' style="")
+        i.fas.fa-fire-alt
+
+        p    Popular - All Uploads
+
+    // recent by category
+    a(href='/media/recent?category=overview' style="")
+
+        i.fas.fa-clock
+        p Recent - Categories
+
+    // recent uncategorized
+    a(href='/media/recent?category=all' style="")
+        i.i.fas.fa-clock
+        p Recent - All Uploads
+
+    hr
+    // turn off until implemented
+    //.nightMode(style="white-space:nowrap")
+    //    a(href="#" style="display:inline-block;") Night Mode
+    //    label.switch
+    //        input(type='checkbox')
+    //        span.slider.round
+
+    a(href="/about") About Us &nbsp
+        i.fa.fa-question-circle(aria-hidden='true')
+
+
+
+.accountDropdown#accountDropdown(style="display:none;text-align:left;border: 1px solid #cec0c0;box-shadow:-8px -9px 10px -10px rgba(0,0,0,0.51);border-radius:3px;")
+    .userDetails
+        if user
+            img(src="/images/gravatar.png" style="width: 34px;display:inline-block;margin-left:15px;border-radius:15px;position: absolute;top: 15px;right: 149px;")
+            p(style="font-size: 13px;position: absolute;left:65px;top: 15px;") #{user.displayName}
+            p(style="font-size: 12px;position: absolute;top: 32px;color: grey;left:63px;") #{user.channelUrl || user.channelName}
+
+        // if there's no user, prompt them to sign up, otherwise prompt them to upgrade to plus
+        if !user
+            a(href="/signup" style="color:#007bff")
+                h7(style="position: absolute;top: 60px;right: 132px;font-size: 13px;") Sign Up
+            // otherwise prompt them to upgrade to plus
+        else
+            a(href="/account?to=nt-plus" style="color:#007bff")
+                h7(style="position: absolute;top: 60px;right: 132px;font-size: 13px;") Upgrade
+    div(style="padding-top:57px")
+
+    if user
+        hr
+        a(href='/upload') New Upload
+        hr
+        a(href='/account') Account
+        a(href='/user/' + user.channelUrl) Channel
+        //a(href='#') Help
+        a(href='/logout') Sign out
+
