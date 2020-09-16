@@ -135,6 +135,8 @@ function frontendRoutes(app){
 
   app.get('/donate', publicController.getDonate);
 
+  app.get('/landing', publicController.getLandingPage);
+
   app.get('/termsofservice', publicController.tos);
   app.get('/privacy', publicController.privacy);
   app.get('/embed/:uniqueTag', publicController.getEmbed);

@@ -503,6 +503,7 @@ exports.postFileUpload = async(req, res) => {
               fileInDirectory = `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-old.mp4`;
             }
 
+            // if the file type is convert or it's over max bitrate
             if(upload.fileType == 'convert' || (bitrate > maxBitrate && fileExtension == '.mp4')){
 
               console.log(fileInDirectory);
