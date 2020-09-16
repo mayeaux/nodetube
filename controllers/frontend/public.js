@@ -71,6 +71,53 @@ exports.index = async(req, res) => {
   }
 };
 
+
+/**
+ * GET /landing
+ * Landing page
+ */
+exports.getLandingPage = async(req, res) => {
+
+  const title = 'Home';
+
+  if(defaultLandingPage == 'globe'){
+
+    // get 150 most popular uploads in last 24h that are sfw and from any category
+    let uploads = await getFromCache.getPopularUploads('24hour', 150, 0, 'all', 'SFW', 'all', '');
+
+    res.render('public/globe', {
+      title,
+      uploadServer,
+      uploads
+    });
+
+  } else {
+
+    const response = indexResponse;
+    let mediaAmount, channelAmount, viewAmount;
+
+    if(!response){
+      mediaAmount = 0;
+      channelAmount = 0;
+      viewAmount = 0;
+    } else {
+      mediaAmount = response.mediaAmount;
+      channelAmount = response.channelAmount;
+      viewAmount = response.viewAmount;
+    }
+
+    res.render('public/home', {
+      title,
+      mediaAmount,
+      channelAmount,
+      viewAmount,
+      uploadServer
+    });
+
+  }
+};
+
+
 /**
  * GET /globe
  * Globe page.
@@ -84,6 +131,31 @@ exports.globe = async(req, res) => {
     uploadServer,
     uploads
   });
+};
+
+/**
+ * GET /random
+ * Random redirect page page.
+ */
+exports.random = async(req, res) => {
+  // and not deleted
+  let upload = await Upload.aggregate([
+    { $match: { visibility: 'public', status: 'completed' } },
+    { $sample: { size: 1 } }
+  ]);
+
+  upload = upload[0];
+
+  return res.redirect(`/user/v/${upload.uniqueTag}/`);
+
+  // /user/v/Kqd5SfS
+
+  console.log(upload);
+
+  console.log(upload.uniqueTag);
+
+  res.send('hello');
+
 };
 
 /**
@@ -159,3 +231,16 @@ exports.getDocs = async(req, res) => {
     title: 'Docs'
   });
 };
+
+
+/**
+ * GET /donate
+ * Donation page
+ */
+exports.getDonate = async(req, res) => {
+
+  res.render('public/donate', {
+    title: 'Donate'
+  });
+};
+

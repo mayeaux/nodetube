@@ -27,6 +27,7 @@ const userSchema = new mongoose.Schema({
     default: 'user'
   },
 
+  // channel username, unique url and identifier
   channelUrl: { type: String, unique: true, required: true, uniqueCaseInsensitive: true },
 
   verified: {

@@ -24,7 +24,7 @@ style.
 
     /* The sidebar links */
     .sidebar a {
-        padding: 8px 8px 8px 32px;
+        padding: 0px 8px 4px 32px;
         text-decoration: none;
         font-size: 14px;
         color: #818181;
@@ -78,7 +78,7 @@ style.
 
     /* The sidebar menu */
     .accountDropdown {
-        height: 366px; /* Full-height: remove this if you want "auto" height */
+        height: 392px; /* Full-height: remove this if you want "auto" height */
         width: 208px; /* Set the width of the sidebar */
         position: fixed; /* Fixed Sidebar (stay in place on scroll) */
         top: 64px; /* Stay at the top */
@@ -126,7 +126,7 @@ style.
 
     /* The navigation menu links */
     .accountDropdown a {
-        padding: 6px 8px 6px 0px;
+        padding: 3px 8px 6px 0px;
         text-decoration: none;
         font-size: 13px;
         color: #828282;
@@ -195,51 +195,75 @@ style.
         border-radius: 50%;
     }
 
+    .ib {
+        display: inline-block;
+    }
 
-#mySidebar.sidebar(style="text-align:left;margin-left:-2px;overflow-y: hidden;")
+
+
+
+
+
+
+// LEFT SIDEBAR
+#mySidebar.sidebar(style="text-align:left;margin-left:-2px;overflow-y: hidden;border-radius:6px;z-index:10")
     div(style="margin-top:27px")
 
-    a(href='https://newtube.app/paypal' style="color:#007bff;") Donate &nbsp
-        i.fas.fa-dollar-sign
+    // user signed in but not paid, prompt to pay
+    if user && user.plan == 'free'
+        a(href='/account?to=nt-plus' style="color:#007bff;")
+
+            i.ib.fas.fa-plus
+            p.ib &nbsp Upgrade &nbsp
 
 
-
-    if user
-        a(href='/account?to=nt-plus' style="color:#007bff;") Upgrade &nbsp
-
-            i.fas.fa-plus
-
+    else if user && user.plan !== 'free'
+        // dont do anything, user is signed in and free
     else
 
-        a(href='/signin' style="color:#007bff;") Sign In
+        // user needs to login
+        a(href='/login' style="color:#007bff;")
+            i.fa.fa-sign-in(aria-hidden='true')
+            p.ib &nbsp Sign In &nbsp
+
+        // user needs to login
+        a(href='/signup' style="color:#007bff;")
+            i.fa.fa-user-plus(aria-hidden='true')
+            p.ib &nbsp Sign Up &nbsp
+
+        hr(style="margin-top:0px")
+
 
         //a(href='/newtube.app/paypal' style="color:#007bff;") Sign Up
 
 
-    hr
-
     // link to popular by categories
     a(href='/media/popular/1?media=all&category=overview&within=24hour' style="")
-        i.fas.fa-fire-alt
+        i.ib.fas.fa-fire-alt
 
-        p Popular - Categories
+        p.ib &nbsp Popular - Categories
 
     // link to popular uncategorized
     a(href='/media/popular/1?media=all&category=all&within=24hour' style="")
-        i.fas.fa-fire-alt
+        i.ib.fas.fa-fire-alt
 
-        p    Popular - All Uploads
+        p.ib &nbsp Popular - All Uploads
 
     // recent by category
     a(href='/media/recent?category=overview' style="")
 
-        i.fas.fa-clock
-        p Recent - Categories
+        i.ib.fas.fa-clock
+        p.ib &nbsp Recent - Categories
 
     // recent uncategorized
     a(href='/media/recent?category=all' style="")
-        i.i.fas.fa-clock
-        p Recent - All Uploads
+        i.ib.i.fas.fa-clock
+        p.ib &nbsp Recent - All Uploads
+
+    a(href='/random' style="")
+        i.ib.i.fas.fa-dice
+        p.ib &nbsp Random Upload
+
 
     hr
     // turn off until implemented
@@ -249,34 +273,124 @@ style.
     //        input(type='checkbox')
     //        span.slider.round
 
-    a(href="/about") About Us &nbsp
-        i.fa.fa-question-circle(aria-hidden='true')
+    a(href="/about")
+        i.ib.fa.fa-question-circle(aria-hidden='true')
+        p.ib About #{brandName} &nbsp
 
-
-
-.accountDropdown#accountDropdown(style="display:none;text-align:left;border: 1px solid #cec0c0;box-shadow:-8px -9px 10px -10px rgba(0,0,0,0.51);border-radius:3px;")
-    .userDetails
-        if user
-            img(src="/images/gravatar.png" style="width: 34px;display:inline-block;margin-left:15px;border-radius:15px;position: absolute;top: 15px;right: 149px;")
-            p(style="font-size: 13px;position: absolute;left:65px;top: 15px;") #{user.displayName}
-            p(style="font-size: 12px;position: absolute;top: 32px;color: grey;left:63px;") #{user.channelUrl || user.channelName}
-
-        // if there's no user, prompt them to sign up, otherwise prompt them to upgrade to plus
-        if !user
-            a(href="/signup" style="color:#007bff")
-                h7(style="position: absolute;top: 60px;right: 132px;font-size: 13px;") Sign Up
-            // otherwise prompt them to upgrade to plus
-        else
-            a(href="/account?to=nt-plus" style="color:#007bff")
-                h7(style="position: absolute;top: 60px;right: 132px;font-size: 13px;") Upgrade
-    div(style="padding-top:57px")
+    a(href='https://newtube.app/paypal' style="color:#007bff;")
+        i.ib.fas.fa-dollar-sign
+        p.ib &nbsp Support NewTube
 
     if user
         hr
-        a(href='/upload') New Upload
-        hr
-        a(href='/account') Account
-        a(href='/user/' + user.channelUrl) Channel
+
+        a(href='/logout')
+            i.fa.fa-sign-out(aria-hidden='true')
+            p.ib &nbsp Sign Out &nbsp
+
+
+// END LEFT SIDEBAR
+
+
+
+
+
+
+
+
+
+
+// RIGHT SIDE DROPDOWN WITH USER RELATED FUNCTIONALITY
+.accountDropdown#accountDropdown(style="display:none;text-align:left;border: 1px solid #cec0c0;box-shadow:-8px -9px 10px -10px rgba(0,0,0,0.51);border-radius:3px;")
+    .userDetails
+        // USER SECTION
+        if user
+            a(href='/user/' + user.channelUrl)
+                if user.customThumbnail
+                    img.center-block.text-center(src=`${uploadServer}/${user.channelUrl}/${user.customThumbnail}` style="width: 34px;display:inline-block;margin-left:15px;border-radius:15px;position: absolute;top: 15px;right: 149px;")
+                else
+                    img.center-block.text-center(src =`/images/default_user_image.png` style="width: 34px;display:inline-block;margin-left:15px;border-radius:15px;position: absolute;top: 15px;right: 149px;")
+
+                p(style="font-size: 13px;position: absolute;left:65px;top: 15px;") #{user.displayName}
+                p(style="font-size: 18px;position: absolute;top: 19px;color: grey;left:63px;") #{user.channelUrl || user.channelName}
+
+
+
+
+        // if there's no user, prompt them to sign up,
+        if !user
+            a(href="/signup" style="color:#007bff")
+                h7(style="position: absolute;top: 60px;right: 105px;font-size: 13px;")
+                    i.ib.fa.fa-sign-in
+                    p.ib Sign Up &nbsp
+            // otherwise prompt them to upgrade to plus
+        else
+
+            // if the user has a free plan, prompt them to get plus
+            if user && user.plan == 'free'
+                a(href="/account?to=nt-plus" style="color:#007bff")
+                    h7.ib(style="position: absolute;top: 70px;right: 78px;font-size: 13px;")
+                        i.ib.fas.fa-plus
+                        p.ib  &nbsp NewTube Plus
+
+
+            // support newtube link
+            a(href="https://newtube.app/paypal" style="color:#007bff")
+
+                if user && user.plan == 'plus'
+                    h7.ib(style="position: absolute;top: 62px;right: 50px; 50px;font-size: 13px;")
+
+                        i.ib.fas.fa-dollar
+                        p.ib &nbsp Support NewTube &nbsp
+                else
+                    h7.ib(style="position: absolute;top:97px;right: 50px; 50px;font-size: 13px;")
+
+                        i.ib.fas.fa-dollar
+                        p.ib &nbsp Support NewTube &nbsp
+
+
+    if user && user.plan == 'plus'
+        // other pages section
+        div(style="padding-top:27px")
+    else
+        div(style="padding-top:57px")
+
+
+    if user
+        hr(style="margin-top:45px")
+        a(href='/upload')
+            i.ib.fas.fa-upload
+            p.ib &nbsp New Upload
+
+        a(href='/account')
+            i.ib.fas.fa-user
+            p.ib &nbsp Account
+
+        a(href='/user/' + user.channelUrl)
+            i.ib.fa.fa-video
+            p.ib Channel
+
+        a(href='/notifications')
+            i.ib.fas.fa-bell
+            if unreadNotifAmount > 0
+                p.ib &nbsp Notifications (#{unreadNotifAmount})
+            else
+                p.ib &nbsp Notifications
+
+        a(href='/media/subscribed')
+            i.ib.fa.fa-video
+            if user.unseenSubscriptionUploads > 0
+                p.ib &nbsp Subscriptions (#{user.unseenSubscriptionUploads})
+            else
+                p.ib &nbsp Subscriptions
+
+
+        hr(style="margin-top:10px;margin-bottom:10px")
+
         //a(href='#') Help
-        a(href='/logout') Sign out
+        //a(href='/logout') Sign out
+
+        a(href='/logout/')
+            i.ib.fa.fa-sign-in
+            p.ib &nbsp Sign Out
 

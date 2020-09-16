@@ -130,14 +130,22 @@ function frontendRoutes(app){
 
   /** publicly available routes **/
   app.get('/', publicController.index);
-  app.get('/globe', publicController.globe);
   app.get('/about', publicController.about);
   app.get('/docs', publicController.getDocs);
+
+
+  app.get('/donate', publicController.getDonate);
+
+  app.get('/landing', publicController.getLandingPage);
+
   app.get('/termsofservice', publicController.tos);
   app.get('/privacy', publicController.privacy);
   app.get('/embed/:uniqueTag', publicController.getEmbed);
   // app.get('/contact', contactController.getContact);
   // app.post('/contact', contactController.postContact);
+
+  app.get('/globe', publicController.globe);
+  app.get('/random', publicController.random);
 
   /** upload APIS **/
   app.post('/upload', uploadingController.postFileUpload);

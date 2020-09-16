@@ -4,13 +4,13 @@ for category in categories
     if uploads[category.name] && uploads[category.name].length && uploads[category.name].length > 0
         div.category.col-sm-12
             div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style="text-align:left;max-height:124px;margin-bottom:20px;")
-                a.upload-user-text(style="font-size:41px;color:#c1baba;" href=`${addressPrepend}/1?category=${category.name}&within=${within}&media=${mediaType || ''}`)
+                a.upload-user-text(style="font-size:41px;" href=`${addressPrepend}/1?category=${category.name}&within=${within}&media=${mediaType || ''}`)
                     h1.fw(style="font-size:41px;color:#c1baba;") #{category.displayName}
 
             // begin individual upload section
             each upload in uploads[category.name]
                 if upload.uploader
-                    div.col-xs-12.col-sm-6.col-md-6.col-lg-4(style="text-align:center;height:360px;margin-bottom:30px;")
+                    div.col-xs-12.col-sm-6.col-md-6.col-lg-4(style="text-align:center;height:354px;margin-bottom:30px;")
                         div(style="width:100%")
                             include ../viewPartials/uploadThumbnail
 

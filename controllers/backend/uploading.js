@@ -416,8 +416,21 @@ exports.postFileUpload = async(req, res) => {
 
             codecName  = response.streams[0].codecName;
 
-            // TODO: what are the units of measurement here?
+            const width = response.streams[0].width;
+            const height = response.streams[0].height;
+
+            // bitrate in kbps
             bitrate = response.format.bit_rate / 1000;
+
+            upload.bitrateInKbps = bitrate;
+
+            upload.dimensions.height = height;
+            upload.dimensions.width = width;
+            upload.dimensions.aspectRatio = height/width;
+
+            console.log(response);
+            //
+            // console.log('')
 
             uploadLogger.info(`BITRATE: ${bitrate}`, logObject);
           }
@@ -491,6 +504,7 @@ exports.postFileUpload = async(req, res) => {
               fileInDirectory = `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-old.mp4`;
             }
 
+            // if the file type is convert or it's over max bitrate
             if(upload.fileType == 'convert' || (bitrate > maxBitrate && fileExtension == '.mp4')){
               await ffmpegHelper.convertVideo({
                 uploadedPath: fileInDirectory,

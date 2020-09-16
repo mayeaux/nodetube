@@ -55,8 +55,6 @@ style.
      ====== Medua Query for Search Box ======
      =========================== */
 
-
-
   /** post button starts to hit search bar **/
   @media (max-width: 753px){
     /*input[name="searchValue"] {*/
@@ -74,6 +72,7 @@ style.
 
   /* when plus button starts to hit search bar */
   @media (max-width: 593px) {
+
     .fullTitle {
       display: none !important;
     }
@@ -98,6 +97,7 @@ style.
   }
 
   /* when plus button starts to hit search bar */
+  /* everything under 439px  */
   @media (max-width: 439px) {
     .fullTitle {
       display: none !important;
@@ -111,21 +111,13 @@ style.
       display: none;
     }
 
-    .searchPlaceHolder {
+    .searchPlaceHolder, .uploadButton {
       display: block !important;
     }
 
   }
 
-  /* anything below this width */
-  @media (min-width: 1250px) {
-    body {
-      zoom: 1.15;
-    }
-    /*.postButton {*/
-    /*display: none !important;*/
-    /*}*/
-  }
+
 
   /*@media (min-width: 320px) {*/
   /*!* smartphones, iPhone, portrait 480x320 phones *!*/
@@ -185,13 +177,12 @@ style.
 
   .search-bar {
     width: 55%;
-    line-height: 56px;
     position: relative;
     margin: 0 auto;
   }
 
   input[type="text"] {
-    width: 73%;
+    width: 88%;
     height: 33px;
     padding: 0 10px;
     color: #000;
@@ -221,29 +212,36 @@ style.
     z-index: 1
   }
 
-  button i {
-    opacity: .5;
-    transition: all .07s ease-in-out
+  .search-uploads-button {
+    border: 1px solid #5b5a5a;
+    z-index: 99999999;
+    background-color: #313131 !important;
   }
 
-  button:hover i {
-    opacity: .95
+  .search-query-input {
+    border: 1px solid #5b5a5a !important;
+    color:white !important;
+    background-color:#313131;
   }
 
-  button:hover {
-    background-color: #E4E4E4;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, .15),
-    inset 0 0 2px rgba(0, 0, 0, .05);
-    transition: all .07s ease-in-out
+  .search-query-input::placeholder { /* Most modern browsers support this now. */
+    color: grey;
   }
+
+  .search-uploads-button:hover i {
+    opacity: .95;
+    color: white;
+  }
+
 
   .searchIcon {
     position: absolute;
     left: 44%;
     top: 29%;
+    color: #a7a3a3;
   }
 
-  .searchExpander {
+  .searchExpander, .uploadButton {
     position: absolute;
     top: 24px;
     right: 111px;
@@ -269,6 +267,33 @@ style.
     padding-left: 56px;
   }
 
+  @media (max-width: 927px) {
+    .diceIcon {
+      visibility: hidden;
+    }
+
+  }
+
+  .postButton {
+    transition: all 0.2s ease;
+    -webkit-transition: all 0.2s ease;
+  }
+
+  .search-uploads-button {
+    transition: all 0.2s ease;
+    -webkit-transition: all 0.2s ease;
+  }
+
+  .postButton:hover {
+    background-color: #212121 !important;
+  }
+
+  .search-uploads-button:hover {
+    background-color: #212121 !important;
+  }
+  
+  
+
 
 
 .container.headerContainer.fixed-top(style="opacity:1;background-color:white;margin:0;max-width:100%;padding:0")
@@ -284,7 +309,7 @@ style.
     a.hamburgerDropdown(href="#" style="position:absolute;left:28px;")
       img(src="/images/white-burger.jpg" style="width:52px;display:inline-block;" onclick='toggleNav()')
 
-    a(href="/" style="position:absolute;left:99px;top:12px;")
+    a(href="/" style="position:absolute;left:99px;top:15px;")
       p.fullTitle(style="text-transform:uppercase;display:inline-block;color:#0FDA01;font-size:25px;font-weight:900;") #{brandName}
       p.singleLetter(style="text-transform:uppercase;") #{brandName}
 
@@ -296,8 +321,8 @@ style.
 
     div.search-bar(style="width:45%;margin-left:200px;")
       input(type='hidden', name='_csrf', value=_csrf)
-      input.search-query-input(type='text', placeholder='Search' name='searchValue' value=searchValue || "")
-      button.search-uploads-button.searchButton(style="right:108px")
+      input.search-query-input(style="margin-top:11px;margin-bottom:10px;" type='text', placeholder=`${  searchQuery !== undefined ? searchQuery : 'Search'   }` name='searchValue' value="")
+      button.search-uploads-button.searchButton(style="right:-6px;background-color:black;")
         i.fas.fa-search.searchIcon
 
     // UPGRADE ICON
@@ -305,42 +330,74 @@ style.
     //    h7(style="font-size:15px") Upgrade
 
     if !user
-      a.signInAnchor(href="/login" style="background-color:white;")
-        div.signInDiv(style="")
-          h7(style="display:inline-block;color:black;") Sign in
 
-      a.signInAnchor(href="/login" style="background-color:white;")
-        div.signInDiv(style="")
-          h7(style="display:inline-block;color:black;") Sign in
+
+      a.diceIcon.signInAnchor(href="/random" style="right:121px;")
+        i.fas.fa-random(aria-hidden="true" style="cursor:pointer;color:#b9b9b9;font-size:32px;margin-top:3px;margin-right:5px;")
+
+
+
+      //a.signInAnchor(href="/random" style="background-color:white;right:121px;")
+      //  div.signInDiv(style="")
+      //    i.fas.fa-dice
+
+      a.signInAnchor(href="/login" style="")
+        div.signInDiv(style="background-color: #313131;border: 1px solid #848484;")
+          h7(style="display:inline-block;color:white;") Sign In
+
 
     if user
+
+      a.diceIcon.signInAnchor(href="/random" style="right:212px;")
+
+        i.fas.fa-random(aria-hidden="true" style="cursor:pointer;color:#b9b9b9;font-size:32px;margin-top:3px;margin-right:5px;")
+
+        //img(src="/images/random.png" style="height:39px;margin-top:2px;opacity:0.9;")
+
       // BELL ICON
       //a(href="#" style="position: absolute;top: 19px;right: 280px;")
       //    img(src="/bell-angle.png" style="width:29px;display:inline-block;margin-left:15px;")
 
-      a(href="https://newtube.app/paypal" style="position: absolute;top: 13px;right: 79px;")
-        div.postButton(style="display:inline-block;border: 1px solid black;padding: 9px 36px;margin-left:15px;border-radius: 3px;background-color: white;" data-toggle='modal', data-target='#exampleModal')
-          //a(href="/donate")
-          h7(style="display:inline-block;color:black;") Donate
 
-        div.postIcon(style="display:none;" data-toggle='modal', data-target='#exampleModal')
-          img(src="/images/whiteDollarIcon.png" style="width:25px;margin-top:9px;")
+      a(href="/upload" style="position: absolute;top: 13px;right: 79px;")
+        div.postButton(style="display:inline-block;border: 1px solid #848484;padding: 9px 36px;margin-left:15px;border-radius: 3px;background-color: #313131;" data-toggle='modal', data-target='#exampleModal')
+          //a(href="/donate")
+          h7(style="display:inline-block;color:white;") Upload
+
+      a(href="/upload" style="position: absolute;top: 13px;right: 79px;")
+        div.postIcon
+          i.fas.fa-upload.uploadButton(style="top: 11px;right: -6px;display:none;")
+
+        //div.postIcon(style="display:none;" data-toggle='modal', data-target='#exampleModal')
+        //  img(src="/images/whiteDollarIcon.png" style="width:25px;margin-top:9px;")
           //h7(style="display:inline-block;color:black;") Post
 
         a.userImage(href="#" style="position: absolute;top: 20px;right: 29px;")
-          img(onclick='toggleAccount()' src=user.gravatar() style="width: 27px;display:inline-block;margin-left:15px;border-radius:15px;")
+          if user.customThumbnail
+            img.center-block.text-center(onclick='toggleAccount()' src=`${uploadServer}/${user.channelUrl}/${user.customThumbnail}` style="width: 27px;display:inline-block;margin-left:15px;border-radius:15px;")
+          else
+            img.center-block.text-center(onclick='toggleAccount()' src=`/images/default_user_image.png` style="width: 27px;display:inline-block;margin-left:15px;border-radius:15px;")
+            //img.center-block.text-center(onclick='toggleAccount()' src=`${uploadServer}/${user._id}/unique.png` style="width: 27px;display:inline-block;margin-left:15px;border-radius:15px;")
 
 
 script.
 
   $(document).ready(function () {
+
+    // whatever search expander is
     $('.searchExpander').click(function () {
       console.log('something')
+
+      // hide the sign in div
+      $('.signInDiv').hide();
+
+
+      // show the back button
       $('.backButtonIcon').css({
         display: 'block'
       });
 
-      // hide single letter
+      // hide single letter (now just says newtube)
       var elem = $('.singleLetter');
       elem[0].style.removeProperty('display');
       elem[0].style.setProperty('display', 'none', 'important');
@@ -351,15 +408,22 @@ script.
       elem2[0].style.removeProperty('display');
       elem2[0].style.setProperty('display', 'inline', 'important');
 
+      // post icon probably now upload button
       var elem1 = $('.postIcon');
       if(elem1[0]){
         elem1[0].style.removeProperty('display');
         elem1[0].style.setProperty('display', 'none', 'important');
       }
 
+      // shwo the search bar again
       $('.search-bar, .search-form').css({
         display: 'inline'
       });
+
+      $('.search-query-input').css({
+        'margin-left' : '-61px'
+      });
+
 
       $('.hamburgerDropdown, .userImage, .searchExpanderButton').css({
         display: 'none'
@@ -368,11 +432,21 @@ script.
       $('.searchButton').css({
         top: '-8px'
       })
+
+      // no need to autofocus
+      $('.search-query-input').focus();
+
     })
 
+
+
+
+    // REVERSE EFFECT
     // show the old header
     $('.backButtonIcon').click(function () {
-      console.log('something')
+      console.log('something else ')
+
+      $('.signInDiv').show();
 
       $('.backButtonIcon, .singleLetter, .search-bar, .search-form').css({
         display: 'none'
@@ -448,7 +522,18 @@ script.
 
     console.log(orderBy, mediaType, searchQuery, searchType)
 
-    $('.search-query-input').focus();
+    // $('.search-query-input').focus();
+
+
+    // TODO: how to capture enter from input
+    $(".search-query-input").on('keyup', function (e) {
+      if (e.key === 'Enter' || e.keyCode === 13) {
+        var userSearchQuery = $('.search-query-input').val()
+
+        window.location = '/search?orderBy=' + orderBy + '&mediaType=' + mediaType + '&searchQuery=' + userSearchQuery + '&searchType=' + searchType
+        // Do something
+      }
+    });
 
 
     // capture submit

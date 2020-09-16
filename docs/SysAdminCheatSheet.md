@@ -12,7 +12,7 @@ netstat -anp | grep :80 | wc -l
 # start caching with forever
 forever start -c "npm run cache" ./
 
-
-
+# show incoming tcp connections
+sudo tcptrack -i eth0
 
 Bootstrap version: public/css/lib/bootstrap/bootstrap.scss

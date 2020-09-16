@@ -54,12 +54,15 @@ block content
         br
         div.formats(style="max-width:500px;margin:0 auto;")
           p(style="font-size:20px;margin-bottom:16px;") Supported File Formats
-          p Video
-          p(style="line-height:23px;max-width:310px;margin:0 auto;margin-bottom:19px;") .mp4, .avi, .flv, .MOV, .m4v, .ogv, .webm, .wmv, .mkv, .mov, .m2t, .MTS, .m2ts, .MPG, .AVI, .mpg
-          p Audio
-          p(style="max-width:209px;margin:0 auto;margin-bottom:19px;") .mp3, .wav, .ogg, .m4a
-          p Image
-          p(style="max-width:209px;margin:0 auto;margin-bottom:19px;") .png, .jpg, .jpeg, .gif, .JPG, .PNG
+          .row
+            .col-sm-6
+              p Video
+              p(style="line-height:35px;max-width:310px;margin:0 auto;margin-bottom:19px;") .mp4, .avi, .flv, .MOV, .m4v, .ogv, .webm, .wmv, .mkv, .mov, .m2t, .MTS, .m2ts, .MPG, .AVI, .mpg
+            .col-sm-6
+              p Audio
+              p(style="max-width:209px;margin:0 auto;margin-bottom:19px;") .mp3, .wav, .ogg, .m4a
+              p Image
+              p(style="max-width:209px;margin:0 auto;margin-bottom:19px;") .png, .jpg, .jpeg, .gif, .JPG, .PNG
 
 
         br
@@ -98,11 +101,13 @@ block content
 
 
                   div#dropTarget(style="")
-                    img(src="/images/filedropdown.png" style="width:350px;")
+                    img(src="/images/fixed.png" style="width:350px;")
                   br
                   br
 
-                  h3.fw(style="font-size:30px;margin-bottom:15px;") Upload Details
+                  div(id="scrollTo")
+
+                  h3.fw(style="font-size:30px;margin-bottom:15px;" id="uploadDetails") Upload Details
 
                   label.fw(style="font-size: 23px;" for='title') Title (*)
                   input.form-group.center-block.text-center(style="width:400px;max-width:95%;border-radius:2px;font-size:20px;font-weight:300;" type="text" name="title" id="title" minlength=3, maxlength=100 required)
@@ -312,6 +317,10 @@ block content
         // Handle file add event
 
         r.on('fileAdded', function (file) {
+
+          // scroll to the div when file selected
+          document.getElementById('scrollTo').scrollIntoView({ behavior: 'smooth' });
+
 
           // replace underlines with spaces just to be nice
           var fileName = file.fileName.replace(/_/g, " ");

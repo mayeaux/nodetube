@@ -2,6 +2,36 @@ extends layout
 
 block content
 
+    if !upload.description
+        style.
+            @media (min-width: 900px) {
+
+                .reactColumn {
+                    margin-top: -141px !important;
+                }
+            }
+
+    if upload.bitrateInKbps > 1500
+        style.
+            /** everything 650 and below */
+            /* on mobile we dont do a max height in other words */
+            @media (min-width: 668px) {
+
+                .plyr {
+                    height: 770px;
+                }
+            }
+    else
+        style.
+            /** everything 650 and below */
+            /* on mobile we dont do a max height in other words */
+            @media (min-width: 668px) {
+
+                .plyr {
+                    height: 625px;
+                }
+            }
+
     style.
         .pending-string {
             max-width: 400px;
@@ -13,8 +43,37 @@ block content
             background-color: black !important;
         }
 
+        /* anything below this width */
+        @media (min-width: 1250px) {
+            body {
+                zoom: 1;
+            }
+
+            .non-player-content, .something {
+                zoom: 1.10;
+                /*font-size:20px;*/
+            }
+
+            /*.postButton {*/
+            /*display: none !important;*/
+            /*}*/
+        }
+
         .navbar {
             background-color: #0c0c0c !important;
+        }
+
+        .uploadDescriptionDiv {
+            margin-top: 23px;
+            /* hack solution to get this trash to work */
+        }
+
+        @media (min-width:900px){
+
+            .uploadDescriptionColumn {
+                /*max-height:199px;*/
+                overflow: hidden;
+            }
         }
 
 
@@ -44,6 +103,170 @@ block content
             max-width: 100% !important;
         }
 
+        .reactImage {
+            opacity: 0.85;
+            width: 40px;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .reactImage:hover {
+            transform: scale(1.3);
+        }
+
+        .commentInput {
+            font-size: 19px;
+            color: black;
+        }
+
+        .uploadDescriptionDiv {
+            /*max-height: 199px;*/
+            overflow: hidden;
+            font-size:18px;
+            white-space:pre-wrap
+        }
+
+        .search-query-input {
+            background-color: black !important;
+        }
+
+
+
+
+
+
+        /* anything above this width */
+        @media (min-width: 900px) {
+
+            .desktopTitle {
+                display: block !important;
+            }
+
+            /* make the title larger, turning it off */
+            /*h2 {*/
+                /*font-size: 36px;*/
+            /*}*/
+
+            /*.postButton {*/
+            /*display: none !important;*/
+            /*}*/
+        }
+
+        /* anything above this width */
+        @media (min-width: 900px) {
+            .uploader-details-section {
+                margin-top: -38px;
+            }
+
+            .uploadDetailsColumn {
+                margin-top:-22px;
+            }
+
+            .uploadButtonsColumn {
+                margin-top:-31px
+            }
+
+            .desktopReactDiv {
+                display: block !important;
+            }
+
+            /*.reactDiv {*/
+                /*margin-top: 25px !important;*/
+            /*}*/
+
+            .extraButtonsDiv {
+                /*margin-top: -27px;*/
+            }
+
+            /*.postButton {*/
+            /*display: none !important;*/
+            /*}*/
+        }
+
+        /* anything below this width */
+        @media (max-width: 900px) {
+
+            .uploadTitle {
+                margin-top: 32px;
+                margin-bottom: -20px !important;
+            }
+
+            .mobileTitle {
+                display: block !important;
+            }
+
+            .lampIcon {
+                display: none;
+            }
+
+            .theatre-mode-button {
+                display: none;
+            }
+
+            .mobileReactDiv {
+                display: block !important;
+            }
+
+            /*.postButton {*/
+            /*display: none !important;*/
+            /*}*/
+        }
+
+
+
+        .secondLine {
+            border-bottom: 1px solid #5b5a5a !important;
+        }
+
+        .lampIcon {
+            filter: invert(75%) sepia(0%) saturate(511%) hue-rotate(232deg) brightness(90%) contrast(82%);
+            height: 43px;
+            margin-top: -7px;
+            cursor: pointer;
+        }
+
+        .reactDiv {
+            max-width:375px;
+            background-color:black;
+            margin:0 auto;
+            border-radius:10px;
+            margin-bottom:21px;
+            padding-bottom:5px;
+            min-width:247px;
+        }
+
+        /* change plyr color per : https://github.com/sampotts/plyr/issues/662 */
+        .plyr--full-ui input[type=range] {
+            color: #0FDA01;
+        }
+
+        .plyr__control--overlaid {
+            background-color: #0FDA01;
+        }
+
+        .plyr--video .plyr__control.plyr__tab-focus,
+        .plyr--video .plyr__control:hover,
+        .plyr--video .plyr__control[aria-expanded=true] {
+            background: #0FDA01;
+        }
+
+        .plyr__control.plyr__tab-focus {
+            box-shadow: 0 0 0 5px rgba(#0FDA01, .5);
+        }
+
+        .plyr__menu__container .plyr__control[role=menuitemradio][aria-checked=true]::before {
+            background: #0FDA01;
+        }
+
+
+        /* anything above this width */
+
+
+        /*media query if it's over 860 px or whatever, make .h2 a certain size */
+
+
+
+
+
     br
     div.center-block.text-center.col-sm-12(style="overflow-x: hidden;margin-top:-21px;background-color:black;")
         if upload.status == 'processing'
@@ -68,7 +291,7 @@ block content
             div.display-div.magnetic(style="min-width:50%;min-height:50%;margin:0 auto;margin-top: -25px;")
                 // margin-top:46px;
 
-                video#media_player.display-element(playsinline poster=`${serverToUse}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;")
+                video#media_player.display-element(playsinline poster=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;")
                     // to
                     each val in upload.videoQualities
                         if val.status === 'complete'
@@ -100,68 +323,60 @@ block content
 
 
 
+        // TODO: FIX NON-PLAYER CONTENT
         // todo: pull this out into its own include
         //- NON PLAYER CONTENT
             hello something
-        div.non-player-content(style="position:relative;max-width:1451px;margin:0 auto;")
+        div.non-player-content(style="position:relative;max-width:1182px;margin:0 auto;")
             // add margin-top 120 on margin-top:120px;"
 
-            br
-            br
-            // Upload Title
-            div.col-sm-8
-                h2.balance-text(class="upload-title-value" style="text-wrap:balance;width:80%;margin:0 auto;font-weight:300;color: rgb(121 119 119) !important;")=upload.title
-
-                if upload.visibility == 'pending' && upload.status !== 'processing'
-                    h3.pending-string Your video is currently pending moderator approval. If it's still pending after several minutes please contact a mod at
-                        a(href="/discord")  Discord
-
-            // DOWNLOAD,EMBED, REPEAT AND REPORT BUTTONS
-            div.col-sm-4
-                // download button
-                div.change-size-button
-                    h2.download-button
-                        i.download-icon.fa.fa-download(aria-hidden="true" style="cursor:pointer;color: rgb(121 119 119) !important;")
-
-                // embed button
-                div.change-size-button(style="margin-left:0px;color: rgb(121 119 119) !important;")
-                    h2.share-button
-                        i.share-icon.fas.fa-code(aria-hidden="true" style="cursor:pointer;font-size:27px;margin-left:0px;")
-
-                // only do repeat button if it's audio or video
-                if upload.fileType == 'video' || upload.fileType == 'audio'
-                    div.change-size-button(style="margin-left:0px;")
-                        h2.repeat-div(style="opacity:0.4")
-                            i.repeat-icon.fa.fa-repeat(aria-hidden="true" style="cursor:pointer")
-
-                // report upload button
-                div.change-size-button(style="cursor:pointer;margin-left:0px;color: rgb(121 119 119) !important;")
-                    h2.report-button(style="")
-                        i.share-icon.fa.fa-exclamation-triangle(aria-hidden="true" style="cursor:pointer;font-size:19px;")
 
 
             br
+            br
+
+
+            //div.col-sm-12
+            //    div.uploadTitle.mobileTitle(style="")
+            //
+            //        h2.balance-text(class="upload-title-value" style="display:inline;text-wrap:balance;width:80%;margin:0 auto;font-weight:300;color: #a9a9a9 !important;") #{upload.title}
+            //            if upload.formattedDuration
+            //                h2.fw(style="display:inline;color: #a9a9a9; !important;").
+            //                    &nbsp - #{upload.formattedDuration}
+
+
+
+
+
+
             // UPLOADER DETAILS SECTION
-            div.col-sm-4
+            div.col-sm-3.uploader-details-section(style="margin-bottom:30px")
                 h3.uploader-name(style="margin-top:25px;font-size:26px;")
                     if upload.uploader.customThumbnail
                         a(href=`/user/${upload.uploader.channelUrl}`)
 
-                            img(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` style="border-radius:13px;width:159px;height:159px;")
+                            img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` style="border-radius:13px;width:110px;height:110px;")
                             br
                             br
                     else if upload.uploader.thumbnailUrl
                         a(href=`/user/${upload.uploader.channelUrl}`)
 
-                            img(src=`${serverToUse}/${upload.uploader._id}/unique.png` style="border-radius:13px;width:159px;height:159px;")
+                            img(src=`${uploadServer}/${upload.uploader._id}/unique.png` style="border-radius:13px;width:110px;height:110px;")
+                            br
+                            br
+                    else
+                        a(href=`/user/${upload.uploader.channelUrl}`)
+
+                            img(src=`/images/default_user_image.png` style="border-radius:13px;width:110px;height:110px;")
                             br
                             br
 
-                    a(href=`/user/${upload.uploader.channelUrl}` style="color:gray;font-weight:300") #{upload.uploader.channelName || upload.uploader.channelUrl}
+                    a(href=`/user/${upload.uploader.channelUrl}` style="color:#a5a5a5;font-weight:300") #{upload.uploader.channelName || upload.uploader.channelUrl}
                         if upload.uploader.verified == true
                             img(src="/images/verified.jpg" width="25px" height="25px" style="margin-left:3px;margin-top:-2px;margin-right:5px;")
                         if upload.uploader.plan == 'plus'
                             span.nodetube-pro PLUS
+
 
 
                 if upload.visibility != 'pending'
@@ -172,68 +387,118 @@ block content
                     br
                     br
 
-                div
-                    // edit button
-                    if ( user && user.channelUrl == upload.uploader.channelUrl ) || ( user && user.role == 'admin' )
-                        br
-                        a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}/edit`)
-                            button.fw.btn.btn-success(style="margin-bottom:-10px;border-radius:5px;") Edit
 
-            // REMOVE QUALITY THING, EVERYONE CAN STAY LOW QUALITY
-            // also have to add .fw to this thing when take it live
-            //if upload.quality && upload.quality.high
-            //    div.dropdown
-            //        button#dropdownMenu1.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:4px;" quality="low")
-            //            | Quality: Low
-            //            span.caret
-            //
-            //        ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1' style="cursor:pointer;")
-            //            li(role='presentation')
-            //                a.low-quality Low
-            //            li(role='presentation')
-            //                a.high-quality High
+            div.col-sm-6.uploadDescriptionColumn
+
+                div.uploadTitle.desktopTitle(style="margin-bottom:20px;")
+
+                    h2.balance-text(class="upload-title-value" style="display:inline;text-wrap:balance;width:80%;margin:0 auto;font-weight:300;color: #a9a9a9 !important;margin-bottom:20px;") #{upload.title}
+                        if upload.formattedDuration
+                            h2.fw(style="display:inline;color: #a9a9a9; !important;").
+                                &nbsp - #{upload.formattedDuration}
+
+
+                if upload.description
+                    .uploadDescriptionDiv
+
+                        p#uploadDescriptionText.fw.uploadDescriptionText(style="color:#a5a5a5") #{upload.description}
+
+
+                //REACTS WITH LIKES, DISLIKE, DISGUST., ETC
+                div.react.reactDiv.desktopReactDiv(style=";")
+                    // margin-top:133px
+                    br
+                    each emoji in emojis
+                        div(style="padding-right:12px;display:inline-block;")
+                            a(href="#")
+                                if currentReact
+                                    if currentReact == emoji.name
+                                        div.clicked-emoji
+                                            img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
+
+                                    else
+                                        div.unclicked-emoji
+                                            img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
+
+                                else
+                                    div.clicked-emoji
+                                        img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
+
+                            p.fw(class=emoji.name style="font-weight:400;") #{emoji.amount}
+
+
+
+                if upload.visibility == 'pending' && upload.status !== 'processing'
+                    h3.pending-string Your video is currently pending moderator approval. If it's still pending after several minutes please contact a mod at
+                        a(href="/discord")  Discord
+
+
+
 
             //if upload.uploader.plan == 'plus'
             //    br
             //    button.donate.btn.btn-success(style="margin-bottom:-10px") Donate
-
-
-
-
             // UPLOAD DETAILS SECTION WITH VIEWS, UPLOADED DAYS AGO, DURATION ETC
-            div.col-sm-4
+            div.col-sm-3.uploadDetailsColumn(style="")
+
+                // download and whatever else buttons
+                .col-sm-12(style="")
+
+                    // download button
+                    div.change-size-button
+                        h2.download-button
+                            i.download-icon.fa.fa-download(aria-hidden="true" style="cursor:pointer;color:#a5a5a5;")
+
+                    // only do repeat button if it's audio or video
+                    if upload.fileType == 'video'
+                        div.change-size-button.theatre-mode-button(style="margin-left:0px;")
+                            h2(style="")
+                                i.fa.fa-tv(aria-hidden="true" style="cursor:pointer;color:#a5a5a5;")
+
+                    // only do repeat button if it's audio or video
+                    if upload.fileType == 'video'
+                        div.change-size-button.lampIconDiv(style="margin-left:-16px;margin-right:-3px;")
+                            img.lampIcon(src="/images/lamp.png")
+
+
+                    // only do repeat button if it's audio or video
+                    if upload.fileType == 'video' || upload.fileType == 'audio'
+                        div.change-size-button(style="")
+                            h2.repeat-div(style="opacity:0.4")
+                                i.repeat-icon.fa.fa-repeat(aria-hidden="true" style="cursor:pointer")
 
                 // Upload View Amount
-                h3.fw #{upload.views} Views
+                h3.fw(style="color:a5a5a5") #{upload.views} Views
 
                 // Upload time ago, duration and uploader
                 if upload.uploader
-                    h4.fw
+                    h4.fw(style="color:a5a5a5")
                         | Uploaded #{upload.timeAgo} &nbsp
-
-                    if upload.formattedDuration
-                        p.fw
-                            | Duration: #{upload.formattedDuration}
 
                     if upload.visibility == 'removed'
                         h2 Upload Deleted
 
+                    p
+
+                    //if upload.bitrateInKbps
+                    //    p.fw.fileSizeText(style="margin-top:15px") Bitrate in kbps: #{upload.bitrateInKbps}
+
                     if upload.fileType == 'video' || upload.fileType == 'audio'
 
                         // TODO: should be able to support MB and GB
-                        p.fw.fileSizeText(style="margin-top:15px") File Size: #{ formattedFileSize }
+                        p.fw.fileSizeText(style="margin-top:15px;color:a5a5a5;") File Size: #{ formattedFileSize }
 
                     if upload.category
                         each category in categories
                             if category.name == upload.category
-                                p.fw(style="margin-top:15px;font-size:12px;") Category: #{category.displayName}
+                                p.fw(style="margin-top:15px;font-size:12px;color:a5a5a5;") Category: #{category.displayName}
 
-                                if upload.subcategory
-
-                                    each subcategory in category.subcategories
-
-                                        if upload.subcategory == subcategory.name
-                                            p.fw(style="margin-top:15px;font-size:12px;") Subcategory: #{subcategory.displayName}
+                                //if upload.subcategory
+                                //
+                                //    each subcategory in category.subcategories
+                                //
+                                //        if upload.subcategory == subcategory.name
+                                //            p.fw(style="margin-top:15px;font-size:12px;") Subcategory: #{subcategory.displayName}
 
                     if maxRatingAllowed !== 'SFW'
                         if upload.rating
@@ -244,171 +509,327 @@ block content
                             if upload.rating == 'sensitive'
                                 p.fw(style="margin-top:15px;font-size:12px;") Rating: Sensitive (18+)
 
+                    div.editButtonDiv
+                        // edit button
+                        if ( user && user.channelUrl == upload.uploader.channelUrl ) || ( user && user.role == 'admin' )
+                            a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}/edit`)
+                                button.fw.btn.btn-success(style="margin-bottom:-10px;border-radius:5px;") Edit
+
 
                     br
 
 
-            // SHARING BUTTONS
-            div
-
-                a(href=`https://www.facebook.com/sharer/sharer.php?u=${url}` target="_blank")
-                    img(src='/images/facebook-share.jpg', width='100', height='30', alt='Share on Twitter')
-                a(href=`https://twitter.com/share?url=${url}` target="_blank")
-                    img(src='/images/twitter-share.jpg', width='100', height='30', alt='Share on Twitter')
-                a(href=`mailto:?subject=Check out this ${upload.fileType}&body=Check out this ${upload.fileType} on ${brandName}: ${url}`, title='Share by Email')
-                    img(src='/images/email-share.jpg')
 
 
+
+
+
+
+
+
+            //div.react.reactDiv.mobileReactDiv(style=";")
+            //    // margin-top:133px
+            //    br
+            //    each emoji in emojis
+            //        div(style="padding-right:12px;display:inline-block;")
+            //            a(href="#")
+            //                if currentReact
+            //                    if currentReact == emoji.name
+            //                        div.clicked-emoji
+            //                            img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
+            //
+            //                    else
+            //                        div.unclicked-emoji
+            //                            img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
+            //
+            //                else
+            //                    div.clicked-emoji
+            //                        img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
+            //
+            //            p.fw(class=emoji.name style="font-weight:400;") #{emoji.amount}
+
+
+
+
+
+
+
+
+
+
+            div.col-sm-12.extraButtonsDiv(style="border-bottom: 1px solid #8e8d8d;")
+                // SHARING BUTTONS
+                div
+
+                    a(href=`https://www.facebook.com/sharer/sharer.php?u=${url}` target="_blank")
+                        img(src='/images/facebook-share.jpg', width='100', height='30', alt='Share on Twitter')
+                    a(href=`https://twitter.com/share?url=${url}` target="_blank")
+                        img(src='/images/twitter-share.jpg', width='100', height='30', alt='Share on Twitter')
+                    a(href=`mailto:?subject=Check out this ${upload.fileType}&body=Check out this ${upload.fileType} on ${brandName}: ${url}`, title='Share by Email')
+                        img(src='/images/email-share.jpg')
+
+
+
+                br
+                button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} \n\n${url}`)
+                    i.fa.fa-info.fw
+                    | Copy Details
+
+                button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} by ${upload.uploader.channelName || upload.uploader.channelUrl} \n\n ${url} \n\n #${brandName}`)
+                    i.fa.fa-info.fw
+                    | With User Info
+
+                br
+
+                div.bottomButtons(style="margin-top:-21px;padding-bottom:10px;")
+
+                    //// embed button
+                    div.change-size-button(style="margin-left:0px;color: rgb(121 119 119) !important;")
+                       h2.share-button
+                           i.share-icon.fas.fa-code(aria-hidden="true" style="cursor:pointer;font-size:19px;margin-left:0px;")
+
+
+                    // report upload button
+                    div.change-size-button(style="cursor:pointer;margin-left:0px;color: rgb(121 119 119) !important;")
+                       h2.report-button(style="font-size:19px;")
+                           i.share-icon.fa.fa-exclamation-triangle(aria-hidden="true" style="cursor:pointer;font-size:17px;")
 
             br
-            button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} \n\n${url}`)
-                i.fa.fa-info.fw
-                | Copy Details
 
-            button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} by ${upload.uploader.channelName || upload.uploader.channelUrl} \n\n ${url} \n\n #${brandName}`)
-                i.fa.fa-info.fw
-                | With User Info
-
-            //  REACTS WITH LIKES, DISLIKE, DISGUST, ETC
-            div.react(style="width:39%;background-color:white;margin:0 auto;border-radius:10px;margin-bottom:21px;margin-top:60px;padding-bottom:12px;max-width:453px;min-width:247px;")
-                // margin-top:133px
-                br
-                each emoji in emojis
-                    div(style="padding-right:15px;display:inline-block;")
-                        a(href="#")
-                            if currentReact
-                                if currentReact == emoji.name
-                                    div.clicked-emoji
-                                        img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
-
-                                else
-                                    div.unclicked-emoji
-                                        img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
-
-                            else
-                                div.clicked-emoji
-                                    img(class=emoji.name src='/emojis/' + emoji.name + '.jpg' width="50px" )
-
-                        p.fw(class=emoji.name style="font-weight:400;") #{emoji.amount}
-
-            // COMMENT SECTION AND FORM
+            // ** COMMENT SECTION AND FORM **
             div
-                br
-                br
-                br
-                div.col-sm-12
-                if user
-                    if !viewingUserIsBlocked
-                        // comment form
-                        div.comment-form.form-group
-                            form.form-horizontal.overall-comment-form(class="comment-form" action='/api/comment', method='post')
-                                input(type='hidden', name='_csrf', value=_csrf)
-                                label.fw(for="comment" style="font-size:20px;") Enter Comment
+                div.col-sm-12(style="margin-top:50px")
+                    if user
+                        if !viewingUserIsBlocked
+                            // comment form
+                            div.comment-form.form-group
+                                form.form-horizontal.overall-comment-form(class="comment-form" action='/api/comment', method='post')
+                                    input(type='hidden', name='_csrf', value=_csrf)
+                                    label.fw(for="comment" style="font-size:20px;") Enter Comment
+                                    br
+                                    input(type="hidden" name="upload" id="upload" value=upload._id)
+                                    textarea.commentInput.fw(name="comment" id="comment" minlength="2" style="width:800px;height:129px;max-width:100%;background-color:#151515;color:white;")
+                                    br
+                                    input.fw.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
+                    else
+                        div.comment-form.form-group.no-user-comment-form
+                            form.form-horizontal.overall-comment-form(class="comment-form")
+                                label.fw(for="comment" style="font-size:17px;") Enter Comment
                                 br
-                                input(type="hidden" name="upload" id="upload" value=upload._id)
-                                textarea.fw(name="comment" id="comment" minlength="2" style="width:800px;height:129px;max-width:100%")
+                                textarea.commentInput.fw(name="comment" id="comment" minlength="2" style="width:800px;height:129px;max-width:100%;background-color:#151515;color:white;")
                                 br
                                 input.fw.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
-                else
-                    div.comment-form.form-group.no-user-comment-form
-                        form.form-horizontal.overall-comment-form(class="comment-form")
-                            label.fw(for="comment" style="font-size:17px;") Enter Comment
-                            br
-                            textarea.fw(name="comment" id="comment" minlength="2" style="width:800px;height:129px;max-width:100%")
-                            br
-                            input.fw.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
 
 
                 // ** COMMENT DISPLAY **
                 // todo: pull this out into its own partial
 
-                // otherwise display all comments
-                if commentCount == 0
-                    div.comment-containing-div(style="width:400px;margin:0 auto;margin-top:70px;")
-                        div(style="display:block")
-                            h3.fw.no-comments-header(style="text-decoration:underline;text-align:left;font-size:22px;") No Comments Yet
+                div.col-sm-12
+                    // otherwise display all comments
+                    if commentCount == 0
+                        div.comment-containing-div(style="width:600px;margin:0 auto;margin-top:70px;")
+                            div(style="display:block")
+                                h3.fw.no-comments-header(style="text-decoration:underline;text-align:left;font-size:22px;") No Comments Yet
 
-                            div.comment-thread
-                                div.original-comment.no-comments-div(style="display:block;padding-bottom:15px;padding-top:10px;")
+                                div.comment-thread
+                                    div.original-comment.no-comments-div(style="display:block;padding-bottom:15px;padding-top:10px;")
 
-                else
-                    if commentCount > 0
-                        div.comment-containing-div.col-sm-6.col-sm-offset-3(style="margin-top:60px;text-align:center")
-                            if commentCount == 1
-                                div(style="display:block")
-                                    h3.fw(style="text-align:left;font-size:28px;margin-bottom:14px;") #{commentCount} Comment
-                            else
-                                div(style="display:block")
-                                    h3.fw(style="text-align:left;font-size:28px;margin-bottom:14px;") #{commentCount} Comments
-                            each comment in comments
-                                if comment.commenter
-                                    div.comment-thread
-                                        div.original-comment(style="display:block;padding-bottom:15px;padding-top:10px;")
-                                            // TODO: Add it here
-                                            div.top-line(style="text-align:left;")
-                                                p.fw(style="text-align:left;display:inline-block;")
-                                                    a(href=`/user/${comment.commenter.channelUrl}` style="color:#d2d2d2;margin-right:5px;") #{comment.commenter.channelName || comment.commenter.channelUrl}
-                                                p.fw(style="display:inline-block;") - #{comment.timeAgo} &nbsp
-                                                    if user && !viewingUserIsBlocked
-                                                        a.reply-link(style="cursor:pointer") Reply
-                                                    // delete button
-                                                    // if uploader or admin or commenter, let them delete comment
-                                                    if isUploaderOrAdmin || ( user && comment.commenter._id == user._id )
-                                                        a.delete-comment-button(style="margin-left:9px;cursor:pointer;" commentId=comment._id) Delete
-
-                                                    if isUploader && !comment.commenter.isBlocked
-                                                        a.block-user-button(style="margin-left:9px;cursor:pointer;" blockedusername=comment.commenter.channelUrl) Block User
-                                                    if isUploader && comment.commenter.isBlocked
-                                                        a.unblock-user-button(style="margin-left:9px;cursor:pointer;" blockedusername=comment.commenter.channelUrl) Unblock User
-
-
-                                            p.fw(style="text-align:left;font-size:16px;") #{comment.text}
-
-                                            // container that appears after you hit Reply
-                                            div.reply-container(style="display:none")
-                                                form.form-horizontal.reply-comment-form(class="comment-form" action='/api/comment', method='post')
-                                                    input(type='hidden', name='_csrf', value=_csrf)
-                                                    input(type="hidden" name="upload" id="upload" value=upload._id)
-                                                    input(type="hidden" name="commentId" id="commentId" value=comment.id)
-                                                    textarea.fw(name="comment" id="comment" minlength="2" style="width:400px;max-width:100%;")
-                                                    br
-                                                    input.fw.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
-                                                    br
-                                                    br
-
-                                        div.responses
-                                            each responseComment in comment.responses
-                                                if responseComment.visibility !== 'removed'
-                                                    div(style="display:block;padding-bottom:15px;padding-left:40px;")
-                                                        div.top-line(style="text-align:left;")
-                                                            p.fw(style="text-align:left;display:inline-block;")
-                                                                a(href=`/user/${responseComment.commenter.channelUrl}` style="color:#d2d2d2;margin-right:5px;") #{responseComment.commenter.channelName || responseComment.commenter.channelUrl}
-                                                            p.fw(style="display:inline-block;") - #{responseComment.timeAgo} &nbsp
-                                                        p.fw(style="text-align:left;") #{responseComment.text}
-
-                                                    //div.reply-container(style="display:none")
-                                                    //    form.form-horizontal.reply-form(class="comment-form" action='/api/comment', method='post')
-                                                    //        input(type='hidden', name='_csrf', value=_csrf)
-                                                    //        input(type="hidden" name="upload" id="upload" value=upload._id)
-                                                    //        input(type="hidden" name="commentId" id="commentId" value=responseComment.id)
-                                                    //        textarea(name="comment" id="comment" style="width:400px;")
-                                                    //        br
-                                                    //        input.btn.btn-md.btn-success(type='submit' value="Post Comment")
-                                                    //        br
-                                                    //        br
-
-
-
-
-
-
+                    else
+                        if commentCount > 0
+                            div.comment-containing-div.col-sm-6.col-sm-offset-3(style="margin-top:60px;text-align:center")
+                                if commentCount == 1
+                                    div(style="display:block")
+                                        h3.fw(style="text-align:left;font-size:28px;margin-bottom:14px;") #{commentCount} Comment
                                 else
-                                    p No commenter
+                                    div(style="display:block")
+                                        h3.fw(style="text-align:left;font-size:28px;margin-bottom:14px;") #{commentCount} Comments
+                                each comment in comments
+                                    if comment.commenter
+                                        div.comment-thread
+                                            div.original-comment(style="display:block;padding-bottom:15px;padding-top:10px;")
+                                                // TODO: Add it here
+                                                div.top-line(style="text-align:left;")
+                                                    p.fw(style="text-align:left;display:inline-block;")
+                                                        a(href=`/user/${comment.commenter.channelUrl}` style="color:#d2d2d2;margin-right:5px;") #{comment.commenter.channelName || comment.commenter.channelUrl}
+                                                    p.fw(style="display:inline-block;") - #{comment.timeAgo} &nbsp
+                                                        if user && !viewingUserIsBlocked
+                                                            a.reply-link(style="cursor:pointer") Reply
+                                                        // delete button
+                                                        // if uploader or admin or commenter, let them delete comment
+                                                        if isUploaderOrAdmin || ( user && comment.commenter._id == user._id )
+                                                            a.delete-comment-button(style="margin-left:9px;cursor:pointer;" commentId=comment._id) Delete
+
+                                                        if isUploader && !comment.commenter.isBlocked
+                                                            a.block-user-button(style="margin-left:9px;cursor:pointer;" blockedusername=comment.commenter.channelUrl) Block User
+                                                        if isUploader && comment.commenter.isBlocked
+                                                            a.unblock-user-button(style="margin-left:9px;cursor:pointer;" blockedusername=comment.commenter.channelUrl) Unblock User
+
+
+                                                p.fw(style="text-align:left;font-size:16px;") #{comment.text}
+
+                                                // container that appears after you hit Reply
+                                                div.reply-container(style="display:none")
+                                                    form.form-horizontal.reply-comment-form(class="comment-form" action='/api/comment', method='post')
+                                                        input(type='hidden', name='_csrf', value=_csrf)
+                                                        input(type="hidden" name="upload" id="upload" value=upload._id)
+                                                        input(type="hidden" name="commentId" id="commentId" value=comment.id)
+                                                        textarea.fw(name="comment" id="comment" minlength="2" style="width:400px;max-width:100%;")
+                                                        br
+                                                        input.fw.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
+                                                        br
+                                                        br
+
+                                            div.responses
+                                                each responseComment in comment.responses
+                                                    if responseComment.visibility !== 'removed'
+                                                        div(style="display:block;padding-bottom:15px;padding-left:40px;")
+                                                            div.top-line(style="text-align:left;")
+                                                                p.fw(style="text-align:left;display:inline-block;")
+                                                                    a(href=`/user/${responseComment.commenter.channelUrl}` style="color:#d2d2d2;margin-right:5px;") #{responseComment.commenter.channelName || responseComment.commenter.channelUrl}
+                                                                p.fw(style="display:inline-block;") - #{responseComment.timeAgo} &nbsp
+                                                            p.fw(style="text-align:left;") #{responseComment.text}
+
+                                                        //div.reply-container(style="display:none")
+                                                        //    form.form-horizontal.reply-form(class="comment-form" action='/api/comment', method='post')
+                                                        //        input(type='hidden', name='_csrf', value=_csrf)
+                                                        //        input(type="hidden" name="upload" id="upload" value=upload._id)
+                                                        //        input(type="hidden" name="commentId" id="commentId" value=responseComment.id)
+                                                        //        textarea(name="comment" id="comment" style="width:400px;")
+                                                        //        br
+                                                        //        input.btn.btn-md.btn-success(type='submit' value="Post Comment")
+                                                        //        br
+                                                        //        br
+
+
+
+
+
+
+                                    else
+                                        p No commenter
+
+
 
 
 block extra_js
+
+
+
   //script(src='https://checkout.stripe.com/checkout.js')
   script(src="https://cdnjs.cloudflare.com/ajax/libs/autolinker/1.4.4/Autolinker.js")
+
+  script.
+
+    $(document).ready(function () {
+
+
+
+      function getWidth() {
+        return Math.max(
+          document.body.scrollWidth,
+          document.documentElement.scrollWidth,
+          document.body.offsetWidth,
+          document.documentElement.offsetWidth,
+          document.documentElement.clientWidth
+        );
+      }
+
+      console.log('Width:  ' + getWidth());
+
+      var width = getWidth();
+
+      if(width < 900){
+        $('.uploadTitle').prependTo('.non-player-content')
+
+        $('.reactDiv').appendTo('.uploadDetailsColumn')
+      }
+
+      console.log(width);
+
+      enquire.register("screen and (max-width:900px)", {
+
+        // OPTIONAL
+        // If supplied, triggered when a media query matches.
+        match: function () {
+          // when going below 900px
+          console.log('RUNNING 1234')
+
+          $('.uploadTitle').prependTo('.non-player-content')
+
+          $('.reactDiv').appendTo('.uploadDetailsColumn')
+
+
+        },
+
+        // OPTIONAL
+        // If supplied, triggered when the media query transitions
+        // *from a matched state to an unmatched state*.
+        unmatch: function () {
+          // when going below 900px
+          console.log('RUNNING 4321')
+
+          $('.uploadTitle').prependTo('.uploadDescriptionColumn')
+
+          $('.reactDiv').appendTo('.uploadDescriptionColumn')
+        },
+
+        // OPTIONAL
+        // If supplied, triggered once, when the handler is registered.
+        setup: function () {
+        },
+
+        // OPTIONAL, defaults to false
+        // If set to true, defers execution of the setup function
+        // until the first time the media query is matched
+        deferSetup: false,
+
+        // OPTIONAL
+        // If supplied, triggered when handler is unregistered.
+        // Place cleanup code here
+        destroy: function () {
+        }
+
+      });
+
+    });
+
+
+
+  script.
+    $(document).ready(function () {
+      // start with theatre mode off by default
+      var theatreModeOn = false;
+
+      // when user clicks theatre icon
+      $('.theatre-mode-button').click(function () {
+
+        // if the theatre mode is off, scroll to where the header ends, and go large screen
+        if(theatreModeOn == false){
+          window.scrollTo(0, 67);
+          $('.plyr').css('height', '98.5vh')
+          console.log('HIT!')
+
+          $('.display-element').css('border', '0px solid white')
+
+          // note that theatre mode is on
+          theatreModeOn = true;
+
+        } else {
+
+          // theatre mode is being turned back off, scroll up and 68.5% vh
+          window.scrollTo(0, 0);
+          $('.plyr').css('height', '68.5vh')
+
+          console.log("RUNNING HERE!");
+
+          $('.display-element').css('border', '1px solid #5b5a5a')
+
+          // note that theatre mode is off again
+          theatreModeOn = false;
+        }
+
+      })
+    })
 
   script.
     var accountOpen = false;
@@ -492,6 +913,57 @@ block extra_footer_js
       // old scroll down to change the header
       //window.scrollTo(0, 21);
 
+      var lampHidden = false;
+
+      $('.lampIconDiv').click(function(){
+
+        // if lamp functionality is not turned on we need to turn it on
+        if(lampHidden == false){
+
+          $('.display-element').css('border', '1px solid black')
+
+          $('.headerContainer').css({
+            display: 'none'
+          })
+
+          $('.non-player-content').css({
+            visibility: 'hidden'
+          })
+
+
+          // make the lamp icon visible, because the rest of the div will be turned off
+          // also opacity 0.54
+          $('.lampIconDiv').css({
+            visibility: 'visible',
+            opacity: 0.54
+          })
+
+          lampHidden = true;
+
+          // otherwise the functionality has already been turned on, so we turn it off
+        } else {
+
+          $('.display-element').css('border', '1px solid #5b5a5a')
+
+          $('.headerContainer, .non-player-content').css({
+            visibility: 'visible'
+          })
+
+          $('.headerContainer').css({
+            display: 'inherit'
+          })
+
+          $('.lampIconDiv').css({
+            visibility: 'visible',
+            opacity: 1
+          })
+
+          lampHidden = false;
+        }
+
+      })
+
+
 
       $('.plyr').focus()
 
@@ -552,6 +1024,15 @@ block extra_footer_js
   script(src="/js/media.js")
 
   script.
+
+    //      setInterval(function(){
+    //        if (document.hasFocus()){
+    //          console.log('Tab is active')
+    //        } else {
+    //          console.log('tab not active');
+    //        }
+    //      }, 3000);
+
       setTimeout(function(){
         // old code to change scroll to
         // window.scrollTo(0, 22);
@@ -566,12 +1047,14 @@ block extra_footer_js
         function runBufferThing(){
           if (!fadeInBuffer) {
             if (timer) {
-              // console.log("clearTimer");
+               // console.log("clearTimer");
               clearTimeout(timer);
               timer = 0;
             }
 
-            // console.log("fadeIn");
+             // console.log("fadeIn");
+
+            // what's going on here?
             $('html').css({
               cursor: ''
             });
@@ -584,7 +1067,7 @@ block extra_footer_js
 
 
           timer = setTimeout(function () {
-            // console.log("fadeout");
+             console.log("fadeout");
             $('.plyr').css({
               cursor: 'none'
             });
@@ -603,6 +1086,90 @@ block extra_footer_js
 
 
       });
+
+
+  //script.
+  //
+  //    // auto theatre mode functionality
+  //    $(function () {
+  //      var timer;
+  //      var fadeInBuffer = false;
+  //
+  //      function runBufferThing() {
+  //        if (!fadeInBuffer) {
+  //          if (timer) {
+  //            console.log("clearTimer");
+  //            clearTimeout(timer);
+  //            timer = 0;
+  //          }
+  //
+  //          console.log("fadeIn");
+  //
+  //        } else {
+  //          $('.non-player-content').css({
+  //            visibility: 'visible'
+  //          });
+  //          $('.headerContainer').css({
+  //            visibility: 'visible'
+  //          });
+  //
+  //          // also hide and show video border
+  //          $('.display-element').css({
+  //            border: '1px solid #5b5a5a'
+  //          });
+  //
+  //          fadeInBuffer = false;
+  //        }
+  //
+  //
+  //        timer = setTimeout(function () {
+  //          console.log("fadeout");
+  //
+  //          // only hide div if the document is in focus
+  //          // turning off so people can be on another tab
+  //          //            if(document.hasFocus()){
+  //          //              $('.non-player-content').css({
+  //          //                visibility: 'hidden'
+  //          //              });
+  //          //
+  //          //            }
+  //
+  //          const yOffset = window.pageYOffset;
+  //
+  //          if(yOffset < 9){
+  //            $('.non-player-content').css({
+  //              visibility: 'hidden'
+  //            });
+  //
+  //            $('.headerContainer').css({
+  //              visibility: 'hidden'
+  //            });
+  //
+  //
+  //            $('.display-element').css({
+  //              border: '0px solid #5b5a5a'
+  //            });
+  //          }
+  //
+  //
+  //
+  //
+  //          fadeInBuffer = true;
+  //
+  //          // run every 5000 seconds
+  //        }, 5000)
+  //      }
+  //
+  //      runBufferThing()
+  //
+  //      $('.plyr').click();
+  //
+  //      $(document).mousemove(function () {
+  //        runBufferThing();
+  //      });
+  //
+  //
+  //    });
 
 
   script.
@@ -636,8 +1203,16 @@ block extra_footer_js
   include ./mediaPlayerPartials/reactFunctionalityJs
 
   script.
+    $(' button[data-plyr="fast-forward"], button[data-plyr="rewind"]').click(function () {
+      player.toggleControls(true);
+      setTimeout(function(){
+        player.toggleControls(true);
+      }, 80)
+    })
+
+  script.
     // Turn description urls into clickable anchor links
-    var myTextEl = document.getElementById('descriptionText');
+    var myTextEl = document.getElementById('uploadDescriptionText');
     if (myTextEl)
     {
       myTextEl.innerHTML = Autolinker.link(myTextEl.innerHTML);

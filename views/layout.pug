@@ -39,9 +39,8 @@ html
     script(src='https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js')
     script(src='https://cdnjs.cloudflare.com/ajax/libs/balance-text/3.2.0/balancetext.min.js')
     script(src='https://cdn.jsdelivr.net/npm/sweetalert2@7.33.1/dist/sweetalert2.js')
-
     script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js')
-
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/enquire.js/2.0.1/enquire.min.js')
 
     link(rel='stylesheet', href='/css/loading-bar.css')
     script(src='/js/loading-bar.js')
@@ -57,6 +56,8 @@ html
 
 
   body(style="overflow-x:hidden;touch-action: manipulation;" id="body" class="dark-mode")
+
+
     include nodeTubeCss
 
 
@@ -66,7 +67,7 @@ html
     // I feel like this is here and breaks if you move it
     include viewPartials/darkLightMode
 
-    .container(style="max-width:1250px;padding-left: 0px; padding-right: 0px;")
+    .container(style="max-width:1250px;padding-left: 0px; padding-right: 0px;margin-top:3px;")
       include layoutPartials/sidebar
 
       include layoutPartials/flash

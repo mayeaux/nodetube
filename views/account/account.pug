@@ -106,15 +106,15 @@ block content
       div.col-sm-2
         h3.fw
           a(href=`/user/${user.channelUrl}`) Channel Page
-      //div.col-sm-2
-      //  h3.fw
-      //    a(href="/account/viewHistory") View History
-      //div.col-sm-2
-      //  h3.fw
-      //    a(href="/account/reactHistory") React History
-      //div.col-sm-2
-      //      h4
-      //        a(href="/" + `${user.channelUrl}` +  "/playlists") Playlists
+      div.col-sm-2
+        h3.fw
+          a(href="/account/viewHistory") View History
+      div.col-sm-2
+        h3.fw
+          a(href="/account/reactHistory") React History
+      div.col-sm-2
+            h3.fw
+              a(href="/" + `${user.channelUrl}` +  "/playlists") Playlists
       if user && user.privs && user.privs.livestreaming
         div.col-sm-2
           h3.fw

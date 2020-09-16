@@ -28,16 +28,15 @@ const uploadSchema = new mongoose.Schema({
   viralServer: String,
 
   hostUrl: String, // (backblaze prepend)  TODO: can eventually delete this
+
   uniqueTag: { type: String, index: true, unique: true },
   fileType: { type: String, enum: ['video', 'image', 'audio', 'unknown', 'convert'] },
+
+  // info about original file
   originalFileSizeInMb: Number,
   processedFileSizeInMb: Number,
   fileSize: Number,  // TODO: should support highQualityFileSize as well for compressions
-  // videoQuality: {
-  //   quality: String, enum: ['240p', '360p', '480p', '720p', '1080p'],
-  //   fileSizeInMb:  Number,
-  //   bitrate: Number
-  // },
+
   videoQualities: [
     {
       quality: 'String',
@@ -46,6 +45,15 @@ const uploadSchema = new mongoose.Schema({
       status: {type: String, enum: ['pending', 'converting', 'complete'], default: 'pending'}
     }
   ],
+  bitrateInKbps: Number,
+  dimensions: {
+    height: String,
+    width: String,
+
+    // height divided by width
+    aspectRatio: String
+  },
+
   views: {
     type: Number,
     default: 0
@@ -256,6 +264,7 @@ uploadSchema.index({sensitive: 1, visibility: 1, status: 1, createdAt: -1, categ
 uploadSchema.index({sensitive: 1, visibility: 1, status: 1, fileType: 1, createdAt: -1}, {name: 'File Type List'});
 uploadSchema.index({uploader: 1, visibility: 1, status: 1, createdAt: -1}, {name: 'Subscription Uploads'});
 uploadSchema.index({uploader: 1, title: 1}, {name: 'Upload Check'});
+uploadSchema.index({visibility: 1, status: 1}, {name: 'Random Upload'});
 
 const Upload = mongoose.model('Upload', uploadSchema);
 
