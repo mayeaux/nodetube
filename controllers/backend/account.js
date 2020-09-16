@@ -473,3 +473,23 @@ exports.postConfirmEmail = async(req, res, next) => {
     }
   }
 };
+
+/**
+ * POST /importer
+ * Importer page.
+ */
+exports.postImporter = (req, res) => {
+
+  const recaptchaPublicKey = process.env.RECAPTCHA_SITEKEY;
+
+  const captchaOn = process.env.RECAPTCHA_ON == 'true';
+
+  if(!req.user){
+    return res.redirect('/login');
+  }
+  res.render('account/importer', {
+    title: 'Create Account',
+    recaptchaPublicKey,
+    captchaOn
+  });
+};

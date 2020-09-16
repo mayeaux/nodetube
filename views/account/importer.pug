@@ -72,16 +72,19 @@ block content
         $(document).ready(function(){
           $('.submit-button').click(function () {
 
+            var csrf = '#{csrf}'
+
             var data = {
               _csrf: csrf,
-              emoji
             }
 
             var thing = $('.importInput').val()
+
+
             if(thing){
               $.ajax({
                 type: 'POST',
-                url: `/api/react/${upload}/${user}`,
+                url: `/postImporter`,
                 data,
                 success: function (data) {
                   console.log(data);
