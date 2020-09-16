@@ -554,10 +554,6 @@ exports.postFileUpload = async(req, res) => {
 
           uploadLogger.info('Upload marked as complete', logObject);
 
-          updateUsersUnreadSubscriptions(user);
-
-          uploadLogger.info('Updated subscribed users subscriptions', logObject);
-
           if(!responseSent){
             responseSent = true;
             aboutToProcess(res, channelUrl, uniqueTag);
@@ -590,60 +586,62 @@ exports.postFileUpload = async(req, res) => {
           // TODO: make a quality conversion counter/progress bar
           for(var i = 0; i < qualities.length; i = i + 1){
             if(bitrate >= qualities[i].bitrate){
-              // TODO: this is kind of ugly lmao
-              qualitySavePath = `${channelUrlFolder}/${uniqueTag}-${qualities[i].quality}.mp4`;
+              // qualitySavePath = `${channelUrlFolder}/${uniqueTag}-${qualities[i].quality}.mp4`;
 
               let qualityExists = upload.videoQualities.find(o => o.quality === qualities[i].quality);
               if(!qualityExists){
-                // TODO: add if it exists but still pending in case server was shut down or something else
-                // qualityExists.status !== 'complete'
-                await ffmpegHelper.convertVideo({
-                  uploadedPath: fileInDirectory,
-                  title,
-                  bitrate: qualities[i].bitrate,
-                  savePath: qualitySavePath,
-                  uniqueTag: uniqueTag + '-' + qualities[i].quality,
-                  quality: qualities[i].quality
-                });
-
-                // const response = await ffmpegHelper.ffprobePromise(qualitySavePath);
 
                 upload.videoQualities.push({
                   quality: qualities[i].quality,
                   bitrate: qualities[i].bitrate,
                   fileSizeInMb: 1,
-                  status: 'complete' // TODO: use enum here not string
+                  status: 'pending' // TODO: use enum here not string
+                });
+              }
+
+            }
+          }
+
+          await upload.save();
+
+          for(var i = 0; i < upload.videoQualities.length; i = i + 1){
+            if(bitrate >= upload.videoQualities[i].bitrate){
+              if(upload.videoQualities[i].status != 'complete'){
+                // TODO: this is kind of ugly lmao
+                qualitySavePath = `${channelUrlFolder}/${uniqueTag}-${upload.videoQualities[i].quality}.mp4`;
+
+                upload.videoQualities[i].status = 'converting';
+                // upload.videoQualities
+                await upload.save();
+                // await upload.save();
+                await ffmpegHelper.convertVideo({
+                  uploadedPath: fileInDirectory,
+                  title,
+                  bitrate: upload.videoQualities[i].bitrate,
+                  savePath: qualitySavePath,
+                  uniqueTag: uniqueTag + '-' + upload.videoQualities[i].quality,
+                  quality: upload.videoQualities[i].quality
                 });
 
-                await upload.save();
-
+                upload.videoQualities[i].status = 'complete';
               }
-              // await ffmpegHelper.convertVideo({
-              //   uploadedPath: fileInDirectory,
-              //   title,
-              //   bitrate: qualities[i].bitrate,
-              //   savePath: qualitySavePath,
-              //   uniqueTag: uniqueTag + '-' + qualities[i].quality,
-              //   quality: qualities[i].quality
-              // });
 
-              // Save file size after compression.
-              // const response = await ffmpegHelper.ffprobePromise(qualitySavePath);
-              // upload.processedFileSizeInMb = bytesToMb(response.format.size);
-
-              upload.videoQualities
               await upload.save();
             }
-            else {
-              // do max possible conversion with the biggest bitrate left? then break;
-              break;
-            }
+            // else {
+            //   // do max possible conversion with the biggest bitrate left? then break;
+            //   break;
+            // }
 
           }
 
           await markConvertAsComplete(uniqueTag, channelUrl, user);
 
           uploadLogger.info('Quality all qualities are converted', logObject);
+
+          updateUsersUnreadSubscriptions(user);
+
+          uploadLogger.info('Updated subscribed users subscriptions', logObject);
 
         });
 

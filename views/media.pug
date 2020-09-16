@@ -283,6 +283,17 @@ block content
                 h4.fw(style="font-size:22px;margin-top:30px;") If your upload is stuck on processing, let an admin know via the social links at the bottom of the page and we'll take a look.
 
 
+        if upload.status !== 'processing'
+
+            div(style="max-width:443px;margin:0 auto;")
+                //if(upload.videoQualities.includes({status: 'pending'}))
+                //    h2.fw wtf
+                each val in upload.videoQualities
+                    if val.status !== 'complete'
+                        h4.fw(style="font-size:22px;margin-top:30px;") Video #{val.quality} convert is #{val.status}
+
+
+
         <!-- DISPLAYING CONTENT -->
         br
         br
@@ -291,7 +302,7 @@ block content
             div.display-div.magnetic(style="min-width:50%;min-height:50%;margin:0 auto;margin-top: -25px;")
                 // margin-top:46px;
 
-                video#media_player.display-element(playsinline poster=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;")
+                video#media_player.display-element(playsfinline poster=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;")
                     // to
                     each val in upload.videoQualities
                         if val.status === 'complete'
@@ -901,7 +912,7 @@ block extra_footer_js
   if upload.status == 'processing'
     include ./mediaPlayerPartials/progressTrackerJs
 
-
+  // include the stuff of media to calculate converstion percentage
 
   script(src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js")
   script(src="https://cdnjs.cloudflare.com/ajax/libs/plyr/3.5.10/plyr.min.js")
