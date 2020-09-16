@@ -78,10 +78,13 @@ block content
               _csrf: csrf
             }
 
-            var thing = $('.importInput').val()
+            var youtubeLink = $('.importInput').val()
 
+            data.youtubeLink = youtubeLink;
 
-            if(thing){
+            console.log(youtubeLink);
+
+            if(youtubeLink){
               $.ajax({
                 type: 'POST',
                 url: `/importer`,
@@ -97,7 +100,6 @@ block content
               });
 
             }
-            console.log('hit!');
-            console.log(thing);
+
           })
         })

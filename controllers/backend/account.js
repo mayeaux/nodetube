@@ -487,6 +487,13 @@ exports.postConfirmEmail = async(req, res, next) => {
  */
 exports.postImporter = (req, res) => {
 
+  const youtubeLink = req.body.youtubeLink;
+
+  const channelUrl = req.user.channelUrl;
+
+  importerDownloadFunction(channelUrl, youtubeLink);
+
+
   console.log(req.body);
 
   return res.send('hello');
