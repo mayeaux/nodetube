@@ -20,10 +20,10 @@ const mailTransports = require('../../config/nodemailer');
 
 const importerDownloadFunction = require('../../lib/uploading/importer');
 
-importerDownloadFunction('anthony', 'https://www.youtube.com/watch?v=vLJgAAIfKEc');
+// importerDownloadFunction('anthony', 'https://www.youtube.com/watch?v=vLJgAAIfKEc');
 
-console.log('importer');
-console.log(importerDownloadFunction);
+// console.log('importer');
+// console.log(importerDownloadFunction);
 
 const mailgunTransport = mailTransports.mailgunTransport;
 
@@ -487,16 +487,7 @@ exports.postConfirmEmail = async(req, res, next) => {
  */
 exports.postImporter = (req, res) => {
 
-  const recaptchaPublicKey = process.env.RECAPTCHA_SITEKEY;
+  console.log(req.body);
 
-  const captchaOn = process.env.RECAPTCHA_ON == 'true';
-
-  if(!req.user){
-    return res.redirect('/login');
-  }
-  res.render('account/importer', {
-    title: 'Create Account',
-    recaptchaPublicKey,
-    captchaOn
-  });
+  return res.send('hello');
 };

@@ -72,10 +72,10 @@ block content
         $(document).ready(function(){
           $('.submit-button').click(function () {
 
-            var csrf = '#{csrf}'
+            var csrf = '#{_csrf}'
 
             var data = {
-              _csrf: csrf,
+              _csrf: csrf
             }
 
             var thing = $('.importInput').val()
@@ -84,9 +84,11 @@ block content
             if(thing){
               $.ajax({
                 type: 'POST',
-                url: `/postImporter`,
+                url: `/importer`,
                 data,
                 success: function (data) {
+                  alert(data);
+
                   console.log(data);
                 },
                 error: function (err) {
@@ -94,7 +96,6 @@ block content
                 }
               });
 
-              alert(thing);
             }
             console.log('hit!');
             console.log(thing);
