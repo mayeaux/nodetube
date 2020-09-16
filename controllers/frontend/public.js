@@ -185,7 +185,6 @@ exports.getDocs = async(req, res) => {
   });
 };
 
-
 /**
  * GET /donate
  * Donation page

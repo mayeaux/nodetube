@@ -133,7 +133,6 @@ function frontendRoutes(app){
   app.get('/about', publicController.about);
   app.get('/docs', publicController.getDocs);
 
-
   app.get('/donate', publicController.getDonate);
 
   app.get('/termsofservice', publicController.tos);

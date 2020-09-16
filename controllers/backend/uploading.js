@@ -464,8 +464,6 @@ exports.postFileUpload = async(req, res) => {
 
           console.log('done moving file');
 
-
-
           const specificMatches = ( codecName == 'hevc' || codecProfile == 'High 4:4:4 Predictive' );
 
           if(specificMatches || bitrate > maxBitrate){
