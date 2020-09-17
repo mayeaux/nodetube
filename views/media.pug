@@ -363,25 +363,25 @@ block content
                     if upload.uploader.customThumbnail
                         a(href=`/user/${upload.uploader.channelUrl}`)
 
-                            img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` style="border-radius:13px;width:110px;height:110px;")
+                            img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` style="opacity:0.75;border-radius:13px;width:110px;height:110px;")
                             br
                             br
                     else if upload.uploader.thumbnailUrl
                         a(href=`/user/${upload.uploader.channelUrl}`)
 
-                            img(src=`${uploadServer}/${upload.uploader._id}/unique.png` style="border-radius:13px;width:110px;height:110px;")
+                            img(src=`${uploadServer}/${upload.uploader._id}/unique.png` style="opacity:0.75;border-radius:13px;width:110px;height:110px;")
                             br
                             br
                     else
                         a(href=`/user/${upload.uploader.channelUrl}`)
 
-                            img(src=`/images/default_user_image.png` style="border-radius:13px;width:110px;height:110px;")
+                            img(src=`/images/default_user_image.png` style="opacity:0.75;border-radius:13px;width:110px;height:110px;")
                             br
                             br
 
                     a(href=`/user/${upload.uploader.channelUrl}` style="color:#a5a5a5;font-weight:300") #{upload.uploader.channelName || upload.uploader.channelUrl}
                         if upload.uploader.verified == true
-                            img(src="/images/verified.jpg" width="25px" height="25px" style="margin-left:3px;margin-top:-2px;margin-right:5px;")
+                            img(src="/images/verified.jpg" width="25px" height="25px" style="opacity:0.75;margin-left:3px;margin-top:-2px;margin-right:5px;")
                         if upload.uploader.plan == 'plus'
                             span.nodetube-pro PLUS
 
@@ -389,9 +389,9 @@ block content
 
                 if upload.visibility != 'pending'
                     if alreadySubbed
-                        button.subscribe.btn.fw.btn-danger(style="border-radius:4px") Unsubscribe (#{subscriberAmount})
+                        button.subscribe.btn.fw.btn-danger(style="border-radius:4px;opacity:0.75;") Unsubscribe (#{subscriberAmount})
                     else
-                        button.subscribe.btn.fw.btn-success(style="border-radius:4px") Subscribe (#{subscriberAmount})
+                        button.subscribe.btn.fw.btn-success(style="border-radius:4px;opacity:0.75;") Subscribe (#{subscriberAmount})
                     br
                     br
 
@@ -521,7 +521,7 @@ block content
                         // edit button
                         if ( user && user.channelUrl == upload.uploader.channelUrl ) || ( user && user.role == 'admin' )
                             a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}/edit`)
-                                button.fw.btn.btn-success(style="margin-bottom:-10px;border-radius:5px;") Edit
+                                button.fw.btn.btn-success(style="margin-bottom:-10px;border-radius:5px;opacity:0.5;") Edit
 
 
                     br
