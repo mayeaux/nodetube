@@ -1,0 +1,105 @@
+extends ../layout
+
+block content
+    style.
+        .dropdown {
+            text-align: center;
+        }
+
+        .button, .dropdown-menu {
+            margin: 10px auto
+        }
+
+        .dropdown-menu {
+            width: 200px;
+            left: 50%;
+            margin-left: -100px;
+        }
+
+        input[type=checkbox] {
+            /* Double-sized Checkboxes */
+            -ms-transform: scale(2); /* IE */
+            -moz-transform: scale(2); /* FF */
+            -webkit-transform: scale(2); /* Safari and Chrome */
+            -o-transform: scale(2); /* Opera */
+            padding: 10px;
+        }
+
+        .ldBar-label {
+            font-size: 2.1em;
+            font-weight: 300;
+        }
+
+        .ldBar {
+            margin: 0 auto;
+        }
+
+        .upload-information p, .formats p {
+            font-weight:300;
+            font-size:17px;
+        }
+
+    br
+    div.center-block.text-center
+        div.upload-information(style="margin-top:20px")
+            h1(style="display:inline")
+                i.fa.fa-upload(style="display:inline")
+            h1.fw(style="display:inline") File Importer
+
+            br
+            h3.fw #{brandName} supports importing from over 110 sites
+            br
+            br
+            div.formats(style="max-width:500px;margin:0 auto;")
+                p(style="font-size:20px;margin-bottom:16px;") You can click here for an entire list
+
+
+            p(style="font-size:18px;margin-bottom: 10px;") You can currently use this because you have Plus
+            br
+
+
+        .row
+            .col-sm-12
+
+                div
+                    label.fw(style="font-size: 23px;" for='title') Url To Import
+                    input.importInput.form-group.center-block.text-center(style="width:400px;max-width:95%;border-radius:2px;font-size:20px;font-weight:300;" type="text" name="title" id="title" minlength=3, maxlength=100 required)
+                    button.fw.btn.btn-primary.submit-button(style="border-radius:5px;font-size:18px;" type="submit") Import
+
+
+
+    script.
+        $(document).ready(function(){
+          $('.submit-button').click(function () {
+
+            var csrf = '#{_csrf}'
+
+            var data = {
+              _csrf: csrf
+            }
+
+            var youtubeLink = $('.importInput').val()
+
+            data.youtubeLink = youtubeLink;
+
+            console.log(youtubeLink);
+
+            if(youtubeLink){
+              $.ajax({
+                type: 'POST',
+                url: `/importer`,
+                data,
+                success: function (data) {
+                  // alert(data);
+
+                  console.log(data);
+                },
+                error: function (err) {
+                  console.log(err);
+                }
+              });
+
+            }
+
+          })
+        })

@@ -133,7 +133,6 @@ function frontendRoutes(app){
   app.get('/about', publicController.about);
   app.get('/docs', publicController.getDocs);
 
-
   app.get('/donate', publicController.getDonate);
 
   app.get('/landing', publicController.getLandingPage);
@@ -265,6 +264,9 @@ function frontendRoutes(app){
   // purchase endpoints
   app.post('/api/purchase/plus', passportConfig.isAuthenticated, purchaseController.purchasePlus);
   app.post('/api/purchase/credit',passportConfig.isAuthenticated,  purchaseController.purchaseCredits);
+
+  app.get('/importer', accountFrontendController.getImporter);
+  app.post('/importer', accountBackendController.postImporter);
 
   /** Account Pages **/
   app.get('/account', passportConfig.isAuthenticated, accountFrontendController.getAccount);
