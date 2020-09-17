@@ -35,7 +35,10 @@ const uploadSchema = new mongoose.Schema({
   // info about original file
   originalFileSizeInMb: Number,
   processedFileSizeInMb: Number,
+
+  // pretty sure this is in bytes
   fileSize: Number,  // TODO: should support highQualityFileSize as well for compressions
+
   bitrateInKbps: Number,
   dimensions: {
     height: String,
