@@ -935,6 +935,6 @@ exports.getImporter = (req, res) => {
   }
 
   res.render('account/importer', {
-    title: 'Importer',
+    title: 'Importer'
   });
 };

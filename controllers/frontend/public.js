@@ -71,7 +71,6 @@ exports.index = async(req, res) => {
   }
 };
 
-
 /**
  * GET /landing
  * Landing page
@@ -116,7 +115,6 @@ exports.getLandingPage = async(req, res) => {
 
   }
 };
-
 
 /**
  * GET /globe
