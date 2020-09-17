@@ -302,7 +302,7 @@ block content
             div.display-div.magnetic(style="min-width:50%;min-height:50%;margin:0 auto;margin-top: -25px;")
                 // margin-top:46px;
 
-                video#media_player.display-element(playsfinline poster=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;")
+                video#media_player.display-element(playsinline poster=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;")
                     // to
                     each val in upload.videoQualities
                         if val.status === 'complete'
