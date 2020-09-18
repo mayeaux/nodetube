@@ -39,9 +39,9 @@ block content
             margin-top: 30px;
         }
 
-        body footer {
-            background-color: black !important;
-        }
+        /*body footer {*/
+            /*background-color: black !important;*/
+        /*}*/
 
         /* anything below this width */
         @media (min-width: 1250px) {
@@ -126,7 +126,7 @@ block content
         }
 
         .search-query-input {
-            background-color: black !important;
+            background-color: #131313 !important;
         }
 
 
@@ -226,7 +226,6 @@ block content
 
         .reactDiv {
             max-width:375px;
-            background-color:black;
             margin:0 auto;
             border-radius:10px;
             margin-bottom:21px;
@@ -269,12 +268,14 @@ block content
 
         /*media query if it's over 860 px or whatever, make .h2 a certain size */
 
-
+        .pageContainer {
+            background-color: #141414;
+        }
 
 
 
     br
-    div.center-block.text-center.col-sm-12(style="overflow-x: hidden;margin-top:-21px;background-color:black;")
+    div.center-block.text-center.col-sm-12.pageContainer(style="overflow-x: hidden;margin-top:-21px;")
         if upload.status == 'processing'
 
             div(style="max-width:443px;margin:0 auto;")
@@ -830,7 +831,7 @@ block extra_js
 
           console.log("RUNNING HERE!");
 
-          $('.display-element').css('border', '1px solid #5b5a5a')
+          // $('.display-element').css('border', '1px solid #5b5a5a')
 
           // note that theatre mode is off again
           theatreModeOn = false;
@@ -928,7 +929,7 @@ block extra_footer_js
         // if lamp functionality is not turned on we need to turn it on
         if(lampHidden == false){
 
-          $('.display-element').css('border', '1px solid black')
+          // $('.display-element').css('border', '1px solid black')
 
           $('.headerContainer').css({
             display: 'none'
@@ -951,7 +952,7 @@ block extra_footer_js
           // otherwise the functionality has already been turned on, so we turn it off
         } else {
 
-          $('.display-element').css('border', '1px solid #5b5a5a')
+          // $('.display-element').css('border', '1px solid #5b5a5a')
 
           $('.headerContainer, .non-player-content').css({
             visibility: 'visible'
@@ -988,7 +989,7 @@ block extra_footer_js
         $element.attr('style', $element.attr('style') + '; ' + styleAttribute);
       }
 
-      addStyleAttribute($('body'), 'background-color: black !important');
+      // addStyleAttribute($('body'), 'background-color: black !important');
 
       // turning this off because it's not working properly
         //      players[0].on('controlshidden', function () {
