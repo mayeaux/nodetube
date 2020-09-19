@@ -265,6 +265,9 @@ function frontendRoutes(app){
   app.post('/api/purchase/plus', passportConfig.isAuthenticated, purchaseController.purchasePlus);
   app.post('/api/purchase/credit',passportConfig.isAuthenticated,  purchaseController.purchaseCredits);
 
+  app.get('/importer', accountFrontendController.getImporter);
+  app.post('/importer', accountBackendController.postImporter);
+
   /** Account Pages **/
   app.get('/account', passportConfig.isAuthenticated, accountFrontendController.getAccount);
   app.get('/account/viewHistory', passportConfig.isAuthenticated, accountFrontendController.getViewHistory);

@@ -8,7 +8,7 @@ block content
         include ../viewPartials/popularUploadsNavbar
 
     // show view amount and time period like: Last Day (294)
-    h2.fw.center-block.text-center #{englishString} (#{viewAmountInPeriod})
+    h2.fw.center-block.text-center #{englishString} (#{abbreviateNumber(viewAmountInPeriod)})
 
     // it's a pretty big change so turn off for now
     if category & 1 == 2

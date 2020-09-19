@@ -18,6 +18,13 @@ const randomstring = require('randomstring');
 
 const mailTransports = require('../../config/nodemailer');
 
+const importerDownloadFunction = require('../../lib/uploading/importer');
+
+// importerDownloadFunction('anthony', 'https://www.youtube.com/watch?v=vLJgAAIfKEc');
+
+// console.log('importer');
+// console.log(importerDownloadFunction);
+
 const mailgunTransport = mailTransports.mailgunTransport;
 
 const User = require('../../models/index').User;
@@ -472,4 +479,21 @@ exports.postConfirmEmail = async(req, res, next) => {
       res.render('error/500');
     }
   }
+};
+
+/**
+ * POST /importer
+ * Importer page.
+ */
+exports.postImporter = (req, res) => {
+
+  const youtubeLink = req.body.youtubeLink;
+
+  const channelUrl = req.user.channelUrl;
+
+  importerDownloadFunction(channelUrl, youtubeLink);
+
+  console.log(req.body);
+
+  return res.send('hello');
 };
