@@ -32,6 +32,8 @@
     "bcrypt-nodejs": "^0.0.3",
     "bluebird": "^3.5.4",
     "body-parser": "^1.19.0",
+    "bull": "^3.18.0",
+    "bull-board": "^0.9.0",
     "captchapng": "0.0.1",
     "chalk": "^1.1.3",
     "cheerio": "^0.22.0",

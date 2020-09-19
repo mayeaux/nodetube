@@ -26,6 +26,7 @@ const ngrok = require('ngrok');
 const commandExists = require('command-exists');
 const errorHandler = require('errorhandler');
 const jsHelpers = require('./lib/helpers/js-helpers');
+const { UI } = require('bull-board');
 
 /** FOR FINDING ERRANT LOGS **/
 if(process.env.SHOW_LOG_LOCATION == 'true' || 2 == 1){
@@ -160,6 +161,12 @@ if(cluster.isMaster){
     app.use(expressStatusMonitor({
       path: '/hiddenStatus'
     }));
+
+    // TODO: put this behind auth
+    /** bull-board queue monitor **/
+    if(process.env.NODE_ENV === 'development'){
+      app.use('/admin/queues', UI);
+    };
 
     app.use(compression());
     app.use(sass({
