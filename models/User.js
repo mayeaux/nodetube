@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 var Schema = mongoose.Schema;
 
-const defaultMaxSizeUpload = process.env.DEFAULT_MAX_UPLOAD_SIZE_IN_MB;
+const defaultMaxSizeUpload = process.env.DEFAULT_MAX_UPLOAD_SIZE_IN_MB || 500;
 
 if(!defaultMaxSizeUpload){
   throw new Error('Default max size is not set properly on the Upload model file. ' +

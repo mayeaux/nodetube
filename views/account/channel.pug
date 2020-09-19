@@ -190,6 +190,10 @@ block content
 
                 include ../viewPartials/uploadDetails
 
+    if channel.uploads.length > 12
+        br
+        include ../viewPartials/channelOverviewPagination
+
     include ../viewPartials/adminSensitivityButtons
 
     include ../viewPartials/changeSensitivityFilterJs
