@@ -166,7 +166,7 @@ if(cluster.isMaster){
     /** bull-board queue monitor **/
     if(process.env.NODE_ENV === 'development'){
       app.use('/admin/queues', UI);
-    };
+    }
 
     app.use(compression());
     app.use(sass({
