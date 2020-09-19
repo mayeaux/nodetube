@@ -41,6 +41,8 @@ const backblaze = require('../../lib/uploading/backblaze');
 // console.log(`SAVE AND SERVE FILES DIRECTORY: ${saveAndServeFilesDirectory}`);
 
 var resumable = require('../../lib/uploading/resumable.js')(__dirname +  '/upload');
+var Queue = require('bull');
+const { setQueues } = require('bull-board');
 
 const moderationUpdatesToDiscord = process.env.MODERATION_UPDATES_TO_DISCORD == 'true';
 
@@ -558,6 +560,57 @@ exports.postFileUpload = async(req, res) => {
             responseSent = true;
             aboutToProcess(res, channelUrl, uniqueTag);
           }
+
+          var videoQualityQueue = new Queue('Video Quality is going to convert');
+          setQueues([videoQualityQueue]);
+
+          videoQualityQueue.process(async function(job, done){
+
+            Upload.update({'videoQualities._id': job.data.videoQualitiesId}, {'$set': {
+              'videoQualities.$.status': 'converting',
+              'videoQualities.$.fileSizeInMb': 2
+            }}, function(err, result){
+
+              if(err){
+                res.send(err);
+              }
+              else {
+                res.send(result);
+              }
+
+            });
+
+            job.progress(5);
+
+            await ffmpegHelper.convertVideo({
+              uploadedPath: job.data.uploadedPath,
+              title: job.data.title,
+              bitrate: job.data.bitrate,
+              savePath: job.data.savePath,
+              uniqueTag: job.data.uniqueTag,
+              quality: job.data.quality
+            });
+
+            job.progress(42); // TODO: set progress based on convert percentage
+
+            Upload.update({'videoQualities._id': job.data.videoQualitiesId}, {'$set': {
+              'videoQualities.$.status': 'complete',
+              'videoQualities.$.fileSizeInMb': 3
+            }}, function(err, result){
+
+              if(err){
+                res.send(err);
+              }
+              else {
+                res.send(result);
+              }
+
+            });
+
+            job.progress(100);
+            done();
+
+          });
           /*
           all values in Kbps (kilobits per seconds)
           2160p (4k) -> 13000
@@ -610,20 +663,17 @@ exports.postFileUpload = async(req, res) => {
                 // TODO: this is kind of ugly lmao
                 qualitySavePath = `${channelUrlFolder}/${uniqueTag}-${upload.videoQualities[i].quality}.mp4`;
 
-                upload.videoQualities[i].status = 'converting';
-                // upload.videoQualities
-                await upload.save();
-                // await upload.save();
-                await ffmpegHelper.convertVideo({
+                videoQualityQueue.add({
+                  uploadId: upload._id,
+                  videoQualitiesId: upload.videoQualities[i]._id,
                   uploadedPath: fileInDirectory,
-                  title,
+                  title: title,
                   bitrate: upload.videoQualities[i].bitrate,
                   savePath: qualitySavePath,
                   uniqueTag: uniqueTag + '-' + upload.videoQualities[i].quality,
                   quality: upload.videoQualities[i].quality
+                  // uploadSave: upload.save()
                 });
-
-                upload.videoQualities[i].status = 'complete';
               }
 
               await upload.save();
