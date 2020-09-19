@@ -17,6 +17,7 @@ style.
         font-family:initial;
     }
 
+
 div.underThing
     // all the details including title
     if ( upload.fileType == 'audio' || upload.fileType == 'video') && upload.formattedDuration
@@ -41,7 +42,7 @@ a.title-anchor(href=`/user/${upload.uploader.channelUrl || channelUrl}/${upload.
 // TODO: need to rename this div
 div.random-thing(style="margin-top:-4px;")
     // view amount
-    p.upload-title-text.views-text(style="margin:0 auto;text-align:center;display:inline;color:#b0aeae;") #{upload.legitViewAmount} views &nbsp
+    p.upload-title-text.views-text(style="margin:0 auto;text-align:center;display:inline;color:#b0aeae;") #{abbreviateNumber(upload.legitViewAmount)} views &nbsp
         // upload time ago
 
         // if its not sorted by popular (aka recent or other thing on user page)
@@ -61,7 +62,7 @@ div.random-thing(style="margin-top:-4px;")
 // show views within time if on popular page
 div.upload-thing
     if within
-        p.upload-title-text.views-text(style="margin-top:-8px;color:#b0aeae;;") #{upload[popularTimeViews]} #{withinDisplayString}
+        p.upload-title-text.views-text(style="margin-top:-8px;color:#b0aeae;;") #{abbreviateNumber(upload[popularTimeViews])} #{withinDisplayString}
 
 
 
@@ -93,3 +94,5 @@ if user && (user.role == 'admin' || user.role == 'moderator') && upload.visibili
         //        img(src="/images/verified.jpg" width="19px" height="19px" style="margin-left:3px;margin-top:-2px;")
         //    if upload.uploader.plan == 'plus'
         //        span.pewtube-pro PLUS
+
+
