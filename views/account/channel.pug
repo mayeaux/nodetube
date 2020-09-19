@@ -83,7 +83,7 @@ block content
                 div.col-sm-3
                     h4.fw Uploads: #{userUploadAmount} &nbsp &nbsp
                 div.col-sm-3
-                    h4.fw Views : #{channel.totalViews}
+                    h4.fw Views : #{numberWithCommas(channel.totalViews)}
                 div.col-sm-3
                     h4.fw Joined: #{joinedTimeAgo}
                 if channel.receivedSubscriptions
