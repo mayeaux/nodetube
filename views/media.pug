@@ -11,6 +11,8 @@ block content
                 }
             }
 
+    // TODO: make this cover more qualities
+    // TODO: also consider using upload.video
     if upload.bitrateInKbps > 1500
         style.
             /** everything 650 and below */
@@ -18,7 +20,7 @@ block content
             @media (min-width: 668px) {
 
                 .plyr {
-                    height: 770px;
+                    height: 794px;
                 }
             }
     else
@@ -28,11 +30,20 @@ block content
             @media (min-width: 668px) {
 
                 .plyr {
-                    height: 625px;
+                    height: 794px;
                 }
             }
 
     style.
+
+        @media (min-width: 668px) {
+
+            .plyr {
+                max-height: 100vh;
+                max-width: 100vw;
+            }
+        }
+
         .pending-string {
             max-width: 400px;
             margin: 0 auto;
