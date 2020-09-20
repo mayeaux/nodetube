@@ -305,7 +305,7 @@ block content
         br
         br
         // if it's a video that's finished processing
-        if upload.fileType === 'video' && !upload.status !== 'processing'
+        if upload.fileType === 'video' && upload.status !== 'processing'
             div.display-div.magnetic(style="min-width:50%;min-height:50%;margin:0 auto;margin-top: -25px;")
                 // margin-top:46px;
 
