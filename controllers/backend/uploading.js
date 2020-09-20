@@ -418,6 +418,7 @@ exports.postFileUpload = async(req, res) => {
             const width = response.streams[0].width;
             const height = response.streams[0].height;
 
+            // pretty sure this is kilobit
             // bitrate in kbps
             bitrate = response.format.bit_rate / 1000;
 
