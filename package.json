@@ -27,6 +27,7 @@
     "ngrok": "./node_modules/ngrok/bin/ngrok http 3000"
   },
   "dependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.0.20",
     "apicache": "^1.4.0",
     "backblaze-b2": "^1.3.1",
     "bcrypt-nodejs": "^0.0.3",
