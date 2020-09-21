@@ -89,10 +89,44 @@ block content
                 type: 'POST',
                 url: `/importer`,
                 data,
-                success: function (data) {
+                success: function (response) {
                   // alert(data);
 
-                  console.log(data);
+                  console.log(response);
+                  var uniqueTag = response.uniqueTag;
+
+
+                  // TODO: setInterval here checking the backend
+
+                  var interval = setInterval(function(){
+
+                    data = {
+                      _csrf: csrf,
+                      uniqueTag
+                    }
+
+                    $.ajax({
+                      type: 'GET',
+                      url: `/importStatus`,
+                      data,
+                      success: function (response) {
+                        // alert(data);
+
+                        console.log(response);
+
+
+                        // TODO: setInterval here checking the backend
+
+                      },
+                      error: function (err) {
+                        console.log(err);
+                      }
+                    });
+
+
+
+                  }, 1000 * 10)
+
                 },
                 error: function (err) {
                   console.log(err);

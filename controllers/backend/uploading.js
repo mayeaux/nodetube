@@ -95,6 +95,7 @@ exports.getUploadProgress = async(req, res) => {
     uniqueTag
   });
 
+  // this will cause the client to refresh the page
   if(upload && upload.status == 'completed'){
     return res.send('100');
   }
