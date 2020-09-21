@@ -108,7 +108,6 @@ exports.getUploadProgress = async(req, res) => {
   // nuspa41uploadProgress
   const string = `${uniqueTag}uploadProgress`;
 
-
   const conversionProgress = await redisClient.getAsync(`${uniqueTag}uploadProgress`);
   const conversionTimeLeft = await redisClient.getAsync(`${uniqueTag}timeLeft`);
 

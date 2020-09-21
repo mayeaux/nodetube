@@ -485,7 +485,7 @@ exports.postConfirmEmail = async(req, res, next) => {
  * POST /importer
  * Importer page.
  */
-exports.postImporter = async (req, res) => {
+exports.postImporter = async(req, res) => {
 
   const youtubeLink = req.body.youtubeLink;
 
@@ -493,17 +493,17 @@ exports.postImporter = async (req, res) => {
 
   console.log(req.body);
 
-  console.log('now ' + new Date())
+  console.log('now ' + new Date());
 
   const uniqueTag = await importerDownloadFunction(channelUrl, youtubeLink);
 
   if(uniqueTag == 'playlist'){
     return res.send({
       uniqueTag: 'playlist'
-    })
+    });
   }
 
-  console.log('now ' + new Date())
+  console.log('now ' + new Date());
 
   return res.send({
     uniqueTag
