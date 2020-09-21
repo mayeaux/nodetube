@@ -497,6 +497,12 @@ exports.postImporter = async (req, res) => {
 
   const uniqueTag = await importerDownloadFunction(channelUrl, youtubeLink);
 
+  if(uniqueTag == 'playlist'){
+    return res.send({
+      uniqueTag: 'playlist'
+    })
+  }
+
   console.log('now ' + new Date())
 
   return res.send({

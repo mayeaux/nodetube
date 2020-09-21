@@ -92,13 +92,20 @@ block content
                 success: function (response) {
                   // alert(data);
 
+                  console.log('response');
                   console.log(response);
                   var uniqueTag = response.uniqueTag;
 
 
                   // TODO: setInterval here checking the backend
 
-                  window.open('/user/v/' + uniqueTag.uniqueTag + '?autoplay=off')
+                  console.log(uniqueTag)
+
+
+                  if(uniqueTag !== 'playlist'){
+                    window.open('/user/v/' + uniqueTag.uniqueTag + '?autoplay=off')
+                  }
+
 
                 },
                 error: function (err) {
