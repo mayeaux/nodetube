@@ -70,6 +70,10 @@ block content
 
     script.
         $(document).ready(function(){
+
+          // no need to autofocus
+          $('.importInput').focus();
+
           $('.submit-button').click(function () {
 
             var csrf = '#{_csrf}'
@@ -100,6 +104,12 @@ block content
                   // TODO: setInterval here checking the backend
 
                   console.log(uniqueTag)
+
+                  // clear the old import value
+                  $('.importInput').val('');
+
+                  // no need to autofocus
+                  $('.importInput').focus();
 
 
                   if(uniqueTag !== 'playlist'){
