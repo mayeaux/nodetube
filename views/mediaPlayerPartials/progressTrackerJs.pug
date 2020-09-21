@@ -23,6 +23,7 @@ script.
         //- console.log(data);
 
         estimatedProcessingSecondsLeft = Number(data.conversionTimeLeft);
+
         setIntervalX(() => {
           if (estimatedProcessingSecondsLeft) estimatedProcessingSecondsLeft -= 1
           var secondsToFormattedTime = #{secondsToFormattedTime};
@@ -70,6 +71,7 @@ script.
 
   var processingStartTime = new Date();
 
+  // check if user is using ngrok
   var userIsOnNgrokDomain = new URL(document.URL).hostname.slice(-8) === "ngrok.io";
 
   // make the interval 7 seconds if the user is on ngrok to reduce timeout erros

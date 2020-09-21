@@ -95,6 +95,11 @@ exports.getUploadProgress = async(req, res) => {
     uniqueTag
   });
 
+  // let the frontend know if the upload or conversion failed
+  if(upload && upload.status == 'failed'){
+    return res.send('failed');
+  }
+
   // this will cause the client to refresh the page
   if(upload && upload.status == 'completed'){
     return res.send('100');
@@ -102,6 +107,7 @@ exports.getUploadProgress = async(req, res) => {
 
   // nuspa41uploadProgress
   const string = `${uniqueTag}uploadProgress`;
+
 
   const conversionProgress = await redisClient.getAsync(`${uniqueTag}uploadProgress`);
   const conversionTimeLeft = await redisClient.getAsync(`${uniqueTag}timeLeft`);

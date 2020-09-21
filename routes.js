@@ -163,7 +163,7 @@ function frontendRoutes(app){
 
   // endpoint for processing progress
   // TODO: should probably be renamed to note it's processing progress not necessarily upload progress
-  app.all('/user/:channel/:media/progress', uploadingController.getUploadProgress);
+  app.all('/user/:channelUrl/:media/progress', uploadingController.getUploadProgress);
 
   // individual user rss feed
   app.get('/user/:channel/rss', accountFrontendController.getChannelRss);
