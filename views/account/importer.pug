@@ -98,34 +98,7 @@ block content
 
                   // TODO: setInterval here checking the backend
 
-                  var interval = setInterval(function(){
-
-                    data = {
-                      _csrf: csrf,
-                      uniqueTag
-                    }
-
-                    $.ajax({
-                      type: 'GET',
-                      url: `/importStatus`,
-                      data,
-                      success: function (response) {
-                        // alert(data);
-
-                        console.log(response);
-
-
-                        // TODO: setInterval here checking the backend
-
-                      },
-                      error: function (err) {
-                        console.log(err);
-                      }
-                    });
-
-
-
-                  }, 1000 * 10)
+                  window.open('/user/v/' + uniqueTag.uniqueTag)
 
                 },
                 error: function (err) {
