@@ -61,10 +61,13 @@ block content
         .row
             .col-sm-12
 
-                div
+                div.importerButton
                     label.fw(style="font-size: 23px;" for='title') Url To Import
                     input.importInput.form-group.center-block.text-center(style="width:400px;max-width:95%;border-radius:2px;font-size:20px;font-weight:300;" type="text" name="title" id="title" minlength=3, maxlength=100 required)
                     button.fw.btn.btn-primary.submit-button(style="border-radius:5px;font-size:18px;" type="submit") Import
+
+                h1.importingText(style="display:none;").
+                    Importing, will redirect you in a second
 
 
 
@@ -77,6 +80,10 @@ block content
           $('.importInput').focus();
 
           $('.submit-button').click(function () {
+
+            $('.importerButton').hide();
+
+            $('.importingText').show();
 
             var csrf = '#{_csrf}'
 
@@ -99,11 +106,30 @@ block content
                 url: `/importer`,
                 data,
                 success: function (response) {
-                  // alert(data);
 
                   console.log('response');
                   console.log(response);
+
+
                   var uniqueTag = response.uniqueTag;
+
+                  console.log(uniqueTag);
+
+
+                  if(uniqueTag.uniqueTag == 'error'){
+                    $('.importerButton').show();
+
+                    $('.importingText').hide();
+
+                    return swal('Sorry that upload URL didn\'t work');
+                  }
+
+
+
+                  // alert(data);
+
+
+
 
 
                   // TODO: setInterval here checking the backend
@@ -118,9 +144,18 @@ block content
 
 
                   if(uniqueTag !== 'playlist'){
-                    window.open('/user/v/' + uniqueTag.uniqueTag + '?autoplay=off')
+
+                    var newUrl = '/user/v/' + uniqueTag.uniqueTag + '?autoplay=off'
+
+                    // redirect instead of opening a new tab, more reliable
+                    window.location.href = newUrl;
+
+                    // window.open(newUrl);
                   } else {
-                    swal('Sorry playlists arent supported at the moment')
+                    $('.importerButton').show();
+
+                    $('.importingText').hide();
+                    return swal('Sorry playlists arent supported at the moment')
                   }
 
 
