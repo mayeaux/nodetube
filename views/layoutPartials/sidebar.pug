@@ -380,10 +380,14 @@ style.
         a(href='/media/subscribed')
             i.ib.fa.fa-video
             if user.unseenSubscriptionUploads > 0
-                p.ib &nbsp Subscriptions (#{user.unseenSubscriptionUploads})
+                p.ib Subscriptions (#{user.unseenSubscriptionUploads})
             else
-                p.ib &nbsp Subscriptions
+                p.ib Subscriptions
 
+        if user && user.privs.importer
+            a(href='/importer')
+                i.ib.fas.fa-upload
+                p.ib &nbsp Importer
 
         hr(style="margin-top:10px;margin-bottom:10px")
 
