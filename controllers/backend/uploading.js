@@ -496,7 +496,8 @@ exports.postFileUpload = async(req, res) => {
 
             /** CONVERT AND UPLOAD VIDEO IF NECESSARY **/
 
-            await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, hostFilePath, bucket, upload, channelUrl, b2);
+
+            await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, upload, channelUrl, b2, hostFilePath, bucket);
 
             uploadLogger.info('Captured thumbnail', logObject);
 
@@ -649,6 +650,10 @@ exports.adminUpload = async(req, res) => {
     const hostFilePath = `${channelUrl}/${uniqueTag}`;
 
     await mkdirp.mkdirpAsync(`./uploads/${user.channelUrl}`);
+
+
+    // TODO: fix this
+    await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, upload, channelUrl, b2, hostFilePath, bucket);
 
     await ffmpegHelper.takeAndUploadThumbnail(realFileInDirectory, uniqueTag, hostFilePath, bucket, upload, channelUrl, b2);
 
