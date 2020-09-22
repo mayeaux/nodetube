@@ -930,7 +930,7 @@ exports.getImporter = (req, res) => {
     return res.redirect('/login');
   }
 
-  if(req.user.channelUrl !== 'anthony'){
+  if(!req.user.privs.importer){
     return res.redirect('/login');
   }
 

@@ -165,6 +165,7 @@ exports.postSignup = async(req, res, next) => {
     user.privs.privateUpload = true;
     user.privs.uploadSize = 2000;
     user.privs.livestreaming = true;
+    user.privs.importer = true;
   }
 
   User.findOne({ channelUrl : req.body.channelUrl }, (err, existingUser) => {

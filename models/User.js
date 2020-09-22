@@ -108,6 +108,11 @@ const userSchema = new mongoose.Schema({
     livestreaming: {
       type: Boolean,
       default: false
+    },
+    // if the user is allowed to stream to the backend
+    importer: {
+      type: Boolean,
+      default: false
     }
   },
 
