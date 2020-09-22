@@ -1,0 +1,16 @@
+# dependabot.yml file with
+# reviews and an assignee for all npm pull requests
+
+version: 2
+updates:
+  # Keep npm dependencies up to date
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    # Raise all npm pull requests with reviewers
+    reviewers:
+      - "Yemeni"
+    # Raise all npm pull requests with an assignee
+    assignees:
+      - "Yemeni"
