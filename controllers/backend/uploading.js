@@ -105,18 +105,18 @@ exports.getUploadProgress = async(req, res) => {
     return res.send('100');
   }
 
-  // nuspa41uploadProgress
-  const string = `${uniqueTag}uploadProgress`;
-
-  const conversionProgress = await redisClient.getAsync(`${uniqueTag}uploadProgress`);
+  const uploadProgress = await redisClient.getAsync(`${uniqueTag}uploadProgress`);
   const conversionTimeLeft = await redisClient.getAsync(`${uniqueTag}timeLeft`);
 
-  console.log('Progress:', conversionProgress);
-  console.log('Time left:', conversionTimeLeft);
+  console.log('Redis says the uploadProgress is:' + uploadProgress);
+  console.log('Redis says the timeLeft is:' + conversionTimeLeft);
+
+  // console.log('Progress:', uploadProgress);
+  // console.log('Time left:', conversionTimeLeft);
 
   // kind of an ugly workaround, if the upload is at 100% converted, mark it as 99%
   // just so backblaze and other things can finish before the frontend redirects
-  if(conversionProgress == '100'){
+  if(uploadProgress == '100'){
     res.send('99');
   }
 
@@ -128,7 +128,7 @@ exports.getUploadProgress = async(req, res) => {
   //
   // console.log(uniqueTag);
 
-  return res.send({conversionProgress, conversionTimeLeft});
+  return res.send({uploadProgress, conversionTimeLeft});
 
 };
 
