@@ -300,6 +300,9 @@ block content
 
                 h4.fw(style="font-size:22px;margin-top:30px;") If your upload is stuck on processing, let an admin know via the social links at the bottom of the page and we'll take a look.
 
+        if upload.status == 'failed'
+            h2.fw(id="processing") Unfortunately this upload failed, please try again or let an admin know something is wrong, thank you!
+
 
         <!-- DISPLAYING CONTENT -->
         br
@@ -451,6 +454,7 @@ block content
                 if upload.visibility == 'pending' && upload.status !== 'processing'
                     h3.pending-string Your video is currently pending moderator approval. If it's still pending after several minutes please contact a mod at
                         a(href="/discord")  Discord
+
 
 
 

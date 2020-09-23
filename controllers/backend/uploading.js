@@ -105,6 +105,7 @@ exports.getUploadProgress = async(req, res) => {
     return res.send('100');
   }
 
+
   const uploadProgress = await redisClient.getAsync(`${uniqueTag}uploadProgress`);
   const conversionTimeLeft = await redisClient.getAsync(`${uniqueTag}timeLeft`);
 

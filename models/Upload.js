@@ -82,6 +82,7 @@ const uploadSchema = new mongoose.Schema({
 
   youTubeDLData: mongoose.Schema.Types.Mixed,
 
+  // TODO: this should be an enum
   status: String,
   sensitive: {
     type: Boolean,
