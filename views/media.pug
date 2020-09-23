@@ -427,27 +427,66 @@ block content
                         p#uploadDescriptionText.fw.uploadDescriptionText(style="color:#a5a5a5") #{upload.description}
 
 
-                //REACTS WITH LIKES, DISLIKE, DISGUST., ETC
-                div.react.reactDiv.desktopReactDiv(style=";")
-                    // margin-top:133px
-                    br
-                    each emoji in emojis
-                        div(style="padding-right:12px;display:inline-block;")
-                            a(href="#")
-                                if currentReact
-                                    if currentReact == emoji.name
+                div.largerSection
+
+                    //REACTS WITH LIKES, DISLIKE, DISGUST., ETC
+                    div.react.reactDiv.desktopReactDiv(style=";")
+                        // margin-top:133px
+                        br
+                        each emoji in emojis
+                            div(style="padding-right:12px;display:inline-block;")
+                                a(href="#")
+                                    if currentReact
+                                        if currentReact == emoji.name
+                                            div.clicked-emoji
+                                                img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
+
+                                        else
+                                            div.unclicked-emoji
+                                                img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
+
+                                    else
                                         div.clicked-emoji
                                             img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
 
-                                    else
-                                        div.unclicked-emoji
-                                            img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
+                                p.fw(class=emoji.name style="font-weight:400;") #{emoji.amount}
 
-                                else
-                                    div.clicked-emoji
-                                        img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
 
-                            p.fw(class=emoji.name style="font-weight:400;") #{emoji.amount}
+                    div.extraButtonsSection
+                        div
+
+                            a(href=`https://www.facebook.com/sharer/sharer.php?u=${url}` target="_blank")
+                                img(src='/images/facebook-share.jpg', width='100', height='30', alt='Share on Twitter')
+                            a(href=`https://twitter.com/share?url=${url}` target="_blank")
+                                img(src='/images/twitter-share.jpg', width='100', height='30', alt='Share on Twitter')
+                            a(href=`mailto:?subject=Check out this ${upload.fileType}&body=Check out this ${upload.fileType} on ${brandName}: ${url}`, title='Share by Email')
+                                img(src='/images/email-share.jpg')
+
+
+
+                        br
+                        button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} \n\n${url}`)
+                            i.fa.fa-info.fw
+                            | Copy Details
+
+                        button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} by ${upload.uploader.channelName || upload.uploader.channelUrl} \n\n ${url} \n\n #${brandName}`)
+                            i.fa.fa-info.fw
+                            | With User Info
+
+                        br
+
+                        div.bottomButtons(style="margin-top:-21px;padding-bottom:10px;")
+
+                            //// embed button
+                            div.change-size-button(style="margin-left:0px;color: rgb(121 119 119) !important;")
+                                h2.share-button
+                                    i.share-icon.fas.fa-code(aria-hidden="true" style="cursor:pointer;font-size:19px;margin-left:0px;")
+
+
+                            // report upload button
+                            div.change-size-button(style="cursor:pointer;margin-left:0px;color: rgb(121 119 119) !important;")
+                                h2.report-button(style="font-size:19px;")
+                                    i.share-icon.fa.fa-exclamation-triangle(aria-hidden="true" style="cursor:pointer;font-size:17px;")
 
 
 
@@ -583,40 +622,7 @@ block content
 
             div.col-sm-12.extraButtonsDiv(style="border-bottom: 1px solid #8e8d8d;")
                 // SHARING BUTTONS
-                div
 
-                    a(href=`https://www.facebook.com/sharer/sharer.php?u=${url}` target="_blank")
-                        img(src='/images/facebook-share.jpg', width='100', height='30', alt='Share on Twitter')
-                    a(href=`https://twitter.com/share?url=${url}` target="_blank")
-                        img(src='/images/twitter-share.jpg', width='100', height='30', alt='Share on Twitter')
-                    a(href=`mailto:?subject=Check out this ${upload.fileType}&body=Check out this ${upload.fileType} on ${brandName}: ${url}`, title='Share by Email')
-                        img(src='/images/email-share.jpg')
-
-
-
-                br
-                button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} \n\n${url}`)
-                    i.fa.fa-info.fw
-                    | Copy Details
-
-                button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} by ${upload.uploader.channelName || upload.uploader.channelUrl} \n\n ${url} \n\n #${brandName}`)
-                    i.fa.fa-info.fw
-                    | With User Info
-
-                br
-
-                div.bottomButtons(style="margin-top:-21px;padding-bottom:10px;")
-
-                    //// embed button
-                    div.change-size-button(style="margin-left:0px;color: rgb(121 119 119) !important;")
-                       h2.share-button
-                           i.share-icon.fas.fa-code(aria-hidden="true" style="cursor:pointer;font-size:19px;margin-left:0px;")
-
-
-                    // report upload button
-                    div.change-size-button(style="cursor:pointer;margin-left:0px;color: rgb(121 119 119) !important;")
-                       h2.report-button(style="font-size:19px;")
-                           i.share-icon.fa.fa-exclamation-triangle(aria-hidden="true" style="cursor:pointer;font-size:17px;")
 
             br
 
@@ -760,16 +766,24 @@ block extra_js
 
       console.log('Width:  ' + getWidth());
 
+      // TODO: thing here
       var width = getWidth();
 
+
+      // have to do this once to start because the enquire thing isn't smart enough to fire automatically
+      // if width is below 900 px;
       if(width < 900){
+
+        // move upload title to top
         $('.uploadTitle').prependTo('.non-player-content')
 
-        $('.reactDiv').appendTo('.uploadDetailsColumn')
+        // move react div
+        $('.largerSection').appendTo('.uploadDetailsColumn')
       }
 
       console.log(width);
 
+      // going below 900 width
       enquire.register("screen and (max-width:900px)", {
 
         // OPTIONAL
@@ -778,9 +792,11 @@ block extra_js
           // when going below 900px
           console.log('RUNNING 1234')
 
+          // move upload title to top
           $('.uploadTitle').prependTo('.non-player-content')
 
-          $('.reactDiv').appendTo('.uploadDetailsColumn')
+          // move react div
+          $('.largerSection').appendTo('.uploadDetailsColumn')
 
 
         },
@@ -794,7 +810,7 @@ block extra_js
 
           $('.uploadTitle').prependTo('.uploadDescriptionColumn')
 
-          $('.reactDiv').appendTo('.uploadDescriptionColumn')
+          $('.largerSection').appendTo('.uploadDescriptionColumn')
         },
 
         // OPTIONAL
