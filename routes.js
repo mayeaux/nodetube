@@ -49,8 +49,12 @@ function fileHostRoutes(app){
     });
   }
 
+  /** upload APIS **/
+  // API that the frontend hits for a uesr to upload
   app.post('/upload', uploadingController.postFileUpload);
-  // app.post('/admin/upload', authMiddleware.adminAuth, filehostController.adminUpload);
+
+  // direct upload for admins that can be used to upload livestream recordings
+  app.post('/admin/upload', authMiddleware.adminAuth, uploadingController.adminUpload);
 
   // edit upload and thumbnails thumbnails
   app.post('/api/upload/:uniqueTag/edit', internalApiController.editUpload);
@@ -145,11 +149,6 @@ function frontendRoutes(app){
 
   app.get('/globe', publicController.globe);
   app.get('/random', publicController.random);
-
-  /** upload APIS **/
-  app.post('/upload', uploadingController.postFileUpload);
-  // TODO: load properly
-  // app.post('/admin/upload', authMiddleware.adminAuth, filehostController.adminUpload);
 
   /** channel browsing routes **/
   app.get('/channels/:page', channelBrowsingController.channels);
