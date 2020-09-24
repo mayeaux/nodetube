@@ -568,11 +568,22 @@ exports.editUpload = async(req, res, next) => {
       fileExtension = path.extname(filename);
     }
 
+    console.log(req.files);
+    console.log(req.files.length);
+
     const fileIsNotImage = req.files && req.files.filetoupload && req.files.filetoupload.size > 0 && fileType && fileType !== 'image';
 
     console.log(req.files);
 
     const fileIsImage = req.files && req.files.filetoupload && req.files.filetoupload.size > 0 && fileType == 'image';
+
+    const webVttPath = req.files && req.files.webvtt && req.files.webvtt.path;
+
+    if(webVttPath){
+      // TODO: check the file type, if it's webvtt, move it to the proper place, and then mark it on the upload
+    }
+
+
 
     // console.log(req.files);
 

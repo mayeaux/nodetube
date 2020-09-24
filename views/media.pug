@@ -317,7 +317,9 @@ block content
                     source.video-source(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`, type='video/mp4')
 
                     // TODO: load captions programatically
-                    //track(kind='captions', label='English captions', src='/uploads/anthony/lordoftherings.vtt', srclang='en', default='')
+                    if upload.webVTTPath
+                        track(kind='captions', label='English captions', src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.webVTTPath}`, srclang='en', default='')
+                        //track(kind='captions', label='English captions', src=`http://localhost:3000/uploads/${upload.uploader.channelUrl}/${upload.webVTTPath}`, srclang='en', default='')
 
 
                     //source(src=upload.uploadUrl, type='video/mp4')

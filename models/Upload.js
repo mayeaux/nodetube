@@ -78,8 +78,11 @@ const uploadSchema = new mongoose.Schema({
     ref: 'Comment'
   }],
 
+  // data from the Youtube API
+  // TODO : rename to indicate it's the youtube api
   youTubeData: mongoose.Schema.Types.Mixed,
 
+  // data from youtubeDL
   youTubeDLData: mongoose.Schema.Types.Mixed,
 
   // TODO: this should be an enum
@@ -125,7 +128,12 @@ const uploadSchema = new mongoose.Schema({
   durationInSeconds: Number,
   formattedDuration: String,
 
-  processingCompletedAt: Date
+  processingCompletedAt: Date,
+
+  // string, such as UnIqUe.webvtt used by default to indicate it's in the same directory with the upload
+  webVTTPath: String
+
+
 }, {
   timestamps: true,
   toObject: {

@@ -105,13 +105,25 @@ block content
                             br
                             br
 
+            // thumbnail functionality if it's audio or video file. images naturally don't have a thumbnail (but maybe they should so that they're smaller in size)
             if upload.fileType == 'video' || upload.fileType == 'audio'
 
+                // if there's no custom thumbnail allow the form
                 if !upload.customThumbnailUrl
                     div.form-group
                         label.col-sm-3.control-label(for='filetoupload' style="") Upload Thumbnail
                         .col-sm-7
+                            // TODO: check this size
                             input.center-block.text-center.upload-thumbnail-input(class="upload-file" data-max-size="500000000" type="file" id="filetoupload" name="filetoupload" accept="image/*")
+
+                        label.col-sm-3.control-label(for='webvtt' style="") Captions
+                        .col-sm-7
+                            // TODO: check this size
+                            // TODO: check how to do accept with srt and vtt
+                            input.center-block.text-center.upload-thumbnail-input(class="upload-file" data-max-size="500000000" type="file" id="webvtt" name="webvtt" accept=".vtt")
+
+                            // allow srt and webvtt
+                            //input.center-block.text-center.upload-thumbnail-input(class="upload-file" data-max-size="500000000" type="file" id="webvtt" name="webvtt" accept=".vtt,.srt")
 
                     div.form-group
                         div.col-sm-3.

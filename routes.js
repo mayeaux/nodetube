@@ -57,6 +57,7 @@ function fileHostRoutes(app){
   app.post('/admin/upload', authMiddleware.adminAuth, uploadingController.adminUpload);
 
   // edit upload and thumbnails thumbnails
+  // note: don't put this behind auth middleware because it uses a token
   app.post('/api/upload/:uniqueTag/edit', internalApiController.editUpload);
   app.post('/api/upload/:uniqueTag/thumbnail/delete', internalApiController.deleteUploadThumbnail);
 
