@@ -147,6 +147,19 @@ function frontendRoutes(app){
   // app.get('/contact', contactController.getContact);
   // app.post('/contact', contactController.postContact);
 
+
+
+  // UPLOADING
+  /** upload APIS **/
+  // API that the frontend hits for a uesr to upload
+  app.post('/upload', uploadingController.postFileUpload);
+
+  // direct upload for admins that can be used to upload livestream recordings
+  app.post('/admin/upload', authMiddleware.adminAuth, uploadingController.adminUpload);
+
+
+
+
   app.get('/globe', publicController.globe);
   app.get('/random', publicController.random);
 
