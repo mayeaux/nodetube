@@ -575,11 +575,21 @@ exports.editUpload = async(req, res, next) => {
 
     console.log(req.files);
 
+    // TODO: you have to make this smarter by checking the FileType
+
     const fileIsImage = req.files && req.files.filetoupload && req.files.filetoupload.size > 0 && fileType == 'image';
 
     const webVttPath = req.files && req.files.webvtt && req.files.webvtt.path;
 
     if(webVttPath){
+      // TODO: check that it is the correct filetype
+
+      const pathToSaveTo = `${saveAndServeFilesDirectory}/${req.user.channelUrl}/${upload.uniqueTag}.vtt`;
+
+      await fs.move(webVttPath, pathToSaveTo, {overwrite: true});
+
+      upload.webVTTPath = `${upload.uniqueTag}.vtt`;
+
       // TODO: check the file type, if it's webvtt, move it to the proper place, and then mark it on the upload
     }
 

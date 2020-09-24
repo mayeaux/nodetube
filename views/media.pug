@@ -319,7 +319,7 @@ block content
                     // TODO: load captions programatically
                     if upload.webVTTPath
                         track(kind='captions', label='English captions', src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.webVTTPath}`, srclang='en', default='')
-                        //track(kind='captions', label='English captions', src=`http://localhost:3000/uploads/${upload.uploader.channelUrl}/${upload.webVTTPath}`, srclang='en', default='')
+                        //track(kind='captions', label='English captions', src=`/uploads/${upload.uploader.channelUrl}/${upload.webVTTPath}`, srclang='en', default='')
 
 
                     //source(src=upload.uploadUrl, type='video/mp4')
