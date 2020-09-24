@@ -193,6 +193,10 @@ block content
             /*}*/
         }
 
+        .extraButton {
+            border-radius: 5px;
+        }
+
         /* anything below this width */
         @media (max-width: 900px) {
 
@@ -454,26 +458,30 @@ block content
                                 p.fw(class=emoji.name style="font-weight:400;") #{emoji.amount}
 
 
-                    div.extraButtonsSection
+                    div.extraButtonsSection(style="margin-top:20px")
+
                         div
 
                             a(href=`https://www.facebook.com/sharer/sharer.php?u=${url}` target="_blank")
-                                img(src='/images/facebook-share.jpg', width='100', height='30', alt='Share on Twitter')
+                                img.extraButton(src='/images/facebook-share.jpg', width='100', height='30', alt='Share on Twitter' style="margin-left:10px;")
                             a(href=`https://twitter.com/share?url=${url}` target="_blank")
-                                img(src='/images/twitter-share.jpg', width='100', height='30', alt='Share on Twitter')
+                                img.extraButton(src='/images/twitter-share.jpg', width='100', height='30', alt='Share on Twitter' style="margin-left:10px;")
                             a(href=`mailto:?subject=Check out this ${upload.fileType}&body=Check out this ${upload.fileType} on ${brandName}: ${url}`, title='Share by Email')
-                                img(src='/images/email-share.jpg')
-
+                                img.extraButton(src='/images/email-share.jpg' style="margin-left:10px;")
 
 
                         br
-                        button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} \n\n${url}`)
+
+                        button.extraButton.btn.btn-success.copy-button(style="margin-right:10px;padding:4px 12px" data-clipboard-text=`${upload.title} \n\n${url}`)
                             i.fa.fa-info.fw
                             | Copy Details
 
-                        button.btn.btn-default.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} by ${upload.uploader.channelName || upload.uploader.channelUrl} \n\n ${url} \n\n #${brandName}`)
+                        button.extraButton.btn.btn-success.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} by ${upload.uploader.channelName || upload.uploader.channelUrl} \n\n ${url} \n\n #${brandName}`)
                             i.fa.fa-info.fw
                             | With User Info
+
+
+
 
                         br
 
