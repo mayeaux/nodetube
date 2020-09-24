@@ -184,6 +184,7 @@ function moderationIsRequired(user){
   return requireModeration;
 }
 
+// check if already uploaded based on the title
 async function checkIfAlreadyUploaded(user, title, logObject, res){
   // TODO: File size check
 
