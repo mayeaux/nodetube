@@ -20,6 +20,12 @@ var concat = require('concat-files');
 var Busboy = require('busboy');
 const mkdirp = Promise.promisifyAll(require('mkdirp'));
 const mv = require('mv');
+const FileType = require('file-type');
+
+const srt2vtt = Promise.promisifyAll(require('srt2vtt'));
+
+
+
 
 const backblaze = require('../../lib/uploading/backblaze');
 
@@ -568,8 +574,8 @@ exports.editUpload = async(req, res, next) => {
       fileExtension = path.extname(filename);
     }
 
-    console.log(req.files);
-    console.log(req.files.length);
+    // console.log(req.files);
+    // console.log(req.files.length);
 
     const fileIsNotImage = req.files && req.files.filetoupload && req.files.filetoupload.size > 0 && fileType && fileType !== 'image';
 
@@ -579,16 +585,100 @@ exports.editUpload = async(req, res, next) => {
 
     const fileIsImage = req.files && req.files.filetoupload && req.files.filetoupload.size > 0 && fileType == 'image';
 
+    const imagePath = req.files && req.files.filetoupload && req.files.filetoupload.path;
+
+    const fileTypeData = await FileType.fromFile(imagePath);
+
+    console.log(fileTypeData);
+
+
     const webVttPath = req.files && req.files.webvtt && req.files.webvtt.path;
 
+    const webVttFile = req.files && req.files.webvtt;
+
+    const originalName = webVttFile.originalFilename;
+
+    const subtitlefileExtension = path.extname(originalName);
+
+
+    function convertPromise(inputPath, outputPath) {
+
+      var srtData = fs.readFileSync(inputPath);
+
+      // 1 - Create a new Promise
+      return new Promise(function (resolve, reject) {
+
+        srt2vtt(srtData, function(err, vttData) {
+
+          if (err) {
+            reject(err);
+          } else {
+
+            fs.writeFileSync(outputPath, vttData);
+            resolve(vttData);
+          }
+
+        });
+
+      });
+    }
+
+
     if(webVttPath){
-      // TODO: check that it is the correct filetype
+      // TODO: parse to see if it's valid webvtt or srt
 
-      const pathToSaveTo = `${saveAndServeFilesDirectory}/${req.user.channelUrl}/${upload.uniqueTag}.vtt`;
+      // This library can't detect .srt files
+      // const fileTypeData = await FileType.fromFile(webVttPath);
 
-      await fs.move(webVttPath, pathToSaveTo, {overwrite: true});
+      // console.log('filetypedata')
+      // console.log(fileTypeData);
+      //
+      // if(fileTypeData){
+      //   const realExtension = fileTypeData.ext;
+      // }
+
+
+
+      if(subtitlefileExtension == '.srt'){
+        // do the convert here
+        if(subtitlefileExtension == '.srt'){
+          console.log('SRT FILE!');
+
+          const outputPath = `${saveAndServeFilesDirectory}/${req.user.channelUrl}/${upload.uniqueTag}.vtt`;
+          await convertPromise(webVttPath, outputPath)
+          console.log('apparently done converting');
+
+          // TODO: does it delete the old file or should I delete it?
+
+        }
+
+      } else if(subtitlefileExtension == '.vtt'){
+        /**  the file in the directory  **/
+        const pathToSaveTo = `${saveAndServeFilesDirectory}/${req.user.channelUrl}/${upload.uniqueTag}.vtt`;
+
+        /**  save the VTT to the directory and mark it on the upload document **/
+        await fs.move(webVttPath, pathToSaveTo, {overwrite: true});
+      }
+
+
+
+      // const subtitlefileExtension = path.extname(pathToSaveTo);
+
+      console.log('subtitle')
+      console.log(subtitlefileExtension);
+
+
+
+
+
 
       upload.webVTTPath = `${upload.uniqueTag}.vtt`;
+
+      // const fileTypeData = await FileType.fromFile(pathToSaveTo);
+      //
+      // console.log(fileTypeData);
+
+      // process.exit(0);
 
       // TODO: check the file type, if it's webvtt, move it to the proper place, and then mark it on the upload
     }
