@@ -387,6 +387,12 @@ exports.postFileUpload = async(req, res) => {
 
         /** turn filenames into an array for concatenation **/
 
+          // TODO: mark here that you started concatenating
+        redisClient.setAsync(`${uniqueTag}uploadProgress`, "Your upload is beginning processing...");
+
+
+
+
         const fileNameArray = [];
         for(let x = 1; x < parseInt(resumableTotalChunks, 10) + 1; x++){
           fileNameArray.push(`${uploadPath}/${x}`);
@@ -487,7 +493,7 @@ exports.postFileUpload = async(req, res) => {
               await upload.save();
 
               // set upload progress as 1 so it has something to show on the frontend
-              redisClient.setAsync(`${uniqueTag}uploadProgress`, 1);
+              redisClient.setAsync(`${uniqueTag}uploadProgress`, 'Your upload is beginning processing...');
 
               if(!responseSent){
                 responseSent = true;
