@@ -128,26 +128,26 @@ block content
 
 
 
-                    div.form-group
-                        div.col-sm-3.
-                        p.col-sm-7(style="white-space:pre-line;margin-top:-15px;").
-                            Thumbnail resolution:
-                                width: 302px;
-                                height: 168x;
-
-                    div.form-group
-                        .col-sm-offset-3.col-sm-4
-                            button.btn.btn.btn-primary(type='submit')
-                                i.fa.fa-pencil
-                                | Edit Upload
+                    //div.form-group
+                        //div.col-sm-3.
+                        //p.col-sm-7(style="white-space:pre-line;margin-top:-15px;").
+                        //    Thumbnail resolution:
+                        //        width: 302px;
+                        //        height: 168x;
 
 
+
+
+                    // if there is a customThumbnailUrl (which is?)
                 else
                     div.form-group
                         .col-sm-offset-3.col-sm-4
                             button.btn.btn.btn-primary(type='submit')
                                 i.fa.fa-pencil
                                 | Edit Upload
+
+
+                // if it's an image
             else
                 div.form-group
                     .col-sm-offset-3.col-sm-4
@@ -185,9 +185,17 @@ block content
                 p VTT Captions
 
             .col-sm-7
-                button.btn.btn.btn-danger.deleteCaptoinsButton(type='submit' style="margin-top:20px")
+                button.btn.btn.btn-danger.deleteCaptionsButton(type='submit' style="margin-top:20px")
                         i.fa.fa-pencil
                         | Delete Captions
+
+        br
+        br
+        div.form-group
+            .col-sm-offset-3.col-sm-4
+                button.btn.btn.btn-primary(type='submit')
+                    i.fa.fa-pencil
+                    | Edit Upload
 
 
 
@@ -200,6 +208,41 @@ block content
 
 
         // add here
+
+    script.
+        $(document).ready(function(){
+          // send a post request to delete the captions
+          $('.deleteCaptionsButton').on('click', function(){
+
+            var csrf = '#{_csrf}';
+
+            var uniqueTag = '#{upload.uniqueTag}';
+
+            var data = {
+              _csrf: csrf,
+              uniqueTag
+            }
+
+            $.ajax({
+              type: 'POST',
+              url: '/api/upload/' + uniqueTag + '/captions/delete',
+              data,
+              success: function (data) {
+                console.log(data);
+
+                if (data == 'success') {
+                  swal({text: 'Congratulations, you have donated $' + result.value + ' of credits to ' + channelName || channelUrl})
+                } else {
+                  swal("Something didn't work, please contact an admin or via the widget in the bottom right corner")
+                }
+                console.log(data);
+              },
+              error: function (err) {
+                console.log(err);
+              }
+            });
+          })
+        })
 
     script.
       function getParameterByName(name, url) {

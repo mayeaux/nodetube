@@ -990,3 +990,50 @@ exports.sendUserCredit = async(req, res) => {
   return res.send('success');
 
 };
+
+
+/**
+ * POST /api/upload/:uniqueTag/captions/delete
+ * Remove the captions from an upload
+ */
+exports.deleteUploadCaption = async(req, res) => {
+  try {
+    console.log(req.body.uploadToken);
+
+    // if there's no req.user then load it as if there was one from the upload token
+    if(!req.user && req.body.uploadToken){
+      req.user = await User.findOne({ uploadToken : req.body.uploadToken });
+    }
+
+    // req.params coming from the api route that's hit
+    // get the upload per the unique tag
+    const upload = await Upload.findOne({ uniqueTag: req.params.uniqueTag }).populate('uploader');
+
+    // if there's no upload send 'no upload'
+    if(!upload){
+      res.send('no upload');
+    }
+
+    // TODO: does this work for admins?
+
+    // only work if the uploader id and req user id are the same
+    // otherwise send 'not authenticated'
+    if(upload.uploader.id.toString() !== req.user.id.toString()){
+      res.send('not authenticated');
+    }
+
+    upload.webVTTPath = undefined;
+    await upload.save();
+
+    res.send('success');
+
+    console.log(req.body);
+  } catch(err){
+    console.log(err);
+  }
+
+};
+
+
+
+
