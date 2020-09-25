@@ -128,6 +128,7 @@ block content
 
 
 
+                    // taking this out as it's no longer the dimensions
                     //div.form-group
                         //div.col-sm-3.
                         //p.col-sm-7(style="white-space:pre-line;margin-top:-15px;").
@@ -136,24 +137,6 @@ block content
                         //        height: 168x;
 
 
-
-
-                    // if there is a customThumbnailUrl (which is?)
-                else
-                    div.form-group
-                        .col-sm-offset-3.col-sm-4
-                            button.btn.btn.btn-primary(type='submit')
-                                i.fa.fa-pencil
-                                | Edit Upload
-
-
-                // if it's an image
-            else
-                div.form-group
-                    .col-sm-offset-3.col-sm-4
-                        button.btn.btn.btn-primary(type='submit')
-                            i.fa.fa-pencil
-                            | Edit Upload
 
         br
         // DELETE FUNCTIONALITY
@@ -178,6 +161,8 @@ block content
                         | Delete Thumbnail
 
 
+
+
         if upload.webVTTPath
             label.control-label(for='' style="text-align:right;") Captions
             // TODO: link this directly to the .vtt file so you can see what it is
@@ -189,11 +174,10 @@ block content
                         i.fa.fa-pencil
                         | Delete Captions
 
-        br
-        br
+            // if it's an image
         div.form-group
             .col-sm-offset-3.col-sm-4
-                button.btn.btn.btn-primary(type='submit')
+                button.btn.btn.btn-primary.submitEditButton(type='submit')
                     i.fa.fa-pencil
                     | Edit Upload
 
@@ -211,6 +195,12 @@ block content
 
     script.
         $(document).ready(function(){
+
+          $('.submitEditButton').on('click', function(){
+            $('form.edit-upload-form').submit();
+          })
+
+
           // send a post request to delete the captions
           $('.deleteCaptionsButton').on('click', function(){
 
@@ -231,11 +221,11 @@ block content
                 console.log(data);
 
                 if (data == 'success') {
-                  swal({text: 'Congratulations, you have donated $' + result.value + ' of credits to ' + channelName || channelUrl})
+                  location.reload();
+                  return false;
                 } else {
-                  swal("Something didn't work, please contact an admin or via the widget in the bottom right corner")
+
                 }
-                console.log(data);
               },
               error: function (err) {
                 console.log(err);
