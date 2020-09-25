@@ -24,9 +24,6 @@ const FileType = require('file-type');
 
 const srt2vtt = Promise.promisifyAll(require('srt2vtt'));
 
-
-
-
 const backblaze = require('../../lib/uploading/backblaze');
 
 const domainNameAndTLD = process.env.DOMAIN_NAME_AND_TLD;
@@ -100,6 +97,28 @@ async function updateUsersUnreadSubscriptions(user){
     await subscribingUser.save();
   }
 
+}
+
+function convertPromise(inputPath, outputPath){
+
+  var srtData = fs.readFileSync(inputPath);
+
+  // 1 - Create a new Promise
+  return new Promise(function(resolve, reject){
+
+    srt2vtt(srtData, function(err, vttData){
+
+      if(err){
+        reject(err);
+      } else {
+
+        fs.writeFileSync(outputPath, vttData);
+        resolve(vttData);
+      }
+
+    });
+
+  });
 }
 
 /**
@@ -591,7 +610,6 @@ exports.editUpload = async(req, res, next) => {
 
     console.log(fileTypeData);
 
-
     const webVttPath = req.files && req.files.webvtt && req.files.webvtt.path;
 
     const webVttFile = req.files && req.files.webvtt;
@@ -601,9 +619,8 @@ exports.editUpload = async(req, res, next) => {
 
       const subtitlefileExtension = path.extname(originalName);
 
-      console.log('subtitle')
+      console.log('subtitle');
       console.log(subtitlefileExtension);
-
 
       if(subtitlefileExtension == '.srt'){
         // do the convert here
@@ -613,7 +630,7 @@ exports.editUpload = async(req, res, next) => {
           const outputPath = `${saveAndServeFilesDirectory}/${req.user.channelUrl}/${upload.uniqueTag}.vtt`;
 
           // convert the srt to vtt
-          await convertPromise(webVttPath, outputPath)
+          await convertPromise(webVttPath, outputPath);
           console.log('apparently done converting');
 
           // TODO: does it delete the old file or should I delete it?
@@ -630,32 +647,6 @@ exports.editUpload = async(req, res, next) => {
 
       upload.webVTTPath = `${upload.uniqueTag}.vtt`;
     }
-
-
-
-
-    function convertPromise(inputPath, outputPath) {
-
-      var srtData = fs.readFileSync(inputPath);
-
-      // 1 - Create a new Promise
-      return new Promise(function (resolve, reject) {
-
-        srt2vtt(srtData, function(err, vttData) {
-
-          if (err) {
-            reject(err);
-          } else {
-
-            fs.writeFileSync(outputPath, vttData);
-            resolve(vttData);
-          }
-
-        });
-
-      });
-    }
-
 
     // console.log(req.files);
 
@@ -961,7 +952,6 @@ exports.sendUserCredit = async(req, res) => {
 
 };
 
-
 /**
  * POST /api/upload/:uniqueTag/captions/delete
  * Remove the captions from an upload
@@ -1003,7 +993,4 @@ exports.deleteUploadCaption = async(req, res) => {
   }
 
 };
-
-
-
 

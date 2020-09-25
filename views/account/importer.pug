@@ -130,6 +130,15 @@ block content
                   console.log(uniqueTag);
 
 
+                  if (uniqueTag.uniqueTag == 'alreadyUploaded') {
+                    $('.importerButton').show();
+
+                    $('.importingText').hide();
+
+                    return swal('Sorry you\'ve already uploaded that');
+                  }
+
+
                   if(uniqueTag.uniqueTag == 'error'){
                     $('.importerButton').show();
 
