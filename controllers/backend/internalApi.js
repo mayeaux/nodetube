@@ -596,9 +596,36 @@ exports.editUpload = async(req, res, next) => {
 
     const webVttFile = req.files && req.files.webvtt;
 
-    const originalName = webVttFile.originalFilename;
+    if(webVttFile){
+      const originalName = webVttFile.originalFilename;
 
-    const subtitlefileExtension = path.extname(originalName);
+      const subtitlefileExtension = path.extname(originalName);
+
+      if(subtitlefileExtension == '.srt'){
+        // do the convert here
+        if(subtitlefileExtension == '.srt'){
+          console.log('SRT FILE!');
+
+          const outputPath = `${saveAndServeFilesDirectory}/${req.user.channelUrl}/${upload.uniqueTag}.vtt`;
+
+          // convert the srt to vtt
+          await convertPromise(webVttPath, outputPath)
+          console.log('apparently done converting');
+
+          // TODO: does it delete the old file or should I delete it?
+
+        }
+
+      } else if(subtitlefileExtension == '.vtt'){
+        /**  the file in the directory  **/
+        const pathToSaveTo = `${saveAndServeFilesDirectory}/${req.user.channelUrl}/${upload.uniqueTag}.vtt`;
+
+        /**  save the VTT to the directory and mark it on the upload document **/
+        await fs.move(webVttPath, pathToSaveTo, {overwrite: true});
+      }
+    }
+
+
 
 
     function convertPromise(inputPath, outputPath) {
@@ -639,28 +666,7 @@ exports.editUpload = async(req, res, next) => {
 
 
 
-      if(subtitlefileExtension == '.srt'){
-        // do the convert here
-        if(subtitlefileExtension == '.srt'){
-          console.log('SRT FILE!');
 
-          const outputPath = `${saveAndServeFilesDirectory}/${req.user.channelUrl}/${upload.uniqueTag}.vtt`;
-
-          // convert the srt to vtt
-          await convertPromise(webVttPath, outputPath)
-          console.log('apparently done converting');
-
-          // TODO: does it delete the old file or should I delete it?
-
-        }
-
-      } else if(subtitlefileExtension == '.vtt'){
-        /**  the file in the directory  **/
-        const pathToSaveTo = `${saveAndServeFilesDirectory}/${req.user.channelUrl}/${upload.uniqueTag}.vtt`;
-
-        /**  save the VTT to the directory and mark it on the upload document **/
-        await fs.move(webVttPath, pathToSaveTo, {overwrite: true});
-      }
 
 
 

@@ -106,26 +106,14 @@ block content
                             br
 
             // thumbnail functionality if it's audio or video file. images naturally don't have a thumbnail (but maybe they should so that they're smaller in size)
-            if upload.fileType == 'video' || upload.fileType == 'audio'
+            if ( upload.fileType == 'video' || upload.fileType == 'audio' ) && !upload.thumbnails.custom
+                p= upload.thumbnails.custom
 
-                // if there's no custom thumbnail allow the form
-                if !upload.customThumbnailUrl
-                    div.form-group
-                        label.col-sm-3.control-label(for='filetoupload' style="") Upload Thumbnail
-                        .col-sm-7
-                            // TODO: check this size
-                            input.center-block.text-center.upload-thumbnail-input(class="upload-file" data-max-size="500000000" type="file" id="filetoupload" name="filetoupload" accept="image/*")
-
-                        // input for captions
-                        label.col-sm-3.control-label(for='webvtt' style="") Captions
-                        .col-sm-7
-                            // TODO: check this size
-                            // TODO: check how to do accept with srt and vtt
-                            //input.center-block.text-center.upload-thumbnail-input(class="upload-file" data-max-size="500000000" type="file" id="webvtt" name="webvtt" accept=".vtt")
-
-                            // allow srt and webvtt
-                            input.center-block.text-center.upload-thumbnail-input(class="upload-file" data-max-size="500000000" type="file" id="webvtt" name="webvtt" accept=".vtt,.srt")
-
+                div.form-group
+                    label.col-sm-3.control-label(for='filetoupload' style="") Upload Thumbnail
+                    .col-sm-7
+                        // TODO: check this size
+                        input.center-block.text-center.upload-thumbnail-input(class="upload-file" data-max-size="500000000" type="file" id="filetoupload" name="filetoupload" accept="image/*")
 
 
                     // taking this out as it's no longer the dimensions
@@ -138,48 +126,69 @@ block content
 
 
 
-        br
-        // DELETE FUNCTIONALITY
-        if upload.customThumbnailUrl || upload.thumbnails.custom
-            label.col-sm-3.control-label(for='' style="text-align:right;") Upload Thumbnail
-            .col-sm-7
-                // TODO: need to do the data migration here
-                if upload.thumbnails.custom
-                    img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.custom}` style="width:301.96px;height:167.969px")
-                else
-                    img(src=upload.customThumbnailUrl style="width:301.96px;height:167.969px")
+            br
+            // DELETE FUNCTIONALITY
+            if upload.customThumbnailUrl || upload.thumbnails.custom
+                label.col-sm-3.control-label(for='' style="text-align:right;") Upload Thumbnail
+                .col-sm-7
+                    // TODO: need to do the data migration here
+                    if upload.thumbnails.custom
+                        img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.custom}` style="width:301.96px;height:167.969px")
+                    else
+                        img(src=upload.customThumbnailUrl style="width:301.96px;height:167.969px")
 
-                form.form-horizontal.delete-thumbnail-form(action=`${thumbnailServer}/api/upload/${upload.uniqueTag}/thumbnail/delete` method="POST")
-                    input(type='hidden', name='_csrf', value=_csrf)
-                    input(type="hidden" name="channelUrl" value=`${user.channelUrl}`)
-                    input(type="hidden" name="uploadToken" value=`${user.uploadToken}`)
+                    form.form-horizontal.delete-thumbnail-form(action=`${thumbnailServer}/api/upload/${upload.uniqueTag}/thumbnail/delete` method="POST")
+                        input(type='hidden', name='_csrf', value=_csrf)
+                        input(type="hidden" name="channelUrl" value=`${user.channelUrl}`)
+                        input(type="hidden" name="uploadToken" value=`${user.uploadToken}`)
 
-                    br
+                        br
 
-                    button.btn.btn.btn-danger(type='submit' style="margin-top:20px")
+                        button.btn.btn.btn-danger(type='submit' style="margin-top:20px;margin-bottom:31px;")
+                            i.fa.fa-pencil
+                            | Delete Thumbnail
+                        br
+
+
+
+
+            if !upload.webVTTPath
+                br
+                br
+                // input for captions
+                label.col-sm-3.control-label(for='webvtt' style="text-align:right;") Captions
+                .col-sm-7
+                    // TODO: check this size
+                    // TODO: check how to do accept with srt and vtt
+                    //input.center-block.text-center.upload-thumbnail-input(class="upload-file" data-max-size="500000000" type="file" id="webvtt" name="webvtt" accept=".vtt")
+
+                    // allow srt and webvtt
+                    input.center-block.text-center.upload-thumbnail-input(class="upload-file" data-max-size="500000000" type="file" id="webvtt" name="webvtt" accept=".vtt,.srt")
+
+
+            if upload.webVTTPath
+                br
+                div.form-group
+                    .col-sm-offset-3.col-sm-4
+
+
+                        label.control-label(for='' style="text-align:right;") Captions
+                        // TODO: link this directly to the .vtt file so you can see what it is
+                        a(href="/")
+                            p VTT Captions
+
+                        .col-sm-7
+                            button.btn.btn.btn-danger.deleteCaptionsButton(type='submit' style="margin-top:20px")
+                                    i.fa.fa-pencil
+                                    | Delete Captions
+                br
+
+                // if it's an image
+            div.form-group
+                .col-sm-offset-3.col-sm-4
+                    button.btn.btn.btn-primary.submitEditButton(type='submit')
                         i.fa.fa-pencil
-                        | Delete Thumbnail
-
-
-
-
-        if upload.webVTTPath
-            label.control-label(for='' style="text-align:right;") Captions
-            // TODO: link this directly to the .vtt file so you can see what it is
-            a(href="/")
-                p VTT Captions
-
-            .col-sm-7
-                button.btn.btn.btn-danger.deleteCaptionsButton(type='submit' style="margin-top:20px")
-                        i.fa.fa-pencil
-                        | Delete Captions
-
-            // if it's an image
-        div.form-group
-            .col-sm-offset-3.col-sm-4
-                button.btn.btn.btn-primary.submitEditButton(type='submit')
-                    i.fa.fa-pencil
-                    | Edit Upload
+                        | Edit Upload
 
 
 
