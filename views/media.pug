@@ -322,8 +322,8 @@ block content
 
                     // TODO: load captions programatically
                     if upload.webVTTPath
-                        track(kind='captions', label='English captions', src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.webVTTPath}`, srclang='en', default='')
-                        //track(kind='captions', label='English captions', src=`/uploads/${upload.uploader.channelUrl}/${upload.webVTTPath}`, srclang='en', default='')
+                        //track(kind='captions', label='English captions', src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.webVTTPath}`, srclang='en', default='')
+                        track(kind='captions', label='English captions', src=`/uploads/${upload.uploader.channelUrl}/${upload.webVTTPath}`, srclang='en', default='')
 
 
                     //source(src=upload.uploadUrl, type='video/mp4')
@@ -963,6 +963,7 @@ block extra_footer_js
       // old scroll down to change the header
       //window.scrollTo(0, 21);
 
+      /** lamp functionality **/
       var lampHidden = false;
 
       $('.lampIconDiv').click(function(){

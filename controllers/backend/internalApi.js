@@ -596,10 +596,14 @@ exports.editUpload = async(req, res, next) => {
 
     const webVttFile = req.files && req.files.webvtt;
 
-    if(webVttFile){
+    if(webVttPath){
       const originalName = webVttFile.originalFilename;
 
       const subtitlefileExtension = path.extname(originalName);
+
+      console.log('subtitle')
+      console.log(subtitlefileExtension);
+
 
       if(subtitlefileExtension == '.srt'){
         // do the convert here
@@ -623,6 +627,8 @@ exports.editUpload = async(req, res, next) => {
         /**  save the VTT to the directory and mark it on the upload document **/
         await fs.move(webVttPath, pathToSaveTo, {overwrite: true});
       }
+
+      upload.webVTTPath = `${upload.uniqueTag}.vtt`;
     }
 
 
@@ -649,48 +655,6 @@ exports.editUpload = async(req, res, next) => {
 
       });
     }
-
-
-    if(webVttPath){
-      // TODO: parse to see if it's valid webvtt or srt
-
-      // This library can't detect .srt files
-      // const fileTypeData = await FileType.fromFile(webVttPath);
-
-      // console.log('filetypedata')
-      // console.log(fileTypeData);
-      //
-      // if(fileTypeData){
-      //   const realExtension = fileTypeData.ext;
-      // }
-
-
-
-
-
-
-
-      // const subtitlefileExtension = path.extname(pathToSaveTo);
-
-      console.log('subtitle')
-      console.log(subtitlefileExtension);
-
-
-
-
-
-
-      upload.webVTTPath = `${upload.uniqueTag}.vtt`;
-
-      // const fileTypeData = await FileType.fromFile(pathToSaveTo);
-      //
-      // console.log(fileTypeData);
-
-      // process.exit(0);
-
-      // TODO: check the file type, if it's webvtt, move it to the proper place, and then mark it on the upload
-    }
-
 
 
     // console.log(req.files);
