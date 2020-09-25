@@ -126,6 +126,8 @@ block content
                             // allow srt and webvtt
                             input.center-block.text-center.upload-thumbnail-input(class="upload-file" data-max-size="500000000" type="file" id="webvtt" name="webvtt" accept=".vtt,.srt")
 
+
+
                     div.form-group
                         div.col-sm-3.
                         p.col-sm-7(style="white-space:pre-line;margin-top:-15px;").
@@ -174,6 +176,18 @@ block content
                     button.btn.btn.btn-danger(type='submit' style="margin-top:20px")
                         i.fa.fa-pencil
                         | Delete Thumbnail
+
+
+        if upload.webVTTPath
+            label.control-label(for='' style="text-align:right;") Captions
+            // TODO: link this directly to the .vtt file so you can see what it is
+            a(href="/")
+                p VTT Captions
+
+            .col-sm-7
+                button.btn.btn.btn-danger.deleteCaptoinsButton(type='submit' style="margin-top:20px")
+                        i.fa.fa-pencil
+                        | Delete Captions
 
 
 

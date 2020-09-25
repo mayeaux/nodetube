@@ -645,6 +645,8 @@ exports.editUpload = async(req, res, next) => {
           console.log('SRT FILE!');
 
           const outputPath = `${saveAndServeFilesDirectory}/${req.user.channelUrl}/${upload.uniqueTag}.vtt`;
+
+          // convert the srt to vtt
           await convertPromise(webVttPath, outputPath)
           console.log('apparently done converting');
 
