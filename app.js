@@ -72,20 +72,16 @@ if(cluster.isMaster){
     cluster.fork();
   }
 
+  if(process.env.CACHING_ON == 'true'){
+    console.log('CACHING IS ON');
+    const runcaching = require('./caching/runCaching');
+  } else {
+    console.log('CACHING IS OFF \n');
+  }
+
 } else {
 
   (async function(){
-
-    if(process.env.CACHING_ON == 'true'){
-      console.log('CACHING IS ON');
-      const runcaching = require('./caching/runCaching');
-    } else {
-      console.log('CACHING IS OFF \n');
-    }
-
-    if(process.env.UPLOAD_TO_B2 == 'true'){
-      console.log(`UPLOAD TO BACKBLAZE ON, BUCKET: ${process.env.BACKBLAZE_BUCKET}\n`);
-    }
 
     // site visit
     const Notification = require('./models').Notification;
@@ -456,6 +452,10 @@ if(cluster.isMaster){
       });
 
     if(process.env.MODERATION_UPDATES_TO_DISCORD == 'true') console.log('SENDING MODERATION REQUESTS TO DISCORD \n');
+
+    if(process.env.UPLOAD_TO_B2 == 'true'){
+      console.log(`UPLOAD TO BACKBLAZE ON, BUCKET: ${process.env.BACKBLAZE_BUCKET}\n`);
+    }
 
     module.exports = app;
 

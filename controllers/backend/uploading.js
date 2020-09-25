@@ -43,11 +43,11 @@ var resumable = require('../../lib/uploading/resumable.js')(__dirname +  '/uploa
 
 const moderationUpdatesToDiscord = process.env.MODERATION_UPDATES_TO_DISCORD == 'true';
 
-process.on('warning', (warning) => {
-  console.warn(warning.name);    // Print the warning name
-  console.warn(warning.message); // Print the warning message
-  console.warn(warning.stack);   // Print the stack trace
-});
+// process.on('warning', (warning) => {
+//   console.warn(warning.name);    // Print the warning name
+//   console.warn(warning.message); // Print the warning message
+//   console.warn(warning.stack);   // Print the stack trace
+// });
 
 const winston = require('winston');
 //
