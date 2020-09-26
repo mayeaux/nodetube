@@ -141,12 +141,17 @@ if(cluster.isMaster){
 
     const i18n = new I18n({
       locales: ['en', 'ar'],
+      defaultLocale: 'ar',
+      queryParameter: 'lang',
       directory: path.join(__dirname, 'locales')
     });
+
+    i18n.setLocale('ar');
 
     /** create express app **/
     const app = express();
 
+    app.use(i18n.init);
     app.use(favicon(path.join(__dirname, 'public', 'images/favicon.ico')));
 
     /*
