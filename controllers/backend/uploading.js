@@ -604,11 +604,26 @@ exports.postFileUpload = async(req, res) => {
               if(err){
                 res.send(err);
               }
-              else {
-                res.send(result);
-              }
+              // else {
+              //   res.send(result);
+              // }
 
             });
+
+            // Update if all qualities are converted
+            // TODO: needs some cleanup
+            // db.uploads.findOne({}).videoQualities.every(arr=> arr.status == 'complete');
+            await Upload.findOne({uniqueTag : job.data.uploadUniqueTag })
+              .select('videoQualities')
+              .exec(async function(err, txs){
+                if(txs.videoQualities.every(arr=> arr.status === 'complete')){
+                  await markConvertAsComplete(uniqueTag, channelUrl, user);
+                  uploadLogger.info('Quality all qualities are converted', logObject);
+                  updateUsersUnreadSubscriptions(user);
+                  uploadLogger.info('Updated subscribed users subscriptions', logObject);
+                }
+
+              });
 
             job.progress(100);
             done();
@@ -673,32 +688,19 @@ exports.postFileUpload = async(req, res) => {
                   title: title,
                   bitrate: upload.videoQualities[i].bitrate,
                   savePath: qualitySavePath,
+                  uploadUniqueTag: uniqueTag,
                   uniqueTag: uniqueTag + '-' + upload.videoQualities[i].quality,
                   quality: upload.videoQualities[i].quality
-                  // uploadSave: upload.save()
                 });
               }
 
               await upload.save();
             }
-            // else {
-            //   // do max possible conversion with the biggest bitrate left? then break;
-            //   break;
-            // }
 
           }
 
-          await markConvertAsComplete(uniqueTag, channelUrl, user);
-
-          uploadLogger.info('Quality all qualities are converted', logObject);
-
-          updateUsersUnreadSubscriptions(user);
-
-          uploadLogger.info('Updated subscribed users subscriptions', logObject);
-
         });
 
-        // });
       }
     });
   } catch(err){
