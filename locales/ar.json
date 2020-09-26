@@ -1,5 +1,22 @@
 {
-  "Hello World": "مرحباً يا عالم",
-  "Hello": "مرحباً",
-  "No Email Required": "ليس هنالك داعِ للإيميل"
+  "Introducing {{brandName}}": "نقدم لكم {{brandName}}",
+  "An open-source YouTube alternative powered by Node.js": "بديل مفتوح المصدر ليوتيوب مدعوم بNode.js",
+  "No Email Required": "ليس هنالك داعٍ للإيميل",
+  "Start your channel on {{brandName}}": "إبدأ ٌقناتك في {{brandName}}",
+  "without having to verify your email": "ليس عليك أن تؤكد إيميلك",
+  "Video, Audio, Images": "فيديو, صوت, صور",
+  "Over 30 file formats are supported": "أكثر من 30 نوع ملفات مدعوم",
+  "between video, audio and image uploads": "بين الفيديو، والصوت والصور",
+  "100% Open Source": "100% مفتوح المصدر",
+  "Create your own {{brandName}} instance": "إنشئ {{brandName}} الآن",
+  "in just minutes following our tutorials": "in just minutes following our tutorials",
+  "{{channelAmount}} Channels": "{{channelAmount}} Channels",
+  "The number of creators who have": "The number of creators who have",
+  "chosen {{brandName}} for their media hosting": "chosen {{brandName}} for their media hosting",
+  "{{mediaAmount}} Uploads": "{{mediaAmount}} Uploads",
+  "The number of  times creators have": "The number of  times creators have",
+  "chosen {{brandName}} for their content hosting": "chosen {{brandName}} for their content hosting",
+  "{{viewAmount}} Views": "{{viewAmount}} Views",
+  "The number of times people have": "The number of times people have",
+  "enjoyed the innovative new platform": "enjoyed the innovative new platform"
 }

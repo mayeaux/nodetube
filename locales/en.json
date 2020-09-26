@@ -1,5 +1,22 @@
 {
-	"Hello World": "Hello World",
-	"Hello": "Hello",
-	"No Email Required": "No Email Required 2"
+	"Introducing {{brandName}}": "Introducing {{brandName}}",
+	"An open-source YouTube alternative powered by Node.js": "An open-source YouTube alternative powered by Node.js",
+	"No Email Required": "No Email Required",
+	"Start your channel on {{brandName}}": "Start your channel on {{brandName}}",
+	"without having to verify your email": "without having to verify your email",
+	"Video, Audio, Images": "Video, Audio, Images",
+	"Over 30 file formats are supported": "Over 30 file formats are supported",
+	"between video, audio and image uploads": "between video, audio and image uploads",
+	"100% Open Source": "100% Open Source",
+	"Create your own {{brandName}} instance": "Create your own {{brandName}} instance",
+	"in just minutes following our tutorials": "in just minutes following our tutorials",
+	"{{channelAmount}} Channels": "{{channelAmount}} Channels",
+	"The number of creators who have": "The number of creators who have",
+	"chosen {{brandName}} for their media hosting": "chosen {{brandName}} for their media hosting",
+	"{{mediaAmount}} Uploads": "{{mediaAmount}} Uploads",
+	"The number of  times creators have": "The number of  times creators have",
+	"chosen {{brandName}} for their content hosting": "chosen {{brandName}} for their content hosting",
+	"{{viewAmount}} Views": "{{viewAmount}} Views",
+	"The number of times people have": "The number of times people have",
+	"enjoyed the innovative new platform": "enjoyed the innovative new platform"
 }
