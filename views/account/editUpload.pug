@@ -127,8 +127,8 @@ block content
 
 
             br
-            // DELETE FUNCTIONALITY
             if upload.customThumbnailUrl || upload.thumbnails.custom
+                // DELETE FUNCTIONALITY
                 label.col-sm-3.control-label(for='' style="text-align:right;") Upload Thumbnail
                 .col-sm-7
                     // TODO: need to do the data migration here
@@ -137,17 +137,43 @@ block content
                     else
                         img(src=upload.customThumbnailUrl style="width:301.96px;height:167.969px")
 
-                    form.form-horizontal.delete-thumbnail-form(action=`${thumbnailServer}/api/upload/${upload.uniqueTag}/thumbnail/delete` method="POST")
-                        input(type='hidden', name='_csrf', value=_csrf)
-                        input(type="hidden" name="channelUrl" value=`${user.channelUrl}`)
-                        input(type="hidden" name="uploadToken" value=`${user.uploadToken}`)
+                    div
+                    div
+                        // What is wrong with Pug? It randomly hides the form. So it was hiding my old form but now I put this
+                        // random empty form in front, and it is being hidden but now my second one shows up.
+                        form
+                        form.form-horizontal.delete-thumbnail-form(action=`${thumbnailServer}/api/upload/${upload.uniqueTag}/thumbnail/delete` method="POST")
+                            input(type='hidden', name='_csrf', value=_csrf)
+                            input(type="hidden" name="channelUrl" value=`${user.channelUrl}`)
+                            input(type="hidden" name="uploadToken" value=`${user.uploadToken}`)
 
-                        br
+                            br
 
-                        button.btn.btn.btn-danger(type='submit' style="margin-top:20px;margin-bottom:31px;")
-                            i.fa.fa-pencil
-                            | Delete Thumbnail
-                        br
+                            button.btn.btn.btn-danger.deleteThumbnailButton(type='submit' style="margin-top:20px;margin-bottom:31px;")
+                                i.fa.fa-pencil
+                                | Delete Thumbnail!!!
+                            br
+            //if 1 == 1
+            //    br
+            //    label.col-sm-3.control-label(for='' style="text-align:right;") Upload Thumbnail
+            //        .col-sm-7
+            //            // TODO: need to do the data migration here
+            //            if upload.thumbnails.custom
+            //                img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.custom}` style="width:301.96px;height:167.969px")
+            //            else
+            //                img(src=upload.customThumbnailUrl style="width:301.96px;height:167.969px")
+            //
+            //            form.form-horizontal.delete-thumbnail-form(action=`${thumbnailServer}/api/upload/${upload.uniqueTag}/thumbnail/delete` method="POST")
+            //                input(type='hidden', name='_csrf', value=_csrf)
+            //                input(type="hidden" name="channelUrl" value=`${user.channelUrl}`)
+            //                input(type="hidden" name="uploadToken" value=`${user.uploadToken}`)
+            //
+            //                br
+            //
+            //                button.btn.btn.btn-danger.deleteThumbnailButton(type='submit' style="margin-top:20px;margin-bottom:31px;")
+            //                    i.fa.fa-pencil
+            //                    | Delete Thumbnail!!!
+            //                br
 
 
 
@@ -341,6 +367,7 @@ block content
         // send xhr request
         $.ajax({
           type: $theForm.attr('method'),
+          // POST to the url of the form
           url: $theForm.attr('action'),
           data,
           cache: false,

@@ -532,7 +532,11 @@ exports.react = async(req, res, next)  => {
 /** POST EDIT UPLOAD **/
 exports.editUpload = async(req, res, next) => {
 
-  console.log(req.body);
+
+
+  // console.log(req.body);
+  //
+  // return res.send('hello');
 
   try {
 
@@ -587,17 +591,23 @@ exports.editUpload = async(req, res, next) => {
 
     // check if there's a thumbnail
     let filename, fileType, fileExtension;
+
+
     if(req.files && req.files.filetoupload){
       filename = req.files.filetoupload.originalFilename;
       fileType = getMediaType(filename);
+
+
       fileExtension = path.extname(filename);
     }
 
     // console.log(req.files);
     // console.log(req.files.length);
 
+    //
     const fileIsNotImage = req.files && req.files.filetoupload && req.files.filetoupload.size > 0 && fileType && fileType !== 'image';
 
+    console.log('req files');
     console.log(req.files);
 
     // TODO: you have to make this smarter by checking the FileType
@@ -606,15 +616,24 @@ exports.editUpload = async(req, res, next) => {
 
     const imagePath = req.files && req.files.filetoupload && req.files.filetoupload.path;
 
-    const fileTypeData = await FileType.fromFile(imagePath);
+    // not doing anything just logging it atm
+    let fileTypeData;
+    if(imagePath){
+      const fileTypeData = await FileType.fromFile(imagePath);
+      console.log(fileTypeData);
 
-    console.log(fileTypeData);
+    }
+
+
 
     const webVttPath = req.files && req.files.webvtt && req.files.webvtt.path;
 
+    const originalName = req.files && req.files.webvtt && req.files.webvtt.originalFilename;
+
     const webVttFile = req.files && req.files.webvtt;
 
-    if(webVttPath){
+    // if there is a path, and it's not a falsy value, because these empty strings are being regarded as values
+    if(webVttPath && originalName){
       const originalName = webVttFile.originalFilename;
 
       const subtitlefileExtension = path.extname(originalName);
