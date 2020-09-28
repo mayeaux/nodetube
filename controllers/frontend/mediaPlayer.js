@@ -159,6 +159,19 @@ exports.getMedia = async(req, res) => {
 
     saveMetaToResLocal(upload, uploadServer, req, res);
 
+    function convertAllAgesToSfw(value){
+      if(value == 'allAges'){
+        return 'SFW'
+      } else if (value == 'mature'){
+        return 'NSFW'
+      }
+    }
+
+    const convertedRating = convertAllAgesToSfw(upload.rating);
+    console.log(convertedRating);
+
+
+
     res.render('media', {
       title: upload.title,
       comments : comments.reverse(),
@@ -186,7 +199,8 @@ exports.getMedia = async(req, res) => {
       secondsToFormattedTime,
       formattedFileSize,
       domainName: process.env.DOMAIN_NAME_AND_TLD,
-      serverToUse
+      serverToUse,
+      convertedRating
     });
 
   } catch(err){
