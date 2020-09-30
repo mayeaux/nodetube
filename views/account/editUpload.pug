@@ -27,7 +27,7 @@ block content
             .form-group
                 label.col-sm-3.control-label(for='description') Description
                 .col-sm-7
-                    textarea(id="description" name="description" maxlength='2000' rows="10" cols="70") #{upload.description}
+                    textarea(id="description" name="description" maxlength='2000' rows="10" cols="70" style="color:black") #{upload.description}
 
             div(style="margin:0 auto;text-align:center;margin-bottom:15px;")
 
@@ -186,7 +186,7 @@ block content
                 // if it's an image
             div.form-group
                 .col-sm-offset-3.col-sm-4
-                    button.btn.btn.btn-primary.submitEditButton(type='submit')
+                    button.btn.btn.btn-primary.submitEditButton(type='submit' style="border-radius:4px;margin-top:10px;")
                         i.fa.fa-pencil
                         | Edit Upload
 
