@@ -1,6 +1,12 @@
 extends ../layout
 
 block content
+
+    style.
+        .btn {
+            border-radius: 4px;
+        }
+
     .container
 
         .page-header
@@ -126,7 +132,6 @@ block content
 
 
 
-            br
             if upload.customThumbnailUrl || upload.thumbnails.custom
                 // DELETE FUNCTIONALITY
                 label.col-sm-3.control-label(for='' style="text-align:right;") Upload Thumbnail
@@ -167,14 +172,13 @@ block content
 
 
             if upload.webVTTPath
-                br
                 div.form-group
                     .col-sm-offset-3.col-sm-4
 
 
                         label.control-label(for='' style="text-align:right;") Captions
                         // TODO: link this directly to the .vtt file so you can see what it is
-                        a(href="/")
+                        a(href=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}.vtt`)
                             p VTT Captions
 
                         .col-sm-7
