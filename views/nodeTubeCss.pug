@@ -1,5 +1,18 @@
 // doing this because otherwise it's too annoying with cloudflare caching
 style.
+
+    @import url('https://rsms.me/inter/inter.css');
+
+    html {
+        font-family: 'Inter', sans-serif;
+    }
+
+    @supports (font-variation-settings: normal) {
+        html {
+            font-family: 'Inter var', sans-serif;
+        }
+    }
+
     .navbar-default .navbar-nav > li > a {
         color: white;
     }
