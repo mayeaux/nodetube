@@ -171,35 +171,32 @@ block content
 
 
                   // RATINGS
-                  // todo: actually add site rating as passed variable
-                  if site_rating || 1 == 1
-                    label.fw(for='rating' style="font-size:24px;margin-top:26px;margin-bottom:15px;") Rating (*)
-                    br
-                    div.radio-buttons.rating(style="")
-                      if user.privs.safeForWorkUpload
-                        label.fw.radio-inline(style="font-size:18px;")
-                          input.radio-button(type='radio', style="margin-bottom:3rem", name='rating' value="allAges" checked=maxRatingAllowed === "SFW")
-                          | Safe For Work
-                        br
-                        br
+                  label.fw(for='rating' style="font-size:24px;margin-top:26px;margin-bottom:15px;") Rating (*)
+                  br
+                  div.radio-buttons.rating(style="")
+                    if user.privs.safeForWorkUpload
+                      label.fw.radio-inline(style="font-size:18px;")
+                        input.radio-button(type='radio', style="margin-bottom:3rem", name='rating' value="allAges" checked=maxRatingAllowed === "SFW")
+                        | Safe For Work
+                      br
+                      br
 
-                      if maxRatingAllowed === "NSFW" || maxRatingAllowed === "SENSITIVE"
-                        label.fw.radio-inline(style="font-size:18px;")
-                          input.radio-button(type='radio', name='rating' value="mature")
-                          | Not Safe For Work
-                        br
-                        br
+                    if maxRatingAllowed === 'NSFW' || maxRatingAllowed == 'SENS'
+                      label.fw.radio-inline(style="font-size:18px;")
+                        input.radio-button(type='radio', name='rating' value="mature")
+                        | Not Safe For Work
+                      br
+                      br
 
-                      if maxRatingAllowed === "SENSITIVE"
-                        label.fw.radio-inline(style="font-size:18px;")
-                          input.radio-button(type='radio', name='rating' value="sensitive" required)
-                          | Sensitive (Shocking content) 18+
+                    if maxRatingAllowed == 'SENS'
+                      label.fw.radio-inline(style="font-size:18px;")
+                        input.radio-button(type='radio', name='rating' value="sensitive" required)
+                        | Sensitive (Shocking content) 18+
 
-                        br
-                        br
+                      br
+                      br
 
-
-                      if maxRatingAllowed === "SFW"
+                    if maxRatingAllowed === "SFW"
                         div.fw(style="width:400px;max-width:95%;margin:auto;") The instance host has chosen to make this instance Safe For Work only, please ensure that your upload is Safe For Work
 
                   br
