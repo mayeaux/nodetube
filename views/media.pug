@@ -628,8 +628,8 @@ block content
                         // TODO: should be able to support MB and GB
                         p.fw.fileSizeText(style="margin-top:15px;color:a5a5a5;") File Size: #{ formattedFileSize }
 
-                    // if there is a category, get the display name for it
-                    if upload.category
+                    // if there is a category, and the category isn't uncategorized, get the display name for it
+                    if upload.category && upload.category !== 'uncategorized'
                         each category in categories
                             if category.name == upload.category
                                 p.fw(style="margin-top:15px;font-size:12px;color:a5a5a5;") Category: #{category.displayName}
@@ -652,12 +652,15 @@ block content
                             if upload.rating == 'sensitive'
                                 p.fw(style="margin-top:15px;font-size:12px;") Rating: Sensitive (18+)
 
-                    p.smallerInfo.fw.fileSizeText.
-                        Rating: #{convertedRating}
+
+                    if convertedRating !== 'SFW'
+                        p.smallerInfo.fw.fileSizeText.
+                            Rating: #{convertedRating}
 
                     // capitalizing the first letter
-                    p.smallerInfo.fw.fileSizeText.
-                        Visibility: #{upload.visibility.charAt(0).toUpperCase() + upload.visibility.slice(1)}
+                    if upload.visibility !== 'public'
+                        p.smallerInfo.fw.fileSizeText.
+                            Visibility: #{upload.visibility.charAt(0).toUpperCase() + upload.visibility.slice(1)}
 
 
                     div.editButtonDiv
