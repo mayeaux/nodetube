@@ -39,7 +39,7 @@ const secondsToFormattedTime = timeHelper.secondsToFormattedTime;
 const stripeToken = process.env.STRIPE_FRONTEND_TOKEN || 'pk_test_iIpX39D0QKD1cXh5CYNUw69B';
 
 function getFormattedFileSize(upload){
-  const fileSizeInMb = upload.originalFileSizeInMb || upload.processedFileSizeInMb || bytesToMb(upload.fileSize);
+  const fileSizeInMb = upload.processedFileSizeInMb || upload.originalFileSizeInMb || bytesToMb(upload.fileSize);
 
   let formattedFileSizeString;
 
