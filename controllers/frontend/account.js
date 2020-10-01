@@ -437,6 +437,7 @@ exports.getChannel = async(req, res) => {
 
     if(user.channelDescription) res.locals.meta.description = user.channelDescription;
 
+    // TODO: fix this here so channel thumbnails work
     if(user.thumbnailUrl){
       res.locals.meta.image = user.thumbnailUrl;
     }

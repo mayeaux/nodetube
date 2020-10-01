@@ -261,6 +261,14 @@ block content
             min-width:247px;
         }
 
+        .replyTextArea {
+            height: 80px;
+            width: 500px;
+            max-width: 500px;
+            color: black;
+            font-size: 17px;
+        }
+
         /* change plyr color per : https://github.com/sampotts/plyr/issues/662 */
         /*.plyr--full-ui input[type=range] {*/
             /*color: #0FDA01;*/
@@ -783,7 +791,7 @@ block content
                                                         input(type='hidden', name='_csrf', value=_csrf)
                                                         input(type="hidden" name="upload" id="upload" value=upload._id)
                                                         input(type="hidden" name="commentId" id="commentId" value=comment.id)
-                                                        textarea.fw(name="comment" id="comment" minlength="2" style="width:400px;max-width:100%;")
+                                                        textarea.fw.replyTextArea(name="comment" id="comment" minlength="2" style="width:400px;max-width:100%;")
                                                         br
                                                         input.fw.btn.btn-md.btn-success.postCommentButton(type='submit' value="Post Comment" style="border-radius:4px")
                                                         br

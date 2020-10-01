@@ -472,6 +472,9 @@ exports.postConfirmEmail = async(req, res, next) => {
     return res.redirect('/account');
 
   } catch(err){
+
+    console.log(err);
+
     // if the email is already in use
     if(err && err.errors && err.errors.email && err.errors.email.kind && ( err.errors.email.kind == 'unique')){
       req.flash('errors', { msg: 'That email is already in use, please try another' });
