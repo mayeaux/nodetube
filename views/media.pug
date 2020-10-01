@@ -2,6 +2,7 @@ extends layout
 
 block content
 
+
     if !upload.description
         style.
             @media (min-width: 900px) {
@@ -33,6 +34,53 @@ block content
             }
 
     style.
+          .right-menu {
+            width: 120px;
+            z-index: 1;
+            background: #1A1A1A;
+            box-shadow: 0 4px 5px 3px rgba(0, 0, 0, 0.2);
+            position: fixed;
+            display: none;
+            transition: 0.2s display ease-in;
+            }
+            .right-menu .menu-options {
+            list-style: none;
+            padding: 10px 0;
+            z-index: 1;
+            }
+            .right-menu .menu-options .menu-option {
+            font-weight: 500;
+            z-index: 1;
+            font-size: 14px;
+            padding: 10px 40px 10px 20px;
+            cursor: pointer;
+            }
+            .right-menu .menu-options .menu-option:hover {
+            background: #3B3B3B;
+            }
+            button {
+            background: grey;
+            border: none;
+            }
+            button .next {
+            color: green;
+            }
+            button[disabled="false"]:hover .next {
+            color: red;
+            animation: move 0.5s;
+            animation-iteration-count: 2;
+            }
+            @keyframes move {
+            from {
+                transform: translate(0%);
+            }
+            50% {
+                transform: translate(-40%);
+            }
+            to {
+                transform: transform(0%);
+            }
+            }
         .pending-string {
             max-width: 400px;
             margin: 0 auto;
@@ -271,6 +319,13 @@ block content
 
 
 
+
+    div#rightClickMenu.right-menu(style="")
+        ul.menu-options
+            li.menu-option.download-button Download
+            li.menu-option.share-button Embed
+            li.menu-option.report-button Report
+            li.menu-option.copy-button(data-clipboard-text=`${upload.title} \n\n${url}`) Copy Details
 
 
     br
@@ -725,6 +780,38 @@ block extra_js
 
   //script(src='https://checkout.stripe.com/checkout.js')
   script(src="https://cdnjs.cloudflare.com/ajax/libs/autolinker/1.4.4/Autolinker.js")
+
+  script.
+    var menu = document.querySelector("#rightClickMenu");
+    let menuVisible = false;
+
+    const toggleMenu = command => {
+    menu.style.display = command === "show" ? "inline" : "none";
+    menuVisible = !menuVisible;
+    };
+
+    const setPosition = ({ top, left }) => {
+    menu = document.querySelector("#rightClickMenu");
+    menu.style.left = `${left}px`;
+    menu.style.top = `${top}px`;
+    toggleMenu("show");
+    };
+
+    window.addEventListener("click", e => {
+    if(menuVisible)toggleMenu("hide");
+    });
+
+    window.addEventListener("contextmenu", e => {
+    e.preventDefault();
+    const origin = {
+        left: e.clientX,
+        top: e.clientY
+    };
+    setPosition(origin);
+    return false;
+    });
+
+
 
   script.
 
