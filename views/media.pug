@@ -13,7 +13,7 @@ block content
 
     // TODO: make this cover more qualities
     // TODO: also consider using upload.video
-    if upload.bitrateInKbps > 1500
+    if upload.bitrateInKbps > 1500 && upload.fileType == 'video'
         style.
             /** everything 650 and below */
             /* on mobile we dont do a max height in other words */
@@ -23,6 +23,19 @@ block content
                     height: 794px;
                 }
             }
+
+    // if it's an audio file give the player a max height of 100px;
+    else if upload.fileType == 'audio'
+        style.
+            /** everything 650 and below */
+            /* on mobile we dont do a max height in other words */
+            @media (min-width: 668px) {
+
+                .plyr {
+                    max-height: 100px;
+                }
+            }
+
     else
         style.
             /** everything 650 and below */
