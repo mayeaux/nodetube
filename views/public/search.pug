@@ -1,6 +1,28 @@
 extends ../layout
 
 block content
+    style.
+        .search-upload-buttons-container {
+            display: grid;
+            justify-content: center;
+            grid-gap: 10px;
+        }
+
+        @media (min-width: 480px) {
+            .search-upload-buttons-container {
+                grid-auto-flow: column;
+            }
+
+        }
+
+        @media (max-width: 479px) {
+            .mobileSearchQuery {
+                display: inline !important;
+            }
+        }
+
+
+
     div.container
         div.col-sm-12.text-center(style="margin:0 auto;")
             //h2
@@ -27,7 +49,19 @@ block content
         //br
         div.col-sm-12.text-center(style="margin:0 auto;margin-top:50px;")
             if uploads
-                div.text-center.center-div
+                div.text-center.center-div.search-upload-buttons-container
+
+                    div.dropdown(style="display:inline;margin-right:15px;")
+                        button.fw.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
+                            | Search Type: Uploads &nbsp
+
+                            span.caret
+
+                        ul.dropdown-menu.dropdown
+                            li
+                                a(href=`/search?searchQuery=${searchQuery}&orderBy=popular&mediaType=${mediaType}&searchType=${searchType}`) Uploads &nbsp
+                            li
+                                a(href=`/search?searchQuery=${searchQuery}&orderBy=newToOld&mediaType=${mediaType}&searchType=user`) Users &nbsp
 
                     include ../viewPartials/orderByDropdown
 
@@ -39,7 +73,8 @@ block content
 
                 include ../viewPartials/searchPagination
 
-                p.fw(style="font-size:27px;margin-top:30px;margin-bottom:30px;") #{totalUploadsAmount} Results
+                p.fw(style="font-size:27px;margin-top:30px;margin-bottom:10px;") #{totalUploadsAmount} Results
+                p.fw.mobileSearchQuery(style="display:none;font-size:20px;margin-top:10px;margin-bottom:30px;") Search Query: #{searchQuery}
 
                 if uploads && uploads.length > 0
                     each upload in uploads
@@ -54,31 +89,54 @@ block content
         // USERS RESULTS
         div.col-sm-12.text-center(style="margin:0 auto;")
             if channels
+
+                div.dropdown(style="display:inline;margin-right:15px;")
+                    button.fw.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
+                        | Search Type: #{capitalizeFirst(searchType)} &nbsp
+
+                        span.caret
+
+                    ul.dropdown-menu.dropdown
+                        li
+                            a(href=`/search?searchQuery=${searchQuery}&orderBy=popular&mediaType=${mediaType}&searchType=`) Uploads &nbsp
+                        li
+                            a(href=`/search?searchQuery=${searchQuery}&orderBy=newToOld&mediaType=${mediaType}&searchType=user`) Users &nbsp
+
+                br
+                br
+                br
+
                 if channels.length > 0
-                    p(style="text-decoration:underline;font-size:20px;")  Results
+                    if channels.length == 1
+                        p.fw(style="font-size:30px;")  1 User Found
+                    if channels.length > 1
+                        p.fw(style="font-size:30px;") #{channels.length} Users Found
+
+                    br
                     each channel in channels
-                        div.col-sm-4(style="text-align:center;height:360px")
+                        div.col-sm-4(style="text-align:center;height:280px")
                             a(href=`/user/${channel.channelUrl}` style="color:black")
                                 if channel.customThumbnail
-                                    img.center-block.text-center(src=`${uploadServer}/${channel.channelUrl}/${channel.customThumbnail}` width="256px" height="168px")
+                                    img.center-block.text-center(src=`${uploadServer}/${channel.channelUrl}/${channel.customThumbnail}` height="168px")
                                 else
-                                    img.center-block.text-center(src='/images/no_img.png' width="256px" height="168px")
+                                    img.center-block.text-center(src='/images/default-user-icon2.jpg' height="168px")
 
 
                                 div
-                                    p.upload-title-text Channel Username: #{channel.channelUrl}
-                                    p.upload-title-text Channel Name: #{channel.channelName}
+                                    p.upload-title-text.fw Channel Username: #{channel.channelUrl}
+                                    if channel.channelName
+                                        p.upload-title-text.fw Channel Name: #{channel.channelName}
                                 br
 
                             div.upload-details
                                 div.views
-                                    p.views-text #{channel.uploads.length} Uploads
+                                    p.fw.views-text #{channel.uploads.length} Uploads
 
                 else
                     div.center-block.text-center
                         br
                         br
-                        p(style="font-size:20px") No Results Found
+                        p(style="font-size:20px") No Users Found
 
 
     script.
