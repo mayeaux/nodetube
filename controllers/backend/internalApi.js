@@ -532,8 +532,6 @@ exports.react = async(req, res, next)  => {
 /** POST EDIT UPLOAD **/
 exports.editUpload = async(req, res, next) => {
 
-
-
   // console.log(req.body);
   //
   // return res.send('hello');
@@ -592,11 +590,9 @@ exports.editUpload = async(req, res, next) => {
     // check if there's a thumbnail
     let filename, fileType, fileExtension;
 
-
     if(req.files && req.files.filetoupload){
       filename = req.files.filetoupload.originalFilename;
       fileType = getMediaType(filename);
-
 
       fileExtension = path.extname(filename);
     }
@@ -623,8 +619,6 @@ exports.editUpload = async(req, res, next) => {
       console.log(fileTypeData);
 
     }
-
-
 
     const webVttPath = req.files && req.files.webvtt && req.files.webvtt.path;
 

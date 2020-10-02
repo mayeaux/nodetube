@@ -643,6 +643,7 @@ block content
 
 
 
+
                     //if maxRatingAllowed !== 'SFW'
                     //    if upload.rating
                     //        if upload.rating == 'allAges'
@@ -759,10 +760,10 @@ block content
                         if commentCount > 0
                             div.comment-containing-div.col-sm-6.col-sm-offset-3(style="margin-top:60px;text-align:center")
                                 if commentCount == 1
-                                    div(style="display:block")
+                                    div.commentCountDiv(style="display:block")
                                         h3.fw(style="text-align:left;font-size:28px;margin-bottom:14px;") #{commentCount} Comment
                                 else
-                                    div(style="display:block")
+                                    div.commentCountDiv(style="display:block")
                                         h3.fw(style="text-align:left;font-size:28px;margin-bottom:14px;") #{commentCount} Comments
                                 each comment in comments
                                     if comment.commenter

@@ -34,6 +34,14 @@ function getParameterByName(name, url){
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
+function convertAllAgesToSfw(value){
+  if(value == 'allAges'){
+    return'SFW';
+  } else if(value == 'mature'){
+    return'NSFW';
+  }
+}
+
 const secondsToFormattedTime = timeHelper.secondsToFormattedTime;
 
 const stripeToken = process.env.STRIPE_FRONTEND_TOKEN || 'pk_test_iIpX39D0QKD1cXh5CYNUw69B';
@@ -159,18 +167,8 @@ exports.getMedia = async(req, res) => {
 
     saveMetaToResLocal(upload, uploadServer, req, res);
 
-    function convertAllAgesToSfw(value){
-      if(value == 'allAges'){
-        return 'SFW'
-      } else if (value == 'mature'){
-        return 'NSFW'
-      }
-    }
-
     const convertedRating = convertAllAgesToSfw(upload.rating);
     console.log(convertedRating);
-
-
 
     res.render('media', {
       title: upload.title,
