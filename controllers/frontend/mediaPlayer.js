@@ -17,7 +17,7 @@ const _ = require('lodash');
 
 const generateComments = require('../../lib/mediaPlayer/generateCommentsObjects');
 const generateReactInfo = require('../../lib/mediaPlayer/generateReactInfo');
-const saveMetaToResLocal = require('../../lib/mediaPlayer/generateMetatags');
+const { saveMetaToResLocal } = require('../../lib/mediaPlayer/generateMetatags');
 const hideUpload = require('../../lib/mediaPlayer/detectUploadVisibility');
 
 console.log(`UPLOAD SERVER: ${uploadServer}\n`);

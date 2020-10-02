@@ -15,6 +15,7 @@ const Subscription = require('../../models/index').Subscription;
 const RSS = require('rss');
 
 const { uploadServer, uploadUrl } = require('../../lib/helpers/settings');
+const { saveMetaToResLocalForChannelPage } = require('../../lib/mediaPlayer/generateMetatags');
 
 const { filterUploadsByMediaType } = require('../../lib/mediaBrowsing/helpers');
 const timeHelper = require('../../lib/helpers/time');
@@ -437,15 +438,7 @@ exports.getChannel = async(req, res) => {
 
     if(user.channelDescription) res.locals.meta.description = user.channelDescription;
 
-    // TODO: fix this here so channel thumbnails work
-    if(user.thumbnailUrl){
-      res.locals.meta.image = user.thumbnailUrl;
-    }
-
-    // TODO: Need to pull this into own library to work
-    // if(user.uploads){
-    //   res.locals.meta.image = user.uploads[0].customThumbnailUrl || ;
-    // }
+    saveMetaToResLocalForChannelPage(user, uploadServer, req, res)   ;
 
     const userUploadAmount = uploads.length;
 

@@ -302,9 +302,9 @@ block content
         // TODO: Sub out thumbnail here
 
         if user.customThumbnail
-          img.center-block.text-center(src=`${uploadServer}/${user.channelUrl}/${user.customThumbnail}` width="256px" height="168px")
+          img.center-block.text-center(src=`${uploadServer}/${user.channelUrl}/${user.customThumbnail}` height="168px")
         else
-          img.center-block.text-center(src=`${uploadServer}/${user._id}/unique.png` width="256px" height="168px")
+          img.center-block.text-center(src=`${uploadServer}/${user._id}/unique.png` height="168px")
 
 
         form.delete-user-thumbnail-form(action=`${thumbnailServer}/api/channel/thumbnail/delete` method="POST")
