@@ -78,6 +78,17 @@ script.
 
   var player = players[0];
 
+  player.on('playing', function(){
+
+    var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+
+    // only hide button if it's on desktop
+    if(width > 900){
+      $('button.plyr__control').css('display', 'none');
+    }
+
+  })
+
   players[0].on('ready', function (event) {
 
     if(autoplay){

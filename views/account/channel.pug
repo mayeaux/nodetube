@@ -69,9 +69,9 @@ block content
 
                 if channel.thumbnailUrl || channel.customThumbnail
                     if channel.customThumbnail
-                        img(src=`${uploadServer}/${channel.channelUrl}/${channel.customThumbnail}` style="border-radius:5px;height:200px")
+                        img(src=`${uploadServer}/${channel.channelUrl}/${channel.customThumbnail}` style="border-radius:5px;height:200px;max-width:300px;")
                     else
-                        img(src=`${uploadServer}/${channel._id}/unique.png` style="border-radius:5px;height:200px")
+                        img(src=`${uploadServer}/${channel._id}/unique.png` style="border-radius:5px;height:200px;max-width:300px;")
 
                         //img(src=channel.thumbnailUrl width="120px" height="120px")
 
