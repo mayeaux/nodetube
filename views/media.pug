@@ -442,24 +442,24 @@ block content
 
 
             // UPLOADER DETAILS SECTION
-            div.col-sm-3.uploader-details-section(style="margin-bottom:30px")
+            div.col-sm-3.uploader-details-section(style="")
                 h3.uploader-name(style="margin-top:25px;font-size:26px;")
                     if upload.uploader.customThumbnail
                         a(href=`/user/${upload.uploader.channelUrl}`)
 
-                            img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` style="opacity:0.75;border-radius:13px;width:110px;height:110px;")
+                            img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` style="opacity:0.75;border-radius:13px;height:110px;")
                             br
                             br
                     else if upload.uploader.thumbnailUrl
                         a(href=`/user/${upload.uploader.channelUrl}`)
 
-                            img(src=`${uploadServer}/${upload.uploader._id}/unique.png` style="opacity:0.75;border-radius:13px;width:110px;height:110px;")
+                            img(src=`${uploadServer}/${upload.uploader._id}/unique.png` style="opacity:0.75;border-radius:13px;height:110px;")
                             br
                             br
                     else
                         a(href=`/user/${upload.uploader.channelUrl}`)
 
-                            img(src=`/images/default_user_image.png` style="opacity:0.75;border-radius:13px;width:110px;height:110px;")
+                            img(src=`/images/default_user_image.png` style="opacity:0.75;border-radius:13px;height:110px;")
                             br
                             br
 

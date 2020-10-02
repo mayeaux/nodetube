@@ -112,6 +112,11 @@ block content
                     if channels.length > 1
                         p.fw(style="font-size:30px;") #{channels.length} Users Found
 
+                    p.fw.mobileSearchQuery(style="display:none;font-size:20px;margin-top:10px;margin-bottom:30px;") Search Query: #{searchQuery}
+                        br
+                        br
+                        br
+
                     br
                     each channel in channels
                         div.col-sm-4(style="text-align:center;height:280px")
