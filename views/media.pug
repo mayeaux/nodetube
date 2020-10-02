@@ -354,7 +354,7 @@ block content
 
                 video#media_player.display-element(playsinline poster=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;")
                     // to
-                    source.video-source(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`, type='video/mp4')
+                    source.video-source(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`, type='video/mp4' oncontextmenu="javascript:rightClickMenu()")
 
                     // TODO: load captions programatically
                     //track(kind='captions', label='English captions', src='/uploads/anthony/lordoftherings.vtt', srclang='en', default='')
@@ -365,7 +365,7 @@ block content
             // if it's an audio
         else if upload.fileType === 'audio'
             div
-                audio#media_player.my_audio(playsinline style="width:80%;" controls='', preload='none')
+                audio#media_player.my_audio(playsinline style="width:80%;" controls='', preload='none' oncontextmenu="javascript:rightClickMenu()")
 
                     if upload.fileExtension == '.m4a'
                         source(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`, type='audio/mp4')
@@ -381,7 +381,7 @@ block content
         else if upload.fileType === 'image'
             div.display-div(style="")
                 a(href=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`)
-                    img.display-element(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="border-radius:13px;max-width:80%;min-width:50%;min-height:50%;max-height:620px;")
+                    img.display-element(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="border-radius:13px;max-width:80%;min-width:50%;min-height:50%;max-height:620px;" oncontextmenu="javascript:rightClickMenu()")
 
 
 
@@ -782,34 +782,36 @@ block extra_js
   script(src="https://cdnjs.cloudflare.com/ajax/libs/autolinker/1.4.4/Autolinker.js")
 
   script.
-    var menu = document.querySelector("#rightClickMenu");
-    let menuVisible = false;
+    function rightClickMenu() {
+        var menu = document.querySelector("#rightClickMenu");
+        let menuVisible = false;
 
-    const toggleMenu = command => {
-    menu.style.display = command === "show" ? "inline" : "none";
-    menuVisible = !menuVisible;
-    };
+        const toggleMenu = command => {
+        menu.style.display = command === "show" ? "inline" : "none";
+        menuVisible = !menuVisible;
+        };
 
-    const setPosition = ({ top, left }) => {
-    menu = document.querySelector("#rightClickMenu");
-    menu.style.left = `${left}px`;
-    menu.style.top = `${top}px`;
-    toggleMenu("show");
-    };
+        const setPosition = ({ top, left }) => {
+        menu = document.querySelector("#rightClickMenu");
+        menu.style.left = `${left}px`;
+        menu.style.top = `${top}px`;
+        toggleMenu("show");
+        };
 
-    window.addEventListener("click", e => {
-    if(menuVisible)toggleMenu("hide");
-    });
+        window.addEventListener("click", e => {
+        if(menuVisible)toggleMenu("hide");
+        });
 
-    window.addEventListener("contextmenu", e => {
-    e.preventDefault();
-    const origin = {
-        left: e.clientX,
-        top: e.clientY
-    };
-    setPosition(origin);
-    return false;
-    });
+        window.addEventListener("contextmenu", e => {
+        e.preventDefault();
+        const origin = {
+            left: e.clientX,
+            top: e.clientY
+        };
+        setPosition(origin);
+        return false;
+        });
+    }
 
 
 
