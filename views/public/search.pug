@@ -43,7 +43,13 @@ block content
             if uploads
                 div.text-center.center-div.search-upload-buttons-container
 
+                    a(href=`/search?searchQuery=${searchQuery}&orderBy=newToOld&mediaType=${mediaType}&searchType=user`)
+                        h2 Search For User
+
+
+                    // search type dropdown
                     div.dropdown.searchTypeDropdown(style="display:inline;margin-right:15px;")
+
                         button.fw.btn.btn-primary.dropdown-toggle.searchTypeButton(type='button', data-toggle='dropdown' style="border-radius:5px;")
                             | Search For: Uploads &nbsp
 
@@ -89,17 +95,20 @@ block content
         div.col-sm-12.text-center(style="margin:0 auto;")
             if channels
 
-                div.dropdown(style="display:inline;margin-right:15px;")
-                    button.fw.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
-                        | Search Type: #{capitalizeFirst(searchType)} &nbsp
+                a(href=`/search?searchQuery=${searchQuery}&orderBy=newToOld&mediaType=${mediaType}&searchType=`)
+                    h2 Search For Uploads
 
-                        span.caret
-
-                    ul.dropdown-menu.dropdown
-                        li
-                            a(href=`/search?searchQuery=${searchQuery}&orderBy=popular&mediaType=${mediaType}&searchType=`) Uploads &nbsp
-                        li
-                            a(href=`/search?searchQuery=${searchQuery}&orderBy=newToOld&mediaType=${mediaType}&searchType=user`) Users &nbsp
+                //div.dropdown(style="display:inline;margin-right:15px;")
+                //    button.fw.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
+                //        | Search Type: #{capitalizeFirst(searchType)} &nbsp
+                //
+                //        span.caret
+                //
+                //    ul.dropdown-menu.dropdown
+                //        li
+                //            a(href=`/search?searchQuery=${searchQuery}&orderBy=popular&mediaType=${mediaType}&searchType=`) Uploads &nbsp
+                //        li
+                //            a(href=`/search?searchQuery=${searchQuery}&orderBy=newToOld&mediaType=${mediaType}&searchType=user`) Users &nbsp
 
                 br
                 br
@@ -111,7 +120,7 @@ block content
                     if channels.length > 1
                         p.fw(style="font-size:30px;") #{channels.length} Users Found
 
-                    p.fw.mobileSearchQuery(style="display:none;font-size:20px;margin-top:10px;margin-bottom:30px;") Search Query: #{searchQuery}
+                    p.fw(style="font-size:20px;margin-top:10px;margin-bottom:30px;") Search Query: #{searchQuery}
                         br
                         br
                         br
@@ -143,7 +152,8 @@ block content
                         p.fw(style="font-size:24px") No Users Found
 
 
-                        p.fw.mobileSearchQuery(style="display:none;font-size:20px;margin-top:10px;margin-bottom:30px;") Search Query: #{searchQuery}
+                        br
+                        p.fw(style="font-size:20px;margin-top:10px;margin-bottom:30px;") Search Query: #{searchQuery}
 
 
     script.
