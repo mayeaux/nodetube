@@ -8,16 +8,26 @@ block content
             grid-gap: 10px;
         }
 
-        @media (min-width: 480px) {
+
+        @media (min-width: 600px) {
             .search-upload-buttons-container {
                 grid-auto-flow: column;
             }
 
         }
 
+        /*below 479px*/
         @media (max-width: 479px) {
             .mobileSearchQuery {
                 display: inline !important;
+            }
+
+            .searchTypeDropdown {
+                margin-bottom: 30px;
+            }
+
+            .searchTypeButton {
+                font-size:16px;
             }
         }
 
@@ -51,9 +61,9 @@ block content
             if uploads
                 div.text-center.center-div.search-upload-buttons-container
 
-                    div.dropdown(style="display:inline;margin-right:15px;")
-                        button.fw.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
-                            | Search Type: Uploads &nbsp
+                    div.dropdown.searchTypeDropdown(style="display:inline;margin-right:15px;")
+                        button.fw.btn.btn-primary.dropdown-toggle.searchTypeButton(type='button', data-toggle='dropdown' style="border-radius:5px;")
+                            | Search For: Uploads &nbsp
 
                             span.caret
 
@@ -73,7 +83,7 @@ block content
 
                 include ../viewPartials/searchPagination
 
-                p.fw(style="font-size:27px;margin-top:30px;margin-bottom:10px;") #{totalUploadsAmount} Results
+                p.fw(style="font-size:27px;margin-top:30px;margin-bottom:10px;") #{totalUploadsAmount} Uploads Found
                 p.fw.mobileSearchQuery(style="display:none;font-size:20px;margin-top:10px;margin-bottom:30px;") Search Query: #{searchQuery}
 
                 if uploads && uploads.length > 0
@@ -141,7 +151,10 @@ block content
                     div.center-block.text-center
                         br
                         br
-                        p(style="font-size:20px") No Users Found
+                        p.fw(style="font-size:24px") No Users Found
+
+
+                        p.fw.mobileSearchQuery(style="display:none;font-size:20px;margin-top:10px;margin-bottom:30px;") Search Query: #{searchQuery}
 
 
     script.
