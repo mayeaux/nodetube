@@ -361,13 +361,7 @@ block content
         if upload.status == 'processing'
 
             div(style="max-width:443px;margin:0 auto;")
-                h2.fw(id="processing") Your upload is currently 1% done being processed
-
-                //p.fw(id="processingTimeElapsed" style="margin-top:33px") Time elapsed: calculating ...
-                //
-                //p.fw(id="estimatedProcessingTimeLeft") Estimated time to completion: calculating ...
-                //
-                //p.fw(id="estimatedTotalProcessingTime") Total estimated conversion time: calculating ...
+                h2.fw(id="processing") Beginning your upload...
 
                 h4.fw(style="font-size:22px;margin-top:30px;") If your upload is stuck on processing, let an admin know via the social links at the bottom of the page and we'll take a look.
 
@@ -426,23 +420,8 @@ block content
         div.non-player-content(style="position:relative;max-width:1182px;margin:0 auto;")
             // add margin-top 120 on margin-top:120px;"
 
-
-
             br
             br
-
-
-            //div.col-sm-12
-            //    div.uploadTitle.mobileTitle(style="")
-            //
-            //        h2.balance-text(class="upload-title-value" style="display:inline;text-wrap:balance;width:80%;margin:0 auto;font-weight:300;color: #a9a9a9 !important;") #{upload.title}
-            //            if upload.formattedDuration
-            //                h2.fw(style="display:inline;color: #a9a9a9; !important;").
-            //                    &nbsp - #{upload.formattedDuration}
-
-
-
-
 
 
             // UPLOADER DETAILS SECTION
@@ -684,45 +663,6 @@ block content
 
                     br
 
-
-
-
-
-
-
-
-
-
-            //div.react.reactDiv.mobileReactDiv(style=";")
-            //    // margin-top:133px
-            //    br
-            //    each emoji in emojis
-            //        div(style="padding-right:12px;display:inline-block;")
-            //            a(href="#")
-            //                if currentReact
-            //                    if currentReact == emoji.name
-            //                        div.clicked-emoji
-            //                            img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
-            //
-            //                    else
-            //                        div.unclicked-emoji
-            //                            img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
-            //
-            //                else
-            //                    div.clicked-emoji
-            //                        img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
-            //
-            //            p.fw(class=emoji.name style="font-weight:400;") #{emoji.amount}
-
-
-
-
-
-
-
-
-
-
             div.col-sm-12.extraButtonsDiv(style="border-bottom: 1px solid #8e8d8d;")
                 // SHARING BUTTONS
 
@@ -861,12 +801,29 @@ block extra_js
           const canvas = Object.assign(document.createElement('canvas'), {width, height});
           canvas.getContext('2d').drawImage(player.media, 0, 0, width, height);
 
-          // TODO: check if the video is at 0 or not, if it is then load the link as the link to the thumbnail
-          // right now it bricks if you try and screenshot before a video is started
+          const thumbnailUrl = '#{uploadServer}/#{upload.uploader.channelUrl}/#{upload.thumbnails.custom || upload.thumbnails.generated}'
 
           var link = document.createElement('a');
-          link.download = 'screenshot.png';
-          link.href = canvas.toDataURL()
+
+
+          if(player.currentTime == 0 ){
+
+            link.download = 'screenshot.jpg';
+
+            console.log('use thumbnail');
+            console.log(thumbnailUrl);
+            link.href = thumbnailUrl
+
+
+          } else {
+
+            link.download = 'screenshot.png';
+
+            console.log('use canvas')
+            link.href = canvas.toDataURL()
+          }
+
+
           link.click();
 
         })
@@ -1244,90 +1201,6 @@ block extra_footer_js
 
 
       });
-
-
-  //script.
-  //
-  //    // auto theatre mode functionality
-  //    $(function () {
-  //      var timer;
-  //      var fadeInBuffer = false;
-  //
-  //      function runBufferThing() {
-  //        if (!fadeInBuffer) {
-  //          if (timer) {
-  //            console.log("clearTimer");
-  //            clearTimeout(timer);
-  //            timer = 0;
-  //          }
-  //
-  //          console.log("fadeIn");
-  //
-  //        } else {
-  //          $('.non-player-content').css({
-  //            visibility: 'visible'
-  //          });
-  //          $('.headerContainer').css({
-  //            visibility: 'visible'
-  //          });
-  //
-  //          // also hide and show video border
-  //          $('.display-element').css({
-  //            border: '1px solid #5b5a5a'
-  //          });
-  //
-  //          fadeInBuffer = false;
-  //        }
-  //
-  //
-  //        timer = setTimeout(function () {
-  //          console.log("fadeout");
-  //
-  //          // only hide div if the document is in focus
-  //          // turning off so people can be on another tab
-  //          //            if(document.hasFocus()){
-  //          //              $('.non-player-content').css({
-  //          //                visibility: 'hidden'
-  //          //              });
-  //          //
-  //          //            }
-  //
-  //          const yOffset = window.pageYOffset;
-  //
-  //          if(yOffset < 9){
-  //            $('.non-player-content').css({
-  //              visibility: 'hidden'
-  //            });
-  //
-  //            $('.headerContainer').css({
-  //              visibility: 'hidden'
-  //            });
-  //
-  //
-  //            $('.display-element').css({
-  //              border: '0px solid #5b5a5a'
-  //            });
-  //          }
-  //
-  //
-  //
-  //
-  //          fadeInBuffer = true;
-  //
-  //          // run every 5000 seconds
-  //        }, 5000)
-  //      }
-  //
-  //      runBufferThing()
-  //
-  //      $('.plyr').click();
-  //
-  //      $(document).mousemove(function () {
-  //        runBufferThing();
-  //      });
-  //
-  //
-  //    });
 
 
   script.

@@ -11,6 +11,8 @@ script.
   }
 
   function downloadIt() {
+
+    // set the title for the upload, this only works if serving from the same host
     if(uploadType=='video'){
       var name = "#{upload.title}.mp4"
     } else {
@@ -23,7 +25,7 @@ script.
 
       // TODO: If I'm serving from the same origin this will work
       // link.href = '/images/twitter-share.jpg'
-    //link.href = '/user/#{upload.uploader.channelUrl}/#{upload.uniqueTag}#{upload.fileType}'
+      //link.href = '/user/#{upload.uploader.channelUrl}/#{upload.uniqueTag}#{upload.fileType}'
 
       link.href = downloadUrl
 
