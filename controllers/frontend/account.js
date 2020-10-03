@@ -555,7 +555,7 @@ exports.notification = async(req, res) => {
 
     const notifications = await Notification.find({
       user: req.user._id
-    }).populate('user sender upload react comment').sort({createdAt: -1});
+    }).populate('user sender upload react comment').sort({createdAt: -1}).limit(100);
 
     // // console.log(notifications);
     // for(let notif of notifications){
