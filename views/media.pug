@@ -603,6 +603,13 @@ block content
                             img.lampIcon(src="/images/lamp.png")
 
 
+                    // screenshot button for videos
+                    if upload.fileType == 'video'
+                        div.change-size-button.screenshotButton(style="margin-left:-6px;margin-right:-16px")
+                            h2.change-size-button
+                                i.fa.fa-camera(aria-hidden="true" style="cursor:pointer;color:#a5a5a5;")
+
+
                     // only do repeat button if it's audio or video
                     if upload.fileType == 'video' || upload.fileType == 'audio'
                         div.change-size-button(style="")
@@ -848,7 +855,21 @@ block extra_js
 
     $(document).ready(function () {
 
+        $('.screenshotButton').click(function(){
+          const width = player.media.videoWidth;
+          const height = player.media.videoHeight;
+          const canvas = Object.assign(document.createElement('canvas'), {width, height});
+          canvas.getContext('2d').drawImage(player.media, 0, 0, width, height);
 
+          // TODO: check if the video is at 0 or not, if it is then load the link as the link to the thumbnail
+          // right now it bricks if you try and screenshot before a video is started
+
+          var link = document.createElement('a');
+          link.download = 'screenshot.png';
+          link.href = canvas.toDataURL()
+          link.click();
+
+        })
 
       function getWidth() {
         return Math.max(
