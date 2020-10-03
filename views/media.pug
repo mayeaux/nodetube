@@ -1032,15 +1032,17 @@ block extra_footer_js
 
       $('.lampIconDiv').click(function(){
 
-        // if lamp functionality is not turned on we need to turn it on
+        /** if lamp turned off functionality is not turned on we need to turn it on **/
         if(lampHidden == false){
 
           // $('.display-element').css('border', '1px solid black')
 
+          // hide the header
           $('.headerContainer').css({
             display: 'none'
           })
 
+          // hide the non player content
           $('.non-player-content').css({
             visibility: 'hidden'
           })
@@ -1053,26 +1055,31 @@ block extra_footer_js
             opacity: 0.54
           })
 
+          // mark as hidden in memory
           lampHidden = true;
 
-          // otherwise the functionality has already been turned on, so we turn it off
+          /** otherwise the functionality has already been turned on, so we turn it off **/
         } else {
 
           // $('.display-element').css('border', '1px solid #5b5a5a')
 
+          // show the header and the rest of the non player content
           $('.headerContainer, .non-player-content').css({
             visibility: 'visible'
           })
 
+          // bring back header container
           $('.headerContainer').css({
             display: 'inherit'
           })
 
+          // give lamp icon full opacity
           $('.lampIconDiv').css({
             visibility: 'visible',
             opacity: 1
           })
 
+          // mark as not hidden in memory
           lampHidden = false;
         }
 
