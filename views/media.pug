@@ -1247,8 +1247,8 @@ block extra_footer_js
 
   include ./mediaPlayerPartials/reactFunctionalityJs
 
-  // if the upload is longer than 15 minutes
-  if upload.durationInSeconds > (15 * 60)
+  // if the upload is longer than 15 minutes and there's a user
+  if upload.durationInSeconds > (15 * 60) && user
     include ./mediaPlayerPartials/lastWatchedJs
 
   script.

@@ -16,14 +16,6 @@ script.
       secondsWatched
     }
 
-    var userChannel = '#{user && user.channelUrl}';
-
-    console.log(userChannel);
-
-    if(!userChannel){
-      return
-    }
-
     $.ajax({
       type: 'POST',
       url: `/api/updateLastWatchedTime`,
