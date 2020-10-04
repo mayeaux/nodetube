@@ -1,6 +1,8 @@
 const Upload = require('../../models/index').Upload;
 const View = require('../../models/index').View;
 const Subscription = require('../../models/index').Subscription;
+const LastWatchedTime = require('../../models/index').LastWatchedTime;
+
 const timeHelper = require('../../lib/helpers/time');
 
 const uploadHelpers = require('../../lib/helpers/settings');
@@ -123,6 +125,25 @@ exports.getMedia = async(req, res) => {
     const { comments, commentCount } = await generateComments(upload._id);
 
     const reactInfo = await generateReactInfo(upload, req.user);
+
+    // TODO: get last watched time
+
+    let lastWatchedTime;
+
+    // see if there's a last watched time
+    // only do it if someone is logged in though
+    if(req.user){
+      lastWatchedTime = await LastWatchedTime.findOne({
+        user: req.user._id,
+        upload : upload._id
+      });
+    }
+
+
+
+
+
+
 
     const emojis = reactInfo.emojis;
 

@@ -6,7 +6,7 @@ require('javascript-time-ago/intl-messageformat-global');
 require('intl-messageformat/dist/locale-data/en');
 const timeAgoEnglish = new javascriptTimeAgo('en-US');
 
-const reactSchema = new mongoose.Schema({
+const lastWatchedTimeSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -19,9 +19,6 @@ const reactSchema = new mongoose.Schema({
   },
   secondsWatched: {
     type: Number
-  },
-  active: {
-    type: Boolean
   }
   // RATHER THAN USE VIEWED-AT TIME WE WILL USE CREATED AT TIME AS A STAND-IN
 },{ timestamps: true,
@@ -33,11 +30,11 @@ const reactSchema = new mongoose.Schema({
   }
 });
 
-reactSchema.virtual('timeAgo').get(function(){
+lastWatchedTimeSchema.virtual('timeAgo').get(function(){
   return timeAgoEnglish.format( new Date(this.createdAt) );
 });
 
-const React = mongoose.model('React', reactSchema);
+const LastWatchedTime = mongoose.model('ReLastWatchedTimeact', lastWatchedTimeSchema);
 
-module.exports = React;
+module.exports = LastWatchedTime;
 

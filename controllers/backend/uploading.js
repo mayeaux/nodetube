@@ -390,13 +390,16 @@ exports.postFileUpload = async(req, res) => {
         // TODO: mark here that you started concatenating
         redisClient.setAsync(`${uniqueTag}uploadProgress`, 'Your upload is beginning processing...');
 
+        // build an array with the names of all the file chunks
         const fileNameArray = [];
         for(let x = 1; x < parseInt(resumableTotalChunks, 10) + 1; x++){
           fileNameArray.push(`${uploadPath}/${x}`);
         }
 
+
         var combinedStream = CombinedStream.create();
 
+        // loop through each file and append it to the stream
         for(const fileChunk of fileNameArray){
           combinedStream.append(function(next){
             next(fs.createReadStream(fileChunk));

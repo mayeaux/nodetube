@@ -91,6 +91,12 @@ script.
 
   players[0].on('ready', function (event) {
 
+    var secondsToMoveFoward = '#{secondsToMoveForward}';
+
+    if(secondsToMoveFoward){
+      player.currentTime = secondsToMoveFoward
+    }
+
     if(autoplay){
       var playPromise = player.play();
 
