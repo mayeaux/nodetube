@@ -1008,7 +1008,6 @@ exports.deleteUploadCaption = async(req, res) => {
 
 };
 
-
 /** handle last watched time per user and upload **/
 exports.updateLastWatchedTime = async(req, res, next)  => {
 
@@ -1018,7 +1017,6 @@ exports.updateLastWatchedTime = async(req, res, next)  => {
 
   const secondsWatched = req.body.secondsWatched;
   const uploadUniqueTag = req.body.uniqueTag;
-
 
   const user = req.user._id;
 
@@ -1033,7 +1031,6 @@ exports.updateLastWatchedTime = async(req, res, next)  => {
     uploadUniqueTag,
     user
   });
-
 
   if(existingLastWatchedTime){
 

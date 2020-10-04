@@ -396,7 +396,6 @@ exports.postFileUpload = async(req, res) => {
           fileNameArray.push(`${uploadPath}/${x}`);
         }
 
-
         var combinedStream = CombinedStream.create();
 
         // loop through each file and append it to the stream

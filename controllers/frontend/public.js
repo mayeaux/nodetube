@@ -203,7 +203,7 @@ exports.getEmbed = async function(req, res){
   let upload = await Upload.findOne({
     uniqueTag,
     visibility: { $ne: 'removed' }
-  }).populate({path: 'uploader comments checkedViews reacts', populate: {path: 'commenter receivedSubscriptions'}}).exec();
+  }).populate({path: 'uploader', populate: {path: ''}}).exec();
 
   if(!upload){
     console.log('Visible upload not found');

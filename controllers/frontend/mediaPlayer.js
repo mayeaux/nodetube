@@ -172,7 +172,6 @@ exports.getMedia = async(req, res) => {
     const convertedRating = convertAllAgesToSfw(upload.rating);
     console.log(convertedRating);
 
-
     let lastWatchedTime;
     if(req.user){
       lastWatchedTime = await LastWatchedTime.findOne({
@@ -180,7 +179,6 @@ exports.getMedia = async(req, res) => {
         upload: upload._id
       });
     }
-
 
     res.render('media', {
       title: upload.title,

@@ -14,7 +14,6 @@ const AdminAction = require('./AdminAction');
 const ReceivedEmail = require('./ReceivedEmail');
 const LastWatchedTime = require('./LastWatchedTime');
 
-
 module.exports = {
   Upload,
   User,
