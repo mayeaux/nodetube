@@ -89,6 +89,8 @@ script.
 
   })
 
+  var lastWatchedTime = '#{lastWatchedTime && lastWatchedTime.secondsWatched}';
+
   players[0].on('ready', function (event) {
 
     var secondsToMoveFoward = '#{secondsToMoveForward}';
@@ -96,8 +98,6 @@ script.
     if(secondsToMoveFoward){
       player.currentTime = secondsToMoveFoward
     }
-
-    var lastWatchedTime = '#{lastWatchedTime && lastWatchedTime.secondsWatched}';
 
     console.log('last wached time');
     console.log(Number(lastWatchedTime))
@@ -247,6 +247,13 @@ script.
   });
 
   players[0].on('play', function (event) {
+
+    if (lastWatchedTime) {
+      player.currentTime = Number(lastWatchedTime)
+      player.play()
+    }
+
+
 
     // $('.plyr').focus()
     // add max height
