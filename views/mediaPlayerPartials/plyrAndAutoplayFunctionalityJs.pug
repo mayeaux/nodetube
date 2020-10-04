@@ -97,6 +97,19 @@ script.
       player.currentTime = secondsToMoveFoward
     }
 
+    var lastWatchedTime = '#{lastWatchedTime && lastWatchedTime.secondsWatched}';
+
+    console.log('last wached time');
+    console.log(Number(lastWatchedTime))
+
+    if (lastWatchedTime) {
+      console.log('RUNNING HERE1241414')
+      setTimeout(function(){
+        player.currentTime = Number(lastWatchedTime)
+        player.play()
+      }, 600)
+    }
+
     if(autoplay){
       var playPromise = player.play();
 
