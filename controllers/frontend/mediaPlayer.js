@@ -126,25 +126,6 @@ exports.getMedia = async(req, res) => {
 
     const reactInfo = await generateReactInfo(upload, req.user);
 
-    // TODO: get last watched time
-
-    let lastWatchedTime;
-
-    // see if there's a last watched time
-    // only do it if someone is logged in though
-    if(req.user){
-      lastWatchedTime = await LastWatchedTime.findOne({
-        user: req.user._id,
-        upload : upload._id
-      });
-    }
-
-
-
-
-
-
-
     const emojis = reactInfo.emojis;
 
     const currentReact = reactInfo.currentReact;
@@ -191,6 +172,16 @@ exports.getMedia = async(req, res) => {
     const convertedRating = convertAllAgesToSfw(upload.rating);
     console.log(convertedRating);
 
+
+    let lastWatchedTime;
+    if(req.user){
+      lastWatchedTime = await LastWatchedTime.findOne({
+        user : req.user._id,
+        upload: upload._id
+      });
+    }
+
+
     res.render('media', {
       title: upload.title,
       comments : comments.reverse(),
@@ -219,7 +210,8 @@ exports.getMedia = async(req, res) => {
       formattedFileSize,
       domainName: process.env.DOMAIN_NAME_AND_TLD,
       serverToUse,
-      convertedRating
+      convertedRating,
+      lastWatchedTime
     });
 
   } catch(err){

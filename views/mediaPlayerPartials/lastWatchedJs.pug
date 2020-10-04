@@ -8,7 +8,7 @@ script.
 
     var mediaUniqueTag = '#{upload.uniqueTag}'
 
-    var secondsWatched = player.currentTime;
+    var secondsWatched = Math.round(player.currentTime);
 
     var data = {
       _csrf: csrf,
@@ -41,7 +41,5 @@ script.
       }
     });
   }
-
-  setTimeout(updateLastWatchedTime, 1000 * 5);
 
   setInterval(updateLastWatchedTime, 1000 * 90)
