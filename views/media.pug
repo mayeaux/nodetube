@@ -427,7 +427,10 @@ block content
             br
             br
 
-            h1 Last Watched Time: #{lastWatchedTime.secondsWatched}
+            if lastWatchedTime
+                h1 Last Watched Time: #{lastWatchedTime.secondsWatched}
+            else
+                h1 No Last Watched Time
 
 
             // UPLOADER DETAILS SECTION

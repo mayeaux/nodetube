@@ -102,12 +102,85 @@ script.
     console.log('last wached time');
     console.log(Number(lastWatchedTime))
 
+    var movedForward = false;
+
     if (lastWatchedTime) {
       console.log('RUNNING HERE1241414')
+      setTimeout(function () {
+        if(movedForward !== true){
+          player.currentTime = Number(lastWatchedTime)
+          var playPromise = player.play();
+
+          if (playPromise !== undefined) {
+            playPromise.then(function () {
+              console.log('thing');
+            }).catch(function (error) {// Auto-play was prevented
+              console.log('thing2');
+              player.play();
+              console.log(error);
+              // Show paused UI.
+            });
+          }
+          // movedForward = true;
+        }
+      }, 100)
+
+      setTimeout(function () {
+        if (movedForward !== true) {
+          player.currentTime = Number(lastWatchedTime)
+          var playPromise = player.play();
+
+          if (playPromise !== undefined) {
+            playPromise.then(function () {
+              console.log('thing');
+            }).catch(function (error) {// Auto-play was prevented
+              console.log('thing2');
+              player.play();
+              console.log(error);
+              // Show paused UI.
+            });
+          }
+          // movedForward = true;
+        }
+      }, 400)
+
       setTimeout(function(){
-        player.currentTime = Number(lastWatchedTime)
-        player.play()
-      }, 600)
+        if (movedForward !== true) {
+          player.currentTime = Number(lastWatchedTime)
+          var playPromise = player.play();
+
+          if (playPromise !== undefined) {
+            playPromise.then(function () {
+              console.log('thing');
+            }).catch(function (error) {// Auto-play was prevented
+              console.log('thing2');
+              player.play();
+              console.log(error);
+              // Show paused UI.
+            });
+          }
+          // movedForward = true;
+        }
+      }, 700)
+
+      setTimeout(function () {
+        if (movedForward !== true) {
+          player.currentTime = Number(lastWatchedTime)
+          var playPromise = player.play();
+
+          if (playPromise !== undefined) {
+            playPromise.then(function () {
+              console.log('thing');
+            }).catch(function (error) {// Auto-play was prevented
+              console.log('thing2');
+              player.play();
+              console.log(error);
+              // Show paused UI.
+            });
+          }
+          movedForward = true;
+        }
+      }, 1000)
     }
 
     if(autoplay){
