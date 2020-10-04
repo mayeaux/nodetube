@@ -1,6 +1,8 @@
 script.
+  console.log('running now121')
+
   function updateLastWatchedTime(){
-    console.log('running');
+    console.log('running here 2020202');
 
     var csrf = '#{_csrf}'
 
@@ -30,6 +32,7 @@ script.
         //- console.log(data);
 
         // Shows undefined when at 100%
+        console.log('running here 21212')
         console.log(data);
 
       },
@@ -39,6 +42,6 @@ script.
     });
   }
 
-  updateLastWatchedTime()
+  setTimeout(updateLastWatchedTime, 1000 * 5);
 
-  setInterval(updateLastWatchedTime, 1000 * 10)
+  setInterval(updateLastWatchedTime, 1000 * 90)

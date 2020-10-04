@@ -1019,17 +1019,6 @@ block extra_footer_js
   if upload.status == 'processing'
     include ./mediaPlayerPartials/progressTrackerJs
 
-  // if the upload is longer than 15 minutes
-  if upload.durationInSeconds > (15 * 60)
-    include ./mediaPlayerPartials/lastWatchedJs
-
-
-
-
-
-
-
-
   script(src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js")
   script(src="https://cdnjs.cloudflare.com/ajax/libs/plyr/3.5.10/plyr.min.js")
   // script(src="//cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.5.1/jquery.nicescroll.min.js")
@@ -1252,6 +1241,10 @@ block extra_footer_js
   include ./mediaPlayerPartials/repeatFunctionalityJs
 
   include ./mediaPlayerPartials/reactFunctionalityJs
+
+  // if the upload is longer than 15 minutes
+  if upload.durationInSeconds > (15 * 60)
+    include ./mediaPlayerPartials/lastWatchedJs
 
   script.
     $(' button[data-plyr="fast-forward"], button[data-plyr="rewind"]').click(function () {
