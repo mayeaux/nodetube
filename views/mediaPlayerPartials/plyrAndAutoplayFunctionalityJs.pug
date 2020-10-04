@@ -218,6 +218,8 @@ script.
   var savedMaxHeight = 0;
   var savedHeight = 0;
 
+
+
   players[0].on('enterfullscreen', function (event) {
 
     console.log('HEY SOMETHING!');
@@ -246,11 +248,14 @@ script.
 
   });
 
+  var alreadyMovedOnPlay = false;
+
   players[0].on('play', function (event) {
 
-    if (lastWatchedTime) {
+    if (lastWatchedTime && !alreadyMovedOnPlay) {
       player.currentTime = Number(lastWatchedTime)
       player.play()
+      alreadyMovedOnPlay = true;
     }
 
 
