@@ -1,0 +1,44 @@
+script.
+  function updateLastWatchedTime(){
+    console.log('running');
+
+    var csrf = '#{_csrf}'
+
+    var mediaUniqueTag = '#{upload.uniqueTag}'
+
+    var secondsWatched = player.currentTime;
+
+    var data = {
+      _csrf: csrf,
+      uniqueTag: mediaUniqueTag,
+      secondsWatched
+    }
+
+    var userChannel = '#{user && user.channelUrl}';
+
+    console.log(userChannel);
+
+    if(!userChannel){
+      return
+    }
+
+    $.ajax({
+      type: 'POST',
+      url: `/api/updateLastWatchedTime`,
+      data,
+      success: function (data) {
+        //- console.log(data);
+
+        // Shows undefined when at 100%
+        console.log(data);
+
+      },
+      error: function (err) {
+        console.log(err);
+      }
+    });
+  }
+
+  updateLastWatchedTime()
+
+  setInterval(updateLastWatchedTime, 1000 * 10)

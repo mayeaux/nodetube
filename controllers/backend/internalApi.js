@@ -59,6 +59,7 @@ const Subscription = require('../../models/index').Subscription;
 const Notification = require('../../models/index').Notification;
 const CreditAction = require('../../models/index').CreditAction;
 const Report = require('../../models/index').Report;
+const LastWatchedTime = require('../../models/index').LastWatchedTime;
 
 const getMediaType = require('../../lib/uploading/media');
 
@@ -1005,5 +1006,58 @@ exports.deleteUploadCaption = async(req, res) => {
     console.log(err);
   }
 
+};
+
+
+/** handle last watched time per user and upload **/
+exports.updateLastWatchedTime = async(req, res, next)  => {
+
+  // console.log(req.body);
+
+  // console.log(`${req.user._id}` , req.params.user);
+
+  const secondsWatched = req.body.secondsWatched;
+  const uploadUniqueTag = req.body.uniqueTag;
+
+
+  const user = req.user._id;
+
+  const upload = await Upload.findOne({
+    uniqueTag : req.body.uniqueTag
+  });
+
+  const uploadId = upload._id;
+
+  // find an existing react per that user and upload
+  let existingLastWatchedTime = await LastWatchedTime.findOne({
+    uploadUniqueTag,
+    user
+  });
+
+
+  if(existingLastWatchedTime){
+
+    existingLastWatchedTime.secondsWatched = secondsWatched;
+
+    await existingLastWatchedTime.save();
+
+    res.send('last watched time updated');
+
+    // if there's already an uploaded time
+  } else {
+
+    console.log('no saved watched time for this user and and upload');
+
+    const newLastWatchedTime = new LastWatchedTime({
+      upload: uploadId,
+      user: req.user._id,
+      uploadUniqueTag: upload.uniqueTag,
+      secondsWatched
+    });
+
+    await newLastWatchedTime.save();
+
+    res.send('new watch time created');
+  }
 };
 

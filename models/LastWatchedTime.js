@@ -17,6 +17,7 @@ const lastWatchedTimeSchema = new mongoose.Schema({
     ref: 'Upload',
     index: true
   },
+  uploadUniqueTag: String,
   secondsWatched: {
     type: Number
   }

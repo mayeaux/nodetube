@@ -1019,6 +1019,15 @@ block extra_footer_js
   if upload.status == 'processing'
     include ./mediaPlayerPartials/progressTrackerJs
 
+  // if the upload is longer than 15 minutes
+  if upload.durationInSeconds > (15 * 60)
+    include ./mediaPlayerPartials/lastWatchedJs
+
+
+
+
+
+
 
 
   script(src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js")
