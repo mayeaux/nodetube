@@ -34,4 +34,6 @@ script.
     });
   }
 
-  setInterval(updateLastWatchedTime, 1000 * 90)
+  setInterval(function(){
+    updateLastWatchedTime()
+  }, 1000 * 90)

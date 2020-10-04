@@ -225,6 +225,7 @@ if(cluster.isMaster){
         requestPath === '/upload' ||
         requestPath === '/account/profile' ||
         requestPath === '/api/channel/thumbnail/delete' ||
+        requestPath === '/api/updateLastWatchedTime' || // it seems the call is calling it to logout?? that's why this is here
         requestPath.match(editUploadRegexp) ||
         requestPath.match(deleteUploadThumbnailRegexp) ||
         requestPath === '/livestream/on-live-auth' ||
