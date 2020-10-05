@@ -1,5 +1,35 @@
 script.
 
+  var lastWatchedTime = '#{lastWatchedTime && lastWatchedTime.secondsWatched}';
+
+  var secondsToMoveFoward = '#{secondsToMoveForward}';
+
+  var v = document.getElementsByTagName("video")[0];
+
+  var movedForward = false;
+
+  v.addEventListener("playing", async function (event) {
+
+
+    if (lastWatchedTime || 1 == 1) {
+      console.log('RUNNING LASST WATCHED');
+
+      if(!movedForward ){
+        player.currentTime = Number(lastWatchedTime)
+        movedForward = true;
+      } else {
+        console.log('already moved!');
+      }
+      console.log('DONE RUNNING!');
+
+    }
+  }, true);
+
+
+
+
+
+
   $('.no-user-comment-form').on('release click', function(event){
     event.preventDefault();
     // swal("Please register to leave a comment")
@@ -78,6 +108,9 @@ script.
 
   var player = players[0];
 
+
+
+
   player.on('playing', function(){
 
     var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
@@ -89,11 +122,10 @@ script.
 
   })
 
-  var lastWatchedTime = '#{lastWatchedTime && lastWatchedTime.secondsWatched}';
-
   players[0].on('ready', function (event) {
 
-    var secondsToMoveFoward = '#{secondsToMoveForward}';
+    console.log(event);
+
 
     if(secondsToMoveFoward){
       player.currentTime = secondsToMoveFoward
@@ -102,99 +134,25 @@ script.
     console.log('last wached time');
     console.log(Number(lastWatchedTime))
 
-    var movedForward = false;
-
-    if (lastWatchedTime) {
-      console.log('RUNNING HERE1241414')
-      setTimeout(function () {
-        if(movedForward !== true){
-          player.currentTime = Number(lastWatchedTime)
-          var playPromise = player.play();
-
-          if (playPromise !== undefined) {
-            playPromise.then(function () {
-              console.log('thing');
-            }).catch(function (error) {// Auto-play was prevented
-              console.log('thing2');
-              player.play();
-              console.log(error);
-              // Show paused UI.
-            });
-          }
-          // movedForward = true;
-        }
-      }, 100)
-
-      setTimeout(function () {
-        if (movedForward !== true) {
-          player.currentTime = Number(lastWatchedTime)
-          var playPromise = player.play();
-
-          if (playPromise !== undefined) {
-            playPromise.then(function () {
-              console.log('thing');
-            }).catch(function (error) {// Auto-play was prevented
-              console.log('thing2');
-              player.play();
-              console.log(error);
-              // Show paused UI.
-            });
-          }
-          // movedForward = true;
-        }
-      }, 400)
-
-      setTimeout(function(){
-        if (movedForward !== true) {
-          player.currentTime = Number(lastWatchedTime)
-          var playPromise = player.play();
-
-          if (playPromise !== undefined) {
-            playPromise.then(function () {
-              console.log('thing');
-            }).catch(function (error) {// Auto-play was prevented
-              console.log('thing2');
-              player.play();
-              console.log(error);
-              // Show paused UI.
-            });
-          }
-          // movedForward = true;
-        }
-      }, 700)
-
-      setTimeout(function () {
-        if (movedForward !== true) {
-          player.currentTime = Number(lastWatchedTime)
-          var playPromise = player.play();
-
-          if (playPromise !== undefined) {
-            playPromise.then(function () {
-              console.log('thing');
-            }).catch(function (error) {// Auto-play was prevented
-              console.log('thing2');
-              player.play();
-              console.log(error);
-              // Show paused UI.
-            });
-          }
-          movedForward = true;
-        }
-      }, 1000)
-    }
 
     if(autoplay){
       var playPromise = player.play();
 
+      //
       if (playPromise !== undefined) {
-        playPromise.then(function () {
-          console.log('thing');
+
+        // play promise is a thenable response, if it's not undefined
+        // try and then it, and if not then log the error and try and plan again
+        playPromise.then(function (event) {
+          console.log('running thenable');
+          console.log(event);
         }).catch(function (error) {// Auto-play was prevented
-          console.log('thing2');
-          player.play();
+
           console.log(error);
-          // Show paused UI.
+          console.log('autoplay was prevented try again');
+          player.play();
         });
+
       }
     } else {
       console.log('dont run')
@@ -239,23 +197,6 @@ script.
   });
 
   var alreadyMovedOnPlay = false;
-
-  players[0].on('play', function (event) {
-
-    // TODO: not working because it fires even on a play that errors out
-    if (lastWatchedTime && !alreadyMovedOnPlay) {
-      player.currentTime = Number(lastWatchedTime)
-      player.play()
-      alreadyMovedOnPlay = true;
-    }
-
-
-
-    // $('.plyr').focus()
-    // add max height
-    // $('.plyr').css('cursor', 'none')
-
-  });
 
   players[0].on('exitfullscreen', function (event) {
     // add max height
