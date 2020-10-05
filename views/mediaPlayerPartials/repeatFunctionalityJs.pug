@@ -1,7 +1,6 @@
 script.
   // repeat functionality
 
-  /* REPEAT FUNCTIONALITY BEGIN */
   var fileType = '#{upload.fileType}';
 
   /* REPEAT FUNCTIONALITY START */
@@ -19,6 +18,7 @@ script.
     };
   }
 
+
   // anything on repeat div clicked
   $('.repeat-div').on('click', function (e) {
     // toggle repeat value
@@ -34,4 +34,15 @@ script.
       $('.repeat-div').css('opacity', '0.7');
     }
   });
-  /* REPEAT FUNCTIONALITY END */
+
+
+  var uploadDuration = Number(#{upload.durationInSeconds})
+
+  // if it's 80 seconds or less, auto repeat
+  if(uploadDuration < 81){
+    repeat = !repeat;
+
+    $('.repeat-status').text('REPEAT: ON')
+    $('.repeat-div').css('opacity', '1');
+
+  }
