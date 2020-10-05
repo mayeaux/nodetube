@@ -43,10 +43,24 @@ block content
             if uploads
                 div.text-center.center-div.search-upload-buttons-container
 
+                h4.fw Showing results for uploads.
+
+                h4.fw Click 'Search For User' to search for a user.
+
+                    br
+
+                    br
+
                 a(href=`/search?searchQuery=${searchQuery}&orderBy=newToOld&mediaType=${mediaType}&searchType=user`)
-                    h2(style="color:#d8dcde;") Search For User
+                    button.fw.btn.btn-primary.btn-lg(style="color:#d8dcde;border-radius:6px;margin-bottom:17px;") Search For User
+
                     br
+
                     br
+
+                    br
+
+
 
 
                     // search type dropdown
@@ -80,8 +94,6 @@ block content
 
                 p.fw(style="font-size:20px;margin-top:10px;margin-bottom:30px;") Search Query: #{searchQuery}
                 br
-                br
-                br
 
                 if uploads && uploads.length > 0
                     each upload in uploads
@@ -98,7 +110,9 @@ block content
             if channels
 
                 a(href=`/search?searchQuery=${searchQuery}&orderBy=newToOld&mediaType=${mediaType}&searchType=`)
-                    h2(style="color:#d8dcde;") Search For Uploads
+
+                    button.fw.btn.btn-primary.btn-lg(style="color:#d8dcde;border-radius:6px;margin-bottom:17px;cursor:pointer;") Search For Uploads
+
 
                 //div.dropdown(style="display:inline;margin-right:15px;")
                 //    button.fw.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
