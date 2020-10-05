@@ -1,14 +1,14 @@
 script.
-  console.log('running now121')
 
   function updateLastWatchedTime(){
-    console.log('running here 2020202');
 
-    var csrf = '#{_csrf}'
+    var csrf = '#{_csrf}';
 
     var mediaUniqueTag = '#{upload.uniqueTag}'
 
     var secondsWatched = Math.round(player.currentTime);
+
+    console.log('updating last watched time: ' + secondsWatched);
 
     var data = {
       _csrf: csrf,
@@ -24,7 +24,7 @@ script.
         //- console.log(data);
 
         // Shows undefined when at 100%
-        console.log('running here 21212')
+        console.log('successfully hit backend')
         console.log(data);
 
       },

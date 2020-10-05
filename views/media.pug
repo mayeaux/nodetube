@@ -427,10 +427,12 @@ block content
             br
             br
 
-            if lastWatchedTime
-                h1 Last Watched Time: #{lastWatchedTime.secondsWatched}
-            else
-                h1 No Last Watched Time
+            if ( upload.durationInSeconds > (15 * 60) ) && user
+
+                if lastWatchedTime
+                    h1 Last Watched Time: #{lastWatchedTime.secondsWatched}
+                else
+                    h1 No Last Watched Time
 
 
             // UPLOADER DETAILS SECTION
@@ -1248,7 +1250,7 @@ block extra_footer_js
   include ./mediaPlayerPartials/reactFunctionalityJs
 
   // if the upload is longer than 15 minutes and there's a user
-  if upload.durationInSeconds > (15 * 60) && user
+  if ( upload.durationInSeconds > (15 * 60) ) && user
     include ./mediaPlayerPartials/lastWatchedJs
 
   script.
