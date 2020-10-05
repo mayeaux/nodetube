@@ -218,8 +218,6 @@ script.
   var savedMaxHeight = 0;
   var savedHeight = 0;
 
-
-
   players[0].on('enterfullscreen', function (event) {
 
     console.log('HEY SOMETHING!');
@@ -236,14 +234,6 @@ script.
     //addStyleAttribute($('.plyr'), 'max-height: 100vh !important');
     //addStyleAttribute($('.plyr'), 'height: 100vh !important');
 
-
-
-
-
-
-
-
-
     // remove video max-height
 
   });
@@ -252,6 +242,7 @@ script.
 
   players[0].on('play', function (event) {
 
+    // TODO: not working because it fires even on a play that errors out
     if (lastWatchedTime && !alreadyMovedOnPlay) {
       player.currentTime = Number(lastWatchedTime)
       player.play()

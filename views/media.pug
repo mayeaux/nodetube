@@ -519,9 +519,9 @@ block content
 
                         div
 
-                            a(href=`https://www.facebook.com/sharer/sharer.php?u=${url}` target="_blank")
+                            a(href=`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${title}\n` target="_blank")
                                 img.extraButton.op80.facebookShareButton(src='/images/facebook-share.jpg', width='100', height='30', alt='Share on Twitter' style="margin-left:10px;")
-                            a(href=`https://twitter.com/share?url=${url}` target="_blank")
+                            a(href=`https://twitter.com/share?url=${url}&text=${title}\n` target="_blank")
                                 img.extraButton.op80.twitterShareButton(src='/images/twitter-share.jpg', width='100', height='30', alt='Share on Twitter' style="margin-left:10px;")
                             a(href=`mailto:?subject=Check out this ${upload.fileType}&body=Check out this ${upload.fileType} on ${brandName}: ${url}`, title='Share by Email')
                                 img.extraButton.op80.emailShareButton(src='/images/email-share.jpg' style="margin-left:10px;")
