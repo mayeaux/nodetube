@@ -5,7 +5,11 @@ script.
 
   var secondsToMoveFoward = '#{secondsToMoveForward}';
 
-  var v = document.getElementsByTagName("video")[0];
+  var v = document.getElementsByTagName("video") && document.getElementsByTagName("video")[0];
+
+  if(!v){
+    v = document.getElementsByTagName("audio") && document.getElementsByTagName("audio")[0];
+  }
 
   var movedForward = false;
 

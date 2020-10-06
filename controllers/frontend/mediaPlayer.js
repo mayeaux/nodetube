@@ -180,7 +180,10 @@ exports.getMedia = async(req, res) => {
         upload: upload._id
       });
 
-      formattedLastWatchedTime = timeHelper.secondsToFormattedTime(Math.round(lastWatchedTime.secondsWatched));
+      if(lastWatchedTime){
+        formattedLastWatchedTime = timeHelper.secondsToFormattedTime(Math.round(lastWatchedTime.secondsWatched));
+      }
+
     }
 
 
