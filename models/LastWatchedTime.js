@@ -35,7 +35,7 @@ lastWatchedTimeSchema.virtual('timeAgo').get(function(){
   return timeAgoEnglish.format( new Date(this.createdAt) );
 });
 
-const LastWatchedTime = mongoose.model('ReLastWatchedTimeact', lastWatchedTimeSchema);
+const LastWatchedTime = mongoose.model('LastWatchedTime', lastWatchedTimeSchema);
 
 module.exports = LastWatchedTime;
 

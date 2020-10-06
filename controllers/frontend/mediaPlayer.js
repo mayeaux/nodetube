@@ -173,12 +173,16 @@ exports.getMedia = async(req, res) => {
     console.log(convertedRating);
 
     let lastWatchedTime;
+    let formattedLastWatchedTime;
     if(req.user){
       lastWatchedTime = await LastWatchedTime.findOne({
         user : req.user._id,
         upload: upload._id
       });
+
+      formattedLastWatchedTime = timeHelper.secondsToFormattedTime(Math.round(lastWatchedTime.secondsWatched));
     }
+
 
     res.render('media', {
       title: upload.title,
@@ -209,7 +213,8 @@ exports.getMedia = async(req, res) => {
       domainName: process.env.DOMAIN_NAME_AND_TLD,
       serverToUse,
       convertedRating,
-      lastWatchedTime
+      lastWatchedTime,
+      formattedLastWatchedTime
     });
 
   } catch(err){
