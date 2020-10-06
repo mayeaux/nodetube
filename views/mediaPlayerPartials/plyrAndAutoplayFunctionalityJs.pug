@@ -1,5 +1,6 @@
 script.
 
+  /** functionality to skip forward automatically based on lastWatchedTime **/
   var lastWatchedTime = '#{lastWatchedTime && lastWatchedTime.secondsWatched}';
 
   var secondsToMoveFoward = '#{secondsToMoveForward}';
@@ -8,14 +9,17 @@ script.
 
   var movedForward = false;
 
+  // this works properly because it runs right when the video has started
   v.addEventListener("playing", async function (event) {
 
 
-    if (lastWatchedTime || 1 == 1) {
+    if (lastWatchedTime) {
       console.log('RUNNING LASST WATCHED');
 
       if(!movedForward ){
         player.currentTime = Number(lastWatchedTime)
+
+        // save in memory that we've skipped forward
         movedForward = true;
       } else {
         console.log('already moved!');
@@ -24,6 +28,8 @@ script.
 
     }
   }, true);
+
+  // TODO: set the lastWatchedTime to 0 when you finish a video/audio
 
 
 

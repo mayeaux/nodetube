@@ -427,14 +427,6 @@ block content
             br
             br
 
-            if ( upload.durationInSeconds > (15 * 60) ) && user
-
-                if lastWatchedTime
-                    h1 Last Watched Time: #{lastWatchedTime.secondsWatched}
-                else
-                    h1 No Last Watched Time
-
-
             // UPLOADER DETAILS SECTION
             div.col-sm-3.uploader-details-section(style="")
                 h3.uploader-name(style="margin-top:25px;font-size:26px;")
@@ -623,6 +615,13 @@ block content
 
                     //if upload.bitrateInKbps
                     //    p.fw.fileSizeText(style="margin-top:15px") Bitrate in kbps: #{upload.bitrateInKbps}
+
+                    if ( upload.durationInSeconds > (15 * 60) ) && user
+
+                                    if lastWatchedTime
+                                        p.fw.fileSizeText(style="margin-top:15px;color:a5a5a5;") Last Watched Time: #{lastWatchedTime.secondsWatched}
+                                    else
+                                        p.fw.fileSizeText(style="margin-top:15px;color:a5a5a5;") No Last Watched Time
 
                     if upload.fileType == 'video' || upload.fileType == 'audio'
 
