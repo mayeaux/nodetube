@@ -45,6 +45,8 @@ exports.index = async(req, res) => {
       uploads
     });
 
+  } else if(defaultLandingPage == 'recent'){
+    res.redirect('/media/recent?category=all');
   } else {
 
     const response = indexResponse;
