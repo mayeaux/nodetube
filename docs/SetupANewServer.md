@@ -44,7 +44,7 @@ sudo apt update
 # install dependencies for nodetube
 # may take a few minutes
 sudo apt-get -y install \
-    git build-essential nginx youtube-dl nload python-setuptools python-dev build-essential tcptrack  vnstat nethogs redis-server build-essential libssl-dev libcurl4-gnutls-dev libexpat1-dev gettext unzip ffmpeg
+    git build-essential nginx youtube-dl nload python-setuptools python-dev build-essential tcptrack  vnstat nethogs redis-server build-essential libssl-dev libcurl4-gnutls-dev libexpat1-dev gettext unzip vnstat nload ffmpeg
 
 
 sudo apt-get update
