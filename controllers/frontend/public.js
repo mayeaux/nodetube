@@ -46,7 +46,7 @@ exports.index = async(req, res) => {
     });
 
   } else if(defaultLandingPage == 'recent'){
-    res.redirect('/media/recent?category=all');
+    res.redirect('/media/recent?category=all&rating=SFW');
   } else {
 
     const response = indexResponse;
