@@ -186,7 +186,6 @@ exports.getMedia = async(req, res) => {
 
     }
 
-
     res.render('media', {
       title: upload.title,
       comments : comments.reverse(),
