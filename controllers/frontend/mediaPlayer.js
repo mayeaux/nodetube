@@ -186,6 +186,16 @@ exports.getMedia = async(req, res) => {
 
     }
 
+    let uploadFps;
+    if(upload.ffprobeData){
+      const videoStream =  upload.ffprobeData.filter(stream => {
+        return stream.codec_type == 'video';
+      });
+
+      uploadFps = videoStream.avg_frame_rate || videoStream.r_frame_rate ;
+    }
+
+
     res.render('media', {
       title: upload.title,
       comments : comments.reverse(),
@@ -216,7 +226,8 @@ exports.getMedia = async(req, res) => {
       serverToUse,
       convertedRating,
       lastWatchedTime,
-      formattedLastWatchedTime
+      formattedLastWatchedTime,
+      uploadFps
     });
 
   } catch(err){

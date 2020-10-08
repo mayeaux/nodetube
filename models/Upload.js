@@ -133,7 +133,7 @@ const uploadSchema = new mongoose.Schema({
   // string, such as UnIqUe.webvtt used by default to indicate it's in the same directory with the upload
   webVTTPath: String,
 
-  ffprobeData : Mixed
+  ffprobeData: mongoose.Schema.Types.Mixed
 
 }, {
   timestamps: true,
