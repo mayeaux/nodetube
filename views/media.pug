@@ -475,7 +475,9 @@ block content
                     h2.balance-text(class="upload-title-value" style="display:inline;text-wrap:balance;width:80%;margin:0 auto;font-weight:300;color: #a9a9a9 !important;margin-bottom:20px;") #{upload.title}
                         if upload.formattedDuration
                             h2.fw(style="display:inline;color: #a9a9a9; !important;").
-                                &nbsp - #{upload.formattedDuration} #{uploadFps}
+                                &nbsp - #{upload.formattedDuration}
+
+                    h2.fpsText #{uploadFps}
 
 
                 if upload.description
@@ -804,6 +806,42 @@ block extra_js
   script.
 
     $(document).ready(function () {
+
+        var fpsValue = '#{uploadFps}';
+
+        $('.fpsText').click(function(){
+
+          console.log('clicked');
+
+          if(fpsValue){
+
+            console.log('running!!!')
+
+            const fpsValueAsNumber = Number(fpsValue.split('/')[0]);
+
+            console.log(fpsValue, typeof fpsValue, fpsValue + 1, typeof fpsValueAsNumber, fpsValueAsNumber + 1);
+
+
+
+            const amountOfSecondsToMove = 1 / fpsValueAsNumber;
+
+            console.log(amountOfSecondsToMove);
+
+            const currentSecond = player.currentTime;
+
+            console.log(currentSecond);
+
+            const moveToSecond = currentSecond + amountOfSecondsToMove;
+
+            console.log(moveToSecond);
+
+            player.currentTime = moveToSecond;
+
+            console.log('moving forward a frame')
+            // alert(fpsValue);
+          }
+
+        });
 
         $('.screenshotButton').click(function(){
           const width = player.media.videoWidth;
