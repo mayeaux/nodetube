@@ -23,7 +23,6 @@ RUN npm i && \
     rm -rf /app/node_modules/ffprobe-static/bin/linux/ia32 && \
     rm -rf /app/node_modules/webp-converter/bin/libwebp_win64 && \
     rm -rf /app/node_modules/webp-converter/bin/libwebp_osx && \
-    rm -rf /app/node_modules/webp-converter/bin/libwebp_osx && \
     strip /app/node_modules/ngrok/bin/ngrok
 
 FROM bougyman/voidlinux
