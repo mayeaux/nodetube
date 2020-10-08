@@ -475,7 +475,7 @@ block content
                     h2.balance-text(class="upload-title-value" style="display:inline;text-wrap:balance;width:80%;margin:0 auto;font-weight:300;color: #a9a9a9 !important;margin-bottom:20px;") #{upload.title}
                         if upload.formattedDuration
                             h2.fw(style="display:inline;color: #a9a9a9; !important;").
-                                &nbsp - #{upload.formattedDuration}
+                                &nbsp - #{upload.formattedDuration} #{uploadFps}
 
 
                 if upload.description

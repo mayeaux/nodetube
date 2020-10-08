@@ -188,11 +188,15 @@ exports.getMedia = async(req, res) => {
 
     let uploadFps;
     if(upload.ffprobeData){
-      const videoStream =  upload.ffprobeData.filter(stream => {
+      console.log('running here!');
+
+      const videoStream =  upload.ffprobeData.streams.filter(stream => {
         return stream.codec_type == 'video';
       });
 
-      uploadFps = videoStream.avg_frame_rate || videoStream.r_frame_rate ;
+      console.log(videoStream);
+
+      uploadFps = videoStream[0].avg_frame_rate || videoStream[0].r_frame_rate ;
     }
 
 
