@@ -477,7 +477,14 @@ block content
                             h2.fw(style="display:inline;color: #a9a9a9; !important;").
                                 &nbsp - #{upload.formattedDuration}
 
-                    h2.fpsText #{uploadFps}
+                    br
+                    each seconds in [1,3,7,15]
+                        h7.fpsText(amountOfFrames=seconds) +#{seconds}
+                        br
+
+                    each seconds in [1,3,7,15]
+                        h7.fpsText(amountOfFrames=-seconds) -#{seconds}
+                        br
 
 
                 if upload.description
@@ -811,13 +818,17 @@ block extra_js
 
         $('.fpsText').click(function(){
 
+          const amountOfFramesToMove = $(this).attr('amountOfFrames')
+
           if(fpsValue) {
 
             const fpsValueAsNumber = Number(fpsValue.split('/')[0]);
 
-            const amountOfSecondsToMove = 1 / fpsValueAsNumber;
+            const amountOfSecondsToMovePerFrame = 1 / fpsValueAsNumber;
 
-            player.currentTime = player.currentTime + amountOfSecondsToMove;
+            const amountOfSecondsToMoveTotal = amountOfSecondsToMovePerFrame * amountOfFramesToMove;
+
+            player.currentTime = player.currentTime + amountOfSecondsToMoveTotal;
 
           }
 
