@@ -417,16 +417,29 @@ exports.postFileUpload = async(req, res) => {
           let bitrate, codecName, codecProfile;
 
           if(upload.fileType !== 'image'){
+
+            // load the ffprobe data in response
             const response = await ffmpegHelper.ffprobePromise(`${uploadPath}/convertedFile`);
 
+            // console.log(response);
+
+            // save the ffprobe data
+            upload.ffprobeData = response;
+
+            // duration in seconds from ffprobe
             upload.durationInSeconds = Math.round(response.format.duration);
 
+            // duration in seconds formatted as smart HH:MM:DD
             upload.formattedDuration = timeHelper.secondsToFormattedTime(Math.round(response.format.duration));
 
-            codecProfile  = response.streams[0].codecProfile;
+            // TODO: this needs to be made to match against whether it's a video or audio because to
+            // TODO : my knowledge streams are not guaranteed to be in order of video -> audio
 
+            // codec name and profile to be used for deciding whether to convert
+            codecProfile  = response.streams[0].codecProfile;
             codecName  = response.streams[0].codecName;
 
+            // height and width of video
             const width = response.streams[0].width;
             const height = response.streams[0].height;
 
@@ -434,13 +447,15 @@ exports.postFileUpload = async(req, res) => {
             // bitrate in kbps
             bitrate = response.format.bit_rate / 1000;
 
+            // save bitrate in kbps
             upload.bitrateInKbps = bitrate;
 
+            // save width, height and aspect ratio on upload
             upload.dimensions.height = height;
             upload.dimensions.width = width;
             upload.dimensions.aspectRatio = height/width;
 
-            console.log(response);
+
             //
             // console.log('')
 

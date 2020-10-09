@@ -214,8 +214,8 @@ block content
         @media (max-width: 900px) {
 
             .uploadTitle {
-                margin-top: 32px;
-                margin-bottom: -20px !important;
+                margin-top: 0px;
+                margin-bottom: 8px !important;
             }
 
             .mobileTitle {
@@ -354,6 +354,21 @@ block content
 
         }
 
+        .noselect {
+            -webkit-touch-callout: none; /* iOS Safari */
+            -webkit-user-select: none; /* Safari */
+            -khtml-user-select: none; /* Konqueror HTML */
+            -moz-user-select: none; /* Old versions of Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none;
+            /* Non-prefixed version, currently
+                                                     supported by Chrome, Edge, Opera and Firefox */
+        }
+
+        .fpsText:hover{
+            color:white;
+        }
+
         /*button.plyr__control  {*/
             /*display: none !important;*/
         /*}*/
@@ -415,6 +430,22 @@ block content
                     img.display-element(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="border-radius:13px;max-width:80%;min-height:50%;max-height:620px;")
 
 
+        // add margin-top 120 on margin-top:120px;"
+
+        if upload.fileType == 'video' && upload.ffprobeData
+            div.frameJumper(style="margin-bottom:1px;margin-top:-14px;")
+                br
+                each frame in [1,5,15,30].reverse()
+                    p.fpsText.noselect(amountOfFrames=-frame style="display:inline;margin-left:7px;") -#{frame} &nbsp
+
+                p(style="display:inline;margin-left:14px;")
+
+
+                each frame in [1,5,15,30]
+                    p.fpsText.noselect(amountOfFrames=frame style="display:inline;margin-left:7px;") +#{frame} &nbsp
+        else
+            div.frameJumper(style="margin-bottom:35px;")
+        br
 
 
         // TODO: FIX NON-PLAYER CONTENT
@@ -422,10 +453,7 @@ block content
         //- NON PLAYER CONTENT
             hello something
         div.non-player-content(style="position:relative;max-width:1182px;margin:0 auto;")
-            // add margin-top 120 on margin-top:120px;"
 
-            br
-            br
 
             // UPLOADER DETAILS SECTION
             div.col-sm-3.uploader-details-section(style="")
@@ -476,7 +504,6 @@ block content
                         if upload.formattedDuration
                             h2.fw(style="display:inline;color: #a9a9a9; !important;").
                                 &nbsp - #{upload.formattedDuration}
-
 
                 if upload.description
                     .uploadDescriptionDiv
@@ -805,6 +832,52 @@ block extra_js
 
     $(document).ready(function () {
 
+      var v = document.getElementsByTagName("video") && document.getElementsByTagName("video")[0];
+
+
+      // this works properly because it runs right when the video has started
+      v.addEventListener('playing', function (event) {
+        console.log('event!!')
+        console.log(event);
+
+        // $('.frameJumper').css({"visibility":"hidden"});
+      })
+
+      v.addEventListener('pause', function (event) {
+        console.log('event!!')
+        console.log(event);
+
+        // $('.frameJumper').css({"visibility":"initial"});
+      })
+
+
+
+
+
+      var fpsValue = '#{uploadFps}';
+
+        $('.fpsText').click(function(){
+
+          const amountOfFramesToMove = $(this).attr('amountOfFrames')
+
+          if(fpsValue) {
+
+            const firstFpsValue = Number(fpsValue.split('/')[0]);
+
+            const secondFpsValue = Number(fpsValue.split('/')[1]);
+
+            const fpsValueAsNumber = firstFpsValue/secondFpsValue
+
+            const amountOfSecondsToMovePerFrame = 1 / fpsValueAsNumber;
+
+            const amountOfSecondsToMoveTotal = amountOfSecondsToMovePerFrame * amountOfFramesToMove;
+
+            player.currentTime = player.currentTime + amountOfSecondsToMoveTotal;
+
+          }
+
+        });
+
         $('.screenshotButton').click(function(){
           const width = player.media.videoWidth;
           const height = player.media.videoHeight;
@@ -816,9 +889,12 @@ block extra_js
           var link = document.createElement('a');
 
 
+          var title = '#{upload.title}'
+
+
           if(player.currentTime == 0 ){
 
-            link.download = 'screenshot.jpg';
+            link.download = '#{title}.jpg';
 
             console.log('use thumbnail');
             console.log(thumbnailUrl);
@@ -827,7 +903,7 @@ block extra_js
 
           } else {
 
-            link.download = 'screenshot.png';
+            link.download = '#{title}.png';
 
             console.log('use canvas')
             link.href = canvas.toDataURL()
@@ -1045,13 +1121,21 @@ block extra_footer_js
 
           // $('.display-element').css('border', '1px solid black')
 
+          // TODO: I would like to do display: none for these because they hide immediately
+          // but if I put the display none, I can't visibiltiY: initial the child element
+
+
+          $('.frameJumper').css({
+            visibility: 'hidden'
+          })
+
           // hide the header
           $('.headerContainer').css({
-            display: 'none'
+            visibility: 'hidden'
           })
 
           // hide the non player content
-          $('.non-player-content').css({
+          $('.non-player-content, footer').css({
             visibility: 'hidden'
           })
 
@@ -1069,17 +1153,21 @@ block extra_footer_js
           /** otherwise the functionality has already been turned on, so we turn it off **/
         } else {
 
-          // $('.display-element').css('border', '1px solid #5b5a5a')
-
-          // show the header and the rest of the non player content
-          $('.headerContainer, .non-player-content').css({
+          $('.frameJumper').css({
             visibility: 'visible'
           })
 
-          // bring back header container
+          // $('.display-element').css('border', '1px solid #5b5a5a')
+
+          // show the header and the rest of the non player content
           $('.headerContainer').css({
-            display: 'inherit'
+            visibility: 'visible'
           })
+
+          $('.non-player-content, footer').css({
+            visibility: 'visible'
+          })
+
 
           // give lamp icon full opacity
           $('.lampIconDiv').css({

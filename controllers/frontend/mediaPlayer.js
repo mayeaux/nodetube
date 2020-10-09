@@ -170,7 +170,7 @@ exports.getMedia = async(req, res) => {
     saveMetaToResLocal(upload, uploadServer, req, res);
 
     const convertedRating = convertAllAgesToSfw(upload.rating);
-    console.log(convertedRating);
+    // console.log(convertedRating);
 
     let lastWatchedTime;
     let formattedLastWatchedTime;
@@ -185,6 +185,20 @@ exports.getMedia = async(req, res) => {
       }
 
     }
+
+    let uploadFps;
+    if(upload.ffprobeData){
+      // console.log('running here!');
+
+      const videoStream =  upload.ffprobeData.streams.filter(stream => {
+        return stream.codec_type == 'video';
+      });
+
+      // console.log(videoStream);
+
+      uploadFps = videoStream[0].avg_frame_rate || videoStream[0].r_frame_rate ;
+    }
+
 
     res.render('media', {
       title: upload.title,
@@ -216,7 +230,8 @@ exports.getMedia = async(req, res) => {
       serverToUse,
       convertedRating,
       lastWatchedTime,
-      formattedLastWatchedTime
+      formattedLastWatchedTime,
+      uploadFps
     });
 
   } catch(err){

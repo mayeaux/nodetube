@@ -61,27 +61,12 @@ block content
                     br
 
 
+                include ../viewPartials/orderByDropdown
 
+                include ../viewPartials/searchUploadsFileTypeDropdown
 
-                    // search type dropdown
-                    //div.dropdown.searchTypeDropdown(style="display:inline;margin-right:15px;")
-                    //
-                    //    button.fw.btn.btn-primary.dropdown-toggle.searchTypeButton(type='button', data-toggle='dropdown' style="border-radius:5px;")
-                    //        | Search For: Uploads &nbsp
-                    //
-                    //        span.caret
-                    //
-                    //    ul.dropdown-menu.dropdown
-                    //        li
-                    //            a(href=`/search?searchQuery=${searchQuery}&orderBy=popular&mediaType=${mediaType}&searchType=${searchType}`) Uploads &nbsp
-                    //        li
-                    //            a(href=`/search?searchQuery=${searchQuery}&orderBy=newToOld&mediaType=${mediaType}&searchType=user`) Users &nbsp
+                include ../viewPartials/sensitivityFilterDropdown
 
-                    include ../viewPartials/orderByDropdown
-
-                    include ../viewPartials/searchUploadsFileTypeDropdown
-
-                    include ../viewPartials/sensitivityFilterDropdown
                 br
                 br
 
