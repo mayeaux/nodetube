@@ -1117,13 +1117,21 @@ block extra_footer_js
 
           // $('.display-element').css('border', '1px solid black')
 
+          // TODO: I would like to do display: none for these because they hide immediately
+          // but if I put the display none, I can't visibiltiY: initial the child element
+
+
+          $('.frameJumper').css({
+            visibility: 'hidden'
+          })
+
           // hide the header
           $('.headerContainer').css({
-            display: 'none'
+            visibility: 'hidden'
           })
 
           // hide the non player content
-          $('.non-player-content').css({
+          $('.non-player-content, footer').css({
             visibility: 'hidden'
           })
 
@@ -1141,17 +1149,21 @@ block extra_footer_js
           /** otherwise the functionality has already been turned on, so we turn it off **/
         } else {
 
+          $('.frameJumper').css({
+            visibility: 'iniital'
+          })
+
           // $('.display-element').css('border', '1px solid #5b5a5a')
 
           // show the header and the rest of the non player content
-          $('.headerContainer, .non-player-content').css({
+          $('.headerContainer').css({
+            visibility: 'visible',
+          })
+
+          $('.non-player-content, footer').css({
             visibility: 'visible'
           })
 
-          // bring back header container
-          $('.headerContainer').css({
-            display: 'inherit'
-          })
 
           // give lamp icon full opacity
           $('.lampIconDiv').css({
