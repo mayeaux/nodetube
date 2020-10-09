@@ -811,34 +811,14 @@ block extra_js
 
         $('.fpsText').click(function(){
 
-          console.log('clicked');
-
-          if(fpsValue){
-
-            console.log('running!!!')
+          if(fpsValue) {
 
             const fpsValueAsNumber = Number(fpsValue.split('/')[0]);
 
-            console.log(fpsValue, typeof fpsValue, fpsValue + 1, typeof fpsValueAsNumber, fpsValueAsNumber + 1);
-
-
-
             const amountOfSecondsToMove = 1 / fpsValueAsNumber;
 
-            console.log(amountOfSecondsToMove);
+            player.currentTime = player.currentTime + amountOfSecondsToMove;
 
-            const currentSecond = player.currentTime;
-
-            console.log(currentSecond);
-
-            const moveToSecond = currentSecond + amountOfSecondsToMove;
-
-            console.log(moveToSecond);
-
-            player.currentTime = moveToSecond;
-
-            console.log('moving forward a frame')
-            // alert(fpsValue);
           }
 
         });
