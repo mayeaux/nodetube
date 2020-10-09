@@ -34,7 +34,11 @@ exports.index = async(req, res) => {
 
   const title = 'Home';
 
-  if(defaultLandingPage == 'globe'){
+  if(defaultLandingPage == 'overview'){
+    res.redirect('/media/recent?category=overview&rating=SFW');
+  } else if(defaultLandingPage == 'recent'){
+    res.redirect('/media/recent?category=all&rating=SFW');
+  } else if(defaultLandingPage == 'globe'){
 
     // get 150 most popular uploads in last 24h that are sfw and from any category
     let uploads = await getFromCache.getPopularUploads('24hour', 150, 0, 'all', 'SFW', 'all', '');
@@ -45,8 +49,6 @@ exports.index = async(req, res) => {
       uploads
     });
 
-  } else if(defaultLandingPage == 'recent'){
-    res.redirect('/media/recent?category=all&rating=SFW');
   } else {
 
     const response = indexResponse;
