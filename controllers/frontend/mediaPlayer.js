@@ -194,9 +194,12 @@ exports.getMedia = async(req, res) => {
         return stream.codec_type == 'video';
       });
 
+      if(videoStream){
+        uploadFps = videoStream[0].avg_frame_rate || videoStream[0].r_frame_rate ;
+      }
+
       // console.log(videoStream);
 
-      uploadFps = videoStream[0].avg_frame_rate || videoStream[0].r_frame_rate ;
     }
 
 
