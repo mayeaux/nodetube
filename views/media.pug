@@ -862,7 +862,11 @@ block extra_js
 
           if(fpsValue) {
 
-            const fpsValueAsNumber = Number(fpsValue.split('/')[0]);
+            const firstFpsValue = Number(fpsValue.split('/')[0]);
+
+            const secondFpsValue = Number(fpsValue.split('/')[1]);
+
+            const fpsValueAsNumber = firstFpsValue/secondFpsValue
 
             const amountOfSecondsToMovePerFrame = 1 / fpsValueAsNumber;
 
