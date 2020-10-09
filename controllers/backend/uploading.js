@@ -455,7 +455,6 @@ exports.postFileUpload = async(req, res) => {
             upload.dimensions.width = width;
             upload.dimensions.aspectRatio = height/width;
 
-
             //
             // console.log('')
 

@@ -194,7 +194,7 @@ exports.getMedia = async(req, res) => {
         return stream.codec_type == 'video';
       });
 
-      console.log(videoStream);
+      // console.log(videoStream);
 
       if(videoStream && videoStream[0]){
         uploadFps = videoStream[0].avg_frame_rate || videoStream[0].r_frame_rate ;
@@ -203,7 +203,6 @@ exports.getMedia = async(req, res) => {
       // console.log(videoStream);
 
     }
-
 
     res.render('media', {
       title: upload.title,
