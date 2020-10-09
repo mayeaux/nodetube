@@ -439,16 +439,17 @@ block content
         div.non-player-content(style="position:relative;max-width:1182px;margin:0 auto;")
             // add margin-top 120 on margin-top:120px;"
 
-            div
-                br
-                each frame in [1,3,7,15].reverse()
-                    p.fpsText.noselect(amountOfFrames=-frame style="display:inline;margin-left:7px;") -#{frame} &nbsp
+            if upload.fileType == 'video'
+                div.frameJumper
+                    br
+                    each frame in [1,3,7,15].reverse()
+                        p.fpsText.noselect(amountOfFrames=-frame style="display:inline;margin-left:7px;") -#{frame} &nbsp
 
-                p(style="display:inline;margin-left:14px;")
+                    p(style="display:inline;margin-left:14px;")
 
 
-                each frame in [1,3,7,15]
-                    p.fpsText.noselect(amountOfFrames=frame style="display:inline;margin-left:7px;") +#{frame} &nbsp
+                    each frame in [1,3,7,15]
+                        p.fpsText.noselect(amountOfFrames=frame style="display:inline;margin-left:7px;") +#{frame} &nbsp
 
 
             br
@@ -831,20 +832,26 @@ block extra_js
 
     $(document).ready(function () {
 
-
-      const attachToDiv = $('.plyr__video-wrapper');
-
-      var destination = $('.plyr__video-wrapper').offset();
-
-      destination.right = ($(window).width() + $(window).scrollLeft()) - (destination.left + $('.plyr__video-wrapper').outerWidth(true));
-      destination.bottom = ($(window).height() + $(window).scrollTop()) - (destination.top + $('.plyr__video-wrapper').outerHeight(true));
+      var v = document.getElementsByTagName("video") && document.getElementsByTagName("video")[0];
 
 
-      console.log(destination)
+      // this works properly because it runs right when the video has started
+      v.addEventListener('playing', function (event) {
+        console.log('event!!')
+        console.log(event);
 
-      $('.frameJumperRight').css({top: 300, left: destination.left});
+        $('.frameJumper').hide();
+      })
 
-      $('.frameJumperLeft').css({top: 300, right: destination.right});
+      v.addEventListener('pause', function (event) {
+        console.log('event!!')
+        console.log(event);
+
+        $('.frameJumper').show();
+      })
+
+
+
 
 
       var fpsValue = '#{uploadFps}';
