@@ -477,14 +477,15 @@ block content
                             h2.fw(style="display:inline;color: #a9a9a9; !important;").
                                 &nbsp - #{upload.formattedDuration}
 
-                    br
-                    each seconds in [1,3,7,15]
-                        h7.fpsText(amountOfFrames=seconds) +#{seconds}
+                    div.frameJumper(style="position:fixed")
                         br
+                        each seconds in [1,3,7,15]
+                            h7.fpsText(amountOfFrames=seconds) +#{seconds}
+                            br
 
-                    each seconds in [1,3,7,15]
-                        h7.fpsText(amountOfFrames=-seconds) -#{seconds}
-                        br
+                        each seconds in [1,3,7,15]
+                            h7.fpsText(amountOfFrames=-seconds) -#{seconds}
+                            br
 
 
                 if upload.description
@@ -814,7 +815,13 @@ block extra_js
 
     $(document).ready(function () {
 
-        var fpsValue = '#{uploadFps}';
+      var destination = $('.plyr__video-wrapper').offset();
+      console.log(destination)
+
+      $('.frameJumper').css({top: destination.top, left: destination.left});
+
+
+      var fpsValue = '#{uploadFps}';
 
         $('.fpsText').click(function(){
 
