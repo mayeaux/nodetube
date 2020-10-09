@@ -430,6 +430,22 @@ block content
                     img.display-element(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="border-radius:13px;max-width:80%;min-height:50%;max-height:620px;")
 
 
+        // add margin-top 120 on margin-top:120px;"
+
+        if upload.fileType == 'video'
+            div.frameJumper(style="margin-bottom:1px;margin-top:-14px;")
+                br
+                each frame in [1,3,7,15].reverse()
+                    p.fpsText.noselect(amountOfFrames=-frame style="display:inline;margin-left:7px;") -#{frame} &nbsp
+
+                p(style="display:inline;margin-left:14px;")
+
+
+                each frame in [1,3,7,15]
+                    p.fpsText.noselect(amountOfFrames=frame style="display:inline;margin-left:7px;") +#{frame} &nbsp
+        else
+            div.frameJumper(style="margin-bottom:35px;")
+        br
 
 
         // TODO: FIX NON-PLAYER CONTENT
@@ -437,23 +453,7 @@ block content
         //- NON PLAYER CONTENT
             hello something
         div.non-player-content(style="position:relative;max-width:1182px;margin:0 auto;")
-            // add margin-top 120 on margin-top:120px;"
 
-            if upload.fileType == 'video'
-                div.frameJumper
-                    br
-                    each frame in [1,3,7,15].reverse()
-                        p.fpsText.noselect(amountOfFrames=-frame style="display:inline;margin-left:7px;") -#{frame} &nbsp
-
-                    p(style="display:inline;margin-left:14px;")
-
-
-                    each frame in [1,3,7,15]
-                        p.fpsText.noselect(amountOfFrames=frame style="display:inline;margin-left:7px;") +#{frame} &nbsp
-
-
-            br
-            br
 
             // UPLOADER DETAILS SECTION
             div.col-sm-3.uploader-details-section(style="")
@@ -840,14 +840,14 @@ block extra_js
         console.log('event!!')
         console.log(event);
 
-        $('.frameJumper').hide();
+        $('.frameJumper').css({"visibility":"hidden"});
       })
 
       v.addEventListener('pause', function (event) {
         console.log('event!!')
         console.log(event);
 
-        $('.frameJumper').show();
+        $('.frameJumper').css({"visibility":"initial"});
       })
 
 
