@@ -555,15 +555,10 @@ exports.notification = async(req, res) => {
   if(!page){ page = 1; }
   page = parseInt(page);
 
-  const limit = 51;
+  const limit = 100;
   const skipAmount = (page * limit) - limit;
 
   const { startingNumber, previousNumber, nextNumber, numbersArray } = pagination.buildPaginationObject(page);
-
-  console.log(startingNumber, previousNumber, nextNumber, numbersArray);
-
-
-
 
   try {
 
