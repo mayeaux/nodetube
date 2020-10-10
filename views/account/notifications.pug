@@ -15,14 +15,14 @@ block content
                     .center-block.text-center
                         ul.pagination
                             li.page-item
-                                a.page-link(href=`/media/popular/${previousNumber}?media=${media}&category${category}&within=${within}`) <
+                                a.page-link(href=`/notifications/${previousNumber}`) <
 
                             each number in numbersArray
                                 li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
                                     a.page-link(href=`/notifications/${number}`) #{number}
 
                             li.page-item
-                                a.page-link(href=`/media/popular/${nextNumber}`) >
+                                a.page-link(href=`/notifications/${nextNumber}`) >
 
 
                     h3 Unread Notifications

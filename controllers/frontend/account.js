@@ -567,8 +567,6 @@ exports.notification = async(req, res) => {
       user: req.user._id
     }).populate('user sender upload react comment').skip(skipAmount).limit(limit).sort({createdAt: -1});
 
-
-
     // // console.log(notifications);
     // for(let notif of notifications){
     //   console.log(notif);
@@ -583,7 +581,7 @@ exports.notification = async(req, res) => {
       previousNumber,
       nextNumber,
       numbersArray,
-      highlightedNumber: page,
+      highlightedNumber: page
     });
 
     // mark notifs as read
