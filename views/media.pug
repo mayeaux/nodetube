@@ -514,12 +514,11 @@ block content
 
                         p#uploadDescriptionText.fw.uploadDescriptionText(style="color:#a5a5a5") #{upload.description}
 
-                        br
-                        br
+                        p.descriptionBottom
 
-                        h2.showMoreButton(style="display:none") Show More
+                    h3.showMoreButton(style="display:none") Show More
 
-                        h2.showLessButton(style="display:none") Show Less
+                    h3.showLessButton(style="display:none") Show Less
 
 
                 div.largerSection
@@ -865,6 +864,12 @@ block extra_js
 
         showMoreButton.hide()
         showLessButton.show()
+
+        //$('html, body').animate({
+        //  scrollTop: $('.descriptionBottom').offset().top
+        //}, 500);
+
+
       })
 
       showLessButton.click(function () {
@@ -873,6 +878,8 @@ block extra_js
         showMoreButton.show()
         showLessButton.hide()
       })
+
+
 
 
       var v = document.getElementsByTagName("video") && document.getElementsByTagName("video")[0];
