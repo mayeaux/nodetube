@@ -901,10 +901,46 @@ block extra_js
       })
 
 
-
-
+      const codes = {
+        109: -5,
+        44: -1,
+        46: 1,
+        47: 5
+      }
 
       var fpsValue = '#{uploadFps}';
+
+
+      $(document).on("keypress", function (e) {
+        const keyCode = e.which;
+
+        for (const code in codes) {
+
+
+          if (code == keyCode) {
+            const amountOfFramesToMove = codes[code];
+
+            const firstFpsValue = Number(fpsValue.split('/')[0]);
+
+            const secondFpsValue = Number(fpsValue.split('/')[1]);
+
+            const fpsValueAsNumber = firstFpsValue / secondFpsValue
+
+            const amountOfSecondsToMovePerFrame = 1 / fpsValueAsNumber;
+
+            const amountOfSecondsToMoveTotal = amountOfSecondsToMovePerFrame * amountOfFramesToMove;
+
+            player.currentTime = player.currentTime + amountOfSecondsToMoveTotal;
+
+            console.log(code);
+          }
+
+
+        }
+
+        // use e.which
+      });
+
 
         $('.fpsText').click(function(){
 
@@ -1293,32 +1329,7 @@ block extra_footer_js
 
   script.
 
-    const codes = {
-      109: -5,
-      44: -1,
-      46: 1,
-      47: 5
-    }
 
-    $(document).on("keypress", function (e) {
-      const keyCode = e.which;
-
-      for(const code in codes){
-
-
-        if(code == keyCode){
-          const coder = codes[code];
-
-          console.log(coder);
-
-          console.log(code);
-        }
-
-
-      }
-
-      // use e.which
-    });
 
     //      setInterval(function(){
     //        if (document.hasFocus()){
