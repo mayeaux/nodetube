@@ -514,6 +514,13 @@ block content
 
                         p#uploadDescriptionText.fw.uploadDescriptionText(style="color:#a5a5a5") #{upload.description}
 
+                        br
+                        br
+
+                        h2.showMoreButton(style="display:none") Show More
+
+                        h2.showLessButton(style="display:none") Show Less
+
 
                 div.largerSection
 
@@ -835,6 +842,38 @@ block extra_js
   script.
 
     $(document).ready(function () {
+
+      const uploadDescriptionText = $('#uploadDescriptionText');
+
+      const showMoreButton = $('.showMoreButton');
+
+      const showLessButton = $('.showLessButton');
+
+
+      // todo; change this to a div that includes the title as well
+      const height = uploadDescriptionText.height();
+
+      if(height > 198){
+        uploadDescriptionText.height('198');
+        // to-do show the show more button
+        showMoreButton.show()
+      }
+
+
+      showMoreButton.click(function(){
+        uploadDescriptionText.height(height);
+
+        showMoreButton.hide()
+        showLessButton.show()
+      })
+
+      showLessButton.click(function () {
+        uploadDescriptionText.height('198');
+
+        showMoreButton.show()
+        showLessButton.hide()
+      })
+
 
       var v = document.getElementsByTagName("video") && document.getElementsByTagName("video")[0];
 
