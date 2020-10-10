@@ -503,13 +503,15 @@ exports.postImporter = async(req, res) => {
 
   if(uniqueTag == 'playlist'){
     return res.send({
-      uniqueTag: 'playlist'
+      uniqueTag: 'playlist',
+      channelUrl
     });
   }
 
   console.log('now ' + new Date());
 
   return res.send({
-    uniqueTag
+    uniqueTag,
+    channelUrl
   });
 };
