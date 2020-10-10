@@ -231,6 +231,7 @@ function frontendRoutes(app){
   app.get('/media/recentReacts', authMiddleware.adminAuth, recentActionsController.recentReacts);
 
   /** account pages **/
+  app.get('/notifications', accountFrontendController.notification);
   app.get('/notifications/:page', accountFrontendController.notification);
   app.get('/login', accountFrontendController.getLogin);
   app.get('/logout', accountFrontendController.logout);

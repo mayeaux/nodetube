@@ -12,9 +12,6 @@ block content
                     p You have no notifications
 
                 else
-                    h3 Unread Notifications
-                    br
-
                     .center-block.text-center
                         ul.pagination
                             li.page-item
@@ -22,10 +19,14 @@ block content
 
                             each number in numbersArray
                                 li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
-                                    a.page-link(href=`/media/popular/${number}?media=${media}&category=${category}&within=${within}`) #{number}
+                                    a.page-link(href=`/notifications/${number}`) #{number}
 
                             li.page-item
-                                a.page-link(href=`/media/popular/${nextNumber}?media=${media}&category=${category}&within=${within}`) >
+                                a.page-link(href=`/media/popular/${nextNumber}`) >
+
+
+                    h3 Unread Notifications
+                    br
 
                     each notification in notifications
                         if notification.read == false
