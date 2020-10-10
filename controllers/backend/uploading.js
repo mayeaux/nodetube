@@ -162,7 +162,7 @@ function testIfUserRestricted(user, logObject, res){
 function aboutToProcess(res, channelUrl, uniqueTag){
   res.send({
     message: 'ABOUT TO PROCESS',
-    url: `/user/${channelUrl}/${uniqueTag}?autoplay=off`
+    url: `/user/${channelUrl}/${uniqueTag}?u=t`
   });
 }
 
@@ -588,6 +588,7 @@ exports.postFileUpload = async(req, res) => {
 
           uploadLogger.info('Updated subscribed users subscriptions', logObject);
 
+          // upload is complete, send it off to user (aboutToProcess is a misnomer here)
           if(!responseSent){
             responseSent = true;
             aboutToProcess(res, channelUrl, uniqueTag);

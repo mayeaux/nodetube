@@ -82,6 +82,30 @@ script.
 
   console.log('should autoplay ' + autoplay)
 
+  // if user had just uploaded it
+  var dontAutoplayBasedOnUpload = "t" == window.getParameterByName("u");
+
+
+  var viewsAmount = '#{upload.views}';
+
+  viewsAmount = Number(viewsAmount);
+
+  console.log(viewsAmount);
+
+  const shouldNotAutoPlayBasedOnViews = viewsAmount < 5;
+
+  console.log(shouldNotAutoPlayBasedOnViews);
+
+  console.log(dontAutoplayBasedOnUpload)
+
+
+  if (dontAutoplayBasedOnUpload && shouldNotAutoPlayBasedOnViews) {
+    autoplay = false;
+  } else {
+    autoplay = true;
+  }
+
+  console.log('should autoplay ' + autoplay)
 
 
   // Available controls:
