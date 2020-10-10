@@ -1293,6 +1293,33 @@ block extra_footer_js
 
   script.
 
+    const codes = {
+      109: -5,
+      44: -1,
+      46: 1,
+      47: 5
+    }
+
+    $(document).on("keypress", function (e) {
+      const keyCode = e.which;
+
+      for(const code in codes){
+
+
+        if(code == keyCode){
+          const coder = codes[code];
+
+          console.log(coder);
+
+          console.log(code);
+        }
+
+
+      }
+
+      // use e.which
+    });
+
     //      setInterval(function(){
     //        if (document.hasFocus()){
     //          console.log('Tab is active')
