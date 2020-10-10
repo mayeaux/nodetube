@@ -553,6 +553,7 @@ exports.notification = async(req, res) => {
 
   try {
 
+    // TODO: prioritize unread notifications
     const notifications = await Notification.find({
       user: req.user._id
     }).populate('user sender upload react comment').sort({createdAt: -1}).limit(100);
