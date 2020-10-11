@@ -62,7 +62,7 @@ script.
 
     $('.delete-thread-comment-button').on('release click', function (e) {
 
-      var threadComment = $(this).parent().parent().parent();
+      var commentInThread = $(this).parent().parent().parent();
 
       var commentId = $(this).attr('commentId');
 
@@ -77,7 +77,7 @@ script.
         confirmButtonText: 'Delete Comment'
       }).then(function (result) {
         if (result.value) {
-          deleteComment(commentId, threadComment)
+          deleteComment(commentId, commentInThread)
         } else {
           swal.close();
         }
