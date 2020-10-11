@@ -1,6 +1,6 @@
 script.
   $(function(){
-    function deleteComment(commentId, commentThread) {
+    function deleteComment(commentId, comment) {
 
       var upload = '#{upload._id}';
 
@@ -21,7 +21,7 @@ script.
 
           swal('Comment deleted!');
 
-          commentThread.hide();
+          comment.hide();
 
 
           // remove comment
