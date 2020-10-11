@@ -779,7 +779,7 @@ block content
                                                         a(href=`/user/${comment.commenter.channelUrl}` style="color:#d2d2d2;margin-right:5px;") #{comment.commenter.channelName || comment.commenter.channelUrl}
                                                     p.fw(style="display:inline-block;") - #{comment.timeAgo} &nbsp
                                                         if user && !viewingUserIsBlocked
-                                                            a.reply-link(style="cursor:pointer") Reply
+                                                            a.reply-link(style="cursor:pointer") Comment in Thread
                                                         // delete button
                                                         // if uploader or admin or commenter, let them delete comment
                                                         if isUploaderOrAdmin || ( user && comment.commenter._id == user._id )
