@@ -816,7 +816,7 @@ block content
                                                                     // delete button
                                                                     // if uploader, admin or commenter, let them delete comment
                                                                     if isUploaderOrAdmin || ( user && comment.commenter._id == user._id )
-                                                                        a.delete-comment-button(style="margin-left:9px;cursor:pointer;" commentId=comment._id) Delete
+                                                                        a.delete-thread-comment-button(style="margin-left:9px;cursor:pointer;" commentId=responseComment._id) Delete
 
                                                                     // if uploader, allow (un)blocking a user
                                                                     // uploader cannot (un)block themselves
