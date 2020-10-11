@@ -785,9 +785,9 @@ block content
                                                         if isUploaderOrAdmin || ( user && comment.commenter._id == user._id )
                                                             a.delete-comment-thread-button(style="margin-left:9px;cursor:pointer;" commentId=comment._id) Delete
 
-                                                        if isUploader && !comment.commenter.isBlocked
+                                                        if isUploader && !comment.commenter.isBlocked && ( user && comment.commenter._id != user._id )
                                                             a.block-user-button(style="margin-left:9px;cursor:pointer;" blockedusername=comment.commenter.channelUrl) Block User
-                                                        if isUploader && comment.commenter.isBlocked
+                                                        if isUploader && comment.commenter.isBlocked && ( user && comment.commenter._id != user._id )
                                                             a.unblock-user-button(style="margin-left:9px;cursor:pointer;" blockedusername=comment.commenter.channelUrl) Unblock User
 
 
