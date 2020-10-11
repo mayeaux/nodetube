@@ -1,0 +1,34 @@
+extends ../layout
+
+block content
+    h1 Donate
+    p Thank you for donating!
+    form(method='POST' action='')
+        div
+            label(for='name') Name:
+            input#name(type='text' name='name')
+
+        div
+            label(for='email') Email address:
+            input#email(type='email' name='email')
+
+        div
+            label(for='amount') Amount:
+            input#amount(type='number' name='amount' min='10')
+
+        div
+            button(type='submit') Next
+
+
+
+
+    h1 Complete your donation
+    p= 'Thank you, ' + name + ', for your generosity! Please enter your payment details below to complete your donation.'
+    form(method='POST' action='/donate/thanks')
+        div
+            label(for='cardholder-name') Cardholder name:
+            input#cardholder-name(type='text' name='cardholder-name' value=(name))
+        div#card-element
+        div#card-errors
+        div
+            button#card-button(data-secret=(intentSecret))= ('Donate $' + amount)

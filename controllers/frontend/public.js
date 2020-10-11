@@ -251,3 +251,14 @@ exports.getDonate = async(req, res) => {
   });
 };
 
+/**
+ * GET /plus
+ * Plus page
+ */
+exports.getPlus = async(req, res) => {
+
+  res.render('public/plus', {
+    title: 'Plus'
+  });
+};
+
