@@ -1,8 +1,5 @@
 extends ../layout
 
-
-
-
 block content
     style.
         .editLink  {
@@ -75,7 +72,7 @@ block content
                         a(href=`${uploadServer}/${channel.channelUrl}/${channel.customThumbnail}`)
                             img(src=`${uploadServer}/${channel._id}/unique.png` style="border-radius:5px;height:200px;max-width:300px;")
 
-                        //img(src=channel.thumbnailUrl width="120px" height="120px")
+                        //-img(src=channel.thumbnailUrl width="120px" height="120px")
 
                 div(style="height:10px;")
                 if alreadySubbed
@@ -107,15 +104,15 @@ block content
                     if channel.channelDescription
                         p.fw(style="font-size:18px" id="descriptionText") #{channel.channelDescription}
 
-                    //if user && user.role == 'admin'
-                    //    each ip in ips
-                    //        p= ip
+                    //-if user && user.role == 'admin'
+                    //-    each ip in ips
+                    //-        p= ip
 
                     if user && ( user.role == 'admin' || user.role == 'moderator') && channel.status !== 'restricted'
                         br
                         br
                         button.delete-account.btn.btn-danger Delete Account
-                        //button.delete-account.btn.btn-danger Delete Account And Ban Ip
+                        //-button.delete-account.btn.btn-danger Delete Account And Ban Ip
                         if user.role == 'admin'
                             button.delete-ips.btn.btn-danger Delete All Accounts / Ips
 
@@ -124,7 +121,7 @@ block content
                         br
                         h3 ACCOUNT DELETED
                         button.undelete-account.btn.btn-warning Undelete Account
-                        //button.undelete-account.btn.btn-warning Undelete Account And Unban Ip
+                        //-button.undelete-account.btn.btn-warning Undelete Account And Unban Ip
                         if user.role == 'admin'
                             button.delete-ips.btn.btn-warning Undelete All Accounts / Unban All Ips
 
@@ -171,12 +168,9 @@ block content
 
         include ../viewPartials/sensitivityFilterDropdown
 
-
-
-
         include ../viewPartials/channelOverviewPagination
 
-    //UPLOAD DISPLAY SECTION
+    //-UPLOAD DISPLAY SECTION
 
     div.container
         each upload in channel.uploads

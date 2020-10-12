@@ -72,32 +72,32 @@ block content
       cursor: pointer;
     }
 
-  //form(action='https://www.paypal.com/cgi-bin/webscr', method='post')
-  //  // Identify your business so that you can collect the payments.
-  //  input(type='hidden', name='business', value='ceo@pew.tube')
-  //  // Specify a Subscribe button.
-  //  input(type='hidden', name='cmd', value='_xclick-subscriptions')
-  //  // Identify the subscription.
-  //  input(type='hidden', name='item_name', value="Recurring PewTube Account Top-Up")
-  //  //input(type='hidden', name='item_number', value='Purchase Acount Top-Up')
-  //  // Set the terms of the regular subscription.
-  //  input(type='hidden', name='a3', value='5.00')
-  //  input(type='hidden', name='p3', value='1')
-  //  input(type='hidden', name='t3', value='M')
-  //  // Set recurring payments until canceled.
-  //  input(type='hidden', name='src', value='1')
-  //  // Provide a drop-down menu option field.
-  //  input(type='hidden', name='on0', value='Format')
-  //  | Format
-  //  br
-  //  select(name='os0')
-  //    option(value='Select a format') -- Select a format --
-  //    option(value='plaintext') Plain text
-  //    option(value='HTML') HTML
-  //  br
-  //  // Display the payment button.
-  //  input(type='image', name='submit', src='https://www.paypalobjects.com/webstatic/en_US/i/btn/png/btn_subscribe_113x26.png', alt='Subscribe')
-  //  img(alt='', width='1', height='1', src='https://www.paypalobjects.com/en_US/i/scr/pixel.gif')
+  //-form(action='https://www.paypal.com/cgi-bin/webscr', method='post')
+  //-  // Identify your business so that you can collect the payments.
+  //-  input(type='hidden', name='business', value='ceo@pew.tube')
+  //-  // Specify a Subscribe button.
+  //-  input(type='hidden', name='cmd', value='_xclick-subscriptions')
+  //-  // Identify the subscription.
+  //-  input(type='hidden', name='item_name', value="Recurring PewTube Account Top-Up")
+  //-  //input(type='hidden', name='item_number', value='Purchase Acount Top-Up')
+  //-  // Set the terms of the regular subscription.
+  //-  input(type='hidden', name='a3', value='5.00')
+  //-  input(type='hidden', name='p3', value='1')
+  //-  input(type='hidden', name='t3', value='M')
+  //-  // Set recurring payments until canceled.
+  //-  input(type='hidden', name='src', value='1')
+  //-  // Provide a drop-down menu option field.
+  //-  input(type='hidden', name='on0', value='Format')
+  //-  | Format
+  //-  br
+  //-  select(name='os0')
+  //-    option(value='Select a format') -- Select a format --
+  //-    option(value='plaintext') Plain text
+  //-    option(value='HTML') HTML
+  //-  br
+  //-  // Display the payment button.
+  //-  input(type='image', name='submit', src='https://www.paypalobjects.com/webstatic/en_US/i/btn/png/btn_subscribe_113x26.png', alt='Subscribe')
+  //-  img(alt='', width='1', height='1', src='https://www.paypalobjects.com/en_US/i/scr/pixel.gif')
 
 
 
@@ -106,28 +106,28 @@ block content
       div.col-sm-2
         h3.fw
           a(href=`/user/${user.channelUrl}`) Channel Page
-      //div.col-sm-2
-      //  h3.fw
-      //    a(href="/account/viewHistory") View History
-      //div.col-sm-2
-      //  h3.fw
-      //    a(href="/account/reactHistory") React History
-      //div.col-sm-2
-      //      h3.fw
-      //        a(href="/" + `${user.channelUrl}` +  "/playlists") Playlists
+      //-div.col-sm-2
+      //-  h3.fw
+      //-    a(href="/account/viewHistory") View History
+      //-div.col-sm-2
+      //-  h3.fw
+      //-    a(href="/account/reactHistory") React History
+      //-div.col-sm-2
+      //-      h3.fw
+      //-        a(href="/" + `${user.channelUrl}` +  "/playlists") Playlists
       if user && user.privs && user.privs.livestreaming
         div.col-sm-2
           h3.fw
             a(href="/account/livestreaming") Livestreaming
-          //a.livestream-button Livestreaming
-          //a.livestreaming-link(href=`/user/${user.channelUrl}/live/staging`) Livestreaming
-      //div.col-sm-2
-      //  h3.fw Credit ($#{user.credit/100})
-      //div.col-sm-2
-      //  h3.fw Earnings ($#{user.receivedCredit / 100})
-      //div.col-sm-2
-      //  h3
-      //    a(href=`/account/creditHistory`) Credit History
+          //- a.livestream-button Livestreaming
+          //- a.livestreaming-link(href=`/user/${user.channelUrl}/live/staging`) Livestreaming
+      //- div.col-sm-2
+      //-  h3.fw Credit ($#{user.credit/100})
+      //- div.col-sm-2
+      //-  h3.fw Earnings ($#{user.receivedCredit / 100})
+      //- div.col-sm-2
+      //-  h3
+        //-  a(href=`/account/creditHistory`) Credit History
 
     p
     hr
@@ -136,8 +136,8 @@ block content
     h1.fw.text-center Channel Overview
     hr
 
-    // TODO: export a variable plus_enabled if user enables payments
-    // TODO: has to have styled updated with fw
+    //- TODO: export a variable plus_enabled if user enables payments
+    //- TODO: has to have styled updated with fw
     if process.env.PLUS_ENABLED == 'true'
       h2.fw.text-center(style="margin-bottom:16px") #{brandName} Plus
       div.nt-plus.center-div.text-center
@@ -145,12 +145,12 @@ block content
           p Thank you so much for subscribing!
           p Your support makes NewTube possible
           p Please enjoy your new features:
-          //h4 Automatic YouTube backup functionality, unlisted uploads, private uploads, 2GB upload size
+          //-h4 Automatic YouTube backup functionality, unlisted uploads, private uploads, 2GB upload size
           h4 Livestreaming, unlisted uploads, private uploads, 2GB upload size
 
 
         else
-          //  - Unlisted, private and scheduled uploads
+          //-  - Unlisted, private and scheduled uploads
             - Built in monetization via direct payments (COMING SOON)
             - One-click complete YouTube backup (including future uploads)
             - Access to NodeTube Recording Studio (COMING EVENTUALLY)
@@ -174,17 +174,17 @@ block content
           button.stripe-button-el#customButton(type="submit" class="stripe-button-el" style="visibility: visible;")
             span(style="display: block; min-height: 30px;") Buy Now
 
-          //br
-          //br
-          //
-          //button.stripe-button-el#customButton(type="submit" class="stripe-button-el" style="visibility: visible;")
-          //  span(style="display: block; min-height: 30px;") Buy Month Subscription
+          //-br
+          //-br
+          //-
+          //-button.stripe-button-el#customButton(type="submit" class="stripe-button-el" style="visibility: visible;")
+          //-  span(style="display: block; min-height: 30px;") Buy Month Subscription
 
-          //br
-          //br
-          //
-          //button.stripe-button-el#customButton(type="submit" class="stripe-button-el" style="visibility: visible;")
-          //  span(style="display: block; min-height: 30px;") Buy Year Subscription
+          //-br
+          //-br
+          //-
+          //-button.stripe-button-el#customButton(type="submit" class="stripe-button-el" style="visibility: visible;")
+          //-  span(style="display: block; min-height: 30px;") Buy Year Subscription
 
 
         br
@@ -192,7 +192,7 @@ block content
         br
 
 
-      // if you're allowed to
+      //- if you're allowed to
     if  user.plan == 'plus' &&  user.privs.youtubeBackup
       h3.ytBackup
         br
@@ -201,15 +201,15 @@ block content
         h3.fw.text-center(style="") YouTube Backup
         br
 
-        //form
-        //  .form-group
-        //    .col-sm-offset-3.col-sm-7
-        //      a.btn.btn-block.btn-google.btn-social(href='/auth/youtube')
-        //        i.fa.fa-youtube
-        //        | Sign in with YouTube
-        //
-        //br
-        //br
+        //-form
+        //-  .form-group
+        //-    .col-sm-offset-3.col-sm-7
+        //-      a.btn.btn-block.btn-google.btn-social(href='/auth/youtube')
+        //-        i.fa.fa-youtube
+        //-        | Sign in with YouTube
+        //-
+        //-br
+        //-br
 
       if !user.youtubeChannelId
         form.form-horizontal
@@ -250,7 +250,7 @@ block content
       br
       br
 
-    //form.upload-form(role="form" method="POST" enctype="multipart/form-data")
+    //-form.upload-form(role="form" method="POST" enctype="multipart/form-data")
     form.update-user-details-form.form-horizontal(role="form" method="POST" enctype="multipart/form-data" action=`${thumbnailServer}/account/profile`)
       input(type="hidden" name="uploadToken" value=`${user.uploadToken}`)
       .form-group
@@ -268,20 +268,20 @@ block content
         .col-sm-7
           textarea(id="description" name="description" maxlength='500' rows="7" cols="70" style="max-width:100%") #{user.channelDescription}
 
-      // UPLOAD FORM IF NO THUMBNAIL
+      //- UPLOAD FORM IF NO THUMBNAIL
       if !user.thumbnailUrl
         .form-group
           label.fw.col-sm-3.control-label(for='channelName' style="font-size:17px;margin-top:-5px;") Channel Thumbnail
           .col-sm-7
-            // FILE INPUT BUTTON
+            //- FILE INPUT BUTTON
             input.center-block.text-center.fw(class="upload-file" data-max-size="500000000" type="file" name="filetoupload" accept="image/*" style="margin:0;margin-bottom:3px;border:0px;")
 
-        //div.form-group
-        //  div.col-sm-3.
-        //  p.col-sm-7(style="white-space:pre-line;margin-top:-15px;margin-bottom:-1px;").
-        //    Thumbnail dimensions:
-        //    width: up to 302px,
-        //    height: 168px
+        //-div.form-group
+        //-  div.col-sm-3.
+        //-  p.col-sm-7(style="white-space:pre-line;margin-top:-15px;margin-bottom:-1px;").
+        //-    Thumbnail dimensions:
+        //-    width: up to 302px,
+        //-    height: 168px
 
       .form-group
         .col-sm-offset-3.col-sm-4
@@ -290,7 +290,7 @@ block content
             | Update Profile
 
 
-    // DISPLAY THUMBNAIL IF IT EXISTS
+    //- DISPLAY THUMBNAIL IF IT EXISTS
 
     if user.thumbnailUrl || user.customThumbnail
       br
@@ -299,7 +299,7 @@ block content
 
         h2.fw.text-center Channel Thumbnail
         br
-        // TODO: Sub out thumbnail here
+        //- TODO: Sub out thumbnail here
 
         if user.customThumbnail
           a(href=`${uploadServer}/${user.channelUrl}/${user.customThumbnail}`)
@@ -318,11 +318,11 @@ block content
             i.fa.fa-pencil
             | Delete
 
-    // EMAIL FUNCTIONALITY
+    //- EMAIL FUNCTIONALITY
 
     if verifyEmailFunctionalityOn
 
-      // IF USER HAS CONFIRMED EMAIL
+      //- IF USER HAS CONFIRMED EMAIL
       if user.email && user.emailConfirmed
         h2.fw.text-center Confirmed Email
           br
@@ -333,7 +333,7 @@ block content
             .col-sm-7
               h5 #{user.email}
 
-      // IS USER HAS PENDING CONFIRMATION EMAIL
+      //- IS USER HAS PENDING CONFIRMATION EMAIL
       if user.email && !user.emailConfirmed
         h3.fw.text-center Save Email
           br
@@ -349,7 +349,7 @@ block content
                 i.fa.fa-envelope
                 | Resend Confirmation Email
 
-      // IF USER HAS NOT SAVED EMAIL
+      //- IF USER HAS NOT SAVED EMAIL
       if !user.email
         h3.fw.text-center Save Email
           br
@@ -466,7 +466,7 @@ block content
         swal('Please stream to rtmp://broadcast.nodetube.live/live/' + username  + '?key=' + uploadToken + ' \n\n You will be live at https://live.nodetube.live/User/' + username)
       })
 
-  // stripe functionality
+  //- stripe functionality
   if process.env.PLUS_ENABLED == 'true'
     script(src='https://checkout.stripe.com/checkout.js')
 

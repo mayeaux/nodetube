@@ -199,17 +199,11 @@ style.
         display: inline-block;
     }
 
-
-
-
-
-
-
-// LEFT SIDEBAR
+//- LEFT SIDEBAR
 #mySidebar.sidebar(style="text-align:left;margin-left:-2px;overflow-y: hidden;border-radius:6px;z-index:10")
     div(style="margin-top:27px")
 
-    // user signed in but not paid, prompt to pay
+    //- user signed in but not paid, prompt to pay
     if user && user.plan == 'free'
         a(href='/account?to=nt-plus' style="color:#007bff;")
 
@@ -218,15 +212,15 @@ style.
 
 
     else if user && user.plan !== 'free'
-        // dont do anything, user is signed in and free
+        //- dont do anything, user is signed in and free
     else
 
-        // user needs to login
+        //- user needs to login
         a(href='/login' style="color:#007bff;")
             i.fa.fa-sign-in(aria-hidden='true')
             p.ib &nbsp Sign In &nbsp
 
-        // user needs to login
+        //- user needs to login
         a(href='/signup' style="color:#007bff;")
             i.fa.fa-user-plus(aria-hidden='true')
             p.ib &nbsp Sign Up &nbsp
@@ -234,28 +228,28 @@ style.
         hr(style="margin-top:0px")
 
 
-        //a(href='/newtube.app/paypal' style="color:#007bff;") Sign Up
+        //-a(href='/newtube.app/paypal' style="color:#007bff;") Sign Up
 
 
-    // link to popular by categories
+    //- link to popular by categories
     a(href='/media/popular/1?media=all&category=overview&within=24hour' style="")
         i.ib.fas.fa-fire-alt
 
         p.ib &nbsp Popular - Categories
 
-    // link to popular uncategorized
+    //- link to popular uncategorized
     a(href='/media/popular/1?media=all&category=all&within=24hour' style="")
         i.ib.fas.fa-fire-alt
 
         p.ib &nbsp Popular - All Uploads
 
-    // recent by category
+    //- recent by category
     a(href='/media/recent?category=overview' style="")
 
         i.ib.fas.fa-clock
         p.ib &nbsp Recent - Categories
 
-    // recent uncategorized
+    //- recent uncategorized
     a(href='/media/recent?category=all' style="")
         i.ib.i.fas.fa-clock
         p.ib &nbsp Recent - All Uploads
@@ -266,12 +260,12 @@ style.
 
 
     hr
-    // turn off until implemented
-    //.nightMode(style="white-space:nowrap")
-    //    a(href="#" style="display:inline-block;") Night Mode
-    //    label.switch
-    //        input(type='checkbox')
-    //        span.slider.round
+    //- turn off until implemented
+    //-.nightMode(style="white-space:nowrap")
+    //-    a(href="#" style="display:inline-block;") Night Mode
+    //-    label.switch
+    //-        input(type='checkbox')
+    //-        span.slider.round
 
     a(href="/about")
         i.ib.fa.fa-question-circle(aria-hidden='true')
@@ -289,7 +283,7 @@ style.
             p.ib &nbsp Sign Out &nbsp
 
 
-// END LEFT SIDEBAR
+//- END LEFT SIDEBAR
 
 
 
@@ -300,10 +294,10 @@ style.
 
 
 
-// RIGHT SIDE DROPDOWN WITH USER RELATED FUNCTIONALITY
+//- RIGHT SIDE DROPDOWN WITH USER RELATED FUNCTIONALITY
 .accountDropdown#accountDropdown(style="display:none;text-align:left;border: 1px solid #cec0c0;box-shadow:-8px -9px 10px -10px rgba(0,0,0,0.51);border-radius:3px;")
     .userDetails
-        // USER SECTION
+        //- USER SECTION
         if user
             a(href='/user/' + user.channelUrl)
                 if user.customThumbnail
@@ -317,16 +311,16 @@ style.
 
 
 
-        // if there's no user, prompt them to sign up,
+        //- if there's no user, prompt them to sign up,
         if !user
             a(href="/signup" style="color:#007bff")
                 h7(style="position: absolute;top: 60px;right: 105px;font-size: 13px;")
                     i.ib.fa.fa-sign-in
                     p.ib Sign Up &nbsp
-            // otherwise prompt them to upgrade to plus
+            //- otherwise prompt them to upgrade to plus
         else
 
-            // if the user has a free plan, prompt them to get plus
+            //- if the user has a free plan, prompt them to get plus
             if user && user.plan == 'free'
                 a(href="/account?to=nt-plus" style="color:#007bff")
                     h7.ib(style="position: absolute;top: 70px;right: 78px;font-size: 13px;")
@@ -334,7 +328,7 @@ style.
                         p.ib  &nbsp NewTube Plus
 
 
-            // support newtube link
+            //- support newtube link
             a(href="https://newtube.app/paypal" style="color:#007bff")
 
                 if user && user.plan == 'plus'
@@ -350,7 +344,7 @@ style.
 
 
     if user && user.plan == 'plus'
-        // other pages section
+        //- other pages section
         div(style="padding-top:27px")
     else
         div(style="padding-top:57px")
@@ -391,8 +385,8 @@ style.
 
         hr(style="margin-top:10px;margin-bottom:10px")
 
-        //a(href='#') Help
-        //a(href='/logout') Sign out
+        //-a(href='#') Help
+        //-a(href='/logout') Sign out
 
         a(href='/logout/')
             i.ib.fa.fa-sign-in

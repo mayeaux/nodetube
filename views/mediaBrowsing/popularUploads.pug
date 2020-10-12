@@ -3,14 +3,14 @@ extends ../layout
 block content
 
 
-    // the element with the anchor links for 'Last Hour' , 'Last Day', etc
+    //- the element with the anchor links for 'Last Hour' , 'Last Day', etc
     div.container
         include ../viewPartials/popularUploadsNavbar
 
-    // show view amount and time period like: Last Day (294)
+    //- show view amount and time period like: Last Day (294)
     h2.fw.center-block.text-center #{englishString} (#{abbreviateNumber(viewAmountInPeriod)})
 
-    // it's a pretty big change so turn off for now
+    //- it's a pretty big change so turn off for now
     if category & 1 == 2
         h3.center-block.text-center Views On This Page: (#{viewsOnThisPage})
 
@@ -23,11 +23,11 @@ block content
 
             br
 
-            //br
+            //-br
 
-            // Non-video stuff (orderBy, sensitivity dropdowns,
+            //- Non-video stuff (orderBy, sensitivity dropdowns,
 
-            // CATEGORY DROPDOWN
+            //- CATEGORY DROPDOWN
             div.search-upload-buttons-container
                 include ../viewPartials/categoryDropdown
 
@@ -41,7 +41,7 @@ block content
 
         br
         div.uploads
-            // CATEGORY OVERVIEW PAGE IF NOT A CATEGORY
+            //- CATEGORY OVERVIEW PAGE IF NOT A CATEGORY
             if !isACategory || category == 'overview'
                 include ../viewPartials/categoryOverviews
 
@@ -59,10 +59,10 @@ block content
 
                         include ../viewPartials/uploadDetails
 
-                        // include ../viewPartials/uploadDetailsPopular
+                        //- include ../viewPartials/uploadDetailsPopular
 
 
-            //include ../viewPartials/adminSensitivityButtons
+            //-include ../viewPartials/adminSensitivityButtons
 
 
     if uploads
@@ -173,7 +173,7 @@ block content
 
     include ../viewPartials/changeSensitivityFilterJs
 
-    //script.
-    //  balanceText();
+    //-script.
+    //-  balanceText();
 
     include ../viewPartials/mouseOverJavascript

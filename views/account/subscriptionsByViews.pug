@@ -20,10 +20,10 @@ block content
                 div.col-sm-4(style="text-align:center;height:360px")
                     a.title-anchor(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}`)
                         if upload.customThumbnailUrl
-                            // TODO: Sub out URL here
+                            //- TODO: Sub out URL here
                             img.preview-image(src=upload.customThumbnailUrl)
 
-                        // TODO: Sub out URL here
+                        //- TODO: Sub out URL here
                         else if upload.fileType == 'video' && upload.thumbnailUrl
                             img.preview-image(src=upload.thumbnailUrl)
                         else if upload.fileType == 'video' && !upload.thumbnailUrl
@@ -42,7 +42,7 @@ block content
                     div.upload-details
                         div.views
                             p.views-text #{upload.legitViewAmount} Views
-                            // capitalize media type
+                            //- capitalize media type
                         div.uploaded-by #{upload.fileType.charAt(0).toUpperCase() + upload.fileType.slice(1)} uploaded
                             | &nbsp#{upload.timeAgo} by
                             a.upload-user-text(href=`/user/${upload.uploader.channelUrl}`)

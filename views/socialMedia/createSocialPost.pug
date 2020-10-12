@@ -6,13 +6,13 @@ block content
     .content
         form.form-horizontal(id='createSocialPostForm', method='POST')
             input(type='hidden', name='_csrf', value=_csrf)
-            //Channel URL
+            //-Channel URL
             .form-group
                 label.col-sm-3.control-label(for='uniqueTag') Unique Tag Or Url
                 .col-sm-7
                     input(type='text', name='uniqueTag', id='uniqueTag' style="width:400px;")
 
-            //Message for Channel
+            //-Message for Channel
             .form-group
                 label.col-sm-3.control-label(for='distance') Distance (long, short or new)
                 .col-sm-7

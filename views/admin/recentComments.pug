@@ -20,7 +20,7 @@ block content
 
         div.center-block.text-center.col-sm-12
             h1 Recent Comments
-            // TOP PAGINATION
+            //- TOP PAGINATION
             nav.center-block.text-center(aria-label='Page navigation example')
                 ul.pagination
                     li.page-item
@@ -58,15 +58,15 @@ block content
                                     else if comment.upload.fileType == 'unknown'
                                         img.preview-image(src='/no_img.png')
 
-                                    //div
-                                    //    p.upload-title-text.twentysix #{comment.upload.title}
-                                    //br
+                                    //-div
+                                    //-    p.upload-title-text.twentysix #{comment.upload.title}
+                                    //-br
 
                                     a.title-anchor(href=`/user/${comment.upload.uploader.channelUrl}/${comment.upload.uniqueTag}`)
                                       div
                                           p.upload-title-text #{comment.upload.title}
 
-                                // comment text
+                                //- comment text
                                 div(style="height:93px;overflow:hidden;")
                                     p(style="width:80%;margin:0 auto;margin-top:10px;") #{comment.text} &nbsp  -#{comment.commenter.channelName || comment.commenter.channelUrl}
 

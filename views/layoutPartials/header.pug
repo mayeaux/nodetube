@@ -292,16 +292,12 @@ style.
   .search-uploads-button:hover {
     background-color: #212121 !important;
   }
-  
-  
-
-
 
 .container.headerContainer.fixed-top(style="opacity:1;background-color:white;margin:0;max-width:100%;padding:0")
-  //.search1
-  //    form.search-form
-  //        input(type='text', placeholder='Search for books, authors, categories and more..')
-  //        input(type='submit', value='Submit')
+  //-.search1
+  //-    form.search-form
+  //-        input(type='text', placeholder='Search for books, authors, categories and more..')
+  //-        input(type='submit', value='Submit')
 
 
 
@@ -326,9 +322,9 @@ style.
       button.search-uploads-button.searchButton(style="right:-6px;background-color:black;")
         i.fas.fa-search.searchIcon
 
-    // UPGRADE ICON
-    //a(href="#" style="position: absolute;top: 21px;right: 325px;")
-    //    h7(style="font-size:15px") Upgrade
+    //- UPGRADE ICON
+    //-a(href="#" style="position: absolute;top: 21px;right: 325px;")
+    //-    h7(style="font-size:15px") Upgrade
 
     if !user
 
@@ -338,9 +334,9 @@ style.
 
 
 
-      //a.signInAnchor(href="/random" style="background-color:white;right:121px;")
-      //  div.signInDiv(style="")
-      //    i.fas.fa-dice
+      //-a.signInAnchor(href="/random" style="background-color:white;right:121px;")
+      //-  div.signInDiv(style="")
+      //-    i.fas.fa-dice
 
       a.signInAnchor(href="/login" style="")
         div.signInDiv(style="background-color: #313131;border: 1px solid #848484;")
@@ -353,11 +349,11 @@ style.
 
         i.fas.fa-random(aria-hidden="true" style="cursor:pointer;color:#b9b9b9;font-size:32px;margin-top:3px;margin-right:5px;")
 
-        //img(src="/images/random.png" style="height:39px;margin-top:2px;opacity:0.9;")
+        //-img(src="/images/random.png" style="height:39px;margin-top:2px;opacity:0.9;")
 
-      // BELL ICON
-      //a(href="#" style="position: absolute;top: 19px;right: 280px;")
-      //    img(src="/bell-angle.png" style="width:29px;display:inline-block;margin-left:15px;")
+      //- BELL ICON
+      //-a(href="#" style="position: absolute;top: 19px;right: 280px;")
+      //-    img(src="/bell-angle.png" style="width:29px;display:inline-block;margin-left:15px;")
 
 
       a(href="/upload" style="position: absolute;top: 13px;right: 79px;")
@@ -369,8 +365,8 @@ style.
         div.postIcon
           i.fas.fa-upload.uploadButton(style="top: 11px;right: -6px;display:none;")
 
-        //div.postIcon(style="display:none;" data-toggle='modal', data-target='#exampleModal')
-        //  img(src="/images/whiteDollarIcon.png" style="width:25px;margin-top:9px;")
+        //-div.postIcon(style="display:none;" data-toggle='modal', data-target='#exampleModal')
+        //-  img(src="/images/whiteDollarIcon.png" style="width:25px;margin-top:9px;")
           //h7(style="display:inline-block;color:black;") Post
 
         a.userImage(href="#" style="position: absolute;top: 20px;right: 29px;")
@@ -489,8 +485,8 @@ if !user
 
     })
 
-// hide the header when you scroll down
-// first I have to make it fixed to the top
+//- hide the header when you scroll down
+//- first I have to make it fixed to the top
 script.
   $(document).ready(function () {
     // grab an element
@@ -508,8 +504,6 @@ script.
 
 script.
   $(document).ready(function () {
-
-
 
     console.log('lets')
 

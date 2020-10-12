@@ -8,7 +8,7 @@ block content
         hr
         each user in users
             div.col-sm-4(style="text-align:center;height:450px;")
-                // NEW CHANNEL UPLOAD FORMAT
+                //- NEW CHANNEL UPLOAD FORMAT
 
                 a(href=`/user/${user.channelUrl}`)
                     h4 Channel Name: #{user.channelName}
@@ -23,9 +23,9 @@ block content
                         form(action="/admin/users" method="POST")
                             input(type='hidden', name='_csrf', value=_csrf)
                             input(type='hidden', name='user', value=`${user._id}`)
-                            //button.btn.btn-success(name="userChangeValue" value="approve" type="submit") Approve
-                            //br
-                            //br
+                            //-button.btn.btn-success(name="userChangeValue" value="approve" type="submit") Approve
+                            //-br
+                            //-br
                             button.btn.btn-primary(name="userChangeValue" value="trustUser" type="submit" ) Trust User
                             br
                             br
