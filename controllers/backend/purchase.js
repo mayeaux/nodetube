@@ -34,6 +34,64 @@ exports.purchasePlus = async function(req, res){
 
 };
 
+// HIT FROM THE ACCOUNT PAGE
+exports.donation = async function(req, res){
+
+  console.log(req.body);
+
+  try {
+    const userDescriptor = req.user.channelName || req.user.channelUrl;
+
+    // what is this token?
+    // it's passed back from stripe after getting hit via the frontend
+
+    const customer = await stripe.createCustomerWithToken(req.body.token.id, userDescriptor);
+    console.log(`Customer created: ${customer.id}`);
+
+    const subscription = await stripe.subscribeUser(customer.id, planName || `${brandName}Plus`);
+    console.log(`Subsription created: ${subscription.id}`);
+
+    const updatedUser = await subscriptions.grantUserPlus(req.user, customer.id);
+    console.log(`UPDATED ${req.user.channelUrl} TO PLUS`);
+    console.log(updatedUser.privs);
+
+    res.send('success');
+  } catch(err){
+    console.log(err);
+    res.send('failure');
+  }
+
+};
+
+// HIT FROM THE ACCOUNT PAGE
+exports.purchasePlus = async function(req, res){
+
+  console.log(req.body);
+
+  try {
+    const userDescriptor = req.user.channelName || req.user.channelUrl;
+
+    // what is this token?
+    // it's passed back from stripe after getting hit via the frontend
+
+    const customer = await stripe.createCustomerWithToken(req.body.token.id, userDescriptor);
+    console.log(`Customer created: ${customer.id}`);
+
+    const subscription = await stripe.subscribeUser(customer.id, planName || `${brandName}Plus`);
+    console.log(`Subsription created: ${subscription.id}`);
+
+    const updatedUser = await subscriptions.grantUserPlus(req.user, customer.id);
+    console.log(`UPDATED ${req.user.channelUrl} TO PLUS`);
+    console.log(updatedUser.privs);
+
+    res.send('success');
+  } catch(err){
+    console.log(err);
+    res.send('failure');
+  }
+
+};
+
 exports.purchaseCredits = async function(req, res){
 
   try {

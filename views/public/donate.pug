@@ -1,34 +1,118 @@
 extends ../layout
 
 block content
-    h1 Donate
-    p Thank you for donating!
-    form(method='POST' action='')
-        div
-            label(for='name') Name:
-            input#name(type='text' name='name')
-
-        div
-            label(for='email') Email address:
-            input#email(type='email' name='email')
-
-        div
-            label(for='amount') Amount:
-            input#amount(type='number' name='amount' min='10')
-
-        div
-            button(type='submit') Next
+    br
+    div.center-block.text-center.col-sm-12.pageContainer(style="overflow-x: hidden;margin-top:-21px;")
 
 
+        h1 Donate
+
+        h5 Please give me lots of money, I've made it quite convenient
+
+        h4 Here are some selections you can do:
+
+        h3 Five Dollar
+
+        h3 Twenty Five Dollar
+
+        h3 Fifty Dollar
+
+        h3 250 Dollar
+
+        h3 Enter In Your Own Amount:
+            form
+                input(type="text" style="width:100px")
+                text(type="input")
+                button#customButton.btn-btn-md.btn-success(type="submit") Donate
 
 
-    h1 Complete your donation
-    p= 'Thank you, ' + name + ', for your generosity! Please enter your payment details below to complete your donation.'
-    form(method='POST' action='/donate/thanks')
-        div
-            label(for='cardholder-name') Cardholder name:
-            input#cardholder-name(type='text' name='cardholder-name' value=(name))
-        div#card-element
-        div#card-errors
-        div
-            button#card-button(data-secret=(intentSecret))= ('Donate $' + amount)
+    //p Thank you for donating!
+    //form(method='POST' action='')
+    //    div
+    //        label(for='name') Name:
+    //        input#name(type='text' name='name')
+    //
+    //    div
+    //        label(for='email') Email address:
+    //        input#email(type='email' name='email')
+    //
+    //    div
+    //        label(for='amount') Amount:
+    //        input#amount(type='number' name='amount' min='10')
+    //
+    //    div
+    //        button(type='submit') Next
+    //
+    //
+    //
+    //
+    //h1 Complete your donation
+    //p= 'Thank you, ' + name + ', for your generosity! Please enter your payment details below to complete your donation.'
+    //form(method='POST' action='/donate/thanks')
+    //    div
+    //        label(for='cardholder-name') Cardholder name:
+    //        input#cardholder-name(type='text' name='cardholder-name' value=(name))
+    //    div#card-element
+    //    div#card-errors
+    //    div
+    //        button#card-button(data-secret=(intentSecret))= ('Donate $' + amount)
+
+    script(src='https://checkout.stripe.com/checkout.js')
+
+    script.
+      var stripeToken = '#{stripeToken}'
+
+      var csrf = '#{_csrf}'
+
+      /** CONFIGURE STRIPE HANDLER **/
+
+      // accepts a callback that is run when a token is received
+      var handler = StripeCheckout.configure({
+        key: stripeToken,
+        image: 'https://newtube.app/images/full_size_logo.png',
+        locale: 'auto',
+        // bitcoin: true,
+        token: function (token) {
+
+          var data = {
+            _csrf: csrf,
+            token
+          }
+
+          $.ajax({
+            type: 'POST',
+            // what is at this backend?
+            url: `/api/purchase/plus`,
+            data,
+            success: function (data) {
+              if (data == 'success') {
+                window.location = "/account?to=nt-plus";
+              } else {
+                swal("Something didn't work, please contact NodeTube at ceo@nodetube.live or via the widget in the bottom right corner")
+              }
+              console.log(data);
+            },
+            error: function (err) {
+              console.log(err);
+            }
+          });
+        }
+      });
+
+      // CLICK HANDLER
+      $('#customButton').click(function (e) {
+        e.preventDefault();
+
+        // Open Checkout with further options:
+        handler.open({
+          name: 'NewTube.',
+          description: 'One Month Of NewTube Plus',
+          amount: 495,
+          allowRememberMe: false
+          // email: "customer@email.com"
+        });
+      });
+      // Close Checkout on page navigation:
+      window.addEventListener('popstate', function () {
+        handler.close();
+      });
