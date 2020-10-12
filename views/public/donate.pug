@@ -5,25 +5,18 @@ block content
     div.center-block.text-center.col-sm-12.pageContainer(style="overflow-x: hidden;margin-top:-21px;")
 
 
-        h1 Donate
+        h1.fw(style="margin-bottom:21px") Donate
 
-        h5 Please give me lots of money, I've made it quite convenient
+        h5.fw(style="font-size:18px") The donation is done securely through Stripe.
+        h5.fw(style="font-size:18px") NewTube never sees your card info, it goes directly to Stripe through their technology
+        br
 
-        h4 Here are some selections you can do:
-
-        h3 Five Dollar
-
-        h3 Twenty Five Dollar
-
-        h3 Fifty Dollar
-
-        h3 250 Dollar
-
-        h3 Enter In Your Own Amount:
+        h3.fw Enter Donation Amount (USD):
+        h3.fw
             form
-                input(type="text" style="width:100px")
-                text(type="input")
-                button#customButton.btn-btn-md.btn-success(type="submit") Donate
+                input.donationAmount.decimal(type="number" style="width:120px;height:36px;border-radius:4px;color:black;" min='5')
+                br
+                button#customButton.btn-btn-md.btn-success(type="submit" style="margin-top:2px;border-radius:4px;") Donate
 
 
     //p Thank you for donating!
@@ -60,6 +53,21 @@ block content
     script(src='https://checkout.stripe.com/checkout.js')
 
     script.
+      $('.decimal').keypress(function (e) {
+        var character = String.fromCharCode(e.keyCode)
+        var newValue = this.value + character;
+        if (isNaN(newValue) || hasDecimalPlace(newValue, 3)) {
+          e.preventDefault();
+          return false;
+        }
+      });
+
+      function hasDecimalPlace(value, x) {
+        var pointIndex = value.indexOf('.');
+        return pointIndex >= 0 && pointIndex < value.length - x;
+      }
+
+
       var stripeToken = '#{stripeToken}'
 
       var csrf = '#{_csrf}'
@@ -74,19 +82,27 @@ block content
         // bitcoin: true,
         token: function (token) {
 
+          console.log(token);
+
+          // TOOD: not secure, let's see what's on the token
+          const amountInDollars = $('.donationAmount')[0].value;
+
+
           var data = {
             _csrf: csrf,
-            token
+            token,
+            amount: amountInDollars
           }
+
 
           $.ajax({
             type: 'POST',
             // what is at this backend?
-            url: `/api/purchase/plus`,
+            url: `/api/purchase/donation`,
             data,
             success: function (data) {
               if (data == 'success') {
-                window.location = "/account?to=nt-plus";
+                // window.location = "/account?to=nt-plus";
               } else {
                 swal("Something didn't work, please contact NodeTube at ceo@nodetube.live or via the widget in the bottom right corner")
               }
@@ -103,11 +119,18 @@ block content
       $('#customButton').click(function (e) {
         e.preventDefault();
 
+        const amount = $('.donationAmount')[0].value;
+
+        console.log(amount);
+
+        const userEmail = '#{user.email}';
+        // TODO: check if it's a valid email, since we're using a dropin atm
+
         // Open Checkout with further options:
         handler.open({
-          name: 'NewTube.',
-          description: 'One Month Of NewTube Plus',
-          amount: 495,
+          name: 'NewTube',
+          description: 'Donation Of $' + amount +  ' To NewTube',
+          amount: amount * 100,
           allowRememberMe: false
           // email: "customer@email.com"
         });

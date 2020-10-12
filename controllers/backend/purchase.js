@@ -39,6 +39,8 @@ exports.donation = async function(req, res){
 
   console.log(req.body);
 
+  const amountInDollars = req.body.amount;
+
   try {
     const userDescriptor = req.user.channelName || req.user.channelUrl;
 
@@ -48,12 +50,10 @@ exports.donation = async function(req, res){
     const customer = await stripe.createCustomerWithToken(req.body.token.id, userDescriptor);
     console.log(`Customer created: ${customer.id}`);
 
-    const subscription = await stripe.subscribeUser(customer.id, planName || `${brandName}Plus`);
-    console.log(`Subsription created: ${subscription.id}`);
+    const purchase = await stripe.makePurchase(customer.id, amountInDollars * 100);
+    console.log(`Purchase made: ${purchase}`);
+    console.log(purchase);
 
-    const updatedUser = await subscriptions.grantUserPlus(req.user, customer.id);
-    console.log(`UPDATED ${req.user.channelUrl} TO PLUS`);
-    console.log(updatedUser.privs);
 
     res.send('success');
   } catch(err){
