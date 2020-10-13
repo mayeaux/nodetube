@@ -402,7 +402,7 @@ block content
 
                 video#media_player.display-element(playsinline poster=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;")
                     // to
-                    source.video-source(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`, type='video/mp4')
+                    source.video-source(src=upload.uploadUrl || `${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`, type='video/mp4')
 
                     // TODO: load captions programatically
                     if upload.webVTTPath
@@ -418,11 +418,11 @@ block content
                 audio#media_player.my_audio(playsinline style="width:80%;" controls='', preload='none')
 
                     if upload.fileExtension == '.m4a'
-                        source(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`, type='audio/mp4')
+                        source(src=upload.uploadUrl || `${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`, type='audio/mp4')
                     if upload.fileExtension == '.oga' || upload.fileExtension == '.ogg'
-                        source(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`, type='audio/ogg')
+                        source(src=upload.uploadUrl || `${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`, type='audio/ogg')
                     else
-                        source(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`, type='audio/mp3')
+                        source(srcupload.uploadUrl || =`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`, type='audio/mp3')
 
 
                     //source(src=upload.uploadUrl, type='audio/mp3')
@@ -431,7 +431,7 @@ block content
         else if upload.fileType === 'image'
             div.display-div(style="")
                 a(href=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`)
-                    img.display-element(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="border-radius:13px;max-width:80%;min-height:50%;max-height:620px;")
+                    img.display-element(src=upload.uploadUrl || `${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="border-radius:13px;max-width:80%;min-height:50%;max-height:620px;")
 
 
         // add margin-top 120 on margin-top:120px;"
