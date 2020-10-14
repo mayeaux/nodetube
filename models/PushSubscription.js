@@ -6,7 +6,10 @@ require('javascript-time-ago/intl-messageformat-global');
 require('intl-messageformat/dist/locale-data/en');
 const timeAgoEnglish = new javascriptTimeAgo('en-US');
 
-const subscriptionSchema = new mongoose.Schema({
+
+// FIND THE USER WITH ACTIVE SUBSCRIPTIONS, SCROLL THROUGH THEIR PUSH ENDPOINTS AND PUSH TO THEM
+
+const pushSubscriptionSchema = new mongoose.Schema({
   subscribingUser: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -34,11 +37,11 @@ const subscriptionSchema = new mongoose.Schema({
   }
 });
 
-subscriptionSchema.virtual('timeAgo').get(function(){
+pushSubscriptionSchema.virtual('timeAgo').get(function(){
   return timeAgoEnglish.format( new Date(this.createdAt) );
 });
 
-const Subscription = mongoose.model('Subscription', subscriptionSchema);
+const PushSubscription = mongoose.model('Subscription', pushSubscriptionSchema);
 
-module.exports = Subscription;
+module.exports = PushSubscription;
 
