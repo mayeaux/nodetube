@@ -62,20 +62,20 @@ block content
 
       var csrf = '#{_csrf}'
 
-      /** CONFIGURE STRIPE HANDLER **/
+      //- /** CONFIGURE STRIPE HANDLER **/
 
-      // accepts a callback that is run when a token is received
+      //- accepts a callback that is run when a token is received
       var handler = StripeCheckout.configure({
         key: stripeToken,
         image: 'https://newtube.app/images/full_size_logo.png',
         locale: 'auto',
-        // bitcoin: true,
+        //- bitcoin: true,
         token: function (token) {
 
           console.log(token);
-          // TODO: have to do some intermediary frontend thing (Your transaction is processing, waiting to hear back from Stripe...)
+          //- TODO: have to do some intermediary frontend thing (Your transaction is processing, waiting to hear back from Stripe...)
 
-          // TOOD: not secure, let's see what's on the token
+          //- TOOD: not secure, let's see what's on the token
           const amountInDollars = $('.donationAmount')[0].value;
 
 
@@ -88,12 +88,12 @@ block content
 
           $.ajax({
             type: 'POST',
-            // what is at this backend?
+            //- what is at this backend?
             url: `/api/purchase/donation`,
             data,
             success: function (data) {
               if (data == 'success') {
-                // window.location = "/account?to=nt-plus";
+                //- window.location = "/account?to=nt-plus";
                 $('.thankYouDiv').show()
                 $('.stillToDonate').hide()
 
@@ -109,7 +109,7 @@ block content
         }
       });
 
-      // CLICK HANDLER
+      //- CLICK HANDLER
       $('#customButton').click(function (e) {
         e.preventDefault();
 
@@ -118,18 +118,18 @@ block content
         console.log(amount);
 
         const userEmail = '#{user.email}';
-        // TODO: check if it's a valid email, since we're using a dropin atm
+        //- TODO: check if it's a valid email, since we're using a dropin atm
 
-        // Open Checkout with further options:
+        //- Open Checkout with further options:
         handler.open({
           name: 'NewTube',
           description: 'Donation Of $' + amount +  ' To NewTube',
           amount: amount * 100,
           allowRememberMe: false
-          // email: "customer@email.com"
+          //- email: "customer@email.com"
         });
       });
-      // Close Checkout on page navigation:
+      //- Close Checkout on page navigation:
       window.addEventListener('popstate', function () {
         handler.close();
       });

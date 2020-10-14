@@ -8,16 +8,16 @@ block content
         hr
         each upload in uploads
             div.col-sm-4(style="text-align:center;height:500px;")
-                // NEW CHANNEL UPLOAD FORMAT
+                //- NEW CHANNEL UPLOAD FORMAT
 
                 a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}`)
-                    // TODO: pretty sure this route is broken
+                    //- TODO: pretty sure this route is broken
 
                     include ../viewPartials/uploadThumbnail
 
 
                 div.upload-details
-                    // capitalize media type
+                    //- capitalize media type
                     div.uploaded-by #{upload.fileType.charAt(0).toUpperCase() + upload.fileType.slice(1)} uploaded by
                         a(href=`/user/${upload.uploader.channelUrl}`)
                             p(style="font-size:16px") #{upload.uploader.channelName}

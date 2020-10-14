@@ -30,35 +30,35 @@ block content
 
                     each notification in notifications
                         if notification.read == false
-                            // react notification
+                            //- react notification
                             if notification.action == 'react' && notification.react
                                 p(style="display:inline") A user has reacted with a #{notification.react.react} to your #{notification.upload.fileType} &nbsp
                                     a(href=`/user/${user.channelUrl}/${notification.upload.uniqueTag}`) #{notification.upload.title}
                                     p(style="display:inline") &nbsp #{notification.timeAgo}
 
-                                // comment notification
+                                //- comment notification
                             else if notification.action == 'comment' && notification.comment && !notification.comment.inResponseTo
                                 p(style="display:inline") #{notification.sender.channelName || notification.sender.channelUrl} has commented "#{notification.comment.text}" on your #{notification.upload.fileType} &nbsp
                                     a(href=`/user/${user.channelUrl}/${notification.upload.uniqueTag}`) #{notification.upload.title}
                                     p(style="display:inline") &nbsp #{notification.timeAgo}
 
-                                // response notification
+                                //- response notification
                             else if notification.action == 'comment' && notification.comment && notification.comment.inResponseTo
                                 p(style="display:inline") #{notification.sender.channelName || notification.sender.channelUrl} has responded "#{notification.comment.text}" to your comment on the #{notification.upload.fileType} &nbsp
                                     a(href=`/user/${user.channelUrl}/${notification.upload.uniqueTag}`) #{notification.upload.title}
                                     p(style="display:inline") &nbsp #{notification.timeAgo}
 
-                                // subscription via media notification
+                                //- subscription via media notification
                             else if notification.action == 'subscription' && notification.upload
                                 p(style="display:inline") A user has subscribed to your channel from your #{notification.upload.fileType} &nbsp
                                     a(href=`/user/${user.channelUrl}/${notification.upload.uniqueTag}`) #{notification.upload.title}
                                     p(style="display:inline") &nbsp #{notification.timeAgo}
 
-                                // subscription from channel page notification
+                                //- subscription from channel page notification
                             else if notification.action == 'subscription' && !notification.upload
                                 p A user has subscribed to your channel from your channel page #{notification.timeAgo} &nbsp
 
-                                // message from admin notification
+                                //- message from admin notification
                             else if notification.action == 'message'
                                 p Note From Admin: #{notification.text}
 
@@ -67,35 +67,35 @@ block content
 
                     each notification in notifications
                         if notification.read == true
-                            // react notification
+                            //- react notification
                             if notification.action == 'react' && notification.react
                                 p(style="display:inline") A user has reacted with a #{notification.react.react} to your #{notification.upload.fileType} &nbsp
                                     a(href=`/user/${user.channelUrl}/${notification.upload.uniqueTag}`) #{notification.upload.title}
                                     p(style="display:inline") &nbsp #{notification.timeAgo}
 
-                                // comment notification
+                                //- comment notification
                             else if notification.action == 'comment' && notification.comment && !notification.comment.inResponseTo
                                 p(style="display:inline") #{notification.sender.channelName || notification.sender.channelUrl} has commented "#{notification.comment.text}" on your #{notification.upload.fileType} &nbsp
                                     a(href=`/user/${user.channelUrl}/${notification.upload.uniqueTag}`) #{notification.upload.title}
                                     p(style="display:inline") &nbsp #{notification.timeAgo}
 
-                                // response notification
+                                //- response notification
                             else if notification.action == 'comment' && notification.comment && notification.comment.inResponseTo
                                 p(style="display:inline") #{notification.sender.channelName || notification.sender.channelUrl} has responded "#{notification.comment.text}" to your comment on the #{notification.upload.fileType} &nbsp
                                     a(href=`/user/${user.channelUrl}/${notification.upload.uniqueTag}`) #{notification.upload.title}
                                     p(style="display:inline") &nbsp #{notification.timeAgo}
 
-                                // subscription via media notification
+                                //- subscription via media notification
                             else if notification.action == 'subscription' && notification.upload
                                 p(style="display:inline") A user has subscribed to your channel from your #{notification.upload.fileType} &nbsp
                                     a(href=`/user/${user.channelUrl}/${notification.upload.uniqueTag}`) #{notification.upload.title}
                                     p(style="display:inline") &nbsp #{notification.timeAgo}
 
-                                // subscription from channel page notification
+                                //- subscription from channel page notification
                             else if notification.action == 'subscription' && !notification.upload
                                 p A user has subscribed to your channel from your channel page #{notification.timeAgo} &nbsp
 
-                                // message from admin notification
+                                //- message from admin notification
                             else if notification.action == 'message'
                                 p Note From Admin: #{notification.text}
 

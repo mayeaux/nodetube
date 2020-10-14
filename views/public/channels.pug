@@ -1,8 +1,5 @@
 extends ../layout
 
-
-
-
 block content
     style.
         .nodetube-pro {
@@ -32,11 +29,11 @@ block content
                     a(href="/channels?within=alltime") All-Time
             div.col-sm-2
                 h3
-                    // style="margin-left:-32px;"
+                    //- style="margin-left:-32px;"
                     a(href="/channelsBySubs" ) Subscriber Count
-            //div.col-sm-2
-            //    h3
-            //        a(href="/channelsByReacts") React Count
+            //-div.col-sm-2
+            //-    h3
+            //-        a(href="/channelsByReacts") React Count
 
 
 
@@ -46,7 +43,7 @@ block content
 
         hr
 
-        // TOP PAGINATION
+        //- TOP PAGINATION
         nav.center-block.text-center(aria-label='Page navigation example')
             ul.pagination
                 li.page-item
@@ -103,7 +100,7 @@ block content
 
 
 
-        //// BOTTOM PAGINATION
+        //- BOTTOM PAGINATION
         if channels.length > 0
 
             nav.center-block.text-center(aria-label='Page navigation example')

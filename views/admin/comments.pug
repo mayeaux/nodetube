@@ -8,7 +8,7 @@ block content
         hr
         each comment in comments
             div.col-sm-4(style="text-align:center;height:420px;border:1px solid black;")
-                // NEW CHANNEL UPLOAD FORMAT
+                //- NEW CHANNEL UPLOAD FORMAT
 
                 a(href=`/user/${comment.commenter.channelUrl}`)
                     h4 Commenter Name: #{comment.commenter.channelName}

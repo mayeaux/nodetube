@@ -1,7 +1,5 @@
 extends ../layout
 
-
-
 block content
     div
         div.row
@@ -22,7 +20,7 @@ block content
 
         div.center-block.text-center.col-sm-12
             h1 Recently Viewed
-            // TOP PAGINATION
+            //- TOP PAGINATION
             nav.center-block.text-center(aria-label='Page navigation example')
                 ul.pagination
                     li.page-item
@@ -45,7 +43,7 @@ block content
             each view in views
                         if view.upload.uploader
                             div.col-sm-4(style="text-align:center;height:335px")
-                                // NEW CHANNEL UPLOAD FORMAT
+                                //- NEW CHANNEL UPLOAD FORMAT
 
                                 a.title-anchor(href=`/user/${view.upload.uploader.channelUrl}/${view.upload.uniqueTag}`)
                                     if view.upload.fileType == 'video' && view.upload.thumbnailUrl

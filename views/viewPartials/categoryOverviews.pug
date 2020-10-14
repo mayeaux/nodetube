@@ -1,13 +1,13 @@
 for category in categories
-    //p= uploads[category.name]
-    // if there's more than one per category
+    //-p= uploads[category.name]
+    //- if there's more than one per category
     if uploads[category.name] && uploads[category.name].length && uploads[category.name].length > 0
         div.category.col-sm-12
             div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style="text-align:left;max-height:124px;margin-bottom:20px;")
                 a.upload-user-text(style="font-size:41px;" href=`${addressPrepend}/1?category=${category.name}&within=${within}&media=${mediaType || ''}`)
                     h1.fw(style="font-size:41px;color:#c1baba;") #{category.displayName}
 
-            // begin individual upload section
+            //- begin individual upload section
             each upload in uploads[category.name]
                 if upload.uploader
                     div.col-xs-12.col-sm-6.col-md-6.col-lg-4(style="text-align:center;height:354px;margin-bottom:30px;")
@@ -16,5 +16,5 @@ for category in categories
 
                             include ../viewPartials/uploadDetails
 
-                            //include ../viewPartials/uploadDetailsPopular
+                            //-include ../viewPartials/uploadDetailsPopular
 

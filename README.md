@@ -7,8 +7,7 @@ You can join the open-source community actively developing NodeTube on [Discord]
 
 <br>
 
-<a href="https://newtube.app" />
-<img src="https://user-images.githubusercontent.com/7200471/73618225-630e5d80-45e3-11ea-8772-9f10f5b9ef16.png" width="800" >
+[![NewTube](https://user-images.githubusercontent.com/7200471/73618225-630e5d80-45e3-11ea-8772-9f10f5b9ef16.png)](https://newtube.app)
 
 ## Get Your Instance Running:
 
@@ -24,7 +23,7 @@ You can get an instance up instantly using one-click deployment with Heroku belo
 - [Redis](https://redis.io/download)
 - [ffmpeg](https://www.ffmpeg.org/download.html)
 
-See instructions on installing these prerequisites for both [OS X](https://github.com/mayeaux/nodetube/wiki/Installation-Instructions---OS-X) and [Linux](https://github.com/mayeaux/nodetube/wiki/Installation-Instructions---Linux). There are also [Docker](https://github.com/mayeaux/nodetube/wiki/Docker) instructions if that's your thing.
+See instructions on installing these prerequisites for both [OS X](https://github.com/mayeaux/nodetube/wiki/Installation-Instructions---OS-X) and [Linux](https://github.com/mayeaux/nodetube/wiki/Installation-Instructions---Linux-(Ubuntu-20)). There are also [Docker](https://github.com/mayeaux/nodetube/wiki/Docker) instructions if that's your thing.
 
 Once Prerequisites Are Installed
 ---------------

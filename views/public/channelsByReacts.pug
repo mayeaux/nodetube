@@ -17,29 +17,29 @@ block content
                     a(href="/channels?within=alltime") All-Time
             div.col-sm-2
                 h3
-                    // style="margin-left:-32px;"
+                    //- style="margin-left:-32px;"
                     a(href="/channelsBySubs" ) Subscriber Count
-            //div.col-sm-2
-            //    h3
-            //        a(href="/channelsByReacts") React Count
+            //-div.col-sm-2
+            //-    h3
+            //-        a(href="/channelsByReacts") React Count
 
 
 
         hr
 
         h2.center-block.text-center Channels (Subscriber Count) &nbsp  &nbsp
-            //| Pages: &nbsp 1 &nbsp
-            //a(href="/channels?page=2") 2
+            //-| Pages: &nbsp 1 &nbsp
+            //-a(href="/channels?page=2") 2
         hr
 
         br
         each channel in channels
             div.col-sm-4(style="text-align:center;height:300px")
-                // NEW CHANNEL UPLOAD FORMAT
+                //- NEW CHANNEL UPLOAD FORMAT
 
                 if channel.uploads.length > 0
                     a(href=`/user/${channel.channelUrl}`)
-                        // TODO: Sub out thumbnail here
+                        //- TODO: Sub out thumbnail here
                         if channel.thumbnailUrl
                             img.preview-image(src=channel.thumbnailUrl)
                         else
