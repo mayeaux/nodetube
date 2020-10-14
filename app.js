@@ -26,6 +26,7 @@ const ngrok = require('ngrok');
 const commandExists = require('command-exists');
 const errorHandler = require('errorhandler');
 const jsHelpers = require('./lib/helpers/js-helpers');
+const { I18n } = require('i18n');
 
 /** FOR FINDING ERRANT LOGS **/
 if(process.env.SHOW_LOG_LOCATION == 'true' || 2 == 1){
@@ -138,9 +139,19 @@ if(cluster.isMaster){
 
     console.log('CONNECTED TO DATABASE AT: ' + mongoUri + '\n');
 
+    const i18n = new I18n({
+      locales: ['en', 'ar'],
+      defaultLocale: 'ar',
+      queryParameter: 'lang',
+      directory: path.join(__dirname, 'locales')
+    });
+
+    i18n.setLocale('ar');
+
     /** create express app **/
     const app = express();
 
+    app.use(i18n.init);
     app.use(favicon(path.join(__dirname, 'public', 'images/favicon.ico')));
 
     /*

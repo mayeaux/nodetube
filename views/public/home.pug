@@ -63,41 +63,41 @@ block content
     //.landingVideo(style="margin-top:0px;padding-top:70px;")
     //  iframe.display-element(src='https://newtube.app/embed/ScMyHdB', frameborder='0', allowfullscreen='' style="width:80%;height:400px;")
 
-    h1.lead-header.fw Introducing #{brandName}
-    h2.tagline-header.fw An open-source YouTube alternative powered by Node.js
+    h1.lead-header.fw #{__('Introducing {{brandName}}', {brandName: brandName})}
+    h2.tagline-header.fw #{__('An open-source YouTube alternative powered by Node.js')}
     hr
 
     .row.first-row
       .col-sm-4
-        h2.pitch-header.fw No Email Required &nbsp
+        h2.pitch-header.fw #{__('No Email Required ')}
           i.fa.fa-bolt
-        p.explainer.fw Start your channel on #{brandName}
-        p.fw without having to verify your email
+        p.explainer.fw #{__('Start your channel on {{brandName}}', {brandName: brandName})}
+        p.fw #{__('without having to verify your email')}
       .col-sm-4
-        h2.pitch-header.fw Video, Audio, Images &nbsp
+        h2.pitch-header.fw #{__('Video, Audio, Images ')}
           i.fa.fa-thumbs-o-up
-        p.explainer.fw Over 30 file formats are supported
-        p.fw between video, audio and image uploads
+        p.explainer.fw #{__('Over 30 file formats are supported')}
+        p.fw #{__('between video, audio and image uploads')}
       .col-sm-4
-        h2.pitch-header.fw 100% Open Source &nbsp
+        h2.pitch-header.fw #{__('100% Open Source ')}
           i.fa.fa-space-shuttle
-        p.explainer.fw Create your own #{brandName} instance
-        p.fw in just minutes following our tutorials
+        p.explainer.fw #{__('Create your own {{brandName}} instance', {brandName: brandName})}
+        p.fw #{__('in just minutes following our tutorials')}
 
 
     .row.second-row
       .col-sm-4
-        h2.pitch-header.fw #{channelAmount} Channels &nbsp
+        h2.pitch-header.fw #{__('{{channelAmount}} Channels ', {channelAmount: channelAmount})}
           i.fa.fa-users
-        p.explainer.fw The number of creators who have
-        p.fw chosen #{brandName} for their media hosting
+        p.explainer.fw #{__('The number of creators who have')}
+        p.fw #{__('chosen {{brandName}} for their media hosting', {brandName: brandName})}
       .col-sm-4
-        h2.pitch-header.fw #{mediaAmount} Uploads &nbsp
+        h2.pitch-header.fw #{__('{{mediaAmount}} Uploads ', {mediaAmount: mediaAmount})}
           i.fa.fa-upload
-        p.explainer.fw The number of  times creators have
-        p.fw chosen #{brandName} for their content hosting
+        p.explainer.fw #{__('The number of  times creators have')}
+        p.fw #{__('chosen {{brandName}} for their content hosting', {brandName: brandName})}
       .col-sm-4
-        h2.pitch-header.fw #{viewAmount} Views &nbsp
+        h2.pitch-header.fw #{__('{{viewAmount}} Views ', {viewAmount: viewAmount})}
           i.fa.fa-video
-        p.explainer.fw The number of times people have
-        p.fw enjoyed the innovative new platform
+        p.explainer.fw #{__('The number of times people have')}
+        p.fw #{__('enjoyed the innovative new platform')}
