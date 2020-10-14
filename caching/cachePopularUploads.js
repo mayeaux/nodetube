@@ -26,6 +26,7 @@ async function getPopularUploads(){
   }
 
   // TODO: have to have a job to update upload's view amounts
+
   // TODO: have to build 4 arrays of ~1000
 
   const searchQuery = {
@@ -60,6 +61,8 @@ async function setPopularUploads(){
   });
 
   // calculate view periods for each upload
+
+  // TODO: why this promise all functionality? this is almost surely what's blowing everything up
   popularUploads = await Promise.all(popularUploads.map(async function(upload){
 
     // get all valid views per upload
@@ -74,6 +77,7 @@ async function setPopularUploads(){
   }
 
   // build json objects representing uploads
+  // this will be stringified and plugged into redis
   popularUploads = buildObjects(popularUploads);
 
   if(logCaching == 'true'){

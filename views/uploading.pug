@@ -39,7 +39,9 @@ block content
       font-size:17px;
     }
 
-    .u
+    .descriptionTextArea {
+      max-width:95%;
+    }
   br
   div.center-block.text-center
       div.upload-information(style="margin-top:20px")
@@ -110,7 +112,7 @@ block content
                   h3.fw(style="font-size:30px;margin-bottom:15px;" id="uploadDetails") Upload Details
 
                   label.fw(style="font-size: 23px;" for='title') Title (*)
-                  input.form-group.center-block.text-center(style="width:400px;max-width:95%;border-radius:2px;font-size:20px;font-weight:300;" type="text" name="title" id="title" minlength=3, maxlength=100 required)
+                  input.form-group.center-block.text-center(style="max-width:600px;height:35px;border-radius:2px;font-size:20px;font-weight:300;" type="text" name="title" id="title" minlength=3, maxlength=100 required)
                   br
 
                   // add endpoint for visibility
@@ -171,41 +173,38 @@ block content
 
 
                   // RATINGS
-                  // todo: actually add site rating as passed variable
-                  if site_rating || 1 == 1
-                    label.fw(for='rating' style="font-size:24px;margin-top:26px;margin-bottom:15px;") Rating (*)
-                    br
-                    div.radio-buttons.rating(style="")
-                      if user.privs.safeForWorkUpload
-                        label.fw.radio-inline(style="font-size:18px;")
-                          input.radio-button(type='radio', style="margin-bottom:3rem", name='rating' value="allAges" checked=maxRatingAllowed === "SFW")
-                          | Safe For Work
-                        br
-                        br
+                  label.fw(for='rating' style="font-size:24px;margin-top:26px;margin-bottom:15px;") Rating (*)
+                  br
+                  div.radio-buttons.rating(style="")
+                    if user.privs.safeForWorkUpload
+                      label.fw.radio-inline(style="font-size:18px;")
+                        input.radio-button(type='radio', style="margin-bottom:3rem", name='rating' value="allAges" checked=maxRatingAllowed === "SFW")
+                        | Safe For Work
+                      br
+                      br
 
-                      if maxRatingAllowed === "NSFW" || maxRatingAllowed === "SENSITIVE"
-                        label.fw.radio-inline(style="font-size:18px;")
-                          input.radio-button(type='radio', name='rating' value="mature")
-                          | Not Safe For Work
-                        br
-                        br
+                    if maxRatingAllowed == 'NSFW' || maxRatingAllowed == 'SENS'
+                      label.fw.radio-inline(style="font-size:18px;")
+                        input.radio-button(type='radio', name='rating' value="mature")
+                        | Not Safe For Work
+                      br
+                      br
 
-                      if maxRatingAllowed === "SENSITIVE"
-                        label.fw.radio-inline(style="font-size:18px;")
-                          input.radio-button(type='radio', name='rating' value="sensitive" required)
-                          | Sensitive (Shocking content) 18+
+                    if maxRatingAllowed == 'SENS'
+                      label.fw.radio-inline(style="font-size:18px;")
+                        input.radio-button(type='radio', name='rating' value="sensitive" required)
+                        | Sensitive (Shocking content) 18+
 
-                        br
-                        br
+                      br
+                      br
 
-
-                      if maxRatingAllowed === "SFW"
+                    if maxRatingAllowed === "SFW"
                         div.fw(style="width:400px;max-width:95%;margin:auto;") The instance host has chosen to make this instance Safe For Work only, please ensure that your upload is Safe For Work
 
                   br
-                  label.fw(for="description" style="font-size:23px") Description
+                  label.fw(for="description" style="font-size:23px;width:600px;") Description
                   br
-                  textarea.fw.form-group(style="width:400px;max-width:95%;border-radius:4px;font-size:16px;" type="text" name="description" id="description" maxlength='2000' rows="10" cols="70")
+                  textarea.fw.form-group.descriptionTextArea(style="color:black;border-radius:4px;font-size:19px;" type="text" name="description" id="description" maxlength='2000' rows="10" cols="70")
 
                 button.fw.btn.btn-primary.submit-button(style="border-radius:5px;font-size:18px;" type="submit") Upload
 

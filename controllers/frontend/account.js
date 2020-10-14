@@ -15,6 +15,7 @@ const Subscription = require('../../models/index').Subscription;
 const RSS = require('rss');
 
 const { uploadServer, uploadUrl } = require('../../lib/helpers/settings');
+const { saveMetaToResLocalForChannelPage } = require('../../lib/mediaPlayer/generateMetatags');
 
 const { filterUploadsByMediaType } = require('../../lib/mediaBrowsing/helpers');
 const timeHelper = require('../../lib/helpers/time');
@@ -437,14 +438,7 @@ exports.getChannel = async(req, res) => {
 
     if(user.channelDescription) res.locals.meta.description = user.channelDescription;
 
-    if(user.thumbnailUrl){
-      res.locals.meta.image = user.thumbnailUrl;
-    }
-
-    // TODO: Need to pull this into own library to work
-    // if(user.uploads){
-    //   res.locals.meta.image = user.uploads[0].customThumbnailUrl || ;
-    // }
+    saveMetaToResLocalForChannelPage(user, uploadServer, req, res)   ;
 
     const userUploadAmount = uploads.length;
 
@@ -557,11 +551,21 @@ exports.getChannel = async(req, res) => {
  */
 exports.notification = async(req, res) => {
 
+  let page = req.params.page;
+  if(!page){ page = 1; }
+  page = parseInt(page);
+
+  const limit = 100;
+  const skipAmount = (page * limit) - limit;
+
+  const { startingNumber, previousNumber, nextNumber, numbersArray } = pagination.buildPaginationObject(page);
+
   try {
 
+    // TODO: prioritize unread notifications
     const notifications = await Notification.find({
       user: req.user._id
-    }).populate('user sender upload react comment').sort({createdAt: -1});
+    }).populate('user sender upload react comment').skip(skipAmount).limit(limit).sort({createdAt: -1});
 
     // // console.log(notifications);
     // for(let notif of notifications){
@@ -572,7 +576,12 @@ exports.notification = async(req, res) => {
 
     res.render('account/notifications', {
       title: 'Notifications',
-      notifications
+      notifications,
+      startingNumber,
+      previousNumber,
+      nextNumber,
+      numbersArray,
+      highlightedNumber: page
     });
 
     // mark notifs as read

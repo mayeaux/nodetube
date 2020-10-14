@@ -1,6 +1,8 @@
 const Upload = require('../../models/index').Upload;
 const View = require('../../models/index').View;
 const Subscription = require('../../models/index').Subscription;
+const LastWatchedTime = require('../../models/index').LastWatchedTime;
+
 const timeHelper = require('../../lib/helpers/time');
 
 const uploadHelpers = require('../../lib/helpers/settings');
@@ -17,7 +19,7 @@ const _ = require('lodash');
 
 const generateComments = require('../../lib/mediaPlayer/generateCommentsObjects');
 const generateReactInfo = require('../../lib/mediaPlayer/generateReactInfo');
-const saveMetaToResLocal = require('../../lib/mediaPlayer/generateMetatags');
+const { saveMetaToResLocal } = require('../../lib/mediaPlayer/generateMetatags');
 const hideUpload = require('../../lib/mediaPlayer/detectUploadVisibility');
 
 console.log(`UPLOAD SERVER: ${uploadServer}\n`);
@@ -34,12 +36,20 @@ function getParameterByName(name, url){
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
+function convertAllAgesToSfw(value){
+  if(value == 'allAges'){
+    return'SFW';
+  } else if(value == 'mature'){
+    return'NSFW';
+  }
+}
+
 const secondsToFormattedTime = timeHelper.secondsToFormattedTime;
 
 const stripeToken = process.env.STRIPE_FRONTEND_TOKEN || 'pk_test_iIpX39D0QKD1cXh5CYNUw69B';
 
 function getFormattedFileSize(upload){
-  const fileSizeInMb = upload.originalFileSizeInMb || upload.processedFileSizeInMb || bytesToMb(upload.fileSize);
+  const fileSizeInMb = upload.processedFileSizeInMb || upload.originalFileSizeInMb || bytesToMb(upload.fileSize);
 
   let formattedFileSizeString;
 
@@ -159,6 +169,41 @@ exports.getMedia = async(req, res) => {
 
     saveMetaToResLocal(upload, uploadServer, req, res);
 
+    const convertedRating = convertAllAgesToSfw(upload.rating);
+    // console.log(convertedRating);
+
+    let lastWatchedTime;
+    let formattedLastWatchedTime;
+    if(req.user){
+      lastWatchedTime = await LastWatchedTime.findOne({
+        user : req.user._id,
+        upload: upload._id
+      });
+
+      if(lastWatchedTime){
+        formattedLastWatchedTime = timeHelper.secondsToFormattedTime(Math.round(lastWatchedTime.secondsWatched));
+      }
+
+    }
+
+    let uploadFps;
+    if(upload.ffprobeData){
+      // console.log('running here!');
+
+      const videoStream =  upload.ffprobeData.streams.filter(stream => {
+        return stream.codec_type == 'video';
+      });
+
+      // console.log(videoStream);
+
+      if(videoStream && videoStream[0]){
+        uploadFps = videoStream[0].avg_frame_rate || videoStream[0].r_frame_rate ;
+      }
+
+      // console.log(videoStream);
+
+    }
+
     res.render('media', {
       title: upload.title,
       comments : comments.reverse(),
@@ -186,7 +231,11 @@ exports.getMedia = async(req, res) => {
       secondsToFormattedTime,
       formattedFileSize,
       domainName: process.env.DOMAIN_NAME_AND_TLD,
-      serverToUse
+      serverToUse,
+      convertedRating,
+      lastWatchedTime,
+      formattedLastWatchedTime,
+      uploadFps
     });
 
   } catch(err){

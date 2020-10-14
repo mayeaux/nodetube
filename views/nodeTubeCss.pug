@@ -1,5 +1,18 @@
 // doing this because otherwise it's too annoying with cloudflare caching
 style.
+
+    @import url('https://rsms.me/inter/inter.css');
+
+    html {
+        font-family: 'Inter', sans-serif;
+    }
+
+    @supports (font-variation-settings: normal) {
+        html {
+            font-family: 'Inter var', sans-serif;
+        }
+    }
+
     .navbar-default .navbar-nav > li > a {
         color: white;
     }
@@ -209,7 +222,7 @@ style.
     }
 
     .fw {
-        font-weight: 300
+        font-weight: 300;
     }
 
     .loginHeader {
@@ -381,4 +394,12 @@ style.
         /*.postButton {*/
         /*display: none !important;*/
         /*}*/
+    }
+
+    .h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+        font-family: 'Helvetica Neue', 'Inter', Arial, sans-serif !important;
+    }
+
+    body {
+        font-family: 'Helvetica Neue', 'Inter', Arial, sans-serif !important;
     }

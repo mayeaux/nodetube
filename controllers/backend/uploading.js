@@ -162,7 +162,7 @@ function testIfUserRestricted(user, logObject, res){
 function aboutToProcess(res, channelUrl, uniqueTag){
   res.send({
     message: 'ABOUT TO PROCESS',
-    url: `/user/${channelUrl}/${uniqueTag}?autoplay=off`
+    url: `/user/${channelUrl}/${uniqueTag}?u=t`
   });
 }
 
@@ -390,6 +390,7 @@ exports.postFileUpload = async(req, res) => {
         // TODO: mark here that you started concatenating
         redisClient.setAsync(`${uniqueTag}uploadProgress`, 'Your upload is beginning processing...');
 
+        // build an array with the names of all the file chunks
         const fileNameArray = [];
         for(let x = 1; x < parseInt(resumableTotalChunks, 10) + 1; x++){
           fileNameArray.push(`${uploadPath}/${x}`);
@@ -397,6 +398,7 @@ exports.postFileUpload = async(req, res) => {
 
         var combinedStream = CombinedStream.create();
 
+        // loop through each file and append it to the stream
         for(const fileChunk of fileNameArray){
           combinedStream.append(function(next){
             next(fs.createReadStream(fileChunk));
@@ -415,16 +417,29 @@ exports.postFileUpload = async(req, res) => {
           let bitrate, codecName, codecProfile;
 
           if(upload.fileType !== 'image'){
+
+            // load the ffprobe data in response
             const response = await ffmpegHelper.ffprobePromise(`${uploadPath}/convertedFile`);
 
+            // console.log(response);
+
+            // save the ffprobe data
+            upload.ffprobeData = response;
+
+            // duration in seconds from ffprobe
             upload.durationInSeconds = Math.round(response.format.duration);
 
+            // duration in seconds formatted as smart HH:MM:DD
             upload.formattedDuration = timeHelper.secondsToFormattedTime(Math.round(response.format.duration));
 
-            codecProfile  = response.streams[0].codecProfile;
+            // TODO: this needs to be made to match against whether it's a video or audio because to
+            // TODO : my knowledge streams are not guaranteed to be in order of video -> audio
 
+            // codec name and profile to be used for deciding whether to convert
+            codecProfile  = response.streams[0].codecProfile;
             codecName  = response.streams[0].codecName;
 
+            // height and width of video
             const width = response.streams[0].width;
             const height = response.streams[0].height;
 
@@ -432,13 +447,14 @@ exports.postFileUpload = async(req, res) => {
             // bitrate in kbps
             bitrate = response.format.bit_rate / 1000;
 
+            // save bitrate in kbps
             upload.bitrateInKbps = bitrate;
 
+            // save width, height and aspect ratio on upload
             upload.dimensions.height = height;
             upload.dimensions.width = width;
             upload.dimensions.aspectRatio = height/width;
 
-            console.log(response);
             //
             // console.log('')
 
@@ -572,6 +588,7 @@ exports.postFileUpload = async(req, res) => {
 
           uploadLogger.info('Updated subscribed users subscriptions', logObject);
 
+          // upload is complete, send it off to user (aboutToProcess is a misnomer here)
           if(!responseSent){
             responseSent = true;
             aboutToProcess(res, channelUrl, uniqueTag);

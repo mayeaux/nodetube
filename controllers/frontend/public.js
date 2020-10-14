@@ -34,7 +34,16 @@ exports.index = async(req, res) => {
 
   const title = 'Home';
 
-  if(defaultLandingPage == 'globe'){
+  // for the category overview section, defaulted to SFW content
+  if(defaultLandingPage == 'overview'){
+    res.redirect('/media/recent?category=overview&rating=SFW');
+
+    // for recent uploads without categories, defaulted to SFW
+  } else if(defaultLandingPage == 'recent'){
+    res.redirect('/media/recent?category=all&rating=SFW');
+
+    // globe functionality
+  } else if(defaultLandingPage == 'globe'){
 
     // get 150 most popular uploads in last 24h that are sfw and from any category
     let uploads = await getFromCache.getPopularUploads('24hour', 150, 0, 'all', 'SFW', 'all', '');
@@ -45,6 +54,7 @@ exports.index = async(req, res) => {
       uploads
     });
 
+    // standard landing page that shows the amount of uploads, users and views
   } else {
 
     const response = indexResponse;
@@ -203,7 +213,7 @@ exports.getEmbed = async function(req, res){
   let upload = await Upload.findOne({
     uniqueTag,
     visibility: { $ne: 'removed' }
-  }).populate({path: 'uploader comments checkedViews reacts', populate: {path: 'commenter receivedSubscriptions'}}).exec();
+  }).populate({path: 'uploader', populate: {path: ''}}).exec();
 
   if(!upload){
     console.log('Visible upload not found');
@@ -236,8 +246,22 @@ exports.getDocs = async(req, res) => {
  */
 exports.getDonate = async(req, res) => {
 
+  const stripeToken = process.env.STRIPE_FRONTEND_TOKEN;
+
   res.render('public/donate', {
-    title: 'Donate'
+    title: 'Donate',
+    stripeToken
+  });
+};
+
+/**
+ * GET /plus
+ * Plus page
+ */
+exports.getPlus = async(req, res) => {
+
+  res.render('public/plus', {
+    title: 'Plus'
   });
 };
 

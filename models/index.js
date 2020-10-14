@@ -12,6 +12,7 @@ const SocialPost = require('./SocialPost');
 const CreditAction = require('./CreditAction');
 const AdminAction = require('./AdminAction');
 const ReceivedEmail = require('./ReceivedEmail');
+const LastWatchedTime = require('./LastWatchedTime');
 
 module.exports = {
   Upload,
@@ -27,6 +28,7 @@ module.exports = {
   SocialPost,
   CreditAction,
   AdminAction,
-  ReceivedEmail
+  ReceivedEmail,
+  LastWatchedTime
 };
 

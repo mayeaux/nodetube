@@ -13,7 +13,7 @@ block content
 
     // TODO: make this cover more qualities
     // TODO: also consider using upload.video
-    if upload.bitrateInKbps > 1500
+    if upload.bitrateInKbps > 1500 && upload.fileType == 'video'
         style.
             /** everything 650 and below */
             /* on mobile we dont do a max height in other words */
@@ -23,6 +23,19 @@ block content
                     height: 794px;
                 }
             }
+
+        // if it's an audio file give the player a max height of 100px;
+    else if upload.fileType == 'audio'
+        style.
+            /** everything 650 and below */
+            /* on mobile we dont do a max height in other words */
+            @media (min-width: 668px) {
+
+                .plyr {
+                    max-height: 100px;
+                }
+            }
+
     else
         style.
             /** everything 650 and below */
@@ -200,9 +213,13 @@ block content
         /* anything below this width */
         @media (max-width: 900px) {
 
+            .frameJumper {
+                display: none !important;
+            }
+
             .uploadTitle {
-                margin-top: 32px;
-                margin-bottom: -20px !important;
+                margin-top: 0px;
+                margin-bottom: 8px !important;
             }
 
             .mobileTitle {
@@ -224,6 +241,9 @@ block content
             /*.postButton {*/
             /*display: none !important;*/
             /*}*/
+            .screenshotButton {
+                margin-left: 5px !important;
+            }
         }
 
 
@@ -246,6 +266,14 @@ block content
             margin-bottom:21px;
             padding-bottom:5px;
             min-width:247px;
+        }
+
+        .replyTextArea {
+            height: 80px;
+            width: 500px;
+            max-width: 500px;
+            color: black;
+            font-size: 17px;
         }
 
         /* change plyr color per : https://github.com/sampotts/plyr/issues/662 */
@@ -287,6 +315,68 @@ block content
             background-color: #141414;
         }
 
+        .op60 {
+            opacity: 0.6;
+        }
+
+        .op70 {
+            opacity: 0.7
+        }
+
+        .op68 {
+            opacity: 0.8;
+        }
+
+        .op80 {
+            opacity: 0.8
+        }
+
+        .postCommentButton {
+            opacity: 0.85
+        }
+
+        .smallerInfo {
+            font-size: 12px;
+        }
+
+        /* there's a small bug because the JS doesn't currently change the class
+        but it works well enough */
+        .unsubscribeButton {
+            opacity: 0.7 !important;;
+        }
+
+        .subscribeButton {
+            opacity: 0.9 !important;
+        }
+
+        /* anything below this width */
+        @media (max-width: 400px) {
+
+            .emailShareButton, .facebookShareButton, .twitterShareButton {
+                margin-left: 5px !important;
+            }
+
+        }
+
+        .noselect {
+            -webkit-touch-callout: none; /* iOS Safari */
+            -webkit-user-select: none; /* Safari */
+            -khtml-user-select: none; /* Konqueror HTML */
+            -moz-user-select: none; /* Old versions of Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none;
+            /* Non-prefixed version, currently
+                                                     supported by Chrome, Edge, Opera and Firefox */
+        }
+
+        .fpsText:hover{
+            color:white;
+        }
+
+        /*button.plyr__control  {*/
+            /*display: none !important;*/
+        /*}*/
+
 
 
     br
@@ -294,13 +384,7 @@ block content
         if upload.status == 'processing'
 
             div(style="max-width:443px;margin:0 auto;")
-                h2.fw(id="processing") Your upload is currently 1% done being processed
-
-                //p.fw(id="processingTimeElapsed" style="margin-top:33px") Time elapsed: calculating ...
-                //
-                //p.fw(id="estimatedProcessingTimeLeft") Estimated time to completion: calculating ...
-                //
-                //p.fw(id="estimatedTotalProcessingTime") Total estimated conversion time: calculating ...
+                h2.fw(id="processing") Beginning your upload...
 
                 h4.fw(style="font-size:22px;margin-top:30px;") If your upload is stuck on processing, let an admin know via the social links at the bottom of the page and we'll take a look.
 
@@ -347,9 +431,25 @@ block content
         else if upload.fileType === 'image'
             div.display-div(style="")
                 a(href=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`)
-                    img.display-element(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="border-radius:13px;max-width:80%;min-width:50%;min-height:50%;max-height:620px;")
+                    img.display-element(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="border-radius:13px;max-width:80%;min-height:50%;max-height:620px;")
 
 
+        // add margin-top 120 on margin-top:120px;"
+
+        if upload.fileType == 'video' && upload.ffprobeData
+            div.frameJumper(style="margin-bottom:1px;margin-top:-14px;")
+                br
+                each frame in [1,5,15,30].reverse()
+                    p.fpsText.noselect(amountOfFrames=-frame style="display:inline;margin-left:7px;") -#{frame} &nbsp
+
+                p(style="display:inline;margin-left:14px;")
+
+
+                each frame in [1,5,15,30]
+                    p.fpsText.noselect(amountOfFrames=frame style="display:inline;margin-left:7px;") +#{frame} &nbsp
+        else
+            div.frameJumper(style="margin-bottom:35px;")
+        br
 
 
         // TODO: FIX NON-PLAYER CONTENT
@@ -357,46 +457,27 @@ block content
         //- NON PLAYER CONTENT
             hello something
         div.non-player-content(style="position:relative;max-width:1182px;margin:0 auto;")
-            // add margin-top 120 on margin-top:120px;"
-
-
-
-            br
-            br
-
-
-            //div.col-sm-12
-            //    div.uploadTitle.mobileTitle(style="")
-            //
-            //        h2.balance-text(class="upload-title-value" style="display:inline;text-wrap:balance;width:80%;margin:0 auto;font-weight:300;color: #a9a9a9 !important;") #{upload.title}
-            //            if upload.formattedDuration
-            //                h2.fw(style="display:inline;color: #a9a9a9; !important;").
-            //                    &nbsp - #{upload.formattedDuration}
-
-
-
-
 
 
             // UPLOADER DETAILS SECTION
-            div.col-sm-3.uploader-details-section(style="margin-bottom:30px")
+            div.col-sm-3.uploader-details-section(style="")
                 h3.uploader-name(style="margin-top:25px;font-size:26px;")
                     if upload.uploader.customThumbnail
                         a(href=`/user/${upload.uploader.channelUrl}`)
 
-                            img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` style="opacity:0.75;border-radius:13px;width:110px;height:110px;")
+                            img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` style="opacity:0.75;border-radius:13px;height:110px;")
                             br
                             br
                     else if upload.uploader.thumbnailUrl
                         a(href=`/user/${upload.uploader.channelUrl}`)
 
-                            img(src=`${uploadServer}/${upload.uploader._id}/unique.png` style="opacity:0.75;border-radius:13px;width:110px;height:110px;")
+                            img(src=`${uploadServer}/${upload.uploader._id}/unique.png` style="opacity:0.75;border-radius:13px;height:110px;")
                             br
                             br
                     else
                         a(href=`/user/${upload.uploader.channelUrl}`)
 
-                            img(src=`/images/default_user_image.png` style="opacity:0.75;border-radius:13px;width:110px;height:110px;")
+                            img(src=`/images/default_user_image.png` style="opacity:0.75;border-radius:13px;height:110px;")
                             br
                             br
 
@@ -408,11 +489,13 @@ block content
 
 
 
+
+
                 if upload.visibility != 'pending'
                     if alreadySubbed
-                        button.subscribe.btn.fw.btn-danger(style="border-radius:4px;opacity:0.75;") Unsubscribe (#{subscriberAmount})
+                        button.subscribe.btn.fw.btn-danger.op80.unsubscribeButton(style="border-radius:4px;") Unsubscribe (#{subscriberAmount})
                     else
-                        button.subscribe.btn.fw.btn-success(style="border-radius:4px;opacity:0.75;") Subscribe (#{subscriberAmount})
+                        button.subscribe.btn.fw.btn-success.op80.subscribeButton(style="border-radius:4px;") Subscribe (#{subscriberAmount})
                     br
                     br
 
@@ -426,11 +509,16 @@ block content
                             h2.fw(style="display:inline;color: #a9a9a9; !important;").
                                 &nbsp - #{upload.formattedDuration}
 
-
                 if upload.description
                     .uploadDescriptionDiv
 
                         p#uploadDescriptionText.fw.uploadDescriptionText(style="color:#a5a5a5") #{upload.description}
+
+                        p.descriptionBottom
+
+                    h4.showMoreButton(style="display:none;font-size:20px;") Show More
+
+                    h4.showLessButton(style="display:none;font-size:20px;") Show Less
 
 
                 div.largerSection
@@ -462,21 +550,21 @@ block content
 
                         div
 
-                            a(href=`https://www.facebook.com/sharer/sharer.php?u=${url}` target="_blank")
-                                img.extraButton(src='/images/facebook-share.jpg', width='100', height='30', alt='Share on Twitter' style="margin-left:10px;")
-                            a(href=`https://twitter.com/share?url=${url}` target="_blank")
-                                img.extraButton(src='/images/twitter-share.jpg', width='100', height='30', alt='Share on Twitter' style="margin-left:10px;")
+                            a(href=`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${title}\n` target="_blank")
+                                img.extraButton.op80.facebookShareButton(src='/images/facebook-share.jpg', width='100', height='30', alt='Share on Twitter' style="margin-left:10px;")
+                            a(href=`https://twitter.com/share?url=${url}&text=${title}\n` target="_blank")
+                                img.extraButton.op80.twitterShareButton(src='/images/twitter-share.jpg', width='100', height='30', alt='Share on Twitter' style="margin-left:10px;")
                             a(href=`mailto:?subject=Check out this ${upload.fileType}&body=Check out this ${upload.fileType} on ${brandName}: ${url}`, title='Share by Email')
-                                img.extraButton(src='/images/email-share.jpg' style="margin-left:10px;")
+                                img.extraButton.op80.emailShareButton(src='/images/email-share.jpg' style="margin-left:10px;")
 
 
                         br
 
-                        button.extraButton.btn.btn-success.copy-button(style="margin-right:10px;padding:4px 12px" data-clipboard-text=`${upload.title} \n\n${url}`)
+                        button.extraButton.btn.btn-success.copy-button.op70.copyDetailsButton(style="margin-right:10px;padding:4px 12px;opacity:0.8;" data-clipboard-text=`${upload.title} \n\n${url}`)
                             i.fa.fa-info.fw
                             | Copy Details
 
-                        button.extraButton.btn.btn-success.copy-button(style="padding:4px 12px" data-clipboard-text=`${upload.title} by ${upload.uploader.channelName || upload.uploader.channelUrl} \n\n ${url} \n\n #${brandName}`)
+                        button.extraButton.btn.btn-success.copy-button.op70.copyDetailsWithUserInfoButton(style="padding:4px 12px;opacity:0.8;" data-clipboard-text=`${upload.title} by ${upload.uploader.channelName || upload.uploader.channelUrl} \n\n ${url} \n\n #${brandName}`)
                             i.fa.fa-info.fw
                             | With User Info
 
@@ -534,6 +622,13 @@ block content
                             img.lampIcon(src="/images/lamp.png")
 
 
+                    // screenshot button for videos
+                    if upload.fileType == 'video'
+                        div.change-size-button.screenshotButton(style="margin-left:-6px;margin-right:-16px")
+                            h2.change-size-button
+                                i.fa.fa-camera(aria-hidden="true" style="cursor:pointer;color:#a5a5a5;")
+
+
                     // only do repeat button if it's audio or video
                     if upload.fileType == 'video' || upload.fileType == 'audio'
                         div.change-size-button(style="")
@@ -543,6 +638,8 @@ block content
                 // Upload View Amount
                 h3.fw(style="color:a5a5a5") #{numberWithCommas(upload.views)} Views
 
+
+                // Additional info, including how long ago the upload was, file size, category and rating
                 // Upload time ago, duration and uploader
                 if upload.uploader
                     h4.fw(style="color:a5a5a5")
@@ -556,12 +653,20 @@ block content
                     //if upload.bitrateInKbps
                     //    p.fw.fileSizeText(style="margin-top:15px") Bitrate in kbps: #{upload.bitrateInKbps}
 
+                    if ( upload.durationInSeconds > (15 * 60) ) && user
+
+                                    if lastWatchedTime
+                                        p.fw.fileSizeText(style="margin-top:15px;color:a5a5a5;") Last Watched Time: #{formattedLastWatchedTime}
+                                    else
+                                        p.fw.fileSizeText(style="margin-top:15px;color:a5a5a5;") No Last Watched Time
+
                     if upload.fileType == 'video' || upload.fileType == 'audio'
 
                         // TODO: should be able to support MB and GB
                         p.fw.fileSizeText(style="margin-top:15px;color:a5a5a5;") File Size: #{ formattedFileSize }
 
-                    if upload.category
+                    // if there is a category, and the category isn't uncategorized, get the display name for it
+                    if upload.category && upload.category !== 'uncategorized'
                         each category in categories
                             if category.name == upload.category
                                 p.fw(style="margin-top:15px;font-size:12px;color:a5a5a5;") Category: #{category.displayName}
@@ -573,14 +678,28 @@ block content
                                 //        if upload.subcategory == subcategory.name
                                 //            p.fw(style="margin-top:15px;font-size:12px;") Subcategory: #{subcategory.displayName}
 
-                    if maxRatingAllowed !== 'SFW'
-                        if upload.rating
-                            if upload.rating == 'allAges'
-                                p.fw(style="margin-top:15px;font-size:12px;") Rating: Safe For Work
-                            if upload.rating == 'mature'
-                                p.fw(style="margin-top:15px;font-size:12px;") Rating: Not Safe For Work
-                            if upload.rating == 'sensitive'
-                                p.fw(style="margin-top:15px;font-size:12px;") Rating: Sensitive (18+)
+
+
+
+                    //if maxRatingAllowed !== 'SFW'
+                    //    if upload.rating
+                    //        if upload.rating == 'allAges'
+                    //            p.fw(style="margin-top:15px;font-size:12px;") Rating: Safe For Work
+                    //        if upload.rating == 'mature'
+                    //            p.fw(style="margin-top:15px;font-size:12px;") Rating: Not Safe For Work
+                    //        if upload.rating == 'sensitive'
+                    //            p.fw(style="margin-top:15px;font-size:12px;") Rating: Sensitive (18+)
+
+
+                    if convertedRating !== 'SFW'
+                        p.smallerInfo.fw.fileSizeText.
+                            Rating: #{convertedRating}
+
+                    // capitalizing the first letter
+                    if upload.visibility !== 'public'
+                        p.smallerInfo.fw.fileSizeText.
+                            Visibility: #{upload.visibility.charAt(0).toUpperCase() + upload.visibility.slice(1)}
+
 
                     div.editButtonDiv
                         // edit button
@@ -590,45 +709,6 @@ block content
 
 
                     br
-
-
-
-
-
-
-
-
-
-
-            //div.react.reactDiv.mobileReactDiv(style=";")
-            //    // margin-top:133px
-            //    br
-            //    each emoji in emojis
-            //        div(style="padding-right:12px;display:inline-block;")
-            //            a(href="#")
-            //                if currentReact
-            //                    if currentReact == emoji.name
-            //                        div.clicked-emoji
-            //                            img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
-            //
-            //                    else
-            //                        div.unclicked-emoji
-            //                            img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
-            //
-            //                else
-            //                    div.clicked-emoji
-            //                        img.reactImage(id=emoji.name src='/emojis/' + emoji.name + '.jpg' )
-            //
-            //            p.fw(class=emoji.name style="font-weight:400;") #{emoji.amount}
-
-
-
-
-
-
-
-
-
 
             div.col-sm-12.extraButtonsDiv(style="border-bottom: 1px solid #8e8d8d;")
                 // SHARING BUTTONS
@@ -650,7 +730,7 @@ block content
                                     input(type="hidden" name="upload" id="upload" value=upload._id)
                                     textarea.commentInput.fw(name="comment" id="comment" minlength="2" style="width:800px;height:129px;max-width:100%;background-color:#151515;color:white;")
                                     br
-                                    input.fw.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
+                                    input.fw.btn.btn-md.btn-success.postCommentButton(type='submit' value="Post Comment" style="border-radius:4px")
                     else
                         div.comment-form.form-group.no-user-comment-form
                             form.form-horizontal.overall-comment-form(class="comment-form")
@@ -658,7 +738,7 @@ block content
                                 br
                                 textarea.commentInput.fw(name="comment" id="comment" minlength="2" style="width:800px;height:129px;max-width:100%;background-color:#151515;color:white;")
                                 br
-                                input.fw.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
+                                input.fw.btn.btn-md.btn-success.postCommentButton(type='submit' value="Post Comment" style="border-radius:4px;")
 
 
                 // ** COMMENT DISPLAY **
@@ -678,10 +758,10 @@ block content
                         if commentCount > 0
                             div.comment-containing-div.col-sm-6.col-sm-offset-3(style="margin-top:60px;text-align:center")
                                 if commentCount == 1
-                                    div(style="display:block")
+                                    div.commentCountDiv(style="display:block")
                                         h3.fw(style="text-align:left;font-size:28px;margin-bottom:14px;") #{commentCount} Comment
                                 else
-                                    div(style="display:block")
+                                    div.commentCountDiv(style="display:block")
                                         h3.fw(style="text-align:left;font-size:28px;margin-bottom:14px;") #{commentCount} Comments
                                 each comment in comments
                                     if comment.commenter
@@ -713,9 +793,9 @@ block content
                                                         input(type='hidden', name='_csrf', value=_csrf)
                                                         input(type="hidden" name="upload" id="upload" value=upload._id)
                                                         input(type="hidden" name="commentId" id="commentId" value=comment.id)
-                                                        textarea.fw(name="comment" id="comment" minlength="2" style="width:400px;max-width:100%;")
+                                                        textarea.fw.replyTextArea(name="comment" id="comment" minlength="2" style="width:400px;max-width:100%;")
                                                         br
-                                                        input.fw.btn.btn-md.btn-success(type='submit' value="Post Comment" style="border-radius:4px")
+                                                        input.fw.btn.btn-md.btn-success.postCommentButton(type='submit' value="Post Comment" style="border-radius:4px")
                                                         br
                                                         br
 
@@ -762,7 +842,163 @@ block extra_js
 
     $(document).ready(function () {
 
+      const uploadDescriptionText = $('#uploadDescriptionText');
 
+      const showMoreButton = $('.showMoreButton');
+
+      const showLessButton = $('.showLessButton');
+
+
+      // todo; change this to a div that includes the title as well
+      const height = uploadDescriptionText.height();
+
+      if(height > 198){
+        uploadDescriptionText.height('198');
+        // to-do show the show more button
+        showMoreButton.show()
+      }
+
+
+      showMoreButton.click(function(){
+        uploadDescriptionText.height(height);
+
+        showMoreButton.hide()
+        showLessButton.show()
+
+        //$('html, body').animate({
+        //  scrollTop: $('.descriptionBottom').offset().top
+        //}, 500);
+
+
+      })
+
+      showLessButton.click(function () {
+        uploadDescriptionText.height('198');
+
+        showMoreButton.show()
+        showLessButton.hide()
+      })
+
+
+
+
+      var v = document.getElementsByTagName("video") && document.getElementsByTagName("video")[0];
+
+
+      // this works properly because it runs right when the video has started
+      v.addEventListener('playing', function (event) {
+        console.log('event!!')
+        console.log(event);
+
+        // $('.frameJumper').css({"visibility":"hidden"});
+      })
+
+      v.addEventListener('pause', function (event) {
+        console.log('event!!')
+        console.log(event);
+
+        // $('.frameJumper').css({"visibility":"initial"});
+      })
+
+
+      const codes = {
+        109: -5,
+        44: -1,
+        46: 1,
+        47: 5
+      }
+
+      var fpsValue = '#{uploadFps}';
+
+
+      $(document).on("keypress", function (e) {
+        const keyCode = e.which;
+
+        for (const code in codes) {
+
+
+          if (code == keyCode) {
+            const amountOfFramesToMove = codes[code];
+
+            const firstFpsValue = Number(fpsValue.split('/')[0]);
+
+            const secondFpsValue = Number(fpsValue.split('/')[1]);
+
+            const fpsValueAsNumber = firstFpsValue / secondFpsValue
+
+            const amountOfSecondsToMovePerFrame = 1 / fpsValueAsNumber;
+
+            const amountOfSecondsToMoveTotal = amountOfSecondsToMovePerFrame * amountOfFramesToMove;
+
+            player.currentTime = player.currentTime + amountOfSecondsToMoveTotal;
+
+            console.log(code);
+          }
+
+
+        }
+
+        // use e.which
+      });
+
+
+        $('.fpsText').click(function(){
+
+          const amountOfFramesToMove = $(this).attr('amountOfFrames')
+
+          if(fpsValue) {
+
+            const firstFpsValue = Number(fpsValue.split('/')[0]);
+
+            const secondFpsValue = Number(fpsValue.split('/')[1]);
+
+            const fpsValueAsNumber = firstFpsValue/secondFpsValue
+
+            const amountOfSecondsToMovePerFrame = 1 / fpsValueAsNumber;
+
+            const amountOfSecondsToMoveTotal = amountOfSecondsToMovePerFrame * amountOfFramesToMove;
+
+            player.currentTime = player.currentTime + amountOfSecondsToMoveTotal;
+
+          }
+
+        });
+
+        $('.screenshotButton').click(function(){
+          const width = player.media.videoWidth;
+          const height = player.media.videoHeight;
+          const canvas = Object.assign(document.createElement('canvas'), {width, height});
+          canvas.getContext('2d').drawImage(player.media, 0, 0, width, height);
+
+          const thumbnailUrl = '#{uploadServer}/#{upload.uploader.channelUrl}/#{upload.thumbnails.custom || upload.thumbnails.generated}'
+
+          var link = document.createElement('a');
+
+
+          var title = '#{upload.title}'
+
+
+          if(player.currentTime == 0 ){
+
+            link.download = '#{title}.jpg';
+
+            console.log('use thumbnail');
+            console.log(thumbnailUrl);
+            link.href = thumbnailUrl
+
+
+          } else {
+
+            link.download = '#{title}.png';
+
+            console.log('use canvas')
+            link.href = canvas.toDataURL()
+          }
+
+
+          link.click();
+
+        })
 
       function getWidth() {
         return Math.max(
@@ -951,8 +1187,6 @@ block extra_footer_js
   if upload.status == 'processing'
     include ./mediaPlayerPartials/progressTrackerJs
 
-
-
   script(src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js")
   script(src="https://cdnjs.cloudflare.com/ajax/libs/plyr/3.5.10/plyr.min.js")
   // script(src="//cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.5.1/jquery.nicescroll.min.js")
@@ -968,16 +1202,26 @@ block extra_footer_js
 
       $('.lampIconDiv').click(function(){
 
-        // if lamp functionality is not turned on we need to turn it on
+        /** if lamp turned off functionality is not turned on we need to turn it on **/
         if(lampHidden == false){
 
           // $('.display-element').css('border', '1px solid black')
 
-          $('.headerContainer').css({
-            display: 'none'
+          // TODO: I would like to do display: none for these because they hide immediately
+          // but if I put the display none, I can't visibiltiY: initial the child element
+
+
+          $('.frameJumper').css({
+            visibility: 'hidden'
           })
 
-          $('.non-player-content').css({
+          // hide the header
+          $('.headerContainer').css({
+            visibility: 'hidden'
+          })
+
+          // hide the non player content
+          $('.non-player-content, footer').css({
             visibility: 'hidden'
           })
 
@@ -989,26 +1233,35 @@ block extra_footer_js
             opacity: 0.54
           })
 
+          // mark as hidden in memory
           lampHidden = true;
 
-          // otherwise the functionality has already been turned on, so we turn it off
+          /** otherwise the functionality has already been turned on, so we turn it off **/
         } else {
 
-          // $('.display-element').css('border', '1px solid #5b5a5a')
-
-          $('.headerContainer, .non-player-content').css({
+          $('.frameJumper').css({
             visibility: 'visible'
           })
 
+          // $('.display-element').css('border', '1px solid #5b5a5a')
+
+          // show the header and the rest of the non player content
           $('.headerContainer').css({
-            display: 'inherit'
+            visibility: 'visible'
           })
 
+          $('.non-player-content, footer').css({
+            visibility: 'visible'
+          })
+
+
+          // give lamp icon full opacity
           $('.lampIconDiv').css({
             visibility: 'visible',
             opacity: 1
           })
 
+          // mark as not hidden in memory
           lampHidden = false;
         }
 
@@ -1076,6 +1329,8 @@ block extra_footer_js
 
   script.
 
+
+
     //      setInterval(function(){
     //        if (document.hasFocus()){
     //          console.log('Tab is active')
@@ -1139,90 +1394,6 @@ block extra_footer_js
       });
 
 
-  //script.
-  //
-  //    // auto theatre mode functionality
-  //    $(function () {
-  //      var timer;
-  //      var fadeInBuffer = false;
-  //
-  //      function runBufferThing() {
-  //        if (!fadeInBuffer) {
-  //          if (timer) {
-  //            console.log("clearTimer");
-  //            clearTimeout(timer);
-  //            timer = 0;
-  //          }
-  //
-  //          console.log("fadeIn");
-  //
-  //        } else {
-  //          $('.non-player-content').css({
-  //            visibility: 'visible'
-  //          });
-  //          $('.headerContainer').css({
-  //            visibility: 'visible'
-  //          });
-  //
-  //          // also hide and show video border
-  //          $('.display-element').css({
-  //            border: '1px solid #5b5a5a'
-  //          });
-  //
-  //          fadeInBuffer = false;
-  //        }
-  //
-  //
-  //        timer = setTimeout(function () {
-  //          console.log("fadeout");
-  //
-  //          // only hide div if the document is in focus
-  //          // turning off so people can be on another tab
-  //          //            if(document.hasFocus()){
-  //          //              $('.non-player-content').css({
-  //          //                visibility: 'hidden'
-  //          //              });
-  //          //
-  //          //            }
-  //
-  //          const yOffset = window.pageYOffset;
-  //
-  //          if(yOffset < 9){
-  //            $('.non-player-content').css({
-  //              visibility: 'hidden'
-  //            });
-  //
-  //            $('.headerContainer').css({
-  //              visibility: 'hidden'
-  //            });
-  //
-  //
-  //            $('.display-element').css({
-  //              border: '0px solid #5b5a5a'
-  //            });
-  //          }
-  //
-  //
-  //
-  //
-  //          fadeInBuffer = true;
-  //
-  //          // run every 5000 seconds
-  //        }, 5000)
-  //      }
-  //
-  //      runBufferThing()
-  //
-  //      $('.plyr').click();
-  //
-  //      $(document).mousemove(function () {
-  //        runBufferThing();
-  //      });
-  //
-  //
-  //    });
-
-
   script.
     balanceText();
 
@@ -1252,6 +1423,10 @@ block extra_footer_js
   include ./mediaPlayerPartials/repeatFunctionalityJs
 
   include ./mediaPlayerPartials/reactFunctionalityJs
+
+  // if the upload is longer than 15 minutes and there's a user
+  if ( upload.durationInSeconds > (15 * 60) ) && user
+    include ./mediaPlayerPartials/lastWatchedJs
 
   script.
     $(' button[data-plyr="fast-forward"], button[data-plyr="rewind"]').click(function () {

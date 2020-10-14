@@ -139,6 +139,7 @@ function frontendRoutes(app){
   app.get('/docs', publicController.getDocs);
 
   app.get('/donate', publicController.getDonate);
+  app.get('/plus', publicController.getPlus);
 
   app.get('/landing', publicController.getLandingPage);
 
@@ -232,6 +233,7 @@ function frontendRoutes(app){
 
   /** account pages **/
   app.get('/notifications', accountFrontendController.notification);
+  app.get('/notifications/:page', accountFrontendController.notification);
   app.get('/login', accountFrontendController.getLogin);
   app.get('/logout', accountFrontendController.logout);
   app.get('/forgot', accountFrontendController.getForgot);
@@ -255,6 +257,8 @@ function frontendRoutes(app){
   /** API ENDPOINTS **/
   app.post('/api/react/:upload/:user', passportConfig.isAuthenticated, internalApiController.react);
 
+  app.post('/api/updateLastWatchedTime', passportConfig.isAuthenticated, internalApiController.updateLastWatchedTime);
+
   // TODO: why admin controller? (fix)
   app.post('/api/upload/delete', passportConfig.isAuthenticated, adminBackendController.deleteUpload);
 
@@ -272,6 +276,7 @@ function frontendRoutes(app){
 
   // purchase endpoints
   app.post('/api/purchase/plus', passportConfig.isAuthenticated, purchaseController.purchasePlus);
+  app.post('/api/purchase/donation', passportConfig.isAuthenticated, purchaseController.donation);
   app.post('/api/purchase/credit',passportConfig.isAuthenticated,  purchaseController.purchaseCredits);
 
   app.get('/importer', accountFrontendController.getImporter);

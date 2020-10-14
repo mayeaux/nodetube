@@ -36,6 +36,8 @@ if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false'){
 
 }
 
+// TODO: mediaBrowsing should be renamed media
+
 const pageLimit = 42;
 
 // TODO: pull this function out
@@ -374,6 +376,10 @@ async function saveSearchQuery(user, search){
 
 }
 
+function capitalizeFirst(string){
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 function getOrderByEnglishString(orderByQuery){
   let orderBy;
   if(!orderByQuery){
@@ -541,7 +547,8 @@ exports.search = async(req, res) => {
     nextNumber,
     totalUploadsAmount,
     uploadNumber,
-    uploadServer
+    uploadServer,
+    capitalizeFirst
   });
 };
 

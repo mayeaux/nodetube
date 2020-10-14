@@ -1,5 +1,47 @@
 script.
 
+
+
+  /** functionality to skip forward automatically based on lastWatchedTime **/
+  var lastWatchedTime = '#{lastWatchedTime && lastWatchedTime.secondsWatched}';
+
+  var secondsToMoveFoward = '#{secondsToMoveForward}';
+
+  var v = document.getElementsByTagName("video") && document.getElementsByTagName("video")[0];
+
+  if(!v){
+    v = document.getElementsByTagName("audio") && document.getElementsByTagName("audio")[0];
+  }
+
+  var movedForward = false;
+
+  // this works properly because it runs right when the video has started
+  v.addEventListener("playing", async function (event) {
+
+
+    if (lastWatchedTime) {
+      console.log('RUNNING LASST WATCHED');
+
+      if(!movedForward ){
+        player.currentTime = Number(lastWatchedTime)
+
+        // save in memory that we've skipped forward
+        movedForward = true;
+      } else {
+        console.log('already moved!');
+      }
+      console.log('DONE RUNNING!');
+
+    }
+  }, true);
+
+  // TODO: set the lastWatchedTime to 0 when you finish a video/audio
+
+
+
+
+
+
   $('.no-user-comment-form').on('release click', function(event){
     event.preventDefault();
     // swal("Please register to leave a comment")
@@ -40,6 +82,30 @@ script.
 
   console.log('should autoplay ' + autoplay)
 
+  // if user had just uploaded it
+  var dontAutoplayBasedOnUpload = "t" == window.getParameterByName("u");
+
+
+  var viewsAmount = '#{upload.views}';
+
+  viewsAmount = Number(viewsAmount);
+
+  console.log(viewsAmount);
+
+  const shouldNotAutoPlayBasedOnViews = viewsAmount < 5;
+
+  console.log(shouldNotAutoPlayBasedOnViews);
+
+  console.log(dontAutoplayBasedOnUpload)
+
+
+  if (dontAutoplayBasedOnUpload && shouldNotAutoPlayBasedOnViews) {
+    autoplay = false;
+  } else {
+    autoplay = true;
+  }
+
+  console.log('should autoplay ' + autoplay)
 
 
   // Available controls:
@@ -78,20 +144,51 @@ script.
 
   var player = players[0];
 
+
+
+
+  player.on('playing', function(){
+
+    var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+
+    // only hide button if it's on desktop
+    if(width > 900){
+      $('button.plyr__control.plyr__control--overlaid').css('display', 'none');
+    }
+
+  })
+
   players[0].on('ready', function (event) {
+
+    console.log(event);
+
+
+    if(secondsToMoveFoward){
+      player.currentTime = secondsToMoveFoward
+    }
+
+    console.log('last wached time');
+    console.log(Number(lastWatchedTime))
+
 
     if(autoplay){
       var playPromise = player.play();
 
+      //
       if (playPromise !== undefined) {
-        playPromise.then(function () {
-          console.log('thing');
+
+        // play promise is a thenable response, if it's not undefined
+        // try and then it, and if not then log the error and try and plan again
+        playPromise.then(function (event) {
+          console.log('running thenable');
+          console.log(event);
         }).catch(function (error) {// Auto-play was prevented
-          console.log('thing2');
-          player.play();
+
           console.log(error);
-          // Show paused UI.
+          console.log('autoplay was prevented try again');
+          player.play();
         });
+
       }
     } else {
       console.log('dont run')
@@ -131,25 +228,11 @@ script.
     //addStyleAttribute($('.plyr'), 'max-height: 100vh !important');
     //addStyleAttribute($('.plyr'), 'height: 100vh !important');
 
-
-
-
-
-
-
-
-
     // remove video max-height
 
   });
 
-  players[0].on('play', function (event) {
-
-    // $('.plyr').focus()
-    // add max height
-    // $('.plyr').css('cursor', 'none')
-
-  });
+  var alreadyMovedOnPlay = false;
 
   players[0].on('exitfullscreen', function (event) {
     // add max height

@@ -59,6 +59,7 @@ const Subscription = require('../../models/index').Subscription;
 const Notification = require('../../models/index').Notification;
 const CreditAction = require('../../models/index').CreditAction;
 const Report = require('../../models/index').Report;
+const LastWatchedTime = require('../../models/index').LastWatchedTime;
 
 const getMediaType = require('../../lib/uploading/media');
 
@@ -532,7 +533,9 @@ exports.react = async(req, res, next)  => {
 /** POST EDIT UPLOAD **/
 exports.editUpload = async(req, res, next) => {
 
-  console.log(req.body);
+  // console.log(req.body);
+  //
+  // return res.send('hello');
 
   try {
 
@@ -587,17 +590,21 @@ exports.editUpload = async(req, res, next) => {
 
     // check if there's a thumbnail
     let filename, fileType, fileExtension;
+
     if(req.files && req.files.filetoupload){
       filename = req.files.filetoupload.originalFilename;
       fileType = getMediaType(filename);
+
       fileExtension = path.extname(filename);
     }
 
     // console.log(req.files);
     // console.log(req.files.length);
 
+    //
     const fileIsNotImage = req.files && req.files.filetoupload && req.files.filetoupload.size > 0 && fileType && fileType !== 'image';
 
+    console.log('req files');
     console.log(req.files);
 
     // TODO: you have to make this smarter by checking the FileType
@@ -606,15 +613,22 @@ exports.editUpload = async(req, res, next) => {
 
     const imagePath = req.files && req.files.filetoupload && req.files.filetoupload.path;
 
-    const fileTypeData = await FileType.fromFile(imagePath);
+    // not doing anything just logging it atm
+    let fileTypeData;
+    if(imagePath){
+      const fileTypeData = await FileType.fromFile(imagePath);
+      console.log(fileTypeData);
 
-    console.log(fileTypeData);
+    }
 
     const webVttPath = req.files && req.files.webvtt && req.files.webvtt.path;
 
+    const originalName = req.files && req.files.webvtt && req.files.webvtt.originalFilename;
+
     const webVttFile = req.files && req.files.webvtt;
 
-    if(webVttPath){
+    // if there is a path, and it's not a falsy value, because these empty strings are being regarded as values
+    if(webVttPath && originalName){
       const originalName = webVttFile.originalFilename;
 
       const subtitlefileExtension = path.extname(originalName);
@@ -992,5 +1006,55 @@ exports.deleteUploadCaption = async(req, res) => {
     console.log(err);
   }
 
+};
+
+/** handle last watched time per user and upload **/
+exports.updateLastWatchedTime = async(req, res, next)  => {
+
+  // console.log(req.body);
+
+  // console.log(`${req.user._id}` , req.params.user);
+
+  const secondsWatched = req.body.secondsWatched;
+  const uploadUniqueTag = req.body.uniqueTag;
+
+  const user = req.user._id;
+
+  const upload = await Upload.findOne({
+    uniqueTag : req.body.uniqueTag
+  });
+
+  const uploadId = upload._id;
+
+  // find an existing react per that user and upload
+  let existingLastWatchedTime = await LastWatchedTime.findOne({
+    uploadUniqueTag,
+    user
+  });
+
+  if(existingLastWatchedTime){
+
+    existingLastWatchedTime.secondsWatched = secondsWatched;
+
+    await existingLastWatchedTime.save();
+
+    res.send('last watched time updated');
+
+    // if there's already an uploaded time
+  } else {
+
+    console.log('no saved watched time for this user and and upload');
+
+    const newLastWatchedTime = new LastWatchedTime({
+      upload: uploadId,
+      user: req.user._id,
+      uploadUniqueTag: upload.uniqueTag,
+      secondsWatched
+    });
+
+    await newLastWatchedTime.save();
+
+    res.send('new watch time created');
+  }
 };
 
