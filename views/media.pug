@@ -488,16 +488,21 @@ block content
                             span.nodetube-pro PLUS
 
 
-
-
-
+                    // TODO: show this if it's pending or not
                 if upload.visibility != 'pending'
                     if alreadySubbed
                         button.subscribe.btn.fw.btn-danger.op80.unsubscribeButton(style="border-radius:4px;") Unsubscribe (#{subscriberAmount})
                     else
                         button.subscribe.btn.fw.btn-success.op80.subscribeButton(style="border-radius:4px;") Subscribe (#{subscriberAmount})
-                    br
-                    br
+
+                br
+                div.change-size-button
+                    h2
+                        img(src="/images/push-notif-dark.jpg" aria-hidden="true" style="cursor:pointer;color:#a5a5a5;width:43px;")
+
+
+                br
+                br
 
 
             div.col-sm-6.uploadDescriptionColumn
