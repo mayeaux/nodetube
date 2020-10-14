@@ -135,7 +135,7 @@ exports.postSignup = async(req, res, next) => {
   // console.log(req.body.grecaptcha.getResponse('captcha'));
 
   if(!/^\w+$/.test(req.body.channelUrl)){
-    req.flash('errors', { msg: 'Please only use letters, numbers and underscores for your username.' });
+    req.flash('errors', { msg: 'Please only use letters, numbers and underscores (no spaces) for your username.' });
     return res.redirect('/signup');
   }
 
@@ -463,6 +463,8 @@ exports.postConfirmEmail = async(req, res, next) => {
       If you did not request this, please ignore this email and no further steps will be needed.\n`
     };
 
+    // TODO: replace with protonmail
+
     const response = await mailgunTransport.sendMail(mailOptions);
 
     console.log(response);
@@ -503,13 +505,15 @@ exports.postImporter = async(req, res) => {
 
   if(uniqueTag == 'playlist'){
     return res.send({
-      uniqueTag: 'playlist'
+      uniqueTag: 'playlist',
+      channelUrl
     });
   }
 
   console.log('now ' + new Date());
 
   return res.send({
-    uniqueTag
+    uniqueTag,
+    channelUrl
   });
 };

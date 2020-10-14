@@ -213,6 +213,10 @@ block content
         /* anything below this width */
         @media (max-width: 900px) {
 
+            .frameJumper {
+                display: none !important;
+            }
+
             .uploadTitle {
                 margin-top: 0px;
                 margin-bottom: 8px !important;
@@ -509,6 +513,12 @@ block content
                     .uploadDescriptionDiv
 
                         p#uploadDescriptionText.fw.uploadDescriptionText(style="color:#a5a5a5") #{upload.description}
+
+                        p.descriptionBottom
+
+                    h4.showMoreButton(style="display:none;font-size:20px;") Show More
+
+                    h4.showLessButton(style="display:none;font-size:20px;") Show Less
 
 
                 div.largerSection
@@ -832,6 +842,46 @@ block extra_js
 
     $(document).ready(function () {
 
+      const uploadDescriptionText = $('#uploadDescriptionText');
+
+      const showMoreButton = $('.showMoreButton');
+
+      const showLessButton = $('.showLessButton');
+
+
+      // todo; change this to a div that includes the title as well
+      const height = uploadDescriptionText.height();
+
+      if(height > 198){
+        uploadDescriptionText.height('198');
+        // to-do show the show more button
+        showMoreButton.show()
+      }
+
+
+      showMoreButton.click(function(){
+        uploadDescriptionText.height(height);
+
+        showMoreButton.hide()
+        showLessButton.show()
+
+        //$('html, body').animate({
+        //  scrollTop: $('.descriptionBottom').offset().top
+        //}, 500);
+
+
+      })
+
+      showLessButton.click(function () {
+        uploadDescriptionText.height('198');
+
+        showMoreButton.show()
+        showLessButton.hide()
+      })
+
+
+
+
       var v = document.getElementsByTagName("video") && document.getElementsByTagName("video")[0];
 
 
@@ -851,10 +901,46 @@ block extra_js
       })
 
 
-
-
+      const codes = {
+        109: -5,
+        44: -1,
+        46: 1,
+        47: 5
+      }
 
       var fpsValue = '#{uploadFps}';
+
+
+      $(document).on("keypress", function (e) {
+        const keyCode = e.which;
+
+        for (const code in codes) {
+
+
+          if (code == keyCode) {
+            const amountOfFramesToMove = codes[code];
+
+            const firstFpsValue = Number(fpsValue.split('/')[0]);
+
+            const secondFpsValue = Number(fpsValue.split('/')[1]);
+
+            const fpsValueAsNumber = firstFpsValue / secondFpsValue
+
+            const amountOfSecondsToMovePerFrame = 1 / fpsValueAsNumber;
+
+            const amountOfSecondsToMoveTotal = amountOfSecondsToMovePerFrame * amountOfFramesToMove;
+
+            player.currentTime = player.currentTime + amountOfSecondsToMoveTotal;
+
+            console.log(code);
+          }
+
+
+        }
+
+        // use e.which
+      });
+
 
         $('.fpsText').click(function(){
 
@@ -1242,6 +1328,8 @@ block extra_footer_js
   script(src="/js/media.js")
 
   script.
+
+
 
     //      setInterval(function(){
     //        if (document.hasFocus()){

@@ -125,6 +125,8 @@ block content
                   console.log(response);
 
 
+                  var channelUrl = response.channelUrl;
+
                   var uniqueTag = response.uniqueTag;
 
                   console.log(uniqueTag);
@@ -168,7 +170,7 @@ block content
 
                   if(uniqueTag !== 'playlist'){
 
-                    var newUrl = '/user/v/' + uniqueTag.uniqueTag + '?autoplay=off'
+                    var newUrl = '/user/' + channelUrl + '/' + uniqueTag.uniqueTag + '?u=t'
 
                     // redirect instead of opening a new tab, more reliable
                     window.location.href = newUrl;

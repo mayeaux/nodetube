@@ -551,11 +551,21 @@ exports.getChannel = async(req, res) => {
  */
 exports.notification = async(req, res) => {
 
+  let page = req.params.page;
+  if(!page){ page = 1; }
+  page = parseInt(page);
+
+  const limit = 100;
+  const skipAmount = (page * limit) - limit;
+
+  const { startingNumber, previousNumber, nextNumber, numbersArray } = pagination.buildPaginationObject(page);
+
   try {
 
+    // TODO: prioritize unread notifications
     const notifications = await Notification.find({
       user: req.user._id
-    }).populate('user sender upload react comment').sort({createdAt: -1}).limit(100);
+    }).populate('user sender upload react comment').skip(skipAmount).limit(limit).sort({createdAt: -1});
 
     // // console.log(notifications);
     // for(let notif of notifications){
@@ -566,7 +576,12 @@ exports.notification = async(req, res) => {
 
     res.render('account/notifications', {
       title: 'Notifications',
-      notifications
+      notifications,
+      startingNumber,
+      previousNumber,
+      nextNumber,
+      numbersArray,
+      highlightedNumber: page
     });
 
     // mark notifs as read

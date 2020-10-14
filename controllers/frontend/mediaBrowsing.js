@@ -36,6 +36,8 @@ if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false'){
 
 }
 
+// TODO: mediaBrowsing should be renamed media
+
 const pageLimit = 42;
 
 // TODO: pull this function out

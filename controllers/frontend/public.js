@@ -246,8 +246,22 @@ exports.getDocs = async(req, res) => {
  */
 exports.getDonate = async(req, res) => {
 
+  const stripeToken = process.env.STRIPE_FRONTEND_TOKEN;
+
   res.render('public/donate', {
-    title: 'Donate'
+    title: 'Donate',
+    stripeToken
+  });
+};
+
+/**
+ * GET /plus
+ * Plus page
+ */
+exports.getPlus = async(req, res) => {
+
+  res.render('public/plus', {
+    title: 'Plus'
   });
 };
 
