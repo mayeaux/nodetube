@@ -79,8 +79,7 @@ script.
   // this is basically the post request after you click a button
   const unregister = async function () {
 
-    var registrations = await
-    navigator.serviceWorker.getRegistrations();
+    var registrations = await navigator.serviceWorker.getRegistrations();
     for (var registration of registrations) {
       console.log(registration);
       const thing = await

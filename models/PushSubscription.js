@@ -41,7 +41,7 @@ pushSubscriptionSchema.virtual('timeAgo').get(function(){
   return timeAgoEnglish.format( new Date(this.createdAt) );
 });
 
-const PushSubscription = mongoose.model('Subscription', pushSubscriptionSchema);
+const PushSubscription = mongoose.model('PushSubscription', pushSubscriptionSchema);
 
 module.exports = PushSubscription;
 

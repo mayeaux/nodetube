@@ -26,6 +26,7 @@ const sendMessageToDiscord = require('../../lib/moderation/discordWebhooks');
 
 const func = require('../../lib/mediaPlayer/pushNotification');
 
+console.log('func');
 console.log(func);
 
 const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');

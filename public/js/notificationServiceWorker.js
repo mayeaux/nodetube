@@ -15,7 +15,7 @@ const urlB64ToUint8Array = base64String => {
 
 // this is basically the post request after you click a button
 const saveSubscription = async subscription => {
-  const SERVER_URL = "http://localhost:4000/save-subscription";
+  const SERVER_URL = "http://localhost:3000/save-subscription";
 
   console.log(subscription);
 

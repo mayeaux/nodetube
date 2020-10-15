@@ -7,7 +7,7 @@ require('intl-messageformat/dist/locale-data/en');
 const timeAgoEnglish = new javascriptTimeAgo('en-US');
 
 const pushEndpointSchema = new mongoose.Schema({
-  subscribingUser: {
+  user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     index: true
@@ -15,7 +15,7 @@ const pushEndpointSchema = new mongoose.Schema({
   // the stringified subscription direct from the browser
   // TODO: make sure there's no security risks here
   subscription: {
-    type: Mixed
+    type: mongoose.Schema.Types.Mixed
   },
 
   drivingUpload: {

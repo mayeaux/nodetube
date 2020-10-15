@@ -60,6 +60,8 @@ const Notification = require('../../models/index').Notification;
 const CreditAction = require('../../models/index').CreditAction;
 const Report = require('../../models/index').Report;
 const LastWatchedTime = require('../../models/index').LastWatchedTime;
+const PushEndpoint = require('../../models/index').PushEndpoint;
+
 
 const getMediaType = require('../../lib/uploading/media');
 
@@ -1056,5 +1058,19 @@ exports.updateLastWatchedTime = async(req, res, next)  => {
 
     res.send('new watch time created');
   }
+};
+
+exports.savePushEndpoint = async function(req, res, next){
+  let pushEndpoint = new PushEndpoint({
+    upload : req.user,
+    subscription : req.body
+  });
+
+  console.log(pushEndpoint);
+
+  await pushEndpoint.save();
+
+  res.send('success');
+
 };
 
