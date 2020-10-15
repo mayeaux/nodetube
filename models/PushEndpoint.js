@@ -22,8 +22,9 @@ const pushEndpointSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Upload'
   },
-  active: {
-    type: Boolean
+  expired: {
+    type: Boolean,
+    default: false
   }
 
 
