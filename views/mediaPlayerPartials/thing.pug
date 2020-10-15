@@ -54,7 +54,25 @@ script.
     swRegistration = await registerServiceWorker();
     console.log('swRegistration');
     console.log(swRegistration);
+
+
+    // alert('hello1');
   };
+
+  const thing1 = async() => {
+    alert('hello2');
+    const SERVER_URL = "http://localhost:3000/api/subscribeToPush";
+
+    const response = await fetch(SERVER_URL, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(subscription)
+    });
+
+    console.log(response);
+  }
 
 
   // this is basically the post request after you click a button
