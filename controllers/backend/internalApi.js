@@ -1063,14 +1063,30 @@ exports.updateLastWatchedTime = async(req, res, next)  => {
 };
 
 exports.savePushEndpoint = async function(req, res, next){
-  let pushEndpoint = new PushEndpoint({
-    upload : req.user,
-    subscription : req.body
+  // console.log(req);
+
+  const userAgent = req.get('User-Agent');
+
+  console.log(userAgent);
+
+  let existingPushEndpoint = await PushEndpoint.findOne({
+    user: req.user,
+    subscription: req.body,
+    userAgent
   });
 
-  console.log(pushEndpoint);
+  if(!existingPushEndpoint){
+    let pushEndpoint = new PushEndpoint({
+      upload : req.user,
+      subscription : req.body,
+      userAgent
+    });
 
-  await pushEndpoint.save();
+    console.log(pushEndpoint);
+
+    await pushEndpoint.save();
+  }
+
 
   res.send('success');
 
@@ -1104,12 +1120,8 @@ exports.subscribeToPushNotifications = async function(req, res, next){
 
     await pushEndpoint.save();
   } else {
-    console.log('CHANGE TO HERE');
+    console.log('already has an existing push subscription');
   }
-
-
-  // TODO: can reuse the subscribe functionality
-
 
   res.send('success');
 

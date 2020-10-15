@@ -7,6 +7,7 @@ require('intl-messageformat/dist/locale-data/en');
 const timeAgoEnglish = new javascriptTimeAgo('en-US');
 
 const pushEndpointSchema = new mongoose.Schema({
+  // the nodetube user associated with this endpoint
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -25,7 +26,14 @@ const pushEndpointSchema = new mongoose.Schema({
   expired: {
     type: Boolean,
     default: false
-  }
+  },
+
+  // the user agent to match against
+  userAgent : {
+    type: String
+  },
+
+
 
 
   // RATHER THAN USE VIEWED-AT TIME WE WILL USE CREATED AT TIME AS A STAND-IN
