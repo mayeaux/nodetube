@@ -136,6 +136,10 @@ block content
     p
     hr
 
+    h2.pushNotificationIcon Notification Icon
+
+
+
     div.center-block.text-center
 
         div.dropdown(style="display:inline;margin-right:15px;")
@@ -219,6 +223,12 @@ block content
     script.
       var myTextEl = document.getElementById('descriptionText');
       myTextEl.innerHTML = Autolinker.link(myTextEl.innerHTML);
+
+    script(src='/js/otherNotif.js')
+
+    script(src="/js/notificationServiceWorker.js")
+
+    include ../mediaPlayerPartials/thing
 
 
 

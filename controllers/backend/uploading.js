@@ -24,6 +24,10 @@ const Upload = require('../../models/index').Upload;
 
 const sendMessageToDiscord = require('../../lib/moderation/discordWebhooks');
 
+const func = require('../../lib/mediaPlayer/pushNotification');
+
+console.log(func);
+
 const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
 const getMediaType = require('../../lib/uploading/media');
 const { b2, bucket, hostUrl } = require('../../lib/uploading/backblaze');
@@ -585,6 +589,8 @@ exports.postFileUpload = async(req, res) => {
           uploadLogger.info('Upload marked as complete', logObject);
 
           updateUsersUnreadSubscriptions(user);
+
+          // TODO: add job to do a push notif here
 
           uploadLogger.info('Updated subscribed users subscriptions', logObject);
 

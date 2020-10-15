@@ -496,9 +496,10 @@ block content
                         button.subscribe.btn.fw.btn-success.op80.subscribeButton(style="border-radius:4px;") Subscribe (#{subscriberAmount})
 
                 br
+                //- push notification functionality
                 div.change-size-button
                     h2
-                        img(src="/images/push-notif-dark.jpg" aria-hidden="true" style="cursor:pointer;color:#a5a5a5;width:43px;")
+                        img.pushNotificationIcon(src="/images/push-notif-dark.jpg" aria-hidden="true" style="cursor:pointer;color:#a5a5a5;width:43px;")
 
 
                 br
@@ -843,9 +844,17 @@ block extra_js
   //script(src='https://checkout.stripe.com/checkout.js')
   script(src="https://cdnjs.cloudflare.com/ajax/libs/autolinker/1.4.4/Autolinker.js")
 
+  script(src='/js/otherNotif.js')
+
+  script(src="/js/notificationServiceWorker.js")
+
   script.
 
     $(document).ready(function () {
+
+      $('.pushNotificationIcon').click(function(){
+        main();
+      })
 
       const uploadDescriptionText = $('#uploadDescriptionText');
 
@@ -1196,6 +1205,7 @@ block extra_footer_js
   script(src="https://cdnjs.cloudflare.com/ajax/libs/plyr/3.5.10/plyr.min.js")
   // script(src="//cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.5.1/jquery.nicescroll.min.js")
 
+
   script.
 
     $(document).ready(function () {
@@ -1326,14 +1336,11 @@ block extra_footer_js
       include mediaPlayerPartials/threateModeFunctionality
 
 
-  include mediaPlayerPartials/pushNotification
-
 
 
   //COMMENT FUNCTIONALITY CONTAINED HERE
   script(src="/js/media.js")
 
-  script(src="/js/notificationServiceWorker.js")
 
   script.
 
