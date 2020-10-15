@@ -28,7 +28,7 @@ const errorHandler = require('errorhandler');
 const jsHelpers = require('./lib/helpers/js-helpers');
 
 /** FOR FINDING ERRANT LOGS **/
-if(process.env.SHOW_LOG_LOCATION == 'true' || 2 == 1){
+if(process.env.SHOW_LOG_LOCATION == 'true' || 1 == 2){
   jsHelpers.showLogLocation();
 }
 

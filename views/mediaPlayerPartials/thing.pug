@@ -81,8 +81,7 @@ script.
     var registrations = await navigator.serviceWorker.getRegistrations();
     for (var registration of registrations) {
       console.log(registration);
-      const thing = await
-      registration.unregister()
+      const thing = await registration.unregister()
       console.log(thing);
     }
   };
