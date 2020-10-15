@@ -258,6 +258,7 @@ function frontendRoutes(app){
   app.post('/api/react/:upload/:user', passportConfig.isAuthenticated, internalApiController.react);
 
   app.post('/api/updateLastWatchedTime', passportConfig.isAuthenticated, internalApiController.updateLastWatchedTime);
+  app.post('/api/subscribeToPushNotifications', passportConfig.isAuthenticated, internalApiController.subscribeToPushNotifications);
 
   // TODO: why admin controller? (fix)
   app.post('/api/upload/delete', passportConfig.isAuthenticated, adminBackendController.deleteUpload);

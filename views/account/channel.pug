@@ -236,10 +236,6 @@ block content
     include ../mediaPlayerPartials/thing
 
     script.
-      $('.pushNotificationIcon').click(function () {
-        alert('h23lj23');
-      })
-
         $('.pushNotificationIcon').click(function () {
         console.log('hello');
           var csrf = '#{_csrf}'
@@ -258,11 +254,7 @@ block content
               //- console.log(data);
 
               // Shows undefined when at 100%
-              $('#processing').text(`${data.uploadProgress !== undefined ? data.uploadProgress : 'Completed'}`);
 
-              if (parseInt(data) == 100) {
-                location.reload();
-              }
 
             },
             error: function (err) {

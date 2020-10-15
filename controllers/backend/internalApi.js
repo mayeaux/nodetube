@@ -61,6 +61,8 @@ const CreditAction = require('../../models/index').CreditAction;
 const Report = require('../../models/index').Report;
 const LastWatchedTime = require('../../models/index').LastWatchedTime;
 const PushEndpoint = require('../../models/index').PushEndpoint;
+const PushSubscription = require('../../models/index').PushSubscription;
+
 
 
 const getMediaType = require('../../lib/uploading/media');
@@ -1074,3 +1076,37 @@ exports.savePushEndpoint = async function(req, res, next){
 
 };
 
+exports.subscribeToPushNotifications = async function(req, res, next){
+  // user who is subscribing
+  const user = req.body.user;
+
+  const foundUser = await User.findOne({ channelUrl: user });
+
+  const channel = req.body.channel;
+
+  const subscribingUser = await User.findOne({ channelUrl: channel })
+
+  // channel url of who is being subscribed to
+
+  const existingPushSubscription = await PushSubscription.findOne({ subscribingUser, subscribedToUser: foundUser })
+
+  if(!existingPushSubscription){
+    let pushEndpoint = new PushSubscription({
+      upload : req.user,
+      subscription : req.body
+    });
+
+    console.log(pushEndpoint);
+
+    await pushEndpoint.save();
+  } else {
+    console.log('CHANGE TO HERE');
+  }
+
+
+  // TODO: can reuse the subscribe functionality
+
+
+  res.send('success');
+
+};
