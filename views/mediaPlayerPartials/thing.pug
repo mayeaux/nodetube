@@ -31,8 +31,7 @@ script.
 
   var permission;
   const requestNotificationPermission = async function () {
-    permission = await
-    window.Notification.requestPermission();
+    permission = await window.Notification.requestPermission();
 
     console.log(permission);
 
@@ -46,15 +45,15 @@ script.
 
   const main = async() => {
     check();
-    swRegistration = await
-    registerServiceWorker();
-    console.log('swRegistration');
-    console.log(swRegistration);
 
-    permission = await
-    requestNotificationPermission();
+
+    permission = await requestNotificationPermission();
     console.log('permission');
     console.log(permission);
+
+    swRegistration = await registerServiceWorker();
+    console.log('swRegistration');
+    console.log(swRegistration);
   };
 
 
