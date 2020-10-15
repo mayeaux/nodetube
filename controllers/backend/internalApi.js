@@ -1082,9 +1082,13 @@ exports.subscribeToPushNotifications = async function(req, res, next){
 
   const foundUser = await User.findOne({ channelUrl: user });
 
+  console.log(foundUser.channelUrl);
+
   const channel = req.body.channel;
 
   const subscribingUser = await User.findOne({ channelUrl: channel })
+
+  console.log(subscribingUser.channelUrl);
 
   // channel url of who is being subscribed to
 
@@ -1092,8 +1096,8 @@ exports.subscribeToPushNotifications = async function(req, res, next){
 
   if(!existingPushSubscription){
     let pushEndpoint = new PushSubscription({
-      upload : req.user,
-      subscription : req.body
+      subscribingUser,
+      subscribedToUser: foundUser
     });
 
     console.log(pushEndpoint);
