@@ -83,6 +83,14 @@ block content
                 else
                     button(style="display:inherit;margin:0 auto;border-radius:3px;").fw.subscribe.btn.btn-success Subscribe (#{subscriberAmount})
 
+                if user && user.role == 'admin'
+
+                    // TODO: this should create a push subsciption, and it will also send a query to see if it should create a new service worker
+                    h2.share-button.pushNotificationIcon
+                        i.share-icon.fas.fa-bell(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:0px;")
+
+
+
 
 
             div.user-stats.col-sm-8(style="")
@@ -135,17 +143,6 @@ block content
 
     p
     hr
-
-    if user && user.role == 'admin'
-        // TODO: this should create a push subsciption, and it will also send a query to see if it should create a new service worker
-        h2.pushNotificationIcon Push Sub To This User
-
-        // TODO: this should create a push subsciption, and it will also send a query to see if it should create a new service worker
-        h2.unsubscribePushButton Unsubscribe To This User
-
-        if user && user.role == 'admin'
-            h3.sendPushNotifs Send Push Notifs For This User (Simulating Upload)
-
 
 
     div.center-block.text-center
