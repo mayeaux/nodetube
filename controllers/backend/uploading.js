@@ -591,9 +591,9 @@ exports.postFileUpload = async(req, res) => {
           uploadLogger.info('Updated subscribed users subscriptions', logObject);
 
           // this is admin upload for all
-          alertAdminOfNewUpload(user, upload);
+          // alertAdminOfNewUpload(user, upload);
 
-          uploadLogger.info('Alert admins of a new upload', logObject);
+          // uploadLogger.info('Alert admins of a new upload', logObject);
 
           // this is admin upload for all
           updateUsersPushNotifications(user, upload);
