@@ -246,6 +246,10 @@ block content
             console.log('readl');
             console.log(alreadyHavePushNotifsOn);
 
+            if(alreadyHavePushNotifsOn){
+              $('.pushNotificationIcon i').css('color', 'grey')
+            }
+
 
 
             $('.pushNotificationIcon').click(function () {
@@ -263,10 +267,15 @@ block content
                 url: `/api/subscribeToPushNotifications`,
                 data,
                 success: function (data) {
+
+                  // by default, turn the color grey and load up 'you have subbed' as the text
+                  $('.pushNotificationIcon i').css('color', 'grey')
                   let swalText = 'You have subscribed to their push notifications'
+
                   // if push notifs already on
                   if (alreadyHavePushNotifsOn) {
                     swalText = 'You have unsubscribed from their push notifications'
+                    $('.pushNotificationIcon i').css('color', 'white')
                   }
 
                   swal(swalText);
