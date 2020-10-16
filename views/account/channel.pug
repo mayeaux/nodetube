@@ -83,7 +83,7 @@ block content
                 else
                     button(style="display:inherit;margin:0 auto;border-radius:3px;").fw.subscribe.btn.btn-success Subscribe (#{subscriberAmount})
 
-                if user && user.role == 'admin'
+                if user
 
                     // TODO: this should create a push subsciption, and it will also send a query to see if it should create a new service worker
                     h2.share-button.pushNotificationIcon
