@@ -1112,19 +1112,32 @@ exports.subscribeToPushNotifications = async function(req, res, next){
 
   // channel url of who is being subscribed to
 
-  const existingPushSubscription = await PushSubscription.findOne({ subscribingUser, subscribedToUser: foundUser });
+  let existingActivePushSubscription = await PushSubscription.findOne({ subscribingUser, subscribedToUser: foundUser, active: true });
 
-  if(!existingPushSubscription){
-    let pushEndpoint = new PushSubscription({
-      subscribingUser,
-      subscribedToUser: foundUser
-    });
+  // already exists and turned on, turn it off
+  if(existingActivePushSubscription){
+    existingActivePushSubscription.active = false;
+    await existingActivePushSubscription.save();
+  }
 
-    console.log(pushEndpoint);
+  // check if there's an inactive one, if not make a new one
+  if(!existingActivePushSubscription){
+    let existingInactivePushNotif = await PushSubscription.findOne({ subscribingUser, subscribedToUser: foundUser, active: false });
 
-    await pushEndpoint.save();
-  } else {
-    console.log('already has an existing push subscription');
+    if(existingInactivePushNotif){
+      existingInactivePushNotif.active = true;
+      await existingInactivePushNotif.save();
+    } else {
+      let pushEndpoint = new PushSubscription({
+        subscribingUser,
+        subscribedToUser: foundUser,
+        active: true
+      });
+
+      console.log(pushEndpoint);
+
+      await pushEndpoint.save();
+    }
   }
 
   res.send('success');
