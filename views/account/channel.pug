@@ -246,11 +246,7 @@ block content
             console.log('readl');
             console.log(alreadyHavePushNotifsOn);
 
-            let swalText = 'You have subbed to their notifications'
-            // if push notifs already on
-            if(alreadyHavePushNotifsOn){
-              swalText = 'You have unsubscribed from their notifications'
-            }
+
 
             $('.pushNotificationIcon').click(function () {
             console.log('hello');
@@ -267,15 +263,16 @@ block content
                 url: `/api/subscribeToPushNotifications`,
                 data,
                 success: function (data) {
+                  let swalText = 'You have subscribed to their push notifications'
+                  // if push notifs already on
+                  if (alreadyHavePushNotifsOn) {
+                    swalText = 'You have unsubscribed from their push notifications'
+                  }
+
                   swal(swalText);
 
-                  if(data == 'already existing inactive, make it active'){
+                  alreadyHavePushNotifsOn = !alreadyHavePushNotifsOn;
 
-                  } else if (data == 'thing1'){
-
-                  } else if (data == 'thing2'){
-
-                  }
                   console.log(data);
                   //- console.log(data);
 
