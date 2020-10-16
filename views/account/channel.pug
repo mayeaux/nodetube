@@ -241,59 +241,66 @@ block content
     if user
         script.
 
-            var alreadyHavePushNotifsOn = '#{alreadyHavePushNotifsOn}' == 'true'
+            $(document).ready(function(){
+              var alreadyHavePushNotifsOn = '#{alreadyHavePushNotifsOn}' == 'true'
 
-            console.log('readl');
-            console.log(alreadyHavePushNotifsOn);
+              console.log('readl');
+              console.log(alreadyHavePushNotifsOn);
 
-            if(alreadyHavePushNotifsOn){
-              $('.pushNotificationIcon i').css('color', 'grey')
-            }
+              if (alreadyHavePushNotifsOn) {
+                $('.pushNotificationIcon i').css('color', 'grey')
+              }
 
-
-
-            $('.pushNotificationIcon').click(function () {
-            console.log('hello');
-              var csrf = '#{_csrf}'
-
-              const data = {
-              _csrf: csrf,
-              user : '#{user.channelUrl}',
-              channel : '#{channel.channelUrl}'
-            }
-
-              $.ajax({
-                type: 'POST',
-                url: `/api/subscribeToPushNotifications`,
-                data,
-                success: function (data) {
-
-                  // by default, turn the color grey and load up 'you have subbed' as the text
-                  $('.pushNotificationIcon i').css('color', 'grey')
-                  let swalText = 'You have subscribed to their push notifications'
-
-                  // if push notifs already on
-                  if (alreadyHavePushNotifsOn) {
-                    swalText = 'You have unsubscribed from their push notifications'
-                    $('.pushNotificationIcon i').css('color', 'white')
-                  }
-
-                  swal(swalText);
-
-                  alreadyHavePushNotifsOn = !alreadyHavePushNotifsOn;
-
-                  console.log(data);
-                  //- console.log(data);
-
-                  // Shows undefined when at 100%
+              if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+                $('.pushNotificationIcon i').hide()
+              }
 
 
-                },
-                error: function (err) {
-                  console.log(err);
+              $('.pushNotificationIcon').click(function () {
+                console.log('hello');
+                var csrf = '#{_csrf}'
+
+                const data = {
+                  _csrf: csrf,
+                  user: '#{user.channelUrl}',
+                  channel: '#{channel.channelUrl}'
                 }
-              });
+
+                $.ajax({
+                  type: 'POST',
+                  url: `/api/subscribeToPushNotifications`,
+                  data,
+                  success: function (data) {
+
+                    // by default, turn the color grey and load up 'you have subbed' as the text
+                    $('.pushNotificationIcon i').css('color', 'grey')
+                    let swalText = 'You have subscribed to their push notifications'
+
+                    // if push notifs already on
+                    if (alreadyHavePushNotifsOn) {
+                      swalText = 'You have unsubscribed from their push notifications'
+                      $('.pushNotificationIcon i').css('color', 'white')
+                    }
+
+                    swal(swalText);
+
+                    alreadyHavePushNotifsOn = !alreadyHavePushNotifsOn;
+
+                    console.log(data);
+                    //- console.log(data);
+
+                    // Shows undefined when at 100%
+
+
+                  },
+                  error: function (err) {
+                    console.log(err);
+                  }
+                });
+              })
             })
+
+
 
 
         script.
@@ -355,7 +362,6 @@ block content
             })
 
     script.
-
         $('.pushNotificationIcon').click(function(){
             main();
         })
