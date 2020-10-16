@@ -23,6 +23,7 @@ const pushEndpointSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Upload'
   },
+
   expired: {
     type: Boolean,
     default: false
@@ -31,10 +32,7 @@ const pushEndpointSchema = new mongoose.Schema({
   // the user agent to match against
   userAgent : {
     type: String
-  },
-
-
-
+  }
 
   // RATHER THAN USE VIEWED-AT TIME WE WILL USE CREATED AT TIME AS A STAND-IN
 },{ timestamps: true,

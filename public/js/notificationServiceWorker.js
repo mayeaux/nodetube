@@ -1,13 +1,13 @@
 // urlB64ToUint8Array is a magic function that will encode the base64 public key
 // to Array buffer which is needed by the subscription option
 const urlB64ToUint8Array = base64String => {
-  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
   const base64 = (base64String + padding)
-    .replace(/\-/g, "+")
-    .replace(/_/g, "/");
+    .replace(/\-/g, '+')
+    .replace(/_/g, '/');
   const rawData = atob(base64);
   const outputArray = new Uint8Array(rawData.length);
-  for (let i = 0; i < rawData.length; ++i) {
+  for(let i = 0; i < rawData.length; ++i){
     outputArray[i] = rawData.charCodeAt(i);
   }
   return outputArray;
@@ -15,14 +15,14 @@ const urlB64ToUint8Array = base64String => {
 
 // this is basically the post request after you click a button
 const saveSubscription = async subscription => {
-  const SERVER_URL = "http://localhost:3000/save-subscription";
+  const SERVER_URL = 'http://localhost:3000/save-subscription';
 
   console.log(subscription);
 
   const response = await fetch(SERVER_URL, {
-    method: "post",
+    method: 'post',
     headers: {
-      "Content-Type": "application/json"
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify(subscription)
   });
@@ -30,7 +30,7 @@ const saveSubscription = async subscription => {
 };
 
 // SETUP LOCAL NOTIFICATION TO SHOW VIA NOTIFICATION API
-const showLocalNotification = async (body, swRegistration) => {
+const showLocalNotification = async(body, swRegistration) => {
 
   console.log(body);
   const params = new URLSearchParams(body);
@@ -42,17 +42,20 @@ const showLocalNotification = async (body, swRegistration) => {
   const data = params.get('data');
   const title = params.get('title');
 
+  const badge = icon;
+
   const options = {
     body: description,
     image,
     icon,
-    data: url
+    data: url,
+    badge
     // here you can add more properties like icon, image, vibrate, etc.
   };
   return swRegistration.showNotification(title, options);
 };
 
-self.addEventListener('notificationclick', function(event) {
+self.addEventListener('notificationclick', function(event){
   console.log(event);
 
   // this contains a bunch of info on the notification, icon image and all that stuff
@@ -68,15 +71,15 @@ self.addEventListener('notificationclick', function(event) {
   event.waitUntil(
     clients.matchAll({type: 'window'}).then( windowClients => {
       // Check if there is already a window/tab open with the target URL
-      for (var i = 0; i < windowClients.length; i++) {
+      for(var i = 0; i < windowClients.length; i++){
         var client = windowClients[i];
         // If so, just focus it.
-        if (client.url === url && 'focus' in client) {
+        if(client.url === url && 'focus' in client){
           return client.focus();
         }
       }
       // If not, then open the target URL in a new window/tab.
-      if (clients.openWindow) {
+      if(clients.openWindow){
         return clients.openWindow(url);
       }
     })
@@ -84,15 +87,15 @@ self.addEventListener('notificationclick', function(event) {
 });
 
 // when you receive a push, start a new notif
-self.addEventListener("push", function(event) {
+self.addEventListener('push', function(event){
   console.log(event);
-  if (event.data) {
-    console.log("Push event!! ", event.data.text());
+  if(event.data){
+    console.log('Push event!! ', event.data.text());
 
     // event data text is the payload text
     return showLocalNotification(event.data.text(), self.registration);
   } else {
-    console.log("Push event but no data");
+    console.log('Push event but no data');
   }
 });
 
@@ -108,9 +111,9 @@ const options = {
   userVisibleOnly: true
 };
 
-console.log(options)
+console.log(options);
 
-self.addEventListener('activate', async () => {
+self.addEventListener('activate', async() => {
   // This will be called only once when the service worker is activated.
   try {
 
@@ -122,7 +125,7 @@ self.addEventListener('activate', async () => {
     const response = await saveSubscription(subscription);
     console.log(response);
 
-  } catch (err) {
-    console.log('Error', err)
+  } catch(err){
+    console.log('Error', err);
   }
 });

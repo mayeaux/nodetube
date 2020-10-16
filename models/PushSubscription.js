@@ -6,7 +6,6 @@ require('javascript-time-ago/intl-messageformat-global');
 require('intl-messageformat/dist/locale-data/en');
 const timeAgoEnglish = new javascriptTimeAgo('en-US');
 
-
 // FIND THE USER WITH ACTIVE SUBSCRIPTIONS, SCROLL THROUGH THEIR PUSH ENDPOINTS AND PUSH TO THEM
 
 const pushSubscriptionSchema = new mongoose.Schema({

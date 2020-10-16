@@ -25,7 +25,6 @@ const User = require('../../models/index').User;
 const Upload = require('../../models/index').Upload;
 const PushEndpoint = require('../../models/index').PushEndpoint;
 
-
 const sendMessageToDiscord = require('../../lib/moderation/discordWebhooks');
 
 const func = require('../../lib/mediaPlayer/pushNotification');
@@ -596,23 +595,21 @@ exports.postFileUpload = async(req, res) => {
           updateUsersUnreadSubscriptions(user);
 
           // TODO: grab the endpoint here
-          const pushEndpoints = await PushEndpoint.find({  })
+          const pushEndpoints = await PushEndpoint.find({ user: req.user, expired: false });
 
           console.log(pushEndpoints);
 
           let url, icon, image = '';
 
-
+          url = `/user/channelUrl/${uniqueTag}`;
 
           const pushPayload = `url=${url}&$description=${description}&image${image}&icon=${icon}&title=${title}&description=${description}`;
 
           for(const endpoint of pushEndpoints){
             console.log(endpoint);
             console.log(pushPayload);
-            pushNotificationLib.sendPushNotification(endpoint.subscription, pushPayload)
+            pushNotificationLib.sendPushNotification(endpoint.subscription, pushPayload);
           }
-
-
 
           // TODO: add job to do a push notif here
 

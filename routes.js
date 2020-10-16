@@ -351,7 +351,6 @@ function frontendRoutes(app){
   app.post('/admin/changeRatings', authMiddleware.adminAuth, adminBackendController.changeRatings);
   app.post('/admin/getUserAccounts', authMiddleware.adminAuth, adminBackendController.getUserAccounts);
 
-
   app.post('/save-subscription', passportConfig.isAuthenticated, internalApiController.savePushEndpoint);
 
   // find all ips and accounts associated

@@ -63,14 +63,10 @@ const LastWatchedTime = require('../../models/index').LastWatchedTime;
 const PushEndpoint = require('../../models/index').PushEndpoint;
 const PushSubscription = require('../../models/index').PushSubscription;
 
-
-
 const getMediaType = require('../../lib/uploading/media');
 const pushNotificationLibrary = require('../../lib/mediaPlayer/pushNotification');
 
 console.log(pushNotificationLibrary);
-
-
 
 const ffmpegHelper = require('../../lib/uploading/ffmpeg');
 var resumable = require('../../lib/uploading/resumable.js')(__dirname +  '/upload');
@@ -1068,6 +1064,8 @@ exports.updateLastWatchedTime = async(req, res, next)  => {
 };
 
 exports.savePushEndpoint = async function(req, res, next){
+
+  console.log(req.user);
   // console.log(req);
 
   const userAgent = req.get('User-Agent');
@@ -1077,21 +1075,22 @@ exports.savePushEndpoint = async function(req, res, next){
   let existingPushEndpoint = await PushEndpoint.findOne({
     user: req.user,
     subscription: req.body,
-    userAgent
+    userAgent,
+    expired: false
   });
 
   if(!existingPushEndpoint){
     let pushEndpoint = new PushEndpoint({
-      upload : req.user,
+      user : req.user,
       subscription : req.body,
-      userAgent
+      userAgent,
+      expired: false
     });
 
     console.log(pushEndpoint);
 
     await pushEndpoint.save();
   }
-
 
   res.send('success');
 
@@ -1107,13 +1106,13 @@ exports.subscribeToPushNotifications = async function(req, res, next){
 
   const channel = req.body.channel;
 
-  const subscribingUser = await User.findOne({ channelUrl: channel })
+  const subscribingUser = await User.findOne({ channelUrl: channel });
 
   console.log(subscribingUser.channelUrl);
 
   // channel url of who is being subscribed to
 
-  const existingPushSubscription = await PushSubscription.findOne({ subscribingUser, subscribedToUser: foundUser })
+  const existingPushSubscription = await PushSubscription.findOne({ subscribingUser, subscribedToUser: foundUser });
 
   if(!existingPushSubscription){
     let pushEndpoint = new PushSubscription({
@@ -1140,28 +1139,23 @@ exports.sendUserPushNotifs = async function(req, res, next){
   // user who is subscribing
   const channel = req.body.channel;
 
-  const userToSendFor = await User.findOne({ channelUrl: channel })
-
-
+  const userToSendFor = await User.findOne({ channelUrl: channel });
 
   console.log(userToSendFor.channelUrl);
-
 
   // TODO: find all the PushSubscriptions where he is the subscribed to user, that are active
   // for each of those pushsubscriptions, populate the user
   // for each of those users, find their endpoints, and then webpush to them (active ones)
 
-  await pushNotificationLibrary.sendPushNotifications()
+  await pushNotificationLibrary.sendPushNotifications();
 
-  return
+  return;
 
   const subscriptions = await PushEndpoint.find({ expired : { $ne: true } });
 
   for(const subscription of subscriptions){
     console.log(subscription);
   }
-
-
 
   // channel url of who is being subscribed to
 
@@ -1183,5 +1177,4 @@ exports.sendUserPushNotifs = async function(req, res, next){
   res.send('success');
 
 };
-
 
