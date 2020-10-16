@@ -1114,12 +1114,17 @@ exports.subscribeToPushNotifications = async function(req, res, next){
 
   let existingActivePushSubscription = await PushSubscription.findOne({ subscribingUser, subscribedToUser: foundUser, active: true });
 
+  let responseText;
+
+
   // already exists and turned on, turn it off
   if(existingActivePushSubscription){
-    console.log('already inactive, turn it off');
+    responseText = 'already inactive, turn it off'
+    console.log(responseText);
     existingActivePushSubscription.active = false;
     await existingActivePushSubscription.save();
   }
+
 
   // check if there's an inactive one, if not make a new one
   if(!existingActivePushSubscription){
@@ -1128,11 +1133,14 @@ exports.subscribeToPushNotifications = async function(req, res, next){
 
 
     if(existingInactivePushNotif){
-      console.log('already existing inactive, make it active');
+      responseText = 'already existing inactive, make it active';
+      console.log(responseText);
       existingInactivePushNotif.active = true;
       await existingInactivePushNotif.save();
     } else {
-      console.log('create a new push sub');
+      responseText = 'create a new push sub';
+
+      console.log(responseText);
       let pushEndpoint = new PushSubscription({
         subscribingUser,
         subscribedToUser: foundUser,
@@ -1145,7 +1153,7 @@ exports.subscribeToPushNotifications = async function(req, res, next){
     }
   }
 
-  res.send('success');
+  res.send(responseText);
 
 };
 
