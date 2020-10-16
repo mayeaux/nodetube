@@ -1100,13 +1100,13 @@ exports.subscribeToPushNotifications = async function(req, res, next){
   // user who is subscribing
   const user = req.body.user;
 
-  const foundUser = await User.findOne({ channelUrl: user });
-
-  console.log(foundUser.channelUrl);
+  const subscribingUser = await User.findOne({ channelUrl: user });
 
   const channel = req.body.channel;
 
-  const subscribingUser = await User.findOne({ channelUrl: channel });
+  const foundUser = await User.findOne({ channelUrl: channel });
+
+  console.log(foundUser.channelUrl);
 
   console.log(subscribingUser.channelUrl);
 
@@ -1162,7 +1162,7 @@ exports.sendUserPushNotifs = async function(req, res, next){
 
   await pushNotificationLibrary.sendPushNotifications();
 
-  return;
+  return res.send('hello');
 
   const subscriptions = await PushEndpoint.find({ expired : { $ne: true } });
 
