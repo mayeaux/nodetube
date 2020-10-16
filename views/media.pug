@@ -616,13 +616,13 @@ block content
                         h2.download-button
                             i.download-icon.fa.fa-download(aria-hidden="true" style="cursor:pointer;color:#a5a5a5;")
 
-                    // only do repeat button if it's audio or video
+                    // theatre mode button
                     if upload.fileType == 'video'
                         div.change-size-button.theatre-mode-button(style="margin-left:0px;")
                             h2(style="")
                                 i.fa.fa-tv(aria-hidden="true" style="cursor:pointer;color:#a5a5a5;")
 
-                    // only do repeat button if it's audio or video
+                    // lamp button functionality
                     if upload.fileType == 'video'
                         div.change-size-button.lampIconDiv(style="margin-left:-16px;margin-right:-3px;")
                             img.lampIcon(src="/images/lamp.png")

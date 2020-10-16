@@ -511,8 +511,16 @@ exports.getChannel = async(req, res) => {
 
     const joinedTimeAgo = timeAgoEnglish.format(user.createdAt);
 
+
+    let existingPushSub;
+    if(req.user){
+      existingPushSub = await PushSubscription.findOne({ subscribingUser: req.user._id, active: true });
+    }
+
+    console.log(existingPushSub);
+
     // if the user already has push notis turned on
-    const alreadyHavePushNotifsOn = req.user && Boolean(await PushSubscription.findOne({ subscribingUser: req.user._id, active: true }));
+    const alreadyHavePushNotifsOn = Boolean(existingPushSub)
 
     console.log('already')
 

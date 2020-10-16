@@ -87,7 +87,7 @@ block content
 
                     // TODO: this should create a push subsciption, and it will also send a query to see if it should create a new service worker
                     h2.share-button.pushNotificationIcon
-                        i.share-icon.fas.fa-bell(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:0px;")
+                        i.share-icon.fas.fa-bell(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:0px;color:white;")
 
 
 
@@ -240,6 +240,18 @@ block content
 
     if user
         script.
+
+            var alreadyHavePushNotifsOn = '#{alreadyHavePushNotifsOn}' == 'true'
+
+            console.log('readl');
+            console.log(alreadyHavePushNotifsOn);
+
+            let swalText = 'You have subbed to their notifications'
+            // if push notifs already on
+            if(alreadyHavePushNotifsOn){
+              swalText = 'You have unsubscribed from their notifications'
+            }
+
             $('.pushNotificationIcon').click(function () {
             console.log('hello');
               var csrf = '#{_csrf}'
@@ -255,6 +267,8 @@ block content
                 url: `/api/subscribeToPushNotifications`,
                 data,
                 success: function (data) {
+                  swal(swalText);
+
                   if(data == 'already existing inactive, make it active'){
 
                   } else if (data == 'thing1'){
