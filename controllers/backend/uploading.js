@@ -594,7 +594,7 @@ exports.postFileUpload = async(req, res) => {
 
           updateUsersUnreadSubscriptions(user);
 
-          // TODO: grab the endpoint here
+          // TODO: push notification functionality
           const pushEndpoints = await PushEndpoint.find({ user: req.user, expired: false });
 
           console.log(pushEndpoints);
@@ -603,7 +603,11 @@ exports.postFileUpload = async(req, res) => {
 
           url = `/user/channelUrl/${uniqueTag}`;
 
-          const pushPayload = `url=${url}&$description=${description}&image${image}&icon=${icon}&title=${title}&description=${description}`;
+          const uploadedImage = `/uploads/${user.channelUrl}/${uniqueTag}.jpg`;
+
+          const pushTitle = `New upload by: ${user.channelUrl}: ${title}`
+
+          const pushPayload = `url=${url}&$description=${description}&image${uploadedImage}&icon=${uploadedImage}&title=${pushTitle}&description=${description}`;
 
           for(const endpoint of pushEndpoints){
             console.log(endpoint);

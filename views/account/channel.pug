@@ -136,13 +136,14 @@ block content
     p
     hr
 
-    h2.pushNotificationIcon Notification Icon
-
-    // TODO: this should create a push subsciption, and it will also send a query to see if it should create a new service worker
-    h2.pushNotificationIcon Push Sub To This User
-
     if user && user.role == 'admin'
-        h3.sendPushNotifs Send Push Notifs For This User (Simulating Upload)
+        h2.pushNotificationIcon Notification Icon
+
+        // TODO: this should create a push subsciption, and it will also send a query to see if it should create a new service worker
+        h2.pushNotificationIcon Push Sub To This User
+
+        if user && user.role == 'admin'
+            h3.sendPushNotifs Send Push Notifs For This User (Simulating Upload)
 
 
 
