@@ -593,7 +593,13 @@ exports.postFileUpload = async(req, res) => {
           // this is admin upload for all
           alertAdminOfNewUpload(user, upload);
 
+          uploadLogger.info('Alert admins of a new upload', logObject);
+
+          // this is admin upload for all
+          // updateUsersPushNotifications(user, upload);
+
           uploadLogger.info('Update users push notifications', logObject);
+
 
           // upload is complete, send it off to user (aboutToProcess is a misnomer here)
           if(!responseSent){
