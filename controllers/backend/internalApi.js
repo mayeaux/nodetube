@@ -66,6 +66,11 @@ const PushSubscription = require('../../models/index').PushSubscription;
 
 
 const getMediaType = require('../../lib/uploading/media');
+const pushNotificationLibrary = require('../../lib/mediaPlayer/pushNotification');
+
+console.log(pushNotificationLibrary);
+
+
 
 const ffmpegHelper = require('../../lib/uploading/ffmpeg');
 var resumable = require('../../lib/uploading/resumable.js')(__dirname +  '/upload');
@@ -1126,3 +1131,57 @@ exports.subscribeToPushNotifications = async function(req, res, next){
   res.send('success');
 
 };
+
+exports.sendUserPushNotifs = async function(req, res, next){
+  if(req.user.role !== 'admin'){
+    return res.send('die');
+  }
+
+  // user who is subscribing
+  const channel = req.body.channel;
+
+  const userToSendFor = await User.findOne({ channelUrl: channel })
+
+
+
+  console.log(userToSendFor.channelUrl);
+
+
+  // TODO: find all the PushSubscriptions where he is the subscribed to user, that are active
+  // for each of those pushsubscriptions, populate the user
+  // for each of those users, find their endpoints, and then webpush to them (active ones)
+
+  await pushNotificationLibrary.sendPushNotifications()
+
+  return
+
+  const subscriptions = await PushEndpoint.find({ expired : { $ne: true } });
+
+  for(const subscription of subscriptions){
+    console.log(subscription);
+  }
+
+
+
+  // channel url of who is being subscribed to
+
+  // const existingPushSubscription = await PushSubscription.find({ subscribingUser, subscribedToUser: foundUser })
+  //
+  // if(!existingPushSubscription){
+  //   let pushEndpoint = new PushSubscription({
+  //     subscribingUser,
+  //     subscribedToUser: foundUser
+  //   });
+  //
+  //   console.log(pushEndpoint);
+  //
+  //   await pushEndpoint.save();
+  // } else {
+  //   console.log('already has an existing push subscription');
+  // }
+
+  res.send('success');
+
+};
+
+

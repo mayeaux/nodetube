@@ -141,6 +141,9 @@ block content
     // TODO: this should create a push subsciption, and it will also send a query to see if it should create a new service worker
     h2.pushNotificationIcon Push Sub To This User
 
+    if user && user.role == 'admin'
+        h3.sendPushNotifs Send Push Notifs For This User (Simulating Upload)
+
 
 
     div.center-block.text-center
@@ -235,40 +238,65 @@ block content
 
     include ../mediaPlayerPartials/thing
 
-    script.
-        $('.pushNotificationIcon').click(function () {
-        console.log('hello');
-          var csrf = '#{_csrf}'
 
-          const data = {
-          _csrf: csrf,
-          user : '#{user.channelUrl}',
-          channel : '#{channel.channelUrl}'
-        }
+    if user
+        script.
+            $('.pushNotificationIcon').click(function () {
+            console.log('hello');
+              var csrf = '#{_csrf}'
 
-          $.ajax({
-            type: 'POST',
-            url: `/api/subscribeToPushNotifications`,
-            data,
-            success: function (data) {
-              //- console.log(data);
-
-              // Shows undefined when at 100%
-
-
-            },
-            error: function (err) {
-              console.log(err);
+              const data = {
+              _csrf: csrf,
+              user : '#{user.channelUrl}',
+              channel : '#{channel.channelUrl}'
             }
-          });
 
-        // main();
+              $.ajax({
+                type: 'POST',
+                url: `/api/subscribeToPushNotifications`,
+                data,
+                success: function (data) {
+                  //- console.log(data);
+
+                  // Shows undefined when at 100%
 
 
+                },
+                error: function (err) {
+                  console.log(err);
+                }
+              });
+         })
+
+    if user && user.role == 'admin'
+        script.
+          $('.sendPushNotifs').click(function () {
+            console.log('hello');
+            var csrf = '#{_csrf}'
+
+            const data = {
+              _csrf: csrf,
+              user: '#{user.channelUrl}',
+              channel: '#{channel.channelUrl}'
+            }
+
+            $.ajax({
+              type: 'POST',
+              url: `/api/sendUserPushNotifs`,
+              data,
+              success: function (data) {
+                //- console.log(data);
+
+                // Shows undefined when at 100%
 
 
+              },
+              error: function (err) {
+                console.log(err);
+              }
+            });
 
-      })
+            })
 
     script.
 

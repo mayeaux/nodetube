@@ -13,6 +13,8 @@ var CombinedStream = require('combined-stream');
 
 const redisClient = require('../../config/redis');
 
+const pushNotificationLib = require('../../lib/mediaPlayer/pushNotification');
+
 const pagination = require('../../lib/helpers/pagination');
 const timeHelper = require('../../lib/helpers/time');
 const uploadingHelpers = require('../../lib/uploading/helpers');
@@ -21,6 +23,8 @@ const bytesToMb = uploadingHelpers.bytesToMb;
 
 const User = require('../../models/index').User;
 const Upload = require('../../models/index').Upload;
+const PushEndpoint = require('../../models/index').PushEndpoint;
+
 
 const sendMessageToDiscord = require('../../lib/moderation/discordWebhooks');
 
@@ -591,6 +595,25 @@ exports.postFileUpload = async(req, res) => {
 
           updateUsersUnreadSubscriptions(user);
 
+          // TODO: grab the endpoint here
+          const pushEndpoints = await PushEndpoint.find({  })
+
+          console.log(pushEndpoints);
+
+          let url, icon, image = '';
+
+
+
+          const pushPayload = `url=${url}&$description=${description}&image${image}&icon=${icon}&title=${title}&description=${description}`;
+
+          for(const endpoint of pushEndpoints){
+            console.log(endpoint);
+            console.log(pushPayload);
+            pushNotificationLib.sendPushNotification(endpoint.subscription, pushPayload)
+          }
+
+
+
           // TODO: add job to do a push notif here
 
           uploadLogger.info('Updated subscribed users subscriptions', logObject);
@@ -613,109 +636,109 @@ exports.postFileUpload = async(req, res) => {
 /** TODO: pull into livestream **/
 exports.adminUpload = async(req, res) => {
 
-  console.log(req.headers);
-
-  console.log('hit');
-
-  if(req.headers.token !== 'token'){
-    res.status = 403;
-    return res.send('wrong');
-  }
-
-  const username = req.headers.username;
-  const date = req.headers.date;
-
-  console.log(date);
-
-  let user = await User.findOne({ channelUrl: username });
-
-  // if you cant find the user
-  if(!user){
-    console.log('NOT EXPECTED: NO USER');
-    res.status(500);
-    return res.send('wrong');
-  }
-
-  const channelUrl = user.channelUrl;
-
-  const title = `Livestream by ${username} at ${date}`;
-
-  const uniqueTag = randomstring.generate(7);
-
-  const fileExtension = '.flv';
-
-  let upload = new Upload({
-    uploader: user._id,
-    title,
-    visibility: 'public',
-    fileType : 'video',
-    hostUrl,
-    fileExtension : '.flv',
-    uniqueTag,
-    rating: 'allAges',
-    status: 'processing',
-    livestreamDate : date
-    // uploadServer
-  });
-
-  await upload.save();
-
-  const realFileInDirectory = `./uploads/${channelUrl}${uniqueTag}.flv`;
-
-  let flvFile = fs.createWriteStream(realFileInDirectory);
-
-  req.on('data', chunk => {
-
-    flvFile.write(chunk);
-
-  });
-
-  req.on('end', async function(){
-
-    flvFile.end();
-
-    const hostFilePath = `${channelUrl}/${uniqueTag}`;
-
-    await mkdirp.mkdirpAsync(`./uploads/${user.channelUrl}`);
-
-    // TODO: fix this
-    await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, upload, channelUrl, b2, hostFilePath, bucket);
-
-    await ffmpegHelper.takeAndUploadThumbnail(realFileInDirectory, uniqueTag, hostFilePath, bucket, upload, channelUrl, b2);
-
-    await ffmpegHelper.convertVideo({
-      uploadedPath: realFileInDirectory,
-      uniqueTag,
-      channelUrl,
-      title: upload.title
-    });
-
-    const response = await ffmpegHelper.ffprobePromise(realFileInDirectory);
-
-    // console.log(response);
-
-    upload.fileSize = response.format.size;
-    upload.processedFileSizeInMb = bytesToMb(response.format.size);
-
-    upload.bitrate = response.format.bit_rate / 1000;
-
-    upload.status = 'completed';
-    upload.fileType = 'video';
-
-    upload = await upload.save();
-
-    console.log('done');
-
-    await markUploadAsComplete(uniqueTag, channelUrl, user);
-
-    res.send('done');
-
-    updateUsersUnreadSubscriptions(user);
-
-    /** UPLOAD TO B2 **/
-    if(process.env.NODE_ENV == 'production'){
-      uploadToB2(upload, realFileInDirectory, hostFilePath);
-    }
-  });
+  // console.log(req.headers);
+  //
+  // console.log('hit');
+  //
+  // if(req.headers.token !== 'token'){
+  //   res.status = 403;
+  //   return res.send('wrong');
+  // }
+  //
+  // const username = req.headers.username;
+  // const date = req.headers.date;
+  //
+  // console.log(date);
+  //
+  // let user = await User.findOne({ channelUrl: username });
+  //
+  // // if you cant find the user
+  // if(!user){
+  //   console.log('NOT EXPECTED: NO USER');
+  //   res.status(500);
+  //   return res.send('wrong');
+  // }
+  //
+  // const channelUrl = user.channelUrl;
+  //
+  // const title = `Livestream by ${username} at ${date}`;
+  //
+  // const uniqueTag = randomstring.generate(7);
+  //
+  // const fileExtension = '.flv';
+  //
+  // let upload = new Upload({
+  //   uploader: user._id,
+  //   title,
+  //   visibility: 'public',
+  //   fileType : 'video',
+  //   hostUrl,
+  //   fileExtension : '.flv',
+  //   uniqueTag,
+  //   rating: 'allAges',
+  //   status: 'processing',
+  //   livestreamDate : date
+  //   // uploadServer
+  // });
+  //
+  // await upload.save();
+  //
+  // const realFileInDirectory = `./uploads/${channelUrl}${uniqueTag}.flv`;
+  //
+  // let flvFile = fs.createWriteStream(realFileInDirectory);
+  //
+  // req.on('data', chunk => {
+  //
+  //   flvFile.write(chunk);
+  //
+  // });
+  //
+  // req.on('end', async function(){
+  //
+  //   flvFile.end();
+  //
+  //   const hostFilePath = `${channelUrl}/${uniqueTag}`;
+  //
+  //   await mkdirp.mkdirpAsync(`./uploads/${user.channelUrl}`);
+  //
+  //   // TODO: fix this
+  //   await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, upload, channelUrl, b2, hostFilePath, bucket);
+  //
+  //   await ffmpegHelper.takeAndUploadThumbnail(realFileInDirectory, uniqueTag, hostFilePath, bucket, upload, channelUrl, b2);
+  //
+  //   await ffmpegHelper.convertVideo({
+  //     uploadedPath: realFileInDirectory,
+  //     uniqueTag,
+  //     channelUrl,
+  //     title: upload.title
+  //   });
+  //
+  //   const response = await ffmpegHelper.ffprobePromise(realFileInDirectory);
+  //
+  //   // console.log(response);
+  //
+  //   upload.fileSize = response.format.size;
+  //   upload.processedFileSizeInMb = bytesToMb(response.format.size);
+  //
+  //   upload.bitrate = response.format.bit_rate / 1000;
+  //
+  //   upload.status = 'completed';
+  //   upload.fileType = 'video';
+  //
+  //   upload = await upload.save();
+  //
+  //   console.log('done');
+  //
+  //   await markUploadAsComplete(uniqueTag, channelUrl, user);
+  //
+  //   res.send('done');
+  //
+  //   updateUsersUnreadSubscriptions(user);
+  //
+  //   /** UPLOAD TO B2 **/
+  //   if(process.env.NODE_ENV == 'production'){
+  //     uploadToB2(upload, realFileInDirectory, hostFilePath);
+  //   }
+  // });
 
 };
