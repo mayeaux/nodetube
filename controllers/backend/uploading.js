@@ -13,8 +13,6 @@ var CombinedStream = require('combined-stream');
 
 const redisClient = require('../../config/redis');
 
-const pushNotificationLib = require('../../lib/mediaPlayer/pushNotification');
-
 const pagination = require('../../lib/helpers/pagination');
 const timeHelper = require('../../lib/helpers/time');
 const uploadingHelpers = require('../../lib/uploading/helpers');
@@ -23,14 +21,8 @@ const bytesToMb = uploadingHelpers.bytesToMb;
 
 const User = require('../../models/index').User;
 const Upload = require('../../models/index').Upload;
-const PushEndpoint = require('../../models/index').PushEndpoint;
 
 const sendMessageToDiscord = require('../../lib/moderation/discordWebhooks');
-
-const func = require('../../lib/mediaPlayer/pushNotification');
-
-console.log('func');
-console.log(func);
 
 const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
 const getMediaType = require('../../lib/uploading/media');
@@ -41,7 +33,9 @@ const {
   markUploadAsComplete,
   updateUsersUnreadSubscriptions,
   runTimeoutFunction,
-  userCanUploadContentOfThisRating
+  userCanUploadContentOfThisRating,
+  updateUsersPushNotifications,
+  alertAdminOfNewUpload
 } = require('../../lib/uploading/helpers');
 const backblaze = require('../../lib/uploading/backblaze');
 
@@ -594,30 +588,12 @@ exports.postFileUpload = async(req, res) => {
 
           updateUsersUnreadSubscriptions(user);
 
-          // TODO: push notification functionality
-          const pushEndpoints = await PushEndpoint.find({ user: req.user, expired: false });
-
-          console.log(pushEndpoints);
-
-          let url, icon, image = '';
-
-          url = `/user/channelUrl/${uniqueTag}`;
-
-          const uploadedImage = `/uploads/${user.channelUrl}/${uniqueTag}.jpg`;
-
-          const pushTitle = `New upload by: ${user.channelUrl}: ${title}`
-
-          const pushPayload = `url=${url}&$description=${description}&image${uploadedImage}&icon=${uploadedImage}&title=${pushTitle}&description=${description}`;
-
-          for(const endpoint of pushEndpoints){
-            console.log(endpoint);
-            console.log(pushPayload);
-            pushNotificationLib.sendPushNotification(endpoint.subscription, pushPayload);
-          }
-
-          // TODO: add job to do a push notif here
-
           uploadLogger.info('Updated subscribed users subscriptions', logObject);
+
+          // this is admin upload for all
+          alertAdminOfNewUpload(user, upload);
+
+          uploadLogger.info('Update users push notifications', logObject);
 
           // upload is complete, send it off to user (aboutToProcess is a misnomer here)
           if(!responseSent){
