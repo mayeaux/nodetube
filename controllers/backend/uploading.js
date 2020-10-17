@@ -600,7 +600,6 @@ exports.postFileUpload = async(req, res) => {
 
           uploadLogger.info('Update users push notifications', logObject);
 
-
           // upload is complete, send it off to user (aboutToProcess is a misnomer here)
           if(!responseSent){
             responseSent = true;
