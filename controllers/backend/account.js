@@ -359,12 +359,12 @@ exports.postReset = async(req, res, next) => {
 
   const mailOptions = {
     to: user.email,
-    from: process.env.FORGOT_PASSWORD_EMAIL_ADDRESS,
     subject: `Your ${brandName} password has been reset`,
-    text: `Hello,\n\nThis is a confirmation that the password for your account ${user.email} has just been changed.\n`
+    body: `Hello,\n\nThis is a confirmation that the password for your account ${user.email} has just been changed.
+	  <br>`
   };
 
-  const response = await mailgunTransport.sendMail(mailOptions);
+  const response = await protonmailTransport().then(pm => pm.sendEmail(mailOptions));
 
   // console.log(response);
 
@@ -404,15 +404,15 @@ exports.postForgot = async(req, res, next) => {
 
     const mailOptions = {
       to: user.email,
-      from: process.env.FORGOT_PASSWORD_EMAIL_ADDRESS,
       subject: `Reset your password on ${brandName}`,
-      text: `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
+      body: `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
       Please click on the following link, or paste this into your browser to complete the process:\n\n
       http://${req.headers.host}/reset/${token}\n\n
-      If you did not request this, please ignore this email and your password will remain unchanged.\n`
+      If you did not request this, please ignore this email and your password will remain unchanged.
+	    <br>`
     };
 
-    const response = await mailgunTransport.sendMail(mailOptions);
+    const response = await protonmailTransport().then(pm => pm.sendEmail(mailOptions));
 
     // console.log(response);
 
