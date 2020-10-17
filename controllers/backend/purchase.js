@@ -54,7 +54,6 @@ exports.donation = async function(req, res){
     console.log(`Purchase made: ${purchase}`);
     console.log(purchase);
 
-
     res.send('success');
   } catch(err){
     console.log(err);

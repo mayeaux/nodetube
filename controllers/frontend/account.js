@@ -12,6 +12,9 @@ const React = require('../../models/index').React;
 const Notification = require('../../models/index').Notification;
 const SocialPost = require('../../models/index').SocialPost;
 const Subscription = require('../../models/index').Subscription;
+const PushSubscription = require('../../models/index').PushSubscription;
+const PushEndpoint = require('../../models/index').PushEndpoint;
+
 const RSS = require('rss');
 
 const { uploadServer, uploadUrl } = require('../../lib/helpers/settings');
@@ -508,6 +511,20 @@ exports.getChannel = async(req, res) => {
 
     const joinedTimeAgo = timeAgoEnglish.format(user.createdAt);
 
+    let existingPushSub;
+    if(req.user){
+      existingPushSub = await PushSubscription.findOne({ subscribingUser: req.user._id, active: true });
+    }
+
+    console.log(existingPushSub);
+
+    // if the user already has push notis turned on
+    const alreadyHavePushNotifsOn = Boolean(existingPushSub);
+
+    console.log('already');
+
+    console.log(alreadyHavePushNotifsOn);
+
     res.render('account/channel', {
       channel : user,
       title: user.channelName || user.channelUrl,
@@ -531,7 +548,8 @@ exports.getChannel = async(req, res) => {
       joinedTimeAgo,
       media,
       page,
-      orderBy
+      orderBy,
+      alreadyHavePushNotifsOn
     });
 
   } catch(err){

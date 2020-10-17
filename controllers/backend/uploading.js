@@ -33,7 +33,9 @@ const {
   markUploadAsComplete,
   updateUsersUnreadSubscriptions,
   runTimeoutFunction,
-  userCanUploadContentOfThisRating
+  userCanUploadContentOfThisRating,
+  updateUsersPushNotifications,
+  alertAdminOfNewUpload
 } = require('../../lib/uploading/helpers');
 const backblaze = require('../../lib/uploading/backblaze');
 
@@ -588,6 +590,16 @@ exports.postFileUpload = async(req, res) => {
 
           uploadLogger.info('Updated subscribed users subscriptions', logObject);
 
+          // this is admin upload for all
+          alertAdminOfNewUpload(user, upload);
+
+          uploadLogger.info('Alert admins of a new upload', logObject);
+
+          // this is admin upload for all
+          updateUsersPushNotifications(user, upload);
+
+          uploadLogger.info('Update users push notifications', logObject);
+
           // upload is complete, send it off to user (aboutToProcess is a misnomer here)
           if(!responseSent){
             responseSent = true;
@@ -606,109 +618,109 @@ exports.postFileUpload = async(req, res) => {
 /** TODO: pull into livestream **/
 exports.adminUpload = async(req, res) => {
 
-  console.log(req.headers);
-
-  console.log('hit');
-
-  if(req.headers.token !== 'token'){
-    res.status = 403;
-    return res.send('wrong');
-  }
-
-  const username = req.headers.username;
-  const date = req.headers.date;
-
-  console.log(date);
-
-  let user = await User.findOne({ channelUrl: username });
-
-  // if you cant find the user
-  if(!user){
-    console.log('NOT EXPECTED: NO USER');
-    res.status(500);
-    return res.send('wrong');
-  }
-
-  const channelUrl = user.channelUrl;
-
-  const title = `Livestream by ${username} at ${date}`;
-
-  const uniqueTag = randomstring.generate(7);
-
-  const fileExtension = '.flv';
-
-  let upload = new Upload({
-    uploader: user._id,
-    title,
-    visibility: 'public',
-    fileType : 'video',
-    hostUrl,
-    fileExtension : '.flv',
-    uniqueTag,
-    rating: 'allAges',
-    status: 'processing',
-    livestreamDate : date
-    // uploadServer
-  });
-
-  await upload.save();
-
-  const realFileInDirectory = `./uploads/${channelUrl}${uniqueTag}.flv`;
-
-  let flvFile = fs.createWriteStream(realFileInDirectory);
-
-  req.on('data', chunk => {
-
-    flvFile.write(chunk);
-
-  });
-
-  req.on('end', async function(){
-
-    flvFile.end();
-
-    const hostFilePath = `${channelUrl}/${uniqueTag}`;
-
-    await mkdirp.mkdirpAsync(`./uploads/${user.channelUrl}`);
-
-    // TODO: fix this
-    await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, upload, channelUrl, b2, hostFilePath, bucket);
-
-    await ffmpegHelper.takeAndUploadThumbnail(realFileInDirectory, uniqueTag, hostFilePath, bucket, upload, channelUrl, b2);
-
-    await ffmpegHelper.convertVideo({
-      uploadedPath: realFileInDirectory,
-      uniqueTag,
-      channelUrl,
-      title: upload.title
-    });
-
-    const response = await ffmpegHelper.ffprobePromise(realFileInDirectory);
-
-    // console.log(response);
-
-    upload.fileSize = response.format.size;
-    upload.processedFileSizeInMb = bytesToMb(response.format.size);
-
-    upload.bitrate = response.format.bit_rate / 1000;
-
-    upload.status = 'completed';
-    upload.fileType = 'video';
-
-    upload = await upload.save();
-
-    console.log('done');
-
-    await markUploadAsComplete(uniqueTag, channelUrl, user);
-
-    res.send('done');
-
-    updateUsersUnreadSubscriptions(user);
-
-    /** UPLOAD TO B2 **/
-    if(process.env.NODE_ENV == 'production'){
-      uploadToB2(upload, realFileInDirectory, hostFilePath);
-    }
-  });
+  // console.log(req.headers);
+  //
+  // console.log('hit');
+  //
+  // if(req.headers.token !== 'token'){
+  //   res.status = 403;
+  //   return res.send('wrong');
+  // }
+  //
+  // const username = req.headers.username;
+  // const date = req.headers.date;
+  //
+  // console.log(date);
+  //
+  // let user = await User.findOne({ channelUrl: username });
+  //
+  // // if you cant find the user
+  // if(!user){
+  //   console.log('NOT EXPECTED: NO USER');
+  //   res.status(500);
+  //   return res.send('wrong');
+  // }
+  //
+  // const channelUrl = user.channelUrl;
+  //
+  // const title = `Livestream by ${username} at ${date}`;
+  //
+  // const uniqueTag = randomstring.generate(7);
+  //
+  // const fileExtension = '.flv';
+  //
+  // let upload = new Upload({
+  //   uploader: user._id,
+  //   title,
+  //   visibility: 'public',
+  //   fileType : 'video',
+  //   hostUrl,
+  //   fileExtension : '.flv',
+  //   uniqueTag,
+  //   rating: 'allAges',
+  //   status: 'processing',
+  //   livestreamDate : date
+  //   // uploadServer
+  // });
+  //
+  // await upload.save();
+  //
+  // const realFileInDirectory = `./uploads/${channelUrl}${uniqueTag}.flv`;
+  //
+  // let flvFile = fs.createWriteStream(realFileInDirectory);
+  //
+  // req.on('data', chunk => {
+  //
+  //   flvFile.write(chunk);
+  //
+  // });
+  //
+  // req.on('end', async function(){
+  //
+  //   flvFile.end();
+  //
+  //   const hostFilePath = `${channelUrl}/${uniqueTag}`;
+  //
+  //   await mkdirp.mkdirpAsync(`./uploads/${user.channelUrl}`);
+  //
+  //   // TODO: fix this
+  //   await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, upload, channelUrl, b2, hostFilePath, bucket);
+  //
+  //   await ffmpegHelper.takeAndUploadThumbnail(realFileInDirectory, uniqueTag, hostFilePath, bucket, upload, channelUrl, b2);
+  //
+  //   await ffmpegHelper.convertVideo({
+  //     uploadedPath: realFileInDirectory,
+  //     uniqueTag,
+  //     channelUrl,
+  //     title: upload.title
+  //   });
+  //
+  //   const response = await ffmpegHelper.ffprobePromise(realFileInDirectory);
+  //
+  //   // console.log(response);
+  //
+  //   upload.fileSize = response.format.size;
+  //   upload.processedFileSizeInMb = bytesToMb(response.format.size);
+  //
+  //   upload.bitrate = response.format.bit_rate / 1000;
+  //
+  //   upload.status = 'completed';
+  //   upload.fileType = 'video';
+  //
+  //   upload = await upload.save();
+  //
+  //   console.log('done');
+  //
+  //   await markUploadAsComplete(uniqueTag, channelUrl, user);
+  //
+  //   res.send('done');
+  //
+  //   updateUsersUnreadSubscriptions(user);
+  //
+  //   /** UPLOAD TO B2 **/
+  //   if(process.env.NODE_ENV == 'production'){
+  //     uploadToB2(upload, realFileInDirectory, hostFilePath);
+  //   }
+  // });
 
 };

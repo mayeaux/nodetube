@@ -7,7 +7,8 @@ require('intl-messageformat/dist/locale-data/en');
 const timeAgoEnglish = new javascriptTimeAgo('en-US');
 
 const pushEndpointSchema = new mongoose.Schema({
-  subscribingUser: {
+  // the nodetube user associated with this endpoint
+  user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     index: true
@@ -15,17 +16,23 @@ const pushEndpointSchema = new mongoose.Schema({
   // the stringified subscription direct from the browser
   // TODO: make sure there's no security risks here
   subscription: {
-    type: Mixed
+    type: mongoose.Schema.Types.Mixed
   },
 
   drivingUpload: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Upload'
   },
-  active: {
-    type: Boolean
-  }
 
+  expired: {
+    type: Boolean,
+    default: false
+  },
+
+  // the user agent to match against
+  userAgent : {
+    type: String
+  }
 
   // RATHER THAN USE VIEWED-AT TIME WE WILL USE CREATED AT TIME AS A STAND-IN
 },{ timestamps: true,
