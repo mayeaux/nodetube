@@ -278,7 +278,7 @@ function frontendRoutes(app){
 
   // purchase endpoints
   app.post('/api/purchase/plus', passportConfig.isAuthenticated, purchaseController.purchasePlus);
-  app.post('/api/purchase/donation', passportConfig.isAuthenticated, purchaseController.donation);
+  app.post('/api/purchase/donation', purchaseController.donation);
   app.post('/api/purchase/credit',passportConfig.isAuthenticated,  purchaseController.purchaseCredits);
 
   app.get('/importer', accountFrontendController.getImporter);
