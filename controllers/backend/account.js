@@ -17,6 +17,7 @@ const mkdirp = Promise.promisifyAll(require('mkdirp'));
 const randomstring = require('randomstring');
 
 const mailTransports = require('../../config/nodemailer');
+const {protonmailTransport} = require('../../config/protonmailTransport');
 
 const importerDownloadFunction = require('../../lib/uploading/importer');
 
@@ -451,21 +452,23 @@ exports.postConfirmEmail = async(req, res, next) => {
     user.emailConfirmationExpires = Date.now() + 3600000; // 1 hour
     user = await user.save();
 
-    console.log(user.email, process.env.CONFIRM_USER_EMAIL_ADDRESS);
+    console.log('User email: ', user.email);
+    console.log('Confirmation email address: ', process.env.PROTONMAIL_USERNAME);
 
     const mailOptions = {
       to: user.email,
-      from: process.env.CONFIRM_USER_EMAIL_ADDRESS,
       subject: `Confirm your email on ${brandName}`,
-      text: `You are receiving this email because you (or someone else) has attempted to link this email to their account.\n\n
-      Please click on the following link, or paste this into your browser to complete the process:\n\n
-      http://${req.headers.host}/confirmEmail/${token}\n\n
-      If you did not request this, please ignore this email and no further steps will be needed.\n`
+      body: `You are receiving this email because you (or someone else) has attempted to link this email to their account.
+      <br><br>
+      Please click on the following link, or paste this into your browser to complete the process:
+      <br><br>
+      http://${req.headers.host}/confirmEmail/${token}
+      <br><br>
+      If you did not request this, please ignore this email and no further steps will be needed.
+      <br>`
     };
 
-    // TODO: replace with protonmail
-
-    const response = await mailgunTransport.sendMail(mailOptions);
+    const response = await protonmailTransport().then(pm => pm.sendEmail(mailOptions));
 
     console.log(response);
 
