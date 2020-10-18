@@ -88,6 +88,8 @@ block content
                     // TODO: this should create a push subsciption, and it will also send a query to see if it should create a new service worker
                     h2.share-button.pushNotificationIcon
                         i.share-icon.fas.fa-bell(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:0px;color:white;")
+                    h2.share-button.emailNotificationIcon
+                        i.share-icon.fas.fa-envelope(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:10px;color:white;")
 
 
 
@@ -242,6 +244,52 @@ block content
         script.
 
             $(document).ready(function(){
+              var alreadyHaveEmailNotifsOn = '#{alreadyHaveEmailNotifsOn}' == 'true'
+
+              if (alreadyHaveEmailNotifsOn) {
+                $('.emailNotificationIcon i').css('color', 'white')
+              }
+
+              $('.emailNotificationIcon').click(function () {
+                console.log('Email notification icon clicked');
+                var csrf = '#{_csrf}'
+
+                const data = {
+                  _csrf: csrf,
+                  user: '#{user.channelUrl}',
+                  channel: '#{channel.channelUrl}'
+                }
+
+                $.ajax({
+                  type: 'POST',
+                  url: `/api/subscribeToEmailNotifications`,
+                  data,
+                  success: function (data) {
+
+                    $('.emailNotificationIcon i').css('color', 'white')
+                    let swalText = 'You have subscribed to their email notifications'
+
+                    if (alreadyHaveEmailNotifsOn) {
+                      swalText = 'You have unsubscribed from their email notifications'
+                      $('.emailNotificationIcon i').css('color', 'lightgrey')
+                    }
+
+                    swal(swalText);
+
+                    alreadyHaveEmailNotifsOn = !alreadyHaveEmailNotifsOn;
+
+                    console.log(data);
+
+                    // Shows undefined when at 100%
+
+
+                  },
+                  error: function (err) {
+                    console.log(err);
+                  }
+                });
+              })
+
               var alreadyHavePushNotifsOn = '#{alreadyHavePushNotifsOn}' == 'true'
 
               console.log('readl');
