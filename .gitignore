@@ -28,7 +28,7 @@ results
 tmp
 
 #Build
-public/css/main.css
+public/css/*.css
 
 # Dependency directory
 node_modules
