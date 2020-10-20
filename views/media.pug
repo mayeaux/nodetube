@@ -677,12 +677,12 @@ block content
                             if category.name == upload.category
                                 p.fw(style="margin-top:15px;font-size:12px;color:a5a5a5;") Category: #{category.displayName}
 
-                                //if upload.subcategory
-                                //
-                                //    each subcategory in category.subcategories
-                                //
-                                //        if upload.subcategory == subcategory.name
-                                //            p.fw(style="margin-top:15px;font-size:12px;") Subcategory: #{subcategory.displayName}
+                                //-if upload.subcategory
+                                //-
+                                //-    each subcategory in category.subcategories
+                                //-
+                                //-        if upload.subcategory == subcategory.name
+                                //-            p.fw(style="margin-top:15px;font-size:12px;") Subcategory: #{subcategory.displayName}
 
 
 
@@ -702,6 +702,7 @@ block content
                             Rating: #{convertedRating}
 
                     // capitalizing the first letter
+                    // TODO: also only show if its the video owner or mod/admin
                     if upload.visibility !== 'public'
                         p.smallerInfo.fw.fileSizeText.
                             Visibility: #{upload.visibility.charAt(0).toUpperCase() + upload.visibility.slice(1)}
