@@ -28,7 +28,7 @@ const errorHandler = require('errorhandler');
 const jsHelpers = require('./lib/helpers/js-helpers');
 
 /** FOR FINDING ERRANT LOGS **/
-if(process.env.SHOW_LOG_LOCATION == 'true' || 2 == 1){
+if(process.env.SHOW_LOG_LOCATION == 'true' || 1 == 2){
   jsHelpers.showLogLocation();
 }
 
@@ -228,7 +228,8 @@ if(cluster.isMaster){
         requestPath.match(editUploadRegexp) ||
         requestPath.match(deleteUploadThumbnailRegexp) ||
         requestPath === '/livestream/on-live-auth' ||
-        requestPath === '/livestream/on-live-done'
+        requestPath === '/livestream/on-live-done' ||
+        requestPath === '/save-subscription' // turning it off here for time being, can't figure a way to get the token in the JS
       ){
         next();
       } else {

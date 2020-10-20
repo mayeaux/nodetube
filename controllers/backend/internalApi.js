@@ -60,8 +60,13 @@ const Notification = require('../../models/index').Notification;
 const CreditAction = require('../../models/index').CreditAction;
 const Report = require('../../models/index').Report;
 const LastWatchedTime = require('../../models/index').LastWatchedTime;
+const PushEndpoint = require('../../models/index').PushEndpoint;
+const PushSubscription = require('../../models/index').PushSubscription;
 
 const getMediaType = require('../../lib/uploading/media');
+const pushNotificationLibrary = require('../../lib/mediaPlayer/pushNotification');
+
+console.log(pushNotificationLibrary);
 
 const ffmpegHelper = require('../../lib/uploading/ffmpeg');
 var resumable = require('../../lib/uploading/resumable.js')(__dirname +  '/upload');
@@ -1056,5 +1061,143 @@ exports.updateLastWatchedTime = async(req, res, next)  => {
 
     res.send('new watch time created');
   }
+};
+
+exports.savePushEndpoint = async function(req, res, next){
+
+  console.log(req.user);
+  // console.log(req);
+
+  const userAgent = req.get('User-Agent');
+
+  console.log(userAgent);
+
+  let existingPushEndpoint = await PushEndpoint.findOne({
+    user: req.user,
+    subscription: req.body,
+    userAgent,
+    expired: false
+  });
+
+  if(!existingPushEndpoint){
+    let pushEndpoint = new PushEndpoint({
+      user : req.user,
+      subscription : req.body,
+      userAgent,
+      expired: false
+    });
+
+    console.log(pushEndpoint);
+
+    await pushEndpoint.save();
+  }
+
+  res.send('success');
+
+};
+
+exports.subscribeToPushNotifications = async function(req, res, next){
+  // user who is subscribing
+  const user = req.body.user;
+
+  const subscribingUser = await User.findOne({ channelUrl: user });
+
+  const channel = req.body.channel;
+
+  const foundUser = await User.findOne({ channelUrl: channel });
+
+  console.log(foundUser.channelUrl);
+
+  console.log(subscribingUser.channelUrl);
+
+  // channel url of who is being subscribed to
+
+  let existingActivePushSubscription = await PushSubscription.findOne({ subscribingUser, subscribedToUser: foundUser, active: true });
+
+  let responseText;
+
+  // already exists and turned on, turn it off
+  if(existingActivePushSubscription){
+    responseText = 'already inactive, turn it off';
+    console.log(responseText);
+    existingActivePushSubscription.active = false;
+    await existingActivePushSubscription.save();
+  }
+
+  // check if there's an inactive one, if not make a new one
+  if(!existingActivePushSubscription){
+
+    let existingInactivePushNotif = await PushSubscription.findOne({ subscribingUser, subscribedToUser: foundUser, active: false });
+
+    if(existingInactivePushNotif){
+      responseText = 'already existing inactive, make it active';
+      console.log(responseText);
+      existingInactivePushNotif.active = true;
+      await existingInactivePushNotif.save();
+    } else {
+      responseText = 'create a new push sub';
+
+      console.log(responseText);
+      let pushEndpoint = new PushSubscription({
+        subscribingUser,
+        subscribedToUser: foundUser,
+        active: true
+      });
+
+      console.log(pushEndpoint);
+
+      await pushEndpoint.save();
+    }
+  }
+
+  res.send(responseText);
+
+};
+
+exports.sendUserPushNotifs = async function(req, res, next){
+  if(req.user.role !== 'admin'){
+    return res.send('die');
+  }
+
+  // user who is subscribing
+  const channel = req.body.channel;
+
+  const userToSendFor = await User.findOne({ channelUrl: channel });
+
+  console.log(userToSendFor.channelUrl);
+
+  // TODO: find all the PushSubscriptions where he is the subscribed to user, that are active
+  // for each of those pushsubscriptions, populate the user
+  // for each of those users, find their endpoints, and then webpush to them (active ones)
+
+  await pushNotificationLibrary.sendPushNotifications();
+
+  return res.send('hello');
+
+  const subscriptions = await PushEndpoint.find({ expired : { $ne: true } });
+
+  for(const subscription of subscriptions){
+    console.log(subscription);
+  }
+
+  // channel url of who is being subscribed to
+
+  // const existingPushSubscription = await PushSubscription.find({ subscribingUser, subscribedToUser: foundUser })
+  //
+  // if(!existingPushSubscription){
+  //   let pushEndpoint = new PushSubscription({
+  //     subscribingUser,
+  //     subscribedToUser: foundUser
+  //   });
+  //
+  //   console.log(pushEndpoint);
+  //
+  //   await pushEndpoint.save();
+  // } else {
+  //   console.log('already has an existing push subscription');
+  // }
+
+  res.send('success');
+
 };
 

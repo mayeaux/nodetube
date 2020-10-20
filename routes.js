@@ -258,6 +258,8 @@ function frontendRoutes(app){
   app.post('/api/react/:upload/:user', passportConfig.isAuthenticated, internalApiController.react);
 
   app.post('/api/updateLastWatchedTime', passportConfig.isAuthenticated, internalApiController.updateLastWatchedTime);
+  app.post('/api/subscribeToPushNotifications', passportConfig.isAuthenticated, internalApiController.subscribeToPushNotifications);
+  app.post('/api/sendUserPushNotifs', passportConfig.isAuthenticated, internalApiController.sendUserPushNotifs);
 
   // TODO: why admin controller? (fix)
   app.post('/api/upload/delete', passportConfig.isAuthenticated, adminBackendController.deleteUpload);
@@ -276,7 +278,7 @@ function frontendRoutes(app){
 
   // purchase endpoints
   app.post('/api/purchase/plus', passportConfig.isAuthenticated, purchaseController.purchasePlus);
-  app.post('/api/purchase/donation', passportConfig.isAuthenticated, purchaseController.donation);
+  app.post('/api/purchase/donation', purchaseController.donation);
   app.post('/api/purchase/credit',passportConfig.isAuthenticated,  purchaseController.purchaseCredits);
 
   app.get('/importer', accountFrontendController.getImporter);
@@ -348,6 +350,8 @@ function frontendRoutes(app){
   app.post('/admin/undeleteAccount', authMiddleware.moderatorAuth, adminBackendController.undeleteAccount);
   app.post('/admin/changeRatings', authMiddleware.adminAuth, adminBackendController.changeRatings);
   app.post('/admin/getUserAccounts', authMiddleware.adminAuth, adminBackendController.getUserAccounts);
+
+  app.post('/save-subscription', passportConfig.isAuthenticated, internalApiController.savePushEndpoint);
 
   // find all ips and accounts associated
   app.post('/admin/deleteAllUsersAndBlockIps', authMiddleware.adminAuth, adminBackendController.deleteAllUsersAndBlockIps);

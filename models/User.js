@@ -208,6 +208,11 @@ const userSchema = new mongoose.Schema({
   blockedUsers: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
+  }],
+
+  pushNotificationEndpoints: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'PushEndpoint'
   }]
 
 }, { timestamps: true, minimize: false });
