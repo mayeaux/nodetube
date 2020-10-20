@@ -19,7 +19,7 @@ You can get an instance up instantly using one-click deployment with Heroku belo
 ## Running On Your Local Computer
 
 ### Required Software
-- [Node.js 8.0+](https://nodejs.org/en/download/)
+- [Node.js 10.0+](https://nodejs.org/en/download/)
 - [MongoDB](https://www.mongodb.org/downloads)
 - [Redis](https://redis.io/download)
 - [ffmpeg](https://www.ffmpeg.org/download.html)
@@ -108,6 +108,7 @@ Don't forget to join the open-source community developing NodeTube on [Discord](
 Domain | Registrations Open | Ratings Allowed 
 :---: | :---: | :---: 
 https://newtube.app | Yes | SFW Only
+https://allwat.ch| Yes | SFW/NSFW/Sensitive
 https://vid8.poal.co| Yes | SFW/NSFW/Sensitive
 
 
