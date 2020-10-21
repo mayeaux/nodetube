@@ -17,7 +17,7 @@ const mkdirp = Promise.promisifyAll(require('mkdirp'));
 const randomstring = require('randomstring');
 
 const mailTransports = require('../../config/nodemailer');
-const {protonmailTransport} = require('../../config/protonmailTransport');
+const {sendProtonMail} = require('../../config/protonmailTransport');
 
 const importerDownloadFunction = require('../../lib/uploading/importer');
 
@@ -468,9 +468,9 @@ exports.postConfirmEmail = async(req, res, next) => {
       <br>`
     };
 
-    const response = await protonmailTransport().then(pm => pm.sendEmail(mailOptions));
+    const response = await sendProtonMail(mailOptions)
 
-    console.log(response);
+    // console.log(response);
 
     req.flash('info', {msg: 'An email has been sent to your address to confirm your email'});
 
