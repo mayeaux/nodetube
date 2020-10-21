@@ -327,6 +327,7 @@ function frontendRoutes(app){
 
   /** ADMIN PAGES **/
   app.get('/admin/users', authMiddleware.adminAuth, adminFrontendController.getUsers);
+  app.get('/admin/users/:page', authMiddleware.adminAuth, adminFrontendController.getUsers);
   app.get('/admin/subscriptions', authMiddleware.adminAuth, adminFrontendController.subscriptions);
   app.get('/admin/comments', authMiddleware.adminAuth, adminFrontendController.getComments);
   app.get('/admin/uploads', authMiddleware.adminAuth, adminFrontendController.getUploads);
