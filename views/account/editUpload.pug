@@ -21,7 +21,7 @@ block content
             br
 
 
-
+        
         form.edit-upload-form.form-horizontal(action=`${thumbnailServer}/api/upload/${upload.uniqueTag}/edit`, method='POST' enctype="multipart/form-data" novalidate )
             input(type='hidden', name='_csrf', value=_csrf)
             input(type='hidden', name='uploadToken', value=user.uploadToken)
@@ -193,6 +193,12 @@ block content
                     button.btn.btn.btn-primary.submitEditButton(type='submit' style="border-radius:4px;margin-top:10px;")
                         i.fa.fa-pencil
                         | Edit Upload
+        
+        form.editLink(action="/api/upload/delete" method="POST" style="border-radius:4px;margin-top:10px;")
+                .col-sm-offset-3.col-sm-4
+                  input(type='hidden', name='_csrf', value=_csrf)
+                  input(type='hidden', name='videoId', value=upload.uniqueTag)
+                  button.btn.btn-danger.delete-media Delete
 
 
 
@@ -205,6 +211,26 @@ block content
 
 
         // add here
+
+    script.
+      $('.delete-media').on('click', function (e) {
+        e.preventDefault();
+        var form = $(this).parents('form');
+
+        swal({
+          title: "WARNING",
+          text: "Are you sure you want to delete this upload?",
+          type: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#DD6B55",
+          confirmButtonText: "Yes, delete it"
+        }).then(function (result) {
+          if (result.value == true) {
+            form.submit();
+          }
+          console.log(result);
+        })
+      });
 
     script.
         $(document).ready(function(){
