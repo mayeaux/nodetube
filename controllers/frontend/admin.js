@@ -63,16 +63,37 @@ exports.getAdminAudit = async(req, res) => {
 
   // exclude uploads without an uploadUrl
 
-  let adminActions = await AdminAction.find({}).populate({path: 'adminOrModerator uploadsAffected usersAffected', populate: {path: 'uploader'}}).lean();
+  let page = req.params.page;
+  if(!page){ page = 1; }
+  page = parseInt(page);
 
-  adminActions = adminActions.reverse();
+  const limit = 100;
+  const skipAmount = (page * limit) - limit;
 
-  console.log(adminActions);
+  const { startingNumber, previousNumber, nextNumber, numbersArray } = pagination.buildPaginationObject(page);
 
-  res.render('admin/adminAudit', {
-    title: 'Admin Audit',
-    adminActions
-  });
+  try {
+    let adminActions = await AdminAction.find({})
+      .populate({path: 'adminOrModerator uploadsAffected usersAffected', populate: {path: 'uploader'}})
+      .skip(skipAmount).limit(limit).lean();
+
+    adminActions = adminActions.reverse();
+
+    console.log(adminActions);
+
+    res.render('admin/adminAudit', {
+      title: 'Admin Audit',
+      adminActions,
+      startingNumber,
+        previousNumber,
+        nextNumber,
+        numbersArray,
+        highlightedNumber: page
+    });
+  } catch (err) {
+    console.log(err);
+    return res.render('error/500');
+  }
 
 };
 
@@ -111,35 +132,91 @@ exports.getSiteVisitorHistory = async(req, res) => {
 };
 
 exports.getSiteVisitors = async(req, res) => {
+  let page = req.params.page;
+  if(!page){ page = 1; }
+  page = parseInt(page);
 
-  const visitors = await SiteVisit.find({}).sort({ _id : -1  }).populate('user');
+  const limit = 100;
+  const skipAmount = (page * limit) - limit;
 
-  res.render('admin/siteVisitors', {
-    title: 'Site Visitors',
-    visitors
-  });
+  const { startingNumber, previousNumber, nextNumber, numbersArray } = pagination.buildPaginationObject(page);
+
+  try {
+    const visitors = await SiteVisit.find({}).sort({ _id : -1  }).populate('user').skip(skipAmount).limit(limit);
+
+    res.render('admin/siteVisitors', {
+      title: 'Site Visitors',
+      visitors,
+      startingNumber,
+      previousNumber,
+      nextNumber,
+      numbersArray,
+      highlightedNumber: page
+    });
+  } catch (err) {
+    console.log(err);
+    return res.render('error/500');
+  }
 
 };
 
 exports.getUploads = async(req, res) => {
 
-  const uploads = await Upload.find({}).sort({ _id : -1  }).populate('uploader');
+  let page = req.params.page;
+  if(!page){ page = 1; }
+  page = parseInt(page);
 
-  res.render('admin/uploads', {
-    title: 'Uploads',
-    uploads
-  });
+  const limit = 100;
+  const skipAmount = (page * limit) - limit;
+
+  const { startingNumber, previousNumber, nextNumber, numbersArray } = pagination.buildPaginationObject(page);
+
+  try {
+    const uploads = await Upload.find({}).sort({ _id : -1  }).populate('uploader').skip(skipAmount).limit(limit);
+
+    res.render('admin/uploads', {
+      title: 'Uploads',
+      uploads,
+      startingNumber,
+      previousNumber,
+      nextNumber,
+      numbersArray,
+      highlightedNumber: page
+    });
+  } catch (err) {
+    console.log(err);
+    return res.render('error/500');
+  }
 
 };
 
 exports.getComments = async(req, res) => {
+  let page = req.params.page;
+  if(!page){ page = 1; }
+  page = parseInt(page);
 
-  const comments = await Comment.find({}).sort({ _id : -1  }).populate('commenter upload');
+  const limit = 100;
+  const skipAmount = (page * limit) - limit;
 
-  res.render('admin/comments', {
-    title: 'Comments',
-    comments
-  });
+  const { startingNumber, previousNumber, nextNumber, numbersArray } = pagination.buildPaginationObject(page);
+
+  try {
+    const comments = await Comment.find({}).sort({ _id : -1  }).populate('commenter upload')
+    .skip(skipAmount).limit(limit);
+
+    res.render('admin/comments', {
+      title: 'Comments',
+      comments,
+      startingNumber,
+      previousNumber,
+      nextNumber,
+      numbersArray,
+      highlightedNumber: page
+    });
+  } catch (err) {
+    
+  }
+  
 
 };
 
@@ -198,14 +275,36 @@ exports.reacts = async(req, res) => {
     });
   }
 
-  const reacts = await React.find({}).populate({path: 'user upload', populate: {path: 'uploader'}}).sort({ _id : -1  });
+  let page = req.params.page;
+  if(!page){ page = 1; }
+  page = parseInt(page);
 
-  // console.log(reacts);
+  const limit = 100;
+  const skipAmount = (page * limit) - limit;
 
-  return res.render('admin/reacts', {
-    title : 'Admin Reacts',
-    reacts
-  });
+  const { startingNumber, previousNumber, nextNumber, numbersArray } = pagination.buildPaginationObject(page);
+
+  try {
+    const reacts = await React.find({}).populate({path: 'user upload', populate: {path: 'uploader'}})
+      .skip(skipAmount).limit(limit).sort({ _id : -1  });
+
+    // console.log(reacts);
+
+    return res.render('admin/reacts', {
+      title : 'Admin Reacts',
+      reacts,
+      startingNumber,
+      previousNumber,
+      nextNumber,
+      numbersArray,
+      highlightedNumber: page
+    });
+  } catch (err) {
+    console.log(err);
+    return res.render('error/500');
+  }
+
+  
 
 };
 
@@ -225,13 +324,36 @@ exports.subscriptions = async(req, res) => {
     });
   }
 
-  const subscriptions = await Subscription.find({}).populate({path: 'subscribingUser subscribedToUser drivingUpload', populate: {path: 'uploader'}}).sort({ _id : -1  });
+  let page = req.params.page;
+  if(!page){ page = 1; }
+  page = parseInt(page);
 
-  // console.log(subscriptions);
+  const limit = 100;
+  const skipAmount = (page * limit) - limit;
 
-  return res.render('admin/subscriptions', {
-    title : 'Admin Reacts',
-    subscriptions
-  });
+  const { startingNumber, previousNumber, nextNumber, numbersArray } = pagination.buildPaginationObject(page);
+
+
+  try {
+    const subscriptions = await Subscription.find({})
+        .populate({path: 'subscribingUser subscribedToUser drivingUpload', populate: {path: 'uploader'}})
+        .skip(skipAmount).limit(limit).sort({ _id : -1  });
+
+    // console.log(subscriptions);
+
+    return res.render('admin/subscriptions', {
+      title : 'Admin Reacts',
+      subscriptions,
+      startingNumber,
+      previousNumber,
+      nextNumber,
+      numbersArray,
+      highlightedNumber: page
+    });
+  } catch (err) {
+    console.log(err);
+    return res.render('error/500');
+  }
+  
 
 };

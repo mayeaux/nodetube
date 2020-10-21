@@ -6,32 +6,58 @@ block content
             h2
             h2.view-header Users (Admin)
         hr
-        each comment in comments
-            div.col-sm-4(style="text-align:center;height:420px;border:1px solid black;")
-                // NEW CHANNEL UPLOAD FORMAT
+        if comments.length == 0
+            .center-block.text-center
+                ul.pagination
+                    li.page-item
+                        a.page-link(href=`/admin/comments/${previousNumber}`) <
 
-                a(href=`/user/${comment.commenter.channelUrl}`)
-                    h4 Commenter Name: #{comment.commenter.channelName}
-                    h4 Commenter Url: #{comment.commenter.channelUrl}
-                    p Visibility : #{comment.visibility}
-                if comment.upload
-                    a(href=`/user/${comment.commenter.channelUrl}/${comment.upload.uniqueTag}`)
-                        h3 Media: #{comment.upload.title}
-                p(style="height:90px") Comment: #{comment.text}
+                    each number in numbersArray
+                        li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
+                            a.page-link(href=`/admin/comments/${number}`) #{number}
+
+                    li.page-item
+                        a.page-link(href=`/admin/comments/${nextNumber}`) >
+            
+            p There are no more comments
+        else
+            .center-block.text-center
+                ul.pagination
+                    li.page-item
+                        a.page-link(href=`/admin/comments/${previousNumber}`) <
+
+                    each number in numbersArray
+                        li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
+                            a.page-link(href=`/admin/comments/${number}`) #{number}
+
+                    li.page-item
+                        a.page-link(href=`/admin/comments/${nextNumber}`) >
+            each comment in comments
+                div.col-sm-4(style="text-align:center;height:420px;border:1px solid black;")
+                    // NEW CHANNEL UPLOAD FORMAT
+
+                    a(href=`/user/${comment.commenter.channelUrl}`)
+                        h4 Commenter Name: #{comment.commenter.channelName}
+                        h4 Commenter Url: #{comment.commenter.channelUrl}
+                        p Visibility : #{comment.visibility}
+                    if comment.upload
+                        a(href=`/user/${comment.commenter.channelUrl}/${comment.upload.uniqueTag}`)
+                            h3 Media: #{comment.upload.title}
+                    p(style="height:90px") Comment: #{comment.text}
 
 
 
 
-                    div.admin-buttons
-                        form(action="/admin/comments" method="POST")
-                            input(type='hidden', name='_csrf', value=_csrf)
-                            input(type='hidden', name='user', value=`${comment.commenter._id}`)
-                            input(type='hidden', name='comment', value=`${comment._id}`)
-                            button.btn.btn-success(name="commentChangeValue" value="reinstateComment" type="submit" ) Reinstate Comment
-                            br
-                            br
-                            button.btn.btn-danger(name="commentChangeValue" value="deleteComment" type="submit" ) Delete Comment
-                            br
-                            br
-                            button.btn.btn-danger(name="commentChangeValue" value="deleteCommentBanUser" type="submit" ) Delete Comment/Ban User
+                        div.admin-buttons
+                            form(action="/admin/comments" method="POST")
+                                input(type='hidden', name='_csrf', value=_csrf)
+                                input(type='hidden', name='user', value=`${comment.commenter._id}`)
+                                input(type='hidden', name='comment', value=`${comment._id}`)
+                                button.btn.btn-success(name="commentChangeValue" value="reinstateComment" type="submit" ) Reinstate Comment
+                                br
+                                br
+                                button.btn.btn-danger(name="commentChangeValue" value="deleteComment" type="submit" ) Delete Comment
+                                br
+                                br
+                                button.btn.btn-danger(name="commentChangeValue" value="deleteCommentBanUser" type="submit" ) Delete Comment/Ban User
 
