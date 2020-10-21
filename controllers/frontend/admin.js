@@ -158,7 +158,6 @@ exports.getUsers = async(req, res) => {
 
   const { startingNumber, previousNumber, nextNumber, numbersArray } = pagination.buildPaginationObject(page);
 
-
   try {
     const users = await User.find({}).populate('user sender upload react comment').skip(skipAmount).limit(limit).sort({ _id : -1  });
 
@@ -173,12 +172,11 @@ exports.getUsers = async(req, res) => {
       nextNumber,
       numbersArray,
       highlightedNumber: page
-  });
-  } catch (err) {
+    });
+  } catch(err){
     console.log(err);
     return res.render('error/500');
   }
-  
 
 };
 
