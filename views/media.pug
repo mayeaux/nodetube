@@ -887,6 +887,8 @@ block extra_js
 
       })
 
+      // TODO: scroll to the top of the div here
+      // when show less button is clicked
       showLessButton.click(function () {
         uploadDescriptionText.height('198');
 
@@ -916,6 +918,8 @@ block extra_js
       })
 
 
+      // the codes for the keyboard shortcuts
+      // and then how many frames to change for each
       const codes = {
         109: -5,
         44: -1,
@@ -935,17 +939,29 @@ block extra_js
           if (code == keyCode) {
             const amountOfFramesToMove = codes[code];
 
+            // for some reason, the fpsValue comes as a fraction
             const firstFpsValue = Number(fpsValue.split('/')[0]);
 
+            // for some reason, the fpsValue comes as a fraction
             const secondFpsValue = Number(fpsValue.split('/')[1]);
 
+            // had to do it this way because I couldn't figure out how to do it without
+            // pulling them out separately
             const fpsValueAsNumber = firstFpsValue / secondFpsValue
 
+            // equation for getting amount of seconds shown per frame
             const amountOfSecondsToMovePerFrame = 1 / fpsValueAsNumber;
+
 
             const amountOfSecondsToMoveTotal = amountOfSecondsToMovePerFrame * amountOfFramesToMove;
 
-            player.currentTime = player.currentTime + amountOfSecondsToMoveTotal;
+            // TODO: check if that comment box is in focus, if it is, don't run this
+
+            if (!$("textarea").is(":focus")) {
+              //input and text area has focus
+              player.currentTime = player.currentTime + amountOfSecondsToMoveTotal;
+            }
+
 
             console.log(code);
           }
