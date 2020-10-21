@@ -7,6 +7,7 @@ const Subscription = require('../../models/index').Subscription;
 const React = require('../../models/index').React;
 const Comment = require('../../models/index').Comment;
 const SiteVisit = require('../../models/index').SiteVisit;
+const pagination = require('../../lib/helpers/pagination');
 
 const { uploadServer} = require('../../lib/helpers/settings');
 
@@ -148,12 +149,36 @@ exports.getNotificationPage = async(req, res) => {
 
 exports.getUsers = async(req, res) => {
 
-  const users = await User.find({}).sort({ _id : -1  });
+  let page = req.params.page;
+  if(!page){ page = 1; }
+  page = parseInt(page);
 
-  res.render('admin/users', {
-    title: 'Users',
-    users
+  const limit = 100;
+  const skipAmount = (page * limit) - limit;
+
+  const { startingNumber, previousNumber, nextNumber, numbersArray } = pagination.buildPaginationObject(page);
+
+
+  try {
+    const users = await User.find({}).populate('user sender upload react comment').skip(skipAmount).limit(limit).sort({ _id : -1  });
+
+    // console.log("users: ")
+    // console.log(users);
+
+    res.render('admin/users', {
+      title: 'Users',
+      users,
+      startingNumber,
+      previousNumber,
+      nextNumber,
+      numbersArray,
+      highlightedNumber: page
   });
+  } catch (err) {
+    console.log(err);
+    return res.render('error/500');
+  }
+  
 
 };
 
