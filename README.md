@@ -19,7 +19,7 @@ You can get an instance up instantly using one-click deployment with Heroku belo
 ## Running On Your Local Computer
 
 ### Required Software
-- [Node.js 10.0+](https://nodejs.org/en/download/)
+- [Node.js 8.0+](https://nodejs.org/en/download/)
 - [MongoDB](https://www.mongodb.org/downloads)
 - [Redis](https://redis.io/download)
 - [ffmpeg](https://www.ffmpeg.org/download.html)
