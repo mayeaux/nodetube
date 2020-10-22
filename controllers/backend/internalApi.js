@@ -67,8 +67,6 @@ const EmailSubscription = require('../../models/index').EmailSubscription;
 const getMediaType = require('../../lib/uploading/media');
 const pushNotificationLibrary = require('../../lib/mediaPlayer/pushNotification');
 
-console.log(pushNotificationLibrary);
-
 const ffmpegHelper = require('../../lib/uploading/ffmpeg');
 var resumable = require('../../lib/uploading/resumable.js')(__dirname +  '/upload');
 

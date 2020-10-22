@@ -233,3 +233,7 @@ exports.subscriptions = async(req, res) => {
   });
 
 };
+
+exports.getAdminOverview = async(req, res) => {
+  return res.render('admin/adminOverview', {});
+};
