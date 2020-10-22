@@ -1177,7 +1177,7 @@ exports.subscribeToPushNotifications = async function(req, res, next){
 
   // already exists and turned on, turn it off
   if(existingActivePushSubscription){
-    responseText = 'already inactive, turn it off';
+    responseText = 'already active, make it inactive';
     console.log(responseText);
     existingActivePushSubscription.active = false;
     await existingActivePushSubscription.save();
