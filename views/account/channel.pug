@@ -250,11 +250,13 @@ block content
             $(document).ready(function(){
 
               var alreadyHaveEmailNotifsOn = '#{alreadySubscribedForEmails}' == 'true'
-
+              
               console.log('already have email notis on')
 
               if (alreadyHaveEmailNotifsOn) {
                 $('.emailNotificationIcon i').css('color', 'white')
+              } else {
+                $('.emailNotificationIcon i').css('color', 'gray')
               }
 
               $('.emailNotificationIcon').click(function () {
@@ -278,7 +280,7 @@ block content
 
                     if (alreadyHaveEmailNotifsOn) {
                       swalText = 'You have unsubscribed from their email notifications'
-                      $('.emailNotificationIcon i').css('color', 'lightgrey')
+                      $('.emailNotificationIcon i').css('color', 'gray')
                     }
 
                     swal(swalText);
@@ -304,6 +306,8 @@ block content
 
               if (alreadyHavePushNotifsOn) {
                 $('.pushNotificationIcon i').css('color', 'white')
+              } else {
+                $('.pushNotificationIcon i').css('color', 'gray')
               }
 
               if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
@@ -334,7 +338,7 @@ block content
                     // if push notifs already on
                     if (alreadyHavePushNotifsOn) {
                       swalText = 'You have unsubscribed from their push notifications'
-                      $('.pushNotificationIcon i').css('color', 'lightgrey')
+                      $('.pushNotificationIcon i').css('color', 'gray')
                     }
 
                     swal(swalText);
