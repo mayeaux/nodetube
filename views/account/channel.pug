@@ -248,7 +248,9 @@ block content
         script.
 
             $(document).ready(function(){
-              var alreadyHaveEmailNotifsOn = '#{alreadyHaveEmailNotifsOn}' == 'true'
+
+              var alreadyHaveEmailNotifsOn = '#{alreadySubscribedForEmails}' == 'true'
+
               console.log('already have email notis on')
 
               if (alreadyHaveEmailNotifsOn) {
