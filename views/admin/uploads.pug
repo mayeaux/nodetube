@@ -6,6 +6,32 @@ block content
             h2
             h2.view-header Upload Overview
         hr
+        if uploads.length == 0
+            .center-block.text-center
+                ul.pagination
+                    li.page-item
+                        a.page-link(href=`/admin/uploads/${previousNumber}`) <
+
+                    each number in numbersArray
+                        li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
+                            a.page-link(href=`/admin/uploads/${number}`) #{number}
+
+                    li.page-item
+                        a.page-link(href=`/admin/uploads/${nextNumber}`) >
+
+            p There are no more uploads
+        else
+            .center-block.text-center
+                ul.pagination
+                    li.page-item
+                        a.page-link(href=`/admin/uploads/${previousNumber}`) <
+
+                    each number in numbersArray
+                        li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
+                            a.page-link(href=`/admin/uploads/${number}`) #{number}
+
+                    li.page-item
+                        a.page-link(href=`/admin/uploads/${nextNumber}`) >
         each upload in uploads
                 div.col-sm-4(style="text-align:center;height:600px;")
                     if upload.uploader

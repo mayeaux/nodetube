@@ -7,7 +7,6 @@ block content
             h2.view-header Users (Admin)
         hr
         if users.length == 0
-            p There are no more users
             .center-block.text-center
                 ul.pagination
                     li.page-item
@@ -19,7 +18,8 @@ block content
 
                     li.page-item
                         a.page-link(href=`/admin/users/${nextNumber}`) >
-
+            
+            p There are no more users
         else
             .center-block.text-center
                         ul.pagination
