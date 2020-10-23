@@ -83,6 +83,14 @@ block content
                 else
                     button(style="display:inherit;margin:0 auto;border-radius:3px;").fw.subscribe.btn.btn-success Subscribe (#{subscriberAmount})
 
+                if user
+
+                    // TODO: this should create a push subsciption, and it will also send a query to see if it should create a new service worker
+                    h2.share-button.pushNotificationIcon
+                        i.share-icon.fas.fa-bell(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:0px;color:white;")
+
+
+
 
 
             div.user-stats.col-sm-8(style="")
@@ -118,6 +126,14 @@ block content
                         //button.delete-account.btn.btn-danger Delete Account And Ban Ip
                         if user.role == 'admin'
                             button.delete-ips.btn.btn-danger Delete All Accounts / Ips
+                            br
+                            br
+                            form(action="/admin/users" method="POST")
+                                input(type='hidden', name='_csrf', value=_csrf)
+                                input(type='hidden', name='user', value=`${channel._id}`)
+                                button.btn.btn-primary(name="userChangeValue" value="trustUser" type="submit" ) Trust User
+                                button.btn.btn-danger(name="userChangeValue" value="untrustUser" type="submit" ) Untrust User
+                                p User Trusted: #{user.privs.autoVisibleUpload}
 
                     if user && ( user.role == 'admin' || user.role == 'moderator') && channel.status == 'restricted'
 
@@ -127,6 +143,7 @@ block content
                         //button.undelete-account.btn.btn-warning Undelete Account And Unban Ip
                         if user.role == 'admin'
                             button.delete-ips.btn.btn-warning Undelete All Accounts / Unban All Ips
+                      
 
         div
 
@@ -135,6 +152,7 @@ block content
 
     p
     hr
+
 
     div.center-block.text-center
 
@@ -216,9 +234,146 @@ block content
     include ../viewPartials/channelSubscribe
 
 
+
+
     script.
       var myTextEl = document.getElementById('descriptionText');
       myTextEl.innerHTML = Autolinker.link(myTextEl.innerHTML);
+
+    //script(src='/js/otherNotif.js')
+
+    script(src="/js/notificationServiceWorker.js")
+
+    include ../mediaPlayerPartials/thing
+
+
+    if user
+        script.
+
+            $(document).ready(function(){
+              var alreadyHavePushNotifsOn = '#{alreadyHavePushNotifsOn}' == 'true'
+
+              console.log('readl');
+              console.log(alreadyHavePushNotifsOn);
+
+              if (alreadyHavePushNotifsOn) {
+                $('.pushNotificationIcon i').css('color', 'white')
+              }
+
+              if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+                $('.pushNotificationIcon i').hide()
+              }
+
+
+              $('.pushNotificationIcon').click(function () {
+                console.log('hello');
+                var csrf = '#{_csrf}'
+
+                const data = {
+                  _csrf: csrf,
+                  user: '#{user.channelUrl}',
+                  channel: '#{channel.channelUrl}'
+                }
+
+                $.ajax({
+                  type: 'POST',
+                  url: `/api/subscribeToPushNotifications`,
+                  data,
+                  success: function (data) {
+
+                    // by default, turn the color grey and load up 'you have subbed' as the text
+                    $('.pushNotificationIcon i').css('color', 'white')
+                    let swalText = 'You have subscribed to their push notifications'
+
+                    // if push notifs already on
+                    if (alreadyHavePushNotifsOn) {
+                      swalText = 'You have unsubscribed from their push notifications'
+                      $('.pushNotificationIcon i').css('color', 'lightgrey')
+                    }
+
+                    swal(swalText);
+
+                    alreadyHavePushNotifsOn = !alreadyHavePushNotifsOn;
+
+                    console.log(data);
+                    //- console.log(data);
+
+                    // Shows undefined when at 100%
+
+
+                  },
+                  error: function (err) {
+                    console.log(err);
+                  }
+                });
+              })
+            })
+
+
+
+
+        script.
+          $('.unsubscribePushButton').click(function () {
+            console.log('hello');
+            var csrf = '#{_csrf}'
+
+            const data = {
+              _csrf: csrf,
+              user: '#{user.channelUrl}',
+              channel: '#{channel.channelUrl}'
+            }
+
+            $.ajax({
+              type: 'POST',
+              url: `/api/subscribeToPushNotifications`,
+              data,
+              success: function (data) {
+                //- console.log(data);
+
+                // Shows undefined when at 100%
+
+
+              },
+              error: function (err) {
+                console.log(err);
+              }
+            });
+            })
+
+    if user && user.role == 'admin'
+        script.
+          $('.sendPushNotifs').click(function () {
+            console.log('hello');
+            var csrf = '#{_csrf}'
+
+            const data = {
+              _csrf: csrf,
+              user: '#{user.channelUrl}',
+              channel: '#{channel.channelUrl}'
+            }
+
+            $.ajax({
+              type: 'POST',
+              url: `/api/sendUserPushNotifs`,
+              data,
+              success: function (data) {
+                //- console.log(data);
+
+                // Shows undefined when at 100%
+
+
+              },
+              error: function (err) {
+                console.log(err);
+              }
+            });
+
+            })
+
+    script.
+        $('.pushNotificationIcon').click(function(){
+            main();
+        })
 
 
 

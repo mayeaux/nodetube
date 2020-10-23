@@ -10,6 +10,17 @@ block content
                 br
                 if notifications.length == 0
                     p You have no notifications
+                    .center-block.text-center
+                        ul.pagination
+                            li.page-item
+                                a.page-link(href=`/notifications/${previousNumber}`) <
+
+                            each number in numbersArray
+                                li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
+                                    a.page-link(href=`/notifications/${number}`) #{number}
+
+                            li.page-item
+                                a.page-link(href=`/notifications/${nextNumber}`) >
 
                 else
                     .center-block.text-center

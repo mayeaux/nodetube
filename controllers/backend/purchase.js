@@ -42,7 +42,7 @@ exports.donation = async function(req, res){
   const amountInDollars = req.body.amount;
 
   try {
-    const userDescriptor = req.user.channelName || req.user.channelUrl;
+    const userDescriptor = (req.user && req.user.channelName) || (req.user && req.user.channelUrl) || 'NewTube User';
 
     // what is this token?
     // it's passed back from stripe after getting hit via the frontend
@@ -53,7 +53,6 @@ exports.donation = async function(req, res){
     const purchase = await stripe.makePurchase(customer.id, amountInDollars * 100);
     console.log(`Purchase made: ${purchase}`);
     console.log(purchase);
-
 
     res.send('success');
   } catch(err){

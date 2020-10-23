@@ -6,19 +6,47 @@ block content
             h2
             h2.view-header Site Visitors (Admin)
         hr
-        each visitor in visitors
-            div.col-sm-4(style="text-align:center;height:250px;")
+        if visitors.length == 0
+            .center-block.text-center
+                ul.pagination
+                    li.page-item
+                        a.page-link(href=`/admin/sitevisitors/${previousNumber}`) <
 
-                a(href=`/admin/siteVisitors/${visitor._id}`)
-                    p #{visitor._id}
-                p IP Address: #{visitor.ip}
-                p Visits: #{visitor.visits}
-                p Engaged In Fraud: #{visitor.doneFraud}
-                p First Ref: #{visitor.refs[0]}
+                    each number in numbersArray
+                        li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
+                            a.page-link(href=`/admin/sitevisitors/${number}`) #{number}
 
-                if visitor.user
-                    a(href=`/user/${visitor.user.channelUrl}`)
-                        p User: #{visitor.user.channelName}
-                        p URL: #{visitor.user.channelUrl}
+                    li.page-item
+                        a.page-link(href=`/admin/sitevisitors/${nextNumber}`) >
+
+            p There are no more site visitors
+
+        else
+            .center-block.text-center
+                ul.pagination
+                    li.page-item
+                        a.page-link(href=`/admin/sitevisitors/${previousNumber}`) <
+
+                    each number in numbersArray
+                        li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
+                            a.page-link(href=`/admin/sitevisitors/${number}`) #{number}
+
+                    li.page-item
+                        a.page-link(href=`/admin/sitevisitors/${nextNumber}`) >
+
+            each visitor in visitors
+                div.col-sm-4(style="text-align:center;height:250px;")
+
+                    a(href=`/admin/siteVisitors/${visitor._id}`)
+                        p #{visitor._id}
+                    p IP Address: #{visitor.ip}
+                    p Visits: #{visitor.visits}
+                    p Engaged In Fraud: #{visitor.doneFraud}
+                    p First Ref: #{visitor.refs[0]}
+
+                    if visitor.user
+                        a(href=`/user/${visitor.user.channelUrl}`)
+                            p User: #{visitor.user.channelName}
+                            p URL: #{visitor.user.channelUrl}
 
 

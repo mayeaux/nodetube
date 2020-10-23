@@ -56,6 +56,7 @@ const uploadSchema = new mongoose.Schema({
   thumbnailUrl: 'String',  // TODO: can eventually delete this
   customThumbnailUrl: 'String', // TODO: can eventually delete this
   uploadUrl: 'String',
+  // TODO: maybe add a value useUploadUrl to turn using uploadUrl on and off on the frontend
   uploader: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'

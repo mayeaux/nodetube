@@ -139,14 +139,16 @@ block content
     // TODO: export a variable plus_enabled if user enables payments
     // TODO: has to have styled updated with fw
     if process.env.PLUS_ENABLED == 'true'
-      h2.fw.text-center(style="margin-bottom:16px") #{brandName} Plus
+      h2.fw.text-center(style="margin-bottom:16px") Upgrade To #{brandName} Plus
+
       div.nt-plus.center-div.text-center
         if user.plan == 'plus'
           p Thank you so much for subscribing!
           p Your support makes NewTube possible
           p Please enjoy your new features:
           //h4 Automatic YouTube backup functionality, unlisted uploads, private uploads, 2GB upload size
-          h4 Livestreaming, unlisted uploads, private uploads, 2GB upload size
+          // h4 Livestreaming, unlisted uploads, private uploads, 2GB upload size
+          h4 Unlisted uploads, private uploads, 2GB upload size
 
 
         else
@@ -158,21 +160,27 @@ block content
             //- NewTube Recording Studio (Coming Soon)
 
 
-          p.fw(style="white-space:pre-line;margin-bottom:19px;font-size:17px;margin-top:23px;").
-            - Upload file-size limit raised to 2GB
+          p.fw(style="white-space:pre-line;margin-bottom:19px;font-size:19px;margin-top:23px;").
+            - Upload size limit raised from 500MB to 2GB
 
             - Unlisted and private uploads
 
             - Livestreaming with live chat
 
-            - Early access to all beta features
-
             - $4.95/month, cancel at any time
 
             - Support alternative tech that values your speech and privacy
 
+          // - Secure purchase through Stripe
+
+
+          //- One-click complete YouTube backup (including future uploads)
+
+
+
           button.stripe-button-el#customButton(type="submit" class="stripe-button-el" style="visibility: visible;")
             span(style="display: block; min-height: 30px;") Buy Now
+            // img(src="/images/stripe-white.png" style="max-width:200px")
 
           //br
           //br

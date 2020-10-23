@@ -377,10 +377,13 @@ block content
             /*display: none !important;*/
         /*}*/
 
+        .plyr__video-wrapper {
+            margin-top: 24px;
+        }
 
 
-    br
-    div.center-block.text-center.col-sm-12.pageContainer(style="overflow-x: hidden;margin-top:-21px;")
+
+    div.center-block.text-center.col-sm-12.pageContainer(style="overflow-x: hidden;margin-top:-2px;padding-right:0px;padding-left:0px;")
         if upload.status == 'processing'
 
             div(style="max-width:443px;margin:0 auto;")
@@ -393,8 +396,6 @@ block content
 
 
         <!-- DISPLAYING CONTENT -->
-        br
-        br
         // if it's a video that's finished processing
         if upload.fileType === 'video' && upload.status !== 'processing'
             div.display-div.magnetic(style="min-width:50%;min-height:50%;margin:0 auto;margin-top: -25px;")
@@ -440,13 +441,13 @@ block content
             div.frameJumper(style="margin-bottom:1px;margin-top:-14px;")
                 br
                 each frame in [1,5,15,30].reverse()
-                    p.fpsText.noselect(amountOfFrames=-frame style="display:inline;margin-left:7px;") -#{frame} &nbsp
+                    p.fpsText.noselect(amountOfFrames=-frame style="color:grey;display:inline;margin-left:7px;") -#{frame} &nbsp
 
                 p(style="display:inline;margin-left:14px;")
 
 
                 each frame in [1,5,15,30]
-                    p.fpsText.noselect(amountOfFrames=frame style="display:inline;margin-left:7px;") +#{frame} &nbsp
+                    p.fpsText.noselect(amountOfFrames=frame style="color:grey;display:inline;margin-left:7px;") +#{frame} &nbsp
         else
             div.frameJumper(style="margin-bottom:35px;")
         br
@@ -465,19 +466,19 @@ block content
                     if upload.uploader.customThumbnail
                         a(href=`/user/${upload.uploader.channelUrl}`)
 
-                            img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` style="opacity:0.75;border-radius:13px;height:110px;")
+                            img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` style="opacity:0.75;border-radius:13px;height:110px;width:243px;")
                             br
                             br
                     else if upload.uploader.thumbnailUrl
                         a(href=`/user/${upload.uploader.channelUrl}`)
 
-                            img(src=`${uploadServer}/${upload.uploader._id}/unique.png` style="opacity:0.75;border-radius:13px;height:110px;")
+                            img(src=`${uploadServer}/${upload.uploader._id}/unique.png` style="opacity:0.75;border-radius:13px;height:110px;width:243px;")
                             br
                             br
                     else
                         a(href=`/user/${upload.uploader.channelUrl}`)
 
-                            img(src=`/images/default_user_image.png` style="opacity:0.75;border-radius:13px;height:110px;")
+                            img(src=`/images/default_user_image.png` style="opacity:0.75;border-radius:13px;height:110px;width:243px;")
                             br
                             br
 
@@ -488,16 +489,22 @@ block content
                             span.nodetube-pro PLUS
 
 
-
-
-
+                    // TODO: show this if it's pending or not
                 if upload.visibility != 'pending'
                     if alreadySubbed
                         button.subscribe.btn.fw.btn-danger.op80.unsubscribeButton(style="border-radius:4px;") Unsubscribe (#{subscriberAmount})
                     else
                         button.subscribe.btn.fw.btn-success.op80.subscribeButton(style="border-radius:4px;") Subscribe (#{subscriberAmount})
-                    br
-                    br
+
+                //br
+                ////- push notification functionality
+                //div.change-size-button
+                //    h2
+                //        img.pushNotificationIcon(src="/images/push-notif-dark.jpg" aria-hidden="true" style="cursor:pointer;color:#a5a5a5;width:43px;")
+
+
+                br
+                br
 
 
             div.col-sm-6.uploadDescriptionColumn
@@ -610,13 +617,13 @@ block content
                         h2.download-button
                             i.download-icon.fa.fa-download(aria-hidden="true" style="cursor:pointer;color:#a5a5a5;")
 
-                    // only do repeat button if it's audio or video
+                    // theatre mode button
                     if upload.fileType == 'video'
                         div.change-size-button.theatre-mode-button(style="margin-left:0px;")
                             h2(style="")
                                 i.fa.fa-tv(aria-hidden="true" style="cursor:pointer;color:#a5a5a5;")
 
-                    // only do repeat button if it's audio or video
+                    // lamp button functionality
                     if upload.fileType == 'video'
                         div.change-size-button.lampIconDiv(style="margin-left:-16px;margin-right:-3px;")
                             img.lampIcon(src="/images/lamp.png")
@@ -671,12 +678,12 @@ block content
                             if category.name == upload.category
                                 p.fw(style="margin-top:15px;font-size:12px;color:a5a5a5;") Category: #{category.displayName}
 
-                                //if upload.subcategory
-                                //
-                                //    each subcategory in category.subcategories
-                                //
-                                //        if upload.subcategory == subcategory.name
-                                //            p.fw(style="margin-top:15px;font-size:12px;") Subcategory: #{subcategory.displayName}
+                                //-if upload.subcategory
+                                //-
+                                //-    each subcategory in category.subcategories
+                                //-
+                                //-        if upload.subcategory == subcategory.name
+                                //-            p.fw(style="margin-top:15px;font-size:12px;") Subcategory: #{subcategory.displayName}
 
 
 
@@ -696,6 +703,7 @@ block content
                             Rating: #{convertedRating}
 
                     // capitalizing the first letter
+                    // TODO: also only show if its the video owner or mod/admin
                     if upload.visibility !== 'public'
                         p.smallerInfo.fw.fileSizeText.
                             Visibility: #{upload.visibility.charAt(0).toUpperCase() + upload.visibility.slice(1)}
@@ -838,9 +846,17 @@ block extra_js
   //script(src='https://checkout.stripe.com/checkout.js')
   script(src="https://cdnjs.cloudflare.com/ajax/libs/autolinker/1.4.4/Autolinker.js")
 
+  script(src='/js/otherNotif.js')
+
+  script(src="/js/notificationServiceWorker.js")
+
   script.
 
     $(document).ready(function () {
+
+      $('.pushNotificationIcon').click(function(){
+        main();
+      })
 
       const uploadDescriptionText = $('#uploadDescriptionText');
 
@@ -852,8 +868,8 @@ block extra_js
       // todo; change this to a div that includes the title as well
       const height = uploadDescriptionText.height();
 
-      if(height > 198){
-        uploadDescriptionText.height('198');
+      if(height > 194){
+        uploadDescriptionText.height('194');
         // to-do show the show more button
         showMoreButton.show()
       }
@@ -872,8 +888,10 @@ block extra_js
 
       })
 
+      // TODO: scroll to the top of the div here
+      // when show less button is clicked
       showLessButton.click(function () {
-        uploadDescriptionText.height('198');
+        uploadDescriptionText.height('194');
 
         showMoreButton.show()
         showLessButton.hide()
@@ -901,6 +919,8 @@ block extra_js
       })
 
 
+      // the codes for the keyboard shortcuts
+      // and then how many frames to change for each
       const codes = {
         109: -5,
         44: -1,
@@ -920,17 +940,29 @@ block extra_js
           if (code == keyCode) {
             const amountOfFramesToMove = codes[code];
 
+            // for some reason, the fpsValue comes as a fraction
             const firstFpsValue = Number(fpsValue.split('/')[0]);
 
+            // for some reason, the fpsValue comes as a fraction
             const secondFpsValue = Number(fpsValue.split('/')[1]);
 
+            // had to do it this way because I couldn't figure out how to do it without
+            // pulling them out separately
             const fpsValueAsNumber = firstFpsValue / secondFpsValue
 
+            // equation for getting amount of seconds shown per frame
             const amountOfSecondsToMovePerFrame = 1 / fpsValueAsNumber;
+
 
             const amountOfSecondsToMoveTotal = amountOfSecondsToMovePerFrame * amountOfFramesToMove;
 
-            player.currentTime = player.currentTime + amountOfSecondsToMoveTotal;
+            // TODO: check if that comment box is in focus, if it is, don't run this
+
+            if (!$("textarea").is(":focus")) {
+              //input and text area has focus
+              player.currentTime = player.currentTime + amountOfSecondsToMoveTotal;
+            }
+
 
             console.log(code);
           }
@@ -1191,6 +1223,7 @@ block extra_footer_js
   script(src="https://cdnjs.cloudflare.com/ajax/libs/plyr/3.5.10/plyr.min.js")
   // script(src="//cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.5.1/jquery.nicescroll.min.js")
 
+
   script.
 
     $(document).ready(function () {
@@ -1323,9 +1356,9 @@ block extra_footer_js
 
 
 
-
   //COMMENT FUNCTIONALITY CONTAINED HERE
   script(src="/js/media.js")
+
 
   script.
 

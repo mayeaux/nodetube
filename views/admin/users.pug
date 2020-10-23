@@ -6,34 +6,62 @@ block content
             h2
             h2.view-header Users (Admin)
         hr
-        each user in users
-            div.col-sm-4(style="text-align:center;height:450px;")
-                // NEW CHANNEL UPLOAD FORMAT
+        if users.length == 0
+            .center-block.text-center
+                ul.pagination
+                    li.page-item
+                        a.page-link(href=`/admin/users/${previousNumber}`) <
 
-                a(href=`/user/${user.channelUrl}`)
-                    h4 Channel Name: #{user.channelName}
-                    h4 Channel Url: #{user.channelUrl}
-                p Trusted User: #{user.privs.autoVisibleUpload}
-                p User Status: #{user.status}
-                p Created At: #{user.createdAt}
+                    each number in numbersArray
+                        li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
+                            a.page-link(href=`/admin/users/${number}`) #{number}
+
+                    li.page-item
+                        a.page-link(href=`/admin/users/${nextNumber}`) >
+            
+            p There are no more users
+        else
+            .center-block.text-center
+                        ul.pagination
+                            li.page-item
+                                a.page-link(href=`/admin/users/${previousNumber}`) <
+
+                            each number in numbersArray
+                                li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
+                                    a.page-link(href=`/admin/users/${number}`) #{number}
+
+                            li.page-item
+                                a.page-link(href=`/admin/users/${nextNumber}`) >
+
+
+            each user in users
+                div.col-sm-4(style="text-align:center;height:450px;")
+                    // NEW CHANNEL UPLOAD FORMAT
+
+                    a(href=`/user/${user.channelUrl}`)
+                        h4 Channel Name: #{user.channelName}
+                        h4 Channel Url: #{user.channelUrl}
+                    p Trusted User: #{user.privs.autoVisibleUpload}
+                    p User Status: #{user.status}
+                    p Created At: #{user.createdAt}
 
 
 
-                    div.admin-buttons
-                        form(action="/admin/users" method="POST")
-                            input(type='hidden', name='_csrf', value=_csrf)
-                            input(type='hidden', name='user', value=`${user._id}`)
-                            //button.btn.btn-success(name="userChangeValue" value="approve" type="submit") Approve
-                            //br
-                            //br
-                            button.btn.btn-primary(name="userChangeValue" value="trustUser" type="submit" ) Trust User
-                            br
-                            br
-                            button.btn.btn-danger(name="userChangeValue" value="untrustUser" type="submit" ) Untrust User
-                            br
-                            br
-                            button.btn.btn-success(name="userChangeValue" value="unbanUser" type="submit" ) Unban User
-                            br
-                            br
-                            button.btn.btn-danger(name="userChangeValue" value="banUser" type="submit") Ban User
+                        div.admin-buttons
+                            form(action="/admin/users" method="POST")
+                                input(type='hidden', name='_csrf', value=_csrf)
+                                input(type='hidden', name='user', value=`${user._id}`)
+                                //button.btn.btn-success(name="userChangeValue" value="approve" type="submit") Approve
+                                //br
+                                //br
+                                button.btn.btn-primary(name="userChangeValue" value="trustUser" type="submit" ) Trust User
+                                br
+                                br
+                                button.btn.btn-danger(name="userChangeValue" value="untrustUser" type="submit" ) Untrust User
+                                br
+                                br
+                                button.btn.btn-success(name="userChangeValue" value="unbanUser" type="submit" ) Unban User
+                                br
+                                br
+                                button.btn.btn-danger(name="userChangeValue" value="banUser" type="submit") Ban User
 
