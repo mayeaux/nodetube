@@ -6,13 +6,39 @@ block content
             h2
             h2.view-header Subscriptions (Admin)
         hr
-        each subscription in subscriptions
-            if subscription.drivingUpload
-                p(style="display:inline") Driving Upload: &nbsp
-                p(style="display:inline-block")
-                    a(href=`/uploads/${subscription.subscribingUser.channelUrl}/${subscription.drivingUpload.uniqueTag}`) #{subscription.drivingUpload.title}
-            p Uploader: #{subscription.subscribedToUser.channelUrl}
-            p Subscriber : #{subscription.subscribingUser.channelUrl}
+        if subscriptions.length == 0
+            .center-block.text-center
+                ul.pagination
+                    li.page-item
+                        a.page-link(href=`/admin/subscriptions/${previousNumber}`) <
 
-            br
-            br
+                    each number in numbersArray
+                        li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
+                            a.page-link(href=`/admin/subscriptions/${number}`) #{number}
+
+                    li.page-item
+                        a.page-link(href=`/admin/subscriptions/${nextNumber}`) >
+            
+            p There are no more subscribers
+        else
+            .center-block.text-center
+                ul.pagination
+                    li.page-item
+                        a.page-link(href=`/admin/subscriptions/${previousNumber}`) <
+
+                    each number in numbersArray
+                        li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
+                            a.page-link(href=`/admin/subscriptions/${number}`) #{number}
+
+                    li.page-item
+                        a.page-link(href=`/admin/subscriptions/${nextNumber}`) >
+            each subscription in subscriptions
+                if subscription.drivingUpload
+                    p(style="display:inline") Driving Upload: &nbsp
+                    p(style="display:inline-block")
+                        a(href=`/uploads/${subscription.subscribingUser.channelUrl}/${subscription.drivingUpload.uniqueTag}`) #{subscription.drivingUpload.title}
+                p Uploader: #{subscription.subscribedToUser.channelUrl}
+                p Subscriber : #{subscription.subscribingUser.channelUrl}
+
+                br
+                br

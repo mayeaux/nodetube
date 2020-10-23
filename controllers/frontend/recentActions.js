@@ -13,22 +13,13 @@ const uploadServer = uploadHelpers.uploadServer;
  */
 exports.recentComments = async(req, res) => {
   let page = req.params.page;
-
-  if(!page){
-    page = 1;
-  }
-
+  if(!page){ page = 1; }
   page = parseInt(page);
 
-  const limit = 102;
+  const limit = 100;
+  const skipAmount = (page * limit) - limit;
 
-  const startingNumber = pagination.getMiddleNumber(page);
-
-  const numbersArray = pagination.createArray(startingNumber);
-
-  const previousNumber = pagination.getPreviousNumber(page);
-
-  const nextNumber = pagination.getNextNumber(page);
+  const { startingNumber, previousNumber, nextNumber, numbersArray } = pagination.buildPaginationObject(page);
 
   try {
 
@@ -36,7 +27,7 @@ exports.recentComments = async(req, res) => {
       visibility : { $ne: 'removed'}
     }).populate({path: 'upload commenter', populate: {path: 'uploader'}})
       .sort({ createdAt: -1 })
-      .skip((page * limit) - limit)
+      .skip(skipAmount)
       .limit(limit);
 
     // delete comments from videos that arent public
@@ -47,6 +38,7 @@ exports.recentComments = async(req, res) => {
     res.render('admin/recentReacts', {
       title: 'Recent Comments',
       comments,
+      startingNumber,
       numbersArray,
       highlightedNumber: page,
       previousNumber,
