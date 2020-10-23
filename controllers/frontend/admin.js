@@ -85,12 +85,12 @@ exports.getAdminAudit = async(req, res) => {
       title: 'Admin Audit',
       adminActions,
       startingNumber,
-        previousNumber,
-        nextNumber,
-        numbersArray,
-        highlightedNumber: page
+      previousNumber,
+      nextNumber,
+      numbersArray,
+      highlightedNumber: page
     });
-  } catch (err) {
+  } catch(err){
     console.log(err);
     return res.render('error/500');
   }
@@ -153,7 +153,7 @@ exports.getSiteVisitors = async(req, res) => {
       numbersArray,
       highlightedNumber: page
     });
-  } catch (err) {
+  } catch(err){
     console.log(err);
     return res.render('error/500');
   }
@@ -183,7 +183,7 @@ exports.getUploads = async(req, res) => {
       numbersArray,
       highlightedNumber: page
     });
-  } catch (err) {
+  } catch(err){
     console.log(err);
     return res.render('error/500');
   }
@@ -202,7 +202,7 @@ exports.getComments = async(req, res) => {
 
   try {
     const comments = await Comment.find({}).sort({ _id : -1  }).populate('commenter upload')
-    .skip(skipAmount).limit(limit);
+      .skip(skipAmount).limit(limit);
 
     res.render('admin/comments', {
       title: 'Comments',
@@ -213,10 +213,10 @@ exports.getComments = async(req, res) => {
       numbersArray,
       highlightedNumber: page
     });
-  } catch (err) {
-    
+  } catch(err){
+    console.log('err');
+    console.log(err);
   }
-  
 
 };
 
@@ -297,12 +297,10 @@ exports.reacts = async(req, res) => {
       numbersArray,
       highlightedNumber: page
     });
-  } catch (err) {
+  } catch(err){
     console.log(err);
     return res.render('error/500');
   }
-
-  
 
 };
 
@@ -331,11 +329,10 @@ exports.subscriptions = async(req, res) => {
 
   const { startingNumber, previousNumber, nextNumber, numbersArray } = pagination.buildPaginationObject(page);
 
-
   try {
     const subscriptions = await Subscription.find({})
-        .populate({path: 'subscribingUser subscribedToUser drivingUpload', populate: {path: 'uploader'}})
-        .skip(skipAmount).limit(limit).sort({ _id : -1  });
+      .populate({path: 'subscribingUser subscribedToUser drivingUpload', populate: {path: 'uploader'}})
+      .skip(skipAmount).limit(limit).sort({ _id : -1  });
 
     // console.log(subscriptions);
 
@@ -348,10 +345,9 @@ exports.subscriptions = async(req, res) => {
       numbersArray,
       highlightedNumber: page
     });
-  } catch (err) {
+  } catch(err){
     console.log(err);
     return res.render('error/500');
   }
-  
 
 };

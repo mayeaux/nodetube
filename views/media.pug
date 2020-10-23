@@ -377,6 +377,10 @@ block content
             /*display: none !important;*/
         /*}*/
 
+        .plyr__video-wrapper {
+            margin-top: 24px;
+        }
+
 
 
     div.center-block.text-center.col-sm-12.pageContainer(style="overflow-x: hidden;margin-top:-2px;padding-right:0px;padding-left:0px;")
@@ -437,13 +441,13 @@ block content
             div.frameJumper(style="margin-bottom:1px;margin-top:-14px;")
                 br
                 each frame in [1,5,15,30].reverse()
-                    p.fpsText.noselect(amountOfFrames=-frame style="display:inline;margin-left:7px;") -#{frame} &nbsp
+                    p.fpsText.noselect(amountOfFrames=-frame style="color:grey;display:inline;margin-left:7px;") -#{frame} &nbsp
 
                 p(style="display:inline;margin-left:14px;")
 
 
                 each frame in [1,5,15,30]
-                    p.fpsText.noselect(amountOfFrames=frame style="display:inline;margin-left:7px;") +#{frame} &nbsp
+                    p.fpsText.noselect(amountOfFrames=frame style="color:grey;display:inline;margin-left:7px;") +#{frame} &nbsp
         else
             div.frameJumper(style="margin-bottom:35px;")
         br
