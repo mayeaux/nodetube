@@ -379,8 +379,7 @@ block content
 
 
 
-    br
-    div.center-block.text-center.col-sm-12.pageContainer(style="overflow-x: hidden;margin-top:-21px;")
+    div.center-block.text-center.col-sm-12.pageContainer(style="overflow-x: hidden;margin-top:-2px;padding-right:0px;padding-left:0px;")
         if upload.status == 'processing'
 
             div(style="max-width:443px;margin:0 auto;")
@@ -393,8 +392,6 @@ block content
 
 
         <!-- DISPLAYING CONTENT -->
-        br
-        br
         // if it's a video that's finished processing
         if upload.fileType === 'video' && upload.status !== 'processing'
             div.display-div.magnetic(style="min-width:50%;min-height:50%;margin:0 auto;margin-top: -25px;")
@@ -465,19 +462,19 @@ block content
                     if upload.uploader.customThumbnail
                         a(href=`/user/${upload.uploader.channelUrl}`)
 
-                            img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` style="opacity:0.75;border-radius:13px;height:110px;")
+                            img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` style="opacity:0.75;border-radius:13px;height:110px;width:243px;")
                             br
                             br
                     else if upload.uploader.thumbnailUrl
                         a(href=`/user/${upload.uploader.channelUrl}`)
 
-                            img(src=`${uploadServer}/${upload.uploader._id}/unique.png` style="opacity:0.75;border-radius:13px;height:110px;")
+                            img(src=`${uploadServer}/${upload.uploader._id}/unique.png` style="opacity:0.75;border-radius:13px;height:110px;width:243px;")
                             br
                             br
                     else
                         a(href=`/user/${upload.uploader.channelUrl}`)
 
-                            img(src=`/images/default_user_image.png` style="opacity:0.75;border-radius:13px;height:110px;")
+                            img(src=`/images/default_user_image.png` style="opacity:0.75;border-radius:13px;height:110px;width:243px;")
                             br
                             br
 
