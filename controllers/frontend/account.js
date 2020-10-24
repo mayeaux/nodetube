@@ -14,7 +14,7 @@ const SocialPost = require('../../models/index').SocialPost;
 const Subscription = require('../../models/index').Subscription;
 const PushSubscription = require('../../models/index').PushSubscription;
 const EmailSubscription = require('../../models/index').EmailSubscription;
-
+const LastWatchedTime = require('../../models/index').LastWatchedTime;
 const PushEndpoint = require('../../models/index').PushEndpoint;
 
 const RSS = require('rss');
@@ -502,6 +502,26 @@ exports.getChannel = async(req, res) => {
     }
 
     user.totalViews = totalViews;
+
+    for(const upload in uploads){
+      console.log(uploads[upload].durationInSeconds)
+      let lastWatchedTime;
+      if(uploads[upload].durationInSeconds >= 900){
+        console.log("This watch")
+        console.log(uploads[upload]._id)
+        console.log(user._id)
+        lastWatchedTime = await LastWatchedTime.findOne({
+          user : req.user._id,
+          upload: uploads[upload]._id
+        });
+      }
+      if(lastWatchedTime !== undefined && lastWatchedTime !== null){
+        uploads[upload].lastWatchedTime = lastWatchedTime.secondsWatched
+        console.log(lastWatchedTime.secondsWatched)
+      } 
+    }
+
+    
 
     user.uploads = uploads;
 
