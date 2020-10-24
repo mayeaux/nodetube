@@ -1012,7 +1012,7 @@ block extra_js
 
           if(player.currentTime == 0 ){
 
-            link.download = '#{title}.jpg';
+            link.download = `#{title}.jpg`;
 
             console.log('use thumbnail');
             console.log(thumbnailUrl);
@@ -1021,7 +1021,7 @@ block extra_js
 
           } else {
 
-            link.download = '#{title}.png';
+            link.download = `#{title}.png`;
 
             console.log('use canvas')
             link.href = canvas.toDataURL()
