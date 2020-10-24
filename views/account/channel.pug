@@ -132,6 +132,14 @@ block content
                         //button.delete-account.btn.btn-danger Delete Account And Ban Ip
                         if user.role == 'admin'
                             button.delete-ips.btn.btn-danger Delete All Accounts / Ips
+                            br
+                            br
+                            form(action="/admin/users" method="POST")
+                                input(type='hidden', name='_csrf', value=_csrf)
+                                input(type='hidden', name='user', value=`${channel._id}`)
+                                button.btn.btn-primary(name="userChangeValue" value="trustUser" type="submit" ) Trust User
+                                button.btn.btn-danger(name="userChangeValue" value="untrustUser" type="submit" ) Untrust User
+                                p User Trusted: #{user.privs.autoVisibleUpload}
 
                     if user && ( user.role == 'admin' || user.role == 'moderator') && channel.status == 'restricted'
 
@@ -141,6 +149,7 @@ block content
                         //button.undelete-account.btn.btn-warning Undelete Account And Unban Ip
                         if user.role == 'admin'
                             button.delete-ips.btn.btn-warning Undelete All Accounts / Unban All Ips
+                      
 
         div
 

@@ -20,20 +20,45 @@ block content
 
         div.center-block.text-center.col-sm-12
             h1= recentActionDisplayName
-            include ../viewPartials/recentActionPagination
+            //- include ../viewPartials/recentActionPagination
+            if documents.length == 0
+                p There are no more comments
+                .center-block.text-center
+                    ul.pagination
+                        li.page-item
+                            a.page-link(href=`/media/recentComments/${previousNumber}`) <
 
-            each document in documents
-                if document.upload.uploader
-                    div.col-sm-4(style="text-align:center;height:335px")
-                        // NEW CHANNEL UPLOAD FORMAT
-                        a.title-anchor(href=`/user/${document.upload.uploader.channelUrl}/${document.upload.uniqueTag}`)
-                            // TODO: Sub out thumbnail here
-                            include ../viewPartials/recentActionThumbnail
+                        each number in numbersArray
+                            li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
+                                a.page-link(href=`/media/recentComments/${number}`) #{number}
 
-                        include ../viewPartials/recentActionUploadDetails
+                        li.page-item
+                            a.page-link(href=`/media/recentComments/${nextNumber}`) >
+            else
+                .center-block.text-center
+                    ul.pagination
+                        li.page-item
+                            a.page-link(href=`/media/recentComments/${previousNumber}`) <
+
+                        each number in numbersArray
+                            li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
+                                a.page-link(href=`/media/recentComments/${number}`) #{number}
+
+                        li.page-item
+                            a.page-link(href=`/media/recentComments/${nextNumber}`) >
+                
+                each document in documents
+                    if document.upload.uploader
+                        div.col-sm-4(style="text-align:center;height:335px")
+                            // NEW CHANNEL UPLOAD FORMAT
+                            a.title-anchor(href=`/user/${document.upload.uploader.channelUrl}/${document.upload.uniqueTag}`)
+                                // TODO: Sub out thumbnail here
+                                include ../viewPartials/recentActionThumbnail
+
+                            include ../viewPartials/recentActionUploadDetails
 
 
-            if documents && documents.length > 0
-                include ../viewPartials/recentActionPagination
+                    //- if documents && documents.length > 0
+                    //-     include ../viewPartials/recentActionPagination
 
     include ../viewPartials/mouseOverJavascript

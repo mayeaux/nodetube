@@ -377,10 +377,13 @@ block content
             /*display: none !important;*/
         /*}*/
 
+        .plyr__video-wrapper {
+            margin-top: 24px;
+        }
 
 
-    br
-    div.center-block.text-center.col-sm-12.pageContainer(style="overflow-x: hidden;margin-top:-21px;")
+
+    div.center-block.text-center.col-sm-12.pageContainer(style="overflow-x: hidden;margin-top:-2px;padding-right:0px;padding-left:0px;")
         if upload.status == 'processing'
 
             div(style="max-width:443px;margin:0 auto;")
@@ -393,8 +396,6 @@ block content
 
 
         <!-- DISPLAYING CONTENT -->
-        br
-        br
         // if it's a video that's finished processing
         if upload.fileType === 'video' && upload.status !== 'processing'
             div.display-div.magnetic(style="min-width:50%;min-height:50%;margin:0 auto;margin-top: -25px;")
@@ -465,13 +466,13 @@ block content
             div.frameJumper(style="margin-bottom:1px;margin-top:-14px;")
                 br
                 each frame in [1,5,15,30].reverse()
-                    p.fpsText.noselect(amountOfFrames=-frame style="display:inline;margin-left:7px;") -#{frame} &nbsp
+                    p.fpsText.noselect(amountOfFrames=-frame style="color:grey;display:inline;margin-left:7px;") -#{frame} &nbsp
 
                 p(style="display:inline;margin-left:14px;")
 
 
                 each frame in [1,5,15,30]
-                    p.fpsText.noselect(amountOfFrames=frame style="display:inline;margin-left:7px;") +#{frame} &nbsp
+                    p.fpsText.noselect(amountOfFrames=frame style="color:grey;display:inline;margin-left:7px;") +#{frame} &nbsp
         else
             div.frameJumper(style="margin-bottom:35px;")
         br
@@ -490,19 +491,19 @@ block content
                     if upload.uploader.customThumbnail
                         a(href=`/user/${upload.uploader.channelUrl}`)
 
-                            img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` style="opacity:0.75;border-radius:13px;height:110px;")
+                            img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uploader.customThumbnail}` style="opacity:0.75;border-radius:13px;height:110px;max-width:243px;")
                             br
                             br
                     else if upload.uploader.thumbnailUrl
                         a(href=`/user/${upload.uploader.channelUrl}`)
 
-                            img(src=`${uploadServer}/${upload.uploader._id}/unique.png` style="opacity:0.75;border-radius:13px;height:110px;")
+                            img(src=`${uploadServer}/${upload.uploader._id}/unique.png` style="opacity:0.75;border-radius:13px;height:110px;max-width:243px;")
                             br
                             br
                     else
                         a(href=`/user/${upload.uploader.channelUrl}`)
 
-                            img(src=`/images/default_user_image.png` style="opacity:0.75;border-radius:13px;height:110px;")
+                            img(src=`/images/default_user_image.png` style="opacity:0.75;border-radius:13px;height:110px;max-width:243px;")
                             br
                             br
 
@@ -1161,12 +1162,12 @@ block extra_js
           var link = document.createElement('a');
 
 
-          var title = '#{upload.title}'
+          var title = `#{upload.title}`
 
 
           if(player.currentTime == 0 ){
 
-            link.download = '#{title}.jpg';
+            link.download = `#{title}.jpg`;
 
             console.log('use thumbnail');
             console.log(thumbnailUrl);
@@ -1175,7 +1176,7 @@ block extra_js
 
           } else {
 
-            link.download = '#{title}.png';
+            link.download = `#{title}.png`;
 
             console.log('use canvas')
             link.href = canvas.toDataURL()

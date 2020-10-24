@@ -330,14 +330,20 @@ function frontendRoutes(app){
   app.get('/admin/users', authMiddleware.adminAuth, adminFrontendController.getUsers);
   app.get('/admin/users/:page', authMiddleware.adminAuth, adminFrontendController.getUsers);
   app.get('/admin/subscriptions', authMiddleware.adminAuth, adminFrontendController.subscriptions);
+  app.get('/admin/subscriptions/:page', authMiddleware.adminAuth, adminFrontendController.subscriptions);
   app.get('/admin/comments', authMiddleware.adminAuth, adminFrontendController.getComments);
+  app.get('/admin/comments/:page', authMiddleware.adminAuth, adminFrontendController.getComments);
   app.get('/admin/uploads', authMiddleware.adminAuth, adminFrontendController.getUploads);
+  app.get('/admin/uploads/:page', authMiddleware.adminAuth, adminFrontendController.getUploads);
   app.get('/admin/dailyStats', authMiddleware.adminAuth, adminFrontendController.dailyStats);
   app.get('/admin/reacts', authMiddleware.adminAuth, adminFrontendController.reacts);
+  app.get('/admin/reacts/:page', authMiddleware.adminAuth, adminFrontendController.reacts);
   app.get('/admin/siteVisitors', authMiddleware.adminAuth, adminFrontendController.getSiteVisitors);
+  app.get('/admin/siteVisitors/:page', authMiddleware.adminAuth, adminFrontendController.getSiteVisitors);
   app.get('/admin/siteVisitors/:id', authMiddleware.adminAuth, adminFrontendController.getSiteVisitorHistory);
   app.get('/admin/notifications', authMiddleware.adminAuth, adminFrontendController.getNotificationPage);
   app.get('/admin/adminAudit', authMiddleware.adminAuth, adminFrontendController.getAdminAudit);
+  app.get('/admin/adminAudit/:page', authMiddleware.adminAuth, adminFrontendController.getAdminAudit);
 
   /** SOCIAL MEDIA ENDPOINTS **/
   app.get('/admin/createSocialPost', authMiddleware.adminAuth, socialMediaFrontendController.getCreateSocialPost);
