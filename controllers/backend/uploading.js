@@ -602,7 +602,7 @@ exports.postFileUpload = async(req, res) => {
           uploadLogger.info('Update users push notifications', logObject);
 
           // do email notifications for the user
-          updateUsersEmailNotifications(user, upload);
+          updateUsersEmailNotifications(user, upload, req.host);
 
           uploadLogger.info('Update users email notifications', logObject);
 
