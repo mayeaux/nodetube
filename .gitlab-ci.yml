@@ -1,0 +1,19 @@
+image: "fedora:latest"
+stages:
+  - build
+
+build_x86_64:
+  stage: build
+  before_script:
+    - dnf install -y buildah git podman curl wget xz
+    - export VERSION=$(curl --silent "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
+    - echo $VERSION
+    - wget https://github.com/aquasecurity/trivy/releases/download/v${VERSION}/trivy_${VERSION}_Linux-64bit.tar.gz
+    - tar zxvf trivy_${VERSION}_Linux-64bit.tar.gz
+  allow_failure: false
+  script:
+    - ./scripts/podman_build.sh
+    - ./scripts/gitlab-push.sh
+  cache:
+    paths:
+      - .trivycache/
