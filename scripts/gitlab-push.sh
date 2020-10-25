@@ -48,7 +48,7 @@ then
     export REGISTRY_AUTH_FILE=${HOME}/auth.json # Set registry file location
     echo "$CI_REGISTRY_PASSWORD" | buildah login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY" # Login to registry
     
-    : "${FQ_IMAGE_NAME:=docker://${CI_REGISTRY}/bougyman/voidlinux-containers/voidlinux}"
+    : "${FQ_IMAGE_NAME:=docker://${CI_REGISTRY}/nodetube/nodetube}"
 
     set +x
     # Push everything to the registry
