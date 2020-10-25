@@ -366,6 +366,7 @@ exports.postReset = async(req, res, next) => {
     text: `Hello,\n\nThis is a confirmation that the password for your account ${user.email} has just been changed.\n`
   };
 
+  // turn an email noting that is ___
   const response = await zohoTransport.sendMail(mailOptions);
 
   // console.log(response);
