@@ -62,11 +62,10 @@ const Report = require('../../models/index').Report;
 const LastWatchedTime = require('../../models/index').LastWatchedTime;
 const PushEndpoint = require('../../models/index').PushEndpoint;
 const PushSubscription = require('../../models/index').PushSubscription;
+const EmailSubscription = require('../../models/index').EmailSubscription;
 
 const getMediaType = require('../../lib/uploading/media');
 const pushNotificationLibrary = require('../../lib/mediaPlayer/pushNotification');
-
-console.log(pushNotificationLibrary);
 
 const ffmpegHelper = require('../../lib/uploading/ffmpeg');
 var resumable = require('../../lib/uploading/resumable.js')(__dirname +  '/upload');
@@ -1096,6 +1095,64 @@ exports.savePushEndpoint = async function(req, res, next){
 
 };
 
+exports.subscribeToEmailNotifications = async function(req, res, next){
+  // user who is subscribing
+  const user = req.body.user;
+
+  const subscribingUser = await User.findOne({ channelUrl: user });
+
+  const channel = req.body.channel;
+
+  const foundUser = await User.findOne({ channelUrl: channel });
+
+  console.log(foundUser.channelUrl);
+
+  console.log(subscribingUser.channelUrl);
+
+  // channel url of who is being subscribed to
+
+  let existingActiveEmailSubscription = await EmailSubscription.findOne({ subscribingUser, subscribedToUser: foundUser, active: true });
+
+  let responseText;
+
+  // already exists and turned on, turn it off
+  if(existingActiveEmailSubscription){
+    responseText = 'already active, turn it off';
+    console.log(responseText);
+    existingActiveEmailSubscription.active = false;
+    await existingActiveEmailSubscription.save();
+  }
+
+  // check if there's an inactive one, if not make a new one
+  if(!existingActiveEmailSubscription){
+
+    let existingInactiveEmailNotif = await EmailSubscription.findOne({ subscribingUser, subscribedToUser: foundUser, active: false });
+
+    if(existingInactiveEmailNotif){
+      responseText = 'already existing inactive, make it active';
+      console.log(responseText);
+      existingInactiveEmailNotif.active = true;
+      await existingInactiveEmailNotif.save();
+    } else {
+      responseText = 'create a new email sub';
+
+      console.log(responseText);
+      let emailEndpoint = new EmailSubscription({
+        subscribingUser,
+        subscribedToUser: foundUser,
+        active: true
+      });
+
+      // console.log(emailEndpoint);
+
+      await emailEndpoint.save();
+    }
+  }
+
+  res.send(responseText);
+
+};
+
 exports.subscribeToPushNotifications = async function(req, res, next){
   // user who is subscribing
   const user = req.body.user;
@@ -1118,7 +1175,7 @@ exports.subscribeToPushNotifications = async function(req, res, next){
 
   // already exists and turned on, turn it off
   if(existingActivePushSubscription){
-    responseText = 'already inactive, turn it off';
+    responseText = 'already active, make it inactive';
     console.log(responseText);
     existingActivePushSubscription.active = false;
     await existingActivePushSubscription.save();

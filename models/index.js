@@ -15,6 +15,7 @@ const ReceivedEmail = require('./ReceivedEmail');
 const LastWatchedTime = require('./LastWatchedTime');
 const PushSubscription = require('./PushSubscription');
 const PushEndpoint = require('./PushEndpoint');
+const EmailSubscription = require('./EmailSubscription');
 
 module.exports = {
   Upload,
@@ -33,6 +34,7 @@ module.exports = {
   ReceivedEmail,
   LastWatchedTime,
   PushSubscription,
-  PushEndpoint
+  PushEndpoint,
+  EmailSubscription
 };
 

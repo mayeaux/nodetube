@@ -260,6 +260,7 @@ function frontendRoutes(app){
   app.post('/api/updateLastWatchedTime', passportConfig.isAuthenticated, internalApiController.updateLastWatchedTime);
   app.post('/api/subscribeToPushNotifications', passportConfig.isAuthenticated, internalApiController.subscribeToPushNotifications);
   app.post('/api/sendUserPushNotifs', passportConfig.isAuthenticated, internalApiController.sendUserPushNotifs);
+  app.post('/api/subscribeToEmailNotifications', passportConfig.isAuthenticated, internalApiController.subscribeToEmailNotifications);
 
   // TODO: why admin controller? (fix)
   app.post('/api/upload/delete', passportConfig.isAuthenticated, adminBackendController.deleteUpload);
@@ -325,6 +326,7 @@ function frontendRoutes(app){
   app.get('/support/reports', authMiddleware.moderatorAuth, supportFrontendController.getReports);
 
   /** ADMIN PAGES **/
+  app.get('/admin', authMiddleware.adminAuth, adminFrontendController.getAdminOverview);
   app.get('/admin/users', authMiddleware.adminAuth, adminFrontendController.getUsers);
   app.get('/admin/users/:page', authMiddleware.adminAuth, adminFrontendController.getUsers);
   app.get('/admin/subscriptions', authMiddleware.adminAuth, adminFrontendController.subscriptions);

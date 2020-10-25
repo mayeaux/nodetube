@@ -84,10 +84,16 @@ block content
                     button(style="display:inherit;margin:0 auto;border-radius:3px;").fw.subscribe.btn.btn-success Subscribe (#{subscriberAmount})
 
                 if user
+                    div(style="margin-top:12px")
+                        // TODO: this should create a push subsciption, and it will also send a query to see if it should create a new service worker
+                        h2.share-button.pushNotificationIcon(style="display:inline")
+                            i.share-icon.fas.fa-bell(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:0px;color:white;")
+                        h2.share-button.emailNotificationIcon(style="display:inline")
+                            i.share-icon.fas.fa-envelope(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:10px;color:white;")
 
-                    // TODO: this should create a push subsciption, and it will also send a query to see if it should create a new service worker
-                    h2.share-button.pushNotificationIcon
-                        i.share-icon.fas.fa-bell(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:0px;color:white;")
+                // todo: else
+                // let's put an 'else' here and here and show those same buttons
+                // but when you click them, it prompts you to either login, or to add your email
 
 
 
@@ -251,6 +257,57 @@ block content
         script.
 
             $(document).ready(function(){
+
+              var alreadyHaveEmailNotifsOn = '#{alreadySubscribedForEmails}' == 'true'
+              
+              console.log('already have email notis on')
+
+              if (alreadyHaveEmailNotifsOn) {
+                $('.emailNotificationIcon i').css('color', 'white')
+              } else {
+                $('.emailNotificationIcon i').css('color', 'gray')
+              }
+
+              $('.emailNotificationIcon').click(function () {
+                console.log('Email notification icon clicked');
+                var csrf = '#{_csrf}'
+
+                const data = {
+                  _csrf: csrf,
+                  user: '#{user.channelUrl}',
+                  channel: '#{channel.channelUrl}'
+                }
+
+                $.ajax({
+                  type: 'POST',
+                  url: `/api/subscribeToEmailNotifications`,
+                  data,
+                  success: function (data) {
+
+                    $('.emailNotificationIcon i').css('color', 'white')
+                    let swalText = 'You have subscribed to their email notifications'
+
+                    if (alreadyHaveEmailNotifsOn) {
+                      swalText = 'You have unsubscribed from their email notifications'
+                      $('.emailNotificationIcon i').css('color', 'gray')
+                    }
+
+                    swal(swalText);
+
+                    alreadyHaveEmailNotifsOn = !alreadyHaveEmailNotifsOn;
+
+                    console.log(data);
+
+                    // Shows undefined when at 100%
+
+
+                  },
+                  error: function (err) {
+                    console.log(err);
+                  }
+                });
+              })
+
               var alreadyHavePushNotifsOn = '#{alreadyHavePushNotifsOn}' == 'true'
 
               console.log('readl');
@@ -258,6 +315,8 @@ block content
 
               if (alreadyHavePushNotifsOn) {
                 $('.pushNotificationIcon i').css('color', 'white')
+              } else {
+                $('.pushNotificationIcon i').css('color', 'gray')
               }
 
               if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
@@ -288,7 +347,7 @@ block content
                     // if push notifs already on
                     if (alreadyHavePushNotifsOn) {
                       swalText = 'You have unsubscribed from their push notifications'
-                      $('.pushNotificationIcon i').css('color', 'lightgrey')
+                      $('.pushNotificationIcon i').css('color', 'gray')
                     }
 
                     swal(swalText);
