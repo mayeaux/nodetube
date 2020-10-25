@@ -41,6 +41,8 @@ const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
 
 const { userCanUploadContentOfThisRating } = require('../../lib/uploading/helpers');
 
+const {getEnglishStringOrder, sortUploads} = require('../../lib/account/order');
+
 const validator = require('email-validator');
 
 const { getUploadDuration } = require('../../lib/mediaBrowsing/helpers');
@@ -52,37 +54,6 @@ require('intl-messageformat/dist/locale-data/en');
 const timeAgoEnglish = new javascriptTimeAgo('en-US');
 
 const secondsToFormattedTime = timeHelper.secondsToFormattedTime;
-
-// TODO: pull this function out
-async function addValuesIfNecessary(upload, channelUrl){
-  if(upload.fileType == 'video' || upload.fileType == 'audio'){
-    if(!upload.durationInSeconds || !upload.formattedDuration){
-
-      var server = uploadServer;
-      if(server.charAt(0) == '/') // the slash confuses the file reading, because host root directory is not the same as machine root directory
-        server = server.substr(1);
-
-      const uploadLocation = `${server}/${channelUrl}/${upload.uniqueTag + upload.fileExtension}`;
-
-      try {
-        const duration = await getUploadDuration(uploadLocation, upload.fileType);
-        console.log(duration);
-
-        let uploadDocument = await Upload.findOne({uniqueTag: upload.uniqueTag});
-
-        uploadDocument.durationInSeconds = duration.seconds;
-        uploadDocument.formattedDuration = duration.formattedTime;
-
-        await uploadDocument.save();
-
-      } catch(err){
-        /** if the file has been deleted then it won't blow up **/
-        // console.log(err);
-      }
-      // console.log('have to add');
-    }
-  }
-}
 
 /**
  * GET /upload
@@ -391,30 +362,7 @@ exports.getChannel = async(req, res) => {
       orderBy = req.query.orderBy;
     }
 
-    // console.log(`orderBy : ${orderBy}`)
-
-    if(orderBy !== 'popular' && orderBy !== 'newToOld' && orderBy !== 'oldToNew' && orderBy !== 'alphabetical'){
-      console.log('doesnt connect');
-      orderBy = 'newToOld';
-    }
-
-    let orderByEnglishString;
-
-    if(orderBy == 'alphabetical'){
-      orderByEnglishString = 'Alphabetical';
-    }
-
-    if(orderBy == 'oldToNew'){
-      orderByEnglishString = 'Old To New';
-    }
-
-    if(orderBy == 'newToOld'){
-      orderByEnglishString = 'New To Old';
-    }
-
-    if(orderBy == 'popular'){
-      orderByEnglishString = 'Popular';
-    }
+    let orderByEnglishString = getEnglishStringOrder(orderBy);
 
     let alreadySubbed = false;
 
@@ -447,30 +395,7 @@ exports.getChannel = async(req, res) => {
 
     const userUploadAmount = uploads.length;
 
-    if(orderBy == 'newToOld'){
-
-      // console.log('new to old');
-      uploads = uploads.sort(function(a, b){
-        return b.createdAt - a.createdAt;
-      });
-    }
-
-    if(orderBy == 'oldToNew'){
-
-      // console.log('old to new');
-      uploads = uploads.sort(function(a, b){
-        return a.createdAt - b.createdAt;
-      });
-    }
-
-    if(orderBy == 'alphabetical'){
-
-      // console.log('alphabetical');
-
-      uploads = uploads.sort(function(a, b){
-        return a.title.localeCompare(b.title);
-      });
-    }
+    uploads = sortUploads(orderBy, uploads);
 
     let filter = uploadFilters.getSensitivityFilter(req.user, req.siteVisitor);
 
@@ -489,12 +414,6 @@ exports.getChannel = async(req, res) => {
         return upload;
       })
     );
-
-    if(orderBy == 'popular'){
-      uploads = uploads.sort(function(a, b){
-        return b.legitViewAmount - a.legitViewAmount;
-      });
-    }
 
     let totalViews = 0;
     for(upload of uploads){
