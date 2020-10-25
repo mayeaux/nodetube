@@ -80,7 +80,7 @@ exports.getMedia = async(req, res) => {
       const media = req.params.media;
       user = await User.findOne({
         // regex for case insensitivity
-        channelUrl:  channelUrl
+        channelUrl:  new RegExp(['^', req.params.channel, '$'].join(''), 'i')
       }).populate('receivedSubscriptions').lean()
         .exec();
 
