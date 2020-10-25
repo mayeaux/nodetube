@@ -40,22 +40,17 @@ if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false'){
 
 const pageLimit = 42;
 
+// Searching for last time watched value, for videos longer then 15 minutes 
 async function addLastTimeWatched(upload, user){
-  console.log("AddLastWatchedTime")
-  console.log(upload.durationInSeconds)
   let lastWatchedTime;
   if(upload.durationInSeconds >= 900){
-    console.log("This watch")
-    console.log(upload._id)
-    console.log(user._id)
     lastWatchedTime = await LastWatchedTime.findOne({
       user : user._id,
       upload: upload._id
     });
   }
+  // Check if user watched the video
   if(lastWatchedTime !== undefined && lastWatchedTime !== null){
-    // uploads[upload].lastWatchedTime = lastWatchedTime.secondsWatched
-    console.log(lastWatchedTime.secondsWatched)
     return lastWatchedTime.secondsWatched
   } 
   
@@ -64,7 +59,7 @@ async function addLastTimeWatched(upload, user){
 // TODO: pull this function out
 async function addValuesIfNecessary(upload, channelUrl){
   if(upload.fileType == 'video' || upload.fileType == 'audio'){
-    if(true){
+    if(!upload.durationInSeconds || !upload.formattedDuration){
 
       var server = uploadServer;
       if(server.charAt(0) == '/') // the slash confuses the file reading, because host root directory is not the same as machine root directory
@@ -80,10 +75,10 @@ async function addValuesIfNecessary(upload, channelUrl){
 
         uploadDocument.durationInSeconds = Math.round(duration.seconds);
         uploadDocument.formattedDuration = duration.formattedTime;
-        const value = Math.round(duration.seconds);
         const saveDocument = await uploadDocument.save();
-        // console.log("saveDocument")
-        return value;
+        
+        const value = Math.round(duration.seconds)
+        return value
       } catch(err){
         /** if the file has been deleted then it won't blow up **/
         console.log(err);
@@ -157,9 +152,13 @@ exports.recentUploads = async(req, res) => {
 
     if(uploads && uploads.length){
       for(const upload in uploads){
-        // console.log(uploads[upload]);
-        uploads[upload].durationInSeconds = await addValuesIfNecessary(uploads[upload], uploads[upload].uploader && uploads[upload].uploader.channelUrl);
+        if(!uploads[upload].durationInSeconds)
+          uploads[upload].durationInSeconds = await addValuesIfNecessary(uploads[upload], uploads[upload].uploader && uploads[upload].uploader.channelUrl);
+        
         uploads[upload].lastWatchedTime = await addLastTimeWatched(uploads[upload], req.user)
+
+        if(uploads[upload].lastWatchedTime)
+          uploads[upload].formattedLastWatchedTime = timeHelper.secondsToFormattedTime(uploads[upload].lastWatchedTime)
       }
     }
 
@@ -340,32 +339,18 @@ exports.popularUploads = async(req, res) => {
     const popularTimeViews = 'viewsWithin' + within;
 
     // console.log(popularTimeViews);
-    //
-    // console.log('getting popular uploads');
 
     if(uploads && uploads.length){
       for(const upload in uploads){
-        // console.log(uploads[upload]);
-        uploads[upload].durationInSeconds = await addValuesIfNecessary(uploads[upload], uploads[upload].uploader && uploads[upload].uploader.channelUrl);
+        if(!uploads[upload].durationInSeconds)
+          uploads[upload].durationInSeconds = await addValuesIfNecessary(uploads[upload], uploads[upload].uploader && uploads[upload].uploader.channelUrl);
+        
         uploads[upload].lastWatchedTime = await addLastTimeWatched(uploads[upload], req.user)
+
+        if(uploads[upload].lastWatchedTime)
+          uploads[upload].formattedLastWatchedTime = timeHelper.secondsToFormattedTime(uploads[upload].lastWatchedTime)
       }
     }
-    // console.log(uploads)
-    // for(const upload in uploads){
-    //   // console.log(uploads[upload]._id)
-    //   let lastWatchedTime;
-    //   if(uploads[upload].lastWatchedTime === undefined){
-    //     lastWatchedTime = await LastWatchedTime.findOne({
-    //       user : req.user._id,
-    //       upload: uploads[upload]._id
-    //     });
-    //   }
-    //   if(lastWatchedTime !== null){
-    //     uploads[upload].lastWatchedTime = lastWatchedTime.secondsWatched
-    //     // console.log(lastWatchedTime.secondsWatched)
-    //   }
-    //   // console.log(uploads[upload].durationInSeconds);
-    // }
 
 
     res.render('mediaBrowsing/popularUploads', {
@@ -573,9 +558,13 @@ exports.search = async(req, res) => {
 
   if(uploads && uploads.length){
     for(const upload in uploads){
-      // console.log(uploads[upload]);
-      uploads[upload].durationInSeconds = await addValuesIfNecessary(uploads[upload], uploads[upload].uploader && uploads[upload].uploader.channelUrl);
+      if(!uploads[upload].durationInSeconds)
+        uploads[upload].durationInSeconds = await addValuesIfNecessary(uploads[upload], uploads[upload].uploader && uploads[upload].uploader.channelUrl);
+      
       uploads[upload].lastWatchedTime = await addLastTimeWatched(uploads[upload], req.user)
+
+      if(uploads[upload].lastWatchedTime)
+        uploads[upload].formattedLastWatchedTime = timeHelper.secondsToFormattedTime(uploads[upload].lastWatchedTime)
     }
   }
 
