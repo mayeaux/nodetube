@@ -80,18 +80,15 @@ exports.getMedia = async(req, res) => {
       const media = req.params.media;
       user = await User.findOne({
         // regex for case insensitivity
-        channelUrl:  new RegExp(['^', req.params.channel, '$'].join(''), 'i')
+        channelUrl:  channelUrl
       }).populate('receivedSubscriptions').lean()
         .exec();
+
       const pushSubscriptionSearchQuery = {
         subscribedToUser :  user._id,
         subscribingUser: req.user._id,
         active: true
       }
-
-      console.log("Ovo gledaj!")
-      console.log(user._id)
-      console.log(req.user._id)
 
       let existingPushSub;
       if(req.user){
