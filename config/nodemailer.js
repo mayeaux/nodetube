@@ -4,12 +4,12 @@ var mg = require('nodemailer-mailgun-transport');
 process.on('unhandledRejection', console.log);
 
 const zohoTransport = nodemailer.createTransport({
-  host: process.env.EMAIL_SMTP_HOST,
-  port: process.env.EMAIL_SMTP_PORT,
+  host: process.env.NODETUBE_NOREPLY_EMAIL_HOST,
+  port: process.env.NODETUBE_NOREPLY_EMAIL_PORT,
   secure: true, // use SSL
   auth: {
-    user: process.env.EMAIL_ADDRESS,
-    pass: process.env.NODETUBE_VERIFY_EMAIL_PASSWORD
+    user: process.env.NODETUBE_NOREPLY_EMAIL_ADDRESS,
+    pass: process.env.NODETUBE_NOREPLY_EMAIL_PASSWORD
   }
 });
 

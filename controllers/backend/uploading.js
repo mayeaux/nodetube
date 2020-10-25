@@ -35,6 +35,7 @@ const {
   runTimeoutFunction,
   userCanUploadContentOfThisRating,
   updateUsersPushNotifications,
+  updateUsersEmailNotifications,
   alertAdminOfNewUpload
 } = require('../../lib/uploading/helpers');
 const backblaze = require('../../lib/uploading/backblaze');
@@ -599,6 +600,11 @@ exports.postFileUpload = async(req, res) => {
           updateUsersPushNotifications(user, upload);
 
           uploadLogger.info('Update users push notifications', logObject);
+
+          // user
+          updateUsersEmailNotifications(user, upload, req.host);
+
+          uploadLogger.info('Update users email notifications', logObject);
 
           // upload is complete, send it off to user (aboutToProcess is a misnomer here)
           if(!responseSent){

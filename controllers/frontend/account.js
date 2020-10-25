@@ -13,6 +13,8 @@ const Notification = require('../../models/index').Notification;
 const SocialPost = require('../../models/index').SocialPost;
 const Subscription = require('../../models/index').Subscription;
 const PushSubscription = require('../../models/index').PushSubscription;
+const EmailSubscription = require('../../models/index').EmailSubscription;
+
 const PushEndpoint = require('../../models/index').PushEndpoint;
 
 const RSS = require('rss');
@@ -511,15 +513,28 @@ exports.getChannel = async(req, res) => {
 
     const joinedTimeAgo = timeAgoEnglish.format(user.createdAt);
 
+    const pushSubscriptionSearchQuery = {
+      subscribedToUser : user._id,
+      subscribingUser: req.user._id,
+      active: true
+    }
+
     let existingPushSub;
     if(req.user){
-      existingPushSub = await PushSubscription.findOne({ subscribingUser: req.user._id, active: true });
+      existingPushSub = await PushSubscription.findOne(pushSubscriptionSearchQuery);
+    }
+
+    let existingEmailSub;
+    if(req.user){
+      existingEmailSub = await EmailSubscription.findOne(pushSubscriptionSearchQuery);
     }
 
     console.log(existingPushSub);
 
     // if the user already has push notis turned on
     const alreadyHavePushNotifsOn = Boolean(existingPushSub);
+
+    const alreadySubscribedForEmails = Boolean(existingEmailSub);
 
     console.log('already');
 
@@ -549,7 +564,8 @@ exports.getChannel = async(req, res) => {
       media,
       page,
       orderBy,
-      alreadyHavePushNotifsOn
+      alreadyHavePushNotifsOn,
+      alreadySubscribedForEmails
     });
 
   } catch(err){

@@ -17,6 +17,7 @@ const mkdirp = Promise.promisifyAll(require('mkdirp'));
 const randomstring = require('randomstring');
 
 const mailTransports = require('../../config/nodemailer');
+// const {sendProtonMail} = require('../../config/protonmailTransport');
 
 const importerDownloadFunction = require('../../lib/uploading/importer');
 
@@ -26,6 +27,8 @@ const importerDownloadFunction = require('../../lib/uploading/importer');
 // console.log(importerDownloadFunction);
 
 const mailgunTransport = mailTransports.mailgunTransport;
+const zohoTransport = mailTransports.zohoTransport;
+
 
 const User = require('../../models/index').User;
 const getMediaType = require('../../lib/uploading/media');
@@ -358,12 +361,13 @@ exports.postReset = async(req, res, next) => {
 
   const mailOptions = {
     to: user.email,
-    from: process.env.FORGOT_PASSWORD_EMAIL_ADDRESS,
+    from: process.env.NODETUBE_NOREPLY_EMAIL_ADDRESS,
     subject: `Your ${brandName} password has been reset`,
     text: `Hello,\n\nThis is a confirmation that the password for your account ${user.email} has just been changed.\n`
   };
 
-  const response = await mailgunTransport.sendMail(mailOptions);
+  // turn an email noting that is ___
+  const response = await zohoTransport.sendMail(mailOptions);
 
   // console.log(response);
 
@@ -403,7 +407,7 @@ exports.postForgot = async(req, res, next) => {
 
     const mailOptions = {
       to: user.email,
-      from: process.env.FORGOT_PASSWORD_EMAIL_ADDRESS,
+      from: process.env.NODETUBE_NOREPLY_EMAIL_ADDRESS,
       subject: `Reset your password on ${brandName}`,
       text: `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
       Please click on the following link, or paste this into your browser to complete the process:\n\n
@@ -411,7 +415,7 @@ exports.postForgot = async(req, res, next) => {
       If you did not request this, please ignore this email and your password will remain unchanged.\n`
     };
 
-    const response = await mailgunTransport.sendMail(mailOptions);
+    const response = await zohoTransport.sendMail(mailOptions);
 
     // console.log(response);
 
@@ -451,11 +455,12 @@ exports.postConfirmEmail = async(req, res, next) => {
     user.emailConfirmationExpires = Date.now() + 3600000; // 1 hour
     user = await user.save();
 
-    console.log(user.email, process.env.CONFIRM_USER_EMAIL_ADDRESS);
+    console.log('User email: ', user.email);
+    console.log('Confirmation email address: ', process.env.PROTONMAIL_USERNAME);
 
     const mailOptions = {
       to: user.email,
-      from: process.env.CONFIRM_USER_EMAIL_ADDRESS,
+      from: process.env.NODETUBE_NOREPLY_EMAIL_ADDRESS,
       subject: `Confirm your email on ${brandName}`,
       text: `You are receiving this email because you (or someone else) has attempted to link this email to their account.\n\n
       Please click on the following link, or paste this into your browser to complete the process:\n\n
@@ -463,11 +468,9 @@ exports.postConfirmEmail = async(req, res, next) => {
       If you did not request this, please ignore this email and no further steps will be needed.\n`
     };
 
-    // TODO: replace with protonmail
+    const response = await zohoTransport.sendMail(mailOptions);
 
-    const response = await mailgunTransport.sendMail(mailOptions);
-
-    console.log(response);
+    // console.log(response);
 
     req.flash('info', {msg: 'An email has been sent to your address to confirm your email'});
 

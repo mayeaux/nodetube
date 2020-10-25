@@ -1,6 +1,9 @@
 const Upload = require('../../models/index').Upload;
+const User = require('../../models/index').User;
 const View = require('../../models/index').View;
 const Subscription = require('../../models/index').Subscription;
+const PushSubscription = require('../../models/index').PushSubscription;
+const EmailSubscription = require('../../models/index').EmailSubscription;
 const LastWatchedTime = require('../../models/index').LastWatchedTime;
 
 const timeHelper = require('../../lib/helpers/time');
@@ -68,12 +71,44 @@ function getFormattedFileSize(upload){
  * Media player page
  */
 exports.getMedia = async(req, res) => {
+  
 
   try {
 
     // channel id and file name
-    const channel = req.params.channel;
-    const media = req.params.media;
+      const channel = req.params.channel;
+      const media = req.params.media;
+      user = await User.findOne({
+        // regex for case insensitivity
+        channelUrl:  new RegExp(['^', req.params.channel, '$'].join(''), 'i')
+      }).populate('receivedSubscriptions').lean()
+        .exec();
+
+      const pushSubscriptionSearchQuery = {
+        subscribedToUser :  user._id,
+        subscribingUser: req.user._id,
+        active: true
+      }
+
+      let existingPushSub;
+      if(req.user){
+        existingPushSub = await PushSubscription.findOne(pushSubscriptionSearchQuery);
+      }
+  
+      let existingEmailSub;
+      if(req.user){
+        existingEmailSub = await EmailSubscription.findOne(pushSubscriptionSearchQuery);
+      }
+      // if the user already has push notis turned on
+      const alreadyHavePushNotifsOn = Boolean(existingPushSub);
+  
+      const alreadySubscribedForEmails = Boolean(existingEmailSub);
+
+      console.log("alreadyHavePushNotifsOn: ")
+      console.log(alreadyHavePushNotifsOn);
+
+      console.log("alreadySubscribedForEmails: ")
+      console.log(alreadySubscribedForEmails);
 
     let upload = await Upload.findOne({
       uniqueTag: media
@@ -235,7 +270,9 @@ exports.getMedia = async(req, res) => {
       convertedRating,
       lastWatchedTime,
       formattedLastWatchedTime,
-      uploadFps
+      uploadFps,
+      alreadyHavePushNotifsOn,
+      alreadySubscribedForEmails
     });
 
   } catch(err){
