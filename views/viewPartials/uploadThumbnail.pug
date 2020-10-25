@@ -1,3 +1,12 @@
+style.
+    progress {
+        width: 100%;
+        border: 0px solid red;
+        background: LightGray;
+        height: 10px;
+    }
+    progress::-moz-progress-bar { background: red; }
+    progress::-webkit-progress-value { background: red; }
 div.holder(style="border:")
     a.title-anchor(href=`/user/${upload.uploader.channelUrl || channelUrl}/${upload.uniqueTag}` style="color:#7d7373;" )
         div.image-container(style="")
@@ -5,8 +14,12 @@ div.holder(style="border:")
                 img.upload-thumbnail.preview-image(src=`${uploadServer}/${channelUrl || upload.uploader.channelUrl}/${upload.thumbnails.custom}` style="")
 
             else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.generated
-                img.upload-thumbnail.preview-image(src=`${uploadServer}/${channelUrl || upload.uploader.channelUrl}/${upload.thumbnails.generated}` style="")
-
+                
+                if !upload.lastWatchedTime
+                    img.upload-thumbnail.preview-image(src=`${uploadServer}/${channelUrl || upload.uploader.channelUrl}/${upload.thumbnails.generated}` style="margin-bottom: -1.5%; height: 220px; max-height: 220px")
+                else
+                    img.upload-thumbnail.preview-image(src=`${uploadServer}/${channelUrl || upload.uploader.channelUrl}/${upload.thumbnails.generated}` style="margin-bottom: -1.5%")
+                    progress(value=upload.lastWatchedTime max=upload.durationInSeconds)  
             else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.medium
                 img.upload-thumbnail.preview-image(src=`${uploadServer}/${channelUrl || upload.uploader.channelUrl}/${upload.thumbnails.medium}` style="")
 
@@ -22,4 +35,5 @@ div.holder(style="border:")
 
             else if upload.fileType == 'unknown'
                 img.upload-thumbnail.preview-image(src='/images/no_img.png')
+
 

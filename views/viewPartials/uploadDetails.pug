@@ -22,9 +22,10 @@ div.underThing
     // all the details including title
     if ( upload.fileType == 'audio' || upload.fileType == 'video') && upload.formattedDuration
         div.duration(style="display:inline;height:26px;max-width:70px;text-align:center;position:relative;bottom:0;right:0;opacity:1;margin: 0 auto;border-radius: 5px")
-            span.durationTime(style="margin-right:7px;font-size:15px;") #{upload.formattedDuration}
-
-
+            if upload.formattedLastWatchedTime
+                span.durationTime(style="margin-right:7px;font-size:15px;") #{upload.formattedLastWatchedTime} / #{upload.formattedDuration}
+            else 
+                span.durationTime(style="margin-right:7px;font-size:15px;") #{upload.formattedDuration}
     if upload.fileType == 'video'
         i.fa.fa-video-camera(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;")
     else if upload.fileType == 'audio'
