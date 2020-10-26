@@ -62,7 +62,7 @@ then
         echo "$DOCKER_TOKEN" | podman login --authfile="$DOCKER_AUTH_FILE" --username "$DOCKER_USERNAME" --password-stdin || die 55 "Could not log in to docker"
         for tag in "${publish_tags[@]}"
         do
-            podman push --authfile="$DOCKER_AUTH_FILE" "$IMAGE_NAME:${tag}" docker://docker.io/"$DOCKER_USERNAME"/nodetube:"$tag"
+            podman push --creds="$DOCKER_USERNAME:$DOCKER_TOKEN" "$IMAGE_NAME:${tag}" docker://docker.io/"$DOCKER_USERNAME"/nodetube:"$tag"
         done
     fi
 
