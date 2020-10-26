@@ -12,7 +12,7 @@ build_x86_64:
     - tar zxvf trivy_${VERSION}_Linux-64bit.tar.gz
   allow_failure: false
   script:
-    - ./scripts/podman_build.sh
+    - ./scripts/buildah-build.sh
     - ./scripts/gitlab-push.sh
   cache:
     paths:
