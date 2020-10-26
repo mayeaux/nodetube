@@ -113,15 +113,15 @@ bud copy "$build" views /app/views/
 
 bud config --env "HOME=/app" "$build"
 bud config --workingdir /app/ "$build"
-bud run "$build" -- npm i --production && \
-                    node ./copySettingsAndPrivateFiles.js && \
-                    rm -rvf node_modules/ffprobe-static/bin/darwin && \
-                    rm -rvf node_modules/ffprobe-static/bin/win32 && \
-                    rm -rvf node_modules/ffprobe-static/bin/linux/ia32 && \
-                    rm -rvf node_modules/webp-converter/bin/libwebp_win64 && \
-                    rm -rvf node_modules/webp-converter/bin/libwebp_osx && \
-                    rm -rvf .npm && \
-                    strip node_modules/ngrok/bin/ngrok
+bud run "$build" -- sh -c 'npm i --production && \
+                           node ./copySettingsAndPrivateFiles.js && \
+                           rm -rvf /app/node_modules/ffprobe-static/bin/darwin && \
+                           rm -rvf /app/node_modules/ffprobe-static/bin/win32 && \
+                           rm -rvf /app/node_modules/ffprobe-static/bin/linux/ia32 && \
+                           rm -rvf /app/node_modules/webp-converter/bin/libwebp_win64 && \
+                           rm -rvf /app/node_modules/webp-converter/bin/libwebp_osx && \
+                           rm -rvf /app/.npm && \
+                           strip /app/node_modules/ngrok/bin/ngrok'
 
 stage_mount=$(buildah mount "$build")
 final=$(buildah from bougyman/voidlinux)
