@@ -52,7 +52,9 @@ then
 
     set +x
     # Push everything to the registry
-    for tag in latest "$(date +%Y%m%d%H%M)"
+    datestamp=$(date +%Y%m%d%H%M)
+    podman tag "$IMAGE_NAME:${tag}" "$IMAGE_NAME:${datestamp}"
+    for tag in latest "$datestamp"
     do
         echo "Publishing $tag"
         podman push "$IMAGE_NAME:${tag}" "$FQ_IMAGE_NAME:${tag}"
