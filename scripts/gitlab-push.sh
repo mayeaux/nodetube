@@ -35,7 +35,7 @@ declare -a publish_tags
 if [ -n "$CI_REGISTRY_PASSWORD" ] # {{{
 then
     export REGISTRY_AUTH_FILE=${HOME}/auth.json # Set registry file location
-    echo "$CI_REGISTRY_PASSWORD" | buildah login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY" # Login to registry
+    echo "$CI_REGISTRY_PASSWORD" | buildah login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY" || die 44 "Could not log in to gitlab registry"
     
     : "${FQ_IMAGE_NAME:=docker://${CI_REGISTRY}/nodetube/nodetube}"
 
@@ -51,16 +51,20 @@ then
     do
         if [ "$tag" != "ci" ]
         then
-            podman tag "$IMAGE_NAME:ci" "$IMAGE_NAME:${tag}"
+            podman tag "$IMAGE_NAME:ci" "$IMAGE_NAME:${tag}" || die 46 "Could not tag $IMAGE_NAME:ci to $IMAGE_NAME:$tag"
         fi
         echo "Publishing $tag"
-        podman push "$IMAGE_NAME:${tag}" "$FQ_IMAGE_NAME:${tag}"
+        podman push "$IMAGE_NAME:${tag}" "$FQ_IMAGE_NAME:${tag}" || die 48 "Could not push $FQ_IMAGE_NAME:$tag to gitlab registry"
     done
+    if [ -n "$DOCKER_USERNAME" ]
+    then
+        echo "$DOCKER_TOKEN" | podman login --username "$DOCKER_USERNAME" --password-stdin && die 55 "Could not log in to docker"
+        for tag in "${publish_tags[@]}"
+        do
+            podman push "$IMAGE_NAME:${tag}" "$DOCKER_USERNAME"/nodetube:"$tag"
+        done
+    fi
 
-    # Trigger Docker Hub builds, "$docker_hook" is supplied by gitlab, defined in this project's CI/CD "variables"
-    # shellcheck disable=SC2154
-    # curl -X POST -H "Content-Type: application/json" --data '{"source_type": "Branch", "source_name": "main"}' "$docker_hook" || \
-     #    die 33 "Failed to trigger docker build"
     echo
     # Show us all the images built
     buildah images
