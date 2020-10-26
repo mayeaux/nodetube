@@ -58,10 +58,11 @@ then
     done
     if [ -n "$DOCKER_USERNAME" ]
     then
-        echo "$DOCKER_TOKEN" | podman login --username "$DOCKER_USERNAME" --password-stdin || die 55 "Could not log in to docker"
+        export DOCKER_AUTH_FILE=${HOME}/docker-auth.json # Set registry file location
+        echo "$DOCKER_TOKEN" | podman login --authfile="$DOCKER_AUTH_FILE" --username "$DOCKER_USERNAME" --password-stdin || die 55 "Could not log in to docker"
         for tag in "${publish_tags[@]}"
         do
-            podman push "$IMAGE_NAME:${tag}" "$DOCKER_USERNAME"/nodetube:"$tag"
+            podman push --authfile="$DOCKER_AUTH_FILE" "$IMAGE_NAME:${tag}" docker://docker.io/"$DOCKER_USERNAME"/nodetube:"$tag"
         done
     fi
 
