@@ -58,7 +58,7 @@ then
     done
     if [ -n "$DOCKER_USERNAME" ]
     then
-        echo "$DOCKER_TOKEN" | podman login --username "$DOCKER_USERNAME" --password-stdin && die 55 "Could not log in to docker"
+        echo "$DOCKER_TOKEN" | podman login --username "$DOCKER_USERNAME" --password-stdin || die 55 "Could not log in to docker"
         for tag in "${publish_tags[@]}"
         do
             podman push "$IMAGE_NAME:${tag}" "$DOCKER_USERNAME"/nodetube:"$tag"
