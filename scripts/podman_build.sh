@@ -1,5 +1,6 @@
 #!/bin/bash
 
+: "${IMAGE_NAME:=nodetube}"
 # author is simply the maintainer tag in image/container metadata
 : "${author:=at hey dot com @bougyman}"
 # created_by will be the prefix of the images, as well. i.e. bougyman/voidlinux
@@ -86,8 +87,9 @@ optparse() { # {{{
 
 optparse "$@"
 
-if [ -n "$CI_REGISTRY_PASSWORD" ]
+if [ -n "$CI" ]
 then
+    export tag=ci
     export STORAGE_DRIVER=vfs
 fi
 
@@ -134,5 +136,18 @@ bud config --workingdir /app/ "$final"
 bud config --created-by "$created_by" "$final"
 bud config --author "$author" --label="name=nodetube" "$final"
 bud commit --squash --rm "$final" "nodetube:${tag}"
+
+scan_image() { # {{{
+    tag=$1
+    [ -d /tmp/oci ] || mkdir -p /tmp/oci
+    shortname=$(basename "$IMAGE_NAME")
+    oci_path=/tmp/oci/${shortname}_${tag}
+    buildah push "$IMAGE_NAME:$tag" "oci:/$oci_path"
+    ./trivy --exit-code 0 --severity HIGH --no-progress image --input "$oci_path"
+    ./trivy --exit-code 1 --severity CRITICAL --no-progress image --input "$oci_path"
+    rm -rf "$oci_path"
+} # }}}
+
+scan_image "$tag"
 
 # vim: set foldmethod=marker et ts=4 sts=4 sw=4 :

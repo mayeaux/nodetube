@@ -28,18 +28,7 @@ die() { # {{{
     exit $code
 } # }}}
 
-scan_image() { # {{{
-    tag=$1
-    [ -d /tmp/oci ] || mkdir -p /tmp/oci
-    shortname=$(basename "$IMAGE_NAME")
-    oci_path=/tmp/oci/${shortname}_${tag}
-    buildah push "$IMAGE_NAME:$tag" "oci:/$oci_path"
-    ./trivy --exit-code 0 --severity HIGH --no-progress image --input "$oci_path"
-    ./trivy --exit-code 1 --severity CRITICAL --no-progress image --input "$oci_path"
-    rm -rf "$oci_path"
-} # }}}
-
-scan_image latest
+declare -a publish_tags
 
 # publish images _only_ if we're run in CI. This allows us to mimic the whole
 # build locally in the exact manner the CI builder does, without any publishing to registries
@@ -52,10 +41,18 @@ then
 
     set +x
     # Push everything to the registry
-    datestamp=$(date +%Y%m%d%H%M)
-    podman tag "$IMAGE_NAME:${tag}" "$IMAGE_NAME:${datestamp}"
-    for tag in latest "$datestamp"
+    publish_tags+=( "$CI_COMMIT_REF_SLUG" )
+    if [ "$CI_COMMIT_REF_SLUG" = "master" ]
+    then
+        datestamp=$(date +%Y%m%d%H%M)
+        publish_tags+=( latest "$datestamp" )
+    fi
+    for tag in "${publish_tags[@]}"
     do
+        if [ "$tag" != "ci" ]
+        then
+            podman tag "$IMAGE_NAME:ci" "$IMAGE_NAME:${tag}"
+        fi
         echo "Publishing $tag"
         podman push "$IMAGE_NAME:${tag}" "$FQ_IMAGE_NAME:${tag}"
     done
