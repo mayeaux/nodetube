@@ -84,10 +84,19 @@ exports.getMedia = async(req, res) => {
       }).populate('receivedSubscriptions').lean()
         .exec();
 
-      const pushSubscriptionSearchQuery = {
-        subscribedToUser :  user._id,
-        subscribingUser: req.user._id,
-        active: true
+      let pushSubscriptionSearchQuery;
+      if(req.user){
+        pushSubscriptionSearchQuery = {
+          subscribedToUser :  user._id,
+          subscribingUser: req.user._id,
+          active: true
+        }
+      } else{
+        pushSubscriptionSearchQuery = {
+          subscribedToUser :  user._id,
+          subscribingUser: undefined,
+          active: true
+        }
       }
 
       let existingPushSub;
