@@ -71,53 +71,52 @@ function getFormattedFileSize(upload){
  * Media player page
  */
 exports.getMedia = async(req, res) => {
-  
 
   try {
 
     // channel id and file name
-      const channel = req.params.channel;
-      const media = req.params.media;
-      user = await User.findOne({
-        // regex for case insensitivity
-        channelUrl:  new RegExp(['^', req.params.channel, '$'].join(''), 'i')
-      }).populate('receivedSubscriptions').lean()
-        .exec();
+    const channel = req.params.channel;
+    const media = req.params.media;
+    user = await User.findOne({
+      // regex for case insensitivity
+      channelUrl:  new RegExp(['^', req.params.channel, '$'].join(''), 'i')
+    }).populate('receivedSubscriptions').lean()
+      .exec();
 
-      let pushSubscriptionSearchQuery;
-      if(req.user){
-        pushSubscriptionSearchQuery = {
-          subscribedToUser :  user._id,
-          subscribingUser: req.user._id,
-          active: true
-        }
-      } else{
-        pushSubscriptionSearchQuery = {
-          subscribedToUser :  user._id,
-          subscribingUser: undefined,
-          active: true
-        }
-      }
+    let pushSubscriptionSearchQuery;
+    if(req.user){
+      pushSubscriptionSearchQuery = {
+        subscribedToUser :  user._id,
+        subscribingUser: req.user._id,
+        active: true
+      };
+    } else {
+      pushSubscriptionSearchQuery = {
+        subscribedToUser :  user._id,
+        subscribingUser: undefined,
+        active: true
+      };
+    }
 
-      let existingPushSub;
-      if(req.user){
-        existingPushSub = await PushSubscription.findOne(pushSubscriptionSearchQuery);
-      }
+    let existingPushSub;
+    if(req.user){
+      existingPushSub = await PushSubscription.findOne(pushSubscriptionSearchQuery);
+    }
   
-      let existingEmailSub;
-      if(req.user){
-        existingEmailSub = await EmailSubscription.findOne(pushSubscriptionSearchQuery);
-      }
-      // if the user already has push notis turned on
-      const alreadyHavePushNotifsOn = Boolean(existingPushSub);
+    let existingEmailSub;
+    if(req.user){
+      existingEmailSub = await EmailSubscription.findOne(pushSubscriptionSearchQuery);
+    }
+    // if the user already has push notis turned on
+    const alreadyHavePushNotifsOn = Boolean(existingPushSub);
   
-      const alreadySubscribedForEmails = Boolean(existingEmailSub);
+    const alreadySubscribedForEmails = Boolean(existingEmailSub);
 
-      console.log("alreadyHavePushNotifsOn: ")
-      console.log(alreadyHavePushNotifsOn);
+    console.log('alreadyHavePushNotifsOn: ');
+    console.log(alreadyHavePushNotifsOn);
 
-      console.log("alreadySubscribedForEmails: ")
-      console.log(alreadySubscribedForEmails);
+    console.log('alreadySubscribedForEmails: ');
+    console.log(alreadySubscribedForEmails);
 
     let upload = await Upload.findOne({
       uniqueTag: media
