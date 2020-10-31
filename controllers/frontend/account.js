@@ -53,6 +53,8 @@ const timeAgoEnglish = new javascriptTimeAgo('en-US');
 
 const secondsToFormattedTime = timeHelper.secondsToFormattedTime;
 
+const forgotEmailFunctionalityOn = process.env.FORGOT_PASSWORD_EMAIL_FUNCTIONALITY_ON == 'true';
+
 // TODO: pull this function out
 async function addValuesIfNecessary(upload, channelUrl){
   if(upload.fileType == 'video' || upload.fileType == 'audio'){
@@ -869,9 +871,16 @@ exports.getConfirm = async(req, res, next) => {
  * Forgot Password page.
  */
 exports.getForgot = (req, res) => {
+
+  if(!forgotEmailFunctionalityOn){
+    return res.send('email functionality off');
+  }
+
+  // if person already logged in send to default page
   if(req.isAuthenticated()){
     return res.redirect('/');
   }
+
   res.render('account/forgot', {
     title: 'Forgot Password'
   });
@@ -903,8 +912,10 @@ exports.getLogin = (req, res) => {
   if(req.user){
     return res.redirect('/');
   }
+
   res.render('account/login', {
-    title: 'Login'
+    title: 'Login',
+    forgotEmailFunctionalityOn
   });
 };
 
