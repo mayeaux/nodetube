@@ -25,7 +25,7 @@ mongoose.set('useUnifiedTopology', true);
 
 mongoose.connect(mongoUri, {
   keepAlive: true,
-  reconnectTries: Number.MAX_VALUE,
+  reconnectTries: Number.MAX_VALUE
 });
 
 mongoose.connection.on('error', (err) => {
@@ -42,11 +42,10 @@ async function main(){
     fileType: 'video'
   });
 
-
   for(const upload of uploads){
     const user = await User.findById(upload.uploader);
-    const videoPath = `../uploads/${user.channelUrl}/${upload.uniqueTag}.mp4`
-     //console.log(`${videoPath}`);
+    const videoPath = `../uploads/${user.channelUrl}/${upload.uniqueTag}.mp4`;
+    // console.log(`${videoPath}`);
 
     try {
       const response = await ffmpegHelper.ffprobePromise(videoPath);
@@ -54,7 +53,7 @@ async function main(){
       upload.ffprobeData = response;
       // save the ffprobe data
       await upload.save();
-    } catch(err) {
+    } catch(err){
       console.log(err);
       continue;
     }
