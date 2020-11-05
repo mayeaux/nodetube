@@ -519,7 +519,7 @@ exports.getChannel = async(req, res) => {
       subscribedToUser : user._id,
       subscribingUser: req.user._id,
       active: true
-    }
+    };
 
     let existingPushSub;
     if(req.user){
