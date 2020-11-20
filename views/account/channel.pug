@@ -86,9 +86,16 @@ block content
                 if user
                     div(style="margin-top:12px")
                         // TODO: this should create a push subsciption, and it will also send a query to see if it should create a new service worker
-                        h2.share-button.pushNotificationIcon(style="display:inline")
+                        h2.fw.share-button.pushNotificationIcon(style="display:inline")
                             i.share-icon.fas.fa-bell(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:0px;color:white;")
-                        h2.share-button.emailNotificationIcon(style="display:inline")
+                        h2.fw.share-button.emailNotificationIcon(style="display:inline")
+                            i.share-icon.fas.fa-envelope(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:10px;color:white;")
+                else
+                    div(style="margin-top:12px")
+                        // TODO: this should create a push subsciption, and it will also send a query to see if it should create a new service worker
+                        h2.fw.share-button.pushNotificationIcon(style="display:inline")
+                            i.share-icon.fas.fa-bell(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:0px;color:white;")
+                        h2.fw.share-button.emailNotificationIcon(style="display:inline")
                             i.share-icon.fas.fa-envelope(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:10px;color:white;")
 
                 // todo: else
@@ -149,7 +156,7 @@ block content
                         //button.undelete-account.btn.btn-warning Undelete Account And Unban Ip
                         if user.role == 'admin'
                             button.delete-ips.btn.btn-warning Undelete All Accounts / Unban All Ips
-                      
+
 
         div
 
@@ -259,7 +266,7 @@ block content
             $(document).ready(function(){
 
               var alreadyHaveEmailNotifsOn = '#{alreadySubscribedForEmails}' == 'true'
-              
+
               console.log('already have email notis on')
 
               if (alreadyHaveEmailNotifsOn) {
@@ -432,6 +439,33 @@ block content
     script.
         $('.pushNotificationIcon').click(function(){
             main();
+        })
+
+        $('.emailNotificationIcon').click(function () {
+          // TODO: How to make it so that the user immediately gets email subs after
+          // signing in.
+          Swal.mixin({
+            title: 'Choose method of email subscription',
+            showCancelButton: true,
+          }).queue([
+            {
+              html: '<hr>' +
+                    '<p>Please <a href="/login">sign in</a> to continue.</p>',
+              confirmButtonText: 'Subscribe without sign in',
+            },
+            {
+              title: 'Choose method of email subscription',
+              confirmButtonText: 'Subscribe',
+              input: 'email',
+              inputLabel: 'Get updates without sign in',
+              inputPlaceholder: 'Enter your email address'
+            }
+          ]).then((result) => {
+            console.log('result', result.value)
+            if (result.value) {
+              const email = result.value[1]
+            }
+          })
         })
 
 

@@ -1,7 +1,7 @@
 extends layout
 
-block content
 
+block content
     if !upload.description
         style.
             @media (min-width: 900px) {
@@ -400,11 +400,36 @@ block content
         if upload.fileType === 'video' && upload.status !== 'processing'
             div.display-div.magnetic(style="min-width:50%;min-height:50%;margin:0 auto;margin-top: -25px;")
                 // margin-top:46px;
+                
+                //- video#my_video_1.video-js.vjs-default-skin(controls='' data-setup='{}')
+                //-   source(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`, type='video/mp4')
+                  
+                //- script. 
+                //-   videojs.autoSetup();
 
-                video#media_player.display-element(playsinline poster=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;")
+                //-     videojs('my_video_1).ready(function(){
+                //-       console.log(this.options()); 
+                      
+                     
+                //-       var myPlayer = this, id = myPlayer.id();
+                    
+                //-       var aspectRatio = 264/640; 
+
+                //-       function resizeVideoJS(){
+                //-         var width = document.getElementById(id).parentElement.offsetWidth;
+                //-         myPlayer.width(width).height( width * aspectRatio );
+
+                //-       }
+      
+                    
+                //-     resizeVideoJS();
+                    
+                //-     window.onresize = resizeVideoJS; 
+                //-   });
+                video#media_player.display-element(playsinline  autoplayposter=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;")
                     // to
                     source.video-source(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`, type='video/mp4')
-
+                
                     // TODO: load captions programatically
                     if upload.webVTTPath
                         track(kind='captions', label='English captions', src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.webVTTPath}`, srclang='en', default='')
@@ -490,11 +515,11 @@ block content
 
 
                     // TODO: show this if it's pending or not
-                if upload.visibility != 'pending'
-                    if alreadySubbed
-                        button.subscribe.btn.fw.btn-danger.op80.unsubscribeButton(style="border-radius:4px;") Unsubscribe (#{subscriberAmount})
-                    else
-                        button.subscribe.btn.fw.btn-success.op80.subscribeButton(style="border-radius:4px;") Subscribe (#{subscriberAmount})
+                
+                if alreadySubbed
+                    button.subscribe.btn.fw.btn-danger.op80.unsubscribeButton(style="border-radius:4px;") Unsubscribe (#{subscriberAmount})
+                else
+                    button.subscribe.btn.fw.btn-success.op80.subscribeButton(style="border-radius:4px;") Subscribe (#{subscriberAmount})
 
                 if user
                     div(style="margin-top:12px")
@@ -671,7 +696,12 @@ block content
                     if ( upload.durationInSeconds > (15 * 60) ) && user
 
                                     if lastWatchedTime
-                                        p.fw.fileSizeText(style="margin-top:15px;color:a5a5a5;") Last Watched Time: #{formattedLastWatchedTime}
+                                        p.fw.fileSizeText(style="margin-top:15px;color:a5a5a5;") Las Watched Time: #{formattedLastWatchedTime}
+                                        script.
+                                          document.getElementById('media_player').addEventListener('loadedmetadata', function() {
+                                            this.currentTime = lastWatchedTime;
+                                          }, false);
+                                          //- document.getElementById('media_player').src = '' + serverToUse + '/' + upload.uploader.channelUrl + '/' upload.uniqueTag + '.mp4#t=00:00:' + lastWatchedTime 
                                     else
                                         p.fw.fileSizeText(style="margin-top:15px;color:a5a5a5;") No Last Watched Time
 
@@ -860,7 +890,7 @@ block extra_js
 
   if user
         script.
-
+      
             $(document).ready(function(){
 
               var alreadyHaveEmailNotifsOn = '#{alreadySubscribedForEmails}' == 'true'
@@ -1016,9 +1046,10 @@ block extra_js
       // when show less button is clicked
       showLessButton.click(function () {
         uploadDescriptionText.height('194');
-
+        
         showMoreButton.show()
         showLessButton.hide()
+        document.getElementsByTagName('h2')[2].scrollIntoView();
       })
 
 
