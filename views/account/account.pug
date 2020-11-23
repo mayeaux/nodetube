@@ -337,9 +337,9 @@ block content
         form.form-horizontal(action='/account/email', method='POST')
           input(type='hidden', name='_csrf', value=_csrf)
           .form-group
-            label.col-sm-3.control-label(for='email') Email Address
+            label.col-sm-3.control-label.fw(for='email' style='font-size:16px') Email Address
             .col-sm-7
-              h5 #{user.email}
+              h5.fw(style='font-size:16px') #{user.email}
 
       // IS USER HAS PENDING CONFIRMATION EMAIL
       if user.email && !user.emailConfirmed
