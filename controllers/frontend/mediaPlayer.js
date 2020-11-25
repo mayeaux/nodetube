@@ -71,7 +71,7 @@ function getFormattedFileSize(upload){
  * Media player page
  */
 exports.getMedia = async(req, res) => {
-  
+
 
   try {
 
@@ -84,24 +84,25 @@ exports.getMedia = async(req, res) => {
       }).populate('receivedSubscriptions').lean()
         .exec();
 
-      const pushSubscriptionSearchQuery = {
-        subscribedToUser :  user._id,
-        subscribingUser: req.user._id,
-        active: true
-      }
-
       let existingPushSub;
-      if(req.user){
-        existingPushSub = await PushSubscription.findOne(pushSubscriptionSearchQuery);
-      }
-  
       let existingEmailSub;
+      let pushSubscriptionSearchQuery;
+
+      // test if push notif and emails are already activated per viewing user
       if(req.user){
+        pushSubscriptionSearchQuery = {
+          subscribedToUser :  user._id,
+          subscribingUser: req.user._id,
+          active: true
+        }
+        existingPushSub = await PushSubscription.findOne(pushSubscriptionSearchQuery);
+
         existingEmailSub = await EmailSubscription.findOne(pushSubscriptionSearchQuery);
       }
+
       // if the user already has push notis turned on
       const alreadyHavePushNotifsOn = Boolean(existingPushSub);
-  
+
       const alreadySubscribedForEmails = Boolean(existingEmailSub);
 
       console.log("alreadyHavePushNotifsOn: ")
