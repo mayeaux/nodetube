@@ -456,7 +456,7 @@ exports.postConfirmEmail = async(req, res, next) => {
     user = await user.save();
 
     console.log('User email: ', user.email);
-    console.log('Confirmation email address: ', process.env.PROTONMAIL_USERNAME);
+    console.log('Confirmation email address: ', process.env.NODETUBE_NOREPLY_EMAIL_ADDRESS);
 
     const mailOptions = {
       to: user.email,
@@ -470,7 +470,7 @@ exports.postConfirmEmail = async(req, res, next) => {
 
     const response = await zohoTransport.sendMail(mailOptions);
 
-    // console.log(response);
+    console.log(response);
 
     req.flash('info', {msg: 'An email has been sent to your address to confirm your email'});
 
