@@ -515,19 +515,20 @@ exports.getChannel = async(req, res) => {
 
     const joinedTimeAgo = timeAgoEnglish.format(user.createdAt);
 
-    const pushSubscriptionSearchQuery = {
-      subscribedToUser : user._id,
-      subscribingUser: req.user._id,
-      active: true
-    }
 
     let existingPushSub;
-    if(req.user){
-      existingPushSub = await PushSubscription.findOne(pushSubscriptionSearchQuery);
-    }
-
     let existingEmailSub;
+    let pushSubscriptionSearchQuery;
+
+    // test if push notif and emails are already activated per viewing user
     if(req.user){
+      pushSubscriptionSearchQuery = {
+        subscribedToUser :  user._id,
+        subscribingUser: req.user._id,
+        active: true
+      }
+      existingPushSub = await PushSubscription.findOne(pushSubscriptionSearchQuery);
+
       existingEmailSub = await EmailSubscription.findOne(pushSubscriptionSearchQuery);
     }
 
@@ -538,9 +539,15 @@ exports.getChannel = async(req, res) => {
 
     const alreadySubscribedForEmails = Boolean(existingEmailSub);
 
-    console.log('already');
+    // console.log('already have push notifs on:');
+    // console.log(alreadyHavePushNotifsOn);
 
-    console.log(alreadyHavePushNotifsOn);
+    const viewingUser = req.user;
+
+    const viewingUserHasConfirmedEmail = viewingUser && viewingUser.email && viewingUser.emailConfirmed;
+
+    // console.log('viewer user confirmed email:');
+    // console.log(viewingUserHasConfirmedEmail);
 
     res.render('account/channel', {
       channel : user,
@@ -567,7 +574,8 @@ exports.getChannel = async(req, res) => {
       page,
       orderBy,
       alreadyHavePushNotifsOn,
-      alreadySubscribedForEmails
+      alreadySubscribedForEmails,
+      viewingUserHasConfirmedEmail
     });
 
   } catch(err){

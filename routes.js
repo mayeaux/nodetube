@@ -250,6 +250,8 @@ function frontendRoutes(app){
 
   /** include passport here because if its a file host, route is already loaded **/
   app.post('/api/channel/thumbnail/delete', passportConfig.isAuthenticated, internalApiController.deleteChannelThumbnail);
+  app.post('/api/deleteUserEmail', passportConfig.isAuthenticated, internalApiController.deleteUserEmail);
+
   app.post('/api/upload/:uniqueTag/edit', passportConfig.isAuthenticated, internalApiController.editUpload);
   app.post('/api/upload/:uniqueTag/thumbnail/delete', passportConfig.isAuthenticated, internalApiController.deleteUploadThumbnail);
   app.post('/api/upload/:uniqueTag/captions/delete', passportConfig.isAuthenticated, internalApiController.deleteUploadCaption);

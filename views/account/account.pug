@@ -332,14 +332,19 @@ block content
 
       // IF USER HAS CONFIRMED EMAIL
       if user.email && user.emailConfirmed
-        h2.fw.text-center Confirmed Email
+        div(style="text-align:center")
           br
-        form.form-horizontal(action='/account/email', method='POST')
-          input(type='hidden', name='_csrf', value=_csrf)
-          .form-group
-            label.col-sm-3.control-label(for='email') Email Address
-            .col-sm-7
-              h5 #{user.email}
+          h2.fw.text-center Confirmed Email
+            br
+
+            h5.fw(style='font-size:19px;margin-top:18px;') Email Address : #{user.email}
+
+          // TODO: Have to finish this, can't think of a good design since I don't want users to spam emails
+          // TODO: also, the frontend is largely in place just needs a swal "Your email was deleted"
+          button.fw.btn.btn.btn-danger.btn-sm.center-block.text-center.deleteEmailButton(type='submit' style="margin-top:20px;border-radius:3px;")
+            i.fa.fa-pencil
+            | Delete
+        br
 
       // IS USER HAS PENDING CONFIRMATION EMAIL
       if user.email && !user.emailConfirmed
@@ -393,6 +398,40 @@ block content
             | Change Password
 
   script.
+    $(function () {
+
+      var csrf = '#{_csrf}'
+
+      var data = {
+        _csrf: csrf
+      }
+
+      $('.deleteEmailButton').click(function () {
+        $.ajax({
+          type: 'POST',
+          // what is at this backend?
+          url: `/api/deleteUserEmail`,
+          data,
+          success: function (data) {
+            if (data == 'success') {
+              // TODO: setup the swal thing here
+
+              window.location = "/account?emailDeleted=true";
+            } else {
+              swal("Something didn't work, please contact NodeTube at ceo@nodetube.live or via the widget in the bottom right corner")
+            }
+            console.log(data);
+          },
+          error: function (err) {
+            console.log(err);
+          }
+        });
+      })
+
+    })
+
+  script.
+
     //.delete-user-thumbnail-form
 
     // capture submit
@@ -569,6 +608,13 @@ block content
 
       if(thumbnailDeleted){
         swal('The thumbnail has been deleted');
+      }
+
+      var emailDeleted = getParameterByName('emailDeleted');
+
+      if (emailDeleted) {
+        // scroll into view
+        swal('The email has been deleted')
       }
 
       if (updateSuccess) {
