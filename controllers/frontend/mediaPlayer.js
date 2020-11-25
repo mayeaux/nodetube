@@ -240,6 +240,11 @@ exports.getMedia = async(req, res) => {
 
     }
 
+    const viewingUser = req.user;
+
+    const viewingUserHasConfirmedEmail = viewingUser && viewingUser.email && viewingUser.emailConfirmed;
+
+
     res.render('media', {
       title: upload.title,
       comments : comments.reverse(),
@@ -273,7 +278,8 @@ exports.getMedia = async(req, res) => {
       formattedLastWatchedTime,
       uploadFps,
       alreadyHavePushNotifsOn,
-      alreadySubscribedForEmails
+      alreadySubscribedForEmails,
+      viewingUserHasConfirmedEmail
     });
 
   } catch(err){

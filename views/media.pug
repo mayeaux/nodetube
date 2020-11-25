@@ -865,6 +865,8 @@ block extra_js
 
               var alreadyHaveEmailNotifsOn = '#{alreadySubscribedForEmails}' == 'true'
 
+              var viewerHasConfirmedEmailAddress = #{viewingUserHasConfirmedEmail}
+
               console.log('already have email notis on')
 
               if (alreadyHaveEmailNotifsOn) {
@@ -873,45 +875,57 @@ block extra_js
                 $('.emailNotificationIcon i').css('color', 'gray')
               }
 
-              $('.emailNotificationIcon').click(function () {
-                console.log('Email notification icon clicked');
-                var csrf = '#{_csrf}'
+              if (viewerHasConfirmedEmailAddress) {
 
-                const data = {
-                  _csrf: csrf,
-                  user: '#{user.channelUrl}',
-                  channel: '#{upload.uploader.channelUrl}'
-                }
+                $('.emailNotificationIcon').click(function () {
+                  console.log('Email notification icon clicked');
+                  var csrf = '#{_csrf}'
 
-                $.ajax({
-                  type: 'POST',
-                  url: `/api/subscribeToEmailNotifications`,
-                  data,
-                  success: function (data) {
-
-                    $('.emailNotificationIcon i').css('color', 'white')
-                    let swalText = 'You have subscribed to their email notifications'
-
-                    if (alreadyHaveEmailNotifsOn) {
-                      swalText = 'You have unsubscribed from their email notifications'
-                      $('.emailNotificationIcon i').css('color', 'gray')
-                    }
-
-                    swal(swalText);
-
-                    alreadyHaveEmailNotifsOn = !alreadyHaveEmailNotifsOn;
-
-                    console.log(data);
-
-                    // Shows undefined when at 100%
-
-
-                  },
-                  error: function (err) {
-                    console.log(err);
+                  const data = {
+                    _csrf: csrf,
+                    user: '#{user.channelUrl}',
+                    channel: '#{channel.channelUrl}'
                   }
-                });
-              })
+
+                  $.ajax({
+                    type: 'POST',
+                    url: `/api/subscribeToEmailNotifications`,
+                    data,
+                    success: function (data) {
+
+                      $('.emailNotificationIcon i').css('color', 'white')
+                      let swalText = 'You have subscribed to their email notifications'
+
+                      if (alreadyHaveEmailNotifsOn) {
+                        swalText = 'You have unsubscribed from their email notifications'
+                        $('.emailNotificationIcon i').css('color', 'gray')
+                      }
+
+                      swal(swalText);
+
+                      alreadyHaveEmailNotifsOn = !alreadyHaveEmailNotifsOn;
+
+                      console.log(data);
+
+                      // Shows undefined when at 100%
+
+
+                    },
+                    error: function (err) {
+                      console.log(err);
+                    }
+                  });
+                })
+                // if viewer doesn't have confirmed email
+                // (can make smarter (please 'finish confirming') if you want
+              } else {
+                $('.emailNotificationIcon').click(function () {
+                  swal('Please finish confirming your email address on your account page first');
+                })
+
+                // TODO: if pending confirmation, say "please confirmation confirmation
+                // otherwise,
+              }
 
               var alreadyHavePushNotifsOn = '#{alreadyHavePushNotifsOn}' == 'true'
 
@@ -977,6 +991,8 @@ block extra_js
   script.
 
     $(document).ready(function () {
+
+
 
       $('.pushNotificationIcon').click(function(){
         main();
