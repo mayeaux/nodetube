@@ -341,9 +341,9 @@ block content
 
           // TODO: Have to finish this, can't think of a good design since I don't want users to spam emails
           // TODO: also, the frontend is largely in place just needs a swal "Your email was deleted"
-          //button.fw.btn.btn.btn-danger.btn-sm.center-block.text-center.deleteEmailButton(type='submit' style="margin-top:20px;border-radius:3px;")
-          //  i.fa.fa-pencil
-          //  | Delete
+          button.fw.btn.btn.btn-danger.btn-sm.center-block.text-center.deleteEmailButton(type='submit' style="margin-top:20px;border-radius:3px;")
+            i.fa.fa-pencil
+            | Delete
         br
 
       // IS USER HAS PENDING CONFIRMATION EMAIL
@@ -414,7 +414,9 @@ block content
           data,
           success: function (data) {
             if (data == 'success') {
-              window.location = "/account?to=nt-plus";
+              // TODO: setup the swal thing here
+
+              window.location = "/account?thumbnailDeleted=true";
             } else {
               swal("Something didn't work, please contact NodeTube at ceo@nodetube.live or via the widget in the bottom right corner")
             }
@@ -606,6 +608,13 @@ block content
 
       if(thumbnailDeleted){
         swal('The thumbnail has been deleted');
+      }
+
+      var emailDeleted = getParameterByName('emailDeleted');
+
+      if (emailDeleted) {
+        // scroll into view
+        swal('The email has been deleted')
       }
 
       if (updateSuccess) {
