@@ -89,7 +89,7 @@ exports.getMedia = async(req, res) => {
       let pushSubscriptionSearchQuery;
 
       // test if push notif and emails are already activated per viewing user
-      if(req.user){
+      if(req.user && user){
         pushSubscriptionSearchQuery = {
           subscribedToUser :  user._id,
           subscribingUser: req.user._id,
