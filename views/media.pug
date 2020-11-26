@@ -884,7 +884,7 @@ block extra_js
                   const data = {
                     _csrf: csrf,
                     user: '#{user.channelUrl}',
-                    channel: '#{channel.channelUrl}'
+                    channel: '#{upload.uploader.channelUrl}'
                   }
 
                   $.ajax({

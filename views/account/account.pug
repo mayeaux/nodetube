@@ -274,7 +274,7 @@ block content
       .form-group
         label.fw.col-sm-3.control-label(for='channelName' style="font-size:17px;margin-top:-5px;") Channel Description
         .col-sm-7
-          textarea(id="description" name="description" maxlength='500' rows="7" cols="70" style="max-width:100%") #{user.channelDescription}
+          textarea(id="description" name="description" maxlength='500' rows="7" cols="70" style="max-width:100%;color:#262525;") #{user.channelDescription}
 
       // UPLOAD FORM IF NO THUMBNAIL
       if !user.thumbnailUrl
@@ -614,7 +614,7 @@ block content
 
       if (emailDeleted) {
         // scroll into view
-        swal('The email has been deleted')
+        swal('The email address has been removed')
       }
 
       if (updateSuccess) {

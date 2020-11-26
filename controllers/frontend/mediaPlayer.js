@@ -89,7 +89,7 @@ exports.getMedia = async(req, res) => {
       let pushSubscriptionSearchQuery;
 
       // test if push notif and emails are already activated per viewing user
-      if(req.user){
+      if(req.user && user){
         pushSubscriptionSearchQuery = {
           subscribedToUser :  user._id,
           subscribingUser: req.user._id,
@@ -105,11 +105,11 @@ exports.getMedia = async(req, res) => {
 
       const alreadySubscribedForEmails = Boolean(existingEmailSub);
 
-      console.log("alreadyHavePushNotifsOn: ")
-      console.log(alreadyHavePushNotifsOn);
-
-      console.log("alreadySubscribedForEmails: ")
-      console.log(alreadySubscribedForEmails);
+      // console.log("alreadyHavePushNotifsOn: ")
+      // console.log(alreadyHavePushNotifsOn);
+      //
+      // console.log("alreadySubscribedForEmails: ")
+      // console.log(alreadySubscribedForEmails);
 
     let upload = await Upload.findOne({
       uniqueTag: media
