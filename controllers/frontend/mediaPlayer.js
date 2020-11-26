@@ -105,11 +105,11 @@ exports.getMedia = async(req, res) => {
 
       const alreadySubscribedForEmails = Boolean(existingEmailSub);
 
-      console.log("alreadyHavePushNotifsOn: ")
-      console.log(alreadyHavePushNotifsOn);
-
-      console.log("alreadySubscribedForEmails: ")
-      console.log(alreadySubscribedForEmails);
+      // console.log("alreadyHavePushNotifsOn: ")
+      // console.log(alreadyHavePushNotifsOn);
+      //
+      // console.log("alreadySubscribedForEmails: ")
+      // console.log(alreadySubscribedForEmails);
 
     let upload = await Upload.findOne({
       uniqueTag: media
