@@ -1533,23 +1533,35 @@ block extra_footer_js
 
              // console.log("fadeIn");
 
-            // what's going on here?
+            // if it's under the timeout time, make the cursor rule regular
+            // aka,the inverse of the other rule
             $('html').css({
               cursor: ''
             });
+
+            $('.plyr__controls').show()
+
+
           } else {
+
             $('.plyr').css({
               cursor: 'default'
             });
+
+            $('.plyr__controls').show()
+
             fadeInBuffer = false;
           }
 
 
+          /** hiding the cursor after 2030 ms **/
           timer = setTimeout(function () {
              console.log("fadeout");
             $('.plyr').css({
               cursor: 'none'
             });
+
+            $('.plyr__controls').hide()
 
             fadeInBuffer = true;
           }, 2030)
