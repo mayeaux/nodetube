@@ -250,7 +250,8 @@ exports.getDonate = async(req, res) => {
 
   res.render('public/donate', {
     title: 'Donate',
-    stripeToken
+    stripeToken,
+    dontShowOptionalHeader : true
   });
 };
 
@@ -264,8 +265,9 @@ exports.getHelp = async(req, res) => {
   const stripeToken = process.env.STRIPE_FRONTEND_TOKEN;
 
   res.render('public/help', {
-    title: 'Help',
-    stripeToken
+    title: 'Help NewTube',
+    stripeToken,
+    dontShowOptionalHeader : true
   });
 };
 
@@ -276,7 +278,8 @@ exports.getHelp = async(req, res) => {
 exports.getPlus = async(req, res) => {
 
   res.render('public/plus', {
-    title: 'Plus'
+    title: 'Plus',
+    dontShowOptionalHeader : true
   });
 };
 
