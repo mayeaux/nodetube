@@ -43,7 +43,7 @@ html
     script(src='https://cdn.jsdelivr.net/npm/sweetalert2@7.33.1/dist/sweetalert2.js')
     script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js')
     script(src='https://cdnjs.cloudflare.com/ajax/libs/enquire.js/2.0.1/enquire.min.js')
-      
+
     link(rel='stylesheet', href='/css/loading-bar.css')
     script(src='/js/loading-bar.js')
 
@@ -65,6 +65,10 @@ html
 
     //layout.pug
     include layoutPartials/header
+
+    // todo: make it so that it's an env var
+    if 1 == 2
+      include layoutPartials/optionalHeader
 
     // I feel like this is here and breaks if you move it
     include viewPartials/darkLightMode

@@ -1,6 +1,10 @@
 1) Point your domain towards your IP
 
 1) Generate a CSR
+# from server where you'll use key
+$ openssl req -new -newkey rsa:2048 -nodes -keyout server.key -out server.csr
+
+Instructions for how to fill it out:
 https://www.namecheap.com/support/knowledgebase/article.aspx/9446/14/generating-csr-on-apache--opensslmodsslnginx--heroku/
 
 2) Activate your CSR
@@ -12,10 +16,8 @@ https://www.namecheap.com/support/knowledgebase/article.aspx/9637/68/how-can-i-c
 Once the cert is issued, you can download and reup it to your server:
 # unzip, then
 
-# rename folder to certs
-$ mv uploads1_newtube.app\ \(1\)/ certs
-
-$ rsync -taPW certs sshuser@your.ip.addy.here:~/
+# rename push the certs up to your bin
+$ rsync -taPW live_newtube_app sshuser@your.ip.addy.here:~/
 
 
 Generate the whatever thing (domain chain)
