@@ -254,6 +254,21 @@ exports.getDonate = async(req, res) => {
   });
 };
 
+
+/**
+ * GET /help
+ * Donation page
+ */
+exports.getHelp = async(req, res) => {
+
+  const stripeToken = process.env.STRIPE_FRONTEND_TOKEN;
+
+  res.render('public/help', {
+    title: 'Help',
+    stripeToken
+  });
+};
+
 /**
  * GET /plus
  * Plus page

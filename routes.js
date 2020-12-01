@@ -139,6 +139,8 @@ function frontendRoutes(app){
   app.get('/docs', publicController.getDocs);
 
   app.get('/donate', publicController.getDonate);
+  app.get('/help', publicController.getHelp);
+
   app.get('/plus', publicController.getPlus);
 
   app.get('/landing', publicController.getLandingPage);
