@@ -515,7 +515,6 @@ exports.getChannel = async(req, res) => {
 
     const joinedTimeAgo = timeAgoEnglish.format(user.createdAt);
 
-
     let existingPushSub;
     let existingEmailSub;
     let pushSubscriptionSearchQuery;
@@ -526,7 +525,7 @@ exports.getChannel = async(req, res) => {
         subscribedToUser :  user._id,
         subscribingUser: req.user._id,
         active: true
-      }
+      };
       existingPushSub = await PushSubscription.findOne(pushSubscriptionSearchQuery);
 
       existingEmailSub = await EmailSubscription.findOne(pushSubscriptionSearchQuery);

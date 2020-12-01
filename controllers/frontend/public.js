@@ -255,7 +255,6 @@ exports.getDonate = async(req, res) => {
   });
 };
 
-
 /**
  * GET /help
  * Donation page

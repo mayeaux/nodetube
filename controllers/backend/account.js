@@ -29,7 +29,6 @@ const importerDownloadFunction = require('../../lib/uploading/importer');
 const mailgunTransport = mailTransports.mailgunTransport;
 const zohoTransport = mailTransports.zohoTransport;
 
-
 const User = require('../../models/index').User;
 const getMediaType = require('../../lib/uploading/media');
 
