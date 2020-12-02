@@ -8,12 +8,43 @@ block content
             margin-top: 32px;
         }
 
+        .model-box {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-top: 66.6%; /* This is your aspect ratio */
+            max-height:100vh;
+        }
+
+        .model {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 100%
+        }
+
     br
     div.center-block.text-center.col-sm-12.pageContainer(style="overflow-x: hidden;margin-top:-21px;")
 
         div.stillToDonate
 
             h1.fw(style="margin-bottom:21px") Help Page
+
+            //iframe(width='560', height='315', src='https://newtube.app/embed/7KH5xau', frameborder='0', allowfullscreen='')
+
+            .model-box
+                iframe.model(src='https://newtube.app/embed/7KH5xau' frameborder='0' allowfullscreen='')
+
+
+            p.videoHeader.fw(style="font-size:24px;margin-top:11px;") How To Use NodeTube
+
+            p.fw(style="font-size:18px") Popular Page, Recent Page, Media Page
+
+            p.fw(style="font-size:18px") Uploading Videos/Audio/Images, Livestreams, Other Features
+
 
             h5.fw(style="font-size:18px") The donation is done securely through Stripe.
             h5.fw(style="font-size:18px") NewTube never sees your card info, it goes directly to Stripe through their technology
