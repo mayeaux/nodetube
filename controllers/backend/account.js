@@ -15,13 +15,12 @@ const mv = require('mv');
 const fs = require('fs-extra');
 const mkdirp = Promise.promisifyAll(require('mkdirp'));
 const randomstring = require('randomstring');
+const mailJet = require('../../lib/emails/mailjet');
 
 const mailTransports = require('../../config/nodemailer');
 // const {sendProtonMail} = require('../../config/protonmailTransport');
 
 const importerDownloadFunction = require('../../lib/uploading/importer');
-
-// importerDownloadFunction('anthony', 'https://www.youtube.com/watch?v=vLJgAAIfKEc');
 
 // console.log('importer');
 // console.log(importerDownloadFunction);
@@ -359,16 +358,20 @@ exports.postReset = async(req, res, next) => {
   req.flash('success', { msg: 'Success! Your password has been changed.' });
 
   const mailOptions = {
-    to: user.email,
-    from: process.env.NODETUBE_NOREPLY_EMAIL_ADDRESS,
+    userEmail: user.email,
+    userName: user.channelName || user.channelUrl,
     subject: `Your ${brandName} password has been reset`,
     text: `Hello,\n\nThis is a confirmation that the password for your account ${user.email} has just been changed.\n`
   };
 
-  // turn an email noting that is ___
-  const response = await zohoTransport.sendMail(mailOptions);
 
-  // console.log(response);
+  try {
+    const response = mailJet.sendEmail(mailOptions)
+
+    // console.log(response);
+  } catch (err){
+    console.log(err);
+  }
 
   return res.redirect('/login');
 
@@ -404,6 +407,7 @@ exports.postForgot = async(req, res, next) => {
       user = await user.save();
     }
 
+    // TODO: replace here
     const mailOptions = {
       to: user.email,
       from: process.env.NODETUBE_NOREPLY_EMAIL_ADDRESS,
@@ -457,19 +461,26 @@ exports.postConfirmEmail = async(req, res, next) => {
     console.log('User email: ', user.email);
     console.log('Confirmation email address: ', process.env.NODETUBE_NOREPLY_EMAIL_ADDRESS);
 
-    const mailOptions = {
-      to: user.email,
-      from: process.env.NODETUBE_NOREPLY_EMAIL_ADDRESS,
-      subject: `Confirm your email on ${brandName}`,
-      text: `You are receiving this email because you (or someone else) has attempted to link this email to their account.\n\n
+    const emailText = `You are receiving this email because you (or someone else) has attempted to link this email to their account.\n\n
       Please click on the following link, or paste this into your browser to complete the process:\n\n
       http://${req.headers.host}/confirmEmail/${token}\n\n
-      If you did not request this, please ignore this email and no further steps will be needed.\n`
+      If you did not request this, please ignore this email and no further steps will be needed.\n`;
+
+    const mailOptions = {
+      userEmail: user.email,
+      userName: user.channelName || user.channelUrl,
+      subject: `Your ${brandName} password has been reset`,
+      text: emailText,
+      html: emailText
     };
 
-    const response = await zohoTransport.sendMail(mailOptions);
+    try {
+      const response = await mailJet.sendEmail(mailOptions)
 
-    console.log(response);
+      console.log(response);
+    } catch (err){
+      console.log(err);
+    }
 
     req.flash('info', {msg: 'An email has been sent to your address to confirm your email'});
 
