@@ -500,12 +500,12 @@ block content
                     div(style="margin-top:12px")
                         // TODO: this should create a push subsciption, and it will also send a query to see if it should create a new service worker
                         div(style="display:inline-block")
-                            h2.share-button.pushNotificationIcon(style="display:inline")
-                                i.share-icon.fas.fa-bell(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:0px;color:white;")
+                            h2.pushNotificationIcon(style="display:inline")
+                                i.fas.fa-bell(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:0px;color:white;")
                             p.pushSubscriptions(style="margin-left:1px") #{amountOfPushSubscriptions}
                         div(style="display:inline-block")
-                            h2.share-button.emailNotificationIcon(style="display:inline")
-                                i.share-icon.fas.fa-envelope(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:10px;color:white;")
+                            h2.emailNotificationIcon(style="display:inline")
+                                i.fas.fa-envelope(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:10px;color:white;")
                             p.emailSubscriptions(style="margin-left:10px") #{amountOfEmailSubscriptions}
 
                     //div(style="margin-top:12px")
