@@ -499,10 +499,21 @@ block content
                 if user
                     div(style="margin-top:12px")
                         // TODO: this should create a push subsciption, and it will also send a query to see if it should create a new service worker
-                        h2.pushNotificationIcon(style="display:inline")
-                            i.share-icon.fas.fa-bell(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:0px;color:white;")
-                        h2.emailNotificationIcon(style="display:inline")
-                            i.share-icon.fas.fa-envelope(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:10px;color:white;")
+                        div(style="display:inline-block")
+                            h2.share-button.pushNotificationIcon(style="display:inline")
+                                i.share-icon.fas.fa-bell(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:0px;color:white;")
+                            p.pushSubscriptions(style="margin-left:1px") #{amountOfPushSubscriptions}
+                        div(style="display:inline-block")
+                            h2.share-button.emailNotificationIcon(style="display:inline")
+                                i.share-icon.fas.fa-envelope(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:10px;color:white;")
+                            p.emailSubscriptions(style="margin-left:10px") #{amountOfEmailSubscriptions}
+
+                    //div(style="margin-top:12px")
+                    //    // TODO: this should create a push subsciption, and it will also send a query to see if it should create a new service worker
+                    //    h2.pushNotificationIcon(style="display:inline")
+                    //        i.share-icon.fas.fa-bell(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:0px;color:white;")
+                    //    h2.emailNotificationIcon(style="display:inline")
+                    //        i.share-icon.fas.fa-envelope(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:10px;color:white;")
 
                 //br
                 ////- push notification functionality
@@ -863,6 +874,10 @@ block extra_js
 
             $(document).ready(function(){
 
+              let amountOfEmailSubscriptions = Number('#{amountOfEmailSubscriptions}');
+
+              let amountOfPushSubscriptions = Number('#{amountOfPushSubscriptions}');
+
               var alreadyHaveEmailNotifsOn = '#{alreadySubscribedForEmails}' == 'true'
 
               var viewerHasConfirmedEmailAddress = #{viewingUserHasConfirmedEmail}
@@ -897,9 +912,35 @@ block extra_js
                       let swalText = 'You have subscribed to their email notifications'
 
                       if (alreadyHaveEmailNotifsOn) {
+
+                        console.log('ALRAEDY ONE')
+
+                        console.log(amountOfEmailSubscriptions)
+
+                        amountOfEmailSubscriptions = amountOfEmailSubscriptions - 1
+
+                        $('.emailSubscriptions').text(amountOfEmailSubscriptions)
+
+                        console.log(amountOfEmailSubscriptions)
+
                         swalText = 'You have unsubscribed from their email notifications'
                         $('.emailNotificationIcon i').css('color', 'gray')
+                      } else {
+                        console.log('ALRAEDY ONE')
+
+                        console.log(amountOfEmailSubscriptions)
+
+                        amountOfEmailSubscriptions = amountOfEmailSubscriptions + 1
+
+                        $('.emailSubscriptions').text(amountOfEmailSubscriptions)
+
+
+                        console.log(amountOfEmailSubscriptions)
                       }
+
+
+
+
 
                       swal(swalText);
 
@@ -965,8 +1006,17 @@ block extra_js
 
                     // if push notifs already on
                     if (alreadyHavePushNotifsOn) {
+                      amountOfPushSubscriptions = amountOfPushSubscriptions - 1
+
+                      $('.pushSubscriptions').text(amountOfPushSubscriptions)
+
                       swalText = 'You have unsubscribed from their push notifications'
                       $('.pushNotificationIcon i').css('color', 'gray')
+                    } else {
+                      amountOfPushSubscriptions = amountOfPushSubscriptions + 1
+
+                      $('.pushSubscriptions').text(amountOfPushSubscriptions)
+
                     }
 
                     swal(swalText);
