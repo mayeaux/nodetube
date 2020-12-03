@@ -90,11 +90,11 @@ block content
                         div(style="display:inline-block")
                             h2.share-button.pushNotificationIcon(style="display:inline")
                                 i.share-icon.fas.fa-bell(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:0px;color:white;")
-                            p(style="margin-left:1px") 1
+                            p(style="margin-left:1px") #{amountOfEmailSubscriptions}
                         div(style="display:inline-block")
                             h2.share-button.emailNotificationIcon(style="display:inline")
                                 i.share-icon.fas.fa-envelope(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:10px;color:white;")
-                            p(style="margin-left:10px") 1
+                            p(style="margin-left:10px") #{amountOfPushSubscriptions}
 
                 // todo: else
                 // let's put an 'else' here and here and show those same buttons
@@ -263,6 +263,10 @@ block content
 
             $(document).ready(function(){
 
+              let amountOfEmailSubscriptions = Number('#{amountOfEmailSubscriptions}');
+
+              let amountOfPushSubscriptions = Number('#{amountOfPushSubscriptions}');
+
               var alreadyHaveEmailNotifsOn = '#{alreadySubscribedForEmails}' == 'true'
 
               var viewerHasConfirmedEmailAddress = #{viewingUserHasConfirmedEmail}
@@ -288,6 +292,9 @@ block content
               if(viewerHasConfirmedEmailAddress){
 
                 $('.emailNotificationIcon').click(function () {
+
+                  // TODO: add proper toggle
+
                   console.log('Email notification icon clicked');
                   var csrf = '#{_csrf}'
 
@@ -306,14 +313,34 @@ block content
                       $('.emailNotificationIcon i').css('color', 'white')
                       let swalText = 'You have subscribed to their email notifications'
 
+                      // TODO: add the toggle here
                       if (alreadyHaveEmailNotifsOn) {
+
+                        console.log('ALRAEDY ONE')
+
+                        console.log(amountOfEmailSubscriptions)
+
+                        amountOfEmailSubscriptions = amountOfEmailSubscriptions - 1
+
+                        console.log(amountOfEmailSubscriptions)
+
                         swalText = 'You have unsubscribed from their email notifications'
                         $('.emailNotificationIcon i').css('color', 'gray')
+                      } else {
+                        console.log('ALRAEDY ONE')
+
+                        console.log(amountOfEmailSubscriptions)
+
+                        amountOfEmailSubscriptions = amountOfEmailSubscriptions + 1
+
+                        console.log(amountOfEmailSubscriptions)
                       }
 
                       swal(swalText);
 
                       alreadyHaveEmailNotifsOn = !alreadyHaveEmailNotifsOn;
+
+
 
                       console.log(data);
 

@@ -548,6 +548,9 @@ exports.getChannel = async(req, res) => {
     // console.log('viewer user confirmed email:');
     // console.log(viewingUserHasConfirmedEmail);
 
+    const amountOfEmailSubscriptions = 1;
+    const amountOfPushSubscriptions = 6;
+
     res.render('account/channel', {
       channel : user,
       title: user.channelName || user.channelUrl,
@@ -574,7 +577,9 @@ exports.getChannel = async(req, res) => {
       orderBy,
       alreadyHavePushNotifsOn,
       alreadySubscribedForEmails,
-      viewingUserHasConfirmedEmail
+      viewingUserHasConfirmedEmail,
+      amountOfEmailSubscriptions,
+      amountOfPushSubscriptions
     });
 
   } catch(err){
