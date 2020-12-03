@@ -409,8 +409,17 @@ block content
 
                     // if push notifs already on
                     if (alreadyHavePushNotifsOn) {
+                      amountOfPushSubscriptions = amountOfPushSubscriptions - 1
+
+                      $('.pushSubscriptions').text(amountOfPushSubscriptions)
+
                       swalText = 'You have unsubscribed from their push notifications'
                       $('.pushNotificationIcon i').css('color', 'gray')
+                    } else {
+                      amountOfPushSubscriptions = amountOfPushSubscriptions + 1
+
+                      $('.pushSubscriptions').text(amountOfPushSubscriptions)
+
                     }
 
                     swal(swalText);
