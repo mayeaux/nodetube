@@ -5,6 +5,8 @@ const uploadHelpers = require('../../lib/helpers/settings');
 const uploadServer = uploadHelpers.uploadServer;
 
 const Upload = require('../../models/index').Upload;
+const User = require('../../models/index').User;
+
 
 const logCaching = process.env.LOG_CACHING;
 const defaultLandingPage = process.env.DEFAULT_LANDING_PAGE;
@@ -153,8 +155,12 @@ exports.random = async(req, res) => {
   ]);
 
   upload = upload[0];
+  
+  const user = await User.findOne({
+    _id : upload.uploader
+  })
 
-  return res.redirect(`/user/v/${upload.uniqueTag}/`);
+  return res.redirect(`/user/${user.channelUrl}/${upload.uniqueTag}/`);
 
   // /user/v/Kqd5SfS
 

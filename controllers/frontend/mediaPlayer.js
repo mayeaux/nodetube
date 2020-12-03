@@ -77,7 +77,7 @@ exports.getMedia = async(req, res) => {
     // channel id and file name
     const channel = req.params.channel;
     const media = req.params.media;
-    user = await User.findOne({
+    let user = await User.findOne({
       // regex for case insensitivity
       channelUrl:  new RegExp(['^', req.params.channel, '$'].join(''), 'i')
     }).populate('receivedSubscriptions').lean()
@@ -243,10 +243,16 @@ exports.getMedia = async(req, res) => {
 
     const viewingUserHasConfirmedEmail = viewingUser && viewingUser.email && viewingUser.emailConfirmed;
 
+    // TODO: to bugfix if the user is wrong, perhaps better to just get the user
 
-    const amountOfPushSubscriptions = await PushSubscription.count({ subscribedToUser :  user._id, active: true });
+    let amountOfPushSubscriptions;
+    let amountOfEmailSubscriptions;
+    if(user){
+      amountOfPushSubscriptions = await PushSubscription.count({ subscribedToUser :  user._id, active: true });
 
-    const amountOfEmailSubscriptions = await EmailSubscription.count({ subscribedToUser :  user._id, active: true });
+      amountOfEmailSubscriptions = await EmailSubscription.count({ subscribedToUser :  user._id, active: true });
+
+    }
 
 
 
