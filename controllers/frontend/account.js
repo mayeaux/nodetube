@@ -519,6 +519,10 @@ exports.getChannel = async(req, res) => {
     let existingEmailSub;
     let pushSubscriptionSearchQuery;
 
+    const amountOfPushSubscriptions = await PushSubscription.count({ subscribedToUser :  user._id, active: true });
+
+    const amountOfEmailSubscriptions = await EmailSubscription.count({ subscribedToUser :  user._id, active: true });
+
     // test if push notif and emails are already activated per viewing user
     if(req.user){
       pushSubscriptionSearchQuery = {
@@ -548,8 +552,8 @@ exports.getChannel = async(req, res) => {
     // console.log('viewer user confirmed email:');
     // console.log(viewingUserHasConfirmedEmail);
 
-    const amountOfEmailSubscriptions = 1;
-    const amountOfPushSubscriptions = 6;
+    // const amountOfEmailSubscriptions = 1;
+    // const amountOfPushSubscriptions = 6;
 
     res.render('account/channel', {
       channel : user,
