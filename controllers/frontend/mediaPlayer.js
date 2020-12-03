@@ -83,6 +83,20 @@ exports.getMedia = async(req, res) => {
     }).populate('receivedSubscriptions').lean()
       .exec();
 
+
+
+    let upload = await Upload.findOne({
+      uniqueTag: media
+    }).populate({path: 'uploader comments blockedUsers', populate: {path: 'commenter'}}).exec();
+
+    if(!user){
+      user = await User.findOne({
+        _id : upload.uploader
+      })
+    }
+
+    // TODO: pull this thing out
+    /*** PUSH NOTIFICATION SECTION **/
     let existingPushSub;
     let existingEmailSub;
     let pushSubscriptionSearchQuery;
@@ -109,10 +123,7 @@ exports.getMedia = async(req, res) => {
     //
     // console.log("alreadySubscribedForEmails: ")
     // console.log(alreadySubscribedForEmails);
-
-    let upload = await Upload.findOne({
-      uniqueTag: media
-    }).populate({path: 'uploader comments blockedUsers', populate: {path: 'commenter'}}).exec();
+    /*** PUSH NOTIFICATION SECTION **/
 
     // even though this is named 'hide upload' it should really be named return 404
     // because it will return true even if there is no upload
@@ -247,12 +258,14 @@ exports.getMedia = async(req, res) => {
 
     let amountOfPushSubscriptions;
     let amountOfEmailSubscriptions;
+
     if(user){
       amountOfPushSubscriptions = await PushSubscription.count({ subscribedToUser :  user._id, active: true });
 
       amountOfEmailSubscriptions = await EmailSubscription.count({ subscribedToUser :  user._id, active: true });
 
     }
+
 
 
 
