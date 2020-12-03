@@ -355,23 +355,26 @@ exports.postReset = async(req, res, next) => {
 
   await user.save();
 
-  req.flash('success', { msg: 'Success! Your password has been changed.' });
+  const emailText = `Hello,\n\nThis is a confirmation that the password for your account ${user.email} has just been changed.\n`
 
   const mailOptions = {
     userEmail: user.email,
     userName: user.channelName || user.channelUrl,
     subject: `Your ${brandName} password has been reset`,
-    text: `Hello,\n\nThis is a confirmation that the password for your account ${user.email} has just been changed.\n`
+    text: emailText
   };
 
 
   try {
-    const response = mailJet.sendEmail(mailOptions)
+    const response = await mailJet.sendEmail(mailOptions)
+    console.log(response.body);
 
-    // console.log(response);
   } catch (err){
     console.log(err);
   }
+
+  req.flash('success', { msg: 'Success! Your password has been changed.' });
+
 
   return res.redirect('/login');
 
@@ -407,18 +410,27 @@ exports.postForgot = async(req, res, next) => {
       user = await user.save();
     }
 
-    // TODO: replace here
-    const mailOptions = {
-      to: user.email,
-      from: process.env.NODETUBE_NOREPLY_EMAIL_ADDRESS,
-      subject: `Reset your password on ${brandName}`,
-      text: `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
+    const emailText = `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
       Please click on the following link, or paste this into your browser to complete the process:\n\n
       http://${req.headers.host}/reset/${token}\n\n
       If you did not request this, please ignore this email and your password will remain unchanged.\n`
+
+    const mailOptions = {
+      userEmail: user.email,
+      userName: user.channelName || user.channelUrl,
+      subject: `Your ${brandName} password has been reset`,
+      text: emailText,
+      html: emailText
     };
 
-    const response = await zohoTransport.sendMail(mailOptions);
+    try {
+      const response = await mailJet.sendEmail(mailOptions)
+
+      console.log(response.body);
+
+    } catch (err){
+      console.log(err);
+    }
 
     // console.log(response);
 
@@ -477,7 +489,8 @@ exports.postConfirmEmail = async(req, res, next) => {
     try {
       const response = await mailJet.sendEmail(mailOptions)
 
-      console.log(response);
+      console.log(response.body);
+
     } catch (err){
       console.log(err);
     }
