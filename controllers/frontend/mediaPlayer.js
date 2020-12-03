@@ -243,6 +243,13 @@ exports.getMedia = async(req, res) => {
 
     const viewingUserHasConfirmedEmail = viewingUser && viewingUser.email && viewingUser.emailConfirmed;
 
+
+    const amountOfPushSubscriptions = await PushSubscription.count({ subscribedToUser :  user._id, active: true });
+
+    const amountOfEmailSubscriptions = await EmailSubscription.count({ subscribedToUser :  user._id, active: true });
+
+
+
     res.render('media', {
       title: upload.title,
       comments : comments.reverse(),
@@ -277,7 +284,9 @@ exports.getMedia = async(req, res) => {
       uploadFps,
       alreadyHavePushNotifsOn,
       alreadySubscribedForEmails,
-      viewingUserHasConfirmedEmail
+      viewingUserHasConfirmedEmail,
+      amountOfPushSubscriptions,
+      amountOfEmailSubscriptions
     });
 
   } catch(err){
