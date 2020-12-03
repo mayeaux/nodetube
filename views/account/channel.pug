@@ -90,11 +90,11 @@ block content
                         div(style="display:inline-block")
                             h2.share-button.pushNotificationIcon(style="display:inline")
                                 i.share-icon.fas.fa-bell(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:0px;color:white;")
-                            p(style="margin-left:1px") #{amountOfEmailSubscriptions}
+                            p.pushSubscriptions(style="margin-left:1px") #{amountOfPushSubscriptions}
                         div(style="display:inline-block")
                             h2.share-button.emailNotificationIcon(style="display:inline")
                                 i.share-icon.fas.fa-envelope(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:10px;color:white;")
-                            p(style="margin-left:10px") #{amountOfPushSubscriptions}
+                            p.emailSubscriptions(style="margin-left:10px") #{amountOfEmailSubscriptions}
 
                 // todo: else
                 // let's put an 'else' here and here and show those same buttons
@@ -322,6 +322,8 @@ block content
 
                         amountOfEmailSubscriptions = amountOfEmailSubscriptions - 1
 
+                        $('.emailSubscriptions').text(amountOfEmailSubscriptions)
+
                         console.log(amountOfEmailSubscriptions)
 
                         swalText = 'You have unsubscribed from their email notifications'
@@ -332,6 +334,9 @@ block content
                         console.log(amountOfEmailSubscriptions)
 
                         amountOfEmailSubscriptions = amountOfEmailSubscriptions + 1
+
+                        $('.emailSubscriptions').text(amountOfEmailSubscriptions)
+
 
                         console.log(amountOfEmailSubscriptions)
                       }
