@@ -89,7 +89,7 @@ exports.getMedia = async(req, res) => {
       uniqueTag: media
     }).populate({path: 'uploader comments blockedUsers', populate: {path: 'commenter'}}).exec();
 
-    if(!user){
+    if(!user && upload){
       user = await User.findOne({
         _id : upload.uploader
       })
