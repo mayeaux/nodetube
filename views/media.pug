@@ -49,12 +49,14 @@ block content
 
     style.
 
+        .plyr {
+            max-height: 102.5vh;
+            max-width: 100vw;
+        }
+
         @media (min-width: 668px) {
 
-            .plyr {
-                max-height: 102.5vh;
-                max-width: 100vw;
-            }
+
         }
 
         .pending-string {
@@ -1390,6 +1392,28 @@ block extra_css
         margin-top: 0px;
     }
 
+    /*button.plyr__control:first-of-type {*/
+    /*    width: 100px;*/
+    /*    height: 100px;*/
+    /*}*/
+
+    /*button:first-of-type.plyr__control {*/
+    /*    width: 100px;*/
+    /*    height: 100px;*/
+    /*}*/
+
+    button[data-plyr="play"] > svg[role="presentation"]{
+        height:58px;
+        width:47px;
+        left:7px;
+    }
+
+    .plyr__controls__item > svg[role="presentation"]{
+        height: 20px !important;
+        width: 20px !important;
+        left: 18px !important;
+    }
+
 
 block extra_footer_js
 
@@ -1404,6 +1428,8 @@ block extra_footer_js
   script.
 
     $(document).ready(function () {
+
+
       // old scroll down to change the header
       //window.scrollTo(0, 21);
 
