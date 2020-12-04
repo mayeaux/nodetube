@@ -58,6 +58,12 @@ block content
             padding-top: 30px;
         }
 
+    if isUser || isAdmin || ( user && user.role == 'moderator' )
+        style.
+            .uploadCard {
+                margin-bottom:45px !important;
+            }
+
     div.channel-information.container
         div.col-sm-12
             div.col-sm-4(style="margin:0 auto;text-align:center;")
@@ -209,7 +215,7 @@ block content
 
     div.container
         each upload in channel.uploads
-            div.col-xs-12.col-sm-6.col-md-6.col-lg-4(style="text-align:center;height:330px;margin-bottom:15px;")
+            div.uploadCard.col-xs-12.col-sm-6.col-md-6.col-lg-4(style="text-align:center;height:330px;margin-bottom:15px;")
                 if isUser || isAdmin || ( user && user.role == 'moderator' )
                     div.editFileButtons(style="")
                         form.editLink(action="/api/upload/delete" method="POST" style="display:inline-block")
