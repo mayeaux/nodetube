@@ -99,7 +99,7 @@ script.
   console.log(dontAutoplayBasedOnUpload)
 
 
-  if (dontAutoplayBasedOnUpload && shouldNotAutoPlayBasedOnViews) {
+  if ((dontAutoplayBasedOnUpload && shouldNotAutoPlayBasedOnViews) ||  !autoplay) {
     autoplay = false;
   } else {
     autoplay = true;
