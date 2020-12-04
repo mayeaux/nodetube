@@ -418,7 +418,7 @@ exports.postForgot = async(req, res, next) => {
     const mailOptions = {
       userEmail: user.email,
       userName: user.channelName || user.channelUrl,
-      subject: `Your ${brandName} password has been reset`,
+      subject: `Reset your password on ${brandName}`,
       text: emailText,
       html: emailText
     };
@@ -481,7 +481,7 @@ exports.postConfirmEmail = async(req, res, next) => {
     const mailOptions = {
       userEmail: user.email,
       userName: user.channelName || user.channelUrl,
-      subject: `Your ${brandName} password has been reset`,
+      subject: `Confirm your email on ${brandName}`,
       text: emailText,
       html: emailText
     };
