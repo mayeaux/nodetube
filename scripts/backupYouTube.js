@@ -254,7 +254,7 @@ async function downloadVideoForUser(channelUrl, youtubeLink){
 
         if(!alreadyUploaded){
 
-          console.log('Still need to download');
+          console.log('Still need to download ' + title);
 
           await Promise.delay(1000 * 15)
 
@@ -610,4 +610,4 @@ function youtubeDlInfoAsync(url, options) {
   });
 }
 
-downloadVideoForUser('anthony', 'https://www.youtube.com/c/TonyHeller/videos?view=0&sort=dd&shelf_id=1\n')
+downloadVideoForUser('TonyHeller', 'https://www.youtube.com/c/TonyHeller/videos?view=0&sort=dd&shelf_id=1\n')
