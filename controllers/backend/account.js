@@ -205,7 +205,7 @@ exports.postSignup = async(req, res, next) => {
 
 exports.postUpdateProfile = async(req, res, next)  => {
 
-  console.log(`UPDATING PROFILE FOR ${'hello'}`);
+
 
   if(!req.user && req.body.uploadToken){
     req.user = await User.findOne({ uploadToken : req.body.uploadToken });
@@ -213,6 +213,8 @@ exports.postUpdateProfile = async(req, res, next)  => {
 
   // console.log('REQ FILES')
   // console.log(req.files);
+
+  console.log(`UPDATING PROFILE FOR ${req.user && req.user.channelUrl}`);
 
   req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
 
@@ -366,8 +368,8 @@ exports.postReset = async(req, res, next) => {
 
 
   try {
-    const response = await mailJet.sendEmail(mailOptions)
-    console.log(response.body);
+    // const response = await mailJet.sendEmail(mailOptions)
+    // console.log(response.body);
 
   } catch (err){
     console.log(err);
