@@ -31,8 +31,8 @@ const mongoose = require('mongoose');
 
 process.on('unhandledRejection', console.log);
 
-dotenv.load({ path: '../.env.private' });
-dotenv.load({ path: '../.env.settings' });
+dotenv.load({ path: '.env.private' });
+dotenv.load({ path: '.env.settings' });
 
 const mongoUri = process.env.MONGODB_URI;
 
@@ -256,7 +256,7 @@ async function downloadVideoForUser(channelUrl, youtubeLink){
 
           console.log('Still need to download ' + title);
 
-          await Promise.delay(1000 * 15)
+          await Promise.delay(1000 * 8)
 
           // downloadVideoForUser(channelUrl, youtubeLink){
 
