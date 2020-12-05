@@ -237,6 +237,8 @@ async function downloadVideoForUser(channelUrl, youtubeLink){
 
       // TODO: add a for list here, check the title, if it whiffs, then download it per the function below
 
+      info.reverse();
+
       for(const upload of info){
         const title = upload.title;
         const id = upload.id;
