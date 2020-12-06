@@ -1,3 +1,6 @@
+/** Has to be run from project root directory **/
+/** ie scripts/backupYouTube.js **/
+
 const Promise = require('bluebird');
 const fs = Promise.promisifyAll(require('fs-extra'));
 const FileType = require('file-type');

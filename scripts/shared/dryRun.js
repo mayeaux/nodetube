@@ -3,9 +3,12 @@
 // In order to us it, symlink your uploads directory in ../ as well
 // as .env.settings and .env.private files, then just run
 // `node ./migrate_ffmpeg.js` from within this directory
+
+
+/** Has to be run from /scripts **/
+
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const ffmpegHelper = require('../../lib/uploading/ffmpeg');
 
 process.on('unhandledRejection', console.log);
 
@@ -76,9 +79,11 @@ async function main(){
 
     var convertedDate = convertYouTubeDlDateToJsDate(dateString);
 
-    upload.processingCompletedAt = convertedDate;
+    console.log(convertedDate);
 
-    await upload.save();
+    // upload.processingCompletedAt = convertedDate;
+    //
+    // await upload.save();
 
   }
   process.exit();
