@@ -338,13 +338,15 @@ exports.getChannel = async(req, res) => {
     const searchQuery = {
       uploader: user._id,
       // TODO: shouldn't really be using uploadUrl anymore
-      $or : [ { status: 'completed' }, { uploadUrl: { $exists: true } } ]
+      status: 'completed',
+
+      // $or : [ { status: 'completed' }, { uploadUrl: { $exists: true } } ]
       // uploadUrl: {$exists: true }
       // status: 'completed'
     };
 
     /** DB CALL TO GET UPLOADS **/
-    let uploads = await Upload.find(searchQuery).populate('').sort({ createdAt : -1 });
+    let uploads = await Upload.find(searchQuery).populate('').sort({ processingCompletedAt : -1 });
 
     uploads = filterUploadsByMediaType(uploads, mediaType);
 
@@ -453,7 +455,7 @@ exports.getChannel = async(req, res) => {
 
       // console.log('new to old');
       uploads = uploads.sort(function(a, b){
-        return b.createdAt - a.createdAt;
+        return b.processingCompletedAt - a.processingCompletedAt;
       });
     }
 
@@ -461,7 +463,7 @@ exports.getChannel = async(req, res) => {
 
       // console.log('old to new');
       uploads = uploads.sort(function(a, b){
-        return a.createdAt - b.createdAt;
+        return a.processingCompletedAt - b.processingCompletedAt;
       });
     }
 
