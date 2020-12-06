@@ -37,8 +37,25 @@ mongoose.connection.on('error', (err) => {
 const Upload = require('../../models/index').Upload;
 const User = require('../../models/index').User;
 
+// TODO: a good candidate for automated testing
+function convertYouTubeDlDateToJsDate(youtubeDlDate){
+  var dateString  = youtubeDlDate;
+
+  // console.log(dateString)
+  var year        = dateString.substring(0,4);
+  var month       = dateString.substring(4,6);
+  var day         = dateString.substring(6,8);
+
+  var date        = new Date(year, month-1, day);
+
+  // console.log(date);
+
+  return date
+
+}
+
 async function main(){
-  const channelUrl = 'TonyHeller'
+  const channelUrl = 'anthony'
   const user = await User.findOne({
     channelUrl
   })
@@ -57,16 +74,9 @@ async function main(){
 
     var dateString  = upload.youTubeDLData.upload_date;
 
-    console.log(dateString)
-    var year        = dateString.substring(0,4);
-    var month       = dateString.substring(4,6);
-    var day         = dateString.substring(6,8);
+    var convertedDate = convertYouTubeDlDateToJsDate(dateString);
 
-    var date        = new Date(year, month-1, day);
-
-    console.log(date);
-
-    upload.processingCompletedAt = date;
+    upload.processingCompletedAt = convertedDate;
 
     await upload.save();
 
