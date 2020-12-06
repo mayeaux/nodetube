@@ -348,12 +348,14 @@ exports.getChannel = async(req, res) => {
     /** DB CALL TO GET UPLOADS **/
 
 
-    const selectString = 'processingCompletedAt fileExtension formattedDuration rating title uploader fileType thumbnailUrl ' + 'uniqueTag customThumbnailUrl thumbnails';
+    const selectString = 'views processingCompletedAt fileExtension formattedDuration rating title uploader fileType thumbnailUrl ' + 'uniqueTag customThumbnailUrl thumbnails';
 
 
 
     // get the uploads for the user, that have status completed, and sort by processingCompletedAt
-    let uploads = await Upload.find(searchQuery).populate('').sort({ processingCompletedAt : -1 }).select(selectString);
+    let uploads = await Upload.find(searchQuery).populate('').select(selectString);
+
+
 
     // let uploads = await Upload.find(searchQuery).populate('').sort({ processingCompletedAt : -1 })
 
@@ -370,7 +372,6 @@ exports.getChannel = async(req, res) => {
     // if the viewer is not an owner or admin, only public
     // if they are owner, then public / pending / private / unlisted
     // if they are mod/admin, then no need to filter at all
-
     if(!viewerIsOwner && !viewerIsAdminOrMod){
       uploads = _.filter(uploads, function(upload){
         return upload.visibility == 'public' || upload.visibility == 'unlisted';
@@ -393,6 +394,7 @@ exports.getChannel = async(req, res) => {
       uploads = _.filter(uploads, function(upload){return upload.visibility == 'public';});
     }
 
+    // TODO: what exactly is this doing here?
     let uploadThumbnailUrl;
     if(uploads && uploads[0]){
       uploadThumbnailUrl =  uploads[0].thumbnailUrl;
@@ -463,6 +465,8 @@ exports.getChannel = async(req, res) => {
 
     const userUploadAmount = uploads.length;
 
+    // TODO: should pull this out in its own function
+    // sort newest to oldest by processingCompletedAt
     if(orderBy == 'newToOld'){
 
       // console.log('new to old');
@@ -471,6 +475,7 @@ exports.getChannel = async(req, res) => {
       });
     }
 
+    // sort oldest to newest by processingCompletedAt
     if(orderBy == 'oldToNew'){
 
       // console.log('old to new');
@@ -479,8 +484,8 @@ exports.getChannel = async(req, res) => {
       });
     }
 
+    // sort by alphabetical
     if(orderBy == 'alphabetical'){
-
       // console.log('alphabetical');
 
       uploads = uploads.sort(function(a, b){
@@ -494,8 +499,12 @@ exports.getChannel = async(req, res) => {
 
     const amountToOutput = limit;
 
+    // TODO: you will have to add the trim at the end
     uploads = uploadFilters.trimUploads(uploads, amountToOutput, skipAmount) ;
 
+    /** populate view amounts onto uploads **/
+    // TODO: this should be replaced so that it's calculated on a timer and then just use the document
+    // TODO: ideally this all runs off of a cache
     // populate upload.legitViewAmount
     uploads = await Promise.all(
       uploads.map(async function(upload){
@@ -506,12 +515,15 @@ exports.getChannel = async(req, res) => {
       })
     );
 
+    // now that views are populated, you can
     if(orderBy == 'popular'){
       uploads = uploads.sort(function(a, b){
         return b.legitViewAmount - a.legitViewAmount;
       });
     }
 
+    // calculate total views per page
+    // TODO: ideally, this should already be populated on the user
     let totalViews = 0;
     for(upload of uploads){
       totalViews = totalViews + upload.legitViewAmount;
@@ -529,45 +541,58 @@ exports.getChannel = async(req, res) => {
 
     const joinedTimeAgo = timeAgoEnglish.format(user.createdAt);
 
+    /*** PUSH/EMAIL NOTIFICATIONS FUNCTIONALITY **/
     let existingPushSub;
     let existingEmailSub;
     let pushSubscriptionSearchQuery;
 
+    // TODO: need to make this an index
+
+    // get the amount of push subs for the user whose upload it is
     const amountOfPushSubscriptions = await PushSubscription.count({ subscribedToUser :  user._id, active: true });
 
+    // TODO: need to make this an index
+
+    // get the amount of email subs for the user whose upload it is
     const amountOfEmailSubscriptions = await EmailSubscription.count({ subscribedToUser :  user._id, active: true });
 
     // test if push notif and emails are already activated per viewing user
     if(req.user){
+
+      // find the subscription type for the viewing user/uploaded user
       pushSubscriptionSearchQuery = {
         subscribedToUser :  user._id,
         subscribingUser: req.user._id,
         active: true
       };
+
+      // TODO: need to do indexes for these
+      // find an existing push sub, to know what to show on the frontend
       existingPushSub = await PushSubscription.findOne(pushSubscriptionSearchQuery);
 
+      // // find an existing email sub, to know what to show on the frontend
       existingEmailSub = await EmailSubscription.findOne(pushSubscriptionSearchQuery);
     }
 
     console.log(existingPushSub);
 
-    // if the user already has push notis turned on
+    // if the user already has subbed for push notifs
     const alreadyHavePushNotifsOn = Boolean(existingPushSub);
 
+    // if the user already has subbed for emails
     const alreadySubscribedForEmails = Boolean(existingEmailSub);
 
     // console.log('already have push notifs on:');
     // console.log(alreadyHavePushNotifsOn);
 
+    // maybe do this earlier?
     const viewingUser = req.user;
 
+    // if user has confirmed email already, for use on frontend
     const viewingUserHasConfirmedEmail = viewingUser && viewingUser.email && viewingUser.emailConfirmed;
 
     // console.log('viewer user confirmed email:');
     // console.log(viewingUserHasConfirmedEmail);
-
-    // const amountOfEmailSubscriptions = 1;
-    // const amountOfPushSubscriptions = 6;
 
     res.render('account/channel', {
       channel : user,
