@@ -348,12 +348,17 @@ exports.getChannel = async(req, res) => {
     /** DB CALL TO GET UPLOADS **/
 
 
-    const selectString = 'views processingCompletedAt fileExtension formattedDuration rating title uploader fileType thumbnailUrl ' + 'uniqueTag customThumbnailUrl thumbnails';
+    const selectString = 'sensitivity visibility views processingCompletedAt fileExtension formattedDuration rating title uploader fileType thumbnailUrl ' + 'uniqueTag customThumbnailUrl thumbnails';
 
 
 
     // get the uploads for the user, that have status completed, and sort by processingCompletedAt
-    let uploads = await Upload.find(searchQuery).populate('').select(selectString);
+    let uploads = await Upload.find(searchQuery).select(selectString);
+
+    // let uploads = await Upload.find(searchQuery);
+
+    console.log('uploads1 length')
+    console.log(uploads.length);
 
 
 
@@ -363,6 +368,9 @@ exports.getChannel = async(req, res) => {
     // let uploads = await Upload.find(searchQuery).populate('').select(selectString);
 
     uploads = filterUploadsByMediaType(uploads, mediaType);
+
+    console.log('uploads2 length')
+    console.log(uploads.length);
 
     // console.log(`IS ADMIN OR MOD: ${viewerIsAdminOrMod}`);
     // console.log(`IS OWNER: ${viewerIsOwner}`);
@@ -377,6 +385,9 @@ exports.getChannel = async(req, res) => {
         return upload.visibility == 'public' || upload.visibility == 'unlisted';
       });
     }
+
+    console.log('uploads3 length')
+    console.log(uploads.length);
 
     // if viewer is owner but not admin they can also see pending / private uploads
     if(viewerIsOwner && !viewerIsAdminOrMod){
@@ -522,6 +533,8 @@ exports.getChannel = async(req, res) => {
       });
     }
 
+
+
     // calculate total views per page
     // TODO: ideally, this should already be populated on the user
     let totalViews = 0;
@@ -593,6 +606,7 @@ exports.getChannel = async(req, res) => {
 
     // console.log('viewer user confirmed email:');
     // console.log(viewingUserHasConfirmedEmail);
+    
 
     res.render('account/channel', {
       channel : user,
