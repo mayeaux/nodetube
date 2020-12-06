@@ -74,6 +74,22 @@ const youtubeBinaryFilePath = youtubedl.getYtdlBinary();
 
 console.log(`youtube-dl binary path: ${youtubeBinaryFilePath}`);
 
+// TODO: can pull this out, it's also used in updatedProcessingUpdatedAtTime.js
+function convertYouTubeDlDateToJsDate(youtubeDlDate){
+  var dateString  = youtubeDlDate;
+
+  // console.log(dateString)
+  var year        = dateString.substring(0,4);
+  var month       = dateString.substring(4,6);
+  var day         = dateString.substring(6,8);
+
+  var date        = new Date(year, month-1, day);
+
+  // console.log(date);
+
+  return date
+
+}
 
 
 // actually do channel page
@@ -246,6 +262,8 @@ async function downloadVideoForUser(channelUrl, youtubeLink){
         const title = upload.title;
         const id = upload.id;
 
+
+
         const uploadUrl = 'https://www.youtube.com/watch?v=' + id;
 
 
@@ -268,7 +286,7 @@ async function downloadVideoForUser(channelUrl, youtubeLink){
           // channelUrl to know who to save it for,
           await downloadVideoForUser(channelUrl, uploadUrl)
         } else {
-          console.log('ALready downloaded ' + title);
+          console.log('Already downloaded ' + title);
 
           await Promise.delay(1000 * 5)
         }
@@ -379,6 +397,10 @@ async function downloadVideoForUser(channelUrl, youtubeLink){
       description = descriptionPrepend
     }
 
+    const youtubeDlUploadDate = info.upload_date;
+
+    const dateToUseForCompletedProcessing = convertYouTubeDlDateToJsDate(youtubeDlUploadDate)
+
     // const description = descriptionPrepend + info.description;
 
     // instantiate upload
@@ -432,7 +454,8 @@ async function downloadVideoForUser(channelUrl, youtubeLink){
 
         upload.thumbnails.generated = `${uniqueTag}.${downloadResponse}`;
 
-        upload.processingCompletedAt = new Date();
+        /** Note: Using the converted date here so it will appear 'in chronological order' **/
+        upload.processingCompletedAt = dateToUseForCompletedProcessing;
 
         await upload.save();
       }
@@ -558,7 +581,7 @@ async function downloadVideoForUser(channelUrl, youtubeLink){
 
         // mark upload as completed
         upload.status = 'completed';
-        upload.processingCompletedAt = new Date();
+        upload.processingCompletedAt = dateToUseForCompletedProcessing;
         upload = await upload.save();
 
         // uploadedPath where the upload file location is
