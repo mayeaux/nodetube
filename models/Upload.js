@@ -144,7 +144,7 @@ const uploadSchema = new mongoose.Schema({
   toJSON: {
     virtuals: true
   },
-  autoIndex: false
+  autoIndex: true
 });
 
 const oneHourAmount =  1000 * 60 * 60;
@@ -266,6 +266,8 @@ uploadSchema.virtual('legitViewAmount').get(function(){
 
   return legitViews;
 });
+
+uploadSchema.index({uploader: 1, status: 1, processingCompletedAt: -1 }, {name: 'Channel Page'});
 
 uploadSchema.index({sensitive: 1, visibility: 1, status: 1, createdAt: -1, category: 1}, {name: 'All Media List'});
 uploadSchema.index({sensitive: 1, visibility: 1, status: 1, fileType: 1, createdAt: -1}, {name: 'File Type List'});
