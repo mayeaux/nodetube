@@ -346,7 +346,19 @@ exports.getChannel = async(req, res) => {
     };
 
     /** DB CALL TO GET UPLOADS **/
-    let uploads = await Upload.find(searchQuery).populate('').sort({ processingCompletedAt : -1 });
+
+
+    const selectString = 'processingCompletedAt fileExtension formattedDuration rating title uploader fileType thumbnailUrl ' + 'uniqueTag customThumbnailUrl thumbnails';
+
+
+
+    // get the uploads for the user, that have status completed, and sort by processingCompletedAt
+    let uploads = await Upload.find(searchQuery).populate('').sort({ processingCompletedAt : -1 }).select(selectString);
+
+    // let uploads = await Upload.find(searchQuery).populate('').sort({ processingCompletedAt : -1 })
+
+
+    // let uploads = await Upload.find(searchQuery).populate('').select(selectString);
 
     uploads = filterUploadsByMediaType(uploads, mediaType);
 
