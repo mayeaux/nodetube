@@ -357,8 +357,8 @@ exports.getChannel = async(req, res) => {
 
     // let uploads = await Upload.find(searchQuery);
 
-    console.log('uploads1 length')
-    console.log(uploads.length);
+    // console.log('uploads1 length')
+    // console.log(uploads.length);
 
 
 
@@ -369,8 +369,8 @@ exports.getChannel = async(req, res) => {
 
     uploads = filterUploadsByMediaType(uploads, mediaType);
 
-    console.log('uploads2 length')
-    console.log(uploads.length);
+    // console.log('uploads2 length')
+    // console.log(uploads.length);
 
     // console.log(`IS ADMIN OR MOD: ${viewerIsAdminOrMod}`);
     // console.log(`IS OWNER: ${viewerIsOwner}`);
@@ -386,8 +386,8 @@ exports.getChannel = async(req, res) => {
       });
     }
 
-    console.log('uploads3 length')
-    console.log(uploads.length);
+    // console.log('uploads3 length')
+    // console.log(uploads.length);
 
     // if viewer is owner but not admin they can also see pending / private uploads
     if(viewerIsOwner && !viewerIsAdminOrMod){
@@ -510,9 +510,6 @@ exports.getChannel = async(req, res) => {
 
     const amountToOutput = limit;
 
-    // TODO: you will have to add the trim at the end
-    uploads = uploadFilters.trimUploads(uploads, amountToOutput, skipAmount) ;
-
     /** populate view amounts onto uploads **/
     // TODO: this should be replaced so that it's calculated on a timer and then just use the document
     // TODO: ideally this all runs off of a cache
@@ -564,6 +561,9 @@ exports.getChannel = async(req, res) => {
     }
 
     user.totalViews = totalViews;
+
+    // TODO: you will have to add the trim at the end
+    uploads = uploadFilters.trimUploads(uploads, amountToOutput, skipAmount) ;
 
     user.uploads = uploads;
 

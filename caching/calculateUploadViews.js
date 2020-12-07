@@ -46,7 +46,7 @@ async function calculateViewAmounts(){
 
     await upload.save();
   }
-  
+
   // if(logCaching == 'true'){
   //   c.l('Uploads received from database');
   //
