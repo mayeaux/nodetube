@@ -58,7 +58,7 @@ async function calculateViewAmounts(){
   // return uploads;
 }
 
-calculateViewAmounts();
+// calculateViewAmounts();
 
-// module.exports = calculateViewAmounts;
+module.exports = calculateViewAmounts;
 

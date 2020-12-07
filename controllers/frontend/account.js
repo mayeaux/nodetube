@@ -516,12 +516,23 @@ exports.getChannel = async(req, res) => {
     /** populate view amounts onto uploads **/
     // TODO: this should be replaced so that it's calculated on a timer and then just use the document
     // TODO: ideally this all runs off of a cache
+
+
     // populate upload.legitViewAmount
     uploads = await Promise.all(
       uploads.map(async function(upload){
         upload = upload.toObject();
-        const checkedViews = await View.countDocuments({ upload: upload.id, validity: 'real' });
-        upload.legitViewAmount = checkedViews;
+
+        // console.log(upload);
+
+        // if(upload.isOver24h == false){
+        if(upload.lessThan24hOld === true){
+          const checkedViews = await View.countDocuments({ upload: upload.id, validity: 'real' });
+          upload.legitViewAmount = checkedViews;
+
+        } else {
+          upload.legitViewAmount = upload.views;
+        }
         return upload;
       })
     );
@@ -606,7 +617,7 @@ exports.getChannel = async(req, res) => {
 
     // console.log('viewer user confirmed email:');
     // console.log(viewingUserHasConfirmedEmail);
-    
+
 
     res.render('account/channel', {
       channel : user,
