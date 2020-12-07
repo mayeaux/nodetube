@@ -179,9 +179,9 @@ uploadSchema.virtual('lessThan1hOld').get(function(){
   return timeDiffInH > 1;
 });
 
-uploadSchema.virtual('lessThan24hOld').get(function(){
+uploadSchema.virtual('moreThan24hOld').get(function(){
 
-  const timeDiff = new Date() - this.createdAt;
+  const timeDiff = new Date() - this.processingCompletedAt;
   const timeDiffInH = timeDiff / oneHourAmount;
 
   return timeDiffInH > 24;

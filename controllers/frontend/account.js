@@ -517,16 +517,26 @@ exports.getChannel = async(req, res) => {
     // TODO: this should be replaced so that it's calculated on a timer and then just use the document
     // TODO: ideally this all runs off of a cache
 
+    const oneHourAmount =  1000 * 60 * 60;
+
+
+
+    // const moreThanOneDayOld =  timeDiffInH > 24;
+
+
 
     // populate upload.legitViewAmount
     uploads = await Promise.all(
       uploads.map(async function(upload){
         upload = upload.toObject();
 
-        // console.log(upload);
+        // const timeDiff = new Date() - upload.processingCompletedAt;
+        // const timeDiffInH = timeDiff / oneHourAmount;
+
+        const moreThan24hOld = upload.moreThan24hOld;
 
         // if(upload.isOver24h == false){
-        if(upload.lessThan24hOld === true){
+        if(!moreThan24hOld === true){
           const checkedViews = await View.countDocuments({ upload: upload.id, validity: 'real' });
           upload.legitViewAmount = checkedViews;
 

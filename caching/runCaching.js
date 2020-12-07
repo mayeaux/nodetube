@@ -102,19 +102,19 @@ console.log(`CACHE POPULAR, DAILY STATS AND INDEXES INTERVAL IN MINUTES: ${cache
 
 async function main(){
 
-  // calculate and cache recent uploads every minute
-  cacheOnlyRecentUploads();
-
   setInterval(cacheOnlyRecentUploads, cacheRecentIntervalInMs);
-
-  cachePopularDailyStatsAndIndex();
 
   setInterval(cachePopularDailyStatsAndIndex, cacheIntervalInMs);
 
-  calculateUploadViews();
-
-
   setInterval(calculateUploadViews, cacheIntervalInMs);
+
+  // calculate and cache recent uploads every minute
+  await cacheOnlyRecentUploads();
+
+  await cachePopularDailyStatsAndIndex();
+
+  await calculateUploadViews();
+
 
 }
 
