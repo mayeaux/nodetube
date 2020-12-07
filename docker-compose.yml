@@ -24,7 +24,7 @@ services:
 
   mongo:
     container_name: nodetube-mongo
-    image: mongo:3.6
+    image: mongo:4.4
     volumes:
       - ./data/db:/data/db
     ports:
