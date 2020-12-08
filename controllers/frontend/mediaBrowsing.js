@@ -40,6 +40,15 @@ if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false'){
 
 const pageLimit = 42;
 
+// TODO: pull out this function
+function removeTrailingSlash(requestPath){
+  if (requestPath.charAt(requestPath.length - 1) == '/') {
+    requestPath = requestPath.substr(0, requestPath.length - 1);
+  }
+
+  return requestPath
+}
+
 // TODO: pull this function out
 async function addValuesIfNecessary(upload, channelUrl){
   if(upload.fileType == 'video' || upload.fileType == 'audio'){
@@ -78,6 +87,8 @@ async function addValuesIfNecessary(upload, channelUrl){
  * Page displaying most recently uploaded content
  */
 exports.recentUploads = async(req, res) => {
+
+  let requestPath = removeTrailingSlash(req.path);
 
   try {
 
@@ -166,6 +177,8 @@ exports.recentUploads = async(req, res) => {
  * Page with all popular
  */
 exports.popularUploads = async(req, res) => {
+
+  let requestPath = removeTrailingSlash(req.path);
 
   // console.log('getting popular uploads');
 
@@ -316,6 +329,7 @@ exports.popularUploads = async(req, res) => {
 
     if(uploads && uploads.length){
       for(const upload in uploads){
+
         // console.log(upload);
         addValuesIfNecessary(upload, upload.uploader && upload.uploader.channelUrl);
       }

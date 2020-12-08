@@ -56,6 +56,15 @@ const secondsToFormattedTime = timeHelper.secondsToFormattedTime;
 const forgotEmailFunctionalityOn = process.env.FORGOT_PASSWORD_EMAIL_FUNCTIONALITY_ON == 'true';
 
 // TODO: pull this function out
+function removeTrailingSlash(requestPath){
+  if (requestPath.charAt(requestPath.length - 1) == '/') {
+    requestPath = requestPath.substr(0, requestPath.length - 1);
+  }
+
+  return requestPath
+}
+
+// TODO: pull this function out
 async function addValuesIfNecessary(upload, channelUrl){
   if(upload.fileType == 'video' || upload.fileType == 'audio'){
     if(!upload.durationInSeconds || !upload.formattedDuration){
@@ -256,11 +265,8 @@ exports.getChannel = async(req, res) => {
 
   // TODO count the amount of / in req.path, if it's just one, check to make sure there's Plus
 
-  let requestPath = req.path;
+  let requestPath = removeTrailingSlash(req.path);
 
-  if (requestPath.charAt(requestPath.length - 1) == '/') {
-    requestPath = requestPath.substr(0, requestPath.length - 1);
-  }
 
   // console.log('request path');
   // console.log(requestPath);
