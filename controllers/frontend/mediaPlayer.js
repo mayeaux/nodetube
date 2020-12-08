@@ -111,11 +111,17 @@ exports.getMedia = async(req, res) => {
       })
     }
 
+    // indicates a 'shortened' media player url, if not plus spit out
     if(amountOfSlashes === 2 && user.plan !== 'plus'){
       res.status(404);
       return res.render('error/404', {
         title: 'Not Found'
       });
+    }
+
+    // if it's three but you're plus, then move to shortened url
+    if(amountOfSlashes === 3 && user.plan == 'plus'){
+      return res.redirect(`/${user.channelUrl}/${upload.uniqueTag}`)
     }
 
     // TODO: pull this thing out

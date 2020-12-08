@@ -311,6 +311,18 @@ exports.getChannel = async(req, res) => {
       });
     }
 
+    console.log('params');
+    console.log(req.query);
+
+    const queryString = '?' + require('url').parse(req.url).query;
+    console.log('query string');
+    console.log(queryString)
+
+    // TODO: need to add req params
+    if(amountOfSlashes === 2 && user.plan == 'plus'){
+      return res.redirect(`/${user.channelUrl}${queryString}`);
+    }
+
     let viewerIsMod = Boolean(req.user && (req.user.role == 'admin' || req.user.role == 'moderator'));
 
     let viewerIsOwner = (req.user && req.user.channelUrl) == user.channelUrl;
@@ -330,9 +342,12 @@ exports.getChannel = async(req, res) => {
       });
     }
 
+    // TODO: what is this doing?
     if(user.channelUrl !== req.params.channel){
       return res.redirect('/user/' + user.channelUrl);
     }
+
+
 
     const siteVisits = await SiteVisit.find({ user: user });
 
