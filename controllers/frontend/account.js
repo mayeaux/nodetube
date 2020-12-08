@@ -366,7 +366,7 @@ exports.getChannel = async(req, res) => {
     if(user.channelUrl !== req.params.channel){
       return res.redirect('/user/' + user.channelUrl);
     }
-    
+
     const siteVisits = await SiteVisit.find({ user: user });
 
     let ips = [];

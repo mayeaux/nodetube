@@ -135,23 +135,60 @@ exports.recentUploads = async(req, res) => {
 
     const mediaType = media;
 
+    // TODO: this is really ugly, since it can return either an array or an array of arrays
+    // TODO: very confusing, should pull out into two funcs or do anything else
     let uploads = await getFromCache.getRecentUploads(limit, skipAmount, mediaType, filter, category, subcategory);
 
-    uploads = uploads.map(function(upload){
-      const uploaderPlan = upload.uploader.plan;
+    console.log(uploads);
 
-      const uploaderHasPlus = uploaderPlan === 'plus';
+      let newUploads = {};
+      if(uploads && !uploads.map){
+        for(let category in uploads){
 
-      if(!uploaderHasPlus){
-        upload.pathToUploader = `/user/${upload.uploader.channelUrl}`
+          const categoryName = category;
+
+          category = uploads[category]
+          category = category.map(function(upload){
+            const uploaderPlan = upload.uploader.plan;
+
+            const uploaderHasPlus = uploaderPlan === 'plus';
+
+            if(!uploaderHasPlus){
+              upload.pathToUploader = `/user/${upload.uploader.channelUrl}`
+            } else {
+              upload.pathToUploader = `/${upload.uploader.channelUrl}`
+            }
+
+            console.log(upload.pathToUploader)
+
+            return upload
+          })
+
+          newUploads[categoryName] = category
+        }
+
+        uploads = newUploads;
+
       } else {
-        upload.pathToUploader = `/${upload.uploader.channelUrl}`
+        // if it's just a bunch of uploads, aka not the ugly categories thing
+        uploads = uploads.map(function(upload){
+          const uploaderPlan = upload.uploader.plan;
+
+          const uploaderHasPlus = uploaderPlan === 'plus';
+
+          if(!uploaderHasPlus){
+            upload.pathToUploader = `/user/${upload.uploader.channelUrl}`
+          } else {
+            upload.pathToUploader = `/${upload.uploader.channelUrl}`
+          }
+
+          console.log(upload.pathToUploader)
+
+          return upload
+        })
       }
 
-      console.log(upload.pathToUploader)
 
-      return upload
-    })
 
 
     // if(category && category !== 'overview'){
@@ -344,14 +381,53 @@ exports.popularUploads = async(req, res) => {
     //
     // console.log('getting popular uploads');
 
+
+
+
     if(uploads && uploads.length){
       for(const upload in uploads){
 
         // console.log(upload);
         addValuesIfNecessary(upload, upload.uploader && upload.uploader.channelUrl);
       }
+    }
 
+    let newUploads = {};
+    if(uploads && !uploads.map){
 
+      // console.log(uploads);
+
+      for(let category in uploads){
+
+        const categoryName = category;
+
+        category = uploads[category]
+        category = category.map(function(upload){
+          const uploaderPlan = upload.uploader.plan;
+
+          const uploaderHasPlus = uploaderPlan === 'plus';
+
+          if(uploaderHasPlus){
+            upload.pathToUploader = `/${upload.uploader.channelUrl}`
+          } else {
+            upload.pathToUploader = `/user/${upload.uploader.channelUrl}`
+          }
+
+          console.log('path to uploader')
+          console.log(upload.pathToUploader)
+
+          return upload
+        })
+
+        // console.log(category);
+
+        newUploads[categoryName] = category
+      }
+
+      uploads = newUploads;
+
+    } else {
+      // if it's just a bunch of uploads, aka not the ugly categories thing
       uploads = uploads.map(function(upload){
         const uploaderPlan = upload.uploader.plan;
 
@@ -369,7 +445,7 @@ exports.popularUploads = async(req, res) => {
       })
     }
 
-    console.log(uploads);
+    // console.log(uploads);
 
     res.render('mediaBrowsing/popularUploads', {
       title: 'Popular Uploads',
