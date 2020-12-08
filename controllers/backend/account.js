@@ -16,6 +16,8 @@ const fs = require('fs-extra');
 const mkdirp = Promise.promisifyAll(require('mkdirp'));
 const randomstring = require('randomstring');
 const mailJet = require('../../lib/emails/mailjet');
+const sendgrid = require('../../lib/emails/sendgrid');
+
 
 const mailTransports = require('../../config/nodemailer');
 // const {sendProtonMail} = require('../../config/protonmailTransport');
@@ -368,8 +370,8 @@ exports.postReset = async(req, res, next) => {
 
 
   try {
-    // const response = await mailJet.sendEmail(mailOptions)
-    // console.log(response.body);
+    // const response = await sendgrid.sendEmail(mailOptions)
+    // console.log(response);
 
   } catch (err){
     console.log(err);
@@ -426,9 +428,9 @@ exports.postForgot = async(req, res, next) => {
     };
 
     try {
-      const response = await mailJet.sendEmail(mailOptions)
+      const response = await sendgrid.sendEmail(mailOptions)
 
-      console.log(response.body);
+      console.log(response);
 
     } catch (err){
       console.log(err);
@@ -489,9 +491,9 @@ exports.postConfirmEmail = async(req, res, next) => {
     };
 
     try {
-      const response = await mailJet.sendEmail(mailOptions)
+      const response = await sendgrid.sendEmail(mailOptions)
 
-      console.log(response.body);
+      console.log(response);
 
     } catch (err){
       console.log(err);
