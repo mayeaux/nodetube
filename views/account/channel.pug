@@ -180,13 +180,13 @@ block content
 
             ul.dropdown-menu.dropdown
                 li
-                    a(href=`/user/${channel.channelUrl}?orderBy=popular&mediaType=${media}&page=${page}&nav=true`) Popular
+                    a(href=`/user/${channel.channelUrl}?orderBy=popular&mediaType=${media}&nav=true`) Popular
                 li
-                    a(href=`/user/${channel.channelUrl}?orderBy=newToOld&mediaType=${media}&page=${page}&nav=true`) New To Old
+                    a(href=`/user/${channel.channelUrl}?orderBy=newToOld&mediaType=${media}&nav=true`) New To Old
                 li
-                    a(href=`/user/${channel.channelUrl}?orderBy=oldToNew&mediaType=${media}&page=${page}&nav=true`) Old To New
+                    a(href=`/user/${channel.channelUrl}?orderBy=oldToNew&mediaType=${media}&nav=true`) Old To New
                 li
-                    a(href=`/user/${channel.channelUrl}?orderBy=alphabetical&mediaType=${media}&page=${page}&nav=true`) Alphabetical
+                    a(href=`/user/${channel.channelUrl}?orderBy=alphabetical&mediaType=${media}&nav=true`) Alphabetical
 
         div.search-upload-buttons-container.dropdown(style="display:inline;padding-right:15px;")
             button#dropdownMenu1.fw.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px;")
@@ -195,13 +195,13 @@ block content
 
             ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1')
                 li(role='presentation')
-                    a(href=`/user/${channelUrl}/?mediaType=all&orderBy=${orderBy}&page=${page}&nav=true`) All
+                    a(href=`/user/${channelUrl}/?mediaType=all&orderBy=${orderBy}&nav=true`) All
                 li(role='presentation')
-                    a(href=`/user/${channelUrl}/?mediaType=video&orderBy=${orderBy}&page=${page}&nav=true`) Videos
+                    a(href=`/user/${channelUrl}/?mediaType=video&orderBy=${orderBy}&nav=true`) Videos
                 li(role='presentation')
-                    a(href=`/user/${channelUrl}/?mediaType=audio&orderBy=${orderBy}&page=${page}&nav=true`) Audio
+                    a(href=`/user/${channelUrl}/?mediaType=audio&orderBy=${orderBy}&nav=true`) Audio
                 li(role='presentation')
-                    a(href=`/user/${channelUrl}/?mediaType=image&orderBy=${orderBy}&page=${page}&nav=true`) Images
+                    a(href=`/user/${channelUrl}/?mediaType=image&orderBy=${orderBy}&nav=true`) Images
 
 
         include ../viewPartials/sensitivityFilterDropdown
