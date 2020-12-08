@@ -262,8 +262,8 @@ exports.getChannel = async(req, res) => {
     requestPath = requestPath.substr(0, requestPath.length - 1);
   }
 
-  console.log('request path');
-  console.log(requestPath);
+  // console.log('request path');
+  // console.log(requestPath);
 
   // console.log(requestPath);
 
