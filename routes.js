@@ -382,12 +382,10 @@ function frontendRoutes(app){
   // req.params
   // app.get('/:media', mediaPlayerController.getMedia)
 
-  // "vanity url" 
+  // "vanity url"
   app.get('/:channel', accountFrontendController.getChannel);
 
-  // app.get('/:channel/:media', function(req, res){
-  //   console.log(req.params);
-  // });
+  app.get('/:channel/:media', mediaPlayerController.getMedia);
 
 
 

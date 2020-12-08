@@ -74,6 +74,16 @@ function getFormattedFileSize(upload){
  */
 exports.getMedia = async(req, res) => {
 
+  let requestPath = req.path;
+
+  if (requestPath.charAt(requestPath.length - 1) == '/') {
+    requestPath = requestPath.substr(0, requestPath.length - 1);
+  }
+
+  // console.log(requestPath);
+
+  const amountOfSlashes = requestPath.split('/').length - 1;
+
   try {
 
     // channel id and file name
@@ -99,6 +109,13 @@ exports.getMedia = async(req, res) => {
       user = await User.findOne({
         _id : upload.uploader
       })
+    }
+
+    if(amountOfSlashes === 2 && user.plan !== 'plus'){
+      res.status(404);
+      return res.render('error/404', {
+        title: 'Not Found'
+      });
     }
 
     // TODO: pull this thing out
