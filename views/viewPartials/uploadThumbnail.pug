@@ -1,5 +1,5 @@
 div.holder(style="border:")
-    a.title-anchor(href=`/user/${upload.uploader.channelUrl || channelUrl}/${upload.uniqueTag}` style="color:#7d7373;" )
+    a.title-anchor(href=`${requestPath}/${upload.uniqueTag}` style="color:#7d7373;" )
         div.image-container(style="")
             if upload.thumbnails && upload.thumbnails.custom
                 img.upload-thumbnail.preview-image(src=`${uploadServer}/${channelUrl || upload.uploader.channelUrl}/${upload.thumbnails.custom}` style="")

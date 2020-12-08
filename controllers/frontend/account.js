@@ -262,6 +262,9 @@ exports.getChannel = async(req, res) => {
     requestPath = requestPath.substr(0, requestPath.length - 1);
   }
 
+  console.log('request path');
+  console.log(requestPath);
+
   // console.log(requestPath);
 
   const amountOfSlashes = requestPath.split('/').length - 1;
@@ -303,7 +306,12 @@ exports.getChannel = async(req, res) => {
       });
     }
 
-    const queryString = '?' + require('url').parse(req.url).query;
+    const queryString = require('url').parse(req.url).query;
+
+    let usableQueryString = '';
+    if(queryString){
+      usableQueryString = '?' + queryString
+    }
 
     if(amountOfSlashes === 1 && user.plan !== 'plus'){
       res.status(404);
@@ -321,7 +329,7 @@ exports.getChannel = async(req, res) => {
 
     // TODO: need to add req params
     if(amountOfSlashes === 2 && user.plan == 'plus'){
-      return res.redirect(`/${user.channelUrl}${queryString}`);
+      return res.redirect(`/${user.channelUrl}${usableQueryString}`);
     }
 
     let viewerIsMod = Boolean(req.user && (req.user.role == 'admin' || req.user.role == 'moderator'));
@@ -695,7 +703,8 @@ exports.getChannel = async(req, res) => {
       alreadySubscribedForEmails,
       viewingUserHasConfirmedEmail,
       amountOfEmailSubscriptions,
-      amountOfPushSubscriptions
+      amountOfPushSubscriptions,
+      requestPath
     });
 
   } catch(err){

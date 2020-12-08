@@ -74,15 +74,25 @@ function getFormattedFileSize(upload){
  */
 exports.getMedia = async(req, res) => {
 
+  function trimTrailingSlash(){
+
+  }
+
   let requestPath = req.path;
 
   if (requestPath.charAt(requestPath.length - 1) == '/') {
     requestPath = requestPath.substr(0, requestPath.length - 1);
   }
 
+  console.log('request path');
+  console.log(requestPath);
+
   // console.log(requestPath);
 
   const amountOfSlashes = requestPath.split('/').length - 1;
+
+  console.log('request path');
+  console.log(requestPath);
 
   try {
 
@@ -336,7 +346,8 @@ exports.getMedia = async(req, res) => {
       viewingUserHasConfirmedEmail,
       amountOfPushSubscriptions,
       amountOfEmailSubscriptions,
-      uploadedAtTime
+      uploadedAtTime,
+      requestPath
     });
 
   } catch(err){
