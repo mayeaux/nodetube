@@ -27,6 +27,62 @@ async function getStats(){
   viewStats = JSON.parse(views);
 }
 
+function attachDataToUploadsAsUploads(uploads){
+  uploads = uploads.map(function(upload){
+    const uploaderPlan = upload.uploader.plan;
+
+    const uploaderHasPlus = uploaderPlan === 'plus';
+
+    if(!uploaderHasPlus){
+      upload.pathToUploader = `/user/${upload.uploader.channelUrl}`
+    } else {
+      upload.pathToUploader = `/${upload.uploader.channelUrl}`
+    }
+
+    console.log(upload.pathToUploader)
+
+    return upload
+  })
+
+  return uploads
+}
+
+
+/** this is for category section **/
+// going to loop through all the uploads, check if the uploader has plus, and if so, will build a path without 'user' prepend
+function attachDataToUploadsAsCategories(uploads){
+  let newUploads = {};
+
+  for(let category in uploads){
+
+    const categoryName = category;
+
+    category = uploads[category]
+    category = category.map(function(upload){
+      const uploaderPlan = upload.uploader.plan;
+
+      const uploaderHasPlus = uploaderPlan === 'plus';
+
+      if(uploaderHasPlus){
+        upload.pathToUploader = `/${upload.uploader.channelUrl}`
+      } else {
+        upload.pathToUploader = `/user/${upload.uploader.channelUrl}`
+      }
+
+      console.log('path to uploader')
+      console.log(upload.pathToUploader)
+
+      return upload
+    })
+
+    // console.log(category);
+
+    newUploads[categoryName] = category
+  }
+
+  return newUploads
+}
+
 if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false'){
   // update daily view stats per minute
   getStats();
@@ -139,53 +195,11 @@ exports.recentUploads = async(req, res) => {
     // TODO: very confusing, should pull out into two funcs or do anything else
     let uploads = await getFromCache.getRecentUploads(limit, skipAmount, mediaType, filter, category, subcategory);
 
-    console.log(uploads);
 
-      let newUploads = {};
       if(uploads && !uploads.map){
-        for(let category in uploads){
-
-          const categoryName = category;
-
-          category = uploads[category]
-          category = category.map(function(upload){
-            const uploaderPlan = upload.uploader.plan;
-
-            const uploaderHasPlus = uploaderPlan === 'plus';
-
-            if(!uploaderHasPlus){
-              upload.pathToUploader = `/user/${upload.uploader.channelUrl}`
-            } else {
-              upload.pathToUploader = `/${upload.uploader.channelUrl}`
-            }
-
-            console.log(upload.pathToUploader)
-
-            return upload
-          })
-
-          newUploads[categoryName] = category
-        }
-
-        uploads = newUploads;
-
+        uploads = attachDataToUploadsAsCategories(uploads)
       } else {
-        // if it's just a bunch of uploads, aka not the ugly categories thing
-        uploads = uploads.map(function(upload){
-          const uploaderPlan = upload.uploader.plan;
-
-          const uploaderHasPlus = uploaderPlan === 'plus';
-
-          if(!uploaderHasPlus){
-            upload.pathToUploader = `/user/${upload.uploader.channelUrl}`
-          } else {
-            upload.pathToUploader = `/${upload.uploader.channelUrl}`
-          }
-
-          console.log(upload.pathToUploader)
-
-          return upload
-        })
+        uploads = attachDataToUploadsAsUploads(uploads)
       }
 
 
@@ -392,57 +406,17 @@ exports.popularUploads = async(req, res) => {
       }
     }
 
+
+
+
     let newUploads = {};
     if(uploads && !uploads.map){
 
-      // console.log(uploads);
-
-      for(let category in uploads){
-
-        const categoryName = category;
-
-        category = uploads[category]
-        category = category.map(function(upload){
-          const uploaderPlan = upload.uploader.plan;
-
-          const uploaderHasPlus = uploaderPlan === 'plus';
-
-          if(uploaderHasPlus){
-            upload.pathToUploader = `/${upload.uploader.channelUrl}`
-          } else {
-            upload.pathToUploader = `/user/${upload.uploader.channelUrl}`
-          }
-
-          console.log('path to uploader')
-          console.log(upload.pathToUploader)
-
-          return upload
-        })
-
-        // console.log(category);
-
-        newUploads[categoryName] = category
-      }
-
-      uploads = newUploads;
+      uploads = attachDataToUploadsAsCategories(uploads)
 
     } else {
       // if it's just a bunch of uploads, aka not the ugly categories thing
-      uploads = uploads.map(function(upload){
-        const uploaderPlan = upload.uploader.plan;
-
-        const uploaderHasPlus = uploaderPlan === 'plus';
-
-        if(!uploaderHasPlus){
-          upload.pathToUploader = `/user/${upload.uploader.channelUrl}`
-        } else {
-          upload.pathToUploader = `/${upload.uploader.channelUrl}`
-        }
-
-        console.log(upload.pathToUploader)
-
-        return upload
-      })
+      uploads = attachDataToUploadsAsUploads(uploads)
     }
 
     // console.log(uploads);
@@ -622,6 +596,7 @@ exports.search = async(req, res) => {
 
     totalUploadsAmount = uploads.length;
 
+    // TODO: can just use views here
     // populate upload.legitViewAmount
     uploads = await Promise.all(
       uploads.map(async function(upload){
