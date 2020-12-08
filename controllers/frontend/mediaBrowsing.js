@@ -135,7 +135,24 @@ exports.recentUploads = async(req, res) => {
 
     const mediaType = media;
 
-    const uploads = await getFromCache.getRecentUploads(limit, skipAmount, mediaType, filter, category, subcategory);
+    let uploads = await getFromCache.getRecentUploads(limit, skipAmount, mediaType, filter, category, subcategory);
+
+    uploads = uploads.map(function(upload){
+      const uploaderPlan = upload.uploader.plan;
+
+      const uploaderHasPlus = uploaderPlan === 'plus';
+
+      if(!uploaderHasPlus){
+        upload.pathToUploader = `/user/${upload.uploader.channelUrl}`
+      } else {
+        upload.pathToUploader = `/${upload.uploader.channelUrl}`
+      }
+
+      console.log(upload.pathToUploader)
+
+      return upload
+    })
+
 
     // if(category && category !== 'overview'){
     //   for(const upload of uploads){
@@ -333,7 +350,26 @@ exports.popularUploads = async(req, res) => {
         // console.log(upload);
         addValuesIfNecessary(upload, upload.uploader && upload.uploader.channelUrl);
       }
+
+
+      uploads = uploads.map(function(upload){
+        const uploaderPlan = upload.uploader.plan;
+
+        const uploaderHasPlus = uploaderPlan === 'plus';
+
+        if(!uploaderHasPlus){
+          upload.pathToUploader = `/user/${upload.uploader.channelUrl}`
+        } else {
+          upload.pathToUploader = `/${upload.uploader.channelUrl}`
+        }
+
+        console.log(upload.pathToUploader)
+
+        return upload
+      })
     }
+
+    console.log(uploads);
 
     res.render('mediaBrowsing/popularUploads', {
       title: 'Popular Uploads',
