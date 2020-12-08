@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 const Upload = require('../../models/index').Upload;
 const User = require('../../models/index').User;
 const View = require('../../models/index').View;
@@ -84,10 +86,14 @@ exports.getMedia = async(req, res) => {
       .exec();
 
 
-
     let upload = await Upload.findOne({
       uniqueTag: media
-    }).populate({path: 'uploader comments blockedUsers', populate: {path: 'commenter'}}).exec();
+    }).populate({
+      path: 'uploader comments blockedUsers',
+      populate: {
+        path: 'commenter'
+      }
+    }).exec();
 
     if(!user && upload){
       user = await User.findOne({
@@ -266,7 +272,7 @@ exports.getMedia = async(req, res) => {
 
     }
 
-
+    const uploadedAtTime = moment(upload.processingCompletedAt).format('MMMM Do YYYY');
 
 
     res.render('media', {
@@ -305,7 +311,8 @@ exports.getMedia = async(req, res) => {
       alreadySubscribedForEmails,
       viewingUserHasConfirmedEmail,
       amountOfPushSubscriptions,
-      amountOfEmailSubscriptions
+      amountOfEmailSubscriptions,
+      uploadedAtTime
     });
 
   } catch(err){
