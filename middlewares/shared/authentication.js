@@ -1,3 +1,6 @@
+// user has plus
+
+
 function adminAuth(req, res, next){
   if(!req.user){
     res.status(404);

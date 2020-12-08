@@ -254,6 +254,20 @@ exports.getChannelRss = async(req, res) => {
    */
 exports.getChannel = async(req, res) => {
 
+  // TODO count the amount of / in req.path, if it's just one, check to make sure there's Plus
+
+  let requestPath = req.path;
+
+  if (requestPath.charAt(requestPath.length - 1) == '/') {
+    requestPath = requestPath.substr(0, requestPath.length - 1);
+  }
+
+  // console.log(requestPath);
+
+  const amountOfSlashes = requestPath.split('/').length - 1;
+
+  // console.log(req.params);
+
   let page = req.query.page;
   if(!page){ page = 1; }
   page = parseInt(page);
@@ -274,14 +288,22 @@ exports.getChannel = async(req, res) => {
   try {
 
     // find the user per channelUrl
-    user = await User.findOne({
+    let user = await User.findOne({
       // regex for case insensitivity
-      channelUrl:  new RegExp(['^', req.params.channel, '$'].join(''), 'i')
+      channelUrl:  new RegExp(['^', channelUrl, '$'].join(''), 'i')
     }).populate('receivedSubscriptions').lean()
       .exec();
 
     // 404 if no user found
     if(!user){
+      res.status(404);
+      return res.render('error/404', {
+        item: 'user',
+        title: 'Not Found'
+      });
+    }
+
+    if(amountOfSlashes === 1 && user.plan !== 'plus'){
       res.status(404);
       return res.render('error/404', {
         item: 'user',

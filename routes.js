@@ -378,6 +378,20 @@ function frontendRoutes(app){
     });
   });
 
+
+  // req.params
+  // app.get('/:media', mediaPlayerController.getMedia)
+
+  // "vanity url" 
+  app.get('/:channel', accountFrontendController.getChannel);
+
+  // app.get('/:channel/:media', function(req, res){
+  //   console.log(req.params);
+  // });
+
+
+
+
   // anything that misses, return a 404
   app.get('*', function(req, res){
 
