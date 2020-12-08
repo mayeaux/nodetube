@@ -119,6 +119,7 @@ exports.getMedia = async(req, res) => {
       });
     }
 
+    // TODO: make sure to add query params here
     // if it's three but you're plus, then move to shortened url
     if(amountOfSlashes === 3 && user.plan == 'plus'){
       return res.redirect(`/${user.channelUrl}/${upload.uniqueTag}`)

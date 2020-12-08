@@ -303,6 +303,8 @@ exports.getChannel = async(req, res) => {
       });
     }
 
+    const queryString = '?' + require('url').parse(req.url).query;
+
     if(amountOfSlashes === 1 && user.plan !== 'plus'){
       res.status(404);
       return res.render('error/404', {
@@ -311,12 +313,11 @@ exports.getChannel = async(req, res) => {
       });
     }
 
-    console.log('params');
-    console.log(req.query);
-
-    const queryString = '?' + require('url').parse(req.url).query;
-    console.log('query string');
-    console.log(queryString)
+    // console.log('params');
+    // console.log(req.query);
+    //
+    // console.log('query string');
+    // console.log(queryString)
 
     // TODO: need to add req params
     if(amountOfSlashes === 2 && user.plan == 'plus'){
