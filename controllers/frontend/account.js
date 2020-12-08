@@ -312,13 +312,17 @@ exports.getChannel = async(req, res) => {
       });
     }
 
+    // get the query params as a string
+    // these are needed for preserving navigation and other things in the redirect
     const queryString = require('url').parse(req.url).query;
 
+    // if there is a query string, prepend the ? character
     let usableQueryString = '';
     if(queryString){
       usableQueryString = '?' + queryString
     }
 
+    // if they are trying to use shortcut method but not plus, 404 them
     if(amountOfSlashes === 1 && user.plan !== 'plus'){
       res.status(404);
       return res.render('error/404', {
@@ -333,7 +337,7 @@ exports.getChannel = async(req, res) => {
     // console.log('query string');
     // console.log(queryString)
 
-    // TODO: need to add req params
+    // if user has plus, redirect him to shorter section
     if(amountOfSlashes === 2 && user.plan == 'plus'){
       return res.redirect(`/${user.channelUrl}${usableQueryString}`);
     }
@@ -357,13 +361,12 @@ exports.getChannel = async(req, res) => {
       });
     }
 
-    // TODO: what is this doing?
+    // if it's not the proper way to show their name
+    // (ie tonyheller not TonyHeller), then redirect them)
     if(user.channelUrl !== req.params.channel){
       return res.redirect('/user/' + user.channelUrl);
     }
-
-
-
+    
     const siteVisits = await SiteVisit.find({ user: user });
 
     let ips = [];
