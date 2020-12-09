@@ -577,6 +577,8 @@ exports.search = async(req, res) => {
 
   const orderByEnglishString = getOrderByEnglishString(orderBy);
 
+  uploads = attachDataToUploadsAsUploads(uploads);
+
   return res.render('public/search', {
     title: 'Search',
     channels: users,
