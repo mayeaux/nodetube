@@ -17,6 +17,8 @@ const EmailSubscription = require('../../models/index').EmailSubscription;
 
 const PushEndpoint = require('../../models/index').PushEndpoint;
 
+const { attachDataToUploadsAsUploads, attachDataToUploadsAsCategories } = require('../../lib/helpers/addFieldsToUploads')
+
 const RSS = require('rss');
 
 const { uploadServer, uploadUrl } = require('../../lib/helpers/settings');
@@ -619,6 +621,16 @@ exports.getChannel = async(req, res) => {
 
     // TODO: you will have to add the trim at the end
     uploads = uploadFilters.trimUploads(uploads, amountToOutput, skipAmount) ;
+
+
+    const userHasPlus = user.plan === 'plus';
+
+    console.log('USER HAS PLUS');
+
+    console.log(userHasPlus);
+
+
+    uploads = attachDataToUploadsAsUploads(uploads, userHasPlus, channelUrl);
 
     user.uploads = uploads;
 
