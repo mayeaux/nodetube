@@ -11,6 +11,8 @@ const pagination = require('../../lib/helpers/pagination');
 
 const { uploadServer} = require('../../lib/helpers/settings');
 
+const { attachDataToUploadsAsUploads } = require('../../lib/helpers/addFieldsToUploads')
+
 let viewStats, uploadStats, userStats, reactStats, subscriptionStats, searchStats, commentStats, siteVisitStats;
 
 async function getStats(){
@@ -103,6 +105,16 @@ exports.getPending = async(req, res) => {
   let uploads = await Upload.find({
     visibility: 'pending'
   }).populate('uploader').lean();
+
+  // no need to do anything crazy since this is an admin only view
+  uploads = uploads.map(function(upload){
+
+    upload.pathToUploader = `/user/${channelUrl}`
+
+    console.log(upload.pathToUploader)
+
+    return upload
+  })
 
   uploads = _.sortBy(uploads, [function(c){ return c.createdAt; }]).reverse();
 

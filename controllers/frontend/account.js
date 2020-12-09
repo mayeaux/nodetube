@@ -17,8 +17,6 @@ const EmailSubscription = require('../../models/index').EmailSubscription;
 
 const PushEndpoint = require('../../models/index').PushEndpoint;
 
-const { attachDataToUploadsAsUploads, attachDataToUploadsAsCategories } = require('../../lib/helpers/addFieldsToUploads')
-
 const RSS = require('rss');
 
 const { uploadServer, uploadUrl } = require('../../lib/helpers/settings');
@@ -56,6 +54,8 @@ const timeAgoEnglish = new javascriptTimeAgo('en-US');
 const secondsToFormattedTime = timeHelper.secondsToFormattedTime;
 
 const forgotEmailFunctionalityOn = process.env.FORGOT_PASSWORD_EMAIL_FUNCTIONALITY_ON == 'true';
+
+const { attachDataToUploadsAsUploads } = require('../../lib/helpers/addFieldsToUploads')
 
 // TODO: pull this function out
 function removeTrailingSlash(requestPath){
