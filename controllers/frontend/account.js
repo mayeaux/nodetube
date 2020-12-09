@@ -165,13 +165,15 @@ exports.subscriptions = async(req, res) => {
     }
 
     // TODO: change the way views calculated
-    const uploads = await Upload.find({
+    let uploads = await Upload.find({
       uploader: {$in: subscribedToUsers},
       visibility: 'public',
       status: 'completed'
     }).populate('uploader checkedViews')
       .skip((page * limit) - limit)
       .limit(limit).sort({createdAt: -1});
+
+    uploads = attachDataToUploadsAsUploads(uploads);
 
     res.render('account/subscriptions', {
       title: 'Subscriptions',
