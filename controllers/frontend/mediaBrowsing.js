@@ -567,6 +567,8 @@ exports.search = async(req, res) => {
 
     uploads = helpers.trimUploads(uploads, limit, skipAmount);
 
+    uploads = attachDataToUploadsAsUploads(uploads);
+
   } else {
     // error
   }
@@ -577,7 +579,6 @@ exports.search = async(req, res) => {
 
   const orderByEnglishString = getOrderByEnglishString(orderBy);
 
-  uploads = attachDataToUploadsAsUploads(uploads);
 
   return res.render('public/search', {
     title: 'Search',
