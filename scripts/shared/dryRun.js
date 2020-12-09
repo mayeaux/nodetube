@@ -4,7 +4,6 @@
 // as .env.settings and .env.private files, then just run
 // `node ./migrate_ffmpeg.js` from within this directory
 
-
 /** Has to be run from /scripts **/
 
 const mongoose = require('mongoose');
@@ -53,16 +52,15 @@ function convertYouTubeDlDateToJsDate(youtubeDlDate){
 
   // console.log(date);
 
-  return date
+  return date;
 
 }
 
 async function main(){
-  const channelUrl = 'TonyHeller'
+  const channelUrl = 'TonyHeller';
   const user = await User.findOne({
     channelUrl
-  })
-
+  });
 
   // uploader_id
   const uploads = await Upload.find({

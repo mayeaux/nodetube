@@ -18,7 +18,6 @@ const randomstring = require('randomstring');
 const mailJet = require('../../lib/emails/mailjet');
 const sendgrid = require('../../lib/emails/sendgrid');
 
-
 const mailTransports = require('../../config/nodemailer');
 // const {sendProtonMail} = require('../../config/protonmailTransport');
 
@@ -207,8 +206,6 @@ exports.postSignup = async(req, res, next) => {
 
 exports.postUpdateProfile = async(req, res, next)  => {
 
-
-
   if(!req.user && req.body.uploadToken){
     req.user = await User.findOne({ uploadToken : req.body.uploadToken });
   }
@@ -359,7 +356,7 @@ exports.postReset = async(req, res, next) => {
 
   await user.save();
 
-  const emailText = `Hello,\n\nThis is a confirmation that the password for your account ${user.email} has just been changed.\n`
+  const emailText = `Hello,\n\nThis is a confirmation that the password for your account ${user.email} has just been changed.\n`;
 
   const mailOptions = {
     userEmail: user.email,
@@ -368,17 +365,15 @@ exports.postReset = async(req, res, next) => {
     text: emailText
   };
 
-
   try {
     // const response = await sendgrid.sendEmail(mailOptions)
     // console.log(response);
 
-  } catch (err){
+  } catch(err){
     console.log(err);
   }
 
   req.flash('success', { msg: 'Success! Your password has been changed.' });
-
 
   return res.redirect('/login');
 
@@ -417,7 +412,7 @@ exports.postForgot = async(req, res, next) => {
     const emailText = `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
       Please click on the following link, or paste this into your browser to complete the process:\n\n
       http://${req.headers.host}/reset/${token}\n\n
-      If you did not request this, please ignore this email and your password will remain unchanged.\n`
+      If you did not request this, please ignore this email and your password will remain unchanged.\n`;
 
     const mailOptions = {
       userEmail: user.email,
@@ -428,11 +423,11 @@ exports.postForgot = async(req, res, next) => {
     };
 
     try {
-      const response = await sendgrid.sendEmail(mailOptions)
+      const response = await sendgrid.sendEmail(mailOptions);
 
       console.log(response);
 
-    } catch (err){
+    } catch(err){
       console.log(err);
     }
 
@@ -491,11 +486,11 @@ exports.postConfirmEmail = async(req, res, next) => {
     };
 
     try {
-      const response = await sendgrid.sendEmail(mailOptions)
+      const response = await sendgrid.sendEmail(mailOptions);
 
       console.log(response);
 
-    } catch (err){
+    } catch(err){
       console.log(err);
     }
 

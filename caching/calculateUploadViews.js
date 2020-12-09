@@ -30,7 +30,7 @@ async function calculateViewAmounts(){
   // TODO: have to build 4 arrays of ~1000
 
   const searchQuery = {
-    status: 'completed',
+    status: 'completed'
   };
 
   const selectString = 'views';

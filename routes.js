@@ -378,7 +378,6 @@ function frontendRoutes(app){
     });
   });
 
-
   // req.params
   // app.get('/:media', mediaPlayerController.getMedia)
 
@@ -386,9 +385,6 @@ function frontendRoutes(app){
   app.get('/:channel', accountFrontendController.getChannel);
 
   app.get('/:channel/:media', mediaPlayerController.getMedia);
-
-
-
 
   // anything that misses, return a 404
   app.get('*', function(req, res){

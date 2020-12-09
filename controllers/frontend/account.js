@@ -55,15 +55,15 @@ const secondsToFormattedTime = timeHelper.secondsToFormattedTime;
 
 const forgotEmailFunctionalityOn = process.env.FORGOT_PASSWORD_EMAIL_FUNCTIONALITY_ON == 'true';
 
-const { attachDataToUploadsAsUploads } = require('../../lib/helpers/addFieldsToUploads')
+const { attachDataToUploadsAsUploads } = require('../../lib/helpers/addFieldsToUploads');
 
 // TODO: pull this function out
 function removeTrailingSlash(requestPath){
-  if (requestPath.charAt(requestPath.length - 1) == '/') {
+  if(requestPath.charAt(requestPath.length - 1) == '/'){
     requestPath = requestPath.substr(0, requestPath.length - 1);
   }
 
-  return requestPath
+  return requestPath;
 }
 
 // TODO: pull this function out
@@ -271,7 +271,6 @@ exports.getChannel = async(req, res) => {
 
   let requestPath = removeTrailingSlash(req.path);
 
-
   // console.log('request path');
   // console.log(requestPath);
 
@@ -323,7 +322,7 @@ exports.getChannel = async(req, res) => {
     // if there is a query string, prepend the ? character
     let usableQueryString = '';
     if(queryString){
-      usableQueryString = '?' + queryString
+      usableQueryString = '?' + queryString;
     }
 
     // if they are trying to use shortcut method but not plus, 404 them
@@ -397,7 +396,7 @@ exports.getChannel = async(req, res) => {
     const searchQuery = {
       uploader: user._id,
       // TODO: shouldn't really be using uploadUrl anymore
-      status: 'completed',
+      status: 'completed'
 
       // $or : [ { status: 'completed' }, { uploadUrl: { $exists: true } } ]
       // uploadUrl: {$exists: true }
@@ -406,10 +405,7 @@ exports.getChannel = async(req, res) => {
 
     /** DB CALL TO GET UPLOADS **/
 
-
     const selectString = 'sensitivity visibility views processingCompletedAt fileExtension formattedDuration rating title uploader fileType thumbnailUrl ' + 'uniqueTag customThumbnailUrl thumbnails';
-
-
 
     // get the uploads for the user, that have status completed, and sort by processingCompletedAt
     let uploads = await Upload.find(searchQuery).select(selectString);
@@ -419,10 +415,7 @@ exports.getChannel = async(req, res) => {
     // console.log('uploads1 length')
     // console.log(uploads.length);
 
-
-
     // let uploads = await Upload.find(searchQuery).populate('').sort({ processingCompletedAt : -1 })
-
 
     // let uploads = await Upload.find(searchQuery).populate('').select(selectString);
 
@@ -575,11 +568,7 @@ exports.getChannel = async(req, res) => {
 
     const oneHourAmount =  1000 * 60 * 60;
 
-
-
     // const moreThanOneDayOld =  timeDiffInH > 24;
-
-
 
     // populate upload.legitViewAmount
     uploads = await Promise.all(
@@ -610,8 +599,6 @@ exports.getChannel = async(req, res) => {
       });
     }
 
-
-
     // calculate total views per page
     // TODO: ideally, this should already be populated on the user
     let totalViews = 0;
@@ -624,13 +611,11 @@ exports.getChannel = async(req, res) => {
     // TODO: you will have to add the trim at the end
     uploads = uploadFilters.trimUploads(uploads, amountToOutput, skipAmount) ;
 
-
     const userHasPlus = user.plan === 'plus';
 
     console.log('USER HAS PLUS');
 
     console.log(userHasPlus);
-
 
     uploads = attachDataToUploadsAsUploads(uploads, userHasPlus, channelUrl);
 
@@ -644,7 +629,7 @@ exports.getChannel = async(req, res) => {
 
     const joinedTimeAgo = timeAgoEnglish.format(user.createdAt);
 
-    /*** PUSH/EMAIL NOTIFICATIONS FUNCTIONALITY **/
+    /** * PUSH/EMAIL NOTIFICATIONS FUNCTIONALITY **/
     let existingPushSub;
     let existingEmailSub;
     let pushSubscriptionSearchQuery;
@@ -696,7 +681,6 @@ exports.getChannel = async(req, res) => {
 
     // console.log('viewer user confirmed email:');
     // console.log(viewingUserHasConfirmedEmail);
-
 
     res.render('account/channel', {
       channel : user,

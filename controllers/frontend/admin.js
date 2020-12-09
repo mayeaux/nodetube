@@ -11,7 +11,7 @@ const pagination = require('../../lib/helpers/pagination');
 
 const { uploadServer} = require('../../lib/helpers/settings');
 
-const { attachDataToUploadsAsUploads } = require('../../lib/helpers/addFieldsToUploads')
+const { attachDataToUploadsAsUploads } = require('../../lib/helpers/addFieldsToUploads');
 
 let viewStats, uploadStats, userStats, reactStats, subscriptionStats, searchStats, commentStats, siteVisitStats;
 
@@ -109,12 +109,12 @@ exports.getPending = async(req, res) => {
   // no need to do anything crazy since this is an admin only view
   uploads = uploads.map(function(upload){
 
-    upload.pathToUploader = `/user/${channelUrl}`
+    upload.pathToUploader = `/user/${channelUrl}`;
 
-    console.log(upload.pathToUploader)
+    console.log(upload.pathToUploader);
 
-    return upload
-  })
+    return upload;
+  });
 
   uploads = _.sortBy(uploads, [function(c){ return c.createdAt; }]).reverse();
 

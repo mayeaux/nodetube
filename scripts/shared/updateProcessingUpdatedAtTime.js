@@ -50,16 +50,15 @@ function convertYouTubeDlDateToJsDate(youtubeDlDate){
 
   // console.log(date);
 
-  return date
+  return date;
 
 }
 
 async function main(){
-  const channelUrl = 'TonyHeller'
+  const channelUrl = 'TonyHeller';
   const user = await User.findOne({
     channelUrl
-  })
-
+  });
 
   // uploader_id
   const uploads = await Upload.find({

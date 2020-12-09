@@ -13,7 +13,7 @@ const uploadServer = uploadHelpers.uploadServer;
 const getFromCache = require('../../caching/getFromCache');
 const uploadFilters = require('../../lib/mediaBrowsing/helpers');
 
-const { attachDataToUploadsAsUploads, attachDataToUploadsAsCategories } = require('../../lib/helpers/addFieldsToUploads')
+const { attachDataToUploadsAsUploads, attachDataToUploadsAsCategories } = require('../../lib/helpers/addFieldsToUploads');
 
 const { getUploadDuration } = require('../../lib/mediaBrowsing/helpers');
 
@@ -44,11 +44,11 @@ const pageLimit = 42;
 
 // TODO: pull out this function
 function removeTrailingSlash(requestPath){
-  if (requestPath.charAt(requestPath.length - 1) == '/') {
+  if(requestPath.charAt(requestPath.length - 1) == '/'){
     requestPath = requestPath.substr(0, requestPath.length - 1);
   }
 
-  return requestPath
+  return requestPath;
 }
 
 // TODO: pull this function out
@@ -141,15 +141,11 @@ exports.recentUploads = async(req, res) => {
     // TODO: very confusing, should pull out into two funcs or do anything else
     let uploads = await getFromCache.getRecentUploads(limit, skipAmount, mediaType, filter, category, subcategory);
 
-
-      if(uploads && !uploads.map){
-        uploads = attachDataToUploadsAsCategories(uploads)
-      } else {
-        uploads = attachDataToUploadsAsUploads(uploads)
-      }
-
-
-
+    if(uploads && !uploads.map){
+      uploads = attachDataToUploadsAsCategories(uploads);
+    } else {
+      uploads = attachDataToUploadsAsUploads(uploads);
+    }
 
     // if(category && category !== 'overview'){
     //   for(const upload of uploads){
@@ -339,9 +335,6 @@ exports.popularUploads = async(req, res) => {
     //
     // console.log('getting popular uploads');
 
-
-
-
     if(uploads && uploads.length){
       for(const upload in uploads){
 
@@ -350,17 +343,14 @@ exports.popularUploads = async(req, res) => {
       }
     }
 
-
-
-
     let newUploads = {};
     if(uploads && !uploads.map){
 
-      uploads = attachDataToUploadsAsCategories(uploads)
+      uploads = attachDataToUploadsAsCategories(uploads);
 
     } else {
       // if it's just a bunch of uploads, aka not the ugly categories thing
-      uploads = attachDataToUploadsAsUploads(uploads)
+      uploads = attachDataToUploadsAsUploads(uploads);
     }
 
     // console.log(uploads);
@@ -576,7 +566,6 @@ exports.search = async(req, res) => {
   const media = mediaType || 'all';
 
   const orderByEnglishString = getOrderByEnglishString(orderBy);
-
 
   return res.render('public/search', {
     title: 'Search',

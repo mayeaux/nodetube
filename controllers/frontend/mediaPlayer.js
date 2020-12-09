@@ -78,7 +78,7 @@ exports.getMedia = async(req, res) => {
   // to access the vanity url version of this url
   let requestPath = req.path;
 
-  if (requestPath.charAt(requestPath.length - 1) == '/') {
+  if(requestPath.charAt(requestPath.length - 1) == '/'){
     requestPath = requestPath.substr(0, requestPath.length - 1);
   }
 
@@ -95,7 +95,6 @@ exports.getMedia = async(req, res) => {
     }).populate('receivedSubscriptions').lean()
       .exec();
 
-
     let upload = await Upload.findOne({
       uniqueTag: media
     }).populate({
@@ -108,7 +107,7 @@ exports.getMedia = async(req, res) => {
     if(!user && upload){
       user = await User.findOne({
         _id : upload.uploader
-      })
+      });
     }
 
     // indicates a 'shortened' media player url, if not plus spit out
@@ -122,11 +121,11 @@ exports.getMedia = async(req, res) => {
     // TODO: make sure to add query params here
     // if it's three but you're plus, then move to shortened url
     if(amountOfSlashes === 3 && user.plan == 'plus'){
-      return res.redirect(`/${user.channelUrl}/${upload.uniqueTag}`)
+      return res.redirect(`/${user.channelUrl}/${upload.uniqueTag}`);
     }
 
     // TODO: pull this thing out
-    /*** PUSH NOTIFICATION SECTION **/
+    /** * PUSH NOTIFICATION SECTION **/
     let existingPushSub;
     let existingEmailSub;
     let pushSubscriptionSearchQuery;
@@ -153,7 +152,7 @@ exports.getMedia = async(req, res) => {
     //
     // console.log("alreadySubscribedForEmails: ")
     // console.log(alreadySubscribedForEmails);
-    /*** PUSH NOTIFICATION SECTION **/
+    /** * PUSH NOTIFICATION SECTION **/
 
     // even though this is named 'hide upload' it should really be named return 404
     // because it will return true even if there is no upload
@@ -297,7 +296,6 @@ exports.getMedia = async(req, res) => {
     }
 
     const uploadedAtTime = moment(upload.processingCompletedAt).format('MMMM Do YYYY');
-
 
     res.render('media', {
       title: upload.title,

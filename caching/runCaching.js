@@ -56,7 +56,6 @@ const cachePopularUploads = require('./cachePopularUploads'); // index and daily
 
 const calculateUploadViews = require('./calculateUploadViews'); // index and daily stats
 
-
 // const cacheRecentUploads = require('./cacheRecentAndPopularUploads');
 
 async function cacheOnlyRecentUploads(){
@@ -83,7 +82,6 @@ async function cachePopularDailyStatsAndIndex(){
   }
 }
 
-
 // parse int because it's a string comming from dotenv
 let cacheRecentIntervalInMinutes = parseInt(process.env.CACHE_RECENT_INTERVAL_IN_MINUTES) || 2.5;
 
@@ -91,14 +89,11 @@ const cacheRecentIntervalInMs = cacheRecentIntervalInMinutes * ( 1000 * 60 );
 
 console.log(`CACHE RECENT INTERVAL IN MINUTES: ${cacheRecentIntervalInMinutes}`);
 
-
 let cacheIntervalInMinutes = parseInt(process.env.CACHE_INTERVAL_IN_MINUTES) || 5;
 
 const cacheIntervalInMs = cacheIntervalInMinutes * ( 1000 * 60 );
 
 console.log(`CACHE POPULAR, DAILY STATS AND INDEXES INTERVAL IN MINUTES: ${cacheIntervalInMinutes} \n`);
-
-
 
 async function main(){
 
@@ -115,13 +110,11 @@ async function main(){
 
   await calculateUploadViews();
 
-
 }
 
-main()
+main();
 
 // calculateUploadViews()
-
 
 // setInterval(async function(){
 //   await cacheRecentUploads();

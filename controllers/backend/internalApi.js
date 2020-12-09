@@ -336,7 +336,7 @@ exports.deleteUserEmail = async(req, res, next) => {
     await req.user.save();
 
     return res.send('success');
-  } catch (err){
+  } catch(err){
 
     console.log(err);
     res.status(500);

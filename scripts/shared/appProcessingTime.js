@@ -38,11 +38,10 @@ const Upload = require('../../models/index').Upload;
 const User = require('../../models/index').User;
 
 async function main(){
-  const channelUrl = 'TonyHeller'
+  const channelUrl = 'TonyHeller';
   const user = await User.findOne({
     channelUrl
-  })
-
+  });
 
   // uploader_id
   const uploads = await Upload.find({
