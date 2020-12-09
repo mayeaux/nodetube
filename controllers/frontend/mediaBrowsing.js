@@ -192,8 +192,6 @@ exports.recentUploads = async(req, res) => {
  */
 exports.popularUploads = async(req, res) => {
 
-  let requestPath = removeTrailingSlash(req.path);
-
   // console.log('getting popular uploads');
 
   const mediaBrowsingType = 'popular';

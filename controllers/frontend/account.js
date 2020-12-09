@@ -724,8 +724,7 @@ exports.getChannel = async(req, res) => {
       alreadySubscribedForEmails,
       viewingUserHasConfirmedEmail,
       amountOfEmailSubscriptions,
-      amountOfPushSubscriptions,
-      requestPath
+      amountOfPushSubscriptions
     });
 
   } catch(err){

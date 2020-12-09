@@ -74,25 +74,15 @@ function getFormattedFileSize(upload){
  */
 exports.getMedia = async(req, res) => {
 
-  function trimTrailingSlash(){
-
-  }
-
+  // get the amount of slashes, to determine if the user is allowed
+  // to access the vanity url version of this url
   let requestPath = req.path;
 
   if (requestPath.charAt(requestPath.length - 1) == '/') {
     requestPath = requestPath.substr(0, requestPath.length - 1);
   }
 
-  // console.log('request path');
-  // console.log(requestPath);
-
-  // console.log(requestPath);
-
   const amountOfSlashes = requestPath.split('/').length - 1;
-
-  // console.log('request path');
-  // console.log(requestPath);
 
   try {
 
