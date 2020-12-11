@@ -506,11 +506,11 @@ block content
                 if user
                     div(style="margin-top:12px")
                         // TODO: this should create a push subsciption, and it will also send a query to see if it should create a new service worker
-                        div(style="display:inline-block")
+                        div.pushSubscriptionsDiv(style="display:inline-block")
                             h2.pushNotificationIcon(style="display:inline")
                                 i.fas.fa-bell(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:0px;color:white;")
                             p.pushSubscriptions(style="margin-left:1px") #{amountOfPushSubscriptions}
-                        div(style="display:inline-block")
+                        div.emailSubscriptionsDiv(style="display:inline-block")
                             h2.emailNotificationIcon(style="display:inline")
                                 i.fas.fa-envelope(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:10px;color:white;")
                             p.emailSubscriptions(style="margin-left:10px") #{amountOfEmailSubscriptions}
@@ -888,6 +888,7 @@ block extra_js
   if user
         script.
 
+            // EMAIL SUBSCRIPTION
             $(document).ready(function(){
 
               let amountOfEmailSubscriptions = Number('#{amountOfEmailSubscriptions}');
@@ -973,8 +974,8 @@ block extra_js
 
               var alreadyHavePushNotifsOn = '#{alreadyHavePushNotifsOn}' == 'true'
 
-              console.log('readl');
-              console.log(alreadyHavePushNotifsOn);
+              // console.log('ready');
+              // console.log(alreadyHavePushNotifsOn);
 
               if (alreadyHavePushNotifsOn) {
                 $('.pushNotificationIcon i').css('color', 'white')
@@ -982,8 +983,10 @@ block extra_js
                   $('.pushNotificationIcon i').css('color', 'gray')
               }
 
+              // if the user's device doesn't have support for service worker and push manager
+              // note: Safari has ServiceWorker but not PushManager
               if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-                $('.pushNotificationIcon i').hide()
+                $('.pushSubscriptionsDiv').hide()
               }
 
 
