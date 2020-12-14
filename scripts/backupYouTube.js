@@ -8,9 +8,7 @@ const webp = require('webp-converter');
 const youtubedl = require('youtube-dl');
 const spawn = require('child_process').spawn;
 
-
 const redisClient = require('../config/redis');
-
 
 const ffmpegHelper = require('../lib/uploading/ffmpeg');
 const timeHelper = require('../lib/helpers/time');
@@ -18,9 +16,7 @@ const randomstring = require('randomstring');
 const Upload = require('../models/index').Upload;
 const User = require('../models/index').User;
 
-
 const URLSearchParams = require('url').URLSearchParams;
-
 
 const requestModule = require('request');
 const request = Promise.promisifyAll(requestModule);
@@ -54,7 +50,6 @@ mongoose.connect(mongoUri, {
   useNewUrlParser: true
 });
 
-
 mongoose.connection.on('error', (err) => {
   console.error(err);
   console.log('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'));
@@ -87,10 +82,9 @@ function convertYouTubeDlDateToJsDate(youtubeDlDate){
 
   // console.log(date);
 
-  return date
+  return date;
 
 }
-
 
 // actually do channel page
 async function checkIfUploadedByTitleAndUploadUrl(uploaderId, title, uploadUrl){
@@ -105,7 +99,6 @@ async function checkIfUploadedByTitleAndUploadUrl(uploaderId, title, uploadUrl){
 
   // console.log(alreadyExistsByTitle)
 
-
   const alreadyExistsByWebpageUrl = await Upload.findOne({
     uploader: uploaderId,
     'youTubeDLData.webpage_url': uploadUrl,
@@ -119,12 +112,8 @@ async function checkIfUploadedByTitleAndUploadUrl(uploaderId, title, uploadUrl){
     alreadyUploaded = true;
   }
 
-  return alreadyUploaded
+  return alreadyUploaded;
 }
-
-
-
-
 
 /** download and save thumbnails locally **/
 async function downloadAndSaveThumbnails(thumbnailUrl, uniqueTag, channelUrl){
@@ -158,39 +147,36 @@ async function downloadAndSaveThumbnails(thumbnailUrl, uniqueTag, channelUrl){
     const newDestination = `uploads/${channelUrl}/${uniqueTag}.png`;
 
     // convert to png
-    const result = await webp.dwebp(thumbnailDestination, newDestination, "-o");
+    const result = await webp.dwebp(thumbnailDestination, newDestination, '-o');
 
     await fs.remove(thumbnailDestination);
 
     // TODO: have to delete thumbnail thing
 
     // console.log(result);
-    console.log('ITS A WEBP')
+    console.log('ITS A WEBP');
 
-    extension = 'png'
+    extension = 'png';
   } else {
 
     const newDestination = `uploads/${channelUrl}/${uniqueTag}.${realExtension}`;
 
     await fs.move(thumbnailDestination, newDestination);
 
-
-    extension = realExtension
+    extension = realExtension;
   }
 
   // return the extension
 
-  console.log(`THUMBNAILS SAVED LOCALLY`);
+  console.log('THUMBNAILS SAVED LOCALLY');
 
-  console.log(uniqueTag)
+  console.log(uniqueTag);
 
-  return extension
+  return extension;
 
-};
+}
 
-
-
-function last(array) {
+function last(array){
   return array[array.length - 1];
 }
 
@@ -198,11 +184,11 @@ function last(array) {
 // channel url to get the user and then match across titles
 // youtube link
 async function downloadVideoForUser(channelUrl, youtubeLink){
-  console.log(channelUrl, youtubeLink)
+  console.log(channelUrl, youtubeLink);
 
   const isYouTubeVideo = youtubeLink.match('youtube.com/watch');
 
-  if (isYouTubeVideo) {
+  if(isYouTubeVideo){
     console.log(isYouTubeVideo);
 
     console.log(youtubeLink);
@@ -220,7 +206,6 @@ async function downloadVideoForUser(channelUrl, youtubeLink){
 
   console.log(youtubeLink);
 
-
   // return
 
   try {
@@ -228,7 +213,7 @@ async function downloadVideoForUser(channelUrl, youtubeLink){
     let isBrighteonDownload = false;
 
     let options;
-    if (isBrighteonDownload) {
+    if(isBrighteonDownload){
       options = ['-f bestvideo'];
     } else {
       options = ['-j', '--flat-playlist', '--dump-single-json'];
@@ -236,8 +221,7 @@ async function downloadVideoForUser(channelUrl, youtubeLink){
 
     let info = await youtubeDlInfoAsync(youtubeLink, options);
 
-    //TODO: add check for titles here
-
+    // TODO: add check for titles here
 
     // TODO: I don't really understand why this is happening
     // but this API is sending two objects which seem virtually identical
@@ -262,10 +246,7 @@ async function downloadVideoForUser(channelUrl, youtubeLink){
         const title = upload.title;
         const id = upload.id;
 
-
-
         const uploadUrl = 'https://www.youtube.com/watch?v=' + id;
-
 
         const user = await User.findOne({ channelUrl });
 
@@ -273,26 +254,23 @@ async function downloadVideoForUser(channelUrl, youtubeLink){
 
         // const checkAgainstTitle = await checkTitle();
 
-        const alreadyUploaded = await checkIfUploadedByTitleAndUploadUrl(uploaderId, title, uploadUrl)
+        const alreadyUploaded = await checkIfUploadedByTitleAndUploadUrl(uploaderId, title, uploadUrl);
 
         if(!alreadyUploaded){
 
           console.log('Still need to download ' + title);
 
-          await Promise.delay(1000 * 8)
+          await Promise.delay(1000 * 8);
 
           // downloadVideoForUser(channelUrl, youtubeLink){
 
           // channelUrl to know who to save it for,
-          await downloadVideoForUser(channelUrl, uploadUrl)
+          await downloadVideoForUser(channelUrl, uploadUrl);
         } else {
           console.log('Already downloaded ' + title);
 
-          await Promise.delay(1000 * 5)
+          await Promise.delay(1000 * 5);
         }
-
-
-
 
         //   need2know uploaderId
         //
@@ -300,7 +278,7 @@ async function downloadVideoForUser(channelUrl, youtubeLink){
         //   const await downloadToInstance()
         // }
       }
-      return 'playlist'
+      return'playlist';
     }
 
     // return
@@ -308,10 +286,6 @@ async function downloadVideoForUser(channelUrl, youtubeLink){
     // console.log(info);
 
     info = info[0];
-
-
-
-
 
     // console.log(info);
 
@@ -335,13 +309,9 @@ async function downloadVideoForUser(channelUrl, youtubeLink){
 
     const webpageUrl = videoData.webpage_url;
 
-
     const fileSize = videoData.size;
 
     // var result = yourstr.replace(/^(?:00:)?0?/, '');
-
-
-
 
     // console.log(info);
 
@@ -352,8 +322,6 @@ async function downloadVideoForUser(channelUrl, youtubeLink){
     if(info.thumbnails){
       var lastThumbnail = last(info.thumbnails);
     }
-
-
 
     const uploadingUser = await User.findOne({
       channelUrl
@@ -367,7 +335,7 @@ async function downloadVideoForUser(channelUrl, youtubeLink){
       console.log('already uploaded');
       console.log(alreadyUploaded);
 
-      return {
+      return{
         uniqueTag: 'alreadyUploaded'
       };
     } else {
@@ -378,13 +346,13 @@ async function downloadVideoForUser(channelUrl, youtubeLink){
 
     const uniqueTag = randomstring.generate(7);
 
-    console.log(aspectRatio, title)
+    console.log(aspectRatio, title);
 
     // prepend some youtubedl stuff into the description
     let descriptionPrepend = `Originally uploaded to ${info.webpage_url}`;
 
     if(info.uploader){
-      descriptionPrepend = descriptionPrepend + ` by ${info.uploader}`
+      descriptionPrepend = descriptionPrepend + ` by ${info.uploader}`;
     }
 
     descriptionPrepend = descriptionPrepend + '\n\n';
@@ -392,14 +360,14 @@ async function downloadVideoForUser(channelUrl, youtubeLink){
     // TODO: bugfix if info.description is undefined
     let description;
     if(info.description){
-      description = descriptionPrepend + info.description
+      description = descriptionPrepend + info.description;
     } else {
-      description = descriptionPrepend
+      description = descriptionPrepend;
     }
 
     const youtubeDlUploadDate = info.upload_date;
 
-    const dateToUseForCompletedProcessing = convertYouTubeDlDateToJsDate(youtubeDlUploadDate)
+    const dateToUseForCompletedProcessing = convertYouTubeDlDateToJsDate(youtubeDlUploadDate);
 
     // const description = descriptionPrepend + info.description;
 
@@ -420,7 +388,7 @@ async function downloadVideoForUser(channelUrl, youtubeLink){
         height,
         width,
         aspectRatio
-      },
+      }
 
       /** note : this is for dev purposes **/
       // uploadServer: 'http://localhost:3000/uploads'
@@ -438,7 +406,6 @@ async function downloadVideoForUser(channelUrl, youtubeLink){
 
     redisClient.setAsync(`${uniqueTag}uploadProgress`, 'Your imported upload is beginning...');
 
-
     if(lastThumbnail){
       // turning off
       const lastThumbnailUrl = lastThumbnail.url;
@@ -450,7 +417,7 @@ async function downloadVideoForUser(channelUrl, youtubeLink){
 
         const downloadResponse = await downloadAndSaveThumbnails(lastThumbnailUrl, uniqueTag, channelUrl);
 
-        console.log(downloadResponse + ' DOWNLOAD RESPONSE')
+        console.log(downloadResponse + ' DOWNLOAD RESPONSE');
 
         upload.thumbnails.generated = `${uniqueTag}.${downloadResponse}`;
 
@@ -467,68 +434,70 @@ async function downloadVideoForUser(channelUrl, youtubeLink){
 
     const fileInDirectory = directory;
 
-    let arguments = [];
+    let commandLineArguments = [];
 
     // set the url for ytdl
-    arguments.push(youtubeLink);
+    commandLineArguments.push(youtubeLink);
 
     // verbose output
-    arguments.push('-v');
+    commandLineArguments.push('-v');
 
-    // arguments.push('-f', 'bestvideo+bestaudio/best');
+    // commandLineArguments.push('-f', 'bestvideo+bestaudio/best');
 
-    arguments.push('--add-metadata');
+    commandLineArguments.push('--add-metadata');
 
-    arguments.push('--ffmpeg-location');
+    commandLineArguments.push('--ffmpeg-location');
 
-    arguments.push(ffmpegPath);
+    commandLineArguments.push(ffmpegPath);
 
-    arguments.push('--no-mtime');
+    commandLineArguments.push('--no-mtime');
 
-    arguments.push('--ignore-errors');
+    commandLineArguments.push('--ignore-errors');
 
     // select download as audio or video
 
     // download as mp4 if it's youtube (tired of reconverting .flv files)
     const isYouTubeDownload = youtubeLink.match('youtube');
-    if(1 == 1){
+
+    const aConditional = true;
+
+    if(aConditional){
       console.log('downloading from youtube');
 
-      arguments.push('-f');
+      commandLineArguments.push('-f');
 
-      arguments.push('best[tbr<4400][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4][tbr<4400]/best[ext=mp4]');
+      commandLineArguments.push('best[tbr<4400][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4][tbr<4400]/best[ext=mp4]');
     }
 
-    // arguments.push('best');
+    // commandLineArguments.push('best');
 
-    const fileExtension = `%(ext)s`;
+    const fileExtension = '%(ext)s';
 
     const filePath = '.';
 
     // let saveToFolder = `${filePath}/%(title)s.${fileExtension}`;
 
     // save to videos directory
-    arguments.push('-o', directory);
+    commandLineArguments.push('-o', directory);
 
-    // console.log(arguments);
+    // console.log(commandLineArguments);
 
     // deleted for now since it requires ffmpeg
     // download as audio if needed
     // if(downloadAsAudio){
     //   console.log('Download as audio');
-    //   arguments.push('-x');
+    //   commandLineArguments.push('-x');
     // }
 
-    // console.log(arguments);
-
+    // console.log(commandLineArguments);
 
     // create child execprocess with youtube-dl
-    const ls = spawn(youtubeBinaryFilePath, arguments);
+    const ls = spawn(youtubeBinaryFilePath, commandLineArguments);
 
     // when youtube-dl gives more data
     ls.stdout.on('data', data => {
 
-      data = data.toString()
+      data = data.toString();
 
       // dont include debug because it may include paths you don't want visible
       if(!data.match('debug')){
@@ -539,11 +508,8 @@ async function downloadVideoForUser(channelUrl, youtubeLink){
       }
     });
 
-
-
-
     // when the process ends, mark it as completed
-    ls.on('close', async (code) => {
+    ls.on('close', async(code) => {
       console.log(typeof code);
 
       console.log(`child process exited with code ${code}`);
@@ -557,23 +523,19 @@ async function downloadVideoForUser(channelUrl, youtubeLink){
 
         upload.durationInSeconds = Math.round(response.format.duration);
 
-
         let bitrateInKbps = response.format.bit_rate / 1000;
 
         upload.bitrateInKbps = bitrateInKbps;
 
         upload.fileSize = response.format.size;
 
-
         upload.formattedDuration = timeHelper.secondsToFormattedTime(Math.round(response.format.duration));
 
-        //TODO: add bitrate
+        // TODO: add bitrate
         // in fact, I can't add bitrate here, because I'm not sure what format youtube-dl will select
         // I will have to ffprobe the file once it's done
 
         // honestly fileSize doesn't really work either so that also needs to be done with ffprobe
-
-
 
         // console.log(response);
 
@@ -590,7 +552,7 @@ async function downloadVideoForUser(channelUrl, youtubeLink){
         // channelUrl
 
         if(!lastThumbnail){
-          const response = await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, upload, channelUrl)
+          const response = await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, upload, channelUrl);
 
           console.log(response);
         }
@@ -598,10 +560,9 @@ async function downloadVideoForUser(channelUrl, youtubeLink){
       }
     });
 
-    return {
+    return{
       uniqueTag
     };
-
 
     // console.log(info.formats);
     // console.log('Download started')
@@ -613,12 +574,12 @@ async function downloadVideoForUser(channelUrl, youtubeLink){
 
     // video.pipe(fs.createWriteStream('myvideo.mp4'))
 
-  } catch (err){
+  } catch(err){
 
     console.log('importer function erroring');
     console.log(err);
 
-    return {
+    return{
       uniqueTag: 'error'
     };
 
@@ -629,13 +590,13 @@ async function downloadVideoForUser(channelUrl, youtubeLink){
 
 }
 
-function youtubeDlInfoAsync(url, options) {
-  return new Promise(function(resolve, reject) {
-    youtubedl.getInfo(url, options, function(err, data) {
-      if (err !== null) reject(err);
+function youtubeDlInfoAsync(url, options){
+  return new Promise(function(resolve, reject){
+    youtubedl.getInfo(url, options, function(err, data){
+      if(err !== null) reject(err);
       else resolve(data);
     });
   });
 }
 
-downloadVideoForUser('TonyHeller', 'https://www.youtube.com/c/TonyHeller/videos?view=0&sort=dd&shelf_id=1\n')
+// downloadVideoForUser('TonyHeller', 'https://www.youtube.com/c/TonyHeller/videos?view=0&sort=dd&shelf_id=1\n');

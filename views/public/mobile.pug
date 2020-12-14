@@ -1,0 +1,183 @@
+extends ../layout
+
+block content
+    style.
+        .thankYouFollower {
+            max-width: 500px;
+            margin: 0 auto;
+            margin-top: 32px;
+        }
+
+        .model-box {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-top: 66.6%; /* This is your aspect ratio */
+            max-height:100vh;
+        }
+
+        .model {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 100%
+        }
+
+        .embed-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+        }
+
+        .embed-container iframe, .embed-container object, .embed-container embed {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+    br
+    div.center-block.text-center.col-sm-12.pageContainer(style="overflow-x: hidden;margin-top:-21px;")
+
+        div.stillToDonate
+
+            h1.fw(style="margin-bottom:21px") NewTube Needs Your Help!
+
+            //iframe(width='560', height='315', src='https://newtube.app/embed/7KH5xau', frameborder='0', allowfullscreen='')
+
+            .embed-container
+                iframe(src='https://newtube.app/embed/7KH5xau/' style='border:0')
+
+
+
+            p.videoHeader.fw(style="font-size:24px;margin-top:11px;") How To Use NodeTube
+
+            p.fw(style="font-size:18px") Popular Page, Recent Page, Media Page
+
+            p.fw(style="font-size:18px") Uploading Videos/Audio/Images, Livestreams, Other Features
+
+
+            h5.fw(style="font-size:18px") The donation is done securely through Stripe.
+            h5.fw(style="font-size:18px") NewTube never sees your card info, it goes directly to Stripe through their technology
+            br
+            h5.fw(style="font-size:22px;margin-bottom:34px;") Thank you for any and all donations, your support is the backbone of this project!
+
+            h3.fw Donation Amount (USD):
+            h3.fw
+                form
+                    input.donationAmount.decimal(type="number" style="width:120px;height:36px;border-radius:4px;color:black;" min='5')
+                    br
+                    button#customButton.btn-btn-md.btn-success(type="submit" style="margin-top:2px;border-radius:4px;") Donate
+
+            br
+            br
+            h4.fw(style="font-size:22px") You can also donate through
+                a(href="https://newtube.app/paypal" style="margin-left:6px") PayPal
+
+
+        div.thankYouDiv(style="display:none;margin-top:100px;overflow:hidden;")
+            h1.fw Thank you for your support, I highly appreciate it!
+
+            h3.fw.thankYouFollower With these funds I can continue to expand the project and deliver a great service for humanity, thanks for contributing to that.
+
+
+
+    script(src='https://checkout.stripe.com/checkout.js')
+
+    script.
+
+      function hasDecimalPlace(value, x) {
+        var pointIndex = value.indexOf('.');
+        return pointIndex >= 0 && pointIndex < value.length - x;
+      }
+
+      $('.decimal').keypress(function (e) {
+        var character = String.fromCharCode(e.keyCode)
+        var newValue = this.value + character;
+        if (isNaN(newValue) || hasDecimalPlace(newValue, 3)) {
+          e.preventDefault();
+          return false;
+        }
+      });
+
+      var stripeToken = '#{stripeToken}'
+
+      var csrf = '#{_csrf}'
+
+      /** CONFIGURE STRIPE HANDLER **/
+
+        // accepts a callback that is run when a token is received
+      var handler = StripeCheckout.configure({
+          key: stripeToken,
+          image: 'https://newtube.app/images/full_size_logo.png',
+          locale: 'auto',
+          // bitcoin: true,
+          token: function (token) {
+
+            console.log(token);
+            // TODO: have to do some intermediary frontend thing (Your transaction is processing, waiting to hear back from Stripe...)
+
+            // TOOD: not secure, let's see what's on the token
+            const amountInDollars = $('.donationAmount')[0].value;
+
+
+            var data = {
+              _csrf: csrf,
+              token,
+              amount: amountInDollars
+            }
+
+
+            $.ajax({
+              type: 'POST',
+              // what is at this backend?
+              url: `/api/purchase/donation`,
+              data,
+              success: function (data) {
+                if (data == 'success') {
+                  // window.location = "/account?to=nt-plus";
+                  $('.thankYouDiv').show()
+                  $('.stillToDonate').hide()
+
+                } else {
+                  swal("Something didn't work, please contact NodeTube at ceo@nodetube.live or via the widget in the bottom right corner")
+                }
+                console.log(data);
+              },
+              error: function (err) {
+                console.log(err);
+              }
+            });
+          }
+        });
+
+      // CLICK HANDLER
+      $('#customButton').click(function (e) {
+        e.preventDefault();
+
+        const amount = $('.donationAmount')[0].value;
+
+        console.log(amount);
+
+      // const userEmail = '#{user && user.email}';
+        // TODO: check if it's a valid email, since we're using a dropin atm
+
+        // Open Checkout with further options:
+        handler.open({
+          name: 'NewTube',
+          description: 'Donation Of $' + amount +  ' To NewTube',
+          amount: amount * 100,
+          allowRememberMe: false
+          // email: "customer@email.com"
+        });
+      });
+      // Close Checkout on page navigation:
+      window.addEventListener('popstate', function () {
+        handler.close();
+      });

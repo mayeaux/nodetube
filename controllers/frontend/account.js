@@ -309,8 +309,16 @@ exports.getChannel = async(req, res) => {
     // 404 if no user found
     if(!user){
       res.status(404);
+
+      let notFoundItem;
+      if(amountOfSlashes == 1){
+        notFoundItem = 'content';
+      } else {
+        notFoundItem = 'user';
+      }
+
       return res.render('error/404', {
-        item: 'user',
+        item: notFoundItem,
         title: 'Not Found'
       });
     }

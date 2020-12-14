@@ -154,7 +154,7 @@ exports.random = async(req, res) => {
   ]);
 
   upload = upload[0];
-  
+
   const user = await User.findOne({
     _id : upload.uploader
   });
@@ -284,6 +284,17 @@ exports.getPlus = async(req, res) => {
   res.render('public/plus', {
     title: 'Plus',
     dontShowOptionalHeader : true
+  });
+};
+
+/**
+ * GET /mobile
+ * Mobile page
+ */
+exports.getMobile = async(req, res) => {
+
+  res.render('public/mobile', {
+    title: 'Mobile'
   });
 };
 
