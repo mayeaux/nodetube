@@ -29,26 +29,20 @@ script.
 
   // this works properly because it runs right when the video has started
   v.addEventListener("playing", async function (event) {
-
-    if (lastWatchedTime) {
-      // console.log('RUNNING LAST WATCHED');
-
-      if(!movedForward ){
-        player.currentTime = Number(lastWatchedTime)
-
-        // save in memory that we've skipped forward
-        movedForward = true;
-      } else {
-        console.log('already moved!');
-      }
-      console.log('DONE RUNNING!');
-
-    }
+    // the way this is setup, 't' will override lastWatchedTime
 
     // skip forward for the 't' thing
     if (amountOfSecondsToSkipForwardTo && !movedForward) {
       player.currentTime = Number(amountOfSecondsToSkipForwardTo)
 
+      movedForward = true;
+    }
+
+    // if last watched time, move it forward
+    if (lastWatchedTime && !movedForward) {
+      player.currentTime = Number(lastWatchedTime)
+
+      // save in memory that we've skipped forward
       movedForward = true;
     }
 
