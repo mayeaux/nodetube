@@ -10,8 +10,6 @@ script.
     return decodeURIComponent(results[2].replace(/\+/g, " "));
   }
 
-
-
   /** functionality to skip forward automatically based on lastWatchedTime **/
   var lastWatchedTime = '#{lastWatchedTime && lastWatchedTime.secondsWatched}';
 
@@ -25,9 +23,12 @@ script.
 
   var movedForward = false;
 
+  const amountOfSecondsToSkipForwardTo = window.getParameterByName('t');
+
+  var dontAutoplayBasedOnUpload = window.getParameterByName('u') == 't';
+
   // this works properly because it runs right when the video has started
   v.addEventListener("playing", async function (event) {
-
 
     if (lastWatchedTime) {
       // console.log('RUNNING LAST WATCHED');
@@ -43,6 +44,15 @@ script.
       console.log('DONE RUNNING!');
 
     }
+
+    // skip forward for the 't' thing
+    if (amountOfSecondsToSkipForwardTo && !movedForward) {
+      player.currentTime = Number(amountOfSecondsToSkipForwardTo)
+
+      movedForward = true;
+    }
+
+
   }, true);
 
   // TODO: set the lastWatchedTime to 0 when you finish a video/audio
@@ -114,6 +124,7 @@ script.
     var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
 
     // only hide button if it's on desktop
+    // once you start playing a video on desktop, hide the play button so when you pause it's not there anymore
     if(width > 900){
       $('button.plyr__control.plyr__control--overlaid').css('display', 'none');
     }
