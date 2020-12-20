@@ -1,5 +1,15 @@
 script.
 
+  function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+  }
+
 
 
   /** functionality to skip forward automatically based on lastWatchedTime **/
@@ -20,7 +30,7 @@ script.
 
 
     if (lastWatchedTime) {
-      console.log('RUNNING LASST WATCHED');
+      // console.log('RUNNING LAST WATCHED');
 
       if(!movedForward ){
         player.currentTime = Number(lastWatchedTime)
@@ -37,37 +47,7 @@ script.
 
   // TODO: set the lastWatchedTime to 0 when you finish a video/audio
 
-
-
-
-
-
-  $('.no-user-comment-form').on('release click', function(event){
-    event.preventDefault();
-    // swal("Please register to leave a comment")
-
-    return swal({
-      text: "Please register to leave a comment",
-      type: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Sign Up Now'
-    }).then(function (result) {
-      if (result.value) {
-        window.location.href = "/signup";
-      }
-    })
-
-  })
-
-  function getParameterByName(name, url) {
-    if (!url) url = window.location.href;
-    name = name.replace(/[\[\]]/g, "\\$&");
-    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-      results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, " "));
-  }
+  /** functionality to skip forward automatically based on lastWatchedTime **/
 
   var sensitive = #{upload.sensitive}
 
@@ -82,22 +62,23 @@ script.
 
   console.log('should autoplay ' + autoplay)
 
-  // if user had just uploaded it
-  var dontAutoplayBasedOnUpload = "t" == window.getParameterByName("u");
+  /** Freshly uploaded functionality **/
 
+  // if user had just uploaded it
+  // u=t is uploaded=true,
+  var dontAutoplayBasedOnUpload = "t" == window.getParameterByName("u");
 
   var viewsAmount = '#{upload.views}';
 
   viewsAmount = Number(viewsAmount);
 
-  console.log(viewsAmount);
+  // console.log(viewsAmount);
 
   const shouldNotAutoPlayBasedOnViews = viewsAmount < 5;
 
-  console.log(shouldNotAutoPlayBasedOnViews);
-
-  console.log(dontAutoplayBasedOnUpload)
-
+  // console.log(shouldNotAutoPlayBasedOnViews);
+  //
+  // console.log(dontAutoplayBasedOnUpload)
 
   if ((dontAutoplayBasedOnUpload && shouldNotAutoPlayBasedOnViews) ||  !autoplay) {
     autoplay = false;
@@ -105,34 +86,12 @@ script.
     autoplay = true;
   }
 
+  /** Freshly uploaded functionality end **/
+
+
   // TODO: add the t=12 parameter here
 
-
   console.log('should autoplay ' + autoplay)
-
-
-  // Available controls:
-  /*
-    controls: [
-    'play-large', // The large play button in the center
-    'restart', // Restart playback
-    'rewind', // Rewind by the seek time (default 10 seconds)
-    'play', // Play/pause playback
-    'fast-forward', // Fast forward by the seek time (default 10 seconds)
-    'progress', // The progress bar and scrubber for playback and buffering
-    'current-time', // The current time of playback
-    'duration', // The full duration of the media
-    'mute', // Toggle mute
-    'volume', // Volume control
-    'captions', // Toggle captions
-    'settings', // Settings menu
-    'pip', // Picture-in-picture (currently Safari only)
-    'airplay', // Airplay (currently Safari only)
-    'download', // Show a download button with a link to either the current source or a custom URL you specify in your options
-    'fullscreen', // Toggle fullscreen
-    ];
-  */
-  // The order you pass them is the order they appear
 
   var plyr_options = {
     autoplay,

@@ -1101,15 +1101,15 @@ block extra_js
 
       // this works properly because it runs right when the video has started
       v.addEventListener('playing', function (event) {
-        console.log('event!!')
-        console.log(event);
+        // console.log('event!!')
+        // console.log(event);
 
         // $('.frameJumper').css({"visibility":"hidden"});
       })
 
       v.addEventListener('pause', function (event) {
-        console.log('event!!')
-        console.log(event);
+        // console.log('event!!')
+        // console.log(event);
 
         // $('.frameJumper').css({"visibility":"initial"});
       })
@@ -1688,6 +1688,8 @@ block extra_footer_js
   include ./mediaPlayerPartials/repeatFunctionalityJs
 
   include ./mediaPlayerPartials/reactFunctionalityJs
+
+  include ./mediaPlayerPartials/promptToRegisterFunctionality
 
   // if the upload is longer than 15 minutes and there's a user
   if ( upload.durationInSeconds > (15 * 60) ) && user

@@ -1,0 +1,20 @@
+script.
+  $('.no-user-comment-form').on('release click', function(event){
+    event.preventDefault();
+    // swal("Please register to leave a comment")
+
+    return swal({
+      text: "Please register to leave a comment",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sign Up Now'
+    }).then(function (result) {
+      if (result.value) {
+        window.location.href = "/signup";
+      }
+    })
+
+  })
+
+
+
