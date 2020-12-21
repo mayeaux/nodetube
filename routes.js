@@ -142,6 +142,7 @@ function frontendRoutes(app){
   app.get('/help', publicController.getHelp);
 
   app.get('/plus', publicController.getPlus);
+  app.get('/mobile', publicController.getMobile);
 
   app.get('/landing', publicController.getLandingPage);
 
