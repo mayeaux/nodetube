@@ -670,7 +670,7 @@ exports.getChannel = async(req, res) => {
       existingEmailSub = await EmailSubscription.findOne(pushSubscriptionSearchQuery);
     }
 
-    console.log(existingPushSub);
+    // console.log(existingPushSub);
 
     // if the user already has subbed for push notifs
     const alreadyHavePushNotifsOn = Boolean(existingPushSub);
