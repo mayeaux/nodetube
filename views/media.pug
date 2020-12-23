@@ -371,12 +371,12 @@ block content
     if upload.fileType == 'video' && upload.ffprobeData
       div.frameJumper(style="margin-bottom:1px;margin-top:-14px;")
       br
-        each frame in [1,5,15,30].reverse()
-          p.fpsText.noselect(amountOfFrames=-frame style="color:grey;display:inline;margin-left:7px;") -#{frame} &nbsp
+      each frame in [1,5,15,30].reverse()
+        p.fpsText.noselect(amountOfFrames=-frame style="color:grey;display:inline;margin-left:7px;") -#{frame} &nbsp
 
-        p(style="display:inline;margin-left:14px;")
+      p(style="display:inline;margin-left:14px;")
 
-        each frame in [1,5,15,30]
+      each frame in [1,5,15,30]
           p.fpsText.noselect(
             amountOfFrames=frame, 
             style="color:grey;display:inline;margin-left:7px;"
