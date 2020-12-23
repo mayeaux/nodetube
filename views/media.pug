@@ -503,17 +503,16 @@ block content
                     else
                         button.subscribe.btn.fw.btn-success.op80.subscribeButton(style="border-radius:4px;") Subscribe (#{subscriberAmount})
 
-                if user
-                    div(style="margin-top:12px")
-                        // TODO: this should create a push subsciption, and it will also send a query to see if it should create a new service worker
-                        div.pushSubscriptionsDiv(style="display:inline-block")
-                            h2.pushNotificationIcon(style="display:inline")
-                                i.fas.fa-bell(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:0px;color:white;")
-                            p.pushSubscriptions(style="margin-left:1px") #{amountOfPushSubscriptions}
-                        div.emailSubscriptionsDiv(style="display:inline-block")
-                            h2.emailNotificationIcon(style="display:inline")
-                                i.fas.fa-envelope(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:10px;color:white;")
-                            p.emailSubscriptions(style="margin-left:10px") #{amountOfEmailSubscriptions}
+                div(style="margin-top:12px")
+                    // TODO: this should create a push subsciption, and it will also send a query to see if it should create a new service worker
+                    div.pushSubscriptionsDiv(style="display:inline-block")
+                        h2.pushNotificationIcon(style="display:inline")
+                            i.fas.fa-bell(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:0px;color:white;")
+                        p.pushSubscriptions(style="margin-left:1px") #{amountOfPushSubscriptions}
+                    div.emailSubscriptionsDiv(style="display:inline-block")
+                        h2.emailNotificationIcon(style="display:inline")
+                            i.fas.fa-envelope(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:10px;color:white;")
+                        p.emailSubscriptions(style="margin-left:10px") #{amountOfEmailSubscriptions}
 
                     //div(style="margin-top:12px")
                     //    // TODO: this should create a push subsciption, and it will also send a query to see if it should create a new service worker
@@ -884,15 +883,17 @@ block extra_js
   if user
     include pugJavascript/emailAndPushNotifications
 
+    script.
+        // pretty sure this is the register of a worker
+        $('.pushNotificationIcon').click(function () {
+          main();
+        })
+  else
+      include pugJavascript/registerToUseFeature
+
   script.
 
     $(document).ready(function () {
-
-
-
-      $('.pushNotificationIcon').click(function(){
-        main();
-      })
 
       const uploadDescriptionText = $('#uploadDescriptionText');
 

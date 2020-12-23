@@ -1,0 +1,32 @@
+script.
+  $(document).ready(function () {
+
+    $('.pushNotificationIcon i').on('release click', function (e) {
+      // if user is not logged in
+      return swal({
+        text: "Please register to subscribe to push notifications",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sign Up Now'
+      }).then(function (result) {
+        if (result.value) {
+          window.location.href = "/signup";
+        }
+      })
+    })
+
+    $('.emailNotificationIcon i').on('release click', function (e) {
+      // if user is not logged in
+      return swal({
+        text: "Please register to subscribe to email notifications",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sign Up Now'
+      }).then(function (result) {
+        if (result.value) {
+          window.location.href = "/signup";
+        }
+      })
+    })
+
+  });

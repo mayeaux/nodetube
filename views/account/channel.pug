@@ -90,17 +90,16 @@ block content
                     button(style="display:inherit;margin:0 auto;border-radius:3px;").fw.subscribe.btn.btn-success Subscribe (#{subscriberAmount})
 
                 // TODO: should support non logged in user where you click it and it says: please login to use this feature
-                if user
-                    div(style="margin-top:12px")
-                        // TODO: this should create a push subsciption, and it will also send a query to see if it should create a new service worker
-                        div(style="display:inline-block")
-                            h2.share-button.pushNotificationIcon(style="display:inline")
-                                i.share-icon.fas.fa-bell(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:0px;color:white;")
-                            p.pushSubscriptions(style="margin-left:1px") #{amountOfPushSubscriptions}
-                        div(style="display:inline-block")
-                            h2.share-button.emailNotificationIcon(style="display:inline")
-                                i.share-icon.fas.fa-envelope(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:10px;color:white;")
-                            p.emailSubscriptions(style="margin-left:10px") #{amountOfEmailSubscriptions}
+                div(style="margin-top:12px")
+                    // TODO: this should create a push subsciption, and it will also send a query to see if it should create a new service worker
+                    div(style="display:inline-block")
+                        h2.share-button.pushNotificationIcon(style="display:inline")
+                            i.share-icon.fas.fa-bell(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:0px;color:white;")
+                        p.pushSubscriptions(style="margin-left:1px") #{amountOfPushSubscriptions}
+                    div(style="display:inline-block")
+                        h2.share-button.emailNotificationIcon(style="display:inline")
+                            i.share-icon.fas.fa-envelope(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:10px;color:white;")
+                        p.emailSubscriptions(style="margin-left:10px") #{amountOfEmailSubscriptions}
 
                 // todo: else
                 // let's put an 'else' here and here and show those same buttons
@@ -318,10 +317,14 @@ block content
 
             })
 
-    script.
-        $('.pushNotificationIcon').click(function(){
-            main();
-        })
+    if user
+        script.
+          // pretty sure this is the register of a worker
+          $('.pushNotificationIcon').click(function(){
+                main();
+            })
+    else
+        include ../pugJavascript/registerToUseFeature
 
 
 
