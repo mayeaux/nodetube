@@ -1,0 +1,158 @@
+script.
+
+  console.log('hello');
+  var csrf = '#{_csrf}'
+
+  const channel = '#{upload && upload.uploader && upload.uploader.channelUrl || channel.channelUrl }'
+
+  const data = {
+    _csrf: csrf,
+    user: '#{user && user.channelUrl}',
+    channel
+  }
+
+  // subscribe or unsubscribe to push notifs
+  function subscribeOrUnsubscribeToPushNotifications(amountOfPushSubscriptions, alreadyHavePushNotifsOn){
+
+    $.ajax({
+      type: 'POST',
+      url: `/api/subscribeToPushNotifications`,
+      data,
+      success: function (data) {
+
+        // by default, turn the color grey and load up 'you have subbed' as the text
+        $('.pushNotificationIcon i').css('color', 'white')
+        let swalText = 'You have subscribed to their push notifications'
+
+        // if push notifs already on
+        if (alreadyHavePushNotifsOn) {
+          amountOfPushSubscriptions = amountOfPushSubscriptions - 1
+
+          $('.pushSubscriptions').text(amountOfPushSubscriptions)
+
+          swalText = 'You have unsubscribed from their push notifications'
+          $('.pushNotificationIcon i').css('color', 'gray')
+        } else {
+          amountOfPushSubscriptions = amountOfPushSubscriptions + 1
+
+          $('.pushSubscriptions').text(amountOfPushSubscriptions)
+
+        }
+
+        swal(swalText);
+
+        alreadyHavePushNotifsOn = !alreadyHavePushNotifsOn;
+
+        console.log(data);
+        //- console.log(data);
+
+        // Shows undefined when at 100%
+
+
+      },
+      error: function (err) {
+        console.log(err);
+      }
+    });
+  }
+
+  function subscribeOrUnsubscribeUserToEmails(amountOfEmailSubscriptions, alreadyHaveEmailNotifsOn){
+    $('.emailNotificationIcon').click(function () {
+      console.log('Email notification icon clicked');
+
+      $.ajax({
+        type: 'POST',
+        url: `/api/subscribeToEmailNotifications`,
+        data,
+        success: function (data) {
+
+          // kind of a weird design, it turns it white by default
+          $('.emailNotificationIcon i').css('color', 'white')
+          let swalText = 'You have subscribed to their email notifications'
+
+          if (alreadyHaveEmailNotifsOn) {
+
+            amountOfEmailSubscriptions = amountOfEmailSubscriptions - 1
+
+            $('.emailSubscriptions').text(amountOfEmailSubscriptions)
+
+            swalText = 'You have unsubscribed from their email notifications'
+            $('.emailNotificationIcon i').css('color', 'gray')
+          } else {
+            amountOfEmailSubscriptions = amountOfEmailSubscriptions + 1
+
+            $('.emailSubscriptions').text(amountOfEmailSubscriptions)
+          }
+
+          swal(swalText);
+
+          alreadyHaveEmailNotifsOn = !alreadyHaveEmailNotifsOn;
+
+          console.log(data);
+
+          // Shows undefined when at 100%
+        },
+        error: function (err) {
+          console.log(err);
+        }
+      });
+    })
+  }
+
+  // EMAIL SUBSCRIPTION
+  $(document).ready(function(){
+
+    /** email subscriptions section **/
+    // how many active email subscriptions the user has
+    let amountOfEmailSubscriptions = Number('#{amountOfEmailSubscriptions}');
+
+    var alreadyHaveEmailNotifsOn = '#{alreadySubscribedForEmails}' === 'true'
+
+    var viewerHasConfirmedEmailAddress = #{viewingUserHasConfirmedEmail}
+
+    console.log('already have email notis on')
+
+    if (alreadyHaveEmailNotifsOn) {
+      $('.emailNotificationIcon i').css('color', 'white')
+    } else {
+      $('.emailNotificationIcon i').css('color', 'gray')
+    }
+
+    if (viewerHasConfirmedEmailAddress) {
+
+      subscribeOrUnsubscribeUserToEmails(amountOfEmailSubscriptions, alreadyHaveEmailNotifsOn)
+      // if viewer doesn't have confirmed email
+    } else {
+      $('.emailNotificationIcon').click(function () {
+        swal('Please finish confirming your email address on your account page first');
+      })
+
+      // TODO: if pending confirmation, say "please finish confirmation
+    }
+
+    /** push notification section **/
+
+    let amountOfPushSubscriptions = Number('#{amountOfPushSubscriptions}');
+
+    var alreadyHavePushNotifsOn = '#{alreadyHavePushNotifsOn}' == 'true'
+
+    // console.log('ready');
+    // console.log(alreadyHavePushNotifsOn);
+
+    if (alreadyHavePushNotifsOn) {
+      $('.pushNotificationIcon i').css('color', 'white')
+    } else {
+      $('.pushNotificationIcon i').css('color', 'gray')
+    }
+
+    // if the user's device doesn't have support for service worker and push manager
+    // note: Safari has ServiceWorker but not PushManager
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+      $('.pushSubscriptionsDiv').hide()
+    }
+
+
+    $('.pushNotificationIcon').click(function () {
+      subscribeOrUnsubscribeToPushNotifications(amountOfPushSubscriptions, alreadyHavePushNotifsOn)
+    })
+  })
