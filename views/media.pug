@@ -423,7 +423,7 @@ block content
             // if it's an audio
         else if upload.fileType === 'audio'
             div
-                audio#media_player.my_audio(playsinline style="width:80%;" controls='', preload='none')
+                audio#media_player.my_audio(playsinline style="width:80%;" controls='', preload='auto')
 
                     if upload.fileExtension == '.m4a'
                         source(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`, type='audio/mp4')
