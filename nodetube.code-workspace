@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"editor.tabSize": 2,
+		"editor.foldingStrategy": "indentation",
+		"javascript.referencesCodeLens.enabled": true,
+		"javascript.referencesCodeLens.showOnAllFunctions": true
+	},
+	"extensions": {
+		"recommendations": [
+			"mikestead.dotenv"
+		]
+	}
+}
