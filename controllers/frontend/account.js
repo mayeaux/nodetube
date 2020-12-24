@@ -971,6 +971,17 @@ exports.getViewHistory = async(req, res) => {
 };
 
 /**
+ * GET /account/extra
+ * Extra account page
+ */
+exports.getExtraPage = async(req, res) => {
+
+  res.render('account/extra', {
+    title: 'Extra Page',
+  });
+};
+
+/**
  * GET /reset/:token
  * Reset Password page.
  */

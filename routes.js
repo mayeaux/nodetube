@@ -295,6 +295,8 @@ function frontendRoutes(app){
   app.get('/account/viewHistory', passportConfig.isAuthenticated, accountFrontendController.getViewHistory);
   app.get('/account/reactHistory', passportConfig.isAuthenticated, accountFrontendController.getReactHistory);
   app.get('/account/livestreaming', passportConfig.isAuthenticated, accountFrontendController.livestreaming);
+  app.get('/account/extra', passportConfig.isAuthenticated, accountFrontendController.getExtraPage);
+
 
   app.get('/media/subscribed', passportConfig.isAuthenticated, accountFrontendController.subscriptions);
   app.get('/media/subscribed/:page', passportConfig.isAuthenticated, accountFrontendController.subscriptions);
