@@ -1,4 +1,4 @@
-/** UNFINISHED **/
+/* UNFINISHED */
 /* eslint-disable no-unused-vars */
 
 const express = require("express"); // JSDoc types only
@@ -16,6 +16,7 @@ const mv = require('mv');
 const fs = require('fs-extra');
 const mkdirp = Promise.promisifyAll(require('mkdirp'));
 const randomstring = require('randomstring');
+
 const mailJet = require('../../lib/emails/mailjet');
 const sendgrid = require('../../lib/emails/sendgrid');
 
@@ -114,6 +115,8 @@ exports.postLogin = async(req, res, next) => {
  * `POST` `/signup`
  * 
  * Create a new local account.
+ * 
+ * TODO: write tests for it.
  * @param {express.Request} req
  * @param {express.Response} res
  * @param {express.NextFunction} next
@@ -137,8 +140,12 @@ exports.postSignup = async (req, res, next) => {
   req.assert('password', 'Password must be at least 4 characters long').len({min: 4});
   req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
   // req.assert('channelName', 'Channel name must be entered').notEmpty();
-  req.assert('channelUrl', 'Channel username must be entered').notEmpty();
-  req.assert('channelUrl', 'Channel username must be between 3 and 25 characters.').len({ min: 3, max: 25 });
+  req.assert('channelUrl', 'Channel username must be entered')
+  .notEmpty()
+  .len({ min: 3, max: 25 }).withMessage("Channel username must be between 3 and 25 characters.")
+
+  /* Data sanitization */
+  req.sanitize("channelUrl").trim().escape();
 
   console.log(req.body.channelUrl + ' <--- inputted channelUrl for' + req.body.email);
   // console.log(req.body.grecaptcha.getResponse('captcha'));
@@ -167,7 +174,7 @@ exports.postSignup = async (req, res, next) => {
   // make sure first user is admin, can refactor later
   const randomUser = await User.findOne();
 
-  if(randomUser){
+  if(!randomUser){
     user.role = 'admin';
     user.plan = 'plus';
     user.privs.unlistedUpload = true;
@@ -207,13 +214,17 @@ exports.postSignup = async (req, res, next) => {
 };
 
 /**
- * POST /account/profile
+ * `POST` `/account/profile`
+ * 
  * Update profile information.
+ * 
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {express.NextFunction} next
  */
-
 exports.postUpdateProfile = async(req, res, next)  => {
 
-  if(!req.user && req.body.uploadToken){
+  if (!req.user && req.body.uploadToken) {
     req.user = await User.findOne({ uploadToken : req.body.uploadToken });
   }
 
@@ -222,7 +233,14 @@ exports.postUpdateProfile = async(req, res, next)  => {
 
   console.log(`UPDATING PROFILE FOR ${req.user && req.user.channelUrl}`);
 
+  /* Data validation */
+  req.assert("channelName", "Channel name must be between 3 to 25 characters long").len({ min: 3, max: 25 });
+  req.assert("description", "Description can be 500 characters long at best").len({ max: 500 });
+
+  /* Data sanitization */
   req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
+  req.sanitize("channelName").trim().escape();
+  req.sanitize("description").trim().escape();
 
   const errors = req.validationErrors();
 
@@ -260,6 +278,7 @@ exports.postUpdateProfile = async(req, res, next)  => {
     const channelUrlFolder = `${saveAndServeFilesDirectory}/${req.user.channelUrl}`;
 
     // make the directory if it doesnt exist
+    // @ts-expect-error
     await mkdirp.mkdirpAsync(channelUrlFolder);
 
     // save the file
@@ -274,7 +293,9 @@ exports.postUpdateProfile = async(req, res, next)  => {
     req.user.customThumbnail = `user-thumbnail${fileExtension}`;
 
     // if no channel name is given, save it as the channel url
-    req.user.channelName = req.body.channelName ?  req.body.channelName : req.user.channelUrl;
+    req.user.channelName = req.body.channelName 
+      ? req.body.channelName 
+      : req.user.channelUrl;
 
     req.user.channelDescription = req.body.description;
 
@@ -549,3 +570,19 @@ exports.postImporter = async(req, res) => {
     channelUrl
   });
 };
+
+// /**
+//  * @param {() => {}} middleware 
+//  */
+// exports.validateAccountRoutes = (middleware) => {
+//   const name = middleware.name;
+
+//   switch (name) {
+//     case "postSignup":
+//       // [validator.]
+      
+  
+//     default:
+//       break;
+//   }
+// }`

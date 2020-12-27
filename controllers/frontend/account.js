@@ -1,50 +1,42 @@
-/** UNFINISHED **/
+/* UNFINISHED */
 /* eslint-disable no-unused-vars */
 
 const express = require("express"); //JSDoc types only
 const randomstring = require('randomstring');
 const _ = require('lodash');
-const User = require('../../models/index').User;
-const Upload = require('../../models/index').Upload;
-const Comment = require('../../models/index').Comment;
-const View = require('../../models/index').View;
-const SiteVisit = require('../../models/index').SiteVisit;
-const React = require('../../models/index').React;
-const Notification = require('../../models/index').Notification;
-const SocialPost = require('../../models/index').SocialPost;
-const Subscription = require('../../models/index').Subscription;
-const PushSubscription = require('../../models/index').PushSubscription;
-const EmailSubscription = require('../../models/index').EmailSubscription;
-
-const PushEndpoint = require('../../models/index').PushEndpoint;
-
 const RSS = require('rss');
+const { URLSearchParams } = require('url');
+const validator = require('email-validator');
 
+const {
+  User,
+  Upload,
+  Comment,
+  View,
+  SiteVisit,
+  React,
+  Notification,
+  SocialPost,
+  Subscription,
+  PushSubscription,
+  EmailSubscription,
+  PushEndpoint
+} = require('../../models/index');
 const { uploadServer, uploadUrl } = require('../../lib/helpers/settings');
 const { saveMetaToResLocalForChannelPage } = require('../../lib/mediaPlayer/generateMetatags');
 
 const { filterUploadsByMediaType } = require('../../lib/mediaBrowsing/helpers');
 const timeHelper = require('../../lib/helpers/time');
 
-const { URLSearchParams } = require('url');
 
-const brandName = process.env.INSTANCE_BRAND_NAME;
-
-const thumbnailServer = process.env.THUMBNAIL_SERVER || '';
 
 const pagination = require('../../lib/helpers/pagination');
-
 const categories = require('../../config/categories');
-
 const uploadFilters = require('../../lib/mediaBrowsing/helpers');
-
 const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
-
 const { userCanUploadContentOfThisRating } = require('../../lib/uploading/helpers');
-
-const validator = require('email-validator');
-
 const { getUploadDuration } = require('../../lib/mediaBrowsing/helpers');
+const { attachDataToUploadsAsUploads } = require('../../lib/helpers/addFieldsToUploads');
 
 const javascriptTimeAgo = require('javascript-time-ago');
 javascriptTimeAgo.locale(require('javascript-time-ago/locales/en'));
@@ -54,9 +46,9 @@ const timeAgoEnglish = new javascriptTimeAgo('en-US');
 
 const secondsToFormattedTime = timeHelper.secondsToFormattedTime;
 
+const brandName = process.env.INSTANCE_BRAND_NAME;
+const thumbnailServer = process.env.THUMBNAIL_SERVER || '';
 const forgotEmailFunctionalityOn = process.env.FORGOT_PASSWORD_EMAIL_FUNCTIONALITY_ON == 'true';
-
-const { attachDataToUploadsAsUploads } = require('../../lib/helpers/addFieldsToUploads');
 
 // TODO: pull this function out
 function removeTrailingSlash(requestPath){
@@ -734,10 +726,13 @@ exports.getChannel = async(req, res) => {
 };
 
 /**
- * GET /notifications
- * User's specific notifications page
+ * `GET` `/notifications`
+ * 
+ * User's specific notifications page.
+ * @param {express.Request} req
+ * @param {express.Response} res
  */
-exports.notification = async(req, res) => {
+exports.notification = async (req, res) => {
 
   let page = req.params.page;
   if(!page){ page = 1; }
@@ -876,15 +871,14 @@ exports.logout = (req, res) => {
 };
 
 /**
- * GET /signup
+ * `GET` `/signup`
+ * 
  * Signup page.
  * @param {express.Request} req
  * @param {express.Response} res
  */
 exports.getSignup = (req, res) => {
-
   const recaptchaPublicKey = process.env.RECAPTCHA_SITEKEY;
-
   const captchaOn = process.env.RECAPTCHA_ON == 'true';
 
   if(req.user){
@@ -902,7 +896,7 @@ exports.getSignup = (req, res) => {
  * 
  * Account page.
  * @param {express.Request} req
- * @param {express.} res
+ * @param {express.Response} res
  */
 exports.getAccount = async(req, res) => {
   const stripeToken = process.env.STRIPE_FRONTEND_TOKEN;
@@ -934,8 +928,11 @@ exports.getAccount = async(req, res) => {
 };
 
 /**
- * GET /account/reactHistory
+ * `GET` `/account/reactHistory`
+ * 
  * React history page.
+ * @param {express.Request} req
+ * @param {express.Response} res
  */
 exports.getReactHistory = async(req, res) => {
   const reacts = await React.find({
@@ -1055,8 +1052,12 @@ exports.getForgot = (req, res) => {
 };
 
 /**
- * GET /account/unlink/:provider
+ * `GET` `/account/unlink/:provider`
+ * 
  * Unlink OAuth provider.
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {express.NextFunction} next
  */
 exports.getOauthUnlink = (req, res, next) => {
   const provider = req.params.provider;
@@ -1143,8 +1144,11 @@ exports.livestreaming = async(req, res) =>
 };
 
 /**
- * GET /importer
+ * `GET` `/importer`
+ * 
  * Importer page.
+ * @param {express.Request} req
+ * @param {express.Response} res
  */
 exports.getImporter = (req, res) => {
 
