@@ -167,7 +167,7 @@ exports.postSignup = async (req, res, next) => {
   // make sure first user is admin, can refactor later
   const randomUser = await User.findOne();
 
-  if(randomUser){
+  if(!randomUser){
     user.role = 'admin';
     user.plan = 'plus';
     user.privs.unlistedUpload = true;
