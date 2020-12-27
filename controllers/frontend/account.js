@@ -1,6 +1,7 @@
 /** UNFINISHED **/
 /* eslint-disable no-unused-vars */
 
+const express = require("express"); //JSDoc types only
 const randomstring = require('randomstring');
 const _ = require('lodash');
 const User = require('../../models/index').User;
@@ -877,6 +878,8 @@ exports.logout = (req, res) => {
 /**
  * GET /signup
  * Signup page.
+ * @param {express.Request} req
+ * @param {express.Response} res
  */
 exports.getSignup = (req, res) => {
 
@@ -895,8 +898,11 @@ exports.getSignup = (req, res) => {
 };
 
 /**
- * GET /account
+ * `GET` `/account`
+ * 
  * Account page.
+ * @param {express.Request} req
+ * @param {express.} res
  */
 exports.getAccount = async(req, res) => {
   const stripeToken = process.env.STRIPE_FRONTEND_TOKEN;

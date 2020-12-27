@@ -1,6 +1,7 @@
 /** UNFINISHED **/
 /* eslint-disable no-unused-vars */
 
+const express = require("express"); // JSDoc types only
 const bluebird = require('bluebird');
 const Promise = require('bluebird');
 const crypto = bluebird.promisifyAll(require('crypto'));
@@ -110,28 +111,34 @@ exports.postLogin = async(req, res, next) => {
 };
 
 /**
- * POST /signup
+ * `POST` `/signup`
+ * 
  * Create a new local account.
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {express.NextFunction} next
  */
-exports.postSignup = async(req, res, next) => {
+exports.postSignup = async (req, res, next) => {
 
   // CAPTCHA VALIDATION
-  if(process.env.NODE_ENV == 'production' && process.env.RECAPTCHA_ON == 'true'){
+  if (process.env.NODE_ENV == 'production' && process.env.RECAPTCHA_ON == 'true') {
+
     try {
       const response = await recaptcha.validate(req.body['g-recaptcha-response']);
     } catch(err){
       req.flash('errors', { msg: 'Captcha failed, please try again' });
       return res.redirect('/signup');
     }
+    
   }
 
-  /** assertion testing the data **/
+  /* assertion testing the data */
   // req.assert('email', 'Email is not valid').isEmail();
-  req.assert('password', 'Password must be at least 4 characters long').len(4);
+  req.assert('password', 'Password must be at least 4 characters long').len({min: 4});
   req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
   // req.assert('channelName', 'Channel name must be entered').notEmpty();
   req.assert('channelUrl', 'Channel username must be entered').notEmpty();
-  req.assert('channelUrl', 'Channel username must be between 3 and 25 characters.').len(3,25);
+  req.assert('channelUrl', 'Channel username must be between 3 and 25 characters.').len({ min: 3, max: 25 });
 
   console.log(req.body.channelUrl + ' <--- inputted channelUrl for' + req.body.email);
   // console.log(req.body.grecaptcha.getResponse('captcha'));
@@ -158,9 +165,9 @@ exports.postSignup = async(req, res, next) => {
   });
 
   // make sure first user is admin, can refactor later
-  const numberOfUsers = await User.countDocuments();
+  const randomUser = await User.findOne();
 
-  if(numberOfUsers == 0){
+  if(randomUser){
     user.role = 'admin';
     user.plan = 'plus';
     user.privs.unlistedUpload = true;
