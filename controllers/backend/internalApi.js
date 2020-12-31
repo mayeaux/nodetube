@@ -1,6 +1,7 @@
-/** UNFINISHED **/
+/* UNFINISHED */
 /* eslint-disable no-unused-vars */
 
+const express = require("express"); // JSDoc types only
 const bluebird = require('bluebird');
 const Promise = require('bluebird');
 const request = bluebird.promisifyAll(require('request'), { multiArgs: true });
@@ -51,18 +52,20 @@ const frontendServer = process.env.FRONTEND_SERVER || '';
 const createNotification = require('../../lib/helpers/notifications');
 
 // models
-const Upload = require('../../models/index').Upload;
-const User = require('../../models/index').User;
-const Comment = require('../../models/index').Comment;
-const React = require('../../models/index').React;
-const Subscription = require('../../models/index').Subscription;
-const Notification = require('../../models/index').Notification;
-const CreditAction = require('../../models/index').CreditAction;
-const Report = require('../../models/index').Report;
-const LastWatchedTime = require('../../models/index').LastWatchedTime;
-const PushEndpoint = require('../../models/index').PushEndpoint;
-const PushSubscription = require('../../models/index').PushSubscription;
-const EmailSubscription = require('../../models/index').EmailSubscription;
+const { 
+  Upload,
+  User,
+  Comment,
+  React,
+  Subscription,
+  Notification,
+  CreditAction,
+  Report,
+  LastWatchedTime,
+  PushEndpoint,
+  PushSubscription,
+  EmailSubscription,
+} = require('../../models/index');
 
 const getMediaType = require('../../lib/uploading/media');
 const pushNotificationLibrary = require('../../lib/mediaPlayer/pushNotification');
@@ -95,7 +98,7 @@ if(process.env.NODE_ENV !== 'production' && !process.env.UPLOAD_SERVER){
 async function updateUsersUnreadSubscriptions(user){
   const subscriptions = await Subscription.find({ subscribedToUser: user._id, active: true });
 
-  for(const subscription of subscriptions){
+  for (const subscription of subscriptions) {
     let subscribingUser = await User.findOne({ _id: subscription.subscribingUser });
 
     subscribingUser.unseenSubscriptionUploads = subscribingUser.unseenSubscriptionUploads + 1;
@@ -779,8 +782,11 @@ exports.deleteComment = async(req, res) => {
 };
 
 /**
- * POST /api/comment
+ * `POST` `/api/comment`
+ * 
  * List of API examples.
+ * @param {express.Request} req
+ * @param {express.Response} res
  */
 exports.postComment = async(req, res) => {
 
@@ -791,6 +797,19 @@ exports.postComment = async(req, res) => {
   if(!req.body.comment){
     res.status(500);
     return res.send('failed to post comment');
+  }
+
+  /* Data validation */
+  req.assert("comment", "The comment shoould have between 2 to 250 characters").len({ min: 2, max: 250 });
+
+  /* Data sanitization */
+  req.sanitize("comment").trim();
+  req.sanitize("comment").escape();
+
+  const errors = req.validationErrors();
+
+  if(errors){
+    return res.status(422).json(errors);
   }
 
   try {
@@ -891,14 +910,12 @@ exports.postComment = async(req, res) => {
     res.json(responseObject);
 
     // res.send('success')
-  }
-  catch(err){
+  } catch(err) {
 
     console.log(err);
 
     res.status(500);
     res.send('failed to post comment');
-
   }
 
 };

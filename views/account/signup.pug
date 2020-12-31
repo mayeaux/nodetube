@@ -1,55 +1,49 @@
 extends ../layout
 
-
-
 block content
   style.
-    .firstPasswordInput, .confirmPasswordInput {
+    .firstPasswordInput, 
+    .confirmPasswordInput {
       width: 88%
     }
 
-  .container
-    .page-header
-      h3.fw.center-block.text-center(style="font-size:33px;") Sign Up
+  h1.page-header.fw.center-block.text-center(style="font-size:33px;") Sign Up
+
+  section.container
     form.form-horizontal.signup-form(id='signup-form', method='POST')
       input(type='hidden', name='_csrf', value=_csrf)
-      //.form-group
-      //  label.col-sm-3.control-label(for='channelName') Display Name
-      //  .col-sm-7
-      //    input.form-control(type='text', name='channelName', id='channelName', placeholder='The name that shows up for your channel',
-      //    autofocus, minlength=3, maxlength=25, required)
+      //-.form-group
+      //-  label.col-sm-3.control-label(for='channelName') Display Name
+      //-  .col-sm-7
+      //-    input.form-control(type='text', name='channelName', id='channelName', placeholder='The name that shows up for your channel',
+      //-    autofocus, minlength=3, maxlength=25, required)
       .form-group
-        label.fw.loginHeader.col-sm-3.control-label(for='channelUrl') Channel Username
+        label.fw.loginHeader.col-sm-3.control-label(for='channelUrl') Channel Username:
         .col-sm-7
           input.fw.loginHeader.form-control.username(type='text', name='channelUrl', id='channelUrl', autofocus, required placeholder='Please choose your channel username')
       .form-group
-        label.fw.loginHeader.col-sm-3.control-label(for='password') Password
+        label.fw.loginHeader.col-sm-3.control-label(for='password') Password:
         .col-sm-7
           input.fw.loginHeader.form-control.firstPasswordInput(type='password', name='password', id='password', placeholder='Please enter your password', required)
       .form-group
-        label.fw.loginHeader.col-sm-3.control-label(for='confirmPassword') Confirm Password
+        label.fw.loginHeader.col-sm-3.control-label(for='confirmPassword') Confirm Password:
         .col-sm-7
           input.fw.loginHeader.form-control.confirmPasswordInput(type='password', name='confirmPassword', id='confirmPassword', placeholder='Please confirm your password', required)
 
       if captchaOn == true
         .form-group
           label.fw.loginHeader.col-sm-3.control-label(for='captcha') Captcha
-          //.col-sm-offset-3.col-sm-7
+          //- .col-sm-offset-3.col-sm-7
           .form-group.col-md-4(style="margin-left:1pt;")
             .g-recaptcha(data-sitekey=`${recaptchaPublicKey}` id='captcha')
 
-      //var regex = new RegExp("^[a-zA-Z]+$");
-
+      //- - var regex = new RegExp("^[a-zA-Z]+$");
       .form-group
         .col-sm-offset-3.col-sm-7
-          p.fw By signing up you are agreeing you have read and agree to the
-            a(href="/termsofservice") &nbspTerms Of Service
+          p.fw By signing up you are agreeing you have read and agree to the #[a(href="/termsofservice") Terms Of Service].
       .form-group
         .col-sm-offset-3.col-sm-7
-          button.fw.loginHeader.btn.btn-success(type='submit' style="border-radius:8px;width:133px;")
-            i.fa.fa-user-plus
-            | Signup
-
+          button.fw.loginHeader.btn.btn-success(type='submit' style="border-radius:8px;width:133px;") #[span.fa.fa-user-plus] Signup
 
   script.
     $('.signup-form').submit(function (evt) {

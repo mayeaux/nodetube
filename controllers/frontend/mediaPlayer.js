@@ -69,8 +69,9 @@ function getFormattedFileSize(upload){
 }
 
 /**
- * GET /$user/$uploadUniqueTag
- * Media player page
+ * `GET` `/$user/$uploadUniqueTag`
+ * 
+ * Media player page.
  */
 exports.getMedia = async(req, res) => {
 

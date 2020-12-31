@@ -1,6 +1,7 @@
-/** UNFINISHED **/
+/* UNFINISHED */
 /* eslint-disable no-unused-vars */
 
+const express = require("express"); // JSDoc types only
 const bluebird = require('bluebird');
 const Promise = require('bluebird');
 const crypto = bluebird.promisifyAll(require('crypto'));
@@ -15,6 +16,7 @@ const mv = require('mv');
 const fs = require('fs-extra');
 const mkdirp = Promise.promisifyAll(require('mkdirp'));
 const randomstring = require('randomstring');
+
 const mailJet = require('../../lib/emails/mailjet');
 const sendgrid = require('../../lib/emails/sendgrid');
 
@@ -49,8 +51,8 @@ const recaptcha = new reCAPTCHA({
   secretKey : process.env.RECAPTCHA_SECRETKEY
 });
 
-const { b2 } = require('../../lib/uploading/backblaze');
-const pagination = require('../../lib/helpers/pagination');
+// const { b2 } = require('../../lib/uploading/backblaze');
+// const pagination = require('../../lib/helpers/pagination');
 
 // where to send users to after login
 const redirectUrl = '/account';
@@ -110,28 +112,41 @@ exports.postLogin = async(req, res, next) => {
 };
 
 /**
- * POST /signup
+ * `POST` `/signup`
+ * 
  * Create a new local account.
+ * 
+ * TODO: write tests for it.
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {express.NextFunction} next
  */
-exports.postSignup = async(req, res, next) => {
+exports.postSignup = async (req, res, next) => {
 
   // CAPTCHA VALIDATION
-  if(process.env.NODE_ENV == 'production' && process.env.RECAPTCHA_ON == 'true'){
+  if (process.env.NODE_ENV == 'production' && process.env.RECAPTCHA_ON == 'true') {
+
     try {
       const response = await recaptcha.validate(req.body['g-recaptcha-response']);
     } catch(err){
       req.flash('errors', { msg: 'Captcha failed, please try again' });
       return res.redirect('/signup');
     }
+    
   }
 
-  /** assertion testing the data **/
+  /* assertion testing the data */
   // req.assert('email', 'Email is not valid').isEmail();
-  req.assert('password', 'Password must be at least 4 characters long').len(4);
+  req.assert('password', 'Password must be at least 4 characters long').len({min: 4});
   req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
   // req.assert('channelName', 'Channel name must be entered').notEmpty();
-  req.assert('channelUrl', 'Channel username must be entered').notEmpty();
-  req.assert('channelUrl', 'Channel username must be between 3 and 25 characters.').len(3,25);
+  req.assert('channelUrl', 'Channel username must be entered')
+  .notEmpty()
+  .len({ min: 3, max: 25 }).withMessage("Channel username must be between 3 and 25 characters.")
+
+  /* Data sanitization */
+  req.sanitize("channelUrl").trim();
+  req.sanitize("channelUrl").escape();
 
   console.log(req.body.channelUrl + ' <--- inputted channelUrl for' + req.body.email);
   // console.log(req.body.grecaptcha.getResponse('captcha'));
@@ -158,9 +173,9 @@ exports.postSignup = async(req, res, next) => {
   });
 
   // make sure first user is admin, can refactor later
-  const numberOfUsers = await User.countDocuments();
+  const randomUser = await User.findOne();
 
-  if(numberOfUsers == 0){
+  if(!randomUser){
     user.role = 'admin';
     user.plan = 'plus';
     user.privs.unlistedUpload = true;
@@ -200,13 +215,17 @@ exports.postSignup = async(req, res, next) => {
 };
 
 /**
- * POST /account/profile
+ * `POST` `/account/profile`
+ * 
  * Update profile information.
+ * 
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {express.NextFunction} next
  */
-
 exports.postUpdateProfile = async(req, res, next)  => {
 
-  if(!req.user && req.body.uploadToken){
+  if (!req.user && req.body.uploadToken) {
     req.user = await User.findOne({ uploadToken : req.body.uploadToken });
   }
 
@@ -215,7 +234,16 @@ exports.postUpdateProfile = async(req, res, next)  => {
 
   console.log(`UPDATING PROFILE FOR ${req.user && req.user.channelUrl}`);
 
+  /* Data validation */
+  req.assert("channelName", "Channel name must be between 3 to 25 characters long").len({ min: 3, max: 25 });
+  req.assert("description", "Description can be 500 characters long at best").len({ max: 500 });
+
+  /* Data sanitization */
   req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
+  req.sanitize("channelName").trim();
+  req.sanitize("channelName").escape();
+  req.sanitize("description").trim();
+  req.sanitize("description").escape();
 
   const errors = req.validationErrors();
 
@@ -253,6 +281,7 @@ exports.postUpdateProfile = async(req, res, next)  => {
     const channelUrlFolder = `${saveAndServeFilesDirectory}/${req.user.channelUrl}`;
 
     // make the directory if it doesnt exist
+    // @ts-expect-error
     await mkdirp.mkdirpAsync(channelUrlFolder);
 
     // save the file
@@ -267,7 +296,9 @@ exports.postUpdateProfile = async(req, res, next)  => {
     req.user.customThumbnail = `user-thumbnail${fileExtension}`;
 
     // if no channel name is given, save it as the channel url
-    req.user.channelName = req.body.channelName ?  req.body.channelName : req.user.channelUrl;
+    req.user.channelName = req.body.channelName 
+      ? req.body.channelName 
+      : req.user.channelUrl;
 
     req.user.channelDescription = req.body.description;
 
@@ -380,8 +411,12 @@ exports.postReset = async(req, res, next) => {
 };
 
 /**
- * POST /forgot
+ * `POST` `/forgot`
+ * 
  * Create a random token, then the send user an email with a reset link.
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {express.NextFunction} next
  */
 exports.postForgot = async(req, res, next) => {
 
@@ -444,8 +479,12 @@ exports.postForgot = async(req, res, next) => {
 };
 
 /**
- * POST /account/email
+ * `POST` `/account/email`
+ * 
  * Create a random token, then the send user an email with a confirmation link
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {express.NextFunction} next
  */
 exports.postConfirmEmail = async(req, res, next) => {
 

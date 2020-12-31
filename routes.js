@@ -29,7 +29,7 @@ const domainNameAndTLD = process.env.DOMAIN_NAME_AND_TLD;
 
 console.log(`DOMAIN NAME AND TLD: ${domainNameAndTLD}\n`);
 
-/** passport config **/
+/* passport config */
 const passportConfig = require('./config/passport');
 const authMiddleware = require('./middlewares/shared/authentication');
 
@@ -309,7 +309,7 @@ function frontendRoutes(app){
   // ??
   app.get('/account/unlink/:provider', passportConfig.isAuthenticated, accountFrontendController.getOauthUnlink);
 
-  /** ACCOUNT APIS **/
+  /* ACCOUNT APIS */
   app.post('/account/password', passportConfig.isAuthenticated, accountBackendController.postUpdatePassword);
   app.post('/account/delete', passportConfig.isAuthenticated, accountBackendController.postDeleteAccount);
   app.post('/account/profile', passportConfig.isAuthenticated, accountBackendController.postUpdateProfile);
