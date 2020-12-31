@@ -51,8 +51,8 @@ const recaptcha = new reCAPTCHA({
   secretKey : process.env.RECAPTCHA_SECRETKEY
 });
 
-const { b2 } = require('../../lib/uploading/backblaze');
-const pagination = require('../../lib/helpers/pagination');
+// const { b2 } = require('../../lib/uploading/backblaze');
+// const pagination = require('../../lib/helpers/pagination');
 
 // where to send users to after login
 const redirectUrl = '/account';
@@ -145,7 +145,8 @@ exports.postSignup = async (req, res, next) => {
   .len({ min: 3, max: 25 }).withMessage("Channel username must be between 3 and 25 characters.")
 
   /* Data sanitization */
-  req.sanitize("channelUrl").trim().escape();
+  req.sanitize("channelUrl").trim();
+  req.sanitize("channelUrl").escape();
 
   console.log(req.body.channelUrl + ' <--- inputted channelUrl for' + req.body.email);
   // console.log(req.body.grecaptcha.getResponse('captcha'));
@@ -239,8 +240,10 @@ exports.postUpdateProfile = async(req, res, next)  => {
 
   /* Data sanitization */
   req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
-  req.sanitize("channelName").trim().escape();
-  req.sanitize("description").trim().escape();
+  req.sanitize("channelName").trim();
+  req.sanitize("channelName").escape();
+  req.sanitize("description").trim();
+  req.sanitize("description").escape();
 
   const errors = req.validationErrors();
 
@@ -408,8 +411,12 @@ exports.postReset = async(req, res, next) => {
 };
 
 /**
- * POST /forgot
+ * `POST` `/forgot`
+ * 
  * Create a random token, then the send user an email with a reset link.
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {express.NextFunction} next
  */
 exports.postForgot = async(req, res, next) => {
 
@@ -472,8 +479,12 @@ exports.postForgot = async(req, res, next) => {
 };
 
 /**
- * POST /account/email
+ * `POST` `/account/email`
+ * 
  * Create a random token, then the send user an email with a confirmation link
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {express.NextFunction} next
  */
 exports.postConfirmEmail = async(req, res, next) => {
 
@@ -570,19 +581,3 @@ exports.postImporter = async(req, res) => {
     channelUrl
   });
 };
-
-// /**
-//  * @param {() => {}} middleware 
-//  */
-// exports.validateAccountRoutes = (middleware) => {
-//   const name = middleware.name;
-
-//   switch (name) {
-//     case "postSignup":
-//       // [validator.]
-      
-  
-//     default:
-//       break;
-//   }
-// }`

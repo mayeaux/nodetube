@@ -803,12 +803,13 @@ exports.postComment = async(req, res) => {
   req.assert("comment", "The comment shoould have between 2 to 250 characters").len({ min: 2, max: 250 });
 
   /* Data sanitization */
-  req.sanitize("comment").trim().escape();
+  req.sanitize("comment").trim();
+  req.sanitize("comment").escape();
 
   const errors = req.validationErrors();
 
   if(errors){
-    res.status(422).json(errors);
+    return res.status(422).json(errors);
   }
 
   try {
@@ -909,14 +910,12 @@ exports.postComment = async(req, res) => {
     res.json(responseObject);
 
     // res.send('success')
-  }
-  catch(err){
+  } catch(err) {
 
     console.log(err);
 
     res.status(500);
     res.send('failed to post comment');
-
   }
 
 };
