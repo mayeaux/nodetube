@@ -1,19 +1,69 @@
 //@import "themes/gsdk/gsdk";
-
 //@import "themes/modern/variables";
-
 @import "themes/default/variables";
-
 //@import "themes/flatly/variables";
-
-
 @import "lib/bootstrap/bootstrap";
 @import "lib/font-awesome/font-awesome";
-
 @import "themes/default/default";
 
-// Scaffolding
-// -------------------------
+/* Generic rules */
+// only rules applying to base tags and their pseudo-selectors/elements go there
+
+:root {
+  // colors
+  --colour0-primary: hsl(0, 0%, 20%);
+  --colour0-secondary: hsl(0, 0%, 80%);
+  
+  --colour-submit-primary: hsl(240, 100%, 50%);
+  --colour-submit-secondary: hsl(220, 100%, 80%);
+  --colour-positive-primary: hsl(120, 100%, 50%);
+  --colour-positive-secondary: hsl(140, 100%, 80%);
+  --colour-negative-primary: hsl(350, 100%, 50%);
+  --colour-negative-secondary: hsl(350, 100%, 80%);
+
+  // links
+  --colour-anchor-primary: hsl(120, 80%, 35%);
+  --colour-anchor-secondary: hsl(120, 100%, 75%);
+  // local links
+  --colour-anchor-local-primary: hsl(270, 80%, 50%);
+  --colour-anchor-local-secondary: hsl(270, 100%, 95%);
+
+  // fonts
+  --font-size-base: 16px;
+
+  // widths
+  --width-mobile: 360px;
+  --width-tablet: 720px;
+  --width-desktop: 1080px;
+  --min-height-input: 44px;
+  --min-width-input: 44px;
+  // sass versions
+  $width-mobile: 360px;
+  $width-tablet: 720px;
+  $width-desktop: 1080px;
+
+  // durations for transition and transform properties
+  --duration-none: 0;
+  --duration-fast: 0.25s;
+  --duration-norm: 0.5s;
+  --duration-slow: 1s;
+  --duration-global: var(--duration-fast);
+
+  --border-radus-base: 5px;
+
+  --outline-default-width: 3px;;
+  --outline-default-colour: var(--colour0-primary);;
+  --outline-default-style: dashed;;
+  --outline-default: 
+    var(--outline-default-width) 
+    var(--outline-default-colour) 
+    var(--outline-default-style);
+  
+  // TODO: make queries to work with env() or sass variables, as css variables don't work in them
+  // @media (min-width: $width-desktop) {
+  //   --font-size-base: 21px;
+  // }
+}
 
 html {
   position: relative;
@@ -44,6 +94,8 @@ footer {
 textarea {
   resize: vertical;
 }
+
+/* END generic rules */
 
 // Navbar
 // -------------------------
@@ -77,6 +129,464 @@ textarea {
   margin-right: 6px;
 }
 
-.navbar-fixed-top .navbar-collapse, .navbar-fixed-bottom .navbar-collapse {
+.navbar-fixed-top .navbar-collapse, 
+.navbar-fixed-bottom .navbar-collapse {
   max-height: 381px;
 }
+
+/* Temporary */
+section.temporary {
+  // temp variables
+  
+  --colour0-primary: hsl(0, 0%, 80%);
+  --colour0-secondary: hsl(0, 0%, 20%);
+  
+  --colour-submit-primary: hsl(220, 100%, 80%);
+  --colour-submit-secondary: hsl(240, 100%, 50%);
+  --colour-positive-primary: hsl(140, 100%, 80%);
+  --colour-positive-secondary: hsl(140, 100%, 50%);
+  --colour-negative-primary: hsl(350, 100%, 80%);
+  --colour-negative-secondary: hsl(350, 100%, 50%); 
+
+  font-size: var(--font-size-base);
+  line-height: 1.15;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  gap: 1em;
+
+  & > h1 {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Text content */
+
+  // Set consistent line height across several text elements 
+  p,
+  li,
+  dt,
+  dd {
+    line-height: 1.5;
+  }
+
+  ul, 
+  ol {
+    padding: 0 0 0 1em;
+    margin: 0;
+  }
+
+  ol {
+    list-style-position: outside;
+  }
+
+  ul {
+    list-style: none;
+  }
+
+  li {
+    text-align: inherit;
+  }
+
+  li > ul > li,
+  li > ol > li {
+    font-size: 0.9em;
+  }
+
+  details {
+    display: block; // Add the correct display in Edge, IE 10+, and Firefox.
+  }
+
+  summary {
+    display: list-item; // Add the correct display in all browsers.
+  }
+
+  /* END Text content */
+
+  /* Forms */
+
+  button, 
+  input, 
+  optgroup,
+  select, 
+  textarea { 
+    box-sizing: border-box;
+    /* 
+      Interactive elements such as form input should provide an area large enough that it is easy to activate them. This helps a variety of people, including people with motor control issues and people using non-precise forms of input such as a stylus or fingers. A minimum interactive size of 44×44 CSS pixels is recommended. 
+    */
+    min-width: 44px;
+    min-height: 44px;
+    width: 100%;
+    font-family: inherit; // Change the font styles in all browsers.
+    font-size: 100%; // Change the font styles in all browsers.
+    line-height: 1.15; // Change the font styles in all browsers.
+    border-radius: 5px;
+    padding: 0.5em;
+    /* 
+      Large amounts of interactive content — including buttons — placed in close visual proximity to each other should have space separating them. This spacing is beneficial for people who are experiencing motor control issues, who may accidentally activate the wrong interactive content. 
+    */
+    margin: 1em 0; 
+  }
+
+  button,
+  input {
+    overflow: visible; // Show the overflow in Edge.
+  }
+
+  button, 
+  select {
+    text-transform: none; // Remove the inheritance of text transform in Firefox.
+  }
+
+  input,
+  textarea {
+    color: hsl(0, 0%, 0%);
+    /* 
+      A property specific to text entry-related elements is the CSS caret-color property, which lets you set the color used to draw the text input caret: 
+    */
+    caret-color: inherit;
+    background-color: hsl(0, 0%, 100%);
+  }
+
+  form {
+    max-width: var(--width-mobile);
+    border: 1px solid var(--colour0-primary);
+    padding: 1em;
+    border-radius: 1em;
+    
+    & input {
+      margin: 0;
+    }
+
+    & > div {
+      margin: 1em 0;
+
+      &:first-of-type {
+        margin-top: 0;
+      }
+
+      &:last-of-type {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  fieldset {
+    padding: 0.35em 0.75em 0.625em; // Correct the padding in Firefox.
+  }
+
+  legend {
+    display: table; // Correct the text wrapping in Edge and IE.
+    box-sizing: border-box; // Correct the text wrapping in Edge and IE.
+    max-width: 100%; // Correct the text wrapping in Edge and IE.
+    color: inherit; // Correct the color inheritance from `fieldset` elements in IE.
+    white-space: normal; // Correct the text wrapping in Edge and IE.
+    border: 1px solid;
+    padding: 0.5em; // Remove the padding so developers are not caught out when they zero out `fieldset` elements in all browsers.
+  }
+
+  label {
+    color: var(--colour0-primary);
+    padding: 0.5em;
+    cursor: pointer;
+  }
+
+  input {
+    border: 2px solid; 
+    transition: var(--duration-global);
+
+    &:required {
+      border-color: var(--colour-submit-primary);
+    }
+
+    &:focus {
+      border-color: transparent;
+      box-shadow: 0 0 6px 6px var(--colour-submit-primary);
+      outline: none;
+    }
+
+    &:invalid {
+      border-color: var(--colour-negative-primary);
+    }
+
+    &:valid {
+      border-color: var(--colour-positive-primary);
+    }
+  }
+
+  textarea {
+    overflow: auto; // Remove the default vertical scrollbar in IE 10+.
+  }
+
+  select {
+    cursor: pointer;
+  }
+
+  progress {
+    vertical-align: baseline; // Add the correct vertical alignment in Chrome, Firefox, and Opera.
+  }
+
+  button {
+    color: var(--colour0-primary);
+    background-color: var(--colour0-secondary);
+    border: 1px solid;
+    box-shadow: 
+      inset 2px 2px 3px hsla(0, 0%, 100%, 0.6),
+      inset -2px -2px 3px hsla(0, 0%, 0%, 0.6);
+    cursor: pointer;
+    -webkit-appearance: button; // Correct the inability to style clickable types in iOS and Safari.
+    transition-duration: var(--duration-global);
+    
+    // Remove the inner border and padding in Firefox.
+    &::-moz-focus-inner {
+      border-style: none;
+      padding: 0;
+    }
+
+    // Restore the focus styles unset by the previous rule.
+    &::-moz-focusring {
+      outline: 1px dotted ButtonText;
+    }
+
+    // &:hover {}
+    &:focus {
+      border-color: var(--colour0-primary);
+      box-shadow: 0 0 5px 5px inherit;
+      outline: none;
+    }
+    &:active {
+      box-shadow: 
+        inset -2px -2px 3px hsla(0, 0%, 100%, 0.6),
+        inset 2px 2px 3px hsla(0, 0%, 0%, 0.6);
+    }
+  }
+
+  *::-webkit-file-upload-button {
+    -webkit-appearance: button; // Correct the inability to style clickable types in iOS and Safari.
+    font: inherit; // Change font properties to `inherit` in Safari.
+  }
+
+  button:disabled,
+  textarea:disabled,
+  input:disabled,
+  select:disabled {
+    cursor: not-allowed;
+  }
+
+  /* END Forms */
+
+  /* Attribute selectors */
+  button,
+  input {
+
+    &[type="button"],
+    &[type="reset"],
+    &[type="submit"] {
+      -webkit-appearance: button; // Correct the inability to style clickable types in iOS and Safari.
+    }
+
+    // Remove the inner border and padding in Firefox.
+    &[type="button"]::-moz-focus-inner,
+    &[type="reset"]::-moz-focus-inner,
+    &[type="submit"]::-moz-focus-inner {
+      border-style: none;
+      padding: 0;
+    }
+    // Restore the focus styles unset by the previous rule.
+    &[type="button"]:-moz-focusring,
+    &[type="reset"]:-moz-focusring,
+    &[type="submit"]:-moz-focusring {
+      outline: 1px dotted ButtonText;
+    }
+  }
+
+  input {
+
+    &[type="checkbox"],
+    &[type="radio"] {
+      box-sizing: border-box; // Add the correct box sizing in IE 10.
+      width: auto;
+      border: none;
+      // padding: 0; // Remove the padding in IE 10 but break custom radios
+      cursor: pointer;
+    }
+  
+    &[type="number"]::-webkit-inner-spin-button,
+    &[type="number"]::-webkit-outer-spin-button {
+      height: auto; // Correct the cursor style of increment and decrement buttons in Chrome.
+    }
+  
+    &[type="search"] {
+      -webkit-appearance: textfield; // Correct the odd appearance in Chrome and Safari.
+      outline-offset: -2px; // Correct the outline style in Safari.
+  
+      &::-webkit-search-decoration {
+        -webkit-appearance: none; // Remove the inner padding in Chrome and Safari on macOS.
+      }
+    }
+  
+    // &[type="color"] {}
+    // &[type="date"] {}
+    // &[type="datetime-local"] {}
+    // &[type="month"] {}
+  
+  
+  }
+
+  button {
+    &[type="button"] {
+      color: var(--colour0-primary);
+      background-color: var(--colour0-secondary);
+      background-image: 
+        radial-gradient(
+          var(--colour0-secondary),
+          var(--colour0-secondary),
+          var(--colour0-primary)
+        );
+  
+      &:focus {
+        outline: var(--outline-default);
+      }
+  
+      &:active {
+        color: var(--colour0-secondary);
+        background-color: var(--colour0-primary);
+        background-image: 
+        radial-gradient(
+          var(--colour0-primary),
+          var(--colour0-primary),
+          var(--colour0-secondary)
+        );
+        outline: none;
+      }
+    }
+  
+    &[type="submit"] {
+      color: var(--colour-submit-primary);
+      background-color: var(--colour-submit-secondary);
+      background-image: 
+        radial-gradient(
+          var(--colour-submit-secondary),
+          var(--colour-submit-secondary),
+          var(--colour-submit-primary)
+        );
+  
+      &:focus {
+        outline: var(--outline-default);
+      }
+  
+      &:active {
+        color:var(--colour-submit-secondary);
+        background-color: var(--colour-submit-primary);
+        background-image: 
+          radial-gradient(
+            var(--colour-submit-primary),
+            var(--colour-submit-primary),
+            var(--colour-submit-secondary)
+          );
+        outline: none;
+      }
+    }
+  }
+  /* END Attribute selectors */
+
+  button {
+    &.positive {
+      color: var(--colour-positive-primary);
+      background-color: var(--colour-positive-secondary);
+      background-image: radial-gradient(
+        var(--colour-positive-secondary),
+        var(--colour-positive-secondary),
+        var(--colour-positive-primary)
+      );
+    }
+
+    &.negative {
+      color: var(--colour-negative-primary);
+      background-color: var(--colour-negative-secondary);
+      background-image: radial-gradient(
+        var(--colour-negative-secondary),
+        var(--colour-negative-secondary),
+        var(--colour-negative-primary)
+      );
+    }
+  }
+}
+
+/* END Temporary */
+
+/* Signup section */
+
+section.signup {
+  
+  & .imagewrapper {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: stretch;
+    align-items: stretch;
+
+    & > .captchacontainer {
+      flex: 1 0 80%;
+      text-align: center;
+      background-color: hsl(0, 0%, 100%);
+      border-radius: 
+        var(--border-radus-base) 0 0 var(--border-radus-base);
+      border: 1px solid hsl(0, 0%, 100%);
+      border-right: none;
+      
+      & > svg {
+        width: 100%;
+        max-height: 100%;
+      }
+    }
+
+    & > button {
+      flex: 0 0 20%;
+      border-radius: 
+        0 var(--border-radus-base) var(--border-radus-base) 0;
+      margin: 0;
+    }
+  }
+
+  & .inputwrapper {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: stretch;
+    align-items: center;
+
+    & > input {
+      flex: 1 0 80%;
+      border-right: none;
+      border-radius: 
+        var(--border-radus-base) 0 0 var(--border-radus-base);
+    }
+
+    & > button {
+      flex: 0 0 20%;
+      border-radius: 
+        0 var(--border-radus-base) var(--border-radus-base) 0;
+    }
+  }
+
+  & output {
+    visibility: hidden;
+    opacity: 0;
+    max-height: 0;
+    color: var(--colour0-primary);
+    transition-property: opacity;
+    transition-duration: var(--duration-global);
+    margin: 0;
+    padding: 0;
+
+    &.errors {
+      visibility: visible;
+      opacity: 1;
+      max-height: 100%;
+      margin: 1em;
+      padding: 0.5em;
+    }
+  }
+  
+}
+
+/* END Signup section */

@@ -46,6 +46,7 @@ html
 
     link(rel='stylesheet', href='/css/loading-bar.css')
     script(src='/js/loading-bar.js')
+    script(src='/js/main.js' defer)
 
     if adsenseOn
       script(data-ad-client=`${adsenseId}` async='' src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js")
@@ -88,7 +89,7 @@ html
       include widgets/google-analytics
 
 
-    script(src='/js/main.js')
+
 
     block extra_footer_js
 

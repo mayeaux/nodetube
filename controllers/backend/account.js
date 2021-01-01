@@ -15,6 +15,7 @@ const mv = require('mv');
 const fs = require('fs-extra');
 const mkdirp = Promise.promisifyAll(require('mkdirp'));
 const randomstring = require('randomstring');
+const svgCaptcha = require("svg-captcha");
 const mailJet = require('../../lib/emails/mailjet');
 const sendgrid = require('../../lib/emails/sendgrid');
 
@@ -110,44 +111,62 @@ exports.postLogin = async(req, res, next) => {
 };
 
 /**
- * POST /signup
+ * `POST` `/signup`
+ * 
  * Create a new local account.
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
  */
-exports.postSignup = async(req, res, next) => {
+exports.postSignup = async (req, res, next) => {
 
-  // CAPTCHA VALIDATION
-  if(process.env.NODE_ENV == 'production' && process.env.RECAPTCHA_ON == 'true'){
-    try {
-      const response = await recaptcha.validate(req.body['g-recaptcha-response']);
-    } catch(err){
-      req.flash('errors', { msg: 'Captcha failed, please try again' });
-      return res.redirect('/signup');
-    }
-  }
-
-  /** assertion testing the data **/
+  /* assertion testing the data */
   // req.assert('email', 'Email is not valid').isEmail();
-  req.assert('password', 'Password must be at least 4 characters long').len(4);
+  req.assert('channelUrl', 'Channel username must be entered').notEmpty();
+  req.assert('channelUrl', 'Channel username must only consist of letters, numbers and underscores (no spaces).').isAlphanumeric();
+  req.assert('channelUrl', 'Channel username must be between 3 and 25 characters.').len({ min: 3, max: 25 });
+  req.assert('password', 'Password must be at least 4 characters long').len({ min: 4 });
   req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
   // req.assert('channelName', 'Channel name must be entered').notEmpty();
-  req.assert('channelUrl', 'Channel username must be entered').notEmpty();
-  req.assert('channelUrl', 'Channel username must be between 3 and 25 characters.').len(3,25);
 
   console.log(req.body.channelUrl + ' <--- inputted channelUrl for' + req.body.email);
-  // console.log(req.body.grecaptcha.getResponse('captcha'));
-
-  if(!/^\w+$/.test(req.body.channelUrl)){
-    req.flash('errors', { msg: 'Please only use letters, numbers and underscores (no spaces) for your username.' });
-    return res.redirect('/signup');
-  }
 
   // req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
+  req.sanitize('channelUrl').trim();
+  req.sanitize('channelUrl').escape();
+  
+  // CAPTCHA VALIDATION
+  if (process.env.NODE_ENV === 'production' && process.env.RECAPTCHA_ON === 'true') {
 
-  const errors = req.validationErrors();
+    try {
+      const response = await recaptcha.validate(req.body['g-recaptcha-response']);
+    } catch(error){
+      next(error);
+    }
 
-  if(errors){
-    req.flash('errors', errors);
-    return res.redirect('/signup');
+  } else {
+    req.assert('captcha', 'Captcha must be at least 4 characters long').len({ min: 4 });
+    req.assert('captcha', 'Invalid captcha').equals(req.session.captcha);
+
+    req.sanitize('captcha').trim();
+    req.sanitize('captcha').escape();
+  }
+
+  const errors = await req.getValidationResult();
+
+  if (!errors.isEmpty()) {
+    const captcha = svgCaptcha.create({ 
+      ignoreChars: "0o1il"
+    });
+    req.session.captcha = captcha.text;
+
+    return res.render('account/signup', {
+      title: 'Create Account',
+      recaptchaPublicKey: process.env.RECAPTCHA_SITEKEY,
+      captchaOn: process.env.RECAPTCHA_ON === 'true',
+      captchaImage: captcha.data,
+      errors: errors.array()
+    });
   }
 
   let user = new User({

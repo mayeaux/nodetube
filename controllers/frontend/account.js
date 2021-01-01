@@ -3,21 +3,22 @@
 
 const randomstring = require('randomstring');
 const _ = require('lodash');
-const User = require('../../models/index').User;
-const Upload = require('../../models/index').Upload;
-const Comment = require('../../models/index').Comment;
-const View = require('../../models/index').View;
-const SiteVisit = require('../../models/index').SiteVisit;
-const React = require('../../models/index').React;
-const Notification = require('../../models/index').Notification;
-const SocialPost = require('../../models/index').SocialPost;
-const Subscription = require('../../models/index').Subscription;
-const PushSubscription = require('../../models/index').PushSubscription;
-const EmailSubscription = require('../../models/index').EmailSubscription;
-
-const PushEndpoint = require('../../models/index').PushEndpoint;
-
+const { 
+  User,
+  Upload,
+  Comment,
+  View,
+  SiteVisit,
+  React,
+  Notification,
+  SocialPost,
+  Subscription,
+  PushSubscription,
+  EmailSubscription,
+  PushEndpoint
+} = require('../../models/index');
 const RSS = require('rss');
+const svgCaptcha = require('svg-captcha');
 
 const { uploadServer, uploadUrl } = require('../../lib/helpers/settings');
 const { saveMetaToResLocalForChannelPage } = require('../../lib/mediaPlayer/generateMetatags');
@@ -875,22 +876,31 @@ exports.logout = (req, res) => {
 };
 
 /**
- * GET /signup
+ * `GET` `/signup`
+ * 
  * Signup page.
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
  */
 exports.getSignup = (req, res) => {
 
-  const recaptchaPublicKey = process.env.RECAPTCHA_SITEKEY;
-
-  const captchaOn = process.env.RECAPTCHA_ON == 'true';
-
-  if(req.user){
+  if (req.user) {
     return res.redirect('/');
   }
+
+  const recaptchaPublicKey = process.env.RECAPTCHA_SITEKEY;
+  const captchaOn = process.env.RECAPTCHA_ON == 'true'
+  const captcha = svgCaptcha.create({ 
+    ignoreChars: "0o1il"
+  });
+
+  req.session.captcha = captcha.text;
+
   res.render('account/signup', {
     title: 'Create Account',
     recaptchaPublicKey,
-    captchaOn
+    captchaOn,
+    captchaImage: captcha.data,
   });
 };
 

@@ -1,3 +1,10 @@
+const express = require("express"); // JSDoc types only
+
+/**
+ * @param {express.Request} req 
+ * @param {express.Response} res 
+ * @param {express.NextFunction} next 
+ */
 async function zopimWidget(req, res, next){
   let zopimOn;
 
@@ -12,6 +19,11 @@ async function zopimWidget(req, res, next){
   next();
 }
 
+/**
+ * @param {express.Request} req 
+ * @param {express.Response} res 
+ * @param {express.NextFunction} next 
+ */
 async function googleAnalyticsWidget(req, res, next){
 
   let googleAnalyticsOn = false;
@@ -26,6 +38,12 @@ async function googleAnalyticsWidget(req, res, next){
   next();
 }
 
+/**
+ * TODO: incorpprate as actual middleware.
+ * @param {express.Request} req 
+ * @param {express.Response} res 
+ * @param {express.NextFunction} next 
+ */
 async function recaptchaWidget(req, res, next){
 
   let recaptchaOn = false;
@@ -39,6 +57,11 @@ async function recaptchaWidget(req, res, next){
   next();
 }
 
+/**
+ * @param {express.Request} req 
+ * @param {express.Response} res 
+ * @param {express.NextFunction} next 
+ */
 async function coinhiveWidget(req, res, next){
   let coinhiveOn = false;
 
