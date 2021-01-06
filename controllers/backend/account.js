@@ -141,7 +141,8 @@ exports.postSignup = async (req, res, next) => {
     try {
       const response = await recaptcha.validate(req.body['g-recaptcha-response']);
     } catch(error){
-      next(error);
+      req.flash('errors', { msg: 'Captcha failed, please try again' });
+      return res.redirect('/signup');
     }
 
   } else {
