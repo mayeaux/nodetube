@@ -6,7 +6,6 @@
    */
   const csrfMeta = document.querySelector('meta[name="csrf-token"]');
   const csrfToken = csrfMeta.content;
-  console.log(csrfToken);
 
   /**
    * @type HTMLElement | null
