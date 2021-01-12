@@ -293,6 +293,14 @@ style.
         background-color: #212121 !important;
     }
 
+    @media (max-width: 450px) {
+        .clickableText {
+            font-size:18px !important;
+            text-decoration:underline solid white 1px !important;
+        }
+
+    }
+
 
 
 
@@ -305,6 +313,6 @@ style.
 
 
 
-    div.secondLine(style="float:left;margin-top:-10px !important;border-bottom: 1px solid #cec0c0;width:100%;box-shadow:-3px 11px 10px -10px rgba(0,0,0,0.51);")
+    div.secondLine(style="padding:0px;float:left;margin-top:-10px !important;border-bottom: 1px solid #cec0c0;width:100%;box-shadow:-3px 11px 10px -10px rgba(0,0,0,0.51);")
         a(href="/help" style="text-align:center;")
-            h3(style="margin-top:10px") NEWTUBE NEEDS YOUR HELP
+            h3.clickableText(style="margin-top:10px;color:white;text-decoration:underline solid white 3px;") NEWTUBE NEEDS YOUR HELP

@@ -469,7 +469,7 @@ block content
 
             // UPLOADER DETAILS SECTION
             div.col-sm-3.uploader-details-section(style="")
-                h3.uploader-name(style="margin-top:25px;font-size:26px;")
+                h3.uploader-name(style="margin-top:25px;font-size:23px;")
                     if upload.uploader.customThumbnail
                         a(href=`/user/${upload.uploader.channelUrl}`)
 
@@ -532,9 +532,9 @@ block content
 
                 div.uploadTitle.desktopTitle(style="margin-bottom:20px;")
 
-                    h2.balance-text(class="upload-title-value" style="display:inline;text-wrap:balance;width:80%;margin:0 auto;font-weight:300;color: #a9a9a9 !important;margin-bottom:20px;") #{upload.title}
+                    h2.balance-text(class="upload-title-value" style="font-size:24px;display:inline;text-wrap:balance;width:80%;margin:0 auto;font-weight:300;color: #a9a9a9 !important;margin-bottom:20px;") #{upload.title}
                         if upload.formattedDuration
-                            h2.fw(style="display:inline;color: #a9a9a9; !important;").
+                            h2.fw(style="font-size:24px;display:inline;color: #a9a9a9; !important;").
                                 &nbsp - #{upload.formattedDuration}
 
                 if upload.description
