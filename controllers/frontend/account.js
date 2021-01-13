@@ -590,9 +590,7 @@ exports.getChannel = async(req, res) => {
 
         // if(upload.isOver24h == false){
         if(!moreThan24hOld === true){
-          const checkedViews = await View.countDocuments({ upload: upload.id, validity: 'real' });
-          upload.legitViewAmount = checkedViews;
-
+          upload.legitViewAmount = await View.countDocuments({ upload: upload.id, validity: 'real' });
         } else {
           upload.legitViewAmount = upload.views;
         }
