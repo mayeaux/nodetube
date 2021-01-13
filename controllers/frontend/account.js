@@ -977,7 +977,7 @@ exports.getViewHistory = async(req, res) => {
 exports.getExtraPage = async(req, res) => {
 
   res.render('account/extra', {
-    title: 'Extra Page',
+    title: 'Extra Page'
   });
 };
 
