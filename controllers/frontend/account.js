@@ -169,6 +169,7 @@ exports.subscriptions = async(req, res) => {
       uploader: {$in: subscribedToUsers},
       visibility: 'public',
       status: 'completed'
+      // TODO: don't use checkedViews here
     }).populate('uploader checkedViews')
       .skip((page * limit) - limit)
       .limit(limit).sort({createdAt: -1});
@@ -802,12 +803,15 @@ exports.subscriptionsByViews = async(req, res) => {
     subscribedToUsers.push(subscription.subscribedToUser);
   }
 
+  // TODO: need to switch this to use views or count them
+  // because if it has a ton then it's really bad to get that way
   let uploads = await Upload.find({
     uploader: { $in: subscribedToUsers },
     visibility: 'public',
     uploadUrl: { $exists: true }
   }).populate('uploader checkedViews');
 
+  // TODO: replace with finding the views
   uploads = _.orderBy(uploads, function(upload){
     return upload.checkedViews.length;
   });
