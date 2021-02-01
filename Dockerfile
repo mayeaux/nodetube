@@ -13,6 +13,8 @@ COPY models /app/models/
 COPY public /app/public/
 COPY scripts /app/scripts/
 COPY views /app/views/
+RUN mkdir /app/hls/
+RUN mkdir /app/recordings/
 
 FROM void as builder
 WORKDIR /app/

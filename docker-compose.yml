@@ -18,6 +18,7 @@ services:
     depends_on:
       - redis
       - mongo
+      - nginx
     command: npm start
     networks:
       - nodetube-network
@@ -35,6 +36,20 @@ services:
   redis:
     container_name: nodetube-redis
     image: redis
+    networks:
+      - nodetube-network
+
+  nginx:
+    container_name: nodetube-nginx-rtmp
+    image: alfg/nginx-rtmp
+    ports:
+      - "1935:1935"
+    volumes:
+      - /app/hls
+      - /app/recordings
+      - ./config/nginx.conf:/etc/nginx/nginx.conf.template
+      - ./upload:/app/upload
+      - ./uploads:/app/uploads
     networks:
       - nodetube-network
 
