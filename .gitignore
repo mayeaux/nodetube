@@ -34,6 +34,7 @@ public/css/main.css
 node_modules
 
 # Editors
+.vscode
 .idea
 *.iml
 
@@ -59,3 +60,5 @@ testing
 combined.log
 error.log
 
+#ignore this for now
+docs/jsdoc
