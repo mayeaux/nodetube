@@ -83,6 +83,10 @@ cd /etc/nginx/sites-available
 sudo mv default default1
 # copy to default
 
+sudo nano default
+# Paste in nginx setup # 
+
+
 # test setup
 sudo nginx -t
 
