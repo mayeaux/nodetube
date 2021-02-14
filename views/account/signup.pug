@@ -1,73 +1,82 @@
 extends ../layout
 
-
-
 block content
-  style.
-    .firstPasswordInput, .confirmPasswordInput {
-      width: 88%
-    }
-
-  .container
-    .page-header
-      h3.fw.center-block.text-center(style="font-size:33px;") Sign Up
-    form.form-horizontal.signup-form(id='signup-form', method='POST')
+  section.signup.temporary
+    //- TODO: pull level 1 heading out of section 
+    h1 Sign Up
+    form#signup-form(method='POST')
       input(type='hidden', name='_csrf', value=_csrf)
-      //.form-group
-      //  label.col-sm-3.control-label(for='channelName') Display Name
-      //  .col-sm-7
-      //    input.form-control(type='text', name='channelName', id='channelName', placeholder='The name that shows up for your channel',
-      //    autofocus, minlength=3, maxlength=25, required)
-      .form-group
-        label.fw.loginHeader.col-sm-3.control-label(for='channelUrl') Channel Username
-        .col-sm-7
-          input.fw.loginHeader.form-control.username(type='text', name='channelUrl', id='channelUrl', autofocus, required placeholder='Please choose your channel username')
-      .form-group
-        label.fw.loginHeader.col-sm-3.control-label(for='password') Password
-        .col-sm-7
-          input.fw.loginHeader.form-control.firstPasswordInput(type='password', name='password', id='password', placeholder='Please enter your password', required)
-      .form-group
-        label.fw.loginHeader.col-sm-3.control-label(for='confirmPassword') Confirm Password
-        .col-sm-7
-          input.fw.loginHeader.form-control.confirmPasswordInput(type='password', name='confirmPassword', id='confirmPassword', placeholder='Please confirm your password', required)
+      div
+        label(for='channelUrl').
+          Channel Username #[abbr(title="This field is mandatory" aria-label="required") *]:
+        p Must have between 3 to 25 characters, which are letters, numbers and underscores (no spaces).
+        input#channelUrl.username(
+          type='text', 
+          name='channelUrl', 
+          minlength="3",
+          maxlength="25",
+          pattern="[a-zA-Z0-9]+"
+          required
+        )
+      div
+        label(for='password').
+          Password #[abbr(title="This field is mandatory" aria-label="required") *]:
+        input#password.firstPasswordInput(
+          type='password', 
+          name='password', 
+          minlength="4", 
+          autocomplete="password"
+          required
+        )
+      div
+        label(for='confirmPassword').
+          Confirm Password #[abbr(title="This field is mandatory" aria-label="required") *]:
+        input#confirmPassword.confirmPasswordInput(
+          type='password', 
+          name='confirmPassword', 
+          minlength="4",
+          autocomplete="password", 
+          required
+        )
 
       if captchaOn == true
         .form-group
-          label.fw.loginHeader.col-sm-3.control-label(for='captcha') Captcha
-          //.col-sm-offset-3.col-sm-7
-          .form-group.col-md-4(style="margin-left:1pt;")
-            .g-recaptcha(data-sitekey=`${recaptchaPublicKey}` id='captcha')
+          label(for='captcha') Captcha #[abbr(title="This field is mandatory" aria-label="required") *]:
+          div.form-group.col-md-4(style="margin-left:1pt;")
+            div.g-recaptcha(data-sitekey=`${recaptchaPublicKey}` id='captcha')
+      else
+        //- buttons get unhidden by javascript
+        div.captcha
+          label(for="captcha").
+            Solve captcha #[abbr(title="This field is mandatory", aria-label="required") *]:
+          div.imagewrapper 
+            div.captchacontainer
+              | !{captchaImage}
+            button.reloadcaptcha(type="button", title="Reload captcha", hidden) 
+              span.fas.fa-sync
 
-      //var regex = new RegExp("^[a-zA-Z]+$");
+          div.inputwrapper
+            input#captcha(type="text", name="captcha", minlength="4", required) 
+            button.checkcaptcha(type="button", title="Check captcha", hidden)
+              span.fas.fa-check-double
 
-      .form-group
-        .col-sm-offset-3.col-sm-7
-          p.fw By signing up you are agreeing you have read and agree to the
-            a(href="/termsofservice") &nbspTerms Of Service
-      .form-group
-        .col-sm-offset-3.col-sm-7
-          button.fw.loginHeader.btn.btn-success(type='submit' style="border-radius:8px;width:133px;")
-            i.fa.fa-user-plus
-            | Signup
+      //- var regex = new RegExp("^[a-zA-Z]+$");
 
+      div
+        p By signing up you are agreeing you have read and agree to the #[a(href="/termsofservice") Terms Of Service]
+      div
+        button(type='submit')
+          span.fa.fa-user-plus
+          |
+          | Signup
 
-  script.
-    $('.signup-form').submit(function (evt) {
-
-      var username = $('.username').val();
-
-      if (!/^\w+$/.test(username)) {
-         evt.preventDefault();
-         swal('Please only use letters, numbers and underscores (no spaces) in your username');
-      } else {
-        /** form will submit properly **/
-      }
-
-      if (username.length > 20 || username.length < 3 ) {
-        evt.preventDefault();
-        swal('Please make sure your username is between 3 and 20 characters');
-      } else {
-        /** form will submit properly **/
-      }
-
-    });
+    if errors
+      output.errors
+        p Errors:
+        ul.errorlist
+          each error in errors
+            li {error}
+    else 
+      output
+        p Errors:
+          ul.errorlist

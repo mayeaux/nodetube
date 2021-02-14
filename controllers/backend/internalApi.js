@@ -21,6 +21,7 @@ var Busboy = require('busboy');
 const mkdirp = Promise.promisifyAll(require('mkdirp'));
 const mv = require('mv');
 const FileType = require('file-type');
+const svgCaptcha = require("svg-captcha");
 
 const srt2vtt = Promise.promisifyAll(require('srt2vtt'));
 
@@ -1283,3 +1284,31 @@ exports.sendUserPushNotifs = async function(req, res, next){
 
 };
 
+/**
+ * Controller for getting SVG captcha.
+ * @param {import('express').Request} req 
+ * @param {import('express').Response} res 
+ */
+exports.getCaptcha = (req, res) => {
+  const captcha = svgCaptcha.create({
+    ignoreChars: "0o1il"
+  });
+  req.session.captcha = captcha.text;
+
+  res.type("svg");
+  res.status(200).send(captcha.data);
+};
+
+/** 
+ * @param {import('express').Request} req 
+ * @param {import('express').Response} res
+ */
+exports.postValidateCaptcha = (req, res) => {
+  req.sanitizeBody("captcha").trim();
+  req.sanitizeBody("captcha").escape();
+  console.log(req.body.captcha, req.session.captcha);
+
+  req.session.captcha === req.body.captcha
+    ? res.status(200).send("success")
+    : res.send("failure")
+};

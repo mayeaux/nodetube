@@ -18,7 +18,7 @@
     "postinstall": "node ./copySettingsAndPrivateFiles.js",
     "eslint": "eslint ./",
     "eslint:fix": "./node_modules/.bin/eslint --fix .",
-    "dev": "nodemon -e pug,js app.js",
+    "dev": "nodemon --ext js app.js",
     "memory": "node --max-old-space-size=4096 app.js",
     "cache": "node --max-old-space-size=8000 caching/runCaching.js",
     "caching": "node --max-old-space-size=8000 caching/runCaching.js",
@@ -95,7 +95,6 @@
     "node-webvtt": "^1.9.3",
     "nodemailer": "^3.1.7",
     "nodemailer-mailgun-transport": "^1.4.0",
-    "nodemon": "^1.19.0",
     "object-sizeof": "^1.3.1",
     "passport": "0.3.2",
     "passport-facebook": "^2.1.1",
@@ -118,6 +117,7 @@
     "srt-to-vtt": "^1.1.3",
     "srt2vtt": "^1.3.1",
     "stripe": "^4.25.0",
+    "svg-captcha": "^1.4.0",
     "tumblr.js": "^1.1.1",
     "twilio": "^3.31.0",
     "twit": "^2.2.11",
@@ -131,16 +131,23 @@
     "youtube-node": "^1.3.3"
   },
   "devDependencies": {
+    "@types/jquery": "^3.5.5",
     "chai": "^3.5.0",
     "eslint": "^4.18.2",
     "eslint-config-airbnb-base": "^11.3.2",
     "eslint-plugin-chai-friendly": "^0.2.0",
     "eslint-plugin-import": "^2.17.2",
     "mocha": "^7.0.1",
+    "nodemon": "^2.0.6",
     "rewire": "^2.5.2",
     "sinon": "^2.0.0",
     "sinon-mongoose": "^1.3.0",
     "supertest": "^3.4.2"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "public/*"
+    ]
   },
   "eslintConfig": {
     "extends": "airbnb-base",

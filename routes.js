@@ -245,6 +245,9 @@ function frontendRoutes(app){
 
   app.get('/signup', accountFrontendController.getSignup);
 
+  app.get('/captcha', internalApiController.getCaptcha);
+  app.post('/captcha', internalApiController.postValidateCaptcha)
+
   /** account api endpoints **/
   app.post('/login', accountBackendController.postLogin);
   app.post('/forgot', accountBackendController.postForgot);
@@ -260,6 +263,8 @@ function frontendRoutes(app){
   app.post('/api/upload/:uniqueTag/captions/delete', passportConfig.isAuthenticated, internalApiController.deleteUploadCaption);
 
   /** API ENDPOINTS **/
+  
+
   app.post('/api/react/:upload/:user', passportConfig.isAuthenticated, internalApiController.react);
 
   app.post('/api/updateLastWatchedTime', passportConfig.isAuthenticated, internalApiController.updateLastWatchedTime);
