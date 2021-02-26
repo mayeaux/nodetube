@@ -620,9 +620,9 @@ exports.getChannel = async(req, res) => {
 
     const userHasPlus = user.plan === 'plus';
 
-    console.log('USER HAS PLUS');
-
-    console.log(userHasPlus);
+    // console.log('USER HAS PLUS');
+    //
+    // console.log(userHasPlus);
 
     uploads = attachDataToUploadsAsUploads(uploads, userHasPlus, channelUrl);
 
