@@ -84,7 +84,7 @@ if user && user.role == 'admin'
                 p.upload-title-text.views-text(style="display:inline") Sensitive (18+)
 
         div.thing(style="margin-top:-33px;margin-left:44px;display:block")
-             input.ratingChanged(style="display:block" type="checkbox" value=`${upload._id}`)
+             input.ratingChanged(style="display:block;z-index:99999;position:absolute;" type="checkbox" value=`${upload._id}`)
 //
 //// denote whether upload is deleted
 if user && (user.role == 'admin' || user.role == 'moderator') && upload.visibility == 'removed'
