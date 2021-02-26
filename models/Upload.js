@@ -87,7 +87,10 @@ const uploadSchema = new mongoose.Schema({
   youTubeDLData: mongoose.Schema.Types.Mixed,
 
   // TODO: this should be an enum
+  // this is where approved is done
   status: String,
+
+  // whether there should be an added warning
   sensitive: {
     type: Boolean,
     default: false
@@ -114,6 +117,7 @@ const uploadSchema = new mongoose.Schema({
     type: Boolean
   },
 
+  // disallows from changing the sensitivity I believe
   moderated: {
     type: Boolean
   },
