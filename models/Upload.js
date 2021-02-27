@@ -52,28 +52,49 @@ const uploadSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+
   visibility: { type: String, enum: ['public', 'unlisted', 'private', 'removed', 'pending'], default: 'public' },
+
+  // TODO: this should be an enum
+  // this is where approved is done
+  status: String,
+
+  // whether there should be an added warning
+  sensitive: {
+    type: Boolean,
+    default: false
+  },
+
+  // the upload rating, basically how sensitive/mature it is
+  rating: { type: String, enum: ['allAges', 'mature', 'sensitive'] },
+
   thumbnailUrl: 'String',  // TODO: can eventually delete this
+
   customThumbnailUrl: 'String', // TODO: can eventually delete this
   uploadUrl: 'String',
+
+
   // TODO: maybe add a value useUploadUrl to turn using uploadUrl on and off on the frontend
   uploader: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
 
+  // TODO: I don't think this is used much more
   checkedViews: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'View',
     default: []
   }],
 
+  // array of all of the reacts on the upload
   reacts: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'React',
     default: []
   }],
 
+  // array of all of the comments on the upload
   comments: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Comment'
@@ -86,18 +107,7 @@ const uploadSchema = new mongoose.Schema({
   // data from youtubeDL
   youTubeDLData: mongoose.Schema.Types.Mixed,
 
-  // TODO: this should be an enum
-  // this is where approved is done
-  status: String,
-
-  // whether there should be an added warning
-  sensitive: {
-    type: Boolean,
-    default: false
-  },
-
-  rating: { type: String, enum: ['allAges', 'mature', 'sensitive'] },
-
+  //
   thumbnails: {
     generated: 'String',
     custom: 'String',
@@ -105,14 +115,17 @@ const uploadSchema = new mongoose.Schema({
     large: 'String'
   },
 
+  // TODO: is this used anymore?
   quality: {
     high: Number
   },
 
+  // if it was a livestream
   livestreamDate: {
     type: String
   },
 
+  // allow curation of popular uploads
   uncurated: {
     type: Boolean
   },
@@ -122,22 +135,29 @@ const uploadSchema = new mongoose.Schema({
     type: Boolean
   },
 
+  // get all categories, this is pulled out so it's more editable
   category: {
     type: String,
     default: 'uncategorized',
     enum: getAllCategories()
   },
 
+  // get all subcategories, this is pulled out so it's more editable
   subcategory: { type: String, enum: getAllSubcategories() },
 
+  // how long is the upload
   durationInSeconds: Number,
+
+  // easy to read format
   formattedDuration: String,
 
+  // when the backend finished processing the upload
   processingCompletedAt: Date,
 
   // string, such as UnIqUe.webvtt used by default to indicate it's in the same directory with the upload
   webVTTPath: String,
 
+  // data returned from running ffprobe against the upload
   ffprobeData: mongoose.Schema.Types.Mixed
 
 }, {
