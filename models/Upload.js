@@ -40,6 +40,8 @@ const uploadSchema = new mongoose.Schema({
   fileSize: Number,  // TODO: should support highQualityFileSize as well for compressions
 
   bitrateInKbps: Number,
+
+  
   dimensions: {
     height: String,
     width: String,
@@ -48,6 +50,8 @@ const uploadSchema = new mongoose.Schema({
     aspectRatio: String
   },
 
+  // TODO: double check this is what's being used, clean the others
+  // how many views the upload has
   views: {
     type: Number,
     default: 0
@@ -57,6 +61,7 @@ const uploadSchema = new mongoose.Schema({
 
   // TODO: this should be an enum
   // this is where approved is done
+  // completed
   status: String,
 
   // whether there should be an added warning
