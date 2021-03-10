@@ -338,10 +338,6 @@ block content
 
         r.on('fileAdded', function (file) {
 
-          // scroll to the div when file selected
-          document.getElementById('scrollTo').scrollIntoView({ behavior: 'smooth' });
-
-
           // replace underlines with spaces just to be nice
           var fileName = file.fileName.replace(/_/g, " ");
 
@@ -354,6 +350,15 @@ block content
           if(!title || title == ""){
             $('#title').val(fileName);
           }
+
+          // focus and scroll down the div
+          $('#title').focus();
+
+          // have to use setTimeout for event loop
+          setTimeout(function(){
+            // scroll to the div when file selected
+            document.getElementById('scrollTo').scrollIntoView({behavior: 'smooth'});
+          }, 1)
 
           // auto fill in title
 
