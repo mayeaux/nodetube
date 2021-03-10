@@ -41,7 +41,6 @@ const uploadSchema = new mongoose.Schema({
 
   bitrateInKbps: Number,
 
-
   dimensions: {
     height: String,
     width: String,
@@ -67,7 +66,7 @@ const uploadSchema = new mongoose.Schema({
     type: String,
     enum: ['public', 'unlisted', 'private', 'removed', 'pending']
   },
-  
+
   // processing, failed, completed, rejected
   // this is where approved is done
   // completed: done being worked on by the backend
@@ -87,13 +86,15 @@ const uploadSchema = new mongoose.Schema({
   },
 
   // the upload rating, basically how sensitive/mature it is
+  // allAges, anyone can see it
+  // mature: people can see it if they have mature selected as filter
+  // sensitive: people will see a warning when they access the upload
   rating: { type: String, enum: ['allAges', 'mature', 'sensitive'] },
 
   thumbnailUrl: 'String',  // TODO: can eventually delete this
 
   customThumbnailUrl: 'String', // TODO: can eventually delete this
   uploadUrl: 'String',
-
 
   // TODO: maybe add a value useUploadUrl to turn using uploadUrl on and off on the frontend
   uploader: {

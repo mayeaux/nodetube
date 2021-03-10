@@ -10,7 +10,6 @@ async function customBranding(req, res, next){
   res.locals.uploadServer = uploadServer;
   res.locals.optionalHeaderOn = process.env.OPTIONAL_HEADER_ON === 'true';
 
-
   next();
 }
 
