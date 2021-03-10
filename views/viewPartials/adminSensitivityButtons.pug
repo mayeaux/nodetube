@@ -11,9 +11,9 @@ if user && user.role == 'admin'
 
         br
         h4 Change Visibility
-        button.btn-lg.button-success.change-visibility(rating="sensitive") Mark As Sensitive
-        button.btn-lg.button-success.change-visibility(rating="mature") Mark As NSFW (Mature)
-        button.btn-lg.button-success.change-visibility(rating="allAges") Mark As SFW (AllAges)
+        button.btn-lg.button-success.change-visibility(visibility="public") Mark As Sensitive
+        button.btn-lg.button-success.change-visibility(visibility="") Mark As NSFW (Mature)
+        button.btn-lg.button-success.change-visibility(visibility="allAges") Mark As SFW (AllAges)
 
         br
         h4 Change Category
@@ -27,7 +27,7 @@ if user && user.role == 'admin'
         //  button.btn-md.button-success.change-category(category=`${category.name}`) #{category.displayName}
 
     script.
-      $('.change-rating').on('click', function () {
+      $('.change-rating .change-visibility').on('click', function () {
         var checkedValues = $('input:checkbox:checked').map(function () {
           return this.value;
         }).get();

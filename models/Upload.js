@@ -41,7 +41,7 @@ const uploadSchema = new mongoose.Schema({
 
   bitrateInKbps: Number,
 
-  
+
   dimensions: {
     height: String,
     width: String,
@@ -57,12 +57,19 @@ const uploadSchema = new mongoose.Schema({
     default: 0
   },
 
-  visibility: { type: String, enum: ['public', 'unlisted', 'private', 'removed', 'pending'], default: 'public' },
+  visibility: {
+    type: String,
+    enum: ['public', 'unlisted', 'private', 'removed', 'pending']
+  },
 
+  // processing, failed, completed, rejected
   // TODO: this should be an enum
   // this is where approved is done
   // completed
-  status: String,
+  status: {
+    type: String,
+    enum: ['processing', 'failed', 'completed', 'rejected']
+  },
 
   // whether there should be an added warning
   sensitive: {
