@@ -62,10 +62,14 @@ const uploadSchema = new mongoose.Schema({
     enum: ['public', 'unlisted', 'private', 'removed', 'pending']
   },
 
+
   // processing, failed, completed, rejected
-  // TODO: this should be an enum
   // this is where approved is done
-  // completed
+  // completed: done being worked on by the backend
+  // processing: still being worked on by the backend
+  // failed: backend has failed to complete processing
+  // TODO: should have a job that goes through and checks old uploads and marks them as failed
+  // TODO cont: after a certain period currently no such mechanism exists
   status: {
     type: String,
     enum: ['processing', 'failed', 'completed', 'rejected']
