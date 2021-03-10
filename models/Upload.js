@@ -57,12 +57,17 @@ const uploadSchema = new mongoose.Schema({
     default: 0
   },
 
+  // the degree to which the upload is visible
+  // public: anyone can see it, shown in search results, recent, popular, channel page
+  // unlisted: anyone with a link can see it, no search results, recent, popular, channel page
+  // private: only the logged in user can see it
+  // pending: user can see it, admins/mods can see it on pending page
+  // removed: nobody but admins/mods can see it
   visibility: {
     type: String,
     enum: ['public', 'unlisted', 'private', 'removed', 'pending']
   },
-
-
+  
   // processing, failed, completed, rejected
   // this is where approved is done
   // completed: done being worked on by the backend

@@ -152,7 +152,7 @@ exports.deleteAccount = async(req, res) => {
 
   await user.save();
 
-  // TODO: bug here, set all visibility as public will have deleterious effects on private uploads, should use status instead
+  // TODO: bug here, set all visibility as removed will have deleterious effects on private uploads, should use status instead
   // make all uploads visibility to removed
   for(let upload of uploads){
     upload.visibility = 'removed';
