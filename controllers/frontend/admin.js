@@ -109,7 +109,7 @@ exports.getPending = async(req, res) => {
   // no need to do anything crazy since this is an admin only view
   uploads = uploads.map(function(upload){
 
-    upload.pathToUploader = `/user/${channelUrl}`;
+    upload.pathToUploader = `/user/${upload.uploader.channelUrl}`;
 
     console.log(upload.pathToUploader);
 
