@@ -67,6 +67,7 @@ html
     include layoutPartials/header
 
     // todo: make it so that it's an env var
+    // optional header with a call to action
     if optionalHeaderOn && !dontShowOptionalHeader && !(user && user.plan == 'plus') || 1 == 2
       include layoutPartials/optionalHeader
 

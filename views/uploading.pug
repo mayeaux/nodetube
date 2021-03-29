@@ -148,8 +148,9 @@ block content
                             a.categoryValue(style="cursor:pointer;" data-value=category.name data-displayname=category.displayName) #{category.displayName}
 
                   br
+                  div#categoryScrollTo(style="")
                   br
-                  div.categoryName(style="display:none")
+                  div.categoryName#categoryName(style="display:none")
                     h5.fw(style="font-size:20px;").categoryDisplayName Category: $Thing
                     br
 
@@ -164,7 +165,7 @@ block content
                         each subcategory in category.subcategories
                             div.radio-buttons.subcategory(class=category.name style="display:none")
                               label.fw.radio-inline(style="margin-top:7px;font-size:15px;")
-                                input.radio-button(type='radio', name='subcategory' value=subcategory.name required)
+                                input.radio-button.subcategoryOption(type='radio', name='subcategory' value=subcategory.name required)
                                 | #{subcategory.displayName}
 
                               br
@@ -232,6 +233,27 @@ block content
   script.
     $(document).ready(function () {
 
+      // focus the button so you can just click enter to start uploading
+      $('.resumable-browser').focus();
+
+      // scroll down and focus description when category is changed
+      $('.categoryValue').on('click', function(){
+        $('#description').focus()
+        // have to do a setTimeout for event loop
+        setTimeout(function(){
+          document.getElementById('categoryName').scrollIntoView({ behavior: 'smooth' });
+        }, 1)
+      })
+
+      // scroll down and focus description when category is changed
+      $('.subcategoryOption').on('click', function () {
+        $('#description').focus()
+        // TODO: would be better if it scrolled down just a smidge to visually bring attention back to description
+        setTimeout(function () {
+          document.getElementById('description').scrollIntoView({behavior: 'smooth'});
+        }, 1)
+      })
+
       // progress bar stuff
       var bar1 = new ldBar("#myItem1");
 
@@ -264,6 +286,8 @@ block content
 
         console.log(value, displayName);
       })
+
+
 
       var privs = #{user.privs}
 
@@ -317,10 +341,6 @@ block content
 
         r.on('fileAdded', function (file) {
 
-          // scroll to the div when file selected
-          document.getElementById('scrollTo').scrollIntoView({ behavior: 'smooth' });
-
-
           // replace underlines with spaces just to be nice
           var fileName = file.fileName.replace(/_/g, " ");
 
@@ -333,6 +353,17 @@ block content
           if(!title || title == ""){
             $('#title').val(fileName);
           }
+
+          // scroll to the div when file selected
+          document.getElementById('scrollTo').scrollIntoView({behavior: 'smooth'});
+
+
+          // have to use setTimeout for event loop
+          setTimeout(function(){
+
+            // focus and scroll down the div
+            $('#title').focus();
+          }, 750)
 
           // auto fill in title
 

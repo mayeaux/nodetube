@@ -40,6 +40,7 @@ const uploadSchema = new mongoose.Schema({
   fileSize: Number,  // TODO: should support highQualityFileSize as well for compressions
 
   bitrateInKbps: Number,
+
   dimensions: {
     height: String,
     width: String,
@@ -48,32 +49,74 @@ const uploadSchema = new mongoose.Schema({
     aspectRatio: String
   },
 
+  // TODO: double check this is what's being used, clean the others
+  // how many views the upload has
   views: {
     type: Number,
     default: 0
   },
-  visibility: { type: String, enum: ['public', 'unlisted', 'private', 'removed', 'pending'], default: 'public' },
+
+  // the degree to which the upload is visible
+  // public: anyone can see it, shown in search results, recent, popular, channel page
+  // unlisted: anyone with a link can see it, no search results, recent, popular, channel page
+  // private: only the logged in user can see it
+  // pending: user can see it, admins/mods can see it on pending page
+  // removed: nobody but admins/mods can see it
+  visibility: {
+    type: String,
+    enum: ['public', 'unlisted', 'private', 'removed', 'pending']
+  },
+
+  // processing, failed, completed, rejected
+  // this is where approved is done
+  // completed: done being worked on by the backend
+  // processing: still being worked on by the backend
+  // failed: backend has failed to complete processing
+  // TODO: should have a job that goes through and checks old uploads and marks them as failed
+  // TODO cont: after a certain period currently no such mechanism exists
+  status: {
+    type: String,
+    enum: ['processing', 'failed', 'completed', 'rejected']
+  },
+
+  // whether there should be an added warning
+  sensitive: {
+    type: Boolean,
+    default: false
+  },
+
+  // the upload rating, basically how sensitive/mature it is
+  // allAges, anyone can see it
+  // mature: people can see it if they have mature selected as filter
+  // sensitive: people will see a warning when they access the upload
+  rating: { type: String, enum: ['allAges', 'mature', 'sensitive'] },
+
   thumbnailUrl: 'String',  // TODO: can eventually delete this
+
   customThumbnailUrl: 'String', // TODO: can eventually delete this
   uploadUrl: 'String',
+
   // TODO: maybe add a value useUploadUrl to turn using uploadUrl on and off on the frontend
   uploader: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
 
+  // TODO: I don't think this is used much more
   checkedViews: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'View',
     default: []
   }],
 
+  // array of all of the reacts on the upload
   reacts: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'React',
     default: []
   }],
 
+  // array of all of the comments on the upload
   comments: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Comment'
@@ -86,15 +129,7 @@ const uploadSchema = new mongoose.Schema({
   // data from youtubeDL
   youTubeDLData: mongoose.Schema.Types.Mixed,
 
-  // TODO: this should be an enum
-  status: String,
-  sensitive: {
-    type: Boolean,
-    default: false
-  },
-
-  rating: { type: String, enum: ['allAges', 'mature', 'sensitive'] },
-
+  //
   thumbnails: {
     generated: 'String',
     custom: 'String',
@@ -102,38 +137,49 @@ const uploadSchema = new mongoose.Schema({
     large: 'String'
   },
 
+  // TODO: is this used anymore?
   quality: {
     high: Number
   },
 
+  // if it was a livestream
   livestreamDate: {
     type: String
   },
 
+  // allow curation of popular uploads
   uncurated: {
     type: Boolean
   },
 
+  // disallows from changing the sensitivity I believe
   moderated: {
     type: Boolean
   },
 
+  // get all categories, this is pulled out so it's more editable
   category: {
     type: String,
     default: 'uncategorized',
     enum: getAllCategories()
   },
 
+  // get all subcategories, this is pulled out so it's more editable
   subcategory: { type: String, enum: getAllSubcategories() },
 
+  // how long is the upload
   durationInSeconds: Number,
+
+  // easy to read format
   formattedDuration: String,
 
+  // when the backend finished processing the upload
   processingCompletedAt: Date,
 
   // string, such as UnIqUe.webvtt used by default to indicate it's in the same directory with the upload
   webVTTPath: String,
 
+  // data returned from running ffprobe against the upload
   ffprobeData: mongoose.Schema.Types.Mixed
 
 }, {

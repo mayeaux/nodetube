@@ -1,3 +1,4 @@
+//DETAILS BELOW AN INDIVIDUAL UPLOAD
 style.
     input[type=checkbox] {
         /* Double-sized Checkboxes */
@@ -68,22 +69,22 @@ div.upload-thing
 
 
 //// if user is an admin, allow them to see category and rating
-//if user && user.role == 'admin'
-//    div.admin-div(style="margin-bottom:15px;margin-top:-4px;")
-//        if upload.category
-//            p.upload-title-text.views-text(style="margin:0;margin-left:3px;text-align:center;display:inline;") #{upload.category}
-//        if upload.subcategory
-//            p.upload-title-text.views-text(style="margin:0;margin-left:3px;text-align:center;display:inline;") #{upload.subcategory}
-//        if upload.rating
-//            if upload.rating == 'allAges'
-//                p.upload-title-text.views-text(style="display:inline") SFW
-//            if upload.rating == 'mature'
-//                p.upload-title-text.views-text(style="display:inline") NSFW
-//            if upload.rating == 'sensitive'
-//                p.upload-title-text.views-text(style="display:inline") Sensitive (18+)
-//
-//        div.thing(style="margin-top:-33px;margin-left:44px;display:block")
-//             input.ratingChanged(style="display:block" type="checkbox" value=`${upload._id}`)
+if user && user.role == 'admin'
+    div.admin-div(style="margin-bottom:15px;margin-top:-4px;")
+        if upload.category
+            p.upload-title-text.views-text(style="margin:0;margin-left:3px;text-align:center;display:inline;") #{upload.category}
+        if upload.subcategory
+            p.upload-title-text.views-text(style="margin:0;margin-left:3px;text-align:center;display:inline;") #{upload.subcategory}
+        if upload.rating
+            if upload.rating == 'allAges'
+                p.upload-title-text.views-text(style="display:inline") SFW
+            if upload.rating == 'mature'
+                p.upload-title-text.views-text(style="display:inline") NSFW
+            if upload.rating == 'sensitive'
+                p.upload-title-text.views-text(style="display:inline") Sensitive (18+)
+
+        div.thing(style="margin-top:-33px;margin-left:44px;display:block")
+             input.ratingChanged(style="display:block;z-index:99999;position:absolute;" type="checkbox" value=`${upload._id}`)
 //
 //// denote whether upload is deleted
 if user && (user.role == 'admin' || user.role == 'moderator') && upload.visibility == 'removed'

@@ -27,6 +27,7 @@ const userSchema = new mongoose.Schema({
     default: 'user'
   },
 
+  // TODO: this should be indexed, no?
   // channel username, unique url and identifier
   channelUrl: { type: String, unique: true, required: true, uniqueCaseInsensitive: true },
 
@@ -141,6 +142,7 @@ const userSchema = new mongoose.Schema({
   },
 
   // restricted = deleted
+  // the only status is "restricted" which denotes deleted. Almost better to just do deleted as boolean
   status: String,
 
   filter: { type: String, enum: ['allAges', 'mature', 'sensitive'], default: 'allAges' },
@@ -184,8 +186,14 @@ const userSchema = new mongoose.Schema({
     default: false
   },
 
+  // customer ID returned by stripe
   stripeCustomerId: {
     type: String
+  },
+
+  // date that the app will look at to know when to change a user back to free from a paid account
+  subscriptionCancellationDate: {
+    type: Date
   },
 
   // amount of usd credits in cents

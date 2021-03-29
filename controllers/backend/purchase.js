@@ -1,4 +1,7 @@
+// nodetube stripe library
 const stripe = require('../../lib/payments/stripe');
+
+// two helper functions to update user to plus/remove their plus features
 const subscriptions = require('../../lib/helpers/subscriptions');
 
 const brandName = process.env.INSTANCE_BRAND_NAME;
@@ -20,7 +23,7 @@ exports.purchasePlus = async function(req, res){
     console.log(`Customer created: ${customer.id}`);
 
     const subscription = await stripe.subscribeUser(customer.id, planName || `${brandName}Plus`);
-    console.log(`Subsription created: ${subscription.id}`);
+    console.log(`Subscription created: ${subscription.id}`);
 
     const updatedUser = await subscriptions.grantUserPlus(req.user, customer.id);
     console.log(`UPDATED ${req.user.channelUrl} TO PLUS`);
@@ -53,35 +56,6 @@ exports.donation = async function(req, res){
     const purchase = await stripe.makePurchase(customer.id, amountInDollars * 100);
     console.log(`Purchase made: ${purchase}`);
     console.log(purchase);
-
-    res.send('success');
-  } catch(err){
-    console.log(err);
-    res.send('failure');
-  }
-
-};
-
-// HIT FROM THE ACCOUNT PAGE
-exports.purchasePlus = async function(req, res){
-
-  console.log(req.body);
-
-  try {
-    const userDescriptor = req.user.channelName || req.user.channelUrl;
-
-    // what is this token?
-    // it's passed back from stripe after getting hit via the frontend
-
-    const customer = await stripe.createCustomerWithToken(req.body.token.id, userDescriptor);
-    console.log(`Customer created: ${customer.id}`);
-
-    const subscription = await stripe.subscribeUser(customer.id, planName || `${brandName}Plus`);
-    console.log(`Subsription created: ${subscription.id}`);
-
-    const updatedUser = await subscriptions.grantUserPlus(req.user, customer.id);
-    console.log(`UPDATED ${req.user.channelUrl} TO PLUS`);
-    console.log(updatedUser.privs);
 
     res.send('success');
   } catch(err){
@@ -128,6 +102,7 @@ exports.purchaseCredits = async function(req, res){
 
 };
 
+// functionality to purchase credits for a user (unused functionality currently)
 exports.purchaseCreditsExistingCustomer = async function(req, res){
 
   try {
@@ -159,3 +134,22 @@ exports.purchaseCreditsExistingCustomer = async function(req, res){
   }
 
 };
+
+exports.cancelSubscription = async function(req, res){
+  console.log(req.body);
+
+  try {
+    const stripeCustomerId = req.user.stripeCustomerId;
+
+    const stripeResponse = await stripe.unsubscribeUser(stripeCustomerId, planName || `${brandName}Plus`);
+    console.log(`User unsubscribed: ${stripeResponse}`);
+
+    // TODO: have to actually implement this
+    req.user.subscriptionCancellationDate = new Date()
+
+    res.send('success');
+  } catch(err){
+    console.log(err);
+    res.send('failure');
+  }
+}
