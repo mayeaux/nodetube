@@ -233,6 +233,9 @@ block content
   script.
     $(document).ready(function () {
 
+      // focus the button so you can just click enter to start uploading
+      $('.resumable-browser').focus();
+
       // scroll down and focus description when category is changed
       $('.categoryValue').on('click', function(){
         $('#description').focus()
@@ -351,14 +354,16 @@ block content
             $('#title').val(fileName);
           }
 
-          // focus and scroll down the div
-          $('#title').focus();
+          // scroll to the div when file selected
+          document.getElementById('scrollTo').scrollIntoView({behavior: 'smooth'});
+
 
           // have to use setTimeout for event loop
           setTimeout(function(){
-            // scroll to the div when file selected
-            document.getElementById('scrollTo').scrollIntoView({behavior: 'smooth'});
-          }, 1)
+
+            // focus and scroll down the div
+            $('#title').focus();
+          }, 750)
 
           // auto fill in title
 
