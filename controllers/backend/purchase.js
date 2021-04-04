@@ -145,11 +145,11 @@ exports.cancelSubscription = async function(req, res){
     console.log(`User unsubscribed: ${stripeResponse}`);
 
     // TODO: have to actually implement this
-    req.user.subscriptionCancellationDate = new Date()
+    req.user.subscriptionCancellationDate = new Date();
 
     res.send('success');
   } catch(err){
     console.log(err);
     res.send('failure');
   }
-}
+};
