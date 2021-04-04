@@ -468,6 +468,7 @@ block content
 
 
             // UPLOADER DETAILS SECTION
+            // LEFT THIRD OF THE PAGE
             div.col-sm-3.uploader-details-section(style="")
                 h3.uploader-name(style="margin-top:25px;font-size:23px;")
                     if upload.uploader.customThumbnail
@@ -519,6 +520,22 @@ block content
                     //        i.share-icon.fas.fa-bell(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:0px;color:white;")
                     //    h2.emailNotificationIcon(style="display:inline")
                     //        i.share-icon.fas.fa-envelope(aria-hidden="true" style="cursor:pointer;font-size:25px;margin-left:10px;color:white;")
+
+                if user && ( user.role == 'admin' || user.role == 'moderator')
+                    div.moderator-buttons
+                        form(action="/pending" method="POST")
+                            input(type='hidden', name='_csrf', value=_csrf)
+                            input(type='hidden', name='uniqueTag', value=`${upload.uniqueTag}`)
+                            button.btn.btn-success(name="moderationValue" value="approve" type="submit") Approve
+                            br
+                            br
+                            button.btn.btn-success(name="moderationValue" value="approveAndTrustUser" type="submit") Approve And Trust User
+                            br
+                            br
+                            button.btn.btn-danger(name="moderationValue" value="banVideo" type="submit" ) Ban Video
+                            br
+                            br
+                            button.btn.btn-danger(name="moderationValue" value="banVideoAndUser" type="submit") Ban Video And User
 
                 //br
                 ////- push notification functionality
