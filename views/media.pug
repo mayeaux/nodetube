@@ -496,12 +496,11 @@ block content
                             span.nodetube-pro PLUS
 
 
-                    // TODO: show this if it's pending or not
-                if upload.visibility != 'pending'
-                    if alreadySubbed
-                        button.subscribe.btn.fw.btn-danger.op80.unsubscribeButton(style="border-radius:4px;") Unsubscribe (#{subscriberAmount})
-                    else
-                        button.subscribe.btn.fw.btn-success.op80.subscribeButton(style="border-radius:4px;") Subscribe (#{subscriberAmount})
+
+                if alreadySubbed
+                    button.subscribe.btn.fw.btn-danger.op80.unsubscribeButton(style="border-radius:4px;") Unsubscribe (#{subscriberAmount})
+                else
+                    button.subscribe.btn.fw.btn-success.op80.subscribeButton(style="border-radius:4px;") Subscribe (#{subscriberAmount})
 
                 div(style="margin-top:12px")
                     // TODO: this should create a push subsciption, and it will also send a query to see if it should create a new service worker
