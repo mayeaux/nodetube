@@ -20,12 +20,12 @@ block content
     // TODO: also consider using upload.video
     if upload.bitrateInKbps > 1500 && upload.fileType == 'video'
         style.
-            /** everything 650 and below */
+            /** everything 668px width and below */
             /* on mobile we dont do a max height in other words */
             @media (min-width: 668px) {
 
                 .plyr {
-                    height: 794px;
+                    height: 85vh;
                 }
             }
 
@@ -43,12 +43,12 @@ block content
 
     else
         style.
-            /** everything 650 and below */
+            /** everything 668px width and below */
             /* on mobile we dont do a max height in other words */
             @media (min-width: 668px) {
 
                 .plyr {
-                    height: 794px;
+                    height: 85vh;
                 }
             }
 
@@ -523,19 +523,23 @@ block content
 
                 if user && ( user.role == 'admin' || user.role == 'moderator')
                     div.moderator-buttons
-                        form(action="/pending" method="POST")
-                            input(type='hidden', name='_csrf', value=_csrf)
-                            input(type='hidden', name='uniqueTag', value=`${upload.uniqueTag}`)
-                            button.btn.btn-success(name="moderationValue" value="approve" type="submit") Approve
-                            br
-                            br
-                            button.btn.btn-success(name="moderationValue" value="approveAndTrustUser" type="submit") Approve And Trust User
-                            br
-                            br
-                            button.btn.btn-danger(name="moderationValue" value="banVideo" type="submit" ) Ban Video
-                            br
-                            br
-                            button.btn.btn-danger(name="moderationValue" value="banVideoAndUser" type="submit") Ban Video And User
+                        p User Trusted = #{upload.uploader.privs.autoVisibleUpload}
+                        if upload.visibility == 'pending'
+                            form(action="/pending" method="POST")
+                                input(type='hidden', name='_csrf', value=_csrf)
+                                input(type='hidden', name='uniqueTag', value=`${upload.uniqueTag}`)
+                                button.btn.btn-success(name="moderationValue" value="approve" type="submit") Approve
+                                br
+                                br
+                                button.btn.btn-success(name="moderationValue" value="approveAndTrustUser" type="submit") Approve And Trust User
+                                br
+                                br
+                                button.btn.btn-danger(name="moderationValue" value="banVideo" type="submit" ) Ban Video
+                                br
+                                br
+                                button.btn.btn-danger(name="moderationValue" value="banVideoAndUser" type="submit") Ban Video And User
+                                br
+                                br
 
                 //br
                 ////- push notification functionality

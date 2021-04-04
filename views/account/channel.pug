@@ -149,7 +149,7 @@ block content
                                 input(type='hidden', name='user', value=`${channel._id}`)
                                 button.btn.btn-primary(name="userChangeValue" value="trustUser" type="submit" ) Trust User
                                 button.btn.btn-danger(name="userChangeValue" value="untrustUser" type="submit" ) Untrust User
-                                p User Trusted: #{user.privs.autoVisibleUpload}
+                                p User Trusted: #{channel.privs.autoVisibleUpload}
 
                     if user && ( user.role == 'admin' || user.role == 'moderator') && channel.status == 'restricted'
 
