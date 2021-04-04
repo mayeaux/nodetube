@@ -26,9 +26,6 @@ if user && user.role == 'admin'
             if category.displayName !== 'Category Overview' && category.displayName !== 'All Uploads'
                 button.btn-md.button-success.change-category(category=`${category.name}`) #{category.displayName}
         br
-        //each category in categories
-        //  button.btn-md.button-success.change-category(category=`${category.name}`) #{category.displayName}
-
 
     script.
           $('.change-rating, .change-visibility, .change-category').on('click', function () {
@@ -44,7 +41,6 @@ if user && user.role == 'admin'
             var category = $(this).attr('category');
 
             var visibility = $(this).attr('visibility');
-
 
             var data = {
               rating: rating,
