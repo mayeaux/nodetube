@@ -82,8 +82,12 @@ exports.changeRatings = async(req, res) => {
 
     let category = req.body.category;
 
+    let visibility = req.body.visibility;
+
     console.log(rating);
     console.log(uploads);
+
+    console.log(visibility);
 
     for(let upload of uploads){
       let foundUpload = await Upload.findOne({_id: upload});
@@ -108,12 +112,17 @@ exports.changeRatings = async(req, res) => {
         foundUpload.category = category;
       }
 
+      if(visibility){
+        foundUpload.visibility = visibility;
+      }
+
       await foundUpload.save();
     }
 
     res.send('success');
 
   } catch(err){
+    console.log(err);
     res.status(500);
     res.send('fail');
   }

@@ -43,11 +43,11 @@ if user && user.role == 'admin'
             var visibility = $(this).attr('visibility');
 
             var data = {
-              rating: rating,
               uploads: checkedValues,
               _csrf: csrf,
               category,
-              visibility
+              visibility,
+              rating
             }
 
             console.log(data);
