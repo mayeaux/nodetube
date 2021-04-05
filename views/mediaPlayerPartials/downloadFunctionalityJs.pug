@@ -2,12 +2,12 @@ script.
 
   // downloadFunctionalityJs
 
-  var downloadUrl = '#{uploadServer}/#{upload.uploader.channelUrl}/#{upload.uniqueTag}#{upload.fileExtension}'
+  var downloadUrl = '#{serverToUse}/#{upload.uploader.channelUrl}/#{upload.uniqueTag}#{upload.fileExtension}'
 
   var uploadType = '#{upload.fileType}'
 
   if(uploadType=='video'){
-    downloadUrl = '#{uploadServer}/#{upload.uploader.channelUrl}/#{upload.uniqueTag}.mp4'
+    downloadUrl = '#{serverToUse}/#{upload.uploader.channelUrl}/#{upload.uniqueTag}.mp4'
   }
 
   function downloadIt() {
