@@ -526,6 +526,7 @@ block content
                         p User Trusted = #{upload.uploader.privs.autoVisibleUpload}
                         if upload.visibility == 'pending'
                             form(action="/pending" method="POST")
+                                input(type='hidden', name='fromMedia', value='true')
                                 input(type='hidden', name='_csrf', value=_csrf)
                                 input(type='hidden', name='uniqueTag', value=`${upload.uniqueTag}`)
                                 button.btn.btn-success(name="moderationValue" value="approve" type="submit") Approve

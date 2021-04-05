@@ -244,7 +244,10 @@ exports.deleteUpload = async(req, res) => {
 
 exports.postPending = async(req, res) => {
 
+  // is it from the admin/uploads page? used in redirect
   const fromUploads = /uploads/.test(req.headers.referer);
+
+  const fromMedia = req.body.fromMedia;
 
   const uniqueTag = req.body.uniqueTag;
   const moderationValue = req.body.moderationValue;
@@ -282,7 +285,9 @@ exports.postPending = async(req, res) => {
 
   req.flash('success', {msg: `${upload.title} by ${user.channelUrl} moderated, thank you.`});
 
-  if(fromUploads){
+  if(fromMedia){
+    res.redirect(req.headers.referer);
+  } else if(fromUploads){
     res.redirect('/admin/uploads');
   } else {
     res.redirect('/pending');
