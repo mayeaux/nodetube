@@ -408,7 +408,7 @@ block content
             div.display-div.magnetic(style="min-width:50%;min-height:50%;margin:0 auto;margin-top: -25px;")
                 // margin-top:46px;
 
-                video#media_player.display-element(playsinline poster=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;")
+                video#media_player.display-element(playsinline poster=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;" crossorigin="anonymous")
                     // to
                     source.video-source(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`, type='video/mp4')
 
@@ -1055,15 +1055,10 @@ block extra_js
         });
 
         $('.screenshotButton').click(function(){
-          const width = player.media.videoWidth;
-          const height = player.media.videoHeight;
-          const canvas = Object.assign(document.createElement('canvas'), {width, height});
-          canvas.getContext('2d').drawImage(player.media, 0, 0, width, height);
 
           const thumbnailUrl = '#{uploadServer}/#{upload.uploader.channelUrl}/#{upload.thumbnails.custom || upload.thumbnails.generated}'
 
           var link = document.createElement('a');
-
 
           var title = `#{upload.title}`
 
@@ -1078,6 +1073,11 @@ block extra_js
 
 
           } else {
+
+            const width = player.media.videoWidth;
+            const height = player.media.videoHeight;
+            const canvas = Object.assign(document.createElement('canvas'), {width, height});
+            canvas.getContext('2d').drawImage(player.media, 0, 0, width, height);
 
             link.download = `#{title}.png`;
 
