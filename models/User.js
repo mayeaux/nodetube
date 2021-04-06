@@ -191,6 +191,16 @@ const userSchema = new mongoose.Schema({
     type: String
   },
 
+  // subscription ID returned by stripe
+  stripeSubscriptionId: {
+    type: String
+  },
+
+  // date that the app will look at to know when to change a user back to free from a paid account
+  subscriptionRenewalDate: {
+    type: Date
+  },
+
   // date that the app will look at to know when to change a user back to free from a paid account
   subscriptionCancellationDate: {
     type: Date

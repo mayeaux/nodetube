@@ -25,7 +25,7 @@ exports.purchasePlus = async function(req, res){
     const subscription = await stripe.subscribeUser(customer.id, planName || `${brandName}Plus`);
     console.log(`Subscription created: ${subscription.id}`);
 
-    const updatedUser = await subscriptions.grantUserPlus(req.user, customer.id);
+    const updatedUser = await subscriptions.grantUserPlus(req.user, customer.id, subscription.id);
     console.log(`UPDATED ${req.user.channelUrl} TO PLUS`);
     console.log(updatedUser.privs);
 
@@ -120,7 +120,7 @@ exports.purchaseCreditsExistingCustomer = async function(req, res){
     const amount = req.body.amount;
 
     const subscription = await stripe.makePurchase(customer.id, amount);
-    console.log(`Subsription created: ${subscription.id}`);
+    console.log(`Subscription created: ${subscription.id}`);
 
     req.user.credit = req.user.credit + amount;
     await req.user.save();
