@@ -108,13 +108,13 @@ block content
     h1.fw.text-center Channel Overview
     hr
 
-    // TODO: export a variable plus_enabled if user enables payments
-    // TODO: has to have styled updated with fw
+    // plus top section
     if process.env.PLUS_ENABLED == 'true'
-      h2.fw.text-center(style="margin-bottom:16px") Upgrade To #{brandName} Plus
-
       div.nt-plus.center-div.text-center
+
         if user.plan == 'plus'
+          h2.fw.text-center(style="margin-bottom:16px") Upgraded To #{brandName} Plus
+
           p Thank you so much for subscribing!
           p Your support makes NewTube possible
           p Please enjoy your new features:
@@ -124,6 +124,8 @@ block content
 
 
         else
+          h2.fw.text-center(style="margin-bottom:16px") Upgrade To #{brandName} Plus
+
           //  - Unlisted, private and scheduled uploads
             - Built in monetization via direct payments (COMING SOON)
             - One-click complete YouTube backup (including future uploads)
@@ -152,7 +154,7 @@ block content
 
 
 
-          button.stripe-button-el#customButton(type="submit" class="stripe-button-el" style="visibility: visible;")
+          button.stripe-button-el#customButton(type="submit" class="stripe-button-el" style="visibility: visible;margin-bottom:20px;")
             span(style="display: block; min-height: 30px;") Buy Now
             // img(src="/images/stripe-white.png" style="max-width:200px")
 
@@ -167,11 +169,6 @@ block content
           //
           //button.stripe-button-el#customButton(type="submit" class="stripe-button-el" style="visibility: visible;")
           //  span(style="display: block; min-height: 30px;") Buy Year Subscription
-
-
-        br
-        br
-        br
 
 
       // if you're allowed to
@@ -370,6 +367,22 @@ block content
           button.fw.btn.btn-primary(type='submit' style="margin-top:20px;border-radius:3px;")
             i.fa.fa-lock
             | Change Password
+
+    //if process.env.PLUS_ENABLED == 'true' && user.plan == 'plus'
+    //  br
+    //  br
+    //  h2.fw.text-center(style="margin-bottom:16px") Upgrade To #{brandName} Plus
+    //
+    //  div.nt-plus.center-div.text-center
+    //      p Thank you so much for subscribing!
+    //      p Your support makes NewTube possible
+    //      p Please enjoy your new features:
+    //      //h4 Automatic YouTube backup functionality, unlisted uploads, private uploads, 2GB upload size
+    //      // h4 Livestreaming, unlisted uploads, private uploads, 2GB upload size
+    //      h4 Unlisted uploads, private uploads, 2GB upload size
+    //
+    //      button.stripe-button-el#customButton(type="submit" class="stripe-button-el" style="visibility: visible;")
+    //        span(style="display: block; min-height: 30px;") Buy Now
 
   script.
     $(function () {
