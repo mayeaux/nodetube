@@ -533,7 +533,7 @@ exports.getChannel = async(req, res) => {
 
     if(user.channelDescription) res.locals.meta.description = user.channelDescription;
 
-    saveMetaToResLocalForChannelPage(user, uploadServer, req, res)   ;
+    saveMetaToResLocalForChannelPage(user, uploadServer, req, res);
 
     const userUploadAmount = uploads.length;
 

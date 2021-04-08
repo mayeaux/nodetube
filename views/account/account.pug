@@ -120,7 +120,7 @@ block content
           p Please enjoy your new features:
           //h4 Automatic YouTube backup functionality, unlisted uploads, private uploads, 2GB upload size
           // h4 Livestreaming, unlisted uploads, private uploads, 2GB upload size
-          h4 Unlisted uploads, private uploads, 2GB upload size
+          h4 Unlisted uploads, private uploads, 2GB upload size, livestreaming
 
 
         else
@@ -368,21 +368,26 @@ block content
             i.fa.fa-lock
             | Change Password
 
-    //if process.env.PLUS_ENABLED == 'true' && user.plan == 'plus'
-    //  br
-    //  br
-    //  h2.fw.text-center(style="margin-bottom:16px") Upgrade To #{brandName} Plus
-    //
-    //  div.nt-plus.center-div.text-center
-    //      p Thank you so much for subscribing!
-    //      p Your support makes NewTube possible
-    //      p Please enjoy your new features:
-    //      //h4 Automatic YouTube backup functionality, unlisted uploads, private uploads, 2GB upload size
-    //      // h4 Livestreaming, unlisted uploads, private uploads, 2GB upload size
-    //      h4 Unlisted uploads, private uploads, 2GB upload size
-    //
-    //      button.stripe-button-el#customButton(type="submit" class="stripe-button-el" style="visibility: visible;")
-    //        span(style="display: block; min-height: 30px;") Buy Now
+    if process.env.PLUS_ENABLED == 'true' && ( user && user.plan == 'plus' )
+      if !user.stripeSubscriptionCancellationDate
+        br
+        br
+        h3.fw.text-center(style="margin-bottom:16px") Cancel #{brandName} Plus Subscription
+
+        div.nt-plus.center-div.text-center
+            p.fw(style="font-size:18px") Thank you for subscribing to NewTube Plus!
+            p.fw(style="font-size:18px") Your subscription was started on: ________
+            p.fw(style="font-size:18px") Your subscription is set to renew on:
+            p.fw(style="font-size:18px") You can cancel your automatic renewal below, you will retain your Plus features until
+            p.fw(style="font-size:18px") the renewal date at which point you will be demoted to a free account.
+            //h4 Automatic YouTube backup functionality, unlisted uploads, private uploads, 2GB upload size
+            // h4 Livestreaming, unlisted uploads, private uploads, 2GB upload size
+
+            button.fw.btn.btn.btn-warning.btn-lg.center-block.text-center.cancel-subscription(type='submit' style="margin-top:20px;border-radius:3px;")
+              i.fa.fa-pencil
+              | Cancel Automatic Renewal
+        else if user.stripeSubscriptionCancellationDate
+          p.fw Your automatic renewal is turned off and your Plus will end . At that point you can reubscribe whenever you'd like.
 
   script.
     $(function () {
@@ -392,6 +397,39 @@ block content
       var data = {
         _csrf: csrf
       }
+
+      function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+
+      }
+
+      var scrollToDiv = getParameterByName('to');
+
+
+      if (scrollToDiv) {
+        // scroll into view
+        setTimeout(function () {
+          $('.' + scrollToDiv).get(0).scrollIntoView();
+        }, 1000)
+
+        setTimeout(function () {
+          if (scrollToDiv == 'cancel-subscription') {
+            swal('Automatic renewal is cancelled');
+          }
+        }, 1000)
+
+      }
+
+      $('.cancel-subscription').on('click', function(){
+        swal('hello');
+        window.location.replace('/account?to=cancel-subscription');
+      })
 
       $('.deleteEmailButton').click(function () {
         $.ajax({

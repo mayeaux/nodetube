@@ -93,6 +93,9 @@ if(cluster.isMaster){
 
     const missedFile404Middleware = require('./middlewares/shared/missedFile404Middleware');
 
+    const stripeSubscriptionMiddleware = require('./middlewares/shared/stripeSubscriptionChecker');
+
+
     process.on('uncaughtException', (err) => {
       console.log('Uncaught Exception: ', err);
       console.log(err.stack);
@@ -245,6 +248,8 @@ if(cluster.isMaster){
       res.locals.user = req.user;
       next();
     });
+
+    app.use(stripeSubscriptionMiddleware)
 
     app.use(useragent.express());
 
