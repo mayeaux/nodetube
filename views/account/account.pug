@@ -387,7 +387,14 @@ block content
               i.fa.fa-pencil
               | Cancel Automatic Renewal
       else if user.stripeSubscriptionCancellationDate
-        p.fw Your automatic renewal is turned off and your Plus will end . At that point you can reubscribe whenever you'd like.
+        br
+        br
+        h3.fw.text-center(style="margin-bottom:16px") #{brandName} Plus Auto-Renewal Cancelled
+
+        div.nt-plus.center-div.text-center
+          p.fw(style="font-size:18px") Your NewTube Plus subscription's autorenew is cancelled.
+
+          p.fw.cancel-subscription(style="font-size:18px")  Your automatic renewal is turned off and your Plus will end . At that point you can reubscribe whenever you'd like.
 
   script.
     $(function () {
@@ -414,15 +421,12 @@ block content
 
       if (scrollToDiv) {
         // scroll into view
-        setTimeout(function () {
-          $('.' + scrollToDiv).get(0).scrollIntoView();
-        }, 1000)
 
         setTimeout(function () {
           if (scrollToDiv == 'cancel-subscription') {
             swal('Automatic renewal is cancelled');
           }
-        }, 1000)
+        }, 1800)
 
       }
 
@@ -667,12 +671,14 @@ block content
       // SCROLL TO SELECTED DIV TO HELP USER EXPERIENCE
       var scrollToDiv = getParameterByName('to');
 
-      if(scrollToDiv){
-        // scroll into view
-        setTimeout(function () {
-          $('.' + scrollToDiv).get(0).scrollIntoView();
-        }, 1000)
-      }
+      // window.addEventListener("DOMContentLoaded", function () {
+        if (scrollToDiv) {
+          // scroll into view
+          setTimeout(function () {
+            $('.' + scrollToDiv).get(0).scrollIntoView();
+          }, 2000)
+        }
+      // });
 
       var csrf = '#{_csrf}'
 
