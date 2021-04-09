@@ -376,8 +376,8 @@ block content
 
         div.nt-plus.center-div.text-center
             p.fw(style="font-size:18px") Thank you for subscribing to NewTube Plus!
-            p.fw(style="font-size:18px") Your subscription was started on: ________
-            p.fw(style="font-size:18px") Your subscription is set to renew on:
+            p.fw(style="font-size:18px") Your subscription was started on: #{moment(user.stripeSubscriptionCreationDate).format('MMMM Do YYYY HH:MM')}
+            p.fw(style="font-size:18px") Your subscription is set to renew on: #{moment(user.stripeSubscriptionRenewalDate).format('MMMM Do YYYY HH:MM')}
             p.fw(style="font-size:18px") You can cancel your automatic renewal below, you will retain your Plus features until
             p.fw(style="font-size:18px") the renewal date at which point you will be demoted to a free account.
             //h4 Automatic YouTube backup functionality, unlisted uploads, private uploads, 2GB upload size
@@ -427,8 +427,25 @@ block content
       }
 
       $('.cancel-subscription').on('click', function(){
-        swal('hello');
-        window.location.replace('/account?to=cancel-subscription');
+        $.ajax({
+          type: 'POST',
+          // what is at this backend?
+          url: `/api/cancelPlusSubscription`,
+          data,
+          success: function (data) {
+            if (data == 'success') {
+              // TODO: setup the swal thing here
+
+              window.location.replace('/account?to=cancel-subscription');
+            } else {
+              swal(`Something didn't work, please contact ${brandName} at ${supportEmail} or via the widget in the bottom right corner`)
+            }
+            console.log(data);
+          },
+          error: function (err) {
+            console.log(err);
+          }
+        });
       })
 
       $('.deleteEmailButton').click(function () {

@@ -345,6 +345,31 @@ exports.deleteUserEmail = async(req, res, next) => {
   }
 };
 
+/** delete user/channel upload **/
+exports.deleteUserEmail = async(req, res, next) => {
+
+  try {
+    console.log(req.body.uploadToken);
+
+    if(!req.user && req.body.uploadToken){
+      req.user = await User.findOne({ uploadToken : req.body.uploadToken });
+    }
+
+    req.user.email = undefined;
+    req.user.emailConfirmed = false;
+
+    await req.user.save();
+
+    return res.send('success');
+  } catch(err){
+
+    console.log(err);
+    res.status(500);
+    res.send('wrong');
+
+  }
+};
+
 /** delete upload thumbnail **/
 exports.deleteUploadThumbnail = async(req, res, next) => {
 
