@@ -386,8 +386,8 @@ block content
             button.fw.btn.btn.btn-warning.btn-lg.center-block.text-center.cancel-subscription(type='submit' style="margin-top:20px;border-radius:3px;")
               i.fa.fa-pencil
               | Cancel Automatic Renewal
-        else if user.stripeSubscriptionCancellationDate
-          p.fw Your automatic renewal is turned off and your Plus will end . At that point you can reubscribe whenever you'd like.
+      else if user.stripeSubscriptionCancellationDate
+        p.fw Your automatic renewal is turned off and your Plus will end . At that point you can reubscribe whenever you'd like.
 
   script.
     $(function () {
