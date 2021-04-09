@@ -392,9 +392,11 @@ block content
         h3.fw.text-center(style="margin-bottom:16px") #{brandName} Plus Auto-Renewal Cancelled
 
         div.nt-plus.center-div.text-center
-          p.fw(style="font-size:18px") Your NewTube Plus subscription's autorenew is cancelled.
+          p.fw(style="font-size:18px") Your NewTube Plus subscription's autorenewal is cancelled.
 
-          p.fw.cancel-subscription(style="font-size:18px")  Your automatic renewal is turned off and your Plus will end . At that point you can reubscribe whenever you'd like.
+          p.fw.cancel-subscription(style="font-size:18px") You will retain your Plus features until #{moment(user.stripeSubscriptionCancellationDate).format('MMMM Do YYYY HH:MM')}
+
+          p.fw(style="font-size:18px") At that point you can resubscribe whenever you'd like.
 
   script.
     $(function () {
