@@ -345,8 +345,8 @@ exports.deleteUserEmail = async(req, res, next) => {
   }
 };
 
-/** delete user/channel upload **/
-exports.deleteUserEmail = async(req, res, next) => {
+/** cancel plus subscription from account page **/
+exports.cancelPlusSubscription = async(req, res, next) => {
 
   try {
     console.log(req.body.uploadToken);
@@ -355,8 +355,11 @@ exports.deleteUserEmail = async(req, res, next) => {
       req.user = await User.findOne({ uploadToken : req.body.uploadToken });
     }
 
-    req.user.email = undefined;
-    req.user.emailConfirmed = false;
+    req.user.stripeSubscriptionCancellationDate = req.user.stripeSubscriptionRenewalDate;
+
+    req.user.stripeSubscriptionRenewalDate = undefined;
+
+    console.log(req.user);
 
     await req.user.save();
 
