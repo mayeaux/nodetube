@@ -211,8 +211,14 @@ const userSchema = new mongoose.Schema({
     type: Date
   },
 
-  stripeSubscriptionCanceled : {
+  // user formerly had Plus but is now cancelled
+  stripeSubscriptionCancelled : {
     type: Boolean
+  },
+
+  // stripe subscription status (canceled, active, unpaid, etc)
+  stripeSubscriptionStatus : {
+    type: String
   },
 
   // amount of usd credits in cents

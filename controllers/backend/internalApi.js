@@ -355,8 +355,10 @@ exports.cancelPlusSubscription = async(req, res, next) => {
       req.user = await User.findOne({ uploadToken : req.body.uploadToken });
     }
 
+    // change the renewal date to the cancellation date
     req.user.stripeSubscriptionCancellationDate = req.user.stripeSubscriptionRenewalDate;
 
+    //
     req.user.stripeSubscriptionRenewalDate = undefined;
 
     console.log(req.user);
