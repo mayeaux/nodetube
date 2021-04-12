@@ -11,21 +11,25 @@ const planName = process.env.STRIPE_PLAN_NAME;
 // HIT FROM THE ACCOUNT PAGE
 exports.purchasePlus = async function(req, res){
 
-  console.log(req.body);
+  // console.log(req.body);
 
   try {
-    const userDescriptor = req.user.channelName || req.user.channelUrl;
+    let userDescriptor = `${req.user.channelUrl}`;
+    if(req.user.channelName){
+      userDescriptor = userDescriptor + ` aka ${req.user.channelName}`
+    }
 
-    // what is this token?
-    // it's passed back from stripe after getting hit via the frontend
-
+    // token passed back from stripe after getting hit via the frontend
     const customer = await stripe.createCustomerWithToken(req.body.token.id, userDescriptor);
+    // console.log(customer);
     console.log(`Customer created: ${customer.id}`);
 
+
     const subscription = await stripe.subscribeUser(customer.id, planName || `${brandName}Plus`);
+    // console.log(subscription)
     console.log(`Subscription created: ${subscription.id}`);
 
-    const updatedUser = await subscriptions.grantUserPlus(req.user, customer.id);
+    const updatedUser = await subscriptions.grantUserPlus(req.user, customer.id, subscription);
     console.log(`UPDATED ${req.user.channelUrl} TO PLUS`);
     console.log(updatedUser.privs);
 
@@ -120,7 +124,7 @@ exports.purchaseCreditsExistingCustomer = async function(req, res){
     const amount = req.body.amount;
 
     const subscription = await stripe.makePurchase(customer.id, amount);
-    console.log(`Subsription created: ${subscription.id}`);
+    console.log(`Subscription created: ${subscription.id}`);
 
     req.user.credit = req.user.credit + amount;
     await req.user.save();

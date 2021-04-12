@@ -345,6 +345,36 @@ exports.deleteUserEmail = async(req, res, next) => {
   }
 };
 
+/** cancel plus subscription from account page **/
+exports.cancelPlusSubscription = async(req, res, next) => {
+
+  try {
+    console.log(req.body.uploadToken);
+
+    if(!req.user && req.body.uploadToken){
+      req.user = await User.findOne({ uploadToken : req.body.uploadToken });
+    }
+
+    // change the renewal date to the cancellation date
+    req.user.stripeSubscriptionCancellationDate = req.user.stripeSubscriptionRenewalDate;
+
+    //
+    req.user.stripeSubscriptionRenewalDate = undefined;
+
+    console.log(req.user);
+
+    await req.user.save();
+
+    return res.send('success');
+  } catch(err){
+
+    console.log(err);
+    res.status(500);
+    res.send('wrong');
+
+  }
+};
+
 /** delete upload thumbnail **/
 exports.deleteUploadThumbnail = async(req, res, next) => {
 

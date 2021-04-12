@@ -3,6 +3,8 @@
 
 const randomstring = require('randomstring');
 const _ = require('lodash');
+const moment = require('moment');
+
 const User = require('../../models/index').User;
 const Upload = require('../../models/index').Upload;
 const Comment = require('../../models/index').Comment;
@@ -14,6 +16,7 @@ const SocialPost = require('../../models/index').SocialPost;
 const Subscription = require('../../models/index').Subscription;
 const PushSubscription = require('../../models/index').PushSubscription;
 const EmailSubscription = require('../../models/index').EmailSubscription;
+
 
 const PushEndpoint = require('../../models/index').PushEndpoint;
 
@@ -533,7 +536,7 @@ exports.getChannel = async(req, res) => {
 
     if(user.channelDescription) res.locals.meta.description = user.channelDescription;
 
-    saveMetaToResLocalForChannelPage(user, uploadServer, req, res)   ;
+    saveMetaToResLocalForChannelPage(user, uploadServer, req, res);
 
     const userUploadAmount = uploads.length;
 
@@ -925,7 +928,8 @@ exports.getAccount = async(req, res) => {
     uploadServer,
     thumbnailServer,
     plusEnabled,
-    verifyEmailFunctionalityOn
+    verifyEmailFunctionalityOn,
+    moment
   });
 };
 

@@ -191,9 +191,34 @@ const userSchema = new mongoose.Schema({
     type: String
   },
 
-  // date that the app will look at to know when to change a user back to free from a paid account
-  subscriptionCancellationDate: {
+  // subscription ID returned by stripe
+  stripeSubscriptionId: {
+    type: String
+  },
+
+  // date that the subscription was created
+  stripeSubscriptionCreationDate: {
     type: Date
+  },
+
+  // date that the app will look at to know when to change a user back to free from a paid account
+  stripeSubscriptionRenewalDate: {
+    type: Date
+  },
+
+  // user has cancelled their plus, should have a job that will delete this
+  stripeSubscriptionCancellationDate: {
+    type: Date
+  },
+
+  // user formerly had Plus but is now cancelled
+  stripeSubscriptionCancelled : {
+    type: Boolean
+  },
+
+  // stripe subscription status (canceled, active, unpaid, etc)
+  stripeSubscriptionStatus : {
+    type: String
   },
 
   // amount of usd credits in cents
