@@ -16,14 +16,13 @@ exports.purchasePlus = async function(req, res){
   try {
     let userDescriptor = `${req.user.channelUrl}`;
     if(req.user.channelName){
-      userDescriptor = userDescriptor + ` aka ${req.user.channelName}`
+      userDescriptor = userDescriptor + ` aka ${req.user.channelName}`;
     }
 
     // token passed back from stripe after getting hit via the frontend
     const customer = await stripe.createCustomerWithToken(req.body.token.id, userDescriptor);
     // console.log(customer);
     console.log(`Customer created: ${customer.id}`);
-
 
     const subscription = await stripe.subscribeUser(customer.id, planName || `${brandName}Plus`);
     // console.log(subscription)

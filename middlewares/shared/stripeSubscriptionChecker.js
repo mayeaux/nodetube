@@ -17,39 +17,39 @@ async function checkSubscriptionRenewalDates(req, res, next){
   // will update the renewal date
   if(stripeSubscriptionRenewalDate && stripeSubscriptionRenewalDate < date ){
 
-      // get the subscription
-      const subscription = await stripe.subscriptions.retrieve(stripeSubscriptionId);
+    // get the subscription
+    const subscription = await stripe.subscriptions.retrieve(stripeSubscriptionId);
 
-      // get the subscription status
-      const status = subscription.status;
+    // get the subscription status
+    const status = subscription.status;
 
-      // end period for billing
-      const renewalDate = subscription.current_period_end;
+    // end period for billing
+    const renewalDate = subscription.current_period_end;
 
-      if(status === 'active'){
-        req.user.stripeSubscriptionRenewalDate = renewalDate;
-        req.user.stripeSubscriptionStatus = 'active';
+    if(status === 'active'){
+      req.user.stripeSubscriptionRenewalDate = renewalDate;
+      req.user.stripeSubscriptionStatus = 'active';
 
-      } else {
+    } else {
 
-        // if the value is not active (aka cancelled or unpaid)
-        // save status (will be a non 'active' value)
-        req.user.stripeSubscriptionStatus = status;
+      // if the value is not active (aka cancelled or unpaid)
+      // save status (will be a non 'active' value)
+      req.user.stripeSubscriptionStatus = status;
 
-        // the cancellation date is when the period ends (this should work as a catch all)
-        req.user.stripeSubscriptionCancellationDate = subscription.current_period_end;
+      // the cancellation date is when the period ends (this should work as a catch all)
+      req.user.stripeSubscriptionCancellationDate = subscription.current_period_end;
 
-        // there will be no more renewal date, just a cancellation date
-        req.user.stripeSubscriptionRenewalDate = undefined;
+      // there will be no more renewal date, just a cancellation date
+      req.user.stripeSubscriptionRenewalDate = undefined;
 
-        // revoke the user's plus
-        // await subscriptionsHelpers.revokeUserPlus(req.user);
+      // revoke the user's plus
+      // await subscriptionsHelpers.revokeUserPlus(req.user);
 
-        // revoke user Plus subscription
+      // revoke user Plus subscription
 
-      }
+    }
 
-      await req.user.save();
+    await req.user.save();
   }
 
   // if the stripe subscription is set to cancel

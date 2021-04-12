@@ -1,15 +1,15 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const Promise = require("bluebird");
+const Promise = require('bluebird');
 const subscriptionHelpers = require('../../lib/helpers/subscriptions');
 
 process.on('uncaughtException', (err) => {
-  console.log(`Uncaught Exception: `, err);
+  console.log('Uncaught Exception: ', err);
   console.log(err.stack);
 });
 
 process.on('unhandledRejection', (err) => {
-  console.log(`Unhandled Rejection: `, err);
+  console.log('Unhandled Rejection: ', err);
   console.log(err.stack);
 });
 

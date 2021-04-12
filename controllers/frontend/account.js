@@ -17,7 +17,6 @@ const Subscription = require('../../models/index').Subscription;
 const PushSubscription = require('../../models/index').PushSubscription;
 const EmailSubscription = require('../../models/index').EmailSubscription;
 
-
 const PushEndpoint = require('../../models/index').PushEndpoint;
 
 const RSS = require('rss');
