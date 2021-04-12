@@ -83,6 +83,8 @@ async function main(){
         if(status === 'active'){
           user.stripeSubscriptionRenewalDate = subscription.current_period_end;
         } else {
+
+          // TODO: revoke user plus
           user.stripeSubscriptionCancellationDate = subscription.ended_at;
           user.stripeSubscriptionCancelled = true;
         }

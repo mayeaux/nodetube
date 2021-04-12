@@ -1,4 +1,5 @@
 const stripe = require('../../lib/payments/stripe');
+const subscriptionsHelpers = require('../../lib/helpers/subscriptions');
 
 // middleware to handle and keep straight Stripe subscriptions and Plus abilities
 async function checkSubscriptionRenewalDates(req, res, next){
@@ -6,12 +7,14 @@ async function checkSubscriptionRenewalDates(req, res, next){
   // get a new date to see if we should check for stripe subscription status
   const date = new Date();
 
+  // get the stripe subscription id
+  const stripeSubscriptionId = req.user && req.user.stripeSubscriptionId;
+
   // get the renewal date
   const stripeSubscriptionRenewalDate = req.user && req.user.stripeSubscriptionRenewalDate;
 
-  const stripeSubscriptionId = req.user.stripeSubscriptionId;
-
   // if the current date is a larger value than the renewal date (aka, it's passed the renewal date time)
+  // will update the renewal date
   if(stripeSubscriptionRenewalDate && stripeSubscriptionRenewalDate < date ){
 
       // get the subscription
@@ -28,6 +31,8 @@ async function checkSubscriptionRenewalDates(req, res, next){
         req.user.stripeSubscriptionStatus = 'active';
 
       } else {
+
+        // if the value is not active (aka cancelled or unpaid)
         // save status (will be a non 'active' value)
         req.user.stripeSubscriptionStatus = status;
 
@@ -36,6 +41,10 @@ async function checkSubscriptionRenewalDates(req, res, next){
 
         // there will be no more renewal date, just a cancellation date
         req.user.stripeSubscriptionRenewalDate = undefined;
+
+        // revoke the user's plus
+        // await subscriptionsHelpers.revokeUserPlus(req.user);
+
         // revoke user Plus subscription
 
       }
@@ -44,7 +53,6 @@ async function checkSubscriptionRenewalDates(req, res, next){
   }
 
   // if the stripe subscription is set to cancel
-
   const stripeSubscriptionCancellationDate = req.user && req.user.stripeSubscriptionCancellationDate;
 
   // if there is a cancellation date that is passed
@@ -67,6 +75,8 @@ async function checkSubscriptionRenewalDates(req, res, next){
       req.user.stripeSubscriptionCancelled = 'true';
       req.user.stripeSubscriptionStatus = status;
     }
+
+    await subscriptionsHelpers.revokeUserPlus(req.user);
 
     await req.user.save();
 

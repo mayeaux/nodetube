@@ -249,11 +249,11 @@ if(cluster.isMaster){
       next();
     });
 
-    app.use(stripeSubscriptionMiddleware)
-
     app.use(useragent.express());
 
     app.use(multipart());
+
+    app.use(stripeSubscriptionMiddleware)
 
     /** PASS NODE ENV TO VIEWS **/
     app.use(async function(req, res, next){
