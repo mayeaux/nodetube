@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const Promise = require("bluebird");
+const subscriptionHelpers = require('../../lib/helpers/subscriptions');
 
 process.on('uncaughtException', (err) => {
   console.log(`Uncaught Exception: `, err);
@@ -49,7 +50,10 @@ const User = require('../../models/index').User;
 
 async function main(){
   const users = await User.find({
-    stripeCustomerId: { $exists: true }
+    stripeCustomerId: { $exists: true },
+
+    // for now, do it where there is no stripeSubscriptionId
+    stripeSubscriptionId : { $exists: false }
   }).sort({ _id: -1 });
 
   const delay = 4000;
@@ -59,6 +63,8 @@ async function main(){
   for(const user of users){
 
     await Promise.delay(delay * counter);
+
+    const secondaryDelay = (delay * counter) + 10000;
 
     console.log(user.channelUrl);
 
@@ -73,7 +79,14 @@ async function main(){
       if(response.subscriptions.total_count > 0){
         const subscription = response.subscriptions.data[0];
 
+        console.log(subscription);
+
         const status = subscription.status;
+
+        console.log(secondaryDelay);
+
+        await Promise.delay(delay * counter);
+
         const subscriptionId = subscription.id;
 
         user.stripeSubscriptionId = subscriptionId;
@@ -84,10 +97,13 @@ async function main(){
           user.stripeSubscriptionRenewalDate = subscription.current_period_end;
         } else {
 
-          // TODO: revoke user plus
           user.stripeSubscriptionCancellationDate = subscription.ended_at;
           user.stripeSubscriptionCancelled = true;
+
+          await subscriptionHelpers.revokeUserPlus(user);
         }
+
+        await user.save();
       }
 
     } catch(err){

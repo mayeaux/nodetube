@@ -368,35 +368,36 @@ block content
             i.fa.fa-lock
             | Change Password
 
-    if process.env.PLUS_ENABLED == 'true' && ( user && user.plan == 'plus' )
-      if !user.stripeSubscriptionCancellationDate
-        br
-        br
-        h3.fw.text-center(style="margin-bottom:16px") Cancel #{brandName} Plus Subscription
+    //if process.env.PLUS_ENABLED == 'true' && ( user && user.plan == 'plus' )
+    //  if !user.stripeSubscriptionCancellationDate
+    //    br
+    //    br
+    //    h3.fw.text-center(style="margin-bottom:16px") Cancel #{brandName} Plus Subscription
+    //
+    //    div.nt-plus.center-div.text-center
+    //        p.fw(style="font-size:18px") Thank you for subscribing to NewTube Plus!
+    //        p.fw(style="font-size:18px") Your subscription was started on: #{moment(user.stripeSubscriptionCreationDate).format('MMMM Do YYYY HH:MM')}
+    //        p.fw(style="font-size:18px") Your subscription is set to renew on: #{moment(user.stripeSubscriptionRenewalDate).format('MMMM Do YYYY HH:MM')}
+    //        p.fw(style="font-size:18px") You can cancel your automatic renewal below, you will retain your Plus features until
+    //        p.fw(style="font-size:18px") the renewal date at which point you will be demoted to a free account.
+    //        //h4 Automatic YouTube backup functionality, unlisted uploads, private uploads, 2GB upload size
+    //        // h4 Livestreaming, unlisted uploads, private uploads, 2GB upload size
+    //
+    //        button.fw.btn.btn.btn-warning.btn-lg.center-block.text-center.cancel-subscription(type='submit' style="margin-top:20px;border-radius:3px;")
+    //          i.fa.fa-pencil
+    //          | Cancel Automatic Renewal
+    //  else if user.stripeSubscriptionCancellationDate
+    //    br
+    //    br
+    //    h3.fw.text-center(style="margin-bottom:16px") #{brandName} Plus Auto-Renewal Cancelled
+    //
+    //    div.nt-plus.center-div.text-center
+    //      p.fw(style="font-size:18px") Your NewTube Plus subscription's autorenewal is cancelled.
+    //
+    //      p.fw.cancel-subscription(style="font-size:18px") You will retain your Plus features until #{moment(user.stripeSubscriptionCancellationDate).format('MMMM Do YYYY HH:MM')}
+    //
+    //      p.fw(style="font-size:18px") At that point you can resubscribe whenever you'd like.
 
-        div.nt-plus.center-div.text-center
-            p.fw(style="font-size:18px") Thank you for subscribing to NewTube Plus!
-            p.fw(style="font-size:18px") Your subscription was started on: #{moment(user.stripeSubscriptionCreationDate).format('MMMM Do YYYY HH:MM')}
-            p.fw(style="font-size:18px") Your subscription is set to renew on: #{moment(user.stripeSubscriptionRenewalDate).format('MMMM Do YYYY HH:MM')}
-            p.fw(style="font-size:18px") You can cancel your automatic renewal below, you will retain your Plus features until
-            p.fw(style="font-size:18px") the renewal date at which point you will be demoted to a free account.
-            //h4 Automatic YouTube backup functionality, unlisted uploads, private uploads, 2GB upload size
-            // h4 Livestreaming, unlisted uploads, private uploads, 2GB upload size
-
-            button.fw.btn.btn.btn-warning.btn-lg.center-block.text-center.cancel-subscription(type='submit' style="margin-top:20px;border-radius:3px;")
-              i.fa.fa-pencil
-              | Cancel Automatic Renewal
-      else if user.stripeSubscriptionCancellationDate
-        br
-        br
-        h3.fw.text-center(style="margin-bottom:16px") #{brandName} Plus Auto-Renewal Cancelled
-
-        div.nt-plus.center-div.text-center
-          p.fw(style="font-size:18px") Your NewTube Plus subscription's autorenewal is cancelled.
-
-          p.fw.cancel-subscription(style="font-size:18px") You will retain your Plus features until #{moment(user.stripeSubscriptionCancellationDate).format('MMMM Do YYYY HH:MM')}
-
-          p.fw(style="font-size:18px") At that point you can resubscribe whenever you'd like.
 
   script.
     $(function () {
