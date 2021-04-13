@@ -5,7 +5,6 @@ const moment = require('moment');
 
 const subscriptionHelpers = require('../../lib/helpers/subscriptions');
 
-
 process.on('uncaughtException', (err) => {
   console.log('Uncaught Exception: ', err);
   console.log(err.stack);
@@ -52,26 +51,29 @@ mongoose.connection.on('error', (err) => {
 const User = require('../../models/index').User;
 
 async function main(){
+
+  // find users where the customerId exists (have paid), and it's not cancelled but lacks stripeSubscriptionId
   const users = await User.find({
     stripeCustomerId: { $exists: true },
 
     // for now, do it where there is no stripeSubscriptionId
-    stripeSubscriptionId : { $exists: false }
+    $and:[ {  stripeSubscriptionId : { $exists: false } }, {  stripeSubscriptionCancelled : { $exists: false } }]
+
   }).sort({ _id: -1 });
 
   const delay = 4000;
+
+  const firstDelayAmount = 4000;
+
+  const secondaryDelay = 6000;
 
   let counter = 1;
 
   for(const user of users){
 
-    const firstDelayAmount = delay * counter
-
     console.log(`Waiting ${firstDelayAmount/1000} seconds`)
 
     await Promise.delay(firstDelayAmount);
-
-    const secondaryDelay = (delay * counter) + 10000;
 
     console.log(`User channel url: ${user.channelUrl}`);
 
@@ -86,29 +88,27 @@ async function main(){
 
       console.log(`Description: ${customerDescription}`)
 
-      // console.log(response);
-
       // if there are some subscriptions for the user
       if(response.subscriptions.total_count > 0){
         const subscription = response.subscriptions.data[0];
 
-        const createdAtTime = moment.unix(subscription.created).format('dddd, MMMM Do, YYYY h:mm:ss A');
+        const createdAtTime = subscription.created
 
         const currentPeriodStart = subscription.current_period_start;
 
         const currentPeriodEnd = subscription.current_period_end;
 
-        const cancelledAtDate = subscription.canceled_at;
+        const endedAtDate = subscription.ended_at;
 
-        console.log(`Created at time: ${createdAtTime}`);
+        console.log(`Created at time: ${moment.unix(createdAtTime).format('dddd, MMMM Do, YYYY h:mm:ss A')}`);
 
         console.log(`Status: ${subscription.status}`);
 
-        console.log(`Current period start: ${currentPeriodStart}`)
+        console.log(`Current period start: ${moment.unix(currentPeriodStart).format('dddd, MMMM Do, YYYY h:mm:ss A')}`)
 
-        console.log(`Current period end: ${currentPeriodEnd}`)
+        console.log(`Current period end: ${moment.unix(currentPeriodEnd).format('dddd, MMMM Do, YYYY h:mm:ss A')}`)
 
-        console.log(`Cancelled at date: ${cancelledAtDate}`)
+        if(endedAtDate) console.log(`Ended at date: ${endedAtDate}`)
 
         // console.log(subscription);
 
@@ -123,21 +123,44 @@ async function main(){
 
         const subscriptionId = subscription.id;
 
+        console.log(`Adding subscription id: ${subscriptionId}, status, and creation date`);
+
         user.stripeSubscriptionId = subscriptionId;
         user.stripeSubscriptionStatus = status;
-        user.stripeSubscriptionCreationDate = subscription.created;
+        user.stripeSubscriptionCreationDate = new Date(subscription.created * 1000);
 
         if(status === 'active'){
-          user.stripeSubscriptionRenewalDate = subscription.current_period_end;
+
+          console.log(`Status is active, adding a renewal date: ${moment.unix(currentPeriodEnd).format('dddd, MMMM Do, YYYY h:mm:ss A')}`)
+
+          user.stripeSubscriptionRenewalDate = new Date(currentPeriodEnd * 1000);
         } else {
 
-          user.stripeSubscriptionCancellationDate = subscription.ended_at;
+          console.log(`Status is ${status}, adding ended at date: ${moment.unix(endedAtDate).format('dddd, MMMM Do, YYYY h:mm:ss A')}, saving as cancelled`)
+
+          // TODO: should I use ended_at or cancelled_at
+          // user.stripeSubscriptionRenewalDate = new Date(subscription.current_period_end * 1000);
+
+          user.stripeSubscriptionCancellationDate = new Date(endedAtDate * 1000);
           user.stripeSubscriptionCancelled = true;
 
+          console.log('Revoking user plus values')
           await subscriptionHelpers.revokeUserPlus(user);
         }
 
         await user.save();
+      } else {
+        await Promise.delay(firstDelayAmount);
+
+        console.log('No active subscription, assume it has been cancelled');
+
+        user.stripeSubscriptionCancelled = true;
+
+        console.log('Revoking user plus values')
+        await subscriptionHelpers.revokeUserPlus(user);
+
+        await user.save();
+
       }
 
     } catch(err){

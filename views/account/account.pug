@@ -369,7 +369,7 @@ block content
             | Change Password
 
     //if process.env.PLUS_ENABLED == 'true' && ( user && user.plan == 'plus' )
-    //  if !user.stripeSubscriptionCancellationDate
+    //  if !user.stripeSubscriptionCancelled
     //    br
     //    br
     //    h3.fw.text-center(style="margin-bottom:16px") Cancel #{brandName} Plus Subscription
@@ -386,7 +386,7 @@ block content
     //        button.fw.btn.btn.btn-warning.btn-lg.center-block.text-center.cancel-subscription(type='submit' style="margin-top:20px;border-radius:3px;")
     //          i.fa.fa-pencil
     //          | Cancel Automatic Renewal
-    //  else if user.stripeSubscriptionCancellationDate
+    //  else if user.stripeSubscriptionCancelled
     //    br
     //    br
     //    h3.fw.text-center(style="margin-bottom:16px") #{brandName} Plus Auto-Renewal Cancelled
