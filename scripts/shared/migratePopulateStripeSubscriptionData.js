@@ -150,6 +150,8 @@ async function main(){
 
         await user.save();
       } else {
+        console.log('Waiting 4 seconds');
+
         await Promise.delay(firstDelayAmount);
 
         console.log('No active subscription, assume it has been cancelled');

@@ -15,6 +15,8 @@ async function checkSubscriptionRenewalDates(req, res, next){
 
   // if the current date is a larger value than the renewal date (aka, it's passed the renewal date time)
   // will update the renewal date
+
+  // TODO: test this
   if(stripeSubscriptionRenewalDate && stripeSubscriptionRenewalDate < date ){
 
     // get the subscription
@@ -32,10 +34,13 @@ async function checkSubscriptionRenewalDates(req, res, next){
 
     } else {
 
+      // TODO: test this
       // if the value is not active (aka cancelled or unpaid)
       // save status (will be a non 'active' value)
       req.user.stripeSubscriptionStatus = status;
 
+
+      // TODO: test this
       // the cancellation date is when the period ends (this should work as a catch all)
       req.user.stripeSubscriptionCancellationDate = subscription.current_period_end;
 
@@ -52,6 +57,7 @@ async function checkSubscriptionRenewalDates(req, res, next){
     await req.user.save();
   }
 
+  /** USER HAS CANCELLED FROM THE FRONTEND **/
   // if the stripe subscription is set to cancel
   const stripeSubscriptionCancellationDate = req.user && req.user.stripeSubscriptionCancellationDate;
 
@@ -77,6 +83,8 @@ async function checkSubscriptionRenewalDates(req, res, next){
     }
 
     await subscriptionsHelpers.revokeUserPlus(req.user);
+
+    // TODO: cancel subscription
 
     await req.user.save();
 
