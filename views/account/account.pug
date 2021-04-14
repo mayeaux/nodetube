@@ -397,11 +397,11 @@ block content
           p.fw.cancel-subscription(style="font-size:18px") You will retain your Plus features until #{moment(user.stripeSubscriptionCancellationDate).format('MMMM Do YYYY HH:MM')}
 
           p.fw(style="font-size:18px") At that point you can resubscribe whenever you'd like.
-      else if user.stripeSubscriptionCancelled
-        br
-        br
-        h3.fw.text-center(style="margin-bottom:16px") Your #{brandName} Plus Subscription was successfully cancelled
-        h4.fw.text-center(style="margin-bottom:16px") At any point you can start a new subscription again at the top of the page.
+    if user.stripeSubscriptionCancelled
+      br
+      br
+      h3.fw.text-center(style="margin-bottom:16px") Your #{brandName} Plus Subscription was successfully cancelled
+      h4.fw.text-center(style="margin-bottom:16px") At any point you can start a new subscription again at the top of the page.
 
 
   script.
