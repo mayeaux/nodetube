@@ -63,15 +63,17 @@ async function checkSubscriptionRenewalDates(req, res, next){
   /** PLUS SUBSCRIPTION HAS CANCELLED FROM THE FRONTEND **/
   // if the stripe subscription is set to cancel
   const stripeSubscriptionCancellationDate = req.user && req.user.stripeSubscriptionCancellationDate;
-
+  
   // if there is a cancellation date that is passed
   if(stripeSubscriptionCancellationDate && stripeSubscriptionCancellationDate < date){
 
     // mark subscription as cancelled with status
     req.user.stripeSubscriptionCancelled = true;
 
+    // revoke plus features
     await subscriptionsHelpers.revokeUserPlus(req.user);
 
+    // save updated user
     await req.user.save();
   }
 

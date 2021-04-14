@@ -369,7 +369,7 @@ block content
             | Change Password
 
     if process.env.PLUS_ENABLED == 'true' && ( user && user.plan == 'plus' )
-      if !user.stripeSubscriptionCancellationDate
+      if !user.stripeSubscriptionCancellationDate && !user.stripeSubscriptionCancelled
         br
         br
         h3.fw.text-center(style="margin-bottom:16px") Cancel #{brandName} Plus Subscription
@@ -386,22 +386,22 @@ block content
             button.fw.btn.btn.btn-warning.btn-lg.center-block.text-center.cancel-subscription(type='submit' style="margin-top:20px;border-radius:3px;")
               i.fa.fa-pencil
               | Cancel Automatic Renewal
-      else if user.stripeSubscriptionCancellationDate
-        br
-        br
-        h3.fw.text-center(style="margin-bottom:16px") #{brandName} Plus Auto-Renewal Cancelled
+    else if user.stripeSubscriptionCancellationDate && !user.stripeSubscriptionCancelled
+      br
+      br
+      h3.fw.text-center(style="margin-bottom:16px") #{brandName} Plus Auto-Renewal Cancelled
 
-        div.nt-plus.center-div.text-center
-          p.fw(style="font-size:18px") Your NewTube Plus subscription's autorenewal is cancelled.
+      div.nt-plus.center-div.text-center
+        p.fw(style="font-size:18px") Your NewTube Plus subscription's autorenewal is cancelled.
 
-          p.fw.cancel-subscription(style="font-size:18px") You will retain your Plus features until #{moment(user.stripeSubscriptionCancellationDate).format('MMMM Do YYYY HH:MM')}
+        p.fw.cancel-subscription(style="font-size:18px") You will retain your Plus features until #{moment(user.stripeSubscriptionCancellationDate).format('MMMM Do YYYY HH:MM')}
 
-          p.fw(style="font-size:18px") At that point you can resubscribe whenever you'd like.
-      else if user.stripeSubscriptionCancelled
-        br
-        br
-        h3.fw.text-center(style="margin-bottom:16px") #{brandName} Your Plus Subscription was successfully cancelled
-        h4.fw.text-center(style="margin-bottom:16px") At any point you can start a new subscription again at the top of the page.
+        p.fw(style="font-size:18px") At that point you can resubscribe whenever you'd like.
+    else if user.stripeSubscriptionCancelled
+      br
+      br
+      h3.fw.text-center(style="margin-bottom:16px") Your #{brandName} Plus Subscription was successfully cancelled
+      h4.fw.text-center(style="margin-bottom:16px") At any point you can start a new subscription again at the top of the page.
 
 
   script.

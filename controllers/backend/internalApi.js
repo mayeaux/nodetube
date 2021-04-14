@@ -373,7 +373,6 @@ exports.cancelPlusSubscription = async(req, res, next) => {
       req.user.stripeSubscriptionStatus = subscription.status;
     }
 
-
     console.log(req.user);
 
     await req.user.save();

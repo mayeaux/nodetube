@@ -71,7 +71,7 @@ async function main(){
 
   for(const user of users){
 
-    console.log(`Waiting ${firstDelayAmount/1000} seconds`)
+    console.log(`Waiting ${firstDelayAmount/1000} seconds`);
 
     await Promise.delay(firstDelayAmount);
 
@@ -86,13 +86,13 @@ async function main(){
 
       const customerDescription = response.description;
 
-      console.log(`Description: ${customerDescription}`)
+      console.log(`Description: ${customerDescription}`);
 
       // if there are some subscriptions for the user
       if(response.subscriptions.total_count > 0){
         const subscription = response.subscriptions.data[0];
 
-        const createdAtTime = subscription.created
+        const createdAtTime = subscription.created;
 
         const currentPeriodStart = subscription.current_period_start;
 
@@ -104,11 +104,11 @@ async function main(){
 
         console.log(`Status: ${subscription.status}`);
 
-        console.log(`Current period start: ${moment.unix(currentPeriodStart).format('dddd, MMMM Do, YYYY h:mm:ss A')}`)
+        console.log(`Current period start: ${moment.unix(currentPeriodStart).format('dddd, MMMM Do, YYYY h:mm:ss A')}`);
 
-        console.log(`Current period end: ${moment.unix(currentPeriodEnd).format('dddd, MMMM Do, YYYY h:mm:ss A')}`)
+        console.log(`Current period end: ${moment.unix(currentPeriodEnd).format('dddd, MMMM Do, YYYY h:mm:ss A')}`);
 
-        if(endedAtDate) console.log(`Ended at date: ${endedAtDate}`)
+        if(endedAtDate) console.log(`Ended at date: ${endedAtDate}`);
 
         // console.log(subscription);
 
@@ -116,7 +116,7 @@ async function main(){
 
         // console.log(secondaryDelay);
 
-        console.log(`Waiting ${secondaryDelay/1000} seconds`)
+        console.log(`Waiting ${secondaryDelay/1000} seconds`);
 
         // secondary delay before
         await Promise.delay(secondaryDelay);
@@ -131,12 +131,12 @@ async function main(){
 
         if(status === 'active'){
 
-          console.log(`Status is active, adding a renewal date: ${moment.unix(currentPeriodEnd).format('dddd, MMMM Do, YYYY h:mm:ss A')}`)
+          console.log(`Status is active, adding a renewal date: ${moment.unix(currentPeriodEnd).format('dddd, MMMM Do, YYYY h:mm:ss A')}`);
 
           user.stripeSubscriptionRenewalDate = new Date(currentPeriodEnd * 1000);
         } else {
 
-          console.log(`Status is ${status}, adding ended at date: ${moment.unix(endedAtDate).format('dddd, MMMM Do, YYYY h:mm:ss A')}, saving as cancelled`)
+          console.log(`Status is ${status}, adding ended at date: ${moment.unix(endedAtDate).format('dddd, MMMM Do, YYYY h:mm:ss A')}, saving as cancelled`);
 
           // TODO: should I use ended_at or cancelled_at
           // they seem to be the same
@@ -145,7 +145,7 @@ async function main(){
           user.stripeSubscriptionCancellationDate = new Date(endedAtDate * 1000);
           user.stripeSubscriptionCancelled = true;
 
-          console.log('Revoking user plus values')
+          console.log('Revoking user plus values');
           await subscriptionHelpers.revokeUserPlus(user);
         }
 
@@ -159,7 +159,7 @@ async function main(){
 
         user.stripeSubscriptionCancelled = true;
 
-        console.log('Revoking user plus values')
+        console.log('Revoking user plus values');
         await subscriptionHelpers.revokeUserPlus(user);
 
         await user.save();
