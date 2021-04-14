@@ -139,6 +139,7 @@ async function main(){
           console.log(`Status is ${status}, adding ended at date: ${moment.unix(endedAtDate).format('dddd, MMMM Do, YYYY h:mm:ss A')}, saving as cancelled`)
 
           // TODO: should I use ended_at or cancelled_at
+          // they seem to be the same
           // user.stripeSubscriptionRenewalDate = new Date(subscription.current_period_end * 1000);
 
           user.stripeSubscriptionCancellationDate = new Date(endedAtDate * 1000);
@@ -150,11 +151,11 @@ async function main(){
 
         await user.save();
       } else {
+        console.log('No active subscription, assume it has been cancelled');
+
         console.log('Waiting 4 seconds');
 
         await Promise.delay(firstDelayAmount);
-
-        console.log('No active subscription, assume it has been cancelled');
 
         user.stripeSubscriptionCancelled = true;
 

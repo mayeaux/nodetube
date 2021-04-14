@@ -25,6 +25,7 @@ const FileType = require('file-type');
 const srt2vtt = Promise.promisifyAll(require('srt2vtt'));
 
 const backblaze = require('../../lib/uploading/backblaze');
+const stripe = require('../../lib/payments/stripe');
 
 const domainNameAndTLD = process.env.DOMAIN_NAME_AND_TLD;
 
@@ -358,8 +359,20 @@ exports.cancelPlusSubscription = async(req, res, next) => {
     // change the renewal date to the cancellation date
     req.user.stripeSubscriptionCancellationDate = req.user.stripeSubscriptionRenewalDate;
 
-    //
+    // clear off renewal date (which is used to check)
     req.user.stripeSubscriptionRenewalDate = undefined;
+
+    // get subscription id
+    const subscriptionId = req.user.stripeSubscriptionId;
+
+    // cancel subscription
+    const subscription = await stripe.subscriptions.del(subscriptionId);
+
+    // mark subscription as cancelled
+    if(subscription.status !== 'active'){
+      req.user.stripeSubscriptionStatus = subscription.status;
+    }
+
 
     console.log(req.user);
 
