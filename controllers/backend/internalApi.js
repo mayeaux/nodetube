@@ -366,7 +366,7 @@ exports.cancelPlusSubscription = async(req, res, next) => {
     const subscriptionId = req.user.stripeSubscriptionId;
 
     // cancel subscription
-    const subscription = await stripe.subscriptions.del(subscriptionId);
+    const subscription = await stripe.stripeApi.subscriptions.del(subscriptionId);
 
     // mark subscription as cancelled
     if(subscription.status !== 'active'){

@@ -21,7 +21,7 @@ async function checkSubscriptionRenewalDates(req, res, next){
   if(stripeSubscriptionRenewalDate && stripeSubscriptionRenewalDate < date ){
 
     // get the subscription
-    const subscription = await stripe.subscriptions.retrieve(stripeSubscriptionId);
+    const subscription = await stripe.stripeApi.subscriptions.retrieve(stripeSubscriptionId);
 
     // get the subscription status
     const status = subscription.status;
@@ -29,8 +29,9 @@ async function checkSubscriptionRenewalDates(req, res, next){
     // end period for billing
     const renewalDate = subscription.current_period_end;
 
+    // if subscription is active, update renewal date
     if(status === 'active'){
-      req.user.stripeSubscriptionRenewalDate = renewalDate;
+      req.user.stripeSubscriptionRenewalDate = new Date(renewalDate * 1000);
       req.user.stripeSubscriptionStatus = 'active';
 
     } else {
@@ -63,7 +64,7 @@ async function checkSubscriptionRenewalDates(req, res, next){
   /** PLUS SUBSCRIPTION HAS CANCELLED FROM THE FRONTEND **/
   // if the stripe subscription is set to cancel
   const stripeSubscriptionCancellationDate = req.user && req.user.stripeSubscriptionCancellationDate;
-  
+
   // if there is a cancellation date that is passed
   if(stripeSubscriptionCancellationDate && stripeSubscriptionCancellationDate < date){
 
