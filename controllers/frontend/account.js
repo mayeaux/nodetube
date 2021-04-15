@@ -1151,8 +1151,12 @@ exports.getImporter = (req, res) => {
     return res.redirect('/login');
   }
 
-  if(!req.user.privs.importer){
-    return res.redirect('/login');
+  if(req.user && !req.user.privs.importer){
+    res.status(404);
+
+    return res.render('error/404', {
+      title: 'Not Found'
+    });
   }
 
   res.render('account/importer', {
