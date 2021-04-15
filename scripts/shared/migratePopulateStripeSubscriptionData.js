@@ -1,3 +1,5 @@
+// This is a helper for adding missing data to User regarding Stripe subscription
+
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const Promise = require('bluebird');
@@ -61,13 +63,11 @@ async function main(){
 
   }).sort({ _id: -1 });
 
-  const delay = 4000;
+  console.log(`Amount of users to check: ${users.length}`)
 
   const firstDelayAmount = 4000;
 
   const secondaryDelay = 6000;
-
-  let counter = 1;
 
   for(const user of users){
 
@@ -76,8 +76,6 @@ async function main(){
     await Promise.delay(firstDelayAmount);
 
     console.log(`User channel url: ${user.channelUrl}`);
-
-    counter = counter + 1;
 
     try {
 
