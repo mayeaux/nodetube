@@ -63,7 +63,7 @@ async function main(){
 
   }).sort({ _id: -1 });
 
-  console.log(`Amount of users to check: ${users.length}`)
+  console.log(`Amount of users to check: ${users.length}`);
 
   const firstDelayAmount = 4000;
 

@@ -368,7 +368,7 @@ block content
             i.fa.fa-lock
             | Change Password
 
-    if process.env.PLUS_ENABLED == 'true' && ( user && user.plan == 'plus' )
+    if process.env.PLUS_ENABLED === 'true' && ( user && user.plan === 'plus' && user.stripeCustomerId)
       if !user.stripeSubscriptionCancellationDate && !user.stripeSubscriptionCancelled
         br
         br
