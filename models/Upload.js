@@ -56,6 +56,10 @@ const uploadSchema = new mongoose.Schema({
     default: 0
   },
 
+
+  // TODO: there is a bug here where if a user has plus and uploads something as unlisted,
+  // TODO: they will be marked as public even though it should retain it's unlisted
+  // TODO: so there should be a new thing 'pendingApproval' or 'approved'
   // the degree to which the upload is visible
   // public: anyone can see it, shown in search results, recent, popular, channel page
   // unlisted: anyone with a link can see it, no search results, recent, popular, channel page

@@ -522,11 +522,16 @@ exports.postImporter = async(req, res) => {
 
   const channelUrl = req.user.channelUrl;
 
+  const sendPushNotifications = req.body.sendPushNotifications === 'true';
+
+  const sendEmailNotifications = req.body.sendEmailNotifications === 'true';
+
   console.log(req.body);
 
   console.log('now ' + new Date());
 
-  const uniqueTag = await importerDownloadFunction(channelUrl, youtubeLink);
+  const uniqueTag = await importerDownloadFunction(channelUrl,
+    youtubeLink, req.user, sendPushNotifications, sendEmailNotifications, req.host);
 
   if(uniqueTag == 'playlist'){
     return res.send({

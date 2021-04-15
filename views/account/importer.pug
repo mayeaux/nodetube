@@ -64,6 +64,15 @@ block content
         .row
             .col-sm-12
 
+                input#sendPushNotifications(type='checkbox' name='sendPushNotifications')
+                label.fw(for='sendPushNotifications' style="margin-left:10px;")  Send Push Notifications
+                br
+                input#sendEmailNotifications(type='checkbox' name='sendEmailNotifications')
+                label.fw(for='sendEmailNotifications' style="margin-left:10px;")  Send Email Notifications
+                br
+                br
+
+
                 div.importerButton
                     label.fw(style="font-size: 23px;" for='title') Url To Import
                     input.importInput.form-group.center-block.text-center(style="width:400px;max-width:95%;border-radius:2px;font-size:20px;font-weight:300;" type="text" name="title" id="title" minlength=3, maxlength=100 required)
@@ -102,14 +111,17 @@ block content
 
             $('.importingText').show();
 
+            var sendPushNotifications = $('#sendPushNotifications').is(':checked');
+
+            var sendEmailNotifications = $('#sendEmailNotifications').is(':checked');
+
             var csrf = '#{_csrf}'
 
             var data = {
-              _csrf: csrf
+              _csrf: csrf,
+              sendPushNotifications,
+              sendEmailNotifications
             }
-
-
-
 
             var youtubeLink = $('.importInput').val()
 
