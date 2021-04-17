@@ -1587,7 +1587,11 @@ block extra_footer_js
       var activeElement = document.activeElement;
       var inputs = ['input', 'textarea'];
 
-      if (activeElement && inputs.indexOf(activeElement.tagName.toLowerCase()) === -1) {
+      var plyrElementNotFocused = !document.activeElement.classList.contains('plyr')
+
+      var inputElementNotFocused = inputs.indexOf(activeElement.tagName.toLowerCase()) === -1;
+      
+      if (activeElement && plyrElementNotFocused && inputElementNotFocused) {
 
         if (e.keyCode === 37) {
 
