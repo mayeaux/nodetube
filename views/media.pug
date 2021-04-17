@@ -1580,3 +1580,27 @@ block extra_footer_js
       script.
         var user = undefined
 
+  script.
+    $(document).keyup(function (e) {
+      var mediaPlayer = document.getElementById("media_player");
+
+      var activeElement = document.activeElement;
+      var inputs = ['input', 'textarea'];
+
+      if (activeElement && inputs.indexOf(activeElement.tagName.toLowerCase()) === -1) {
+
+        if (e.keyCode === 37) {
+
+          mediaPlayer.currentTime = mediaPlayer.currentTime - 5;
+
+          return false;
+
+        } else if (e.keyCode === 39) {
+
+          mediaPlayer.currentTime = mediaPlayer.currentTime + 5;
+
+          return false;
+        }
+      }
+    });
+
