@@ -82,8 +82,12 @@ exports.changeRatings = async(req, res) => {
 
     let category = req.body.category;
 
+    let visibility = req.body.visibility;
+
     console.log(rating);
     console.log(uploads);
+
+    console.log(visibility);
 
     for(let upload of uploads){
       let foundUpload = await Upload.findOne({_id: upload});
@@ -108,12 +112,17 @@ exports.changeRatings = async(req, res) => {
         foundUpload.category = category;
       }
 
+      if(visibility){
+        foundUpload.visibility = visibility;
+      }
+
       await foundUpload.save();
     }
 
     res.send('success');
 
   } catch(err){
+    console.log(err);
     res.status(500);
     res.send('fail');
   }
@@ -152,7 +161,7 @@ exports.deleteAccount = async(req, res) => {
 
   await user.save();
 
-  // TODO: bug here, set all visibility as public will have deleterious effects on private uploads, should use status instead
+  // TODO: bug here, set all visibility as removed will have deleterious effects on private uploads, should use status instead
   // make all uploads visibility to removed
   for(let upload of uploads){
     upload.visibility = 'removed';
@@ -235,7 +244,10 @@ exports.deleteUpload = async(req, res) => {
 
 exports.postPending = async(req, res) => {
 
+  // is it from the admin/uploads page? used in redirect
   const fromUploads = /uploads/.test(req.headers.referer);
+
+  const fromMedia = req.body.fromMedia;
 
   const uniqueTag = req.body.uniqueTag;
   const moderationValue = req.body.moderationValue;
@@ -273,7 +285,9 @@ exports.postPending = async(req, res) => {
 
   req.flash('success', {msg: `${upload.title} by ${user.channelUrl} moderated, thank you.`});
 
-  if(fromUploads){
+  if(fromMedia){
+    res.redirect(req.headers.referer);
+  } else if(fromUploads){
     res.redirect('/admin/uploads');
   } else {
     res.redirect('/pending');

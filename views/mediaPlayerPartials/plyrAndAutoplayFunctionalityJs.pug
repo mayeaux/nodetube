@@ -1,31 +1,57 @@
 script.
 
-  $('.no-user-comment-form').on('release click', function(event){
-    event.preventDefault();
-    // swal("Please register to leave a comment")
-
-    return swal({
-      text: "Please register to leave a comment",
-      type: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Sign Up Now'
-    }).then(function (result) {
-      if (result.value) {
-        window.location.href = "/signup";
-      }
-    })
-
-  })
-
   function getParameterByName(name, url) {
     if (!url) url = window.location.href;
     name = name.replace(/[\[\]]/g, "\\$&");
     var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-      results = regex.exec(url);
+            results = regex.exec(url);
     if (!results) return null;
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, " "));
   }
+
+  /** functionality to skip forward automatically based on lastWatchedTime **/
+  var lastWatchedTime = '#{lastWatchedTime && lastWatchedTime.secondsWatched}';
+
+  var secondsToMoveFoward = '#{secondsToMoveForward}';
+
+  var v = document.getElementsByTagName("video") && document.getElementsByTagName("video")[0];
+
+  if(!v){
+    v = document.getElementsByTagName("audio") && document.getElementsByTagName("audio")[0];
+  }
+
+  var movedForward = false;
+
+  const amountOfSecondsToSkipForwardTo = window.getParameterByName('t');
+
+  var dontAutoplayBasedOnUpload = window.getParameterByName('u') == 't';
+
+  // this works properly because it runs right when the video has started
+  v.addEventListener("playing", async function (event) {
+    // the way this is setup, 't' will override lastWatchedTime
+
+    // skip forward for the 't' thing
+    if (amountOfSecondsToSkipForwardTo && !movedForward) {
+      player.currentTime = Number(amountOfSecondsToSkipForwardTo)
+
+      movedForward = true;
+    }
+
+    // if last watched time, move it forward
+    if (lastWatchedTime && !movedForward) {
+      player.currentTime = Number(lastWatchedTime)
+
+      // save in memory that we've skipped forward
+      movedForward = true;
+    }
+
+
+  }, true);
+
+  // TODO: set the lastWatchedTime to 0 when you finish a video/audio
+
+  /** functionality to skip forward automatically based on lastWatchedTime **/
 
   var sensitive = #{upload.sensitive}
 
@@ -40,37 +66,44 @@ script.
 
   console.log('should autoplay ' + autoplay)
 
+  /** Freshly uploaded functionality **/
+
+  // if user had just uploaded it
+  // u=t is uploaded=true,
+  var dontAutoplayBasedOnUpload = "t" == window.getParameterByName("u");
+
+  var viewsAmount = '#{upload.views}';
+
+  viewsAmount = Number(viewsAmount);
+
+  // console.log(viewsAmount);
+
+  const shouldNotAutoPlayBasedOnViews = viewsAmount < 5;
+
+  // console.log(shouldNotAutoPlayBasedOnViews);
+  //
+  // console.log(dontAutoplayBasedOnUpload)
+
+  if ((dontAutoplayBasedOnUpload && shouldNotAutoPlayBasedOnViews) ||  !autoplay) {
+    autoplay = false;
+  } else {
+    autoplay = true;
+  }
+
+  /** Freshly uploaded functionality end **/
 
 
-  // Available controls:
-  /*
-    controls: [
-    'play-large', // The large play button in the center
-    'restart', // Restart playback
-    'rewind', // Rewind by the seek time (default 10 seconds)
-    'play', // Play/pause playback
-    'fast-forward', // Fast forward by the seek time (default 10 seconds)
-    'progress', // The progress bar and scrubber for playback and buffering
-    'current-time', // The current time of playback
-    'duration', // The full duration of the media
-    'mute', // Toggle mute
-    'volume', // Volume control
-    'captions', // Toggle captions
-    'settings', // Settings menu
-    'pip', // Picture-in-picture (currently Safari only)
-    'airplay', // Airplay (currently Safari only)
-    'download', // Show a download button with a link to either the current source or a custom URL you specify in your options
-    'fullscreen', // Toggle fullscreen
-    ];
-  */
-  // The order you pass them is the order they appear
+  // TODO: add the t=12 parameter here
+
+  console.log('should autoplay ' + autoplay)
 
   var plyr_options = {
     autoplay,
     clickToPlay: true,
-    speed: {selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]},
-    controls: ['play-large', 'play','progress', 'current-time', 'duration', 'rewind', 'fast-forward', 'mute', 'volume', 'settings', 'fullscreen', 'captions'],
-    settings: ['speed', 'captions', 'quality', 'loop']
+    speed: {selected: 1, options: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]},
+    controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'rewind', 'fast-forward', 'mute', 'volume', 'settings', 'pip', 'fullscreen', 'captions'],
+    settings: ['speed', 'captions', 'quality', 'loop'],
+    fullscreen: {iosNative: true}
   };
 
   // Create the plyr instances - this defines players[0] as our primary player.
@@ -78,20 +111,52 @@ script.
 
   var player = players[0];
 
+
+
+
+  player.on('playing', function(){
+
+    var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+
+    // only hide button if it's on desktop
+    // once you start playing a video on desktop, hide the play button so when you pause it's not there anymore
+    if(width > 900){
+      $('button.plyr__control.plyr__control--overlaid').css('display', 'none');
+    }
+
+  })
+
   players[0].on('ready', function (event) {
+
+    console.log(event);
+
+
+    if(secondsToMoveFoward){
+      player.currentTime = secondsToMoveFoward
+    }
+
+    console.log('last wached time');
+    console.log(Number(lastWatchedTime))
+
 
     if(autoplay){
       var playPromise = player.play();
 
+      //
       if (playPromise !== undefined) {
-        playPromise.then(function () {
-          console.log('thing');
+
+        // play promise is a thenable response, if it's not undefined
+        // try and then it, and if not then log the error and try and plan again
+        playPromise.then(function (event) {
+          console.log('running thenable');
+          console.log(event);
         }).catch(function (error) {// Auto-play was prevented
-          console.log('thing2');
-          player.play();
+
           console.log(error);
-          // Show paused UI.
+          console.log('autoplay was prevented try again');
+          player.play();
         });
+
       }
     } else {
       console.log('dont run')
@@ -131,25 +196,11 @@ script.
     //addStyleAttribute($('.plyr'), 'max-height: 100vh !important');
     //addStyleAttribute($('.plyr'), 'height: 100vh !important');
 
-
-
-
-
-
-
-
-
     // remove video max-height
 
   });
 
-  players[0].on('play', function (event) {
-
-    // $('.plyr').focus()
-    // add max height
-    // $('.plyr').css('cursor', 'none')
-
-  });
+  var alreadyMovedOnPlay = false;
 
   players[0].on('exitfullscreen', function (event) {
     // add max height

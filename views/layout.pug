@@ -15,8 +15,10 @@ html
     meta(property='og:description', content=meta.description)
     meta(property='og:video', content=meta.video)
 
-
-    meta(name='twitter:card', content='summary')
+    // twitter meta tags
+    // trying out large card of twitter
+    meta(name='twitter:card', content='summary_large_image')
+    //meta(name='twitter:card', content='summary')
     meta(name='twitter:title', content=(meta.title || title))
     meta(name='twitter:description', content=meta.description || "An open-source file hosting platform")
     meta(name='twitter:image', content=meta.image)
@@ -63,6 +65,11 @@ html
 
     //layout.pug
     include layoutPartials/header
+
+    // todo: make it so that it's an env var
+    // optional header with a call to action
+    if optionalHeaderOn && !dontShowOptionalHeader && !(user && user.plan == 'plus') || 1 == 2
+      include layoutPartials/optionalHeader
 
     // I feel like this is here and breaks if you move it
     include viewPartials/darkLightMode

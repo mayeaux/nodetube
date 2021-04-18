@@ -1,0 +1,35 @@
+div.row
+    div.col-sm-2
+        h3.fw
+            a(href=`/user/${user.channelUrl}`) Channel Page
+
+    if user && user.privs && user.privs.livestreaming
+        div.col-sm-2
+            h3.fw
+                a(href="/account/livestreaming") Livestreaming
+
+    //div.col-sm-2
+    //    h3.fw
+    //        a(href=`/account/extra`) Extra
+    //div.col-sm-2
+    //  h3.fw
+    //    a(href="/account/viewHistory") View History
+    //div.col-sm-2
+    //  h3.fw
+    //    a(href="/account/reactHistory") React History
+    //div.col-sm-2
+    //      h3.fw
+    //        a(href="/" + `${user.channelUrl}` +  "/playlists") Playlists
+
+            //a.livestream-button Livestreaming
+            //a.livestreaming-link(href=`/user/${user.channelUrl}/live/staging`) Livestreaming
+    //div.col-sm-2
+    //  h3.fw Credit ($#{user.credit/100})
+    //div.col-sm-2
+    //  h3.fw Earnings ($#{user.receivedCredit / 100})
+    //div.col-sm-2
+    //  h3
+    //    a(href=`/account/creditHistory`) Credit History
+
+p
+hr

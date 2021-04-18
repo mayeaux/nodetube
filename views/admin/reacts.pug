@@ -6,12 +6,38 @@ block content
             h2
             h2.view-header Reacts (Admin)
         hr
-        each react in reacts
-            p
-                a(href=`/user/${react.upload.uploader.channelUrl}/${react.upload.uniqueTag}`) Upload Title #{react.upload.title}
-            p Uploader: #{react.upload.uploader.channelUrl}
-            p Reacter : #{react.user.channelUrl}
-            p Reaction: #{react.react}
+        if reacts.length == 0
+            .center-block.text-center
+                ul.pagination
+                    li.page-item
+                        a.page-link(href=`/admin/reacts/${previousNumber}`) <
 
-            br
-            br
+                    each number in numbersArray
+                        li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
+                            a.page-link(href=`/admin/reacts/${number}`) #{number}
+
+                    li.page-item
+                        a.page-link(href=`/admin/reacts/${nextNumber}`) >
+
+            p There are no more reacts
+        else
+            .center-block.text-center
+                ul.pagination
+                    li.page-item
+                        a.page-link(href=`/admin/reacts/${previousNumber}`) <
+
+                    each number in numbersArray
+                        li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
+                            a.page-link(href=`/admin/reacts/${number}`) #{number}
+
+                    li.page-item
+                        a.page-link(href=`/admin/reacts/${nextNumber}`) >
+            each react in reacts
+                p
+                    a(href=`/user/${react.upload.uploader.channelUrl}/${react.upload.uniqueTag}`) Upload Title #{react.upload.title}
+                p Uploader: #{react.upload.uploader.channelUrl}
+                p Reacter : #{react.user.channelUrl}
+                p Reaction: #{react.react}
+
+                br
+                br

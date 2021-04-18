@@ -1,6 +1,13 @@
 extends ../layout
 
+
+
 block content
+  style.
+    .firstPasswordInput, .confirmPasswordInput {
+      width: 88%
+    }
+
   .container
     .page-header
       h3.fw.center-block.text-center(style="font-size:33px;") Sign Up
@@ -18,11 +25,11 @@ block content
       .form-group
         label.fw.loginHeader.col-sm-3.control-label(for='password') Password
         .col-sm-7
-          input.fw.loginHeader.form-control(type='password', name='password', id='password', placeholder='Please enter your password', required)
+          input.fw.loginHeader.form-control.firstPasswordInput(type='password', name='password', id='password', placeholder='Please enter your password', required)
       .form-group
         label.fw.loginHeader.col-sm-3.control-label(for='confirmPassword') Confirm Password
         .col-sm-7
-          input.fw.loginHeader.form-control(type='password', name='confirmPassword', id='confirmPassword', placeholder='Please confirm your password', required)
+          input.fw.loginHeader.form-control.confirmPasswordInput(type='password', name='confirmPassword', id='confirmPassword', placeholder='Please confirm your password', required)
 
       if captchaOn == true
         .form-group
@@ -51,7 +58,7 @@ block content
 
       if (!/^\w+$/.test(username)) {
          evt.preventDefault();
-         swal('Please only use letters, numbers and underscores in your username');
+         swal('Please only use letters, numbers and underscores (no spaces) in your username');
       } else {
         /** form will submit properly **/
       }

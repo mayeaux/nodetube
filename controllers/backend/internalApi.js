@@ -20,8 +20,12 @@ var concat = require('concat-files');
 var Busboy = require('busboy');
 const mkdirp = Promise.promisifyAll(require('mkdirp'));
 const mv = require('mv');
+const FileType = require('file-type');
+
+const srt2vtt = Promise.promisifyAll(require('srt2vtt'));
 
 const backblaze = require('../../lib/uploading/backblaze');
+const stripe = require('../../lib/payments/stripe');
 
 const domainNameAndTLD = process.env.DOMAIN_NAME_AND_TLD;
 
@@ -56,8 +60,13 @@ const Subscription = require('../../models/index').Subscription;
 const Notification = require('../../models/index').Notification;
 const CreditAction = require('../../models/index').CreditAction;
 const Report = require('../../models/index').Report;
+const LastWatchedTime = require('../../models/index').LastWatchedTime;
+const PushEndpoint = require('../../models/index').PushEndpoint;
+const PushSubscription = require('../../models/index').PushSubscription;
+const EmailSubscription = require('../../models/index').EmailSubscription;
 
 const getMediaType = require('../../lib/uploading/media');
+const pushNotificationLibrary = require('../../lib/mediaPlayer/pushNotification');
 
 const ffmpegHelper = require('../../lib/uploading/ffmpeg');
 var resumable = require('../../lib/uploading/resumable.js')(__dirname +  '/upload');
@@ -94,6 +103,28 @@ async function updateUsersUnreadSubscriptions(user){
     await subscribingUser.save();
   }
 
+}
+
+function convertPromise(inputPath, outputPath){
+
+  var srtData = fs.readFileSync(inputPath);
+
+  // 1 - Create a new Promise
+  return new Promise(function(resolve, reject){
+
+    srt2vtt(srtData, function(err, vttData){
+
+      if(err){
+        reject(err);
+      } else {
+
+        fs.writeFileSync(outputPath, vttData);
+        resolve(vttData);
+      }
+
+    });
+
+  });
 }
 
 /**
@@ -288,6 +319,72 @@ exports.deleteChannelThumbnail = async(req, res, next) => {
   await req.user.save();
 
   return res.send('success');
+};
+
+/** delete user/channel upload **/
+exports.deleteUserEmail = async(req, res, next) => {
+
+  try {
+    console.log(req.body.uploadToken);
+
+    if(!req.user && req.body.uploadToken){
+      req.user = await User.findOne({ uploadToken : req.body.uploadToken });
+    }
+
+    req.user.email = undefined;
+    req.user.emailConfirmed = false;
+
+    await req.user.save();
+
+    return res.send('success');
+  } catch(err){
+
+    console.log(err);
+    res.status(500);
+    res.send('wrong');
+
+  }
+};
+
+/** cancel plus subscription from account page **/
+exports.cancelPlusSubscription = async(req, res, next) => {
+
+  try {
+    console.log(req.body.uploadToken);
+
+    if(!req.user && req.body.uploadToken){
+      req.user = await User.findOne({ uploadToken : req.body.uploadToken });
+    }
+
+    // change the renewal date to the cancellation date
+    req.user.stripeSubscriptionCancellationDate = req.user.stripeSubscriptionRenewalDate;
+
+    // clear off renewal date (which is used to check)
+    req.user.stripeSubscriptionRenewalDate = undefined;
+
+    // get subscription id
+    const subscriptionId = req.user.stripeSubscriptionId;
+
+    // cancel subscription
+    const subscription = await stripe.stripeApi.subscriptions.del(subscriptionId);
+
+    // mark subscription as cancelled
+    if(subscription.status !== 'active'){
+      req.user.stripeSubscriptionStatus = subscription.status;
+    }
+
+    console.log(req.user);
+
+    await req.user.save();
+
+    return res.send('success');
+  } catch(err){
+
+    console.log(err);
+    res.status(500);
+    res.send('wrong');
+
+  }
 };
 
 /** delete upload thumbnail **/
@@ -507,7 +604,9 @@ exports.react = async(req, res, next)  => {
 /** POST EDIT UPLOAD **/
 exports.editUpload = async(req, res, next) => {
 
-  console.log(req.body);
+  // console.log(req.body);
+  //
+  // return res.send('hello');
 
   try {
 
@@ -562,17 +661,77 @@ exports.editUpload = async(req, res, next) => {
 
     // check if there's a thumbnail
     let filename, fileType, fileExtension;
+
     if(req.files && req.files.filetoupload){
       filename = req.files.filetoupload.originalFilename;
       fileType = getMediaType(filename);
+
       fileExtension = path.extname(filename);
     }
 
+    // console.log(req.files);
+    // console.log(req.files.length);
+
+    //
     const fileIsNotImage = req.files && req.files.filetoupload && req.files.filetoupload.size > 0 && fileType && fileType !== 'image';
 
+    console.log('req files');
     console.log(req.files);
 
+    // TODO: you have to make this smarter by checking the FileType
+
     const fileIsImage = req.files && req.files.filetoupload && req.files.filetoupload.size > 0 && fileType == 'image';
+
+    const imagePath = req.files && req.files.filetoupload && req.files.filetoupload.path;
+
+    // not doing anything just logging it atm
+    let fileTypeData;
+    if(imagePath){
+      const fileTypeData = await FileType.fromFile(imagePath);
+      console.log(fileTypeData);
+
+    }
+
+    const webVttPath = req.files && req.files.webvtt && req.files.webvtt.path;
+
+    const originalName = req.files && req.files.webvtt && req.files.webvtt.originalFilename;
+
+    const webVttFile = req.files && req.files.webvtt;
+
+    // if there is a path, and it's not a falsy value, because these empty strings are being regarded as values
+    if(webVttPath && originalName){
+      const originalName = webVttFile.originalFilename;
+
+      const subtitlefileExtension = path.extname(originalName);
+
+      console.log('subtitle');
+      console.log(subtitlefileExtension);
+
+      if(subtitlefileExtension == '.srt'){
+        // do the convert here
+        if(subtitlefileExtension == '.srt'){
+          console.log('SRT FILE!');
+
+          const outputPath = `${saveAndServeFilesDirectory}/${req.user.channelUrl}/${upload.uniqueTag}.vtt`;
+
+          // convert the srt to vtt
+          await convertPromise(webVttPath, outputPath);
+          console.log('apparently done converting');
+
+          // TODO: does it delete the old file or should I delete it?
+
+        }
+
+      } else if(subtitlefileExtension == '.vtt'){
+        /**  the file in the directory  **/
+        const pathToSaveTo = `${saveAndServeFilesDirectory}/${req.user.channelUrl}/${upload.uniqueTag}.vtt`;
+
+        /**  save the VTT to the directory and mark it on the upload document **/
+        await fs.move(webVttPath, pathToSaveTo, {overwrite: true});
+      }
+
+      upload.webVTTPath = `${upload.uniqueTag}.vtt`;
+    }
 
     // console.log(req.files);
 
@@ -877,3 +1036,292 @@ exports.sendUserCredit = async(req, res) => {
   return res.send('success');
 
 };
+
+/**
+ * POST /api/upload/:uniqueTag/captions/delete
+ * Remove the captions from an upload
+ */
+exports.deleteUploadCaption = async(req, res) => {
+  try {
+    console.log(req.body.uploadToken);
+
+    // if there's no req.user then load it as if there was one from the upload token
+    if(!req.user && req.body.uploadToken){
+      req.user = await User.findOne({ uploadToken : req.body.uploadToken });
+    }
+
+    // req.params coming from the api route that's hit
+    // get the upload per the unique tag
+    const upload = await Upload.findOne({ uniqueTag: req.params.uniqueTag }).populate('uploader');
+
+    // if there's no upload send 'no upload'
+    if(!upload){
+      res.send('no upload');
+    }
+
+    // TODO: does this work for admins?
+
+    // only work if the uploader id and req user id are the same
+    // otherwise send 'not authenticated'
+    if(upload.uploader.id.toString() !== req.user.id.toString()){
+      res.send('not authenticated');
+    }
+
+    upload.webVTTPath = undefined;
+    await upload.save();
+
+    res.send('success');
+
+    console.log(req.body);
+  } catch(err){
+    console.log(err);
+  }
+
+};
+
+/** handle last watched time per user and upload **/
+exports.updateLastWatchedTime = async(req, res, next)  => {
+
+  // console.log(req.body);
+
+  // console.log(`${req.user._id}` , req.params.user);
+
+  const secondsWatched = req.body.secondsWatched;
+  const uploadUniqueTag = req.body.uniqueTag;
+
+  const user = req.user._id;
+
+  const upload = await Upload.findOne({
+    uniqueTag : req.body.uniqueTag
+  });
+
+  const uploadId = upload._id;
+
+  // find an existing react per that user and upload
+  let existingLastWatchedTime = await LastWatchedTime.findOne({
+    uploadUniqueTag,
+    user
+  });
+
+  if(existingLastWatchedTime){
+
+    existingLastWatchedTime.secondsWatched = secondsWatched;
+
+    await existingLastWatchedTime.save();
+
+    res.send('last watched time updated');
+
+    // if there's already an uploaded time
+  } else {
+
+    console.log('no saved watched time for this user and and upload');
+
+    const newLastWatchedTime = new LastWatchedTime({
+      upload: uploadId,
+      user: req.user._id,
+      uploadUniqueTag: upload.uniqueTag,
+      secondsWatched
+    });
+
+    await newLastWatchedTime.save();
+
+    res.send('new watch time created');
+  }
+};
+
+exports.savePushEndpoint = async function(req, res, next){
+
+  console.log(req.user);
+  // console.log(req);
+
+  const userAgent = req.get('User-Agent');
+
+  console.log(userAgent);
+
+  let existingPushEndpoint = await PushEndpoint.findOne({
+    user: req.user,
+    subscription: req.body,
+    userAgent,
+    expired: false
+  });
+
+  if(!existingPushEndpoint){
+    let pushEndpoint = new PushEndpoint({
+      user : req.user,
+      subscription : req.body,
+      userAgent,
+      expired: false
+    });
+
+    console.log(pushEndpoint);
+
+    await pushEndpoint.save();
+  }
+
+  res.send('success');
+
+};
+
+exports.subscribeToEmailNotifications = async function(req, res, next){
+  // user who is subscribing
+  const user = req.body.user;
+
+  const subscribingUser = await User.findOne({ channelUrl: user });
+
+  const channel = req.body.channel;
+
+  const foundUser = await User.findOne({ channelUrl: channel });
+
+  console.log(foundUser.channelUrl);
+
+  console.log(subscribingUser.channelUrl);
+
+  // channel url of who is being subscribed to
+
+  let existingActiveEmailSubscription = await EmailSubscription.findOne({ subscribingUser, subscribedToUser: foundUser, active: true });
+
+  let responseText;
+
+  // already exists and turned on, turn it off
+  if(existingActiveEmailSubscription){
+    responseText = 'already active, turn it off';
+    console.log(responseText);
+    existingActiveEmailSubscription.active = false;
+    await existingActiveEmailSubscription.save();
+  }
+
+  // check if there's an inactive one, if not make a new one
+  if(!existingActiveEmailSubscription){
+
+    let existingInactiveEmailNotif = await EmailSubscription.findOne({ subscribingUser, subscribedToUser: foundUser, active: false });
+
+    if(existingInactiveEmailNotif){
+      responseText = 'already existing inactive, make it active';
+      console.log(responseText);
+      existingInactiveEmailNotif.active = true;
+      await existingInactiveEmailNotif.save();
+    } else {
+      responseText = 'create a new email sub';
+
+      console.log(responseText);
+      let emailEndpoint = new EmailSubscription({
+        subscribingUser,
+        subscribedToUser: foundUser,
+        active: true
+      });
+
+      // console.log(emailEndpoint);
+
+      await emailEndpoint.save();
+    }
+  }
+
+  res.send(responseText);
+
+};
+
+exports.subscribeToPushNotifications = async function(req, res, next){
+  // user who is subscribing
+  const user = req.body.user;
+
+  const subscribingUser = await User.findOne({ channelUrl: user });
+
+  const channel = req.body.channel;
+
+  const foundUser = await User.findOne({ channelUrl: channel });
+
+  console.log(foundUser.channelUrl);
+
+  console.log(subscribingUser.channelUrl);
+
+  // channel url of who is being subscribed to
+
+  let existingActivePushSubscription = await PushSubscription.findOne({ subscribingUser, subscribedToUser: foundUser, active: true });
+
+  let responseText;
+
+  // already exists and turned on, turn it off
+  if(existingActivePushSubscription){
+    responseText = 'already active, make it inactive';
+    // console.log(responseText);
+    existingActivePushSubscription.active = false;
+    await existingActivePushSubscription.save();
+  }
+
+  // check if there's an inactive one, if not make a new one
+  if(!existingActivePushSubscription){
+
+    let existingInactivePushNotif = await PushSubscription.findOne({ subscribingUser, subscribedToUser: foundUser, active: false });
+
+    if(existingInactivePushNotif){
+      responseText = 'already existing inactive, make it active';
+      // console.log(responseText);
+      existingInactivePushNotif.active = true;
+      await existingInactivePushNotif.save();
+    } else {
+      responseText = 'create a new push sub';
+
+      // console.log(responseText);
+      let pushEndpoint = new PushSubscription({
+        subscribingUser,
+        subscribedToUser: foundUser,
+        active: true
+      });
+
+      // console.log(pushEndpoint);
+
+      await pushEndpoint.save();
+    }
+  }
+
+  res.send(responseText);
+
+};
+
+exports.sendUserPushNotifs = async function(req, res, next){
+  if(req.user.role !== 'admin'){
+    return res.send('die');
+  }
+
+  // user who is subscribing
+  const channel = req.body.channel;
+
+  const userToSendFor = await User.findOne({ channelUrl: channel });
+
+  console.log(userToSendFor.channelUrl);
+
+  // TODO: find all the PushSubscriptions where he is the subscribed to user, that are active
+  // for each of those pushsubscriptions, populate the user
+  // for each of those users, find their endpoints, and then webpush to them (active ones)
+
+  await pushNotificationLibrary.sendPushNotifications();
+
+  return res.send('hello');
+
+  const subscriptions = await PushEndpoint.find({ expired : { $ne: true } });
+
+  for(const subscription of subscriptions){
+    console.log(subscription);
+  }
+
+  // channel url of who is being subscribed to
+
+  // const existingPushSubscription = await PushSubscription.find({ subscribingUser, subscribedToUser: foundUser })
+  //
+  // if(!existingPushSubscription){
+  //   let pushEndpoint = new PushSubscription({
+  //     subscribingUser,
+  //     subscribedToUser: foundUser
+  //   });
+  //
+  //   console.log(pushEndpoint);
+  //
+  //   await pushEndpoint.save();
+  // } else {
+  //   console.log('already has an existing push subscription');
+  // }
+
+  res.send('success');
+
+};
+

@@ -7,11 +7,22 @@ script.
 
   var domainName = '#{domainName}';
 
+  const username = '#{upload.uploader.channelUrl}';
+
   var embedString = '<iframe width="560" height="315" src="' + domainName + '/embed/' + uniqueTag + '" frameborder="0" allowfullscreen=""></iframe>'
 
   if(fileType == 'audio'){
     embedString = '<iframe width="560" height="54" src="' + domainName + '/embed/' + uniqueTag + '" frameborder="0" allowfullscreen=""></iframe>'
   }
+
+  // TODO: have to change this here
+  $('.rss-button').on('click', function () {
+    swal({
+      title: 'RSS',
+      text: domainName + '/user/' + username + '/rss'
+    });
+  })
+
 
   $('.share-button').on('click', function(){
     swal({

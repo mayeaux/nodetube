@@ -9,13 +9,12 @@ services:
     ports:
       - "49161:3000"
     volumes:
-      - .:/app/
       - /app/node_modules
       - ./upload:/app/upload
       - ./uploads:/app/uploads
     environment:
       - REDIS_HOST=redis
-      - MONGODB_DOCKER_URI=mongodb://nodetube-mongo:27017/nodetube
+      - MONGODB_URI=mongodb://nodetube-mongo:27017/nodetube
     depends_on:
       - redis
       - mongo
@@ -25,7 +24,7 @@ services:
 
   mongo:
     container_name: nodetube-mongo
-    image: mongo:3.6
+    image: mongo:4.4
     volumes:
       - ./data/db:/data/db
     ports:

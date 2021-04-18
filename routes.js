@@ -49,10 +49,15 @@ function fileHostRoutes(app){
     });
   }
 
+  /** upload APIS **/
+  // API that the frontend hits for a uesr to upload
   app.post('/upload', uploadingController.postFileUpload);
-  // app.post('/admin/upload', authMiddleware.adminAuth, filehostController.adminUpload);
+
+  // direct upload for admins that can be used to upload livestream recordings
+  app.post('/admin/upload', authMiddleware.adminAuth, uploadingController.adminUpload);
 
   // edit upload and thumbnails thumbnails
+  // note: don't put this behind auth middleware because it uses a token
   app.post('/api/upload/:uniqueTag/edit', internalApiController.editUpload);
   app.post('/api/upload/:uniqueTag/thumbnail/delete', internalApiController.deleteUploadThumbnail);
 
@@ -134,6 +139,10 @@ function frontendRoutes(app){
   app.get('/docs', publicController.getDocs);
 
   app.get('/donate', publicController.getDonate);
+  app.get('/help', publicController.getHelp);
+
+  app.get('/plus', publicController.getPlus);
+  app.get('/mobile', publicController.getMobile);
 
   app.get('/landing', publicController.getLandingPage);
 
@@ -143,13 +152,16 @@ function frontendRoutes(app){
   // app.get('/contact', contactController.getContact);
   // app.post('/contact', contactController.postContact);
 
+  // UPLOADING
+  /** upload APIS **/
+  // API that the frontend hits for a uesr to upload
+  app.post('/upload', uploadingController.postFileUpload);
+
+  // direct upload for admins that can be used to upload livestream recordings
+  app.post('/admin/upload', authMiddleware.adminAuth, uploadingController.adminUpload);
+
   app.get('/globe', publicController.globe);
   app.get('/random', publicController.random);
-
-  /** upload APIS **/
-  app.post('/upload', uploadingController.postFileUpload);
-  // TODO: load properly
-  // app.post('/admin/upload', authMiddleware.adminAuth, filehostController.adminUpload);
 
   /** channel browsing routes **/
   app.get('/channels/:page', channelBrowsingController.channels);
@@ -163,7 +175,7 @@ function frontendRoutes(app){
 
   // endpoint for processing progress
   // TODO: should probably be renamed to note it's processing progress not necessarily upload progress
-  app.all('/user/:channel/:media/progress', uploadingController.getUploadProgress);
+  app.all('/user/:channelUrl/:media/progress', uploadingController.getUploadProgress);
 
   // individual user rss feed
   app.get('/user/:channel/rss', accountFrontendController.getChannelRss);
@@ -224,6 +236,7 @@ function frontendRoutes(app){
 
   /** account pages **/
   app.get('/notifications', accountFrontendController.notification);
+  app.get('/notifications/:page', accountFrontendController.notification);
   app.get('/login', accountFrontendController.getLogin);
   app.get('/logout', accountFrontendController.logout);
   app.get('/forgot', accountFrontendController.getForgot);
@@ -240,11 +253,20 @@ function frontendRoutes(app){
 
   /** include passport here because if its a file host, route is already loaded **/
   app.post('/api/channel/thumbnail/delete', passportConfig.isAuthenticated, internalApiController.deleteChannelThumbnail);
+  app.post('/api/deleteUserEmail', passportConfig.isAuthenticated, internalApiController.deleteUserEmail);
+  app.post('/api/cancelPlusSubscription', passportConfig.isAuthenticated, internalApiController.cancelPlusSubscription);
+
   app.post('/api/upload/:uniqueTag/edit', passportConfig.isAuthenticated, internalApiController.editUpload);
   app.post('/api/upload/:uniqueTag/thumbnail/delete', passportConfig.isAuthenticated, internalApiController.deleteUploadThumbnail);
+  app.post('/api/upload/:uniqueTag/captions/delete', passportConfig.isAuthenticated, internalApiController.deleteUploadCaption);
 
   /** API ENDPOINTS **/
   app.post('/api/react/:upload/:user', passportConfig.isAuthenticated, internalApiController.react);
+
+  app.post('/api/updateLastWatchedTime', passportConfig.isAuthenticated, internalApiController.updateLastWatchedTime);
+  app.post('/api/subscribeToPushNotifications', passportConfig.isAuthenticated, internalApiController.subscribeToPushNotifications);
+  app.post('/api/sendUserPushNotifs', passportConfig.isAuthenticated, internalApiController.sendUserPushNotifs);
+  app.post('/api/subscribeToEmailNotifications', passportConfig.isAuthenticated, internalApiController.subscribeToEmailNotifications);
 
   // TODO: why admin controller? (fix)
   app.post('/api/upload/delete', passportConfig.isAuthenticated, adminBackendController.deleteUpload);
@@ -263,7 +285,8 @@ function frontendRoutes(app){
 
   // purchase endpoints
   app.post('/api/purchase/plus', passportConfig.isAuthenticated, purchaseController.purchasePlus);
-  app.post('/api/purchase/credit',passportConfig.isAuthenticated,  purchaseController.purchaseCredits);
+  app.post('/api/purchase/donation', purchaseController.donation);
+  app.post('/api/purchase/credit', passportConfig.isAuthenticated,  purchaseController.purchaseCredits);
 
   app.get('/importer', accountFrontendController.getImporter);
   app.post('/importer', accountBackendController.postImporter);
@@ -273,6 +296,7 @@ function frontendRoutes(app){
   app.get('/account/viewHistory', passportConfig.isAuthenticated, accountFrontendController.getViewHistory);
   app.get('/account/reactHistory', passportConfig.isAuthenticated, accountFrontendController.getReactHistory);
   app.get('/account/livestreaming', passportConfig.isAuthenticated, accountFrontendController.livestreaming);
+  app.get('/account/extra', passportConfig.isAuthenticated, accountFrontendController.getExtraPage);
 
   app.get('/media/subscribed', passportConfig.isAuthenticated, accountFrontendController.subscriptions);
   app.get('/media/subscribed/:page', passportConfig.isAuthenticated, accountFrontendController.subscriptions);
@@ -309,16 +333,24 @@ function frontendRoutes(app){
   app.get('/support/reports', authMiddleware.moderatorAuth, supportFrontendController.getReports);
 
   /** ADMIN PAGES **/
+  app.get('/admin', authMiddleware.adminAuth, adminFrontendController.getAdminOverview);
   app.get('/admin/users', authMiddleware.adminAuth, adminFrontendController.getUsers);
+  app.get('/admin/users/:page', authMiddleware.adminAuth, adminFrontendController.getUsers);
   app.get('/admin/subscriptions', authMiddleware.adminAuth, adminFrontendController.subscriptions);
+  app.get('/admin/subscriptions/:page', authMiddleware.adminAuth, adminFrontendController.subscriptions);
   app.get('/admin/comments', authMiddleware.adminAuth, adminFrontendController.getComments);
+  app.get('/admin/comments/:page', authMiddleware.adminAuth, adminFrontendController.getComments);
   app.get('/admin/uploads', authMiddleware.adminAuth, adminFrontendController.getUploads);
+  app.get('/admin/uploads/:page', authMiddleware.adminAuth, adminFrontendController.getUploads);
   app.get('/admin/dailyStats', authMiddleware.adminAuth, adminFrontendController.dailyStats);
   app.get('/admin/reacts', authMiddleware.adminAuth, adminFrontendController.reacts);
+  app.get('/admin/reacts/:page', authMiddleware.adminAuth, adminFrontendController.reacts);
   app.get('/admin/siteVisitors', authMiddleware.adminAuth, adminFrontendController.getSiteVisitors);
+  app.get('/admin/siteVisitors/:page', authMiddleware.adminAuth, adminFrontendController.getSiteVisitors);
   app.get('/admin/siteVisitors/:id', authMiddleware.adminAuth, adminFrontendController.getSiteVisitorHistory);
   app.get('/admin/notifications', authMiddleware.adminAuth, adminFrontendController.getNotificationPage);
   app.get('/admin/adminAudit', authMiddleware.adminAuth, adminFrontendController.getAdminAudit);
+  app.get('/admin/adminAudit/:page', authMiddleware.adminAuth, adminFrontendController.getAdminAudit);
 
   /** SOCIAL MEDIA ENDPOINTS **/
   app.get('/admin/createSocialPost', authMiddleware.adminAuth, socialMediaFrontendController.getCreateSocialPost);
@@ -335,6 +367,8 @@ function frontendRoutes(app){
   app.post('/admin/changeRatings', authMiddleware.adminAuth, adminBackendController.changeRatings);
   app.post('/admin/getUserAccounts', authMiddleware.adminAuth, adminBackendController.getUserAccounts);
 
+  app.post('/save-subscription', passportConfig.isAuthenticated, internalApiController.savePushEndpoint);
+
   // find all ips and accounts associated
   app.post('/admin/deleteAllUsersAndBlockIps', authMiddleware.adminAuth, adminBackendController.deleteAllUsersAndBlockIps);
 
@@ -346,6 +380,14 @@ function frontendRoutes(app){
       title: 'Debug'
     });
   });
+
+  // req.params
+  // app.get('/:media', mediaPlayerController.getMedia)
+
+  // "vanity url"
+  app.get('/:channel', accountFrontendController.getChannel);
+
+  app.get('/:channel/:media', mediaPlayerController.getMedia);
 
   // anything that misses, return a 404
   app.get('*', function(req, res){

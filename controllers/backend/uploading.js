@@ -33,7 +33,10 @@ const {
   markUploadAsComplete,
   updateUsersUnreadSubscriptions,
   runTimeoutFunction,
-  userCanUploadContentOfThisRating
+  userCanUploadContentOfThisRating,
+  updateUsersPushNotifications,
+  updateUsersEmailNotifications,
+  alertAdminOfNewUpload
 } = require('../../lib/uploading/helpers');
 const backblaze = require('../../lib/uploading/backblaze');
 
@@ -43,11 +46,11 @@ var resumable = require('../../lib/uploading/resumable.js')(__dirname +  '/uploa
 
 const moderationUpdatesToDiscord = process.env.MODERATION_UPDATES_TO_DISCORD == 'true';
 
-process.on('warning', (warning) => {
-  console.warn(warning.name);    // Print the warning name
-  console.warn(warning.message); // Print the warning message
-  console.warn(warning.stack);   // Print the stack trace
-});
+// process.on('warning', (warning) => {
+//   console.warn(warning.name);    // Print the warning name
+//   console.warn(warning.message); // Print the warning message
+//   console.warn(warning.stack);   // Print the stack trace
+// });
 
 const winston = require('winston');
 //
@@ -95,22 +98,28 @@ exports.getUploadProgress = async(req, res) => {
     uniqueTag
   });
 
+  // let the frontend know if the upload or conversion failed
+  if(upload && upload.status == 'failed'){
+    return res.send('failed');
+  }
+
+  // this will cause the client to refresh the page
   if(upload && upload.status == 'completed'){
     return res.send('100');
   }
 
-  // nuspa41uploadProgress
-  const string = `${uniqueTag}uploadProgress`;
-
-  const conversionProgress = await redisClient.getAsync(`${uniqueTag}uploadProgress`);
+  const uploadProgress = await redisClient.getAsync(`${uniqueTag}uploadProgress`);
   const conversionTimeLeft = await redisClient.getAsync(`${uniqueTag}timeLeft`);
 
-  console.log('Progress:', conversionProgress);
-  console.log('Time left:', conversionTimeLeft);
+  console.log('Redis says the uploadProgress is:' + uploadProgress);
+  console.log('Redis says the timeLeft is:' + conversionTimeLeft);
+
+  // console.log('Progress:', uploadProgress);
+  // console.log('Time left:', conversionTimeLeft);
 
   // kind of an ugly workaround, if the upload is at 100% converted, mark it as 99%
   // just so backblaze and other things can finish before the frontend redirects
-  if(conversionProgress == '100'){
+  if(uploadProgress == '100'){
     res.send('99');
   }
 
@@ -122,7 +131,7 @@ exports.getUploadProgress = async(req, res) => {
   //
   // console.log(uniqueTag);
 
-  return res.send({conversionProgress, conversionTimeLeft});
+  return res.send({uploadProgress, conversionTimeLeft});
 
 };
 
@@ -156,7 +165,7 @@ function testIfUserRestricted(user, logObject, res){
 function aboutToProcess(res, channelUrl, uniqueTag){
   res.send({
     message: 'ABOUT TO PROCESS',
-    url: `/user/${channelUrl}/${uniqueTag}?autoplay=off`
+    url: `/user/${channelUrl}/${uniqueTag}?u=t`
   });
 }
 
@@ -178,6 +187,7 @@ function moderationIsRequired(user){
   return requireModeration;
 }
 
+// check if already uploaded based on the title
 async function checkIfAlreadyUploaded(user, title, logObject, res){
   // TODO: File size check
 
@@ -380,6 +390,10 @@ exports.postFileUpload = async(req, res) => {
 
         /** turn filenames into an array for concatenation **/
 
+        // TODO: mark here that you started concatenating
+        redisClient.setAsync(`${uniqueTag}uploadProgress`, 'Your upload is beginning processing...');
+
+        // build an array with the names of all the file chunks
         const fileNameArray = [];
         for(let x = 1; x < parseInt(resumableTotalChunks, 10) + 1; x++){
           fileNameArray.push(`${uploadPath}/${x}`);
@@ -387,6 +401,7 @@ exports.postFileUpload = async(req, res) => {
 
         var combinedStream = CombinedStream.create();
 
+        // loop through each file and append it to the stream
         for(const fileChunk of fileNameArray){
           combinedStream.append(function(next){
             next(fs.createReadStream(fileChunk));
@@ -405,29 +420,44 @@ exports.postFileUpload = async(req, res) => {
           let bitrate, codecName, codecProfile;
 
           if(upload.fileType !== 'image'){
+
+            // load the ffprobe data in response
             const response = await ffmpegHelper.ffprobePromise(`${uploadPath}/convertedFile`);
 
+            // console.log(response);
+
+            // save the ffprobe data
+            upload.ffprobeData = response;
+
+            // duration in seconds from ffprobe
             upload.durationInSeconds = Math.round(response.format.duration);
 
+            // duration in seconds formatted as smart HH:MM:DD
             upload.formattedDuration = timeHelper.secondsToFormattedTime(Math.round(response.format.duration));
 
-            codecProfile  = response.streams[0].codecProfile;
+            // TODO: this needs to be made to match against whether it's a video or audio because to
+            // TODO : my knowledge streams are not guaranteed to be in order of video -> audio
 
+            // codec name and profile to be used for deciding whether to convert
+            codecProfile  = response.streams[0].codecProfile;
             codecName  = response.streams[0].codecName;
 
+            // height and width of video
             const width = response.streams[0].width;
             const height = response.streams[0].height;
 
+            // pretty sure this is kilobit
             // bitrate in kbps
             bitrate = response.format.bit_rate / 1000;
 
+            // save bitrate in kbps
             upload.bitrateInKbps = bitrate;
 
+            // save width, height and aspect ratio on upload
             upload.dimensions.height = height;
             upload.dimensions.width = width;
             upload.dimensions.aspectRatio = height/width;
 
-            console.log(response);
             //
             // console.log('')
 
@@ -479,7 +509,7 @@ exports.postFileUpload = async(req, res) => {
               await upload.save();
 
               // set upload progress as 1 so it has something to show on the frontend
-              redisClient.setAsync(`${uniqueTag}uploadProgress`, 1);
+              redisClient.setAsync(`${uniqueTag}uploadProgress`, 'Your upload is beginning processing...');
 
               if(!responseSent){
                 responseSent = true;
@@ -489,7 +519,7 @@ exports.postFileUpload = async(req, res) => {
 
             /** CONVERT AND UPLOAD VIDEO IF NECESSARY **/
 
-            await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, hostFilePath, bucket, upload, channelUrl, b2);
+            await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, upload, channelUrl, b2, hostFilePath, bucket);
 
             uploadLogger.info('Captured thumbnail', logObject);
 
@@ -561,6 +591,24 @@ exports.postFileUpload = async(req, res) => {
 
           uploadLogger.info('Updated subscribed users subscriptions', logObject);
 
+          // this is admin upload for all
+          alertAdminOfNewUpload(user, upload);
+
+          uploadLogger.info('Alert admins of a new upload', logObject);
+
+          if(upload.visibility == 'public'){
+            // update user push notifications
+            updateUsersPushNotifications(user, upload);
+
+            uploadLogger.info('Update users push notifications', logObject);
+
+            // update user email notifications
+            updateUsersEmailNotifications(user, upload, req.host);
+
+            uploadLogger.info('Update users email notifications', logObject);
+          }
+
+          // upload is complete, send it off to user (aboutToProcess is a misnomer here)
           if(!responseSent){
             responseSent = true;
             aboutToProcess(res, channelUrl, uniqueTag);
@@ -578,106 +626,109 @@ exports.postFileUpload = async(req, res) => {
 /** TODO: pull into livestream **/
 exports.adminUpload = async(req, res) => {
 
-  console.log(req.headers);
-
-  console.log('hit');
-
-  if(req.headers.token !== 'token'){
-    res.status = 403;
-    return res.send('wrong');
-  }
-
-  const username = req.headers.username;
-  const date = req.headers.date;
-
-  console.log(date);
-
-  let user = await User.findOne({ channelUrl: username });
-
-  // if you cant find the user
-  if(!user){
-    console.log('NOT EXPECTED: NO USER');
-    res.status(500);
-    return res.send('wrong');
-  }
-
-  const channelUrl = user.channelUrl;
-
-  const title = `Livestream by ${username} at ${date}`;
-
-  const uniqueTag = randomstring.generate(7);
-
-  const fileExtension = '.flv';
-
-  let upload = new Upload({
-    uploader: user._id,
-    title,
-    visibility: 'public',
-    fileType : 'video',
-    hostUrl,
-    fileExtension : '.flv',
-    uniqueTag,
-    rating: 'allAges',
-    status: 'processing',
-    livestreamDate : date
-    // uploadServer
-  });
-
-  await upload.save();
-
-  const realFileInDirectory = `./uploads/${channelUrl}${uniqueTag}.flv`;
-
-  let flvFile = fs.createWriteStream(realFileInDirectory);
-
-  req.on('data', chunk => {
-
-    flvFile.write(chunk);
-
-  });
-
-  req.on('end', async function(){
-
-    flvFile.end();
-
-    const hostFilePath = `${channelUrl}/${uniqueTag}`;
-
-    await mkdirp.mkdirpAsync(`./uploads/${user.channelUrl}`);
-
-    await ffmpegHelper.takeAndUploadThumbnail(realFileInDirectory, uniqueTag, hostFilePath, bucket, upload, channelUrl, b2);
-
-    await ffmpegHelper.convertVideo({
-      uploadedPath: realFileInDirectory,
-      uniqueTag,
-      channelUrl,
-      title: upload.title
-    });
-
-    const response = await ffmpegHelper.ffprobePromise(realFileInDirectory);
-
-    // console.log(response);
-
-    upload.fileSize = response.format.size;
-    upload.processedFileSizeInMb = bytesToMb(response.format.size);
-
-    upload.bitrate = response.format.bit_rate / 1000;
-
-    upload.status = 'completed';
-    upload.fileType = 'video';
-
-    upload = await upload.save();
-
-    console.log('done');
-
-    await markUploadAsComplete(uniqueTag, channelUrl, user);
-
-    res.send('done');
-
-    updateUsersUnreadSubscriptions(user);
-
-    /** UPLOAD TO B2 **/
-    if(process.env.NODE_ENV == 'production'){
-      uploadToB2(upload, realFileInDirectory, hostFilePath);
-    }
-  });
+  // console.log(req.headers);
+  //
+  // console.log('hit');
+  //
+  // if(req.headers.token !== 'token'){
+  //   res.status = 403;
+  //   return res.send('wrong');
+  // }
+  //
+  // const username = req.headers.username;
+  // const date = req.headers.date;
+  //
+  // console.log(date);
+  //
+  // let user = await User.findOne({ channelUrl: username });
+  //
+  // // if you cant find the user
+  // if(!user){
+  //   console.log('NOT EXPECTED: NO USER');
+  //   res.status(500);
+  //   return res.send('wrong');
+  // }
+  //
+  // const channelUrl = user.channelUrl;
+  //
+  // const title = `Livestream by ${username} at ${date}`;
+  //
+  // const uniqueTag = randomstring.generate(7);
+  //
+  // const fileExtension = '.flv';
+  //
+  // let upload = new Upload({
+  //   uploader: user._id,
+  //   title,
+  //   visibility: 'public',
+  //   fileType : 'video',
+  //   hostUrl,
+  //   fileExtension : '.flv',
+  //   uniqueTag,
+  //   rating: 'allAges',
+  //   status: 'processing',
+  //   livestreamDate : date
+  //   // uploadServer
+  // });
+  //
+  // await upload.save();
+  //
+  // const realFileInDirectory = `./uploads/${channelUrl}${uniqueTag}.flv`;
+  //
+  // let flvFile = fs.createWriteStream(realFileInDirectory);
+  //
+  // req.on('data', chunk => {
+  //
+  //   flvFile.write(chunk);
+  //
+  // });
+  //
+  // req.on('end', async function(){
+  //
+  //   flvFile.end();
+  //
+  //   const hostFilePath = `${channelUrl}/${uniqueTag}`;
+  //
+  //   await mkdirp.mkdirpAsync(`./uploads/${user.channelUrl}`);
+  //
+  //   // TODO: fix this
+  //   await ffmpegHelper.takeAndUploadThumbnail(fileInDirectory, uniqueTag, upload, channelUrl, b2, hostFilePath, bucket);
+  //
+  //   await ffmpegHelper.takeAndUploadThumbnail(realFileInDirectory, uniqueTag, hostFilePath, bucket, upload, channelUrl, b2);
+  //
+  //   await ffmpegHelper.convertVideo({
+  //     uploadedPath: realFileInDirectory,
+  //     uniqueTag,
+  //     channelUrl,
+  //     title: upload.title
+  //   });
+  //
+  //   const response = await ffmpegHelper.ffprobePromise(realFileInDirectory);
+  //
+  //   // console.log(response);
+  //
+  //   upload.fileSize = response.format.size;
+  //   upload.processedFileSizeInMb = bytesToMb(response.format.size);
+  //
+  //   upload.bitrate = response.format.bit_rate / 1000;
+  //
+  //   upload.status = 'completed';
+  //   upload.fileType = 'video';
+  //
+  //   upload = await upload.save();
+  //
+  //   console.log('done');
+  //
+  //   await markUploadAsComplete(uniqueTag, channelUrl, user);
+  //
+  //   res.send('done');
+  //
+  //   updateUsersUnreadSubscriptions(user);
+  //
+  //   /** UPLOAD TO B2 **/
+  //   if(process.env.NODE_ENV == 'production'){
+  //     uploadToB2(upload, realFileInDirectory, hostFilePath);
+  //   }
+  // });
 
 };

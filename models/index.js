@@ -12,6 +12,10 @@ const SocialPost = require('./SocialPost');
 const CreditAction = require('./CreditAction');
 const AdminAction = require('./AdminAction');
 const ReceivedEmail = require('./ReceivedEmail');
+const LastWatchedTime = require('./LastWatchedTime');
+const PushSubscription = require('./PushSubscription');
+const PushEndpoint = require('./PushEndpoint');
+const EmailSubscription = require('./EmailSubscription');
 
 module.exports = {
   Upload,
@@ -27,6 +31,10 @@ module.exports = {
   SocialPost,
   CreditAction,
   AdminAction,
-  ReceivedEmail
+  ReceivedEmail,
+  LastWatchedTime,
+  PushSubscription,
+  PushEndpoint,
+  EmailSubscription
 };
 

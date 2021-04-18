@@ -15,17 +15,19 @@ const mv = require('mv');
 const fs = require('fs-extra');
 const mkdirp = Promise.promisifyAll(require('mkdirp'));
 const randomstring = require('randomstring');
+const mailJet = require('../../lib/emails/mailjet');
+const sendgrid = require('../../lib/emails/sendgrid');
 
 const mailTransports = require('../../config/nodemailer');
+// const {sendProtonMail} = require('../../config/protonmailTransport');
 
 const importerDownloadFunction = require('../../lib/uploading/importer');
-
-// importerDownloadFunction('anthony', 'https://www.youtube.com/watch?v=vLJgAAIfKEc');
 
 // console.log('importer');
 // console.log(importerDownloadFunction);
 
 const mailgunTransport = mailTransports.mailgunTransport;
+const zohoTransport = mailTransports.zohoTransport;
 
 const User = require('../../models/index').User;
 const getMediaType = require('../../lib/uploading/media');
@@ -135,7 +137,7 @@ exports.postSignup = async(req, res, next) => {
   // console.log(req.body.grecaptcha.getResponse('captcha'));
 
   if(!/^\w+$/.test(req.body.channelUrl)){
-    req.flash('errors', { msg: 'Please only use letters, numbers and underscores for your username.' });
+    req.flash('errors', { msg: 'Please only use letters, numbers and underscores (no spaces) for your username.' });
     return res.redirect('/signup');
   }
 
@@ -165,6 +167,7 @@ exports.postSignup = async(req, res, next) => {
     user.privs.privateUpload = true;
     user.privs.uploadSize = 2000;
     user.privs.livestreaming = true;
+    user.privs.importer = true;
   }
 
   User.findOne({ channelUrl : req.body.channelUrl }, (err, existingUser) => {
@@ -203,14 +206,14 @@ exports.postSignup = async(req, res, next) => {
 
 exports.postUpdateProfile = async(req, res, next)  => {
 
-  console.log(`UPDATING PROFILE FOR ${'hello'}`);
-
   if(!req.user && req.body.uploadToken){
     req.user = await User.findOne({ uploadToken : req.body.uploadToken });
   }
 
   // console.log('REQ FILES')
   // console.log(req.files);
+
+  console.log(`UPDATING PROFILE FOR ${req.user && req.user.channelUrl}`);
 
   req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
 
@@ -353,18 +356,24 @@ exports.postReset = async(req, res, next) => {
 
   await user.save();
 
-  req.flash('success', { msg: 'Success! Your password has been changed.' });
+  const emailText = `Hello,\n\nThis is a confirmation that the password for your account ${user.email} has just been changed.\n`;
 
   const mailOptions = {
-    to: user.email,
-    from: process.env.FORGOT_PASSWORD_EMAIL_ADDRESS,
+    userEmail: user.email,
+    userName: user.channelName || user.channelUrl,
     subject: `Your ${brandName} password has been reset`,
-    text: `Hello,\n\nThis is a confirmation that the password for your account ${user.email} has just been changed.\n`
+    text: emailText
   };
 
-  const response = await mailgunTransport.sendMail(mailOptions);
+  try {
+    // const response = await sendgrid.sendEmail(mailOptions)
+    // console.log(response);
 
-  // console.log(response);
+  } catch(err){
+    console.log(err);
+  }
+
+  req.flash('success', { msg: 'Success! Your password has been changed.' });
 
   return res.redirect('/login');
 
@@ -400,17 +409,27 @@ exports.postForgot = async(req, res, next) => {
       user = await user.save();
     }
 
-    const mailOptions = {
-      to: user.email,
-      from: process.env.FORGOT_PASSWORD_EMAIL_ADDRESS,
-      subject: `Reset your password on ${brandName}`,
-      text: `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
+    const emailText = `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
       Please click on the following link, or paste this into your browser to complete the process:\n\n
       http://${req.headers.host}/reset/${token}\n\n
-      If you did not request this, please ignore this email and your password will remain unchanged.\n`
+      If you did not request this, please ignore this email and your password will remain unchanged.\n`;
+
+    const mailOptions = {
+      userEmail: user.email,
+      userName: user.channelName || user.channelUrl,
+      subject: `Reset your password on ${brandName}`,
+      text: emailText,
+      html: emailText
     };
 
-    const response = await mailgunTransport.sendMail(mailOptions);
+    try {
+      const response = await sendgrid.sendEmail(mailOptions);
+
+      console.log(response);
+
+    } catch(err){
+      console.log(err);
+    }
 
     // console.log(response);
 
@@ -450,27 +469,39 @@ exports.postConfirmEmail = async(req, res, next) => {
     user.emailConfirmationExpires = Date.now() + 3600000; // 1 hour
     user = await user.save();
 
-    console.log(user.email, process.env.CONFIRM_USER_EMAIL_ADDRESS);
+    console.log('User email: ', user.email);
+    console.log('Confirmation email address: ', process.env.NODETUBE_NOREPLY_EMAIL_ADDRESS);
 
-    const mailOptions = {
-      to: user.email,
-      from: process.env.CONFIRM_USER_EMAIL_ADDRESS,
-      subject: `Confirm your email on ${brandName}`,
-      text: `You are receiving this email because you (or someone else) has attempted to link this email to their account.\n\n
+    const emailText = `You are receiving this email because you (or someone else) has attempted to link this email to their account.\n\n
       Please click on the following link, or paste this into your browser to complete the process:\n\n
       http://${req.headers.host}/confirmEmail/${token}\n\n
-      If you did not request this, please ignore this email and no further steps will be needed.\n`
+      If you did not request this, please ignore this email and no further steps will be needed.\n`;
+
+    const mailOptions = {
+      userEmail: user.email,
+      userName: user.channelName || user.channelUrl,
+      subject: `Confirm your email on ${brandName}`,
+      text: emailText,
+      html: emailText
     };
 
-    const response = await mailgunTransport.sendMail(mailOptions);
+    try {
+      const response = await sendgrid.sendEmail(mailOptions);
 
-    console.log(response);
+      console.log(response);
+
+    } catch(err){
+      console.log(err);
+    }
 
     req.flash('info', {msg: 'An email has been sent to your address to confirm your email'});
 
     return res.redirect('/account');
 
   } catch(err){
+
+    console.log(err);
+
     // if the email is already in use
     if(err && err.errors && err.errors.email && err.errors.email.kind && ( err.errors.email.kind == 'unique')){
       req.flash('errors', { msg: 'That email is already in use, please try another' });
@@ -485,15 +516,34 @@ exports.postConfirmEmail = async(req, res, next) => {
  * POST /importer
  * Importer page.
  */
-exports.postImporter = (req, res) => {
+exports.postImporter = async(req, res) => {
 
   const youtubeLink = req.body.youtubeLink;
 
   const channelUrl = req.user.channelUrl;
 
-  importerDownloadFunction(channelUrl, youtubeLink);
+  const sendPushNotifications = req.body.sendPushNotifications === 'true';
+
+  const sendEmailNotifications = req.body.sendEmailNotifications === 'true';
 
   console.log(req.body);
 
-  return res.send('hello');
+  console.log('now ' + new Date());
+
+  const uniqueTag = await importerDownloadFunction(channelUrl,
+    youtubeLink, req.user, sendPushNotifications, sendEmailNotifications, req.host);
+
+  if(uniqueTag == 'playlist'){
+    return res.send({
+      uniqueTag: 'playlist',
+      channelUrl
+    });
+  }
+
+  console.log('now ' + new Date());
+
+  return res.send({
+    uniqueTag,
+    channelUrl
+  });
 };

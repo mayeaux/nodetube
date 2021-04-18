@@ -1,0 +1,318 @@
+style.
+    @import url("//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css");
+
+    /*body {*/
+    /*margin: 30px;*/
+    /*}*/
+
+    .headerContainer {
+        padding: 0px;
+    }
+
+    .search {
+        position: relative;
+        color: #aaa;
+        font-size: 16px;
+    }
+
+    .search input {
+        width: 600px;
+        height: 36px;
+
+        background: #fcfcfc;
+        border: 1px solid #aaa;
+    }
+
+    .search input {
+        text-indent: 9px;
+    }
+
+    .search .fa-search {
+
+    }
+
+    .singleLetter {
+        display: none;
+        color: #0FDA01;
+        font-size: 30px;
+        font-weight: 900;
+        margin-top: 28px;
+        position: absolute;
+        top: -30px;
+    }
+
+    /*.formSpan {*/
+    /*color: grey;*/
+    /*position: absolute;*/
+    /*right: -78px;*/
+    /*top: -1px;*/
+    /*background-color: #eaeaea;*/
+    /*padding: 10px 26px;*/
+    /*border: 1px solid #cec0c0;*/
+    /*}*/
+
+    /* ===========================
+       ====== Medua Query for Search Box ======
+       =========================== */
+
+    /** post button starts to hit search bar **/
+    @media (max-width: 753px){
+        /*input[name="searchValue"] {*/
+        /*display: none;*/
+        /*}*/
+
+        .postButton {
+            display: none !important;
+        }
+
+        .postIcon {
+            display: inline !important;
+        }
+    }
+
+    /* when plus button starts to hit search bar */
+    @media (max-width: 593px) {
+
+        .fullTitle {
+            display: none !important;
+        }
+
+        .singleLetter {
+            display: inline !important;
+            left: -32px;
+        }
+
+        .search-bar {
+            width: 57% !important;
+            margin-left: 70px !important;
+        }
+
+        .hamburgerDropdown {
+            left: 11px !important;
+        }
+
+        .permBar {
+            display: none;
+        }
+    }
+
+    /* when plus button starts to hit search bar */
+    /* everything under 439px  */
+    @media (max-width: 439px) {
+        .fullTitle {
+            display: none !important;
+        }
+
+        .singleLetter {
+            display: inline !important;
+        }
+
+        .search-bar {
+            display: none;
+        }
+
+        .searchPlaceHolder, .uploadButton {
+            display: block !important;
+        }
+
+    }
+
+
+
+    /*@media (min-width: 320px) {*/
+    /*!* smartphones, iPhone, portrait 480x320 phones *!*/
+    /*input[name="searchValue"] {*/
+    /*background: pink;*/
+    /*}*/
+
+    /*}*/
+
+    /*@media (min-width: 481px) {*/
+    /*!* portrait e-readers (Nook/Kindle), smaller tablets @ 600 or @ 640 wide. *!*/
+    /*input[name="searchValue"] {*/
+    /*background: yellow;*/
+    /*}*/
+
+    /*}*/
+
+    /*@media (min-width: 641px) {*/
+    /*!* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones *!*/
+    /*input[name="searchValue"] {*/
+    /*background: purple;*/
+    /*}*/
+
+    /*!*.postButton {*!*/
+    /*!*display:none !important;*!*/
+    /*!*}*!*/
+
+    /*}*/
+
+    /*@media (min-width: 961px) {*/
+    /*!* tablet, landscape iPad, lo-res laptops ands desktops *!*/
+    /*input[name="searchValue"] {*/
+    /*background: green;*/
+    /*}*/
+
+    /*}*/
+
+    /*@media (min-width: 1025px) {*/
+    /*!* big landscape tablets, laptops, and desktops *!*/
+    /*input[name="searchValue"] {*/
+    /*background: blue;*/
+    /*}*/
+
+    /*}*/
+
+    /*@media (min-width: 1281px) {*/
+    /*!* hi-res laptops and desktops *!*/
+    /*input[name="searchValue"] {*/
+    /*background: red;*/
+    /*}*/
+    /*}*/
+
+
+    .box {
+        width: 80%;
+    }
+
+    .search-bar {
+        width: 55%;
+        position: relative;
+        margin: 0 auto;
+    }
+
+    input[type="text"] {
+        width: 88%;
+        height: 33px;
+        padding: 0 10px;
+        color: #000;
+        border: 1px solid #BEBEBE;
+        border-radius: 2px 0 0 2px;
+        z-index: 2;
+    }
+
+    input:focus {
+        border: 1.1px solid #1c62b9;
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, .4);
+    }
+
+    .searchButton {
+        position: absolute;
+        width: 14%;
+        height: 33px;
+        border: 1px solid #BEBEBE;
+        border-left: 0;
+        top: 11px;
+        right: 0;
+        border-radius: 0px 2px 2px 0;
+        cursor: pointer;
+        font-size: 14px;
+        text-align: center;
+        background-color: #f0f0f0;
+        z-index: 1
+    }
+
+    .search-uploads-button {
+        border: 1px solid #5b5a5a;
+        z-index: 999999;
+        background-color: #313131 !important;
+    }
+
+    .search-query-input {
+        border: 1px solid #5b5a5a !important;
+        color:white !important;
+        background-color:#313131;
+    }
+
+    .search-query-input::placeholder { /* Most modern browsers support this now. */
+        color: grey;
+    }
+
+    .search-uploads-button:hover i {
+        opacity: .95;
+        color: white;
+    }
+
+
+    .searchIcon {
+        position: absolute;
+        left: 44%;
+        top: 29%;
+        color: #a7a3a3;
+    }
+
+    .searchExpander, .uploadButton {
+        position: absolute;
+        top: 24px;
+        right: 111px;
+        font-size: 22px;
+        color: grey;
+    }
+
+    .signInDiv {
+        display: inline-block;
+        border: 2px solid black;
+        padding: 9px 23px;
+        border-radius: 3px;
+    }
+
+    .signInAnchor {
+        position: absolute;
+        top: 13px;
+        right: 10px;
+    }
+
+    .secondLine {
+        margin-top: -54px !important;
+        padding-left: 56px;
+        background-color: #141414;
+    }
+
+    @media (max-width: 927px) {
+        .diceIcon {
+            visibility: hidden;
+        }
+
+    }
+
+    .postButton {
+        transition: all 0.2s ease;
+        -webkit-transition: all 0.2s ease;
+    }
+
+    .search-uploads-button {
+        transition: all 0.2s ease;
+        -webkit-transition: all 0.2s ease;
+    }
+
+    .postButton:hover {
+        background-color: #212121 !important;
+    }
+
+    .search-uploads-button:hover {
+        background-color: #212121 !important;
+    }
+
+    @media (max-width: 450px) {
+        .clickableText {
+            font-size:18px !important;
+            text-decoration:underline solid white 1px !important;
+        }
+
+    }
+
+
+
+
+
+.container.headerContainer.fixed-top(style="margin-top:10px !important;opacity:1;background-color:white;margin:0;max-width:100%;padding:0")
+    //.search1
+    //    form.search-form
+    //        input(type='text', placeholder='Search for books, authors, categories and more..')
+    //        input(type='submit', value='Submit')
+
+
+
+    div.secondLine(style="padding:0px;float:left;margin-top:-10px !important;border-bottom: 1px solid #cec0c0;width:100%;box-shadow:-3px 11px 10px -10px rgba(0,0,0,0.51);")
+        a(href="/help" style="text-align:center;")
+            h3.clickableText(style="margin-top:10px;color:white;text-decoration:underline solid white 3px;opacity:0.8;") NEWTUBE NEEDS YOUR HELP

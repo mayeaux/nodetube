@@ -108,6 +108,7 @@ Don't forget to join the open-source community developing NodeTube on [Discord](
 Domain | Registrations Open | Ratings Allowed 
 :---: | :---: | :---: 
 https://newtube.app | Yes | SFW Only
+https://allwat.ch| Yes | SFW/NSFW/Sensitive
 https://vid8.poal.co| Yes | SFW/NSFW/Sensitive
 
 

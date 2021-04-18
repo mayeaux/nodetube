@@ -1,11 +1,11 @@
 nav.center-block.text-center(aria-label='Page navigation example')
     ul.pagination
         li.page-item
-            a.page-link(href=`/user/${channel.channelUrl}?page=${previousNumber}`) <
+            a.page-link(href=`/user/${channel.channelUrl}?page=${previousNumber}&orderBy=${orderBy}&mediaType=${media}&nav=true`) <
 
         each number in numbersArray
             li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
-                a.page-link(href=`/user/${channel.channelUrl}?page=${number}`) #{number}
+                a.page-link(href=`/user/${channel.channelUrl}?page=${number}&orderBy=${orderBy}&mediaType=${media}&nav=true`) #{number}
 
         li.page-item
-            a.page-link(href=`user/${channel.channelUrl}?page=${nextNumber}`) >
+            a.page-link(href=`user/${channel.channelUrl}?page=${nextNumber}&orderBy=${orderBy}&mediaType=${media}&nav=true`) >

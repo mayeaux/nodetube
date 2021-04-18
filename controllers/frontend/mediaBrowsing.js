@@ -13,6 +13,8 @@ const uploadServer = uploadHelpers.uploadServer;
 const getFromCache = require('../../caching/getFromCache');
 const uploadFilters = require('../../lib/mediaBrowsing/helpers');
 
+const { attachDataToUploadsAsUploads, attachDataToUploadsAsCategories } = require('../../lib/helpers/addFieldsToUploads');
+
 const { getUploadDuration } = require('../../lib/mediaBrowsing/helpers');
 
 const getSensitivityFilter =  uploadFilters.getSensitivityFilter;
@@ -36,7 +38,18 @@ if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false'){
 
 }
 
+// TODO: mediaBrowsing should be renamed media
+
 const pageLimit = 42;
+
+// TODO: pull out this function
+function removeTrailingSlash(requestPath){
+  if(requestPath.charAt(requestPath.length - 1) == '/'){
+    requestPath = requestPath.substr(0, requestPath.length - 1);
+  }
+
+  return requestPath;
+}
 
 // TODO: pull this function out
 async function addValuesIfNecessary(upload, channelUrl){
@@ -76,6 +89,8 @@ async function addValuesIfNecessary(upload, channelUrl){
  * Page displaying most recently uploaded content
  */
 exports.recentUploads = async(req, res) => {
+
+  let requestPath = removeTrailingSlash(req.path);
 
   try {
 
@@ -122,7 +137,15 @@ exports.recentUploads = async(req, res) => {
 
     const mediaType = media;
 
-    const uploads = await getFromCache.getRecentUploads(limit, skipAmount, mediaType, filter, category, subcategory);
+    // TODO: this is really ugly, since it can return either an array or an array of arrays
+    // TODO: very confusing, should pull out into two funcs or do anything else
+    let uploads = await getFromCache.getRecentUploads(limit, skipAmount, mediaType, filter, category, subcategory);
+
+    if(uploads && !uploads.map){
+      uploads = attachDataToUploadsAsCategories(uploads);
+    } else {
+      uploads = attachDataToUploadsAsUploads(uploads);
+    }
 
     // if(category && category !== 'overview'){
     //   for(const upload of uploads){
@@ -314,10 +337,23 @@ exports.popularUploads = async(req, res) => {
 
     if(uploads && uploads.length){
       for(const upload in uploads){
+
         // console.log(upload);
         addValuesIfNecessary(upload, upload.uploader && upload.uploader.channelUrl);
       }
     }
+
+    let newUploads = {};
+    if(uploads && !uploads.map){
+
+      uploads = attachDataToUploadsAsCategories(uploads);
+
+    } else {
+      // if it's just a bunch of uploads, aka not the ugly categories thing
+      uploads = attachDataToUploadsAsUploads(uploads);
+    }
+
+    // console.log(uploads);
 
     res.render('mediaBrowsing/popularUploads', {
       title: 'Popular Uploads',
@@ -372,6 +408,10 @@ async function saveSearchQuery(user, search){
 
   await searchQuery.save();
 
+}
+
+function capitalizeFirst(string){
+  return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 function getOrderByEnglishString(orderByQuery){
@@ -490,6 +530,7 @@ exports.search = async(req, res) => {
 
     totalUploadsAmount = uploads.length;
 
+    // TODO: can just use views here
     // populate upload.legitViewAmount
     uploads = await Promise.all(
       uploads.map(async function(upload){
@@ -513,6 +554,8 @@ exports.search = async(req, res) => {
     const helpers = require('../../lib/mediaBrowsing/helpers');
 
     uploads = helpers.trimUploads(uploads, limit, skipAmount);
+
+    uploads = attachDataToUploadsAsUploads(uploads);
 
   } else {
     // error
@@ -541,7 +584,8 @@ exports.search = async(req, res) => {
     nextNumber,
     totalUploadsAmount,
     uploadNumber,
-    uploadServer
+    uploadServer,
+    capitalizeFirst
   });
 };
 

@@ -1,28 +1,6 @@
+// I guess this is comment functionality?
+
 $(function(){
-
-  /*  INCREASE MEDIA PLAYER FUNCTIONALITY START */
-  $('.increase-size').on('click', function(){
-
-    var height = $('.display-element').height();
-    var width = $('.display-element').width();
-
-    $('.display-element').css( 'height' , ( height * 0.1) + height );
-    $('.display-element').css( 'width' , ( width * 0.1) + width );
-
-    // console.log(height, width);
-  });
-
-  $('.decrease-size').on('click', function(){
-
-    var height = $('.display-element').height();
-    var width = $('.display-element').width();
-
-    $('.display-element').css( 'height' , height - ( height * 0.1));
-    $('.display-element').css( 'width' , width - ( width * 0.1));
-
-    // console.log(height, width);
-  });
-  /*  INCREASE MEDIA PLAYER FUNCTIONALITY END */
 
   // SHOW REPLY BOX
   $('.reply-link').on('click', function(){
@@ -57,6 +35,7 @@ $(function(){
           return swal('Sorry, that comment has already been sent');
         }
 
+        // if there's no comments yet, append the comment and mark it as '1 Comment'
         if($('.no-comments-div').length > 0  ){
 
           var html = `<p class="fw" style="text-align:left;">${data.user} - ${data.timeAgo} &nbsp;</p><p class="fw" style="text-align:left;">${data.text}</p>`;
@@ -70,9 +49,10 @@ $(function(){
 
         console.log(data);
 
+        // if it's a regular comment and not a reply
         if(commentForm.hasClass('overall-comment-form')){
 
-          var containingDiv = $('.comment-containing-div');
+          var containingDiv = $('.commentCountDiv');
 
           var commentDiv =$(`<div style="display:block;padding-bottom:15px;"><p class="fw" style="text-align:left;">${data.user} - ${data.timeAgo} &nbsp;</p><p class="fw" style="text-align:left;">${data.text}</p>`);
 
@@ -80,6 +60,7 @@ $(function(){
 
           console.log('original comment form');
 
+          // if it's a reply
         } else if(commentForm.hasClass('reply-comment-form')){
 
           var containingDiv = commentForm.parent().parent().parent();

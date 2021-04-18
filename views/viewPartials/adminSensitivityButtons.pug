@@ -1,94 +1,75 @@
+// buttons on the bottom of the page to adjust visibility/maturity/category
+
 if user && user.role == 'admin'
-    //div.center-block.text-center.col-sm-12(style="margin-top:30px")
-    //    button.btn-lg.button-success.change-rating(rating="sensitive") Mark As Sensitive
-    //    button.btn-lg.button-success.change-rating(rating="mature") Mark As NSFW (Mature)
-    //    button.btn-lg.button-success.change-rating(rating="allAges") Mark As SFW (AllAges)
-    //
-    //    br
-    //    each category in categories
-    //      button.btn-md.button-success.change-rating(category=`${category.name}`) #{category.displayName}
-    //    br
-    //    //each category in categories
-    //    //  button.btn-md.button-success.change-category(category=`${category.name}`) #{category.displayName}
+    // TODO: need to add visibility
+    div.center-block.text-center.col-sm-12(style="margin-top:30px")
+        h4 Change Rating
+        button.btn-lg.button-success.change-rating(rating="sensitive") Mark As Sensitive
+        button.btn-lg.button-success.change-rating(rating="mature") Mark As NSFW (Mature)
+        button.btn-lg.button-success.change-rating(rating="allAges") Mark As SFW (AllAges)
+
+
+        br
+        h4 Change Visibility
+        button.btn-lg.button-success.change-visibility(visibility="public") Public
+        button.btn-lg.button-success.change-visibility(visibility="unlisted") Unlisted
+        button.btn-lg.button-success.change-visibility(visibility="private") Private
+        button.btn-lg.button-success.change-visibility(visibility="removed") Removed
+        button.btn-lg.button-success.change-visibility(visibility="pending") Pending
+
+        br
+        h4 Change Category
+        // categories loaded programatically
+
+        div(style="max-width:400px;margin:0 auto;")
+          each category in categories
+            if category.displayName !== 'Category Overview' && category.displayName !== 'All Uploads'
+                button.btn-md.button-success.change-category(category=`${category.name}`) #{category.displayName}
+        br
 
     script.
-      $('.change-rating').on('click', function () {
-        var checkedValues = $('input:checkbox:checked').map(function () {
-          return this.value;
-        }).get();
 
-        var rating = $(this).attr('rating');
-        var csrf = '#{_csrf}'
+          $('.change-rating, .change-visibility, .change-category').on('click', function () {
 
-        var category = $(this).attr('category');
+            var checkedValues = $('input:checkbox:checked').map(function () {
+              return this.value;
+            }).get();
 
+            var csrf = '#{_csrf}'
 
-        var data = {
-          rating: rating,
-          uploads: checkedValues,
-          _csrf: csrf,
-          category
-        }
+            var rating = $(this).attr('rating');
 
-        console.log(data);
+            var category = $(this).attr('category');
 
-        $.ajax({
-          type: 'POST',
-          url: `/admin/changeRatings`, // todo: change to user filter
-          data,
-          success: function (data) {
-            if (data == 'success') {
-              window.location.reload(true);
-            } else {
-              swal("Something didn't work, please contact NodeTube at ceo@nodetube.org or via the widget in the bottom right corner")
+            var visibility = $(this).attr('visibility');
+
+            var data = {
+              uploads: checkedValues,
+              _csrf: csrf,
+              category,
+              visibility,
+              rating
             }
+
             console.log(data);
-          },
-          error: function (err) {
-            console.log(err);
-          }
-        });
+
+            $.ajax({
+              type: 'POST',
+              url: `/admin/changeRatings`, // todo: change to user filter
+              data,
+              success: function (data) {
+                if (data == 'success') {
+                  window.location.reload(true);
+                } else {
+                  swal("Something didn't work, please contact NodeTube at ceo@nodetube.org or via the widget in the bottom right corner")
+                }
+                console.log(data);
+              },
+              error: function (err) {
+                console.log(err);
+              }
+            });
 
 
-        console.log(rating);
-      })
-
-    script.
-      $('.change-category').on('click', function () {
-        var checkedValues = $('input:checkbox:checked').map(function () {
-          return this.value;
-        }).get();
-
-        var csrf = '#{_csrf}'
-
-        var category = $(this).attr('category');
-
-        var data = {
-          rating: rating,
-          uploads: checkedValues,
-          _csrf: csrf,
-          category
-        }
-
-        console.log(data);
-
-        $.ajax({
-          type: 'POST',
-          url: `/admin/changeRatings`, // todo: change to user filter
-          data,
-          success: function (data) {
-            if (data == 'success') {
-              window.location.reload(true);
-            } else {
-              swal("Something didn't work, please contact NodeTube at ceo@nodetube.org or via the widget in the bottom right corner")
-            }
-            console.log(data);
-          },
-          error: function (err) {
-            console.log(err);
-          }
-        });
-
-
-        console.log(rating);
-      })
+            console.log(rating);
+          })

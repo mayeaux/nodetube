@@ -1,5 +1,18 @@
 // doing this because otherwise it's too annoying with cloudflare caching
 style.
+
+    @import url('https://rsms.me/inter/inter.css');
+
+    html {
+        font-family: 'Inter', sans-serif;
+    }
+
+    @supports (font-variation-settings: normal) {
+        html {
+            font-family: 'Inter var', sans-serif;
+        }
+    }
+
     .navbar-default .navbar-nav > li > a {
         color: white;
     }
@@ -209,7 +222,7 @@ style.
     }
 
     .fw {
-        font-weight: 300
+        font-weight: 300;
     }
 
     .loginHeader {
@@ -241,7 +254,7 @@ style.
 
     /* Dark mode: */
     .dark-mode {
-        background-color: #111 !important; //#1a1a1c; //rgba(11, 11, 12, 1); //#181817; //#292322; //rgb(40,44,52); rgb(33,37,43);
+        background-color: #141414 !important; //#1a1a1c; //rgba(11, 11, 12, 1); //#181817; //#292322; //rgb(40,44,52); rgb(33,37,43);
         color: darkgray !important;
     }
 
@@ -358,10 +371,13 @@ style.
     }
 
     .display-element {
+        border-bottom: 1px solid #313131;
+
         /*TODO: this should be the height of the */
         /*max-height: 625px;*/
 
-        border: 1px solid #5b5a5a;
+        /* turning off the border */
+        /*border: 1px solid #5b5a5a;*/
 
     }
 
@@ -378,4 +394,12 @@ style.
         /*.postButton {*/
         /*display: none !important;*/
         /*}*/
+    }
+
+    .h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+        font-family: 'Helvetica Neue', 'Inter', Arial, sans-serif !important;
+    }
+
+    body {
+        font-family: 'Helvetica Neue', 'Inter', Arial, sans-serif !important;
     }

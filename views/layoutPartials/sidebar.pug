@@ -14,12 +14,14 @@ style.
         transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
 
         /* added */
-        border: 1.2px solid rgb(179, 177, 177);
         margin-top: 50px;
         padding: 0px;
         height: 469px;
 
-        box-shadow: rgba(0, 0, 0, 0.51) 15px 17px 10px -10px
+        box-shadow: rgba(0, 0, 0, 0.51) 15px 17px 10px -10px;
+
+        /*border: 1.2px solid rgb(179, 177, 177);*/
+        border: 0px;
     }
 
     /* The sidebar links */
@@ -273,11 +275,15 @@ style.
     //        input(type='checkbox')
     //        span.slider.round
 
+    a(href="mailto:contact@newtube.app")
+        i.ib.far.fa-envelope-open(aria-hidden='true')
+        p.ib &nbsp Contact #{brandName} &nbsp
+
     a(href="/about")
         i.ib.fa.fa-question-circle(aria-hidden='true')
         p.ib About #{brandName} &nbsp
 
-    a(href='https://newtube.app/paypal' style="color:#007bff;")
+    a(href='https://newtube.app/donate' style="color:#007bff;")
         i.ib.fas.fa-dollar-sign
         p.ib &nbsp Support NewTube
 
@@ -335,7 +341,7 @@ style.
 
 
             // support newtube link
-            a(href="https://newtube.app/paypal" style="color:#007bff")
+            a(href="https://newtube.app/donate" style="color:#007bff")
 
                 if user && user.plan == 'plus'
                     h7.ib(style="position: absolute;top: 62px;right: 50px; 50px;font-size: 13px;")
@@ -380,10 +386,14 @@ style.
         a(href='/media/subscribed')
             i.ib.fa.fa-video
             if user.unseenSubscriptionUploads > 0
-                p.ib &nbsp Subscriptions (#{user.unseenSubscriptionUploads})
+                p.ib Subscriptions (#{user.unseenSubscriptionUploads})
             else
-                p.ib &nbsp Subscriptions
+                p.ib Subscriptions
 
+        if user && user.privs.importer
+            a(href='/importer')
+                i.ib.fas.fa-upload
+                p.ib &nbsp Importer
 
         hr(style="margin-top:10px;margin-bottom:10px")
 

@@ -8,6 +8,7 @@ async function customBranding(req, res, next){
   res.locals.adsenseOn = Boolean(process.env.ADSENSE_ID);
   res.locals.adsenseId = process.env.ADSENSE_ID;
   res.locals.uploadServer = uploadServer;
+  res.locals.optionalHeaderOn = process.env.OPTIONAL_HEADER_ON === 'true';
 
   next();
 }

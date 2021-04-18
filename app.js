@@ -28,7 +28,7 @@ const errorHandler = require('errorhandler');
 const jsHelpers = require('./lib/helpers/js-helpers');
 
 /** FOR FINDING ERRANT LOGS **/
-if(process.env.SHOW_LOG_LOCATION == 'true' || 2 == 1){
+if(process.env.SHOW_LOG_LOCATION == 'true' || 1 == 2){
   jsHelpers.showLogLocation();
 }
 
@@ -72,20 +72,16 @@ if(cluster.isMaster){
     cluster.fork();
   }
 
+  if(process.env.CACHING_ON == 'true'){
+    console.log('CACHING IS ON');
+    const runcaching = require('./caching/runCaching');
+  } else {
+    console.log('CACHING IS OFF \n');
+  }
+
 } else {
 
   (async function(){
-
-    if(process.env.CACHING_ON == 'true'){
-      console.log('CACHING IS ON');
-      const runcaching = require('./caching/runCaching');
-    } else {
-      console.log('CACHING IS OFF \n');
-    }
-
-    if(process.env.UPLOAD_TO_B2 == 'true'){
-      console.log(`UPLOAD TO BACKBLAZE ON, BUCKET: ${process.env.BACKBLAZE_BUCKET}\n`);
-    }
 
     // site visit
     const Notification = require('./models').Notification;
@@ -96,6 +92,8 @@ if(cluster.isMaster){
     const socialRedirectMiddleware = require('./middlewares/shared/socialRedirects');
 
     const missedFile404Middleware = require('./middlewares/shared/missedFile404Middleware');
+
+    const stripeSubscriptionMiddleware = require('./middlewares/shared/stripeSubscriptionChecker');
 
     process.on('uncaughtException', (err) => {
       console.log('Uncaught Exception: ', err);
@@ -232,7 +230,8 @@ if(cluster.isMaster){
         requestPath.match(editUploadRegexp) ||
         requestPath.match(deleteUploadThumbnailRegexp) ||
         requestPath === '/livestream/on-live-auth' ||
-        requestPath === '/livestream/on-live-done'
+        requestPath === '/livestream/on-live-done' ||
+        requestPath === '/save-subscription' // turning it off here for time being, can't figure a way to get the token in the JS
       ){
         next();
       } else {
@@ -252,6 +251,8 @@ if(cluster.isMaster){
     app.use(useragent.express());
 
     app.use(multipart());
+
+    app.use(stripeSubscriptionMiddleware);
 
     /** PASS NODE ENV TO VIEWS **/
     app.use(async function(req, res, next){
@@ -297,6 +298,41 @@ if(cluster.isMaster){
         // console.log(unreadNotifs + ' unreadnotifs')
 
       }
+      next();
+    });
+
+    app.use(async function(req, res, next){
+      var SI_SYMBOL = ['', 'k', 'M', 'G', 'T', 'P', 'E'];
+
+      function abbreviateNumber(number){
+
+        // what tier? (determines SI symbol)
+        var tier = Math.log10(number) / 3 | 0;
+
+        // if zero, we don't need a suffix
+        if(tier == 0)return number;
+
+        // get suffix and determine scale
+        var suffix = SI_SYMBOL[tier];
+        var scale = Math.pow(10, tier * 3);
+
+        // scale the number
+        var scaled = number / scale;
+
+        // format number and add suffix
+        return scaled.toFixed(1) + suffix;
+      }
+
+      res.locals.abbreviateNumber = abbreviateNumber;
+
+      function numberWithCommas(x){
+        var parts = x.toString().split('.');
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        return parts.join('.');
+      }
+
+      res.locals.numberWithCommas = numberWithCommas;
+
       next();
     });
 
@@ -421,6 +457,10 @@ if(cluster.isMaster){
       });
 
     if(process.env.MODERATION_UPDATES_TO_DISCORD == 'true') console.log('SENDING MODERATION REQUESTS TO DISCORD \n');
+
+    if(process.env.UPLOAD_TO_B2 == 'true'){
+      console.log(`UPLOAD TO BACKBLAZE ON, BUCKET: ${process.env.BACKBLAZE_BUCKET}\n`);
+    }
 
     module.exports = app;
 

@@ -1,6 +1,10 @@
 1) Point your domain towards your IP
 
 1) Generate a CSR
+# from server where you'll use key
+$ openssl req -new -newkey rsa:2048 -nodes -keyout server.key -out server.csr
+
+Instructions for how to fill it out:
 https://www.namecheap.com/support/knowledgebase/article.aspx/9446/14/generating-csr-on-apache--opensslmodsslnginx--heroku/
 
 2) Activate your CSR
@@ -9,18 +13,24 @@ https://www.namecheap.com/support/knowledgebase/article.aspx/794/67/how-do-i-act
 Amazingly, for namecheap, they give you the wrong host value, see the note about not including the domain name in the host value here:
 https://www.namecheap.com/support/knowledgebase/article.aspx/9637/68/how-can-i-complete-the-domain-control-validation-dcv-for-my-ssl-certificate/#dns
 
+Once the cert is issued, you can download and reup it to your server:
+# unzip, then
 
-Generate the whatever thing
+# rename push the certs up to your bin
+$ rsync -taPW live_newtube_app sshuser@your.ip.addy.here:~/
+
+
+Generate the whatever thing (domain chain)
 https://www.namecheap.com/support/knowledgebase/article.aspx/9419/33/installing-an-ssl-certificate-on-nginx/
-
-This line is also bugged, it will put the END CERTIFICATE and BEGIN CERTIFICIATE on the same line
-
-It should instead look like this:
------END CERTIFICATE-----
------BEGIN CERTIFICATE-----
 
 
 $ cat your_domain.crt your_domain.ca-bundle >> your_domain_chain.crt
+
+This command can be bugged, it can put the END CERTIFICATE and BEGIN CERTIFICIATE on the same line
+
+It should instead look like this: (that's 5 dashes after the END CERTIFICATE)
+-----END CERTIFICATE-----
+-----BEGIN CERTIFICATE-----
 
 
 Add to server block:
@@ -35,7 +45,20 @@ server {
         ## THESE PARTS HERE
         listen 443 ssl;
 
-        ssl_certificate /home/fred/asdf/uploads3_newtube_app_chain.crt;
-        ssl_certificate_key /home/fred/asdf/server.key;
+        ssl_certificate /home/fred/certs/uploads1_newtube_app_chain.crt;
+        ssl_certificate_key /home/fred/certs/uploads1_newtube_app.key;
+
+        ... more stuff ....
+}
+
+
+Then:
+
+# test setup
+sudo nginx -t
+
+# restart nginx with new setup
+sudo service nginx restart
+
 
 

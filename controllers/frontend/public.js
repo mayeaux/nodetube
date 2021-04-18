@@ -5,6 +5,7 @@ const uploadHelpers = require('../../lib/helpers/settings');
 const uploadServer = uploadHelpers.uploadServer;
 
 const Upload = require('../../models/index').Upload;
+const User = require('../../models/index').User;
 
 const logCaching = process.env.LOG_CACHING;
 const defaultLandingPage = process.env.DEFAULT_LANDING_PAGE;
@@ -34,7 +35,16 @@ exports.index = async(req, res) => {
 
   const title = 'Home';
 
-  if(defaultLandingPage == 'globe'){
+  // for the category overview section, defaulted to SFW content
+  if(defaultLandingPage == 'overview'){
+    res.redirect('/media/recent?category=overview&rating=SFW');
+
+    // for recent uploads without categories, defaulted to SFW
+  } else if(defaultLandingPage == 'recent'){
+    res.redirect('/media/recent?category=all&rating=SFW');
+
+    // globe functionality
+  } else if(defaultLandingPage == 'globe'){
 
     // get 150 most popular uploads in last 24h that are sfw and from any category
     let uploads = await getFromCache.getPopularUploads('24hour', 150, 0, 'all', 'SFW', 'all', '');
@@ -45,6 +55,7 @@ exports.index = async(req, res) => {
       uploads
     });
 
+    // standard landing page that shows the amount of uploads, users and views
   } else {
 
     const response = indexResponse;
@@ -144,7 +155,11 @@ exports.random = async(req, res) => {
 
   upload = upload[0];
 
-  return res.redirect(`/user/v/${upload.uniqueTag}/`);
+  const user = await User.findOne({
+    _id : upload.uploader
+  });
+
+  return res.redirect(`/user/${user.channelUrl}/${upload.uniqueTag}/`);
 
   // /user/v/Kqd5SfS
 
@@ -203,7 +218,7 @@ exports.getEmbed = async function(req, res){
   let upload = await Upload.findOne({
     uniqueTag,
     visibility: { $ne: 'removed' }
-  }).populate({path: 'uploader comments checkedViews reacts', populate: {path: 'commenter receivedSubscriptions'}}).exec();
+  }).populate({path: 'uploader', populate: {path: ''}}).exec();
 
   if(!upload){
     console.log('Visible upload not found');
@@ -236,8 +251,50 @@ exports.getDocs = async(req, res) => {
  */
 exports.getDonate = async(req, res) => {
 
+  const stripeToken = process.env.STRIPE_FRONTEND_TOKEN;
+
   res.render('public/donate', {
-    title: 'Donate'
+    title: 'Donate',
+    stripeToken,
+    dontShowOptionalHeader : true
+  });
+};
+
+/**
+ * GET /help
+ * Donation page
+ */
+exports.getHelp = async(req, res) => {
+
+  const stripeToken = process.env.STRIPE_FRONTEND_TOKEN;
+
+  res.render('public/help', {
+    title: 'Help NewTube',
+    stripeToken,
+    dontShowOptionalHeader : true
+  });
+};
+
+/**
+ * GET /plus
+ * Plus page
+ */
+exports.getPlus = async(req, res) => {
+
+  res.render('public/plus', {
+    title: 'Plus',
+    dontShowOptionalHeader : true
+  });
+};
+
+/**
+ * GET /mobile
+ * Mobile page
+ */
+exports.getMobile = async(req, res) => {
+
+  res.render('public/mobile', {
+    title: 'Mobile'
   });
 };
 

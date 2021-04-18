@@ -1,5 +1,6 @@
 div.holder(style="border:")
-    a.title-anchor(href=`/user/${upload.uploader.channelUrl || channelUrl}/${upload.uniqueTag}` style="color:#7d7373;" )
+    // if there is no requestPath, it means it is the popular/recent pages
+    a.title-anchor(href=`${upload.pathToUploader}/${upload.uniqueTag}` style="color:#7d7373;" )
         div.image-container(style="")
             if upload.thumbnails && upload.thumbnails.custom
                 img.upload-thumbnail.preview-image(src=`${uploadServer}/${channelUrl || upload.uploader.channelUrl}/${upload.thumbnails.custom}` style="")
@@ -15,11 +16,10 @@ div.holder(style="border:")
 
             else if upload.fileType == 'image'
                 // TODO: have to fix this
-                img.upload-thumbnail.preview-image(src=`${uploadServer}/${channelUrl|| upload.uploader.channelUrl }/${upload.uniqueTag}${upload.fileExtension}` style="")
+                img.upload-thumbnail.preview-image(src=`${uploadServer}/${channelUrl || upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="")
 
             else if upload.fileType == 'audio'
                 img.upload-thumbnail.preview-image(src='/images/headphone.png')
 
             else if upload.fileType == 'unknown'
                 img.upload-thumbnail.preview-image(src='/images/no_img.png')
-

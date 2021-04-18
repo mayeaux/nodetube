@@ -1,6 +1,12 @@
 extends ../layout
 
 block content
+
+    style.
+        .btn {
+            border-radius: 4px;
+        }
+
     .container
 
         .page-header
@@ -27,7 +33,7 @@ block content
             .form-group
                 label.col-sm-3.control-label(for='description') Description
                 .col-sm-7
-                    textarea(id="description" name="description" maxlength='2000' rows="10" cols="70") #{upload.description}
+                    textarea(id="description" name="description" maxlength='2000' rows="10" cols="70" style="color:black") #{upload.description}
 
             div(style="margin:0 auto;text-align:center;margin-bottom:15px;")
 
@@ -105,62 +111,94 @@ block content
                             br
                             br
 
-            if upload.fileType == 'video' || upload.fileType == 'audio'
+            // thumbnail functionality if it's audio or video file. images naturally don't have a thumbnail (but maybe they should so that they're smaller in size)
+            if ( upload.fileType == 'video' || upload.fileType == 'audio' ) && !upload.thumbnails.custom
+                p= upload.thumbnails.custom
 
-                if !upload.customThumbnailUrl
-                    div.form-group
-                        label.col-sm-3.control-label(for='filetoupload' style="") Upload Thumbnail
-                        .col-sm-7
-                            input.center-block.text-center.upload-thumbnail-input(class="upload-file" data-max-size="500000000" type="file" id="filetoupload" name="filetoupload" accept="image/*")
+                div.form-group
+                    label.col-sm-3.control-label(for='filetoupload' style="") Upload Thumbnail
+                    .col-sm-7
+                        // TODO: check this size
+                        input.center-block.text-center.upload-thumbnail-input(class="upload-file" data-max-size="500000000" type="file" id="filetoupload" name="filetoupload" accept="image/*")
 
-                    div.form-group
-                        div.col-sm-3.
-                        p.col-sm-7(style="white-space:pre-line;margin-top:-15px;").
-                            Thumbnail resolution:
-                                width: 302px;
-                                height: 168x;
 
-                    div.form-group
-                        .col-sm-offset-3.col-sm-4
-                            button.btn.btn.btn-primary(type='submit')
+                    // taking this out as it's no longer the dimensions
+                    //div.form-group
+                        //div.col-sm-3.
+                        //p.col-sm-7(style="white-space:pre-line;margin-top:-15px;").
+                        //    Thumbnail resolution:
+                        //        width: 302px;
+                        //        height: 168x;
+
+
+
+            if upload.customThumbnailUrl || upload.thumbnails.custom
+                // DELETE FUNCTIONALITY
+                label.col-sm-3.control-label(for='' style="text-align:right;") Upload Thumbnail
+                .col-sm-7
+                    // TODO: need to do the data migration here
+                    if upload.thumbnails.custom
+                        img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.custom}` style="width:301.96px;height:167.969px")
+                    else
+                        img(src=upload.customThumbnailUrl style="width:301.96px;height:167.969px")
+
+                    div
+                    div
+                        // What is wrong with Pug? It randomly hides the form. So it was hiding my old form but now I put this
+                        // random empty form in front, and it is being hidden but now my second one shows up.
+                        form
+                        form.form-horizontal.delete-thumbnail-form(action=`${thumbnailServer}/api/upload/${upload.uniqueTag}/thumbnail/delete` method="POST")
+                            input(type='hidden', name='_csrf', value=_csrf)
+                            input(type="hidden" name="channelUrl" value=`${user.channelUrl}`)
+                            input(type="hidden" name="uploadToken" value=`${user.uploadToken}`)
+
+                            br
+
+                            button.btn.btn.btn-danger.deleteThumbnailButton(type='submit' style="margin-top:20px;margin-bottom:31px;")
                                 i.fa.fa-pencil
-                                | Edit Upload
+                                | Delete Thumbnail
 
 
-                else
-                    div.form-group
-                        .col-sm-offset-3.col-sm-4
-                            button.btn.btn.btn-primary(type='submit')
-                                i.fa.fa-pencil
-                                | Edit Upload
-            else
+            if !upload.webVTTPath
+                // input for captions
+                label.col-sm-3.control-label(for='webvtt' style="text-align:right;") Captions
+                .col-sm-7
+                    // TODO: check this size
+                    // TODO: check how to do accept with srt and vtt
+                    //input.center-block.text-center.upload-thumbnail-input(class="upload-file" data-max-size="500000000" type="file" id="webvtt" name="webvtt" accept=".vtt")
+
+                    // allow srt and webvtt
+                    input.center-block.text-center.upload-thumbnail-input(class="upload-file" data-max-size="500000000" type="file" id="webvtt" name="webvtt" accept=".vtt,.srt")
+
+
+            if upload.webVTTPath
                 div.form-group
                     .col-sm-offset-3.col-sm-4
-                        button.btn.btn.btn-primary(type='submit')
-                            i.fa.fa-pencil
-                            | Edit Upload
 
-        br
-        // DELETE FUNCTIONALITY
-        if upload.customThumbnailUrl || upload.thumbnails.custom
-            label.col-sm-3.control-label(for='' style="text-align:right;") Upload Thumbnail
-            .col-sm-7
-                // TODO: need to do the data migration here
-                if upload.thumbnails.custom
-                    img(src=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.custom}` style="width:301.96px;height:167.969px")
-                else
-                    img(src=upload.customThumbnailUrl style="width:301.96px;height:167.969px")
 
-                form.form-horizontal.delete-thumbnail-form(action=`${thumbnailServer}/api/upload/${upload.uniqueTag}/thumbnail/delete` method="POST")
-                    input(type='hidden', name='_csrf', value=_csrf)
-                    input(type="hidden" name="channelUrl" value=`${user.channelUrl}`)
-                    input(type="hidden" name="uploadToken" value=`${user.uploadToken}`)
+                        label.control-label(for='' style="text-align:right;") Captions
+                        // TODO: link this directly to the .vtt file so you can see what it is
+                        a(href=`${uploadServer}/${upload.uploader.channelUrl}/${upload.uniqueTag}.vtt`)
+                            p VTT Captions
 
-                    br
+                        .col-sm-7
+                            button.btn.btn.btn-danger.deleteCaptionsButton(type='submit' style="margin-top:20px")
+                                    i.fa.fa-pencil
+                                    | Delete Captions
+                br
 
-                    button.btn.btn.btn-danger(type='submit' style="margin-top:20px")
+                // if it's an image
+            div.form-group
+                .col-sm-offset-3.col-sm-4
+                    button.btn.btn.btn-primary.submitEditButton(type='submit' style="border-radius:4px;margin-top:10px;")
                         i.fa.fa-pencil
-                        | Delete Thumbnail
+                        | Edit Upload
+
+        form.editLink(action="/api/upload/delete" method="POST" style="border-radius:4px;margin-top:10px;")
+                .col-sm-offset-3.col-sm-4
+                  input(type='hidden', name='_csrf', value=_csrf)
+                  input(type='hidden', name='videoId', value=upload.uniqueTag)
+                  button.btn.btn-danger.delete-media Delete
 
 
 
@@ -173,6 +211,67 @@ block content
 
 
         // add here
+
+    script.
+      $('.delete-media').on('click', function (e) {
+        e.preventDefault();
+        var form = $(this).parents('form');
+
+        swal({
+          title: "WARNING",
+          text: "Are you sure you want to delete this upload?",
+          type: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#DD6B55",
+          confirmButtonText: "Yes, delete it"
+        }).then(function (result) {
+          if (result.value == true) {
+            form.submit();
+          }
+          console.log(result);
+        })
+      });
+
+    script.
+        $(document).ready(function(){
+
+          $('.submitEditButton').on('click', function(){
+            $('form.edit-upload-form').submit();
+          })
+
+
+          // send a post request to delete the captions
+          $('.deleteCaptionsButton').on('click', function(){
+
+            var csrf = '#{_csrf}';
+
+            var uniqueTag = '#{upload.uniqueTag}';
+
+            var data = {
+              _csrf: csrf,
+              uniqueTag
+            }
+
+            $.ajax({
+              type: 'POST',
+              url: '/api/upload/' + uniqueTag + '/captions/delete',
+              data,
+              success: function (data) {
+                console.log(data);
+
+                if (data == 'success') {
+                  location.reload();
+                  return false;
+                } else {
+
+                }
+              },
+              error: function (err) {
+                console.log(err);
+              }
+            });
+          })
+        })
 
     script.
       function getParameterByName(name, url) {
@@ -274,6 +373,7 @@ block content
         // send xhr request
         $.ajax({
           type: $theForm.attr('method'),
+          // POST to the url of the form
           url: $theForm.attr('action'),
           data,
           cache: false,

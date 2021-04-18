@@ -1,45 +1,84 @@
 extends ../layout
 
 block content
+    style.
+        .search-upload-buttons-container {
+            display: grid;
+            justify-content: center;
+            grid-gap: 10px;
+        }
+
+
+        @media (min-width: 600px) {
+            .search-upload-buttons-container {
+                grid-auto-flow: column;
+            }
+
+        }
+
+        /*below 479px*/
+        @media (max-width: 479px) {
+            .mobileSearchQuery {
+                display: inline !important;
+            }
+
+            .searchTypeDropdown {
+                margin-bottom: 30px;
+            }
+
+            .searchTypeButton {
+                font-size:16px;
+            }
+        }
+
+
+
     div.container
         div.col-sm-12.text-center(style="margin:0 auto;")
-            //h2
-            //h2.fw(style="display:inline;") Search For Keyword
-            //br
-            //br
-            //div(style="margin: 0 auto;")
-            //    input(type='hidden', name='_csrf', value=_csrf )
-            //    input.search-query-input.form-control(style="margin: 0 auto;width:400px;max-width:100%" type='search', name='search', id='search' placeholder=`${searchQuery !== 'undefined' ? searchQuery: ''}`)
-            //    br
-            //    // NOTE this does not work by sending a post, rather see the JS it only sends a GET request
-            //    div.search-upload-buttons-container
-            //        button.fw.search-uploads-button.btn-lg.btn.btn-primary(type='submit' name="type" value="upload")
-            //            //i.fa.fa-lock
-            //            | Search For Media
-            //
-            //        button.fw.search-users-button.btn-lg.btn.btn-primary(type='submit' name="type" value="user")
-            //            //i.fa.fa-lock
-            //            | Search For User
-
 
 
         // UPLOADS RESULTS
         //br
         div.col-sm-12.text-center(style="margin:0 auto;margin-top:50px;")
             if uploads
-                div.text-center.center-div
+                div.text-center.center-div.search-upload-buttons-container
 
-                    include ../viewPartials/orderByDropdown
+                h4(style="font-size:33px").fw Showing results for Uploads
 
-                    include ../viewPartials/searchUploadsFileTypeDropdown
+                h4(style="font-size:26px;margin-top:14px;").fw Click the 'Search For User' button to search for a User
 
-                    include ../viewPartials/sensitivityFilterDropdown
+                    br
+
+                    br
+
+                a(href=`/search?searchQuery=${searchQuery}&orderBy=newToOld&mediaType=${mediaType}&searchType=user`)
+                    button.fw.btn.btn-primary.btn-lg(style="color:#d8dcde;border-radius:6px;margin-bottom:17px;") Search For User
+
+                    br
+
+                    br
+
+                    br
+
+
+                include ../viewPartials/orderByDropdown
+
+                include ../viewPartials/searchUploadsFileTypeDropdown
+
+                include ../viewPartials/sensitivityFilterDropdown
+
                 br
                 br
 
                 include ../viewPartials/searchPagination
 
-                p.fw(style="font-size:27px;margin-top:30px;margin-bottom:30px;") #{totalUploadsAmount} Results
+                if totalUploadsAmount == 1
+                    p.fw(style="font-size:27px;margin-top:30px;margin-bottom:10px;") #{totalUploadsAmount} Upload Found
+                else
+                    p.fw(style="font-size:27px;margin-top:30px;margin-bottom:10px;") #{totalUploadsAmount} Uploads Found
+
+                p.fw(style="font-size:20px;margin-top:10px;margin-bottom:30px;") Search Query: #{searchQuery}
+                br
 
                 if uploads && uploads.length > 0
                     each upload in uploads
@@ -54,31 +93,74 @@ block content
         // USERS RESULTS
         div.col-sm-12.text-center(style="margin:0 auto;")
             if channels
+
+                h4.fw Showing results for Users.
+
+                h4.fw Click 'Search For Uploads' to search for an upload.
+
+                br
+
+                a(href=`/search?searchQuery=${searchQuery}&orderBy=newToOld&mediaType=${mediaType}&searchType=`)
+
+                    button.fw.btn.btn-primary.btn-lg(style="color:#d8dcde;border-radius:6px;margin-bottom:17px;cursor:pointer;") Search For Uploads
+
+
+                //div.dropdown(style="display:inline;margin-right:15px;")
+                //    button.fw.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px")
+                //        | Search Type: #{capitalizeFirst(searchType)} &nbsp
+                //
+                //        span.caret
+                //
+                //    ul.dropdown-menu.dropdown
+                //        li
+                //            a(href=`/search?searchQuery=${searchQuery}&orderBy=popular&mediaType=${mediaType}&searchType=`) Uploads &nbsp
+                //        li
+                //            a(href=`/search?searchQuery=${searchQuery}&orderBy=newToOld&mediaType=${mediaType}&searchType=user`) Users &nbsp
+
+                br
+                br
+                br
+
                 if channels.length > 0
-                    p(style="text-decoration:underline;font-size:20px;")  Results
+                    if channels.length == 1
+                        p.fw(style="font-size:30px;")  1 User Found
+                    if channels.length > 1
+                        p.fw(style="font-size:30px;") #{channels.length} Users Found
+
+                    p.fw(style="font-size:20px;margin-top:10px;margin-bottom:30px;") Search Query: #{searchQuery}
+                        br
+                        br
+                        br
+
+                    br
                     each channel in channels
-                        div.col-sm-4(style="text-align:center;height:360px")
+                        div.col-sm-4(style="text-align:center;height:280px")
                             a(href=`/user/${channel.channelUrl}` style="color:black")
                                 if channel.customThumbnail
-                                    img.center-block.text-center(src=`${uploadServer}/${channel.channelUrl}/${channel.customThumbnail}` width="256px" height="168px")
+                                    img.center-block.text-center(src=`${uploadServer}/${channel.channelUrl}/${channel.customThumbnail}` height="168px")
                                 else
-                                    img.center-block.text-center(src='/images/no_img.png' width="256px" height="168px")
+                                    img.center-block.text-center(src='/images/default-user-icon2.jpg' height="168px")
 
 
                                 div
-                                    p.upload-title-text Channel Username: #{channel.channelUrl}
-                                    p.upload-title-text Channel Name: #{channel.channelName}
+                                    p.upload-title-text.fw Channel Username: #{channel.channelUrl}
+                                    if channel.channelName
+                                        p.upload-title-text.fw Channel Name: #{channel.channelName}
                                 br
 
                             div.upload-details
                                 div.views
-                                    p.views-text #{channel.uploads.length} Uploads
+                                    p.fw.views-text #{channel.uploads.length} Uploads
 
                 else
                     div.center-block.text-center
                         br
                         br
-                        p(style="font-size:20px") No Results Found
+                        p.fw(style="font-size:24px") No Users Found
+
+
+                        br
+                        p.fw(style="font-size:20px;margin-top:10px;margin-bottom:30px;") Search Query: #{searchQuery}
 
 
     script.

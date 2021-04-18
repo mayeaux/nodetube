@@ -1,3 +1,4 @@
+//DETAILS BELOW AN INDIVIDUAL UPLOAD
 style.
     input[type=checkbox] {
         /* Double-sized Checkboxes */
@@ -14,7 +15,9 @@ style.
 
     .durationTime {
         color: #959595;
+        font-family:initial;
     }
+
 
 div.underThing
     // all the details including title
@@ -40,7 +43,7 @@ a.title-anchor(href=`/user/${upload.uploader.channelUrl || channelUrl}/${upload.
 // TODO: need to rename this div
 div.random-thing(style="margin-top:-4px;")
     // view amount
-    p.upload-title-text.views-text(style="margin:0 auto;text-align:center;display:inline;color:#b0aeae;") #{upload.legitViewAmount} views &nbsp
+    p.upload-title-text.views-text(style="margin:0 auto;text-align:center;display:inline;color:#b0aeae;") #{abbreviateNumber(upload.legitViewAmount)} views &nbsp
         // upload time ago
 
         // if its not sorted by popular (aka recent or other thing on user page)
@@ -60,28 +63,28 @@ div.random-thing(style="margin-top:-4px;")
 // show views within time if on popular page
 div.upload-thing
     if within
-        p.upload-title-text.views-text(style="margin-top:-8px;color:#b0aeae;;") #{upload[popularTimeViews]} #{withinDisplayString}
+        p.upload-title-text.views-text(style="margin-top:-8px;color:#b0aeae;;") #{abbreviateNumber(upload[popularTimeViews])} #{withinDisplayString}
 
 
 
 
 //// if user is an admin, allow them to see category and rating
-//if user && user.role == 'admin'
-//    div.admin-div(style="margin-bottom:15px;margin-top:-4px;")
-//        if upload.category
-//            p.upload-title-text.views-text(style="margin:0;margin-left:3px;text-align:center;display:inline;") #{upload.category}
-//        if upload.subcategory
-//            p.upload-title-text.views-text(style="margin:0;margin-left:3px;text-align:center;display:inline;") #{upload.subcategory}
-//        if upload.rating
-//            if upload.rating == 'allAges'
-//                p.upload-title-text.views-text(style="display:inline") SFW
-//            if upload.rating == 'mature'
-//                p.upload-title-text.views-text(style="display:inline") NSFW
-//            if upload.rating == 'sensitive'
-//                p.upload-title-text.views-text(style="display:inline") Sensitive (18+)
-//
-//        div.thing(style="margin-top:-33px;margin-left:44px;display:block")
-//             input.ratingChanged(style="display:block" type="checkbox" value=`${upload._id}`)
+if user && user.role == 'admin'
+    div.admin-div(style="margin-bottom:15px;margin-top:-4px;")
+        if upload.category
+            p.upload-title-text.views-text(style="margin:0;margin-left:3px;text-align:center;display:inline;") #{upload.category}
+        if upload.subcategory
+            p.upload-title-text.views-text(style="margin:0;margin-left:3px;text-align:center;display:inline;") #{upload.subcategory}
+        if upload.rating
+            if upload.rating == 'allAges'
+                p.upload-title-text.views-text(style="display:inline") SFW
+            if upload.rating == 'mature'
+                p.upload-title-text.views-text(style="display:inline") NSFW
+            if upload.rating == 'sensitive'
+                p.upload-title-text.views-text(style="display:inline") Sensitive (18+)
+
+        div.thing(style="margin-top:-33px;margin-left:44px;display:block")
+             input.ratingChanged(style="display:block;z-index:99999;position:absolute;" type="checkbox" value=`${upload._id}`)
 //
 //// denote whether upload is deleted
 if user && (user.role == 'admin' || user.role == 'moderator') && upload.visibility == 'removed'
@@ -92,3 +95,5 @@ if user && (user.role == 'admin' || user.role == 'moderator') && upload.visibili
         //        img(src="/images/verified.jpg" width="19px" height="19px" style="margin-left:3px;margin-top:-2px;")
         //    if upload.uploader.plan == 'plus'
         //        span.pewtube-pro PLUS
+
+

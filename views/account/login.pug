@@ -16,11 +16,11 @@ block content
       .form-group
         label.fw.loginHeader.col-sm-3.control-label(for='email') Email or Username
         .col-sm-7
-          input.fw.loginHeader.form-control(name='email', id='email', placeholder='Email or Username', autofocus, required)
+          input.fw.loginHeader.form-control(name='email', id='email', placeholder='Email or Username', autofocus, required style="max-width:600px;")
       .form-group
         label.fw.loginHeader.col-sm-3.control-label(for='password') Password
         .col-sm-7
-          input.fw.loginHeader.form-control(type='password', name='password', id='password', placeholder='Password', required)
+          input.fw.loginHeader.form-control(type='password', name='password', id='password', placeholder='Password', required style="max-width:600px;")
       .form-group
         .col-sm-offset-3.col-sm-7
           button.fw.loginHeader.col-sm-3.btn.btn-primary(type='submit' style="border-radius:8px;width:122px;")
@@ -28,7 +28,10 @@ block content
             | Login
 
           // turn off forgot password, should expose it as an env var
-          //a.btn.btn-link(href='/forgot') Forgot your password?
+
+          // show the forgot your password button
+          if forgotEmailFunctionalityOn
+            a.btn.btn-link.fw(href='/forgot' style="font-size:17px") Forgot your password?
       .form-group
         .col-sm-12
           hr

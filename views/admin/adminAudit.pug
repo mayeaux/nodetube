@@ -6,59 +6,86 @@ block content
             h2
             h2.view-header Admin Actions
         hr
-        each action in adminActions
-            p Admin Or Moderator: #{action.adminOrModerator.channelUrl}
-            if action.siteVisitorsAffected
-                for siteVisitor in action.siteVisitorsAffected
-                    p #{siteVisitor.channelUrl}
-            if action.uploadsAffected
-                for upload in action.uploadsAffected
-                    a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}`)
-                        p Title Affected: #{upload.title}
-            if action.usersAffected
-                for user in action.usersAffected
-                    p User Affected: #{user.channelUrl}
-            p Action Type : #{action.actionType}
-            if action.data
-                if action.data.originalRating
-                    p Original Rating: #{action.data.originalRating}
-                if action.data.updatedRating
-                    p Updated Rating: #{action.data.updatedRating}
-            br
-            br
+        if adminActions.length == 0
+            .center-block.text-center
+                ul.pagination
+                    li.page-item
+                        a.page-link(href=`/admin/adminAudit/${previousNumber}`) <
+
+                    each number in numbersArray
+                        li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
+                            a.page-link(href=`/admin/adminAudit/${number}`) #{number}
+
+                    li.page-item
+                        a.page-link(href=`/admin/adminAudit/${nextNumber}`) >
+
+            p There are no more admin actions
+        else
+            .center-block.text-center
+                ul.pagination
+                    li.page-item
+                        a.page-link(href=`/admin/adminAudit/${previousNumber}`) <
+
+                    each number in numbersArray
+                        li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
+                            a.page-link(href=`/admin/adminAudit/${number}`) #{number}
+
+                    li.page-item
+                        a.page-link(href=`/admin/adminAudit/${nextNumber}`) >
+
+            each action in adminActions
+                p Admin Or Moderator: #{action.adminOrModerator.channelUrl}
+                if action.siteVisitorsAffected
+                    for siteVisitor in action.siteVisitorsAffected
+                        p #{siteVisitor.channelUrl}
+                if action.uploadsAffected
+                    for upload in action.uploadsAffected
+                        a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}`)
+                            p Title Affected: #{upload.title}
+                if action.usersAffected
+                    for user in action.usersAffected
+                        p User Affected: #{user.channelUrl}
+                p Action Type : #{action.actionType}
+                if action.data
+                    if action.data.originalRating
+                        p Original Rating: #{action.data.originalRating}
+                    if action.data.updatedRating
+                        p Updated Rating: #{action.data.updatedRating}
+                br
+                br
 
 
-            //each val, index in action
-            //    p= index + ': ' + val
-            //br
-            //br
-        //
-        //each comment in adminActions
-        //    div.col-sm-4(style="text-align:center;height:420px;border:1px solid black;")
-        //        // NEW CHANNEL UPLOAD FORMAT
-        //
-        //        a(href=`/user/${comment.commenter.channelUrl}`)
-        //            h4 Commenter Name: #{comment.commenter.channelName}
-        //            h4 Commenter Url: #{comment.commenter.channelUrl}
-        //            p Visibility : #{comment.visibility}
-        //        if comment.upload
-        //            a(href=`/user/${comment.commenter.channelUrl}/${comment.upload.uniqueTag}`)
-        //                h3 Media: #{comment.upload.title}
-        //        p(style="height:90px") Comment: #{comment.text}
-        //
-        //
-        //
-        //
-        //            div.admin-buttons
-        //                form(action="/admin/comments" method="POST")
-        //                    input(type='hidden', name='_csrf', value=_csrf)
-        //                    input(type='hidden', name='user', value=`${comment.commenter._id}`)
-        //                    input(type='hidden', name='comment', value=`${comment._id}`)
-        //                    button.btn.btn-success(name="commentChangeValue" value="reinstateComment" type="submit" ) Reinstate Comment
-        //                    br
-        //                    br
-        //                    button.btn.btn-danger(name="commentChangeValue" value="deleteComment" type="submit" ) Delete Comment
-        //                    br
-        //                    br
-        //                    button.btn.btn-danger(name="commentChangeValue" value="deleteCommentBanUser" type="submit" ) Delete Comment/Ban User
-        //
+                //each val, index in action
+                //    p= index + ': ' + val
+                //br
+                //br
+            //
+            //each comment in adminActions
+            //    div.col-sm-4(style="text-align:center;height:420px;border:1px solid black;")
+            //        // NEW CHANNEL UPLOAD FORMAT
+            //
+            //        a(href=`/user/${comment.commenter.channelUrl}`)
+            //            h4 Commenter Name: #{comment.commenter.channelName}
+            //            h4 Commenter Url: #{comment.commenter.channelUrl}
+            //            p Visibility : #{comment.visibility}
+            //        if comment.upload
+            //            a(href=`/user/${comment.commenter.channelUrl}/${comment.upload.uniqueTag}`)
+            //                h3 Media: #{comment.upload.title}
+            //        p(style="height:90px") Comment: #{comment.text}
+            //
+            //
+            //
+            //
+            //            div.admin-buttons
+            //                form(action="/admin/comments" method="POST")
+            //                    input(type='hidden', name='_csrf', value=_csrf)
+            //                    input(type='hidden', name='user', value=`${comment.commenter._id}`)
+            //                    input(type='hidden', name='comment', value=`${comment._id}`)
+            //                    button.btn.btn-success(name="commentChangeValue" value="reinstateComment" type="submit" ) Reinstate Comment
+            //                    br
+            //                    br
+            //                    button.btn.btn-danger(name="commentChangeValue" value="deleteComment" type="submit" ) Delete Comment
+            //                    br
+            //                    br
+            //                    button.btn.btn-danger(name="commentChangeValue" value="deleteCommentBanUser" type="submit" ) Delete Comment/Ban User
+            //

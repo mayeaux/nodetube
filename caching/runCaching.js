@@ -54,6 +54,8 @@ const setCache = require('./setCache'); // index and daily stats
 const cacheRecentUploads = require('./cacheRecentUploads'); // index and daily stats
 const cachePopularUploads = require('./cachePopularUploads'); // index and daily stats
 
+const calculateUploadViews = require('./calculateUploadViews'); // index and daily stats
+
 // const cacheRecentUploads = require('./cacheRecentAndPopularUploads');
 
 async function cacheOnlyRecentUploads(){
@@ -67,17 +69,6 @@ async function cacheOnlyRecentUploads(){
   }
 
 }
-// calculate and cache recent uploads every minute
-cacheOnlyRecentUploads();
-
-// parse int because it's a string comming from dotenv
-let cacheRecentIntervalInMinutes = parseInt(process.env.CACHE_RECENT_INTERVAL_IN_MINUTES) || 2.5;
-
-const cacheRecentIntervalInMs = cacheRecentIntervalInMinutes * ( 1000 * 60 );
-
-console.log(`CACHE RECENT INTERVAL IN MINUTES: ${cacheRecentIntervalInMinutes}`);
-
-setInterval(cacheOnlyRecentUploads, cacheRecentIntervalInMs);
 
 async function cachePopularDailyStatsAndIndex(){
   try {
@@ -91,7 +82,12 @@ async function cachePopularDailyStatsAndIndex(){
   }
 }
 
-cachePopularDailyStatsAndIndex();
+// parse int because it's a string comming from dotenv
+let cacheRecentIntervalInMinutes = parseInt(process.env.CACHE_RECENT_INTERVAL_IN_MINUTES) || 2.5;
+
+const cacheRecentIntervalInMs = cacheRecentIntervalInMinutes * ( 1000 * 60 );
+
+console.log(`CACHE RECENT INTERVAL IN MINUTES: ${cacheRecentIntervalInMinutes}`);
 
 let cacheIntervalInMinutes = parseInt(process.env.CACHE_INTERVAL_IN_MINUTES) || 5;
 
@@ -99,7 +95,26 @@ const cacheIntervalInMs = cacheIntervalInMinutes * ( 1000 * 60 );
 
 console.log(`CACHE POPULAR, DAILY STATS AND INDEXES INTERVAL IN MINUTES: ${cacheIntervalInMinutes} \n`);
 
-setInterval(cachePopularDailyStatsAndIndex, cacheIntervalInMs);
+async function main(){
+
+  setInterval(cacheOnlyRecentUploads, cacheRecentIntervalInMs);
+
+  setInterval(cachePopularDailyStatsAndIndex, cacheIntervalInMs);
+
+  setInterval(calculateUploadViews, cacheIntervalInMs);
+
+  // calculate and cache recent uploads every minute
+  await cacheOnlyRecentUploads();
+
+  await cachePopularDailyStatsAndIndex();
+
+  await calculateUploadViews();
+
+}
+
+main();
+
+// calculateUploadViews()
 
 // setInterval(async function(){
 //   await cacheRecentUploads();

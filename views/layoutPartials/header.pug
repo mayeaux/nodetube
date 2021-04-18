@@ -214,7 +214,7 @@ style.
 
   .search-uploads-button {
     border: 1px solid #5b5a5a;
-    z-index: 99999999;
+    z-index: 999999;
     background-color: #313131 !important;
   }
 
@@ -265,6 +265,7 @@ style.
   .secondLine {
     margin-top: -54px !important;
     padding-left: 56px;
+    background-color: #141414;
   }
 
   @media (max-width: 927px) {
@@ -310,8 +311,8 @@ style.
       img(src="/images/white-burger.jpg" style="width:52px;display:inline-block;" onclick='toggleNav()')
 
     a(href="/" style="position:absolute;left:99px;top:15px;")
-      p.fullTitle(style="text-transform:uppercase;display:inline-block;color:#acc5ff;font-size:25px;font-weight:900;") #{brandName}
-      p.singleLetter(style="text-transform:uppercase;color:#acc5ff;") #{brandName}
+      p.fullTitle(style="text-transform:uppercase;display:inline-block;color:#ffffff;font-size:25px;font-weight:900;") #{brandName}
+      p.singleLetter(style="text-transform:uppercase;color:#ffffff;") #{brandName}
 
     div.searchPlaceHolder(style="height:56px;display:inline-block;display:none;")
       a(href="#")
@@ -488,6 +489,8 @@ if !user
 
     })
 
+// hide the header when you scroll down
+// first I have to make it fixed to the top
 script.
   $(document).ready(function () {
     // grab an element
@@ -506,6 +509,8 @@ script.
 script.
   $(document).ready(function () {
 
+
+
     console.log('lets')
 
     var orderBy = '#{orderBy}'
@@ -523,6 +528,8 @@ script.
     console.log(orderBy, mediaType, searchQuery, searchType)
 
     // $('.search-query-input').focus();
+
+
 
 
     // TODO: how to capture enter from input
