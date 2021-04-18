@@ -354,7 +354,7 @@ block content
 
                 video#media_player.display-element(playsinline poster=`${uploadServer}/${upload.uploader.channelUrl}/${upload.thumbnails.generated || upload.thumbnails.medium}` controls='', style="max-width:100%;background-color:black;")
                     // to
-                    source.video-source(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`, type='video/mp4' oncontextmenu="javascript:rightClickMenu()")
+                    source.video-source(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}.mp4`, type='video/mp4')
 
                     // TODO: load captions programatically
                     //track(kind='captions', label='English captions', src='/uploads/anthony/lordoftherings.vtt', srclang='en', default='')
@@ -365,7 +365,7 @@ block content
             // if it's an audio
         else if upload.fileType === 'audio'
             div
-                audio#media_player.my_audio(playsinline style="width:80%;" controls='', preload='none' oncontextmenu="javascript:rightClickMenu()")
+                audio#media_player.my_audio.display-element(playsinline style="width:80%;" controls='', preload='none')
 
                     if upload.fileExtension == '.m4a'
                         source(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`, type='audio/mp4')
@@ -381,7 +381,7 @@ block content
         else if upload.fileType === 'image'
             div.display-div(style="")
                 a(href=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`)
-                    img.display-element(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="border-radius:13px;max-width:80%;min-width:50%;min-height:50%;max-height:620px;" oncontextmenu="javascript:rightClickMenu()")
+                    img.display-element(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}` style="border-radius:13px;max-width:80%;min-width:50%;min-height:50%;max-height:620px;")
 
 
 
@@ -782,35 +782,71 @@ block extra_js
   script(src="https://cdnjs.cloudflare.com/ajax/libs/autolinker/1.4.4/Autolinker.js")
 
   script.
-    function rightClickMenu() {
-        var menu = document.querySelector("#rightClickMenu");
-        let menuVisible = false;
+    // document.getElementById('media_player').oncontextmenu = function () {
+    //   rightClickMenu();
+    // }
 
-        const toggleMenu = command => {
-        menu.style.display = command === "show" ? "inline" : "none";
-        menuVisible = !menuVisible;
-        };
+    var menu = document.querySelector("#rightClickMenu");
+    let menuVisible = false;
 
-        const setPosition = ({ top, left }) => {
-        menu = document.querySelector("#rightClickMenu");
-        menu.style.left = `${left}px`;
-        menu.style.top = `${top}px`;
-        toggleMenu("show");
-        };
+    function toggleMenu(command) {
 
-        window.addEventListener("click", e => {
-        if(menuVisible)toggleMenu("hide");
-        });
+      // if command is show, inline, otherwise return none
+      var determineVisibility = command === "show" ? "inline" : "none";
 
-        window.addEventListener("contextmenu", e => {
+      // set display based on on command
+      menu.style.display = determineVisibility
+
+      // reverse menu visibility
+      menuVisible = !menuVisible;
+    }
+
+    window.addEventListener("click", e => {
+      // alert('hello!');
+
+      toggleMenu("hide");
+    });
+
+    // determine where to display menu
+    const setPosition = ({top, left}) => {
+      menu = document.querySelector("#rightClickMenu");
+      menu.style.left = `${left}px`;
+      menu.style.top = `${top}px`;
+    };
+
+    // on right click, set position
+    window.addEventListener("contextmenu", e => {
+
+      console.log(e.target);
+
+      var displayElementClicked = e.target.classList.contains('display-element')
+
+      var plyrControlsClicked = e.target.classList.contains('plyr__controls') || e.target.classList.contains('plyr__controls__item')
+
+      var plyrThingClicked = e.target.hasAttribute('data-plyr');
+
+
+      if(displayElementClicked || plyrControlsClicked || plyrThingClicked){
         e.preventDefault();
-        const origin = {
-            left: e.clientX,
-            top: e.clientY
-        };
-        setPosition(origin);
-        return false;
-        });
+
+        rightClickMenu(e);
+      }
+    });
+
+    // toggle visibility of rightClickMenu
+    function rightClickMenu(e) {
+
+      e.preventDefault();
+      //
+      const origin = {
+        left: e.clientX,
+        top: e.clientY
+      };
+      setPosition(origin);
+
+      toggleMenu('show');
+
+      return false;
     }
 
 
