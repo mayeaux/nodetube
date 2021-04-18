@@ -53,6 +53,53 @@ block content
             }
 
     style.
+        .right-menu {
+            width: 120px;
+            z-index: 1;
+            background: #1A1A1A;
+            box-shadow: 0 4px 5px 3px rgba(0, 0, 0, 0.2);
+            position: fixed;
+            display: none;
+            transition: 0.2s display ease-in;
+        }
+        .right-menu .menu-options {
+            list-style: none;
+            padding: 10px 0;
+            z-index: 1;
+        }
+        .right-menu .menu-options .menu-option {
+            font-weight: 500;
+            z-index: 1;
+            font-size: 14px;
+            padding: 10px 40px 10px 20px;
+            cursor: pointer;
+        }
+        .right-menu .menu-options .menu-option:hover {
+            background: #3B3B3B;
+        }
+        button {
+            background: grey;
+            border: none;
+        }
+        button .next {
+            color: green;
+        }
+        button[disabled="false"]:hover .next {
+            color: red;
+            animation: move 0.5s;
+            animation-iteration-count: 2;
+        }
+        @keyframes move {
+            from {
+                transform: translate(0%);
+            }
+            50% {
+                transform: translate(-40%);
+            }
+            to {
+                transform: transform(0%);
+            }
+        }
 
         .plyr {
             max-height: 102.5vh;
@@ -390,6 +437,17 @@ block content
 
 
 
+    div#rightClickMenu.right-menu(style="")
+        ul.menu-options
+            li.menu-option.download-button Download
+            li.menu-option.share-button Embed
+            li.menu-option.report-button Report
+            li.menu-option.copy-button(data-clipboard-text=`${upload.title} \n\n${url}`) Copy Details
+            if upload.fileType === 'audio' || upload.fileType === 'video'
+                li.menu-option.repeat-div(style="opacity:1") Repeat
+            if upload.fileType === 'video'
+                li.menu-option.screenshotButton(style="margin-left:0px !important") Screenshot
+
     div.center-block.text-center.col-sm-12.pageContainer(style="overflow-x: hidden;margin-top:-2px;padding-right:0px;padding-left:0px;")
         if upload.status == 'processing'
 
@@ -423,7 +481,7 @@ block content
             // if it's an audio
         else if upload.fileType === 'audio'
             div
-                audio#media_player.my_audio(playsinline style="width:80%;" controls='', preload='auto')
+                audio#media_player.my_audio.display-element(playsinline style="width:80%;" controls='', preload='auto')
 
                     if upload.fileExtension == '.m4a'
                         source(src=`${serverToUse}/${upload.uploader.channelUrl}/${upload.uniqueTag}${upload.fileExtension}`, type='audio/mp4')
@@ -911,6 +969,76 @@ block extra_js
         })
   else
       include pugJavascript/registerToUseFeature
+
+  script.
+    // document.getElementById('media_player').oncontextmenu = function () {
+    //   rightClickMenu();
+    // }
+
+    var menu = document.querySelector("#rightClickMenu");
+    let menuVisible = false;
+
+    function toggleMenu(command) {
+
+      // if command is show, inline, otherwise return none
+      var determineVisibility = command === "show" ? "inline" : "none";
+
+      // set display based on on command
+      menu.style.display = determineVisibility
+
+      // reverse menu visibility
+      menuVisible = !menuVisible;
+    }
+
+    window.addEventListener("click", e => {
+      // alert('hello!');
+
+      toggleMenu("hide");
+    });
+
+    // determine where to display menu
+    const setPosition = ({top, left}) => {
+      menu = document.querySelector("#rightClickMenu");
+      menu.style.left = `${left}px`;
+      menu.style.top = `${top}px`;
+    };
+
+    // on right click, set position
+    window.addEventListener("contextmenu", e => {
+
+      console.log(e.target);
+
+      var displayElementClicked = e.target.classList.contains('display-element')
+
+      var plyrControlsClicked = e.target.classList.contains('plyr__controls') || e.target.classList.contains('plyr__controls__item')
+
+      var plyrThingClicked = e.target.hasAttribute('data-plyr');
+
+
+      if(displayElementClicked || plyrControlsClicked || plyrThingClicked){
+        e.preventDefault();
+
+        rightClickMenu(e);
+      }
+    });
+
+    // toggle visibility of rightClickMenu
+    function rightClickMenu(e) {
+
+      e.preventDefault();
+      //
+      const origin = {
+        left: e.clientX,
+        top: e.clientY
+      };
+      setPosition(origin);
+
+      toggleMenu('show');
+
+      return false;
+    }
+
+
 
   script.
 
@@ -1590,7 +1718,7 @@ block extra_footer_js
       var plyrElementNotFocused = !document.activeElement.classList.contains('plyr')
 
       var inputElementNotFocused = inputs.indexOf(activeElement.tagName.toLowerCase()) === -1;
-      
+
       if (activeElement && plyrElementNotFocused && inputElementNotFocused) {
 
         if (e.keyCode === 37) {
