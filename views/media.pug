@@ -54,7 +54,7 @@ block content
 
     style.
         .right-menu {
-            width: 120px;
+            width: 155px;
             z-index: 1;
             background: #1A1A1A;
             box-shadow: 0 4px 5px 3px rgba(0, 0, 0, 0.2);
@@ -62,6 +62,10 @@ block content
             display: none;
             transition: 0.2s display ease-in;
         }
+        .menu-option li, .menu-option i {
+            display:inline;
+        }
+
         .right-menu .menu-options {
             list-style: none;
             padding: 10px 0;
@@ -446,7 +450,9 @@ block content
             if upload.fileType === 'audio' || upload.fileType === 'video'
                 li.menu-option.repeat-div(style="opacity:1") Repeat
             if upload.fileType === 'video'
-                li.menu-option.screenshotButton(style="margin-left:0px !important") Screenshot
+                div.menu-option
+                    i.fa.fa-camera(aria-hidden="true" style="cursor:pointer;color:#a5a5a5;")
+                    li.screenshotButton(style="margin-left:0px !important;") Screenshot
 
     div.center-block.text-center.col-sm-12.pageContainer(style="overflow-x: hidden;margin-top:-2px;padding-right:0px;padding-left:0px;")
         if upload.status == 'processing'
