@@ -54,7 +54,7 @@ block content
 
     style.
         .right-menu {
-            width: 155px;
+            width: 164px;
             z-index: 1;
             background: #1A1A1A;
             box-shadow: 0 4px 5px 3px rgba(0, 0, 0, 0.2);
@@ -443,12 +443,24 @@ block content
 
     div#rightClickMenu.right-menu(style="")
         ul.menu-options
-            li.menu-option.download-button Download
-            li.menu-option.share-button Embed
-            li.menu-option.report-button Report
-            li.menu-option.copy-button(data-clipboard-text=`${upload.title} \n\n${url}`) Copy Details
+            div
+                h4.fw(style="margin-left:24px") Menu Options
+            div.menu-option.download-button
+                i.download-icon.fa.fa-download(aria-hidden="true" style="cursor:pointer;color:#a5a5a5;")
+                li Download
+            div.menu-option
+                i.share-icon.fas.fa-code(aria-hidden="true" style="cursor:pointer;margin-left:-2px;")
+                li.share-button(style="margin-left:6px;") Embed
+            div.menu-option
+                i.share-icon.fa.fa-exclamation-triangle(aria-hidden="true" style="cursor:pointer;")
+                li.report-button Report
+            div.menu-option
+                i.fas.fa-copy
+                li.copy-button(data-clipboard-text=`${upload.title} \n\n${url}`) Copy Details
             if upload.fileType === 'audio' || upload.fileType === 'video'
-                li.menu-option.repeat-div(style="opacity:1") Repeat
+                div.menu-option
+                    i.repeat-icon.fa.fa-repeat(aria-hidden="true" style="cursor:pointer")
+                    li.menu-option.repeat-div(style="opacity:1;margin-left:-18px;") Repeat
             if upload.fileType === 'video'
                 div.menu-option
                     i.fa.fa-camera(aria-hidden="true" style="cursor:pointer;color:#a5a5a5;")
@@ -688,12 +700,12 @@ block content
 
                         div.bottomButtons(style="margin-top:-17px;padding-bottom:10px;")
 
-                            //// embed button
+                            // embed button
                             div.change-size-button(style="margin-left:0px;color: rgb(121 119 119) !important;")
                                 h2.share-button
                                     i.share-icon.fas.fa-code(aria-hidden="true" style="cursor:pointer;font-size:26px;margin-left:0px;")
 
-                            // report upload button
+                            // rss button
                             div.change-size-button(style="cursor:pointer;margin-left:6px;color: rgb(121 119 119) !important;")
                                 h2.rss-button(style="font-size:19px;")
                                     i.share-icon.fas.fa-rss(aria-hidden="true" style="cursor:pointer;font-size:26px;")
