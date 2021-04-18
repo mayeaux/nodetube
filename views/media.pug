@@ -443,7 +443,10 @@ block content
             li.menu-option.share-button Embed
             li.menu-option.report-button Report
             li.menu-option.copy-button(data-clipboard-text=`${upload.title} \n\n${url}`) Copy Details
-
+            if upload.fileType === 'audio' || upload.fileType === 'video'
+                li.menu-option.repeat-div(style="opacity:1") Repeat
+            if upload.fileType === 'video'
+                li.menu-option.screenshotButton(style="margin-left:0px !important") Screenshot
 
     div.center-block.text-center.col-sm-12.pageContainer(style="overflow-x: hidden;margin-top:-2px;padding-right:0px;padding-left:0px;")
         if upload.status == 'processing'
