@@ -441,28 +441,28 @@ block content
 
 
 
-    div#rightClickMenu.right-menu(style="")
+    div#rightClickMenu.right-menu(style="position:absolute;")
         ul.menu-options
             div
                 h4.fw(style="margin-left:24px") Menu Options
             div.menu-option.download-button
                 i.download-icon.fa.fa-download(aria-hidden="true" style="cursor:pointer;color:#a5a5a5;")
                 li Download
-            div.menu-option
+            div.menu-option.share-button
                 i.share-icon.fas.fa-code(aria-hidden="true" style="cursor:pointer;margin-left:-2px;")
                 li.share-button(style="margin-left:6px;") Embed
-            div.menu-option
+            div.menu-option.report-button
                 i.share-icon.fa.fa-exclamation-triangle(aria-hidden="true" style="cursor:pointer;")
                 li.report-button Report
-            div.menu-option
+            div.menu-option.copy-button
                 i.fas.fa-copy
-                li.copy-button(data-clipboard-text=`${upload.title} \n\n${url}`) Copy Details
+                li.copy-button(data-clipboard-text=`${upload.title} \n\n${url}` style="margin-left:6px;") Copy Details
             if upload.fileType === 'audio' || upload.fileType === 'video'
-                div.menu-option
+                div.menu-option.repeat-div
                     i.repeat-icon.fa.fa-repeat(aria-hidden="true" style="cursor:pointer")
                     li.menu-option.repeat-div(style="opacity:1;margin-left:-18px;") Repeat
             if upload.fileType === 'video'
-                div.menu-option
+                div.menu-option.screenshotButton
                     i.fa.fa-camera(aria-hidden="true" style="cursor:pointer;color:#a5a5a5;")
                     li.screenshotButton(style="margin-left:0px !important;") Screenshot
 
