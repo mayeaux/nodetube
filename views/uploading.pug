@@ -131,15 +131,10 @@ block content
                         | Private
                     br
 
-                  div(style="margin:0 auto;text-align:center")
+                  div(style="margin:0 auto;text-align:center;margin-bottom:11px;")
                     h4.fw(style="margin-bottom:3px;font-size:17px;") (Optional)
                     label.fw(for='title' style="font-size:20px") Select A Thumbnail
-                    br
-
-                    div.dropdown(style="display:inline;")
-                      button#dropdownMenu1.fw.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px;font-size:15px;;margin-top:3px;")
-                        | Choose File
-
+                    input.btn.btn-primary.center-block.text-center.upload-thumbnail-input(data-max-size="500000000" type="file" id="filetoupload" name="filetoupload" accept="image/*")
                   br
 
                   label.fw(for='title' style="font-size:20px") Select A Category
