@@ -130,12 +130,22 @@ block content
                         input.radio-button(type='radio', name='visibility' value="private")
                         | Private
                     br
+
+                  div(style="margin:0 auto;text-align:center")
+                    h4.fw(style="margin-bottom:3px;font-size:17px;") (Optional)
+                    label.fw(for='title' style="font-size:20px") Select A Thumbnail
                     br
+
+                    div.dropdown(style="display:inline;")
+                      button#dropdownMenu1.fw.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px;font-size:15px;;margin-top:3px;")
+                        | Choose File
+
+                  br
 
                   label.fw(for='title' style="font-size:20px") Select A Category
                   br
 
-                  div.dropdown(style="display:inline;padding-right:15px;")
+                  div.dropdown(style="display:inline;")
                     button#dropdownMenu1.fw.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown' style="border-radius:5px;font-size:15px;")
                       | Category: &nbsp
                       span.caret
@@ -147,14 +157,10 @@ block content
                           if category.displayName !== 'All Uploads' && category.displayName !== 'Category Overview'
                             a.categoryValue(style="cursor:pointer;" data-value=category.name data-displayname=category.displayName) #{category.displayName}
 
-                  br
-                  div#categoryScrollTo(style="")
-                  br
+                  div#categoryScrollTo(style="margin-top:3px;")
                   div.categoryName#categoryName(style="display:none")
-                    h5.fw(style="font-size:20px;").categoryDisplayName Category: $Thing
                     br
-
-
+                    h5.fw(style="font-size:20px;").categoryDisplayName Category: $Thing
 
 
                   // subcategories
@@ -167,10 +173,6 @@ block content
                               label.fw.radio-inline(style="margin-top:7px;font-size:15px;")
                                 input.radio-button.subcategoryOption(type='radio', name='subcategory' value=subcategory.name required)
                                 | #{subcategory.displayName}
-
-                              br
-                        br
-
 
 
                   // RATINGS
