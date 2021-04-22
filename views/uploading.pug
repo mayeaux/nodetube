@@ -449,9 +449,41 @@ block content
             })
           }
 
-          // TODO: add a post here to add a thumbnail
-          if (response.url) {
-            window.location.href = response.url;
+          var thumbnailFile = $('#filetoupload')[0].files[0]
+
+          let files = new FormData();
+
+          files.append('fileName', thumbnailFile)
+
+          var addThumbnailUrl = '/api/uploadFileThumbnail';
+
+          if(thumbnailFile){
+            $.ajax({
+              type: 'POST',
+              url: addThumbnailUrl,
+              processData: false,
+              contentType: false,
+              data: thumbnailFile,
+              success: function (response) {
+                console.log(response);
+
+                if (response.url) {
+                  window.location.href = response.url;
+                }
+
+              },
+              error: function (err) {
+                // hopefully this never happens?
+                console.log(err);
+              }
+            });
+
+          } else {
+
+            // no thumbnail added, just redirect to the url
+            if (response.url) {
+              window.location.href = response.url;
+            }
           }
 
 

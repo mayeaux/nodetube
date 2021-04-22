@@ -165,7 +165,8 @@ function testIfUserRestricted(user, logObject, res){
 function aboutToProcess(res, channelUrl, uniqueTag){
   res.send({
     message: 'ABOUT TO PROCESS',
-    url: `/user/${channelUrl}/${uniqueTag}?u=t`
+    url: `/user/${channelUrl}/${uniqueTag}?u=t`,
+    uniqueTag
   });
 }
 
@@ -732,3 +733,12 @@ exports.adminUpload = async(req, res) => {
   // });
 
 };
+
+
+/**
+ * POST /api/uploadFileThumbnail
+ * Upload file thumbnail
+ */
+exports.postThumbnailUpload = async(req, res) => {
+  // TODO: implement here
+}
