@@ -117,16 +117,16 @@ block content
 
                   // add endpoint for visibility
                   if user.plan == 'plus'
-                    label.fw(for='title' style="font-size:20px") Visibility
+                    label.fw(for='title' style="font-size:22px") Visibility
                     br
                     div.radio-buttons.visibility
-                      label.fw.radio-inline(style="font-size:15px;")
+                      label.fw.radio-inline(style="font-size:17px;")
                         input.radio-button(type='radio', name='visibility' value="public" checked)
                         | Public
-                      label.fw.radio-inline(style="font-size:15px;")
+                      label.fw.radio-inline(style="font-size:17px;")
                         input.radio-button(type='radio', name='visibility' value="unlisted")
                         | Unlisted
-                      label.fw.radio-inline(style="font-size:15px;")
+                      label.fw.radio-inline(style="font-size:17px;")
                         input.radio-button(type='radio', name='visibility' value="private")
                         | Private
                     br
@@ -134,7 +134,7 @@ block content
                   div(style="margin:0 auto;text-align:center;margin-bottom:11px;")
                     h4.fw(style="margin-bottom:3px;font-size:17px;") (Optional)
                     label.fw(for='title' style="font-size:20px") Select A Thumbnail
-                    input.btn.btn-primary.center-block.text-center.upload-thumbnail-input(data-max-size="500000000" type="file" id="filetoupload" name="filetoupload" accept="image/*")
+                    input.btn.btn-primary.center-block.text-center.upload-thumbnail-input(data-max-size="500000000" type="file" id="filetoupload" name="filetoupload" accept="image/*" style="width:211px;border-radius:6px;")
                   br
 
                   label.fw(for='title' style="font-size:20px") Select A Category
@@ -425,6 +425,7 @@ block content
         });
 
 
+        // when receiving a success response from the backend
         r.on('fileSuccess', function (file, response) {
 
           console.log('message:')
@@ -448,6 +449,7 @@ block content
             })
           }
 
+          // TODO: add a post here to add a thumbnail
           if (response.url) {
             window.location.href = response.url;
           }
@@ -458,6 +460,7 @@ block content
         });
 
 
+        // if receiving an error from the backend
         r.on('fileError', function (file, response) {
 
           response = JSON.parse(response);
