@@ -133,8 +133,8 @@ block content
 
                   div(style="margin:0 auto;text-align:center;margin-bottom:11px;")
                     h4.fw(style="margin-bottom:3px;font-size:17px;") (Optional)
-                    label.fw(for='title' style="font-size:20px") Select A Thumbnail
-                    input.btn.btn-primary.center-block.text-center.upload-thumbnail-input(data-max-size="500000000" type="file" id="filetoupload" name="filetoupload" accept="image/*" style="width:211px;border-radius:6px;")
+                    label.fw(for='title' style="font-size:20px") Custom Thumbnail
+                    input.btn.btn-primary.center-block.text-center.upload-thumbnail-input(data-max-size="500000000" type="file" id="filetoupload" name="filetoupload" accept="image/*" style="width:176px;border-radius:6px;font-size:11px;")
                   br
 
                   label.fw(for='title' style="font-size:20px") Select A Category
@@ -457,13 +457,23 @@ block content
 
           var addThumbnailUrl = '/api/uploadFileThumbnail';
 
-          if(thumbnailFile){
+          if(!thumbnailFile){
+
+            // alert('no thumbnail url');
+            if (response.url) {
+              window.location.href = response.url;
+            }
+
+          } else {
+
+            // alert('thumbnail url');
+
             $.ajax({
               type: 'POST',
               url: addThumbnailUrl,
               processData: false,
               contentType: false,
-              data: thumbnailFile,
+              data: files,
               success: function (response) {
                 console.log(response);
 
@@ -475,15 +485,17 @@ block content
               error: function (err) {
                 // hopefully this never happens?
                 console.log(err);
+
+                // alert('there was an error');
+
+                // no thumbnail added, just redirect to the url
+                // if (response.url) {
+                //   window.location.href = response.url;
+                // }
               }
             });
 
-          } else {
 
-            // no thumbnail added, just redirect to the url
-            if (response.url) {
-              window.location.href = response.url;
-            }
           }
 
 

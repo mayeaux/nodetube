@@ -588,25 +588,32 @@ exports.postFileUpload = async(req, res) => {
 
           uploadLogger.info('Upload marked as complete', logObject);
 
-          updateUsersUnreadSubscriptions(user);
-
-          uploadLogger.info('Updated subscribed users subscriptions', logObject);
-
           // this is admin upload for all
           alertAdminOfNewUpload(user, upload);
 
           uploadLogger.info('Alert admins of a new upload', logObject);
 
-          if(upload.visibility == 'public'){
-            // update user push notifications
-            updateUsersPushNotifications(user, upload);
+          // if visibility is public, send push and email notifications
+          if(upload.visibility === 'public'){
 
-            uploadLogger.info('Update users push notifications', logObject);
+            // update the subscription amount of subscribing users
+            updateUsersUnreadSubscriptions(user);
 
-            // update user email notifications
-            updateUsersEmailNotifications(user, upload, req.host);
+            uploadLogger.info('Updated subscribed users subscriptions', logObject);
 
-            uploadLogger.info('Update users email notifications', logObject);
+            // send push and email notifs if production
+            if(process.env.NODE_ENV === 'production'){
+              // update user push notifications
+              updateUsersPushNotifications(user, upload);
+
+              uploadLogger.info('Update users push notifications', logObject);
+
+              // update user email notifications
+              updateUsersEmailNotifications(user, upload, req.host);
+
+              uploadLogger.info('Update users email notifications', logObject);
+            }
+
           }
 
           // upload is complete, send it off to user (aboutToProcess is a misnomer here)
@@ -740,5 +747,35 @@ exports.adminUpload = async(req, res) => {
  * Upload file thumbnail
  */
 exports.postThumbnailUpload = async(req, res) => {
+  console.log('files')
+  console.log(req.files);
+
+
+  console.log('body')
+  console.log(req.body);
+
+
+  if(req.files && req.files.filetoupload){
+    filename = req.files.filetoupload.originalFilename;
+    fileType = getMediaType(filename);
+
+    fileExtension = path.extname(filename);
+  }
+
+  // console.log(req.files);
+  // console.log(req.files.length);
+
+  //
+  const fileIsNotImage = req.files && req.files.filetoupload && req.files.filetoupload.size > 0 && fileType && fileType !== 'image';
+
+  console.log('req files');
+  console.log(req.files);
+
+  // TODO: you have to make this smarter by checking the FileType
+
+  const fileIsImage = req.files && req.files.filetoupload && req.files.filetoupload.size > 0 && fileType == 'image';
+
+  const imagePath = req.files && req.files.filetoupload && req.files.filetoupload.path;
+
   // TODO: implement here
 }
