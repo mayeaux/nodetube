@@ -754,19 +754,30 @@ exports.postThumbnailUpload = async(req, res) => {
   console.log('body')
   console.log(req.body);
 
+  // check if there's a thumbnail
+  let thumbnailFile;
 
-  if(req.files && req.files.filetoupload){
-    filename = req.files.filetoupload.originalFilename;
-    fileType = getMediaType(filename);
-
-    fileExtension = path.extname(filename);
+  // if req there are files and
+  if(req.files && req.files.thumbnailFile){
+    thumbnailFile = req.files.thumbnailFile;
+  } else {
+    res.status(500)
+    return res.send('no thumbnail file');
   }
+
+  const filename = thumbnailFile.originalFilename;
+  // size in bytes
+  const fileSize = thumbnailFile.size;
+
+  fileType = getMediaType(filename);
+
+  fileExtension = path.extname(filename);
 
   // console.log(req.files);
   // console.log(req.files.length);
 
   //
-  const fileIsNotImage = req.files && req.files.filetoupload && req.files.filetoupload.size > 0 && fileType && fileType !== 'image';
+  const fileIsNotImage = req.files.filetoupload.size > 0 && fileType && fileType !== 'image';
 
   console.log('req files');
   console.log(req.files);

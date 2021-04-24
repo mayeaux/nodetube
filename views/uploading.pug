@@ -134,7 +134,7 @@ block content
                   div(style="margin:0 auto;text-align:center;margin-bottom:11px;")
                     h4.fw(style="margin-bottom:3px;font-size:17px;") (Optional)
                     label.fw(for='title' style="font-size:20px") Custom Thumbnail
-                    input.btn.btn-primary.center-block.text-center.upload-thumbnail-input(data-max-size="500000000" type="file" id="filetoupload" name="filetoupload" accept="image/*" style="width:176px;border-radius:6px;font-size:11px;")
+                    input.btn.btn-primary.center-block.text-center.upload-thumbnail-input(data-max-size="5000000" type="file" id="filetoupload" name="filetoupload" accept="image/*" style="width:176px;border-radius:6px;font-size:11px;")
                   br
 
                   label.fw(for='title' style="font-size:20px") Select A Category
@@ -230,6 +230,22 @@ block content
   script.
     $(document).ready(function () {
 
+      function checkIfFileSizeAcceptable(){
+        var fileInput = $('#filetoupload');
+
+        var maxSize = fileInput.data('max-size');
+
+        if (fileInput.get(0).files.length) {
+          var fileSize = fileInput.get(0).files[0].size; // in bytes
+
+          if (fileSize > maxSize) {
+            return false;
+          } else {
+            return true
+          }
+        }
+      }
+
       // focus the button so you can just click enter to start uploading
       $('.resumable-browser').focus();
 
@@ -284,8 +300,6 @@ block content
         console.log(value, displayName);
       })
 
-
-
       var privs = #{user.privs}
 
       var maxSize;
@@ -294,7 +308,6 @@ block content
         maxSize = '#{user.privs.uploadSize}' || 500;
       } else {
         maxSize = 500;
-
       }
 
       var maxSizeInBytes = maxSize * 1000000
@@ -369,6 +382,12 @@ block content
         });
 
         $('.submit-button').on('click', function (e) {
+
+          const fileSizeAcceptable = checkIfFileSizeAcceptable()
+
+          if(!fileSizeAcceptable){
+            return swal('Please select a thumbnail under 5MB');
+          }
 
           var title = $('#title').val();
           var description = $('#description').val();
@@ -453,7 +472,7 @@ block content
 
           let files = new FormData();
 
-          files.append('fileName', thumbnailFile)
+          files.append('thumbnailFile', thumbnailFile)
 
           var addThumbnailUrl = '/api/uploadFileThumbnail';
 
@@ -606,3 +625,4 @@ block content
             }, 1000 * 1)
       }
     });
+
