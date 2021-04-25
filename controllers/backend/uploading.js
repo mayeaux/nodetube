@@ -743,17 +743,15 @@ exports.adminUpload = async(req, res) => {
 
 };
 
-
 /**
  * POST /api/uploadFileThumbnail
  * Upload file thumbnail
  */
 exports.postThumbnailUpload = async(req, res) => {
-  console.log('files')
+  console.log('files');
   console.log(req.files);
 
-
-  console.log('body')
+  console.log('body');
   console.log(req.body);
 
   const uniqueTag = req.body.uploadUniqueTag;
@@ -765,7 +763,7 @@ exports.postThumbnailUpload = async(req, res) => {
   if(req.files && req.files.thumbnailFile){
     thumbnailFile = req.files.thumbnailFile;
   } else {
-    res.status(500)
+    res.status(500);
     return res.send('no thumbnail file');
   }
 
@@ -791,7 +789,7 @@ exports.postThumbnailUpload = async(req, res) => {
   const extension = '.' + String(bufferFileType.ext);
 
   console.log('extension');
-  console.log(extension)
+  console.log(extension);
 
   const fileType = getMediaType('hackforsetup' + extension);
 
@@ -802,8 +800,6 @@ exports.postThumbnailUpload = async(req, res) => {
 
   console.log('File type');
   console.log(fileType);
-
-
 
   console.log(bufferFileType);
 
@@ -828,5 +824,4 @@ exports.postThumbnailUpload = async(req, res) => {
 
   return res.send('success');
 
-
-}
+};
