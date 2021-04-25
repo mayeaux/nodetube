@@ -10,6 +10,8 @@ const path = require('path');
 const mkdirp = Promise.promisifyAll(require('mkdirp'));
 var randomstring = require('randomstring');
 var CombinedStream = require('combined-stream');
+const FileType = require('file-type');
+const readChunk = require('read-chunk');
 
 const redisClient = require('../../config/redis');
 
@@ -769,24 +771,57 @@ exports.postThumbnailUpload = async(req, res) => {
   // size in bytes
   const fileSize = thumbnailFile.size;
 
-  fileType = getMediaType(filename);
+  // 5 MB
+  if(fileSize > 5242880){
+    res.status(500);
+    res.send('file too large');
+  }
 
-  fileExtension = path.extname(filename);
+  const filePath = thumbnailFile.path;
 
-  // console.log(req.files);
-  // console.log(req.files.length);
+  const buffer = readChunk.sync(filePath, 0, 4100);
 
-  //
-  const fileIsNotImage = req.files.filetoupload.size > 0 && fileType && fileType !== 'image';
+  const bufferFileType = await FileType.fromBuffer(buffer);
 
-  console.log('req files');
-  console.log(req.files);
+  console.log('Buffer file type ' + bufferFileType);
 
-  // TODO: you have to make this smarter by checking the FileType
+  const extension = '.' + String(bufferFileType.ext);
 
-  const fileIsImage = req.files && req.files.filetoupload && req.files.filetoupload.size > 0 && fileType == 'image';
+  console.log('extension');
+  console.log(extension)
 
-  const imagePath = req.files && req.files.filetoupload && req.files.filetoupload.path;
+  const fileType = getMediaType('hackforsetup' + extension);
 
-  // TODO: implement here
+  if(fileType !== 'image'){
+    res.status(500);
+    res.send('not an image');
+  }
+
+  console.log('File type');
+  console.log(fileType);
+
+
+
+  console.log(bufferFileType);
+
+  const channelUrl = req.user.channelUrl;
+
+  const saveFileDirectory = `${saveAndServeFilesDirectory}/${channelUrl}/${upload.uniqueTag}-custom${extension}`;
+
+  await fs.move(filePath, saveFileDirectory);
+
+  upload.thumbnails.custom = `${upload.uniqueTag}-custom${extension}`;
+
+  if(process.env.UPLOAD_TO_B2 === 'true'){
+    // TODO: check this
+    // await backblaze.editploadThumbnailToB2(req.user.channelUrl, upload.uniqueTag, extension, saveFileDirectory);
+  }
+
+  // sendUploadThumbnailToB2(args)
+
+  await upload.save();
+
+  return res.send('success');
+
+
 }
