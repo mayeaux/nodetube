@@ -776,7 +776,7 @@ exports.postThumbnailUpload = async(req, res) => {
   // 5 MB
   if(fileSize > 5242880){
     res.status(500);
-    res.send('file too large');
+    return res.send('file too large');
   }
 
   const filePath = thumbnailFile.path;
@@ -797,7 +797,7 @@ exports.postThumbnailUpload = async(req, res) => {
 
   if(fileType !== 'image'){
     res.status(500);
-    res.send('not an image');
+    return res.send('not an image');
   }
 
   console.log('File type');
