@@ -809,6 +809,12 @@ exports.postThumbnailUpload = async(req, res) => {
 
   await fs.move(filePath, saveFileDirectory);
 
+  const upload = await Upload.findOne({ uniqueTag });
+
+  if(!upload.thumbnails){
+    upload.thumbnails = {};
+  }
+
   upload.thumbnails.custom = `${uniqueTag}-custom${extension}`;
 
   if(process.env.UPLOAD_TO_B2 === 'true'){

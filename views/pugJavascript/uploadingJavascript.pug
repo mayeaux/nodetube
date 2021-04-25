@@ -39,6 +39,9 @@ script.
 
         return swal('Please select a thumbnail under 5MB');
       }
+
+      document.getElementById('scrollToThumbnail').scrollIntoView({behavior: 'smooth'});
+
     });
 
     // focus the button so you can just click enter to start uploading
