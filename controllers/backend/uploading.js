@@ -756,6 +756,8 @@ exports.postThumbnailUpload = async(req, res) => {
   console.log('body')
   console.log(req.body);
 
+  const uniqueTag = req.body.uploadUniqueTag;
+
   // check if there's a thumbnail
   let thumbnailFile;
 
@@ -785,6 +787,7 @@ exports.postThumbnailUpload = async(req, res) => {
 
   console.log('Buffer file type ' + bufferFileType);
 
+  // comes back at 'mp4' to prepend . to make .mp4
   const extension = '.' + String(bufferFileType.ext);
 
   console.log('extension');
@@ -806,11 +809,11 @@ exports.postThumbnailUpload = async(req, res) => {
 
   const channelUrl = req.user.channelUrl;
 
-  const saveFileDirectory = `${saveAndServeFilesDirectory}/${channelUrl}/${upload.uniqueTag}-custom${extension}`;
+  const saveFileDirectory = `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-custom${extension}`;
 
   await fs.move(filePath, saveFileDirectory);
 
-  upload.thumbnails.custom = `${upload.uniqueTag}-custom${extension}`;
+  upload.thumbnails.custom = `${uniqueTag}-custom${extension}`;
 
   if(process.env.UPLOAD_TO_B2 === 'true'){
     // TODO: check this
@@ -820,6 +823,8 @@ exports.postThumbnailUpload = async(req, res) => {
   // sendUploadThumbnailToB2(args)
 
   await upload.save();
+
+  res.status(200);
 
   return res.send('success');
 

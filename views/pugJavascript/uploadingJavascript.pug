@@ -238,6 +238,8 @@ script.
 
         response = JSON.parse(response);
 
+        var redirectUrl = response.url
+
         if(response.message == 'ALREADY-UPLOADED'){
           //  HIDE FORM SHOW GIF
           $(".upload-form").show();
@@ -260,14 +262,15 @@ script.
 
         files.append('thumbnailFile', thumbnailFile)
 
+        files.append('uploadUniqueTag', response.uniqueTag)
+
         var addThumbnailUrl = '/api/uploadFileThumbnail';
 
+        // if there's thumbnail file, just redirect
         if(!thumbnailFile){
 
           // alert('no thumbnail url');
-          if (response.url) {
-            window.location.href = response.url;
-          }
+          window.location.href = response.url;
 
         } else {
 
@@ -282,8 +285,8 @@ script.
             success: function (response) {
               console.log(response);
 
-              if (response.url) {
-                window.location.href = response.url;
+              if (response === 'success') {
+                window.location.href = response.url
               }
 
             },
@@ -294,9 +297,7 @@ script.
               // alert('there was an error');
 
               // no thumbnail added, just redirect to the url
-              // if (response.url) {
-              //   window.location.href = response.url;
-              // }
+              window.location.href = response.url
             }
           });
 
