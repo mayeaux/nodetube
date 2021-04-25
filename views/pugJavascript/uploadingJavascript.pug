@@ -1,35 +1,45 @@
 script(src='/js/lib/jquery-3.1.1.min.js')
 script(src='/js/lib/resumable.js')
 script.
-  $(document).ready(function () {
 
-    function checkIfFileSizeAcceptable(){
-      var fileInput = $('.upload-thumbnail-input');
+  function checkIfFileSizeAcceptable() {
+    var fileInput = $('.upload-thumbnail-input');
 
-      var maxSize = fileInput.data('max-size');
+    var maxSize = fileInput.data('max-size');
 
-      console.log('max size');
+    console.log('max size');
 
-      console.log(maxSize);
-
+    console.log(maxSize);
 
 
-      if (fileInput.get(0).files.length) {
-        var fileSize = fileInput.get(0).files[0].size; // in bytes
+    if (fileInput.get(0).files.length) {
+      var fileSize = fileInput.get(0).files[0].size; // in bytes
 
-        console.log('file size');
+      console.log('file size');
 
-        console.log(fileSize)
+      console.log(fileSize)
 
-        if (fileSize > maxSize) {
-          return false;
-        } else {
-          return true
-        }
+      if (fileSize > maxSize) {
+        return false;
       } else {
         return true
       }
+    } else {
+      return true
     }
+  }
+
+  $(document).ready(function () {
+
+    $('.upload-thumbnail-input').on('change', function () {
+      const fileSizeAcceptable = checkIfFileSizeAcceptable()
+
+      if (!fileSizeAcceptable) {
+        $(this).val(null);
+
+        return swal('Please select a thumbnail under 5MB');
+      }
+    });
 
     // focus the button so you can just click enter to start uploading
     $('.resumable-browser').focus();
@@ -180,12 +190,6 @@ script.
       });
 
       $('.submit-button').on('click', function (e) {
-
-        const fileSizeAcceptable = checkIfFileSizeAcceptable()
-
-        if(!fileSizeAcceptable){
-          return swal('Please select a thumbnail under 5MB');
-        }
 
         var title = $('#title').val();
         var description = $('#description').val();
