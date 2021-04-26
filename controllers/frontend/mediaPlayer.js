@@ -76,12 +76,11 @@ exports.getMedia = async(req, res) => {
 
   // TODO: pull out plus redirect thing
 
-
   // get the amount of slashes, to determine if the user is allowed
   // to access the vanity url version of this url
   let requestPath = req.path;
 
-  var queryParams = req.url.split('?')[1]
+  var queryParams = req.url.split('?')[1];
 
   if(requestPath.charAt(requestPath.length - 1) == '/'){
     requestPath = requestPath.substr(0, requestPath.length - 1);
@@ -130,7 +129,7 @@ exports.getMedia = async(req, res) => {
     if(amountOfSlashes === 3 && user.plan == 'plus'){
       let redirectPath = `/${user.channelUrl}/${upload.uniqueTag}`;
       if(queryParams){
-        redirectPath = redirectPath + '?' + queryParams
+        redirectPath = redirectPath + '?' + queryParams;
       }
 
       return res.redirect(redirectPath);
