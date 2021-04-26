@@ -74,9 +74,14 @@ function getFormattedFileSize(upload){
  */
 exports.getMedia = async(req, res) => {
 
+  // TODO: pull out plus redirect thing
+
+
   // get the amount of slashes, to determine if the user is allowed
   // to access the vanity url version of this url
   let requestPath = req.path;
+
+  var queryParams = req.url.split('?')[1]
 
   if(requestPath.charAt(requestPath.length - 1) == '/'){
     requestPath = requestPath.substr(0, requestPath.length - 1);
@@ -118,10 +123,17 @@ exports.getMedia = async(req, res) => {
       });
     }
 
+    console.log(req.path);
+
     // TODO: make sure to add query params here
     // if it's three but you're plus, then move to shortened url
     if(amountOfSlashes === 3 && user.plan == 'plus'){
-      return res.redirect(`/${user.channelUrl}/${upload.uniqueTag}`);
+      let redirectPath = `/${user.channelUrl}/${upload.uniqueTag}`;
+      if(queryParams){
+        redirectPath = redirectPath + '?' + queryParams
+      }
+
+      return res.redirect(redirectPath);
     }
 
     // TODO: pull this thing out

@@ -275,23 +275,27 @@ script.
           })
         }
 
+        // get the thumbnail file
         var thumbnailFile = $('#filetoupload')[0].files[0]
-
-        let files = new FormData();
-
-        files.append('thumbnailFile', thumbnailFile)
-
-        files.append('uploadUniqueTag', response.uniqueTag)
-
-        var addThumbnailUrl = '/api/uploadFileThumbnail';
 
         // if there's thumbnail file, just redirect
         if(!thumbnailFile){
 
+          // alert('Redirecting to ' + redirectUrl);
+
           // alert('no thumbnail url');
-          window.location.href = response.url;
+          return window.location.href = redirectUrl;
 
         } else {
+
+          // initiate a form to send for thumbnail upload
+          let files = new FormData();
+
+          files.append('thumbnailFile', thumbnailFile)
+
+          files.append('uploadUniqueTag', response.uniqueTag)
+
+          var addThumbnailUrl = '/api/uploadFileThumbnail';
 
           // alert('thumbnail url');
 
