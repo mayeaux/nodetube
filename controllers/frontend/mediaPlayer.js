@@ -123,7 +123,7 @@ exports.getMedia = async(req, res) => {
       });
     }
 
-    console.log(req.path);
+    // console.log(req.path);
 
     // TODO: make sure to add query params here
     // if it's three but you're plus, then move to shortened url

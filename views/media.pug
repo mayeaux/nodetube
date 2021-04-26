@@ -1739,17 +1739,28 @@ block extra_footer_js
 
       if (activeElement && plyrElementNotFocused && inputElementNotFocused) {
 
+        // left keypad
         if (e.keyCode === 37) {
 
           mediaPlayer.currentTime = mediaPlayer.currentTime - 5;
 
           return false;
 
+        // right keypad
         } else if (e.keyCode === 39) {
 
           mediaPlayer.currentTime = mediaPlayer.currentTime + 5;
 
           return false;
+
+        // space button
+        } else if (e.keyCode === 32) {
+            // toggle play/pause button
+            if (mediaPlayer.paused){
+              mediaPlayer.play();
+            } else {
+              mediaPlayer.pause();
+            }
         }
       }
     });
