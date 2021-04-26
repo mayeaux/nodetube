@@ -30,6 +30,11 @@ block content
       font-weight: 300;
     }
 
+    .ldBar path.mainline {
+      stroke-width: 6 !important;
+      stroke: white !important;
+    }
+
     .ldBar {
       margin: 0 auto;
     }
@@ -73,9 +78,9 @@ block content
 
         //h3.fw(style="font-size: 30px;") Select Upload
 
-        if user.plan == 'free' && plus_enabled
-          p You can raise this limit to 2000 MB by subscribing for&nbsp
-            a(href="/account?to=pt-plus") #{brandName} Plus
+        if user.plan === 'free' && plusEnabled
+          p You can raise this limit to 2000 MB (2GB) by subscribing for&nbsp
+            a(href="/account?to=nt-plus") #{brandName} Plus
 
         if site_rating
 

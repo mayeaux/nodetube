@@ -420,6 +420,8 @@ exports.postFileUpload = async(req, res) => {
 
           uploadLogger.info('Concat done', logObject);
 
+          // TODO: pull this out into its own function
+
           let bitrate, codecName, codecProfile;
 
           if(upload.fileType !== 'image'){

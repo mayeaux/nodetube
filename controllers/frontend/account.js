@@ -59,6 +59,12 @@ const forgotEmailFunctionalityOn = process.env.FORGOT_PASSWORD_EMAIL_FUNCTIONALI
 
 const { attachDataToUploadsAsUploads } = require('../../lib/helpers/addFieldsToUploads');
 
+const stripeToken = process.env.STRIPE_FRONTEND_TOKEN;
+
+const plusEnabled = process.env.PLUS_ENABLED === 'true';
+
+const verifyEmailFunctionalityOn = process.env.CONFIRM_EMAIL_FUNCTIONALITY_ON === 'true';
+
 // TODO: pull this function out
 function removeTrailingSlash(requestPath){
   if(requestPath.charAt(requestPath.length - 1) == '/'){
@@ -66,37 +72,6 @@ function removeTrailingSlash(requestPath){
   }
 
   return requestPath;
-}
-
-// TODO: pull this function out
-async function addValuesIfNecessary(upload, channelUrl){
-  if(upload.fileType == 'video' || upload.fileType == 'audio'){
-    if(!upload.durationInSeconds || !upload.formattedDuration){
-
-      var server = uploadServer;
-      if(server.charAt(0) == '/') // the slash confuses the file reading, because host root directory is not the same as machine root directory
-        server = server.substr(1);
-
-      const uploadLocation = `${server}/${channelUrl}/${upload.uniqueTag + upload.fileExtension}`;
-
-      try {
-        const duration = await getUploadDuration(uploadLocation, upload.fileType);
-        console.log(duration);
-
-        let uploadDocument = await Upload.findOne({uniqueTag: upload.uniqueTag});
-
-        uploadDocument.durationInSeconds = duration.seconds;
-        uploadDocument.formattedDuration = duration.formattedTime;
-
-        await uploadDocument.save();
-
-      } catch(err){
-        /** if the file has been deleted then it won't blow up **/
-        // console.log(err);
-      }
-      // console.log('have to add');
-    }
-  }
 }
 
 /**
@@ -124,7 +99,8 @@ exports.getFileUpload = async(req, res) => {
     categories,
     maxRatingAllowed: process.env.MAX_RATING_ALLOWED,
     userCanUploadContentOfThisRating,
-    secondsToFormattedTime
+    secondsToFormattedTime,
+    plusEnabled
   });
 };
 
@@ -903,11 +879,6 @@ exports.getSignup = (req, res) => {
  * Account page.
  */
 exports.getAccount = async(req, res) => {
-  const stripeToken = process.env.STRIPE_FRONTEND_TOKEN;
-
-  const plusEnabled = process.env.PLUS_ENABLED == 'true';
-
-  const verifyEmailFunctionalityOn = process.env.CONFIRM_EMAIL_FUNCTIONALITY_ON == 'true';
 
   // give user an upload token
   if(!req.user.uploadToken){
