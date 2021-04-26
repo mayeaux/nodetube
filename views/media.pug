@@ -1747,14 +1747,32 @@ block extra_footer_js
           // left keypad
           if (e.keyCode === 37) {
 
-            mediaPlayer.currentTime = mediaPlayer.currentTime - 5;
+            e.preventDefault()
+
+            $('button[data-plyr="rewind"]').click()
+
+            player.toggleControls(true);
+            setTimeout(function () {
+              player.toggleControls(true);
+            }, 150)
+
+            // mediaPlayer.currentTime = mediaPlayer.currentTime - 5;
 
             return false;
 
             // right keypad
           } else if (e.keyCode === 39) {
 
-            mediaPlayer.currentTime = mediaPlayer.currentTime + 5;
+            e.preventDefault()
+
+            $('button[data-plyr="fast-forward"]').click()
+
+            player.toggleControls(true);
+            setTimeout(function () {
+              player.toggleControls(true);
+            }, 150)
+
+            // mediaPlayer.currentTime = mediaPlayer.currentTime + 5;
 
             return false;
 
@@ -1777,6 +1795,12 @@ block extra_footer_js
 
         if (inputElementNotFocused && e.keyCode === 13) {
           mediaPlayer.requestFullscreen();
+        }
+
+        var leftOrRightKey = e.keyCode === 37 || e.keyCode === 39;
+
+        if (!plyrElementNotFocused && leftOrRightKey) {
+          player.toggleControls(true);
         }
       }
     });
