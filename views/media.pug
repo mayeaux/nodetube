@@ -1729,7 +1729,7 @@ block extra_footer_js
   script.
     $(document).keyup(function (e) {
 
-      var oneOfTheUsedKeys = e.keyCode === 37 || e.keyCode === 39 || e.keyCode === 32 || e.keyCode === 13;
+      var oneOfTheUsedKeys = e.keyCode === 37 || e.keyCode === 39 || e.keyCode === 32 || e.keyCode === 13 || e.keyCode === 70;
 
       if(oneOfTheUsedKeys){
         var mediaPlayer = document.getElementById("media_player");
@@ -1793,7 +1793,7 @@ block extra_footer_js
           }
         }
 
-        if (inputElementNotFocused && e.keyCode === 13) {
+        if (inputElementNotFocused && ( e.keyCode === 13 || e.keyCode === 70)) {
           mediaPlayer.requestFullscreen();
         }
 
