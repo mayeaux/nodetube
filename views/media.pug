@@ -1737,9 +1737,10 @@ block extra_footer_js
         var activeElement = document.activeElement;
         var inputs = ['input', 'textarea'];
 
-        var plyrElementNotFocused = !document.activeElement.classList.contains('plyr')
-
+        // match against an input or text area input
         var inputElementNotFocused = inputs.indexOf(activeElement.tagName.toLowerCase()) === -1;
+
+        var plyrElementNotFocused = !document.activeElement.classList.contains('plyr')
 
         if (activeElement && plyrElementNotFocused && inputElementNotFocused) {
 
@@ -1772,7 +1773,9 @@ block extra_footer_js
             return false
 
           }
-        } else if (inputElementNotFocused && e.keyCode === 13) {
+        }
+
+        if (inputElementNotFocused && e.keyCode === 13) {
           mediaPlayer.requestFullscreen();
         }
       }
