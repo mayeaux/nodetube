@@ -1728,64 +1728,69 @@ block extra_footer_js
 
   script.
     $(document).keyup(function (e) {
-      var mediaPlayer = document.getElementById("media_player");
 
-      var activeElement = document.activeElement;
-      var inputs = ['input', 'textarea'];
+      var oneOfTheUsedKeys = e.keyCode === 37 || e.keyCode === 39 || e.keyCode === 32 || e.keyCode === 13;
 
-      var plyrElementNotFocused = !document.activeElement.classList.contains('plyr')
+      if(oneOfTheUsedKeys){
+        var mediaPlayer = document.getElementById("media_player");
 
-      var inputElementNotFocused = inputs.indexOf(activeElement.tagName.toLowerCase()) === -1;
+        var activeElement = document.activeElement;
+        var inputs = ['input', 'textarea'];
 
-      if (activeElement && plyrElementNotFocused && inputElementNotFocused) {
+        var plyrElementNotFocused = !document.activeElement.classList.contains('plyr')
 
-        // left keypad
-        if (e.keyCode === 37) {
+        var inputElementNotFocused = inputs.indexOf(activeElement.tagName.toLowerCase()) === -1;
 
-          mediaPlayer.currentTime = mediaPlayer.currentTime - 5;
+        if (activeElement && plyrElementNotFocused && inputElementNotFocused) {
 
-          return false;
+          // left keypad
+          if (e.keyCode === 37) {
 
-        // right keypad
-        } else if (e.keyCode === 39) {
+            mediaPlayer.currentTime = mediaPlayer.currentTime - 5;
 
-          mediaPlayer.currentTime = mediaPlayer.currentTime + 5;
+            return false;
 
-          return false;
+            // right keypad
+          } else if (e.keyCode === 39) {
 
-          // space button
-        } else if (e.keyCode === 32) {
-          // dont scroll down
-          e.preventDefault()
+            mediaPlayer.currentTime = mediaPlayer.currentTime + 5;
 
-          // toggle play/pause button
-          if (mediaPlayer.paused) {
-            mediaPlayer.play();
-          } else {
-            mediaPlayer.pause();
+            return false;
+
+            // space button
+          } else if (e.keyCode === 32) {
+            // dont scroll down
+            e.preventDefault()
+
+            // toggle play/pause button
+            if (mediaPlayer.paused) {
+              mediaPlayer.play();
+            } else {
+              mediaPlayer.pause();
+            }
+
+            return false
+
           }
-
-          return false
-
+        } else if (inputElementNotFocused && e.keyCode === 13) {
+          mediaPlayer.requestFullscreen();
         }
-      } else if (inputElementNotFocused && e.keyCode === 13){
-        mediaPlayer.requestFullscreen();
       }
     });
 
   script.
     $(document).keypress(function (e) {
 
-      var activeElement = document.activeElement;
-      var inputs = ['input', 'textarea'];
+      if(e.keyCode === 32){
+        var activeElement = document.activeElement;
+        var inputs = ['input', 'textarea'];
 
-      var plyrElementNotFocused = !document.activeElement.classList.contains('plyr')
+        var plyrElementNotFocused = !document.activeElement.classList.contains('plyr')
 
-      var inputElementNotFocused = inputs.indexOf(activeElement.tagName.toLowerCase()) === -1;
+        var inputElementNotFocused = inputs.indexOf(activeElement.tagName.toLowerCase()) === -1;
 
-      if (activeElement && plyrElementNotFocused && inputElementNotFocused) {
+        if (activeElement && plyrElementNotFocused && inputElementNotFocused) {
 
-        if (e.keyCode === 32) {
           // dont scroll down
           e.preventDefault()
 
@@ -1793,6 +1798,7 @@ block extra_footer_js
 
         }
       }
+
     });
 
 
