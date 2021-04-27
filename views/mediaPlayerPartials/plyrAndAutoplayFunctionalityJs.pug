@@ -97,13 +97,20 @@ script.
 
   console.log('should autoplay ' + autoplay)
 
+  // make seek time five seconds if on wider displays
+  var seekTime = 10;
+  if ($(window).width() >= 668) {
+    seekTime = 5
+  }
+
   var plyr_options = {
     autoplay,
     clickToPlay: true,
     speed: {selected: 1, options: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]},
     controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'rewind', 'fast-forward', 'mute', 'volume', 'settings', 'pip', 'fullscreen', 'captions'],
     settings: ['speed', 'captions', 'quality', 'loop'],
-    fullscreen: {iosNative: true}
+    fullscreen: {iosNative: true},
+    seekTime
   };
 
   // Create the plyr instances - this defines players[0] as our primary player.
