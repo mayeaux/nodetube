@@ -26,6 +26,7 @@ script.
         $('#processing').text(`${data.uploadProgress !== undefined ? data.uploadProgress : 'Completed'}`);
 
         if(parseInt(data) == 100){
+          // TODO: this should be a u=t link
           location.reload();
         }
 

@@ -227,6 +227,7 @@ if(cluster.isMaster){
         requestPath === '/upload' ||
         requestPath === '/account/profile' ||
         requestPath === '/api/channel/thumbnail/delete' ||
+        requestPath === '/api/uploadFileThumbnail' ||
         requestPath.match(editUploadRegexp) ||
         requestPath.match(deleteUploadThumbnailRegexp) ||
         requestPath === '/livestream/on-live-auth' ||

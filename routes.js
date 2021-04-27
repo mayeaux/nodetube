@@ -259,6 +259,7 @@ function frontendRoutes(app){
   app.post('/api/upload/:uniqueTag/edit', passportConfig.isAuthenticated, internalApiController.editUpload);
   app.post('/api/upload/:uniqueTag/thumbnail/delete', passportConfig.isAuthenticated, internalApiController.deleteUploadThumbnail);
   app.post('/api/upload/:uniqueTag/captions/delete', passportConfig.isAuthenticated, internalApiController.deleteUploadCaption);
+  app.post('/api/uploadFileThumbnail', passportConfig.isAuthenticated, uploadingController.postThumbnailUpload);
 
   /** API ENDPOINTS **/
   app.post('/api/react/:upload/:user', passportConfig.isAuthenticated, internalApiController.react);

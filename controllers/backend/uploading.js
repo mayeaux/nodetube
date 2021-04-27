@@ -10,6 +10,8 @@ const path = require('path');
 const mkdirp = Promise.promisifyAll(require('mkdirp'));
 var randomstring = require('randomstring');
 var CombinedStream = require('combined-stream');
+const FileType = require('file-type');
+const readChunk = require('read-chunk');
 
 const redisClient = require('../../config/redis');
 
@@ -165,7 +167,8 @@ function testIfUserRestricted(user, logObject, res){
 function aboutToProcess(res, channelUrl, uniqueTag){
   res.send({
     message: 'ABOUT TO PROCESS',
-    url: `/user/${channelUrl}/${uniqueTag}?u=t`
+    url: `/user/${channelUrl}/${uniqueTag}?u=t`,
+    uniqueTag
   });
 }
 
@@ -417,6 +420,8 @@ exports.postFileUpload = async(req, res) => {
 
           uploadLogger.info('Concat done', logObject);
 
+          // TODO: pull this out into its own function
+
           let bitrate, codecName, codecProfile;
 
           if(upload.fileType !== 'image'){
@@ -587,25 +592,32 @@ exports.postFileUpload = async(req, res) => {
 
           uploadLogger.info('Upload marked as complete', logObject);
 
-          updateUsersUnreadSubscriptions(user);
-
-          uploadLogger.info('Updated subscribed users subscriptions', logObject);
-
           // this is admin upload for all
           alertAdminOfNewUpload(user, upload);
 
           uploadLogger.info('Alert admins of a new upload', logObject);
 
-          if(upload.visibility == 'public'){
-            // update user push notifications
-            updateUsersPushNotifications(user, upload);
+          // if visibility is public, send push and email notifications
+          if(upload.visibility === 'public'){
 
-            uploadLogger.info('Update users push notifications', logObject);
+            // update the subscription amount of subscribing users
+            updateUsersUnreadSubscriptions(user);
 
-            // update user email notifications
-            updateUsersEmailNotifications(user, upload, req.host);
+            uploadLogger.info('Updated subscribed users subscriptions', logObject);
 
-            uploadLogger.info('Update users email notifications', logObject);
+            // send push and email notifs if production
+            if(process.env.NODE_ENV === 'production'){
+              // update user push notifications
+              updateUsersPushNotifications(user, upload);
+
+              uploadLogger.info('Update users push notifications', logObject);
+
+              // update user email notifications
+              updateUsersEmailNotifications(user, upload, req.host);
+
+              uploadLogger.info('Update users email notifications', logObject);
+            }
+
           }
 
           // upload is complete, send it off to user (aboutToProcess is a misnomer here)
@@ -730,5 +742,94 @@ exports.adminUpload = async(req, res) => {
   //     uploadToB2(upload, realFileInDirectory, hostFilePath);
   //   }
   // });
+
+};
+
+/**
+ * POST /api/uploadFileThumbnail
+ * Upload file thumbnail
+ */
+exports.postThumbnailUpload = async(req, res) => {
+  console.log('files');
+  console.log(req.files);
+
+  console.log('body');
+  console.log(req.body);
+
+  const uniqueTag = req.body.uploadUniqueTag;
+
+  // check if there's a thumbnail
+  let thumbnailFile;
+
+  // if req there are files and
+  if(req.files && req.files.thumbnailFile){
+    thumbnailFile = req.files.thumbnailFile;
+  } else {
+    res.status(500);
+    return res.send('no thumbnail file');
+  }
+
+  const filename = thumbnailFile.originalFilename;
+  // size in bytes
+  const fileSize = thumbnailFile.size;
+
+  // 5 MB
+  if(fileSize > 5242880){
+    res.status(500);
+    return res.send('file too large');
+  }
+
+  const filePath = thumbnailFile.path;
+
+  const buffer = readChunk.sync(filePath, 0, 4100);
+
+  const bufferFileType = await FileType.fromBuffer(buffer);
+
+  console.log('Buffer file type ' + bufferFileType);
+
+  // comes back at 'mp4' to prepend . to make .mp4
+  const extension = '.' + String(bufferFileType.ext);
+
+  console.log('extension');
+  console.log(extension);
+
+  const fileType = getMediaType('hackforsetup' + extension);
+
+  if(fileType !== 'image'){
+    res.status(500);
+    return res.send('not an image');
+  }
+
+  console.log('File type');
+  console.log(fileType);
+
+  console.log(bufferFileType);
+
+  const channelUrl = req.user.channelUrl;
+
+  const saveFileDirectory = `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-custom${extension}`;
+
+  await fs.move(filePath, saveFileDirectory);
+
+  const upload = await Upload.findOne({ uniqueTag });
+
+  if(!upload.thumbnails){
+    upload.thumbnails = {};
+  }
+
+  upload.thumbnails.custom = `${uniqueTag}-custom${extension}`;
+
+  if(process.env.UPLOAD_TO_B2 === 'true'){
+    // TODO: check this
+    // await backblaze.editploadThumbnailToB2(req.user.channelUrl, upload.uniqueTag, extension, saveFileDirectory);
+  }
+
+  // sendUploadThumbnailToB2(args)
+
+  await upload.save();
+
+  res.status(200);
+
+  return res.send('success');
 
 };

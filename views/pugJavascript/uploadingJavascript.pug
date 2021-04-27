@@ -1,0 +1,440 @@
+script(src='/js/lib/jquery-3.1.1.min.js')
+script(src='/js/lib/resumable.js')
+script.
+
+  function checkIfFileSizeAcceptable() {
+    var fileInput = $('.upload-thumbnail-input');
+
+    var maxSize = fileInput.data('max-size');
+
+    console.log('max size');
+
+    console.log(maxSize);
+
+
+    if (fileInput.get(0).files.length) {
+      var fileSize = fileInput.get(0).files[0].size; // in bytes
+
+      console.log('file size');
+
+      console.log(fileSize)
+
+      if (fileSize > maxSize) {
+        return false;
+      } else {
+        return true
+      }
+    } else {
+      return true
+    }
+  }
+
+  $(document).ready(function () {
+
+    $('.upload-thumbnail-input').on('change', function () {
+      const fileSizeAcceptable = checkIfFileSizeAcceptable()
+
+      if (!fileSizeAcceptable) {
+        $(this).val(null);
+
+        return swal('Please select a thumbnail under 5MB');
+      }
+
+      document.getElementById('scrollToThumbnail').scrollIntoView({behavior: 'smooth'});
+
+    });
+
+    // focus the button so you can just click enter to start uploading
+    $('.resumable-browser').focus();
+
+    // scroll down and focus description when category is changed
+    $('.categoryValue').on('click', function(){
+      $('#description').focus()
+      // have to do a setTimeout for event loop
+      setTimeout(function(){
+        document.getElementById('categoryName').scrollIntoView({ behavior: 'smooth' });
+      }, 1)
+    })
+
+    // scroll down and focus description when category is changed
+    $('.subcategoryOption').on('click', function () {
+      $('#description').focus()
+      // TODO: would be better if it scrolled down just a smidge to visually bring attention back to description
+      setTimeout(function () {
+        document.getElementById('description').scrollIntoView({behavior: 'smooth'});
+      }, 1)
+    })
+
+    // progress bar stuff
+    var bar1 = new ldBar("#myItem1");
+
+    var selectedCategory;
+    var selectedSubcategory;
+
+    // hide uploading gif
+    $(".upload-gif").hide();
+
+    // when a new category is selected
+    $('.categoryValue').click(function(){
+      var value = $(this).data("value");
+
+      var displayName = $(this).data("displayname");
+
+      // hide all subcategories
+      $('.subcategories').hide();
+
+      selectedCategory = value;
+
+      // display selected category
+      $('.categoryDisplayName').text('Category: ' + displayName)
+
+      // show subcategories if they exist
+      $('.categoryName').show();
+      $('.' + value).show();
+
+
+
+
+      console.log(value, displayName);
+    })
+
+    var privs = #{user.privs}
+
+    var maxSize;
+
+    if(privs){
+      maxSize = '#{user.privs.uploadSize}' || 500;
+    } else {
+      maxSize = 500;
+    }
+
+    var maxSizeInBytes = maxSize * 1000000
+
+    console.log(maxSizeInBytes)
+
+    // set chunk size to 25MB
+    var chunkSize = 1000 * 1000 * 25;
+
+    // on submit, build a resumable, and then fire it off
+
+    var r = new Resumable({
+      target: '#{uploadUrl}',
+      chunkSize: chunkSize,
+      simultaneousUploads: 1,
+      testChunks: false,
+      throttleProgressCallbacks: 1,
+      maxFiles: 1,
+      maxFileSize: maxSizeInBytes,
+      maxFileSizeErrorCallback: function (file, errorCount) {
+        swal(`Please upload a file smaller than ${maxSize} MB`);
+        // console.log(file);
+      }
+
+    });
+
+    // Resumable.js isn't supported, fall back on a different method
+    if (!r.support) {
+      swal('Sorry, your browser isn\'t supported currently, please update your browser');
+    } else {
+      var setProgressAndTimeRemaining = null;
+      var barProgress = null;
+      var estimatedUploadTimeLeft = null;
+      var secondsElapsed = null;
+
+      r.assignBrowse($('.resumable-browse')[0]);
+
+      r.assignDrop(document.getElementById('dropTarget'));
+
+      // Handle file add event
+
+      r.on('fileAdded', function (file) {
+
+        var fileType = file.file.type.split('/')[0];
+
+        if(fileType === 'video' || fileType === 'audio'){
+          $('#customThumbnailDiv').show();
+        } else if (fileType === 'image') {
+          $('#customThumbnailDiv').hide();
+        }
+
+        console.log('filetype');
+        console.log(fileType);
+
+        console.log(file);
+
+        // replace underlines with spaces just to be nice
+        var fileName = file.fileName.replace(/_/g, " ");
+
+        fileName = fileName.substring(0, fileName.lastIndexOf('.'));
+
+        var title = $('#title').val();
+
+        console.log(title);
+
+        if(!title || title == ""){
+          $('#title').val(fileName);
+        }
+
+        // scroll to the div when file selected
+        document.getElementById('scrollTo').scrollIntoView({behavior: 'smooth'});
+
+
+        // have to use setTimeout for event loop
+        setTimeout(function(){
+
+          // focus and scroll down the div
+          $('#title').focus();
+        }, 750)
+
+        // auto fill in title
+
+        // console.log(file);
+
+      });
+
+      $('.submit-button').on('click', function (e) {
+
+        var title = $('#title').val();
+        var description = $('#description').val();
+
+        var visibility = $('input[name=visibility]:checked').val();
+        var rating = $(".rating label input[type='radio']:checked").val();
+
+        var subcategory = $(".subcategory label input[type='radio']:checked").val();
+
+        if(!rating){
+          return swal('Please select a rating')
+        }
+
+        if(!visibility){
+          visibility = 'public'
+        }
+
+        $('.upload-title-name').text('File: ' + title);
+
+        if (r.files.length == 0) {
+          swal('Please select a file')
+          return
+        }
+
+        if (title == '') {
+          swal('Please enter a title')
+          return
+        }
+
+        //  HIDE FORM SHOW GIF
+        $(".upload-form").hide();
+
+        $('.upload-information').hide();
+
+        $(".upload-gif").show();
+
+
+
+        var uploadToken = '#{user.uploadToken}'
+
+        r.opts.query = {
+          title,
+          description,
+          uploadToken,
+          visibility,
+          rating,
+          category: selectedCategory,
+          subcategory
+        };
+
+        r.upload();
+
+        $('.file-progress').html('BEGINNING UPLOAD...');
+      });
+
+
+      // when receiving a success response from the backend
+      r.on('fileSuccess', function (file, response) {
+
+        console.log('message:')
+        console.log(response);
+
+        response = JSON.parse(response);
+
+        var redirectUrl = response.url
+
+        if(response.message == 'ALREADY-UPLOADED'){
+          //  HIDE FORM SHOW GIF
+          $(".upload-form").show();
+          $(".upload-gif").hide();
+
+
+          $('.upload-information').show();
+
+
+          // auto fill in title
+          $('#title').val('');
+          return swal({ title: 'File Already Uploaded', text: 'Sorry, this file has already been uploaded, please try another'}, function(){
+            window.location.href = '/upload'
+          })
+        }
+
+        // get the thumbnail file
+        var thumbnailFile = $('#filetoupload')[0].files[0]
+
+        // if there's thumbnail file, just redirect
+        if(!thumbnailFile){
+
+          // alert('Redirecting to ' + redirectUrl);
+
+          // alert('no thumbnail url');
+          return window.location.href = redirectUrl;
+
+        } else {
+
+          // initiate a form to send for thumbnail upload
+          let files = new FormData();
+
+          files.append('thumbnailFile', thumbnailFile)
+
+          files.append('uploadUniqueTag', response.uniqueTag)
+
+          var addThumbnailUrl = '/api/uploadFileThumbnail';
+
+          // alert('thumbnail url');
+
+          $.ajax({
+            type: 'POST',
+            url: addThumbnailUrl,
+            processData: false,
+            contentType: false,
+            data: files,
+            success: function (response) {
+              console.log(response);
+
+              if (response === 'success') {
+                window.location.href = redirectUrl
+              }
+
+            },
+            error: function (err) {
+              // hopefully this never happens?
+              console.log(err);
+
+              // alert('there was an error');
+
+              // no thumbnail added, just redirect to the url
+              window.location.href = redirectUrl
+            }
+          });
+
+
+        }
+
+
+        // Reflect that the file upload has completed
+        $('.file-progress').html('UPLOAD COMPLETED');
+      });
+
+
+      // if receiving an error from the backend
+      r.on('fileError', function (file, response) {
+
+        response = JSON.parse(response);
+
+        console.log(response.message);
+
+        console.log('file error');
+
+        if (response.message == 'UNKNOWN-FILETYPE') {
+          //  HIDE FORM SHOW GIF
+          $(".upload-form").show();
+          $(".upload-gif").hide();
+          $('.upload-information').show();
+
+
+          // auto fill in title
+          $('#title').val('');
+          return swal({
+            title: 'File Type Not Supported',
+            text: 'Sorry, this file type is not supported, please try another file'
+          }, function () {
+            window.location.href = '/upload'
+          })
+        }
+
+        if (response.message == 'ALREADY-UPLOADED') {
+          //  HIDE FORM SHOW GIF
+          $(".upload-form").show();
+          $(".upload-gif").hide();
+          $('.upload-information').show();
+
+
+          // auto fill in title
+          $('#title').val('');
+          return swal({
+            title: 'File Already Uploaded',
+            text: 'Sorry, this file has already been uploaded, please try another'
+          }, function () {
+            window.location.href = '/upload'
+          })
+        }
+
+        if (response.message == 'UPLOADS_OFF') {
+          //  HIDE FORM SHOW GIF
+          $(".upload-form").show();
+          $(".upload-gif").hide();
+
+          // auto fill in title
+          $('#title').val('');
+          return swal({
+            title: 'Uploads Temporarily Off',
+            text: 'Sorry uploads are temporarily turned off (only app moderator is offline)'
+          }, function () {
+            window.location.href = '/upload'
+          })
+        }
+
+        // Reflect that the file upload has resulted in error
+        $('.file-progress').html('File could not be uploaded: (' + response.message + ')');
+      });
+
+
+      r.on('fileProgress', function (file, response) {
+
+        const progress = Math.floor(file.progress() * 100);
+
+        if (progress === 0 || progress === '0') {
+          uploadStartTime = new Date()
+          $('.file-progress').html('BEGINNING UPLOAD...');
+        } else {
+          secondsElapsed = Math.round((new Date() - uploadStartTime) / 1000)
+          const progressSpeed = (file.progress() * 100) / secondsElapsed
+
+          estimatedUploadSecondsLeft = Math.ceil((100 - (file.progress() * 100)) / progressSpeed)
+
+          barProgress = progress
+        }
+      });
+
+      setInterval(function() {
+        if (barProgress) {
+          $('.file-progress').html('PROGRESS: ' + barProgress + '%');
+
+          bar1.set(barProgress);
+
+          var secondsToFormattedTime = #{secondsToFormattedTime}
+          estimatedUploadSecondsLeft = estimatedUploadSecondsLeft > 0 ? estimatedUploadSecondsLeft - 1 : 0
+          secondsElapsed += 1
+
+          var formattedElapsedTime = secondsElapsed && secondsToFormattedTime(secondsElapsed)
+          var formattedTimeLeft = estimatedUploadSecondsLeft !== null && secondsToFormattedTime(estimatedUploadSecondsLeft)
+          var formattedTotalEstimatedProcessingTime = estimatedUploadSecondsLeft !== null && secondsToFormattedTime(estimatedUploadSecondsLeft + secondsElapsed)
+
+          $('#uploadTimeElapsed').text(`Time elapsed: ${formattedElapsedTime ? formattedElapsedTime : "calculating ..."}`)
+
+          $('#estimatedUploadTimeLeft').text(`Estimated time to completion: ${formattedTimeLeft ? formattedTimeLeft : "calculating ..." }`);
+        }
+
+        $('#estimatedTotalUploadTime').text(`Total estimated upload time: ${formattedTotalEstimatedProcessingTime ? formattedTotalEstimatedProcessingTime : "calculating ..."}`)
+
+      }, 1000 * 1)
+    }
+  });
+

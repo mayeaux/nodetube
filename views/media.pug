@@ -307,7 +307,7 @@ block content
 
 
         .secondLine {
-            border-bottom: 1px solid #3f3f3f  !important;
+            border-bottom: 0px solid #3f3f3f  !important;
         }
 
         .lampIcon {
@@ -1728,29 +1728,105 @@ block extra_footer_js
 
   script.
     $(document).keyup(function (e) {
-      var mediaPlayer = document.getElementById("media_player");
 
-      var activeElement = document.activeElement;
-      var inputs = ['input', 'textarea'];
+      var oneOfTheUsedKeys = e.keyCode === 37 || e.keyCode === 39 || e.keyCode === 32 || e.keyCode === 13 || e.keyCode === 70;
 
-      var plyrElementNotFocused = !document.activeElement.classList.contains('plyr')
+      if(oneOfTheUsedKeys){
+        var mediaPlayer = document.getElementById("media_player");
 
-      var inputElementNotFocused = inputs.indexOf(activeElement.tagName.toLowerCase()) === -1;
+        var activeElement = document.activeElement;
+        var inputs = ['input', 'textarea'];
 
-      if (activeElement && plyrElementNotFocused && inputElementNotFocused) {
+        // match against an input or text area input
+        var inputElementNotFocused = inputs.indexOf(activeElement.tagName.toLowerCase()) === -1;
 
-        if (e.keyCode === 37) {
+        var plyrElementNotFocused = !document.activeElement.classList.contains('plyr')
 
-          mediaPlayer.currentTime = mediaPlayer.currentTime - 5;
+        if (activeElement && plyrElementNotFocused && inputElementNotFocused) {
 
-          return false;
+          // left keypad
+          if (e.keyCode === 37) {
 
-        } else if (e.keyCode === 39) {
+            e.preventDefault()
 
-          mediaPlayer.currentTime = mediaPlayer.currentTime + 5;
+            $('button[data-plyr="rewind"]').click()
 
-          return false;
+            player.toggleControls(true);
+            setTimeout(function () {
+              player.toggleControls(true);
+            }, 150)
+
+            // mediaPlayer.currentTime = mediaPlayer.currentTime - 5;
+
+            return false;
+
+            // right keypad
+          } else if (e.keyCode === 39) {
+
+            e.preventDefault()
+
+            $('button[data-plyr="fast-forward"]').click()
+
+            player.toggleControls(true);
+            setTimeout(function () {
+              player.toggleControls(true);
+            }, 150)
+
+            // mediaPlayer.currentTime = mediaPlayer.currentTime + 5;
+
+            return false;
+
+            // space button
+          } else if (e.keyCode === 32) {
+            // dont scroll down
+            e.preventDefault()
+
+            // toggle play/pause button
+            if (mediaPlayer.paused) {
+              mediaPlayer.play();
+            } else {
+              mediaPlayer.pause();
+            }
+
+            return false
+
+          }
+        }
+
+        if (inputElementNotFocused && ( e.keyCode === 13 || e.keyCode === 70)) {
+          mediaPlayer.requestFullscreen();
+        }
+
+        var leftOrRightKey = e.keyCode === 37 || e.keyCode === 39;
+
+        if (!plyrElementNotFocused && leftOrRightKey) {
+          player.toggleControls(true);
         }
       }
     });
+
+  script.
+    $(document).keypress(function (e) {
+
+      if(e.keyCode === 32){
+        var activeElement = document.activeElement;
+        var inputs = ['input', 'textarea'];
+
+        var plyrElementNotFocused = !document.activeElement.classList.contains('plyr')
+
+        var inputElementNotFocused = inputs.indexOf(activeElement.tagName.toLowerCase()) === -1;
+
+        if (activeElement && plyrElementNotFocused && inputElementNotFocused) {
+
+          // dont scroll down
+          e.preventDefault()
+
+          return false
+
+        }
+      }
+
+    });
+
+
 
