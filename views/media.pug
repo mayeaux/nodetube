@@ -716,6 +716,12 @@ block content
                                 h2.report-button(style="font-size:19px;")
                                     i.share-icon.fa.fa-exclamation-triangle(aria-hidden="true" style="cursor:pointer;font-size:26px;")
 
+                            if ( upload.durationInSeconds > (15 * 60) ) && user
+                                // save upload time
+                                div(style="cursor:pointer;margin-left:6px;color: rgb(121 119 119) !important;display:inline;")
+                                    h2.save-last-watched-button(style="font-size:19px;display:inline;")
+                                        i.share-icon.fa.fa-floppy-o(aria-hidden="true" style="cursor:pointer;font-size:26px;")
+
 
 
 
@@ -1702,6 +1708,8 @@ block extra_footer_js
   // if the upload is longer than 15 minutes and there's a user
   if ( upload.durationInSeconds > (15 * 60) ) && user
     include ./mediaPlayerPartials/lastWatchedJs
+
+
 
   script.
     $(' button[data-plyr="fast-forward"], button[data-plyr="rewind"]').click(function () {
