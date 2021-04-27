@@ -3,7 +3,7 @@
   "short_name": "NodeTube",
   "theme_color": "#183793",
   "background_color": "#FAFAFA",
-  "display": "standalone",
+  "display": "minimal-ui",
   "scope": "/",
   "start_url": "/media/popular/1?within=24hour&category=all",
   "icons": [{
