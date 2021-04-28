@@ -29,7 +29,7 @@ async function addLastTimeWatched(upload, user){
   }
   // Check if user watched the video
   if(lastWatchedTime !== undefined && lastWatchedTime !== null){
-    return lastWatchedTime.secondsWatched
+    return lastWatchedTime.secondsWatched;
   }
 }
 
@@ -615,11 +615,10 @@ exports.getChannel = async(req, res) => {
     if(req.user){
       if(uploads && uploads.length){
         for(const upload in uploads){
-          uploads[upload].lastWatchedTime = await addLastTimeWatched(uploads[upload], req.user)
+          uploads[upload].lastWatchedTime = await addLastTimeWatched(uploads[upload], req.user);
         }
       }
     }
-
 
     const userHasPlus = user.plan === 'plus';
 

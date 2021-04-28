@@ -96,7 +96,7 @@ async function addLastTimeWatched(upload, user){
   }
   // Check if user watched the video
   if(lastWatchedTime !== undefined && lastWatchedTime !== null){
-    return lastWatchedTime.secondsWatched
+    return lastWatchedTime.secondsWatched;
   }
 }
 
@@ -174,7 +174,7 @@ exports.recentUploads = async(req, res) => {
     if(req.user){
       if(uploads && uploads.length){
         for(const upload in uploads){
-          uploads[upload].lastWatchedTime = await addLastTimeWatched(uploads[upload], req.user)
+          uploads[upload].lastWatchedTime = await addLastTimeWatched(uploads[upload], req.user);
         }
       }
     }
@@ -380,7 +380,7 @@ exports.popularUploads = async(req, res) => {
     if(req.user){
       if(uploads && uploads.length){
         for(const upload in uploads){
-          uploads[upload].lastWatchedTime = await addLastTimeWatched(uploads[upload], req.user)
+          uploads[upload].lastWatchedTime = await addLastTimeWatched(uploads[upload], req.user);
         }
       }
     }
@@ -602,7 +602,7 @@ exports.search = async(req, res) => {
   if(req.user){
     if(uploads && uploads.length){
       for(const upload in uploads){
-        uploads[upload].lastWatchedTime = await addLastTimeWatched(uploads[upload], req.user)
+        uploads[upload].lastWatchedTime = await addLastTimeWatched(uploads[upload], req.user);
       }
     }
   }
