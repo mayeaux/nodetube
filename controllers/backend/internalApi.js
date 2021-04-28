@@ -743,7 +743,7 @@ exports.editUpload = async(req, res, next) => {
       // gotta save and upload image
     } else if(fileIsImage){
 
-      await fs.move(req.files.filetoupload.path, `${saveAndServeFilesDirectory}/${req.user.channelUrl}/${upload.uniqueTag}-custom${fileExtension}`, {overwrite: true});
+      await fs.move(req.files.filetoupload.path, `${saveAndServeFilesDirectory}/${upload.uploader.channelUrl}/${upload.uniqueTag}-custom${fileExtension}`, {overwrite: true});
 
       upload.thumbnails.custom = `${upload.uniqueTag}-custom${fileExtension}`;
 

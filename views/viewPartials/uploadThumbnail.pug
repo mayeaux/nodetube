@@ -1,18 +1,38 @@
+style.
+
+    progress {
+        width: 100%;
+        border: 0px solid red;
+        background: LightGray;
+        height: 10px;
+        margin-bottom:-5px;
+    }
+    progress::-moz-progress-bar { background: red; }
+    progress::-webkit-progress-value { background: red; }
+
 div.holder(style="border:")
     // if there is no requestPath, it means it is the popular/recent pages
     a.title-anchor(href=`${upload.pathToUploader}/${upload.uniqueTag}` style="color:#7d7373;" )
         div.image-container(style="")
             if upload.thumbnails && upload.thumbnails.custom
                 img.upload-thumbnail.preview-image(src=`${uploadServer}/${channelUrl || upload.uploader.channelUrl}/${upload.thumbnails.custom}` style="")
+                if upload.lastWatchedTime
+                    progress(value=upload.lastWatchedTime max=upload.durationInSeconds)
 
             else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.generated
                 img.upload-thumbnail.preview-image(src=`${uploadServer}/${channelUrl || upload.uploader.channelUrl}/${upload.thumbnails.generated}` style="")
+                if upload.lastWatchedTime
+                    progress(value=upload.lastWatchedTime max=upload.durationInSeconds)
 
             else if upload.fileType == 'video' && upload.thumbnails && upload.thumbnails.medium
                 img.upload-thumbnail.preview-image(src=`${uploadServer}/${channelUrl || upload.uploader.channelUrl}/${upload.thumbnails.medium}` style="")
+                if upload.lastWatchedTime
+                    progress(value=upload.lastWatchedTime max=upload.durationInSeconds)
 
             else if upload.fileType == 'video' && !upload.thumbnailUrl
                 img.upload-thumbnail.preview-image(src="/images/no_img.png")
+                if upload.lastWatchedTime
+                    progress(value=upload.lastWatchedTime max=upload.durationInSeconds)
 
             else if upload.fileType == 'image'
                 // TODO: have to fix this

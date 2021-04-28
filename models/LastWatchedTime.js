@@ -31,6 +31,8 @@ const lastWatchedTimeSchema = new mongoose.Schema({
   }
 });
 
+lastWatchedTimeSchema.index({upload: 1, user: 1}, {name: 'Last Watched Per User And Upload'});
+
 lastWatchedTimeSchema.virtual('timeAgo').get(function(){
   return timeAgoEnglish.format( new Date(this.createdAt) );
 });

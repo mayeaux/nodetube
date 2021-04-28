@@ -1801,10 +1801,6 @@ block extra_footer_js
           }
         }
 
-        if (inputElementNotFocused && ( e.keyCode === 13 || e.keyCode === 70)) {
-          mediaPlayer.requestFullscreen();
-        }
-
         var leftOrRightKey = e.keyCode === 37 || e.keyCode === 39;
 
         if (!plyrElementNotFocused && leftOrRightKey) {
@@ -1815,6 +1811,25 @@ block extra_footer_js
 
   script.
     $(document).keypress(function (e) {
+
+      if (e.keyCode === 13 || e.keyCode === 70) {
+        var activeElement = document.activeElement;
+        var inputs = ['input', 'textarea'];
+
+        var inputElementNotFocused = inputs.indexOf(activeElement.tagName.toLowerCase()) === -1;
+
+        if (inputElementNotFocused) {
+
+          var mediaPlayer = document.getElementById("media_player");
+          
+          // dont scroll down
+          mediaPlayer.requestFullscreen();
+
+          return false
+
+        }
+      }
+
 
       if(e.keyCode === 32){
         var activeElement = document.activeElement;

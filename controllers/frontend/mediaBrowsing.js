@@ -7,6 +7,7 @@ const User = require('../../models/index').User;
 const Upload = require('../../models/index').Upload;
 const SearchQuery = require('../../models/index').SearchQuery;
 const View = require('../../models/index').View;
+const LastWatchedTime = require('../../models/index').LastWatchedTime;
 
 const uploadHelpers = require('../../lib/helpers/settings');
 const uploadServer = uploadHelpers.uploadServer;
@@ -84,6 +85,21 @@ async function addValuesIfNecessary(upload, channelUrl){
   }
 }
 
+// Searching for last time watched value, for videos longer then 15 minutes
+async function addLastTimeWatched(upload, user){
+  let lastWatchedTime;
+  if(upload.durationInSeconds >= 900){
+    lastWatchedTime = await LastWatchedTime.findOne({
+      user : user._id,
+      upload: upload._id
+    });
+  }
+  // Check if user watched the video
+  if(lastWatchedTime !== undefined && lastWatchedTime !== null){
+    return lastWatchedTime.secondsWatched;
+  }
+}
+
 /**
  * GET /media/recent
  * Page displaying most recently uploaded content
@@ -154,6 +170,14 @@ exports.recentUploads = async(req, res) => {
     // }
 
     // console.log('rendering');
+
+    if(req.user){
+      if(uploads && uploads.length){
+        for(const upload in uploads){
+          uploads[upload].lastWatchedTime = await addLastTimeWatched(uploads[upload], req.user);
+        }
+      }
+    }
 
     res.render('mediaBrowsing/recentUploads', {
       title: 'Recent Uploads',
@@ -351,6 +375,14 @@ exports.popularUploads = async(req, res) => {
     } else {
       // if it's just a bunch of uploads, aka not the ugly categories thing
       uploads = attachDataToUploadsAsUploads(uploads);
+    }
+
+    if(req.user){
+      if(uploads && uploads.length){
+        for(const upload in uploads){
+          uploads[upload].lastWatchedTime = await addLastTimeWatched(uploads[upload], req.user);
+        }
+      }
     }
 
     // console.log(uploads);
@@ -566,6 +598,14 @@ exports.search = async(req, res) => {
   const media = mediaType || 'all';
 
   const orderByEnglishString = getOrderByEnglishString(orderBy);
+
+  if(req.user){
+    if(uploads && uploads.length){
+      for(const upload in uploads){
+        uploads[upload].lastWatchedTime = await addLastTimeWatched(uploads[upload], req.user);
+      }
+    }
+  }
 
   return res.render('public/search', {
     title: 'Search',
