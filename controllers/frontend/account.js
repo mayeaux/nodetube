@@ -31,7 +31,6 @@ async function addLastTimeWatched(upload, user){
   if(lastWatchedTime !== undefined && lastWatchedTime !== null){
     return lastWatchedTime.secondsWatched
   }
-
 }
 
 const PushEndpoint = require('../../models/index').PushEndpoint;
@@ -615,13 +614,10 @@ exports.getChannel = async(req, res) => {
 
     if(req.user){
       if(uploads && uploads.length){
-      for(const upload in uploads){
-        uploads[upload].lastWatchedTime = await addLastTimeWatched(uploads[upload], req.user)
-
-        if(uploads[upload].lastWatchedTime)
-          uploads[upload].formattedLastWatchedTime = timeHelper.secondsToFormattedTime(uploads[upload].lastWatchedTime)
+        for(const upload in uploads){
+          uploads[upload].lastWatchedTime = await addLastTimeWatched(uploads[upload], req.user)
+        }
       }
-    }
     }
 
 
