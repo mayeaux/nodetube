@@ -16,6 +16,23 @@ const SocialPost = require('../../models/index').SocialPost;
 const Subscription = require('../../models/index').Subscription;
 const PushSubscription = require('../../models/index').PushSubscription;
 const EmailSubscription = require('../../models/index').EmailSubscription;
+const LastWatchedTime = require('../../models/index').LastWatchedTime;
+
+// Searching for last time watched value, for videos longer then 15 minutes
+async function addLastTimeWatched(upload, user){
+  let lastWatchedTime;
+  if(upload.durationInSeconds >= 900){
+    lastWatchedTime = await LastWatchedTime.findOne({
+      user : user._id,
+      upload: upload._id
+    });
+  }
+  // Check if user watched the video
+  if(lastWatchedTime !== undefined && lastWatchedTime !== null){
+    return lastWatchedTime.secondsWatched
+  }
+
+}
 
 const PushEndpoint = require('../../models/index').PushEndpoint;
 
@@ -392,7 +409,7 @@ exports.getChannel = async(req, res) => {
 
     /** DB CALL TO GET UPLOADS **/
 
-    const selectString = 'sensitivity visibility views processingCompletedAt fileExtension formattedDuration rating title uploader fileType thumbnailUrl ' + 'uniqueTag customThumbnailUrl thumbnails';
+    const selectString = 'sensitivity visibility views processingCompletedAt fileExtension formattedDuration rating title uploader fileType thumbnailUrl ' + 'uniqueTag customThumbnailUrl thumbnails durationInSeconds';
 
     // get the uploads for the user, that have status completed, and sort by processingCompletedAt
     let uploads = await Upload.find(searchQuery).select(selectString);
@@ -595,6 +612,18 @@ exports.getChannel = async(req, res) => {
 
     // TODO: you will have to add the trim at the end
     uploads = uploadFilters.trimUploads(uploads, amountToOutput, skipAmount) ;
+
+    if(req.user){
+      if(uploads && uploads.length){
+      for(const upload in uploads){
+        uploads[upload].lastWatchedTime = await addLastTimeWatched(uploads[upload], req.user)
+
+        if(uploads[upload].lastWatchedTime)
+          uploads[upload].formattedLastWatchedTime = timeHelper.secondsToFormattedTime(uploads[upload].lastWatchedTime)
+      }
+    }
+    }
+
 
     const userHasPlus = user.plan === 'plus';
 
