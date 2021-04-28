@@ -26,12 +26,25 @@ div.underThing
             span.durationTime(style="margin-right:7px;font-size:15px;") #{upload.formattedDuration}
 
 
+    // list file type
     if upload.fileType == 'video'
         i.fa.fa-video-camera(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;")
     else if upload.fileType == 'audio'
         i.fa.fa-volume-up(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;")
     else if upload.fileType == 'image'
         i.fa.fa-picture-o(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;")
+
+    // list visibilities
+    if upload.visibility == 'unlisted'
+        i.fas.fa-eye-slash(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;margin-left:8px;")
+    if upload.visibility === 'private'
+        i.fas.fa-lock(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;margin-left:8px;")
+    if upload.visibility === 'pending'
+        i.fas.fa-clock(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;margin-left:8px;")
+
+
+
+    //i.fas.fa-eye(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;margin-left:8px;")
 
 
 // UPLOAD TITLE

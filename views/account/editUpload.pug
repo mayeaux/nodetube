@@ -69,7 +69,7 @@ block content
                                         br
                                         br
 
-            if upload.uploader.plan == "plus"
+            if upload.uploader.plan === "plus" || (user.role === 'admin' || user.role === 'moderator')
                 .form-group
                     label.col-sm-3.control-label(for='visibility') Visibiliy
                     .col-sm-7

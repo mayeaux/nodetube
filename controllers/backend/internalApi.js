@@ -653,8 +653,10 @@ exports.editUpload = async(req, res, next) => {
     // load upload changes
     upload.title = req.body.title;
     upload.description = req.body.description;
-    if(upload.uploader.plan == 'plus')
+    // only allow user to change visibility if they have plus, or if it's an admin or moderator
+    if(upload.uploader.plan === 'plus' || isModeratorOrAdmin){
       upload.visibility = req.body.visibility;
+    }
     upload.rating = req.body.rating;
     upload.category = req.body.category;
     upload.subcategory = req.body.subcategory;

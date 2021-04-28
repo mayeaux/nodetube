@@ -726,8 +726,9 @@ block content
 
 
                 if upload.visibility == 'pending' && upload.status !== 'processing'
-                    h3.pending-string Your video is currently pending moderator approval. If it's still pending after several minutes please contact a mod at
+                    h3.pending-string.fw Your video is currently pending moderator approval. First approval takes the longest, if you've been waiting too long you can ask a mod on
                         a(href="/discord")  Discord
+                    br
 
 
 
@@ -736,7 +737,7 @@ block content
             //if upload.uploader.plan == 'plus'
             //    br
             //    button.donate.btn.btn-success(style="margin-bottom:-10px") Donate
-            // UPLOAD DETAILS SECTION WITH VIEWS, UPLOADED DAYS AGO, DURATION ETC
+            // UPLOAD DETAILS SECTION WITH VIEWS, UPLOADED DAYS AGO, DURATION ETC (RIGHT THIRD OF PAGE)
             div.col-sm-3.uploadDetailsColumn(style="padding:0px;")
 
                 // download and whatever else buttons
@@ -838,11 +839,17 @@ block content
                     // capitalizing the first letter
                     // TODO: also only show if its the video owner or mod/admin
                     if upload.visibility !== 'public'
-                        p.smallerInfo.fw.fileSizeText.
+                        p.smallerInfo.fw.fileSizeText(style="display:inline").
                             Visibility: #{upload.visibility.charAt(0).toUpperCase() + upload.visibility.slice(1)}
+                        if upload.visibility === 'unlisted'
+                            i.fas.fa-eye-slash(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;margin-left:8px;font-size:12px;")
+                        if upload.visibility === 'pending'
+                            i.fas.fa-clock-o(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;margin-left:8px;font-size:12px;")
+                        if upload.visibility === 'private'
+                            i.fas.fa-lock(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;margin-left:8px;font-size:12px;")
 
 
-                    div.editButtonDiv
+                    div.editButtonDiv(style="margin-top:8px")
                         // edit button
                         if ( user && user.channelUrl == upload.uploader.channelUrl ) || ( user && user.role == 'admin' )
                             a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}/edit`)
@@ -1821,7 +1828,7 @@ block extra_footer_js
         if (inputElementNotFocused) {
 
           var mediaPlayer = document.getElementById("media_player");
-          
+
           // dont scroll down
           mediaPlayer.requestFullscreen();
 
