@@ -42,6 +42,12 @@ div.underThing
     if upload.visibility === 'pending'
         i.fas.fa-clock(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;margin-left:8px;")
 
+    // sensitivity (rating)
+    if upload.rating === 'mature'
+        i.fas.fa-exclamation-triangle(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;margin-left:8px;")
+    if upload.rating === 'sensitive'
+        i.fas.fa-radiation-alt(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;margin-left:8px;")
+
 
 
     //i.fas.fa-eye(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;margin-left:8px;")

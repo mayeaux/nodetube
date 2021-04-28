@@ -1,4 +1,5 @@
-if maxRatingAllowed !== 'SFW'
+// show filter is max rating allowed is not SFW (aka NSFW or sensitive is allowed)
+if maxRatingAllowed !== 'SFW' || user.role == 'admin'
     div.search-upload-buttons-container.dropdown(style="display:inline")
         // TODO: this should be updated to be smart enough to support MAX_RATING_ALLOWED env var (aka SFW doesn't even have a filter)
         if !user
