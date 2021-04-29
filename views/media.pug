@@ -856,11 +856,19 @@ block content
                         if upload.visibility === 'private'
                             i.fas.fa-lock(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;margin-left:8px;font-size:12px;")
 
-                    div.editButtonDiv(style="margin-top:9px")
+                    div.editButtonDiv(style="margin-top:14px")
                         // edit button
                         if ( user && user.channelUrl == upload.uploader.channelUrl ) || ( user && user.role == 'admin' )
                             a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}/edit`)
                                 button.fw.btn.btn-success(style="margin-bottom:-10px;border-radius:5px;opacity:0.75;") Edit
+
+
+                        br
+                        br
+                        form.editLink(action="/api/upload/delete" method="POST" style="display:inline-block")
+                            input(type='hidden', name='_csrf', value=_csrf)
+                            input(type='hidden', name='videoId', value=upload.uniqueTag)
+                            button.btn.btn-danger.delete-media(style="border-radius:5px;opacity:0.65;") Delete
 
 
                     br

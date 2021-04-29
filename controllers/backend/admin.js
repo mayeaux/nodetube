@@ -219,9 +219,9 @@ exports.deleteUpload = async(req, res) => {
 
   const upload = await Upload.findOne({ uniqueTag: req.body.videoId }).populate('uploader');
 
-  const userOwnsUploads = req.user._id.toString() == upload.uploader._id.toString();
+  const userOwnsUploads = req.user._id.toString() === upload.uploader._id.toString();
 
-  const userIsAdmin = req.user.role == 'admin';
+  const userIsAdmin = req.user.role === 'admin';
 
   if(userOwnsUploads || userIsAdmin){
     upload.visibility = 'removed';
