@@ -43,11 +43,11 @@ function getParameterByName(name, url){
 
 function convertAllAgesToSfw(value){
   if(value == 'allAges'){
-    return 'SFW';
+    return'SFW';
   } else if(value == 'mature'){
-    return 'NSFW';
+    return'NSFW';
   } else if(value == 'sensitive'){
-    return 'Sensitive';
+    return'Sensitive';
   }
 }
 

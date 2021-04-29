@@ -1091,6 +1091,13 @@ exports.updateLastWatchedTime = async(req, res, next)  => {
   const secondsWatched = req.body.secondsWatched;
   const uploadUniqueTag = req.body.uniqueTag;
 
+  // if seconds greater than 1 week
+  if(secondsWatched > 604800){
+    console.log('fake amount of seconds' + secondsWatched);
+    res.status(500);
+    res.send('error');
+  }
+
   const user = req.user._id;
 
   const upload = await Upload.findOne({
