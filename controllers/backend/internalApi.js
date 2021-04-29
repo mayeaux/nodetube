@@ -1093,7 +1093,7 @@ exports.updateLastWatchedTime = async(req, res, next)  => {
 
   // if seconds greater than 1 week
   if(secondsWatched > 604800){
-    console.log('fake amount of seconds' + secondsWatched);
+    console.log('fake amount of seconds: ' + secondsWatched);
     res.status(500);
     res.send('error');
   }

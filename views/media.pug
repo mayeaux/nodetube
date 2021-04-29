@@ -833,8 +833,16 @@ block content
 
 
                     if convertedRating !== 'SFW'
-                        p.smallerInfo.fw.fileSizeText.
-                            Rating: #{convertedRating}
+                        div.uploadRating(style="margin-bottom:4px")
+                            p.smallerInfo.fw.fileSizeText(style="display:inline").
+                                Rating: #{convertedRating}
+                            if convertedRating === 'NSFW'
+                                i.fas.fa-exclamation-triangle(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;margin-left:8px;font-size:12px;")
+                            if convertedRating === 'Sensitive'
+                                i.fas.fa-radiation-alt(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;margin-left:8px;font-size:12px;")
+                            br
+
+
 
                     // capitalizing the first letter
                     // TODO: also only show if its the video owner or mod/admin
@@ -848,8 +856,7 @@ block content
                         if upload.visibility === 'private'
                             i.fas.fa-lock(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;margin-left:8px;font-size:12px;")
 
-
-                    div.editButtonDiv(style="margin-top:8px")
+                    div.editButtonDiv(style="margin-top:9px")
                         // edit button
                         if ( user && user.channelUrl == upload.uploader.channelUrl ) || ( user && user.role == 'admin' )
                             a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}/edit`)
