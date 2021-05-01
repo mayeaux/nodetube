@@ -1127,6 +1127,13 @@ block extra_js
 
         showMoreButton.show()
         showLessButton.hide()
+
+        showMoreButton.get(0).scrollIntoView();
+
+        var currentPositionOfPage = window.scrollY;
+        window.scrollTo(0, currentPositionOfPage + -150);
+
+
       })
 
 
