@@ -653,8 +653,10 @@ exports.editUpload = async(req, res, next) => {
     // load upload changes
     upload.title = req.body.title;
     upload.description = req.body.description;
+    // had to do this check for if the body has a visibility, if it's pending it will brick
+    // TODO: should be changed such that pending is pendingApproval and not a visibility
     // only allow user to change visibility if they have plus, or if it's an admin or moderator
-    if(upload.uploader.plan === 'plus' || isModeratorOrAdmin){
+    if((upload.uploader.plan === 'plus' || isModeratorOrAdmin) && req.body.visibilty){
       upload.visibility = req.body.visibility;
     }
     upload.rating = req.body.rating;

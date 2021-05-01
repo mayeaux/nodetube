@@ -77,9 +77,9 @@ exports.getAdminAudit = async(req, res) => {
   try {
     let adminActions = await AdminAction.find({})
       .populate({path: 'adminOrModerator uploadsAffected usersAffected', populate: {path: 'uploader'}})
-      .skip(skipAmount).limit(limit).lean();
+      .skip(skipAmount).limit(limit).lean().sort({ createdAt: -1 });
 
-    adminActions = adminActions.reverse();
+    // adminActions = adminActions.reverse();
 
     console.log(adminActions);
 
