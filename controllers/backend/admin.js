@@ -257,34 +257,45 @@ exports.postPending = async(req, res) => {
   const upload = await Upload.findOne({ uniqueTag }).populate('uploader');
   const user = await User.findOne({ _id : upload.uploader });
 
-  if(moderationValue == 'approve'){
+  // approving an upload
+  if(moderationValue === 'approve'){
     upload.visibility = 'public';
     await upload.save();
+    // TODO: refactor with object function
+    await createAdminAction(req.user, 'approveUpload', upload.uploader._id, upload);
   }
 
-  if(moderationValue == 'approveAndTrustUser'){
+  // approving upload and trusting user
+  if(moderationValue === 'approveAndTrustUser'){
     upload.visibility = 'public';
     await upload.save();
 
     user.privs.autoVisibleUpload = true;
     await user.save();
+    await createAdminAction(req.user, 'approveUploadAndTrustUser', upload.uploader._id, upload);
   }
 
-  if(moderationValue == 'banVideo'){
+  // deleting video
+  if(moderationValue === 'banVideo'){
     upload.visibility = 'removed';
     await upload.save();
+    await createAdminAction(req.user, 'deleteUpload', upload.uploader._id, upload);
   }
 
-  if(moderationValue== 'banVideoAndUser'){
+  // deleting video and banning user
+  if(moderationValue === 'banVideoAndUser'){
     upload.visibility = 'removed';
     await upload.save();
 
     user.status = 'restricted';
     await user.save();
+
+    await createAdminAction(req.user, 'deleteUploadAndBanUser', upload.uploader._id, upload);
   }
 
   req.flash('success', {msg: `${upload.title} by ${user.channelUrl} moderated, thank you.`});
 
+  // TODO: refactor here to use ajax
   if(fromMedia){
     res.redirect(req.headers.referer);
   } else if(fromUploads){
