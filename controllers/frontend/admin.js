@@ -247,8 +247,32 @@ exports.getUsers = async(req, res) => {
 
   const { startingNumber, previousNumber, nextNumber, numbersArray } = pagination.buildPaginationObject(page);
 
+  const populateString = 'user sender upload react comment';
+
+  const { email, channelUrl, stripeCustomerId } = req.query;
+
+  let searchQuery = {};
+
+  if(email){
+    searchQuery.email = email
+  }
+
+  if(channelUrl){
+    searchQuery.channelUrl = channelUrl
+  }
+
+  if(stripeCustomerId){
+    searchQuery.stripeCustomerId = stripeCustomerId
+  }
+
+  console.log(email);
+
   try {
-    const users = await User.find({}).populate('user sender upload react comment').skip(skipAmount).limit(limit).sort({ _id : -1  });
+    const users = await User.find(searchQuery)
+      .populate(populateString)
+      .skip(skipAmount)
+      .limit(limit)
+      .sort({ _id : -1  });
 
     // console.log("users: ")
     // console.log(users);
