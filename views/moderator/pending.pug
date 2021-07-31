@@ -22,6 +22,7 @@ block content
                     div.uploaded-by #{upload.fileType.charAt(0).toUpperCase() + upload.fileType.slice(1)} uploaded by
                         a(href=`/user/${upload.uploader.channelUrl}`)
                             p(style="font-size:16px") #{upload.uploader.channelName || upload.uploader.channelUrl }
+                    p(style="font-size:14px") Uploaded #{timeAgoEnglish.format(upload.createdAt) }
 
                     div.moderator-buttons
                         form(action="/pending" method="POST")

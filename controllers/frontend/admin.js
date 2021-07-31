@@ -9,6 +9,12 @@ const Comment = require('../../models/index').Comment;
 const SiteVisit = require('../../models/index').SiteVisit;
 const pagination = require('../../lib/helpers/pagination');
 
+const javascriptTimeAgo = require('javascript-time-ago');
+javascriptTimeAgo.locale(require('javascript-time-ago/locales/en'));
+require('javascript-time-ago/intl-messageformat-global');
+require('intl-messageformat/dist/locale-data/en');
+const timeAgoEnglish = new javascriptTimeAgo('en-US');
+
 const { uploadServer} = require('../../lib/helpers/settings');
 
 const { attachDataToUploadsAsUploads } = require('../../lib/helpers/addFieldsToUploads');
@@ -121,7 +127,8 @@ exports.getPending = async(req, res) => {
   res.render('moderator/pending', {
     title: 'Pending',
     uploads,
-    uploadServer
+    uploadServer,
+    timeAgoEnglish
   });
 
 };
