@@ -58,6 +58,14 @@ block content
             padding-top: 30px;
         }
 
+        /* anything below this width */
+        @media (max-width: 834px) {
+            .uploads {
+                padding: 0px 0px !important;
+            }
+        }
+
+
     if isUser || isAdmin || ( user && user.role == 'moderator' )
         style.
             .uploadCard {
@@ -218,7 +226,7 @@ block content
 
     //UPLOAD DISPLAY SECTION
 
-    div.container
+    div.container.uploads
         each upload in channel.uploads
             div.uploadCard.col-xs-12.col-sm-6.col-md-6.col-lg-4(style="text-align:center;height:330px;margin-bottom:15px;")
                 if isUser || isAdmin || ( user && user.role == 'moderator' )

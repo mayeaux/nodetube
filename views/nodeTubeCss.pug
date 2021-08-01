@@ -385,7 +385,7 @@ style.
         margin-top: 30px;
     }
 
-    /* anything below this width */
+    /* anything above this width */
     @media (min-width: 1250px) {
         body {
             zoom: 1.15;
@@ -403,3 +403,19 @@ style.
     body {
         font-family: 'Helvetica Neue', 'Inter', Arial, sans-serif !important;
     }
+
+    /* anything above this width */
+    @media (min-width: 834px) {
+        .uploads {
+            padding: 0px 15px !important;
+        }
+    }
+
+    /* anything below this width */
+    @media (max-width: 834px) {
+        .uploads {
+            padding: 0px 0px !important;
+        }
+    }
+
+

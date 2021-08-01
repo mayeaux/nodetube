@@ -14,7 +14,7 @@ block content
     if category & 1 == 2
         h3.center-block.text-center Views On This Page: (#{viewsOnThisPage})
 
-    div.container
+    div
 
         h2.center-block.text-center #{timeAgoEnglish}
 
@@ -39,8 +39,7 @@ block content
         // upper pagination
         include ../viewPartials/popularUploadsPagination
 
-
-        br
+        hr
         div.uploads
             // CATEGORY OVERVIEW PAGE IF NOT A CATEGORY
             if !isACategory || category == 'overview'
@@ -55,12 +54,12 @@ block content
 
                 each upload in uploads
                     div.col-xs-12.col-sm-6.col-md-6.col-lg-4(style="text-align:center;height:340px;margin-bottom:34px;")
+                        div(style="width:100%")
+                            include ../viewPartials/uploadThumbnail
 
-                        include ../viewPartials/uploadThumbnail
+                            include ../viewPartials/uploadDetails
 
-                        include ../viewPartials/uploadDetails
-
-                        // include ../viewPartials/uploadDetailsPopular
+                            // include ../viewPartials/uploadDetailsPopular
 
 
             include ../viewPartials/adminSensitivityButtons
