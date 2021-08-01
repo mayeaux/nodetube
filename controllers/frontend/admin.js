@@ -261,15 +261,15 @@ exports.getUsers = async(req, res) => {
   let searchQuery = {};
 
   if(email){
-    searchQuery.email = email
+    searchQuery.email = email;
   }
 
   if(channelUrl){
-    searchQuery.channelUrl = channelUrl
+    searchQuery.channelUrl = channelUrl;
   }
 
   if(stripeCustomerId){
-    searchQuery.stripeCustomerId = stripeCustomerId
+    searchQuery.stripeCustomerId = stripeCustomerId;
   }
 
   console.log(email);
