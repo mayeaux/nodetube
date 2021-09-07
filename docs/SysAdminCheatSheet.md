@@ -4,7 +4,7 @@
 pm2 start --name=webapp npm -- start
 
 ## start caching with pm2
-pm2 start --name=caching npm -- start
+pm2 start --name=caching npm -- cache
 
 ## show data usage
 vnstat -i eth0
