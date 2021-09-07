@@ -1,5 +1,11 @@
 # Useful tools
 
+## start webapp with pm2
+pm2 start --name=webapp npm -- start
+
+## start caching with pm2
+pm2 start --name=caching npm -- start
+
 ## show data usage
 vnstat -i eth0
 
@@ -14,8 +20,6 @@ forever start -c "npm run cache" ./
 
 ## show incoming tcp connections
 sudo tcptrack -i eth0
-
-
 
 
 
