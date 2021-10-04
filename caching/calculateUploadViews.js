@@ -2,6 +2,7 @@ const Promise = require('bluebird');
 const _ = require('lodash');
 const View = require('../models/index').View;
 const Upload = require('../models/index').Upload;
+const moment = require('moment');
 
 const c = {
   l : console.log
@@ -23,6 +24,7 @@ async function calculateViewAmounts(){
 
   if(logCaching == 'true'){
     c.l('Calculating view amounts for particular videos');
+    console.log(moment(new Date).format('hh:mm:ss A'))
   }
 
   // TODO: have to have a job to update upload's view amounts
@@ -45,6 +47,11 @@ async function calculateViewAmounts(){
     upload.views = amountOfViews;
 
     await upload.save();
+  }
+
+  if(logCaching == 'true'){
+    c.l('View amounts calculated');
+    console.log(moment(new Date).format('hh:mm:ss A'))
   }
 
   // if(logCaching == 'true'){
