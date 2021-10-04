@@ -24,6 +24,7 @@ async function getPopularUploads(){
 
   if(logCaching == 'true'){
     c.l('Beginning caching popular uploads, getting popular uploads from db');
+    console.log(moment(new Date).format('hh:mm:ss A'))
   }
 
   // TODO: have to have a job to update upload's view amounts

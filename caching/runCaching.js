@@ -110,14 +110,14 @@ console.log(`CACHE TOTAL VIEW INTERVAL IN MINUTES: ${cacheIntervalInMinutes} \n`
 
 async function main(){
 
-  setInterval(cacheOnlyRecentUploads, cacheRecentIntervalInMs);
-
-  setInterval(cachePopularDailyStatsAndIndex, cacheIntervalInMs);
-
-  // calculate total amount of views for channel display
-  // TODO: couldn't this just be done during popular? maybe not because it doesn't do for sensitive?
-  // TODO: then just do a separate job for
-  setInterval(calculateUploadViews, cacheTotalViewsIntervalInMs);
+  // setInterval(cacheOnlyRecentUploads, cacheRecentIntervalInMs);
+  //
+  // setInterval(cachePopularDailyStatsAndIndex, cacheIntervalInMs);
+  //
+  // // calculate total amount of views for channel display
+  // // TODO: couldn't this just be done during popular? maybe not because it doesn't do for sensitive?
+  // // TODO: then just do a separate job for
+  // setInterval(calculateUploadViews, cacheTotalViewsIntervalInMs);
 
   // calculate and cache recent uploads every minute
   await cacheOnlyRecentUploads();
