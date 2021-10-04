@@ -120,7 +120,7 @@ async function main(){
   setInterval(calculateUploadViews, cacheTotalViewsIntervalInMs);
 
   // calculate and cache recent uploads every minute
-  // await cacheOnlyRecentUploads();
+  await cacheOnlyRecentUploads();
 
   await cachePopularDailyStatsAndIndex();
 

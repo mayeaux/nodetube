@@ -37,10 +37,10 @@ async function getPopularUploads(){
     category : { $exists: true }
   };
 
-  const selectString = 'formattedDuration rating title views checkedViews uploader fileType thumbnailUrl ' +
+  const selectString = 'formattedDuration rating title uploader fileType thumbnailUrl ' +
     'uploadUrl uniqueTag customThumbnailUrl fileExtension thumbnails reacts uncurated category subcategory description';
 
-  let popularUploads = await Upload.find(searchQuery).select(selectString).limit(20).populate('uploader reacts')
+  let popularUploads = await Upload.find(searchQuery).select(selectString).populate('uploader reacts')
     .lean();
 
   if(logCaching == 'true'){
@@ -69,21 +69,6 @@ async function setPopularUploads(){
 
     formattedPopularUploads.push(calculateViewsByPeriod(upload, uploadViews));
   }
-
-  console.log(formattedPopularUploads[1])
-
-  // calculate view periods for each upload
-  // TODO: why this promise all functionality? this is almost surely what's blowing everything up
-  // popularUploads = await Promise.all(popularUploads.map(async function(upload){
-  //
-  //   // get all valid views per upload
-  //   const uploadViews = await View.find({ upload, validity: 'real' }).select('createdAt');
-  //
-  //   // calculate their views per period (last24h, lastweek)
-  //   return calculateViewsByPeriod(upload, uploadViews);
-  // }));
-  //
-  // console.log(popularUploads[1])
 
   if(logCaching == 'true'){
     c.l('Popular uploads have been calculated according to view periods');

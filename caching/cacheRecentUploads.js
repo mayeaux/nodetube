@@ -16,7 +16,7 @@ const buildObjects = helpers.buildObjects;
 
 const redisClient = require('../config/redis');
 
-const logCaching = false;
+const logCaching = process.env.LOG_CACHING;
 
 /** Get all recent uploads from the database per category and concat them **/
 async function getRecentUploads(){
