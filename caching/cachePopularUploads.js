@@ -2,6 +2,7 @@ const Promise = require('bluebird');
 const _ = require('lodash');
 const View = require('../models/index').View;
 const Upload = require('../models/index').Upload;
+const moment = require('moment');
 
 const c = {
   l : console.log
@@ -22,11 +23,11 @@ const logCaching = process.env.LOG_CACHING;
 async function getPopularUploads(){
 
   if(logCaching == 'true'){
-    c.l('Getting popular uploads');
+    c.l('Beginning caching popular uploads, getting popular uploads from db');
+    console.log(moment(new Date).format('hh:mm:ss A'))
   }
 
   // TODO: have to have a job to update upload's view amounts
-
   // TODO: have to build 4 arrays of ~1000
 
   const searchQuery = {
@@ -37,14 +38,14 @@ async function getPopularUploads(){
     category : { $exists: true }
   };
 
-  const selectString = 'formattedDuration rating title views checkedViews uploader fileType thumbnailUrl ' +
+  const selectString = 'formattedDuration rating title uploader fileType thumbnailUrl ' +
     'uploadUrl uniqueTag customThumbnailUrl fileExtension thumbnails reacts uncurated category subcategory description';
 
   let popularUploads = await Upload.find(searchQuery).select(selectString).populate('uploader reacts')
     .lean();
 
   if(logCaching == 'true'){
-    c.l('Uploads received from database');
+    c.l('Uploads received from database for popular calculating');
 
     c.l(popularUploads.length);
   }
@@ -60,20 +61,19 @@ async function setPopularUploads(){
     return upload.uploader;
   });
 
-  // calculate view periods for each upload
+  let formattedPopularUploads = [];
 
-  // TODO: why this promise all functionality? this is almost surely what's blowing everything up
-  popularUploads = await Promise.all(popularUploads.map(async function(upload){
+  console.log(moment(new Date).format('hh:mm:ss A'))
 
-    // get all valid views per upload
-    const uploadViews = await View.find({ upload, validity: 'real' }).select('createdAt');
+  for(const upload of popularUploads){
+    const uploadViews = await View.find({ upload, validity: 'real' }).select('createdAt')
 
-    // calculate their views per period (last24h, lastweek)
-    return calculateViewsByPeriod(upload, uploadViews);
-  }));
+    formattedPopularUploads.push(calculateViewsByPeriod(upload, uploadViews));
+  }
 
   if(logCaching == 'true'){
     c.l('Popular uploads have been calculated according to view periods');
+    console.log(moment(new Date).format('hh:mm:ss A'))
   }
 
   // build json objects representing uploads

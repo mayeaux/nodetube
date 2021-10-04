@@ -3,6 +3,7 @@ const _ = require('lodash');
 const View = require('../models/index').View;
 const Upload = require('../models/index').Upload;
 const categories = require('../config/categories');
+const moment = require('moment');
 
 const javascriptTimeAgo = require('javascript-time-ago');
 javascriptTimeAgo.locale(require('javascript-time-ago/locales/en'));
@@ -21,12 +22,17 @@ const logCaching = process.env.LOG_CACHING;
 /** Get all recent uploads from the database per category and concat them **/
 async function getRecentUploads(){
 
+  if(logCaching == 'true'){
+    console.log(`Beginning running recent uploads`);
+
+  }
+
   let recentUploadsAllCategories = [];
 
   for(const category of categories){
 
     if(logCaching == 'true'){
-      console.log(`Getting uploads for category: ${category.name}`);
+      console.log(`Getting recent uploads for category: ${category.name}`);
     }
 
     const searchQuery = {
@@ -60,6 +66,9 @@ async function getRecentUploads(){
 /** Get recent uploads per the function above, calculate their views per time period **/
 async function setRecentUploads(){
   let recentUploads  = await getRecentUploads();
+
+  console.log(`Calculating view amounts`);
+  console.log(moment(new Date).format('hh:mm:ss A'))
 
   // calculate view periods for each upload
   recentUploads = await Promise.all(recentUploads.map(async function(upload){

@@ -1,7 +1,16 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-
 const logCaching = process.env.LOG_CACHING;
+const jsHelpers = require('../lib/helpers/js-helpers');
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+/** FOR FINDING ERRANT LOGS **/
+if(process.env.SHOW_LOG_LOCATION == 'true' || 1 == 2){
+  jsHelpers.showLogLocation();
+}
 
 process.on('uncaughtException', (err) => {
   console.log('Uncaught Exception: ', err);
@@ -51,12 +60,10 @@ console.log(`CACHING IS RUNNING AGAINST: ${database} \n`);
 
 const setCache = require('./setCache'); // index and daily stats
 
+// functions to run caching jobs
 const cacheRecentUploads = require('./cacheRecentUploads'); // index and daily stats
 const cachePopularUploads = require('./cachePopularUploads'); // index and daily stats
-
 const calculateUploadViews = require('./calculateUploadViews'); // index and daily stats
-
-// const cacheRecentUploads = require('./cacheRecentAndPopularUploads');
 
 async function cacheOnlyRecentUploads(){
 
@@ -73,6 +80,7 @@ async function cacheOnlyRecentUploads(){
 async function cachePopularDailyStatsAndIndex(){
   try {
     await cachePopularUploads();
+    await calculateUploadViews();
     await setCache.setDailyStats();
     await setCache.setIndexValues();
 
@@ -95,24 +103,52 @@ const cacheIntervalInMs = cacheIntervalInMinutes * ( 1000 * 60 );
 
 console.log(`CACHE POPULAR, DAILY STATS AND INDEXES INTERVAL IN MINUTES: ${cacheIntervalInMinutes} \n`);
 
-async function main(){
+let cacheTotalViewsInterval = parseInt(process.env.CACHE_TOTAL_VIEW_INTERVAL) || 6;
 
-  setInterval(cacheOnlyRecentUploads, cacheRecentIntervalInMs);
+const cacheTotalViewsIntervalInMs = cacheTotalViewsInterval * ( 1000 * 60 );
 
-  setInterval(cachePopularDailyStatsAndIndex, cacheIntervalInMs);
+console.log(`CACHE TOTAL VIEW INTERVAL IN MINUTES: ${cacheIntervalInMinutes} \n`);
 
-  setInterval(calculateUploadViews, cacheIntervalInMs);
+// TODO: there is a bug here, where when times line up, they will run multiple jobs at once,
+// TODO: ideally, they should push into an array, run the most recent job in array, then delete it from array,
+// TODO: and run them sequentially
 
+async function runRecentInterval(){
   // calculate and cache recent uploads every minute
   await cacheOnlyRecentUploads();
-
-  await cachePopularDailyStatsAndIndex();
-
-  await calculateUploadViews();
-
+  await sleep(cacheRecentIntervalInMs)
+  runRecentInterval();
 }
 
-main();
+runRecentInterval();
+
+async function runOtherCaching(){
+  await cachePopularDailyStatsAndIndex();
+  await sleep(cacheIntervalInMs)
+  runOtherCaching()
+}
+
+runOtherCaching()
+
+// async function main(){
+//
+//   // setInterval(cacheOnlyRecentUploads, cacheRecentIntervalInMs);
+//   //
+//   // setInterval(cachePopularDailyStatsAndIndex, cacheIntervalInMs);
+//   //
+//   // // calculate total amount of views for channel display
+//   // // TODO: couldn't this just be done during popular? maybe not because it doesn't do for sensitive?
+//   // // TODO: then just do a separate job for
+//   // setInterval(calculateUploadViews, cacheTotalViewsIntervalInMs);
+//
+//   // calculate and cache recent uploads every minute
+//   // await cacheOnlyRecentUploads();
+//
+//   // also does total view amounts
+//   await cachePopularDailyStatsAndIndex();
+// }
+
+// main();
 
 // calculateUploadViews()
 
