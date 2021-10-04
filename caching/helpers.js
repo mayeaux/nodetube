@@ -52,7 +52,7 @@ var dayAgo = moment().subtract(24, 'hours').toDate();
 var hourAgo = moment().subtract(1, 'hours').toDate();
 var minuteAgo = moment().subtract(1, 'minutes').toDate();
 
-async function calculateViewsByPeriod(upload, uploadViews){
+function calculateViewsByPeriod(upload, uploadViews){
   upload.viewsAllTime = uploadViews.length;
 
   uploadViews = _.filter(uploadViews, function(uploadView){ return uploadView.createdAt > monthAgo; });

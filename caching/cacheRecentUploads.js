@@ -16,17 +16,21 @@ const buildObjects = helpers.buildObjects;
 
 const redisClient = require('../config/redis');
 
-const logCaching = process.env.LOG_CACHING;
+const logCaching = false;
 
 /** Get all recent uploads from the database per category and concat them **/
 async function getRecentUploads(){
+
+  if(logCaching == 'true'){
+    console.log(`Beginning running recent uploads`);
+  }
 
   let recentUploadsAllCategories = [];
 
   for(const category of categories){
 
     if(logCaching == 'true'){
-      console.log(`Getting uploads for category: ${category.name}`);
+      console.log(`Getting recent uploads for category: ${category.name}`);
     }
 
     const searchQuery = {

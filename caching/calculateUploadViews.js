@@ -22,7 +22,7 @@ const logCaching = process.env.LOG_CACHING;
 async function calculateViewAmounts(){
 
   if(logCaching == 'true'){
-    c.l('Getting popular uploads');
+    c.l('Calculating view amounts for particular videos');
   }
 
   // TODO: have to have a job to update upload's view amounts
@@ -40,7 +40,7 @@ async function calculateViewAmounts(){
   for(const upload of uploads){
     const amountOfViews = await View.countDocuments({ upload: upload.id, validity: 'real' });
 
-    console.log(upload.views);
+    // console.log(upload.views);
 
     upload.views = amountOfViews;
 
