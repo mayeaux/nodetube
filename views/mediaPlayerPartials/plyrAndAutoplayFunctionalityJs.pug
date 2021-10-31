@@ -113,9 +113,9 @@ script.
     seekTime,
   };
 
-  const hasPreviewThumbnail = #{upload.hasPreviewSpriteThumbnail}
+  const hasPreviewThumbnail = '#{upload.hasPreviewSpriteThumbnail}'
 
-  if(hasPreviewThumbnail){
+  if(hasPreviewThumbnail === 'true'){
     const previewThumbnails = {
       enabled: true,
       src: [`/uploads/#{upload.uploader.channelUrl}/#{upload.uniqueTag}_sprite.vtt`],
