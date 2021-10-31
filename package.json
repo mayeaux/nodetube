@@ -66,7 +66,7 @@
     "forever": "^2.0.0",
     "formidable": "^1.2.1",
     "fs-extra": "^4.0.3",
-    "generate-video-sprites-node": "^1.0.2",
+    "generate-video-sprites-node": "^1.0.3",
     "get-audio-duration": "^2.0.0",
     "get-video-duration": "^1.0.3",
     "heroku-ssl-redirect": "0.0.4",
