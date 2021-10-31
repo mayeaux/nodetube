@@ -179,11 +179,11 @@ const uploadSchema = new mongoose.Schema({
   // when the backend finished processing the upload
   processingCompletedAt: Date,
 
-  // string, such as UnIqUe.webvtt used by default to indicate it's in the same directory with the upload
-  webVTTPath: String,
-
   // data returned from running ffprobe against the upload
-  ffprobeData: mongoose.Schema.Types.Mixed
+  ffprobeData: mongoose.Schema.Types.Mixed,
+
+  // the expected path is $uniqueTag_sprite.vtt in the same directory
+  hasPreviewSpriteThumbnail: Boolean
 
 }, {
   timestamps: true,

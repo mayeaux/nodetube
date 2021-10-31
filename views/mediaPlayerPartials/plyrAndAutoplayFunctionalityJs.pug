@@ -111,22 +111,19 @@ script.
     settings: ['speed', 'captions', 'quality', 'loop'],
     fullscreen: {iosNative: true},
     seekTime,
-    previewThumbnails: {
-      enabled: true,
-      src: [`/uploads/#{upload.uploader.channelUrl}/#{upload.uniqueTag}_sprite.vtt`],
-    },
   };
 
-  // TODO: add sprite
-  // if (#{upload.hasPreviewSpriteThumbnail}) {
-  //
-  //   let previewThumbnails = {
-  //     enabled: true,
-  //     src: ['/uploads/anthony/newVideoTrimmed.vtt'],
-  //   }
-  //
-  //   plyr_options.previewThumbnails = previewThumbnails;
-  // }
+  const hasPreviewThumbnail = #{upload.hasPreviewSpriteThumbnail}
+
+  if(hasPreviewThumbnail){
+    const previewThumbnails = {
+      enabled: true,
+      src: [`/uploads/#{upload.uploader.channelUrl}/#{upload.uniqueTag}_sprite.vtt`],
+    }
+
+    plyr_options.previewThumbnails = previewThumbnails;
+  }
+
 
   // Create the plyr instances - this defines players[0] as our primary player.
   var players = Plyr.setup("#media_player", plyr_options);
