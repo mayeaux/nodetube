@@ -593,9 +593,18 @@ exports.postFileUpload = async(req, res) => {
 
           // todo: only run if user has plus
           // will automatically stick it at /uploads/$channelUrl/$uniqueTag_sprite.png and /$uniqueTag_sprite.vtt
-          if(1 == 1){
-            await createSpriteImageAndVtt(channelUrl, uniqueTag, fileInDirectory)
+
+          try {
+            if(1 == 1){
+              await createSpriteImageAndVtt(channelUrl, uniqueTag, fileInDirectory)
+
+              upload.hasPreviewSpriteThumbnail = true;
+              await upload.save();
+            }
+          } catch (err){
+            console.log(err);
           }
+
 
           await markUploadAsComplete(uniqueTag, channelUrl, user);
 
