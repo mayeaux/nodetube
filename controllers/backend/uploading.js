@@ -29,6 +29,9 @@ const sendMessageToDiscord = require('../../lib/moderation/discordWebhooks');
 const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
 const getMediaType = require('../../lib/uploading/media');
 const { b2, bucket, hostUrl } = require('../../lib/uploading/backblaze');
+const createSpriteImageAndVtt = require('../../lib/uploading/createSpriteImages');
+
+console.log(createSpriteImageAndVtt);
 
 const ffmpegHelper = require('../../lib/uploading/ffmpeg');
 const {
@@ -586,6 +589,12 @@ exports.postFileUpload = async(req, res) => {
             // note it's at 99% so the frontend doesnt redirect yet
             redisClient.setAsync(`${uniqueTag}uploadProgress`, 99);
             await backblaze.uploadToB2(upload, fileInDirectory, hostFilePath);
+          }
+
+          // todo: only run if user has plus
+          // will automatically stick it at /uploads/$channelUrl/$uniqueTag_sprite.png and /$uniqueTag_sprite.vtt
+          if(1 == 1){
+            await createSpriteImageAndVtt(channelUrl, uniqueTag, fileInDirectory)
           }
 
           await markUploadAsComplete(uniqueTag, channelUrl, user);
