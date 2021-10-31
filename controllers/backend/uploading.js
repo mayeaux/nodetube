@@ -31,8 +31,6 @@ const getMediaType = require('../../lib/uploading/media');
 const { b2, bucket, hostUrl } = require('../../lib/uploading/backblaze');
 const createSpriteImageAndVtt = require('../../lib/uploading/createSpriteImages');
 
-console.log(createSpriteImageAndVtt);
-
 const ffmpegHelper = require('../../lib/uploading/ffmpeg');
 const {
   markUploadAsComplete,
