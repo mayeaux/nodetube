@@ -427,6 +427,7 @@ exports.postFileUpload = async(req, res) => {
 
           let bitrate, codecName, codecProfile;
 
+          // if not an image, requires ffprobe data collection
           if(upload.fileType !== 'image'){
 
             // load the ffprobe data in response
@@ -502,12 +503,16 @@ exports.postFileUpload = async(req, res) => {
 
           console.log('done moving file');
 
+
+          /** BASIC VIDEO PROCESSING COMPLETED, CHECKING IF NEEDS CONVERSION **/
+
           const specificMatches = ( codecName == 'hevc' || codecProfile == 'High 4:4:4 Predictive' );
 
           if(specificMatches || bitrate > maxBitrate){
             upload.fileType = 'convert';
           }
 
+          // TODO: a bit ugly, wish we could pull out 'only video' stuff and then do convert in its own conditional
           /** TELL THE USER WE ARE CONVERTING / COMPRESSING THEIR VIDEO **/
           if(upload.fileType == 'convert' || bitrate > maxBitrate || upload.fileType == 'video'){
 
@@ -519,6 +524,7 @@ exports.postFileUpload = async(req, res) => {
               // set upload progress as 1 so it has something to show on the frontend
               redisClient.setAsync(`${uniqueTag}uploadProgress`, 'Your upload is beginning processing...');
 
+              // video is marked as processing, end the request and send user to upload page
               if(!responseSent){
                 responseSent = true;
                 aboutToProcess(res, channelUrl, uniqueTag);
@@ -535,13 +541,14 @@ exports.postFileUpload = async(req, res) => {
 
             // TODO: savePath and fileInDirectory are the same thing, need to clean this code up
 
+            // if we need to convert, move it to this 'old' location so we can write to the new location
             if(fileExtension == '.mp4' && bitrate > maxBitrate || specificMatches){
               await fs.move(savePath, `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-old.mp4`);
 
               fileInDirectory = `${saveAndServeFilesDirectory}/${channelUrl}/${uniqueTag}-old.mp4`;
             }
 
-            // if the file type is convert or it's over max bitrate
+            // if the file type is convert or it's over max bitrate, convert it with ffmpeg
             if(upload.fileType == 'convert' || (bitrate > maxBitrate && fileExtension == '.mp4')){
 
               console.log(fileInDirectory);
@@ -556,7 +563,8 @@ exports.postFileUpload = async(req, res) => {
 
               uploadLogger.info('Finished converting file', logObject);
 
-              // assuming an mp4 is created at this point so we delete the old uncoverted video
+              // assuming an mp4 is created at this point so we delete the old unconverted video
+              // note, $fileInDirectory is changed
               await fs.remove(`${fileInDirectory}`);
 
               uploadLogger.info('Deleted unconverted file', logObject);
@@ -590,21 +598,6 @@ exports.postFileUpload = async(req, res) => {
             redisClient.setAsync(`${uniqueTag}uploadProgress`, 99);
             await backblaze.uploadToB2(upload, fileInDirectory, hostFilePath);
           }
-
-          // todo: only run if user has plus
-          // will automatically stick it at /uploads/$channelUrl/$uniqueTag_sprite.png and /$uniqueTag_sprite.vtt
-
-          try {
-            if(1 == 1){
-              await createSpriteImageAndVtt(channelUrl, uniqueTag, fileInDirectory)
-
-              upload.hasPreviewSpriteThumbnail = true;
-              await upload.save();
-            }
-          } catch (err){
-            console.log(err);
-          }
-
 
           await markUploadAsComplete(uniqueTag, channelUrl, user);
 
@@ -642,6 +635,19 @@ exports.postFileUpload = async(req, res) => {
           if(!responseSent){
             responseSent = true;
             aboutToProcess(res, channelUrl, uniqueTag);
+          }
+
+          // once everything is done, generate thumbnail previews
+          if(upload.fileType === 'video'){
+            // will automatically stick it at /uploads/$channelUrl/$uniqueTag_sprite.png and /$uniqueTag_sprite.vtt
+            (async function(){
+              if(user.plan === 'plus') {
+                await createSpriteImageAndVtt(channelUrl, uniqueTag, fileInDirectory)
+
+                upload.hasPreviewSpriteThumbnail = true;
+                await upload.save();
+              }
+            })()
           }
         });
 
