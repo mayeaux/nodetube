@@ -18,7 +18,7 @@
     "postinstall": "node ./copySettingsAndPrivateFiles.js",
     "eslint": "eslint ./",
     "eslint:fix": "./node_modules/.bin/eslint --fix .",
-    "dev": "nodemon -e pug,js app.js",
+    "dev": "nodemon -e js app.js",
     "memory": "node --max-old-space-size=4096 app.js",
     "cache": "node --max-old-space-size=8000 caching/runCaching.js",
     "caching": "node --max-old-space-size=8000 caching/runCaching.js",

@@ -568,7 +568,7 @@ block content
 
                     a(href=`/user/${upload.uploader.channelUrl}` style="color:#a5a5a5;font-weight:300") #{upload.uploader.channelName || upload.uploader.channelUrl}
                         if upload.uploader.verified == true
-                            img(src="/images/verified.jpg" width="25px" height="25px" style="opacity:0.75;margin-left:3px;margin-top:-2px;margin-right:5px;")
+                            img(src="/images/verified.jpg" width="25px" height="25px" style="opacity:0.75;margin-left:3px;margin-top:-2px;margin-right:5px;border-radius:20px;")
                         if upload.uploader.plan == 'plus'
                             span.nodetube-pro PLUS
 
