@@ -139,9 +139,9 @@ block content
                     if channel.channelDescription
                         p.fw(style="font-size:18px" id="descriptionText") #{channel.channelDescription}
 
-                    //if user && user.role == 'admin'
-                    //    each ip in ips
-                    //        p= ip
+                    if user && user.role == 'admin'
+                        each ip in ips
+                            p= ip
 
                     if user && ( user.role == 'admin' || user.role == 'moderator') && channel.status !== 'restricted'
                         br
