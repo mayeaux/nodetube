@@ -604,10 +604,6 @@ exports.react = async(req, res, next)  => {
 /** POST EDIT UPLOAD **/
 exports.editUpload = async(req, res, next) => {
 
-  // console.log(req.body);
-  //
-  // return res.send('hello');
-
   try {
 
     if(!req.user && req.body.uploadToken){
@@ -656,7 +652,11 @@ exports.editUpload = async(req, res, next) => {
     // had to do this check for if the body has a visibility, if it's pending it will brick
     // TODO: should be changed such that pending is pendingApproval and not a visibility
     // only allow user to change visibility if they have plus, or if it's an admin or moderator
-    if((upload.uploader.plan === 'plus' || isModeratorOrAdmin) && req.body.visibilty){
+
+    const isPlusOrModeratorOrAdmin = upload.uploader.plan === 'plus' || isModeratorOrAdmin;
+    const visibilityValue = req.body.visibility;
+
+    if(isPlusOrModeratorOrAdmin && visibilityValue){
       upload.visibility = req.body.visibility;
     }
     upload.rating = req.body.rating;
