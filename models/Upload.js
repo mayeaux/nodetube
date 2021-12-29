@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
-const _ = require('lodash');
-const categoriesConfig = require('../config/categories');
+const lodash = require('lodash');
 
 const { getAllCategories, getAllSubcategories } = require('../lib/helpers/categories');
 
@@ -253,7 +252,7 @@ uploadSchema.virtual('timeAgo').get(function(){
 
 uploadSchema.virtual('viewsWithin1hour').get(function(){
 
-  let realViews = _.filter(this.checkedViews, function(view){
+  let realViews = lodash.filter(this.checkedViews, function(view){
     return view.validity == 'real' && view.createdAt > ( new Date() - oneHourAmount );
   });
 
@@ -262,7 +261,7 @@ uploadSchema.virtual('viewsWithin1hour').get(function(){
 
 uploadSchema.virtual('viewsWithin24hour').get(function(){
 
-  let realViews = _.filter(this.checkedViews, function(view){
+  let realViews = lodash.filter(this.checkedViews, function(view){
     return view.validity == 'real' && view.createdAt > ( new Date() - oneDayAmount );
   });
 
@@ -271,7 +270,7 @@ uploadSchema.virtual('viewsWithin24hour').get(function(){
 
 uploadSchema.virtual('viewsWithin1week').get(function(){
 
-  let realViews = _.filter(this.checkedViews, function(view){
+  let realViews = lodash.filter(this.checkedViews, function(view){
     return view.validity == 'real' && view.createdAt > ( new Date() - oneDayAmount * 7 );
   });
 
@@ -280,7 +279,7 @@ uploadSchema.virtual('viewsWithin1week').get(function(){
 
 uploadSchema.virtual('viewsWithin1month').get(function(){
 
-  let realViews = _.filter(this.checkedViews, function(view){
+  let realViews = lodash.filter(this.checkedViews, function(view){
     return view.validity == 'real';
   });
 
@@ -289,7 +288,7 @@ uploadSchema.virtual('viewsWithin1month').get(function(){
 
 uploadSchema.virtual('viewsAllTime').get(function(){
 
-  let realViews = _.filter(this.checkedViews, function(view){
+  let realViews = lodash.filter(this.checkedViews, function(view){
     return view.validity == 'real' && ( new Date() - oneDayAmount * 365 );
   });
 
@@ -298,7 +297,7 @@ uploadSchema.virtual('viewsAllTime').get(function(){
 
 uploadSchema.virtual('legitViewAmount').get(function(){
 
-  const realViews = _.filter(this.checkedViews, function(view){
+  const realViews = lodash.filter(this.checkedViews, function(view){
     return view.validity == 'real';
   });
 

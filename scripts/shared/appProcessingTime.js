@@ -5,7 +5,6 @@
 // `node ./migrate_ffmpeg.js` from within this directory
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const ffmpegHelper = require('../../lib/uploading/ffmpeg');
 
 process.on('unhandledRejection', console.log);
 
@@ -39,9 +38,7 @@ const User = require('../../models/index').User;
 
 async function main(){
   const channelUrl = 'TonyHeller';
-  const user = await User.findOne({
-    channelUrl
-  });
+  await User.findOne({ channelUrl });
 
   // uploader_id
   const uploads = await Upload.find({

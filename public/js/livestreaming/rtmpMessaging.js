@@ -1,7 +1,5 @@
 const domainNameAndTLD = process.env.DOMAIN_NAME_AND_TLD;
 
-const brandName = process.env.INSTANCE_BRAND_NAME;
-
 /** MESSAGING FUNCTIONALITY**/
 
 var pathName = window.location.pathname;
@@ -12,7 +10,6 @@ var username = pathName.match(regexp)[1];
 
 var env = '#{env || '+production+'}';
 
-var websocketUrl;
 var messageUrl;
 
 // var webSocketUrl = 'wss://' + location.host + '/one2many';
@@ -38,7 +35,7 @@ var onUserConnection = {
   message: 'CONNECTING'
 };
 
-messageSocket.onopen = function(event){
+messageSocket.onopen = function(){
   messageSocket.send(JSON.stringify(onUserConnection));
 };
 
@@ -175,7 +172,7 @@ messageSocket.onmessage = function(message){
 };
 
 // close socket on page reload
-window.onbeforeunload = function(event)
+window.onbeforeunload = function()
 {
   console.log('closing!');
 

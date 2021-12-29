@@ -5,7 +5,6 @@
 // `node ./migrate_ffmpeg.js` from within this directory
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const ffmpegHelper = require('../../lib/uploading/ffmpeg');
 
 process.on('unhandledRejection', console.log);
 

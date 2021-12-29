@@ -39,7 +39,6 @@ const showLocalNotification = async(body, swRegistration) => {
   const description = params.get('description');
   const image = params.get('image');
   const icon = params.get('icon');
-  const data = params.get('data');
   const title = params.get('title');
 
   const badge = icon;
@@ -57,9 +56,6 @@ const showLocalNotification = async(body, swRegistration) => {
 
 self.addEventListener('notificationclick', function(event){
   console.log(event);
-
-  // this contains a bunch of info on the notification, icon image and all that stuff
-  const notification = event.notification;
 
   // url was passed in the data thing
   const url = event.notification.data;

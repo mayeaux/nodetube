@@ -5,8 +5,6 @@ const fs = require('fs');
 const https = require('https');
 const http = require('http');
 
-const ws = require('ws');
-
 const User = require('../../models/index').User;
 
 const publisher = require('../../config/redis');
@@ -115,8 +113,6 @@ exports.onLiveAuth = async(req, res) => {
 var app;
 var server;
 let webSockets;
-let connectedUsers;
-let connectedUsersAmount;
 var messagesObject;
 
 // TODO: have to fix this

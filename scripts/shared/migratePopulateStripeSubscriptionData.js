@@ -20,8 +20,6 @@ process.on('unhandledRejection', (err) => {
 dotenv.load({ path: '.env.private' });
 dotenv.load({ path: '.env.settings' });
 
-const brandName = process.env.INSTANCE_BRAND_NAME;
-
 const secretKey = process.env.STRIPE_API_KEY;
 
 const stripe = require('stripe')(secretKey);

@@ -7,7 +7,7 @@ $(function(){
     var replyLinkContainingDiv = $(this).parent().parent().parent();
 
     // make reply form visible
-    var replyContainer = replyLinkContainingDiv.children('.reply-container').css('display', 'inline');
+    replyLinkContainingDiv.children('.reply-container').css('display', 'inline');
   });
 
   /** POST COMMENT FUNCTIONALITY START **/
@@ -48,30 +48,6 @@ $(function(){
         }
 
         console.log(data);
-
-        // if it's a regular comment and not a reply
-        if(commentForm.hasClass('overall-comment-form')){
-
-          var containingDiv = $('.commentCountDiv');
-
-          var commentDiv =$(`<div style="display:block;padding-bottom:15px;"><p class="fw" style="text-align:left;">${data.user} - ${data.timeAgo} &nbsp;</p><p class="fw" style="text-align:left;">${data.text}</p>`);
-
-          var responsesDiv = containingDiv.append(commentDiv);
-
-          console.log('original comment form');
-
-          // if it's a reply
-        } else if(commentForm.hasClass('reply-comment-form')){
-
-          var containingDiv = commentForm.parent().parent().parent();
-
-          var commentDiv =$(`<div style="display:block;padding-bottom:15px;padding-left:40px;"><p class="fw" style="text-align:left;">${data.user} - ${data.timeAgo} &nbsp;</p><p class="fw" style="text-align:left;">${data.text}</p>`);
-
-          var responsesDiv = containingDiv.children('.responses').append(commentDiv);
-
-        }
-
-        // console.log(data);
       },
       error: function(err){
         console.log(err);

@@ -30,8 +30,6 @@ async function checkWhetherToCountView(siteVisitorId, uploadID){
     // assuming the timeDiff is in ms, then this is the value for one hour
     const timeDiffInH = timeDiff / ( 1000 * 60 * 60);
 
-    const timeDiffInM = timeDiff / ( 1000 * 60);
-
     // console.log(timeDiffInM);
     // console.log('^ time diff in M ');
     //

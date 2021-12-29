@@ -14,7 +14,7 @@ const uploadHelpers = require('../../lib/helpers/settings');
 
 const checkWhetherToCountView = require('../../middlewares/shared/viewCounting');
 
-const { bytesToGb, bytesToMb } = require('../../lib/uploading/helpers');
+const { bytesToMb } = require('../../lib/uploading/helpers');
 
 const categories = require('../../config/categories');
 

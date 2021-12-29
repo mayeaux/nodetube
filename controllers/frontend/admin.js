@@ -17,8 +17,6 @@ const timeAgoEnglish = new javascriptTimeAgo('en-US');
 
 const { uploadServer} = require('../../lib/helpers/settings');
 
-const { attachDataToUploadsAsUploads } = require('../../lib/helpers/addFieldsToUploads');
-
 let viewStats, uploadStats, userStats, reactStats, subscriptionStats, searchStats, commentStats, siteVisitStats;
 
 async function getStats(){

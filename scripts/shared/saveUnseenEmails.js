@@ -94,7 +94,7 @@ let mailListeners = [];
     });
 
     // seqno just an incrementing index
-    mailListener.on('mail', async function(mail, seqno, attributes){
+    mailListener.on('mail', async function(mail){
 
       const fromEmailAddress = mail.from[0].address;
       const subject = mail.subject;

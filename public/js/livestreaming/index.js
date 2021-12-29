@@ -1,7 +1,3 @@
-const domainNameAndTLD = process.env.DOMAIN_NAME_AND_TLD;
-
-const brandName = process.env.INSTANCE_BRAND_NAME;
-
 var pathName = window.location.pathname;
 
 var regexp = /\/user\/(.*)\/live/;
@@ -43,7 +39,7 @@ var onUserConnection = {
   message: 'CONNECTING'
 };
 
-messageSocket.onopen = function(event){
+messageSocket.onopen = function(){
   messageSocket.send(JSON.stringify(onUserConnection));
 };
 
@@ -55,7 +51,6 @@ function onError(error){
 
 var video;
 var webRtcPeer;
-var webRtcPeerScreencast;
 
 window.onload = function(){
   // console = new Console();
@@ -418,8 +413,7 @@ messageSocket.onmessage = function(message){
 };
 
 // close socket on page reload
-window.onbeforeunload = function(event)
-{
+window.onbeforeunload = function(){
   console.log('closing!');
 
   var onUserDisconnection = {

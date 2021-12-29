@@ -1,20 +1,10 @@
 const SiteVisit = require('../../models').SiteVisit;
 const arraysEqual = require('../../lib/helpers/js-helpers').arraysEqual;
-const ipstack = require('ipstack');
 const dotenv = require('dotenv');
 
 /** Load environment variables from .env file, where API keys and passwords are configured. **/
 dotenv.load({path: '../.env.settings'});
 dotenv.load({path: '../.env.private'});
-
-function getIpDataAsync(ip){
-  return new Promise(function(resolve, reject){
-    ipstack(ip, process.env.IPSTACK_API_KEY, function(err, data){
-      if(err !== null) reject(err);
-      else resolve(data);
-    });
-  });
-}
 
 async function iptracker(req, res, next){
 

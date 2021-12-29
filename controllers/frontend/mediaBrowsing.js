@@ -20,9 +20,8 @@ const { getUploadDuration } = require('../../lib/mediaBrowsing/helpers');
 
 const getSensitivityFilter =  uploadFilters.getSensitivityFilter;
 const categories = require('../../config/categories');
-const logCaching = process.env.LOG_CACHING;
 
-// todo: get out of controller
+// TODO get out of controller
 let viewStats;
 
 async function getStats(){
@@ -43,15 +42,6 @@ if(!process.env.FILE_HOST  || process.env.FILE_HOST == 'false'){
 
 const pageLimit = 42;
 
-// TODO: pull out this function
-function removeTrailingSlash(requestPath){
-  if(requestPath.charAt(requestPath.length - 1) == '/'){
-    requestPath = requestPath.substr(0, requestPath.length - 1);
-  }
-
-  return requestPath;
-}
-
 // TODO: pull this function out
 async function addValuesIfNecessary(upload, channelUrl){
   if(upload.fileType == 'video' || upload.fileType == 'audio'){
@@ -71,10 +61,6 @@ async function addValuesIfNecessary(upload, channelUrl){
 
         uploadDocument.durationInSeconds = Math.round(duration.seconds);
         uploadDocument.formattedDuration = duration.formattedTime;
-
-        const saveDocument = await uploadDocument.save();
-        // console.log(saveDocument);
-
       } catch(err){
         /** if the file has been deleted then it won't blow up **/
         // console.log(err);
@@ -105,9 +91,6 @@ async function addLastTimeWatched(upload, user){
  * Page displaying most recently uploaded content
  */
 exports.recentUploads = async(req, res) => {
-
-  let requestPath = removeTrailingSlash(req.path);
-
   try {
 
     const mediaBrowsingType = 'recent';
@@ -272,25 +255,6 @@ exports.popularUploads = async(req, res) => {
     {withinString: '1week', englishString: 'Last Week'}
     , { withinString: '1month', englishString: 'Last Month' }, { withinString: 'alltime', englishString: 'All Time' }];
 
-  // used for 'views per these returned items
-  function calculateViewAmount(uploads){
-    let viewCounter = 0;
-
-    for(const checkUpload of uploads){
-      // console.log(checkUpload);
-
-      let stringToCheck;
-      if(within == 'alltime'){
-        stringToCheck = 'viewsAllTime';
-      } else {
-        stringToCheck = `viewsWithin${within}`;
-      }
-      const forThisUpload = checkUpload[stringToCheck];
-      viewCounter = viewCounter + forThisUpload;
-    }
-    return viewCounter;
-  }
-
   try {
 
     switch(englishString){
@@ -367,7 +331,6 @@ exports.popularUploads = async(req, res) => {
       }
     }
 
-    let newUploads = {};
     if(uploads && !uploads.map){
 
       uploads = attachDataToUploadsAsCategories(uploads);

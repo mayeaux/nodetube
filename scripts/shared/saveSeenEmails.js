@@ -82,7 +82,7 @@ mailListener.on('error', function(err){
   });
 
   // seqno just an incrementing index
-  mailListener.on('mail', async function(mail, seqno, attributes){
+  mailListener.on('mail', async function(mail){
 
     // console.log(attributes);
 
@@ -136,7 +136,7 @@ mailListener.on('error', function(err){
 
     // console.log(mail.headers['message-id']);
 
-    const keys = Object.keys(mail.headers);
+    // const keys = Object.keys(mail.headers);
 
     // console.log(keys);
     // console.log(mail.eml)

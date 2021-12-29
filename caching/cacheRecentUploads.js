@@ -1,5 +1,4 @@
 const Promise = require('bluebird');
-const _ = require('lodash');
 const View = require('../models/index').View;
 const Upload = require('../models/index').Upload;
 const categories = require('../config/categories');
@@ -23,7 +22,7 @@ const logCaching = process.env.LOG_CACHING;
 async function getRecentUploads(){
 
   if(logCaching == 'true'){
-    console.log(`Beginning running recent uploads`);
+    console.log('Beginning running recent uploads');
 
   }
 
@@ -67,8 +66,8 @@ async function getRecentUploads(){
 async function setRecentUploads(){
   let recentUploads  = await getRecentUploads();
 
-  console.log(`Calculating view amounts`);
-  console.log(moment(new Date).format('hh:mm:ss A'))
+  console.log('Calculating view amounts');
+  console.log(moment(new Date).format('hh:mm:ss A'));
 
   // calculate view periods for each upload
   recentUploads = await Promise.all(recentUploads.map(async function(upload){
