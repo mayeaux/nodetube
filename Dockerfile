@@ -1,5 +1,5 @@
 FROM bougyman/voidlinux as void
-RUN xbps-install -Syu git tar python nodejs-lts-10 base-devel
+RUN xbps-install -Syu git tar python nodejs-lts base-devel
 COPY app* package* .env.settings.sample .env.private.sample copySettingsAndPrivateFiles.js Procfile routes.js /app/
 COPY bin /app/bin/
 COPY caching /app/caching/
@@ -28,7 +28,7 @@ RUN npm i --production && \
 FROM bougyman/voidlinux
 WORKDIR /app/
 COPY --from=builder /app/ /app/
-RUN xbps-install -Syu tar python nodejs-lts-10 && rm -rf /var/cache/xbps && \
+RUN xbps-install -Syu tar python nodejs-lts && rm -rf /var/cache/xbps && \
     ln -s /app/node_modules/ffprobe-static/bin/linux/x64/ffprobe /app/node_modules/@ffmpeg-installer/linux-x64/ffmpeg /usr/local/bin/
 EXPOSE 8080
 CMD ["npm", "start"]
