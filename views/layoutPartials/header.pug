@@ -1,66 +1,281 @@
 style.
   @import url("//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css");
 
-  /*body {*/
-  /*margin: 30px;*/
-  /*}*/
+  h7 {
+    color: white;
+    display: inline-block;
+  }
+
+  input[type="text"] {
+    border-radius: 2px 0 0 2px;
+    border: 1px solid #bebebe;
+    color: #000000;
+    height: 33px;
+    padding: 0 10px;
+    width: 88%;
+    z-index: 2;
+  }
+
+  input:focus {
+    border: 1.1px solid #1c62b9;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, .4);
+  }
+
+  .backButtonIcon {
+    display: none;
+    left: 17px;
+    width: 70px;
+  }
+
+  .box {
+    width: 80%;
+  }
+
+  .faRandom {
+    color:#b9b9b9;
+    cursor:pointer;
+    font-size:32px;
+    margin-right:5px;
+    margin-top:3px;
+  }
+
+  .fixedTop {
+    background-color:white;
+    margin:0;
+    max-width:100%;
+    opacity:1;
+    padding:0;
+  }
+
+  .fullTitle {
+    color: #ffffff;
+    display: inline-block;
+    font-size: 25px;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .fullTitleLink {
+    left: 99px;
+    position: absolute;
+    top: 15px;
+  }
+
+  .hamburgerDropdown {
+    position:absolute;
+    left:28px;
+  }
+
+  .hamburgerDropdown img {
+    display: inline-block;
+    width: 52px;
+  }
 
   .headerContainer {
     padding: 0px;
   }
 
+  .postButton {
+    transition: all 0.2s ease;
+    -webkit-transition: all 0.2s ease;
+  }
+
+  .postButton:hover {
+    background-color: #212121 !important;
+  }
+
   .search {
-    position: relative;
-    color: #aaa;
+    color: #aaaaaa;
     font-size: 16px;
+    position: relative;
   }
 
   .search input {
-    width: 600px;
-    height: 36px;
-
     background: #fcfcfc;
-    border: 1px solid #aaa;
-  }
-
-  .search input {
+    border: 1px solid #aaaaaa;
+    height: 36px;
     text-indent: 9px;
+    width: 600px;
   }
 
-  .search .fa-search {
+  .searchBar {
+    margin: 0 auto 0 200px;
+    position: relative;
+    width: 45%;
 
+    /* TODO looks like this is overridden by inline styles. double check. */
+    /* width: 55%; */
+  }
+
+  .searchQueryInput {
+    background-color:#313131;
+    border: 1px solid #5b5a5a !important;
+    color:white !important;
+    margin-bottom: 10px;
+    margin-top: 11px;
+  }
+
+  .searchQueryInput::placeholder {
+    /* Most modern browsers support this now. */
+    color: grey;
+  }
+
+  .searchUploadsButton {
+    -webkit-transition: all 0.2s ease;
+    background-color: #313131 !important;
+    border: 1px solid #5b5a5a;
+    transition: all 0.2s ease;
+    z-index: 999999;
+  }
+
+  .searchUploadsButton:hover {
+    background-color: #212121 !important;
+  }
+
+  .searchUploadsButton:hover i {
+    color: white;
+    opacity: .95;
+  }
+
+  .searchButton {
+    background-color: black;
+    border-left: 0;
+    border-radius: 0px 2px 2px 0;
+    border: 1px solid #bebebe;
+    cursor: pointer;
+    font-size: 14px;
+    height: 33px;
+    position: absolute;
+    right: -6px;
+    text-align: center;
+    top: 11px;
+    width: 14%;
+    z-index: 1;
+
+    /* TODO looks like these are overridden by inline styles. double check. */
+    /* background-color: #f0f0f0; */
+    /* right: 0; */
+  }
+
+  .searchExpander, .uploadIconI {
+    color: grey;
+    font-size: 22px;
+    position: absolute;
+    right: 111px;
+    top: 24px;
+  }
+
+  .searchIcon {
+    color: #a7a3a3;
+    left: 44%;
+    position: absolute;
+    top: 29%;
+  }
+
+  .secondLine {
+    background-color: #141414;
+    padding-left: 56px;
+    border-bottom: 1px solid #cec0c0;
+    box-shadow: -3px 11px 10px -10px rgba(0,0,0,0.51);
+    float: left;
+    width: 100%;
+
+    margin-top: -54px !important;
+  }
+
+  .signInAnchor {
+    position: absolute;
+    right: 121px;
+    top: 13px;
+
+    /* TODO looks like this is overridden by inline styles. double check. */
+    /* right: 10px; */
+  }
+
+  .signInAnchor.withUser {
+    right: 212px;
+  }
+
+  .signInDiv {
+    background-color: #313131;
+    border-radius: 3px;
+    border: 1px solid #848484;
+    display: inline-block;
+    padding: 9px 23px;
+
+    /* TODO looks like this is overridden by inline styles. double check. */
+    /* border: 2px solid black; */
   }
 
   .singleLetter {
+    color: #ffffff;
     display: none;
-    color: #0FDA01;
     font-size: 30px;
     font-weight: 900;
     margin-top: 28px;
     position: absolute;
+    text-transform: uppercase;
     top: -30px;
+
+    /* TODO looks like this is overridden by inline styles. double check. */
+    /* color: #0fda01; */
   }
 
-  /*.formSpan {*/
-  /*color: grey;*/
-  /*position: absolute;*/
-  /*right: -78px;*/
-  /*top: -1px;*/
-  /*background-color: #eaeaea;*/
-  /*padding: 10px 26px;*/
-  /*border: 1px solid #cec0c0;*/
-  /*}*/
+  .textCenter {
+    border-radius: 15px;
+    display: inline-block;
+    margin-left: 15px;
+    width: 27px;
+   }
 
-  /* ===========================
-     ====== Medua Query for Search Box ======
-     =========================== */
+  .uploadButton {
+    position: absolute;
+    right: 79px;
+    top: 13px;
+  }
 
-  /** post button starts to hit search bar **/
+  .uploadButton div.postButton {
+    background-color: #313131;
+    border-radius: 3px;
+    border: 1px solid #848484;
+    display: inline-block;
+    margin-left: 15px;
+    padding: 9px 36px;
+  }
+
+  .uploadIcon {
+    position: absolute;
+    right: 79px;
+    top: 13px;
+  }
+
+  .uploadIconI {
+    display: none;
+    right: -6px;
+    top: 11px;
+  }
+
+  .userImage {
+    position: absolute;
+    right: 29px;
+    top: 20px;
+  }
+
+  /*
+     ======================================
+     ====== Search Box Media Queries ======
+     = page widths in descending order... =
+     ======================================
+   */
+
+  @media (max-width: 927px) {
+    .diceIcon {
+      visibility: hidden;
+    }
+  }
+
+  /* post button starts to hit search bar */
   @media (max-width: 753px){
-    /*input[name="searchValue"] {*/
-    /*display: none;*/
-    /*}*/
-
     .postButton {
       display: none !important;
     }
@@ -70,334 +285,132 @@ style.
     }
   }
 
-  /* when plus button starts to hit search bar */
+  /* plus button starts to hit search bar */
   @media (max-width: 593px) {
+    .hamburgerDropdown {
+      left: 11px !important;
+    }
 
     .fullTitle {
-      display: none !important;
+      color: #ffffff;
+      display: none;
+      font-size: 25px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .permBar {
+      display: none;
+    }
+
+    .searchBar {
+      width: 57% !important;
+      margin-left: 70px !important;
     }
 
     .singleLetter {
       display: inline !important;
       left: -32px;
     }
-
-    .search-bar {
-      width: 57% !important;
-      margin-left: 70px !important;
-    }
-
-    .hamburgerDropdown {
-      left: 11px !important;
-    }
-
-    .permBar {
-      display: none;
-    }
   }
 
-  /* when plus button starts to hit search bar */
-  /* everything under 439px  */
+  /* everything under 439px */
   @media (max-width: 439px) {
     .fullTitle {
       display: none !important;
     }
 
-    .singleLetter {
-      display: inline !important;
-    }
-
-    .search-bar {
+    .searchBar {
       display: none;
     }
 
-    .searchPlaceHolder, .uploadButton {
+    .searchPlaceHolder {
+      display: none;
+      height: 56px;
+    }
+
+    .searchPlaceHolder, .uploadIconI {
       display: block !important;
     }
 
-  }
-
-
-
-  /*@media (min-width: 320px) {*/
-  /*!* smartphones, iPhone, portrait 480x320 phones *!*/
-  /*input[name="searchValue"] {*/
-  /*background: pink;*/
-  /*}*/
-
-  /*}*/
-
-  /*@media (min-width: 481px) {*/
-  /*!* portrait e-readers (Nook/Kindle), smaller tablets @ 600 or @ 640 wide. *!*/
-  /*input[name="searchValue"] {*/
-  /*background: yellow;*/
-  /*}*/
-
-  /*}*/
-
-  /*@media (min-width: 641px) {*/
-  /*!* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones *!*/
-  /*input[name="searchValue"] {*/
-  /*background: purple;*/
-  /*}*/
-
-  /*!*.postButton {*!*/
-  /*!*display:none !important;*!*/
-  /*!*}*!*/
-
-  /*}*/
-
-  /*@media (min-width: 961px) {*/
-  /*!* tablet, landscape iPad, lo-res laptops ands desktops *!*/
-  /*input[name="searchValue"] {*/
-  /*background: green;*/
-  /*}*/
-
-  /*}*/
-
-  /*@media (min-width: 1025px) {*/
-  /*!* big landscape tablets, laptops, and desktops *!*/
-  /*input[name="searchValue"] {*/
-  /*background: blue;*/
-  /*}*/
-
-  /*}*/
-
-  /*@media (min-width: 1281px) {*/
-  /*!* hi-res laptops and desktops *!*/
-  /*input[name="searchValue"] {*/
-  /*background: red;*/
-  /*}*/
-  /*}*/
-
-
-  .box {
-    width: 80%;
-  }
-
-  .search-bar {
-    width: 55%;
-    position: relative;
-    margin: 0 auto;
-  }
-
-  input[type="text"] {
-    width: 88%;
-    height: 33px;
-    padding: 0 10px;
-    color: #000;
-    border: 1px solid #BEBEBE;
-    border-radius: 2px 0 0 2px;
-    z-index: 2;
-  }
-
-  input:focus {
-    border: 1.1px solid #1c62b9;
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, .4);
-  }
-
-  .searchButton {
-    position: absolute;
-    width: 14%;
-    height: 33px;
-    border: 1px solid #BEBEBE;
-    border-left: 0;
-    top: 11px;
-    right: 0;
-    border-radius: 0px 2px 2px 0;
-    cursor: pointer;
-    font-size: 14px;
-    text-align: center;
-    background-color: #f0f0f0;
-    z-index: 1
-  }
-
-  .search-uploads-button {
-    border: 1px solid #5b5a5a;
-    z-index: 999999;
-    background-color: #313131 !important;
-  }
-
-  .search-query-input {
-    border: 1px solid #5b5a5a !important;
-    color:white !important;
-    background-color:#313131;
-  }
-
-  .search-query-input::placeholder { /* Most modern browsers support this now. */
-    color: grey;
-  }
-
-  .search-uploads-button:hover i {
-    opacity: .95;
-    color: white;
-  }
-
-
-  .searchIcon {
-    position: absolute;
-    left: 44%;
-    top: 29%;
-    color: #a7a3a3;
-  }
-
-  .searchExpander, .uploadButton {
-    position: absolute;
-    top: 24px;
-    right: 111px;
-    font-size: 22px;
-    color: grey;
-  }
-
-  .signInDiv {
-    display: inline-block;
-    border: 2px solid black;
-    padding: 9px 23px;
-    border-radius: 3px;
-  }
-
-  .signInAnchor {
-    position: absolute;
-    top: 13px;
-    right: 10px;
-  }
-
-  .secondLine {
-    margin-top: -54px !important;
-    padding-left: 56px;
-    background-color: #141414;
-  }
-
-  @media (max-width: 927px) {
-    .diceIcon {
-      visibility: hidden;
+    .singleLetter {
+      display: inline !important;
     }
-
   }
 
-  .postButton {
-    transition: all 0.2s ease;
-    -webkit-transition: all 0.2s ease;
-  }
+.container.headerContainer.fixedTop
+  div.secondLine
+    a.hamburgerDropdown(href="#")
+      img(src="/images/white-burger.jpg" onclick="toggleNav()")
 
-  .search-uploads-button {
-    transition: all 0.2s ease;
-    -webkit-transition: all 0.2s ease;
-  }
+    a.fullTitleLink(href="/")
+      p.fullTitle #{brandName}
+      p.singleLetter #{brandName}
 
-  .postButton:hover {
-    background-color: #212121 !important;
-  }
-
-  .search-uploads-button:hover {
-    background-color: #212121 !important;
-  }
-  
-  
-
-
-
-.container.headerContainer.fixed-top(style="opacity:1;background-color:white;margin:0;max-width:100%;padding:0")
-  //.search1
-  //    form.search-form
-  //        input(type='text', placeholder='Search for books, authors, categories and more..')
-  //        input(type='submit', value='Submit')
-
-
-
-  div.secondLine(style="float:left;margin-top:8px;border-bottom: 1px solid #cec0c0;width:100%;box-shadow:-3px 11px 10px -10px rgba(0,0,0,0.51);")
-
-    a.hamburgerDropdown(href="#" style="position:absolute;left:28px;")
-      img(src="/images/white-burger.jpg" style="width:52px;display:inline-block;" onclick='toggleNav()')
-
-    a(href="/" style="position:absolute;left:99px;top:15px;")
-      p.fullTitle(style="text-transform:uppercase;display:inline-block;color:#ffffff;font-size:25px;font-weight:900;") #{brandName}
-      p.singleLetter(style="text-transform:uppercase;color:#ffffff;") #{brandName}
-
-    div.searchPlaceHolder(style="height:56px;display:inline-block;display:none;")
+    div.searchPlaceHolder
       a(href="#")
-        i.fas.fa-search.searchExpander.searchExpanderButton
-        i.fas.fa-arrow-left.searchExpander.backButtonIcon(style="left:17px;display:none;width:70px;")
+        // TODO why do we need these sequences of identifiers?
+        i.fas.faSearch.searchExpander.searchExpanderButton
+        i.fas.faArrowLeft.searchExpander.backButtonIcon
 
+    div.searchBar
+      input(type="hidden", name="_csrf", value=_csrf)
 
-    div.search-bar(style="width:45%;margin-left:200px;")
-      input(type='hidden', name='_csrf', value=_csrf)
-      input.search-query-input(style="margin-top:11px;margin-bottom:10px;" type='text', placeholder=`${  searchQuery !== undefined ? searchQuery : 'Search'   }` name='searchValue' value="")
-      button.search-uploads-button.searchButton(style="right:-6px;background-color:black;")
-        i.fas.fa-search.searchIcon
+      input.searchQueryInput(
+          name="searchValue"
+          placeholder=`${ searchQuery !== undefined ? searchQuery : 'Search' }`
+          type="text",
+          value="")
 
-    // UPGRADE ICON
-    //a(href="#" style="position: absolute;top: 21px;right: 325px;")
-    //    h7(style="font-size:15px") Upgrade
+      button.searchUploadsButton.searchButton
+        // TODO why do we need this sequence of identifiers?
+        i.fas.faSearch.searchIcon
 
     if !user
+      a.diceIcon.signInAnchor(href="/random")
+        // TODO why do we need this sequence of identifiers?
+        i.fas.faRandom(aria-hidden="true")
 
-
-      a.diceIcon.signInAnchor(href="/random" style="right:121px;")
-        i.fas.fa-random(aria-hidden="true" style="cursor:pointer;color:#b9b9b9;font-size:32px;margin-top:3px;margin-right:5px;")
-
-
-
-      //a.signInAnchor(href="/random" style="background-color:white;right:121px;")
-      //  div.signInDiv(style="")
-      //    i.fas.fa-dice
-
-      a.signInAnchor(href="/login" style="")
-        div.signInDiv(style="background-color: #313131;border: 1px solid #848484;")
-          h7(style="display:inline-block;color:white;") Sign In
-
+      a.signInAnchor(href="/login")
+        div.signInDiv
+          h7 Sign In
 
     if user
+      a.diceIcon.signInAnchor.withUser(href="/random")
 
-      a.diceIcon.signInAnchor(href="/random" style="right:212px;")
+        // TODO why do we need this sequence of identifiers?
+        i.fas.faRandom(aria-hidden="true")
 
-        i.fas.fa-random(aria-hidden="true" style="cursor:pointer;color:#b9b9b9;font-size:32px;margin-top:3px;margin-right:5px;")
+      a.uploadButton(href="/upload")
+        div.postButton(data-target="#exampleModal", data-toggle="modal")
+          h7 Upload
 
-        //img(src="/images/random.png" style="height:39px;margin-top:2px;opacity:0.9;")
-
-      // BELL ICON
-      //a(href="#" style="position: absolute;top: 19px;right: 280px;")
-      //    img(src="/bell-angle.png" style="width:29px;display:inline-block;margin-left:15px;")
-
-
-      a(href="/upload" style="position: absolute;top: 13px;right: 79px;")
-        div.postButton(style="display:inline-block;border: 1px solid #848484;padding: 9px 36px;margin-left:15px;border-radius: 3px;background-color: #313131;" data-toggle='modal', data-target='#exampleModal')
-          //a(href="/donate")
-          h7(style="display:inline-block;color:white;") Upload
-
-      a(href="/upload" style="position: absolute;top: 13px;right: 79px;")
+      a.uploadIcon(href="/upload")
         div.postIcon
-          i.fas.fa-upload.uploadButton(style="top: 11px;right: -6px;display:none;")
+          i.fas.fa-upload.uploadIconI
 
-        //div.postIcon(style="display:none;" data-toggle='modal', data-target='#exampleModal')
-        //  img(src="/images/whiteDollarIcon.png" style="width:25px;margin-top:9px;")
-          //h7(style="display:inline-block;color:black;") Post
-
-        a.userImage(href="#" style="position: absolute;top: 20px;right: 29px;")
+        a.userImage(href="#")
           if user.customThumbnail
-            img.center-block.text-center(onclick='toggleAccount()' src=`${uploadServer}/${user.channelUrl}/${user.customThumbnail}` style="width: 27px;display:inline-block;margin-left:15px;border-radius:15px;")
+            img.centerBlock.textCenter(
+                onclick="toggleAccount()"
+                src=`${uploadServer}/${user.channelUrl}/${user.customThumbnail}`)
           else
-            img.center-block.text-center(onclick='toggleAccount()' src=`/images/default_user_image.png` style="width: 27px;display:inline-block;margin-left:15px;border-radius:15px;")
-            //img.center-block.text-center(onclick='toggleAccount()' src=`${uploadServer}/${user._id}/unique.png` style="width: 27px;display:inline-block;margin-left:15px;border-radius:15px;")
-
-
+            img.centerBlock.textCenter(
+              onclick="toggleAccount()"
+              src="/images/default_user_image.png")
 script.
-
   $(document).ready(function () {
 
     // whatever search expander is
     $('.searchExpander').click(function () {
-      console.log('something')
 
       // hide the sign in div
       $('.signInDiv').hide();
 
-
       // show the back button
-      $('.backButtonIcon').css({
-        display: 'block'
-      });
+      $('.backButtonIcon').show();
 
+      // TODO add and remove css classes instead of individual styles
       // hide single letter (now just says newtube)
       var elem = $('.singleLetter');
       elem[0].style.removeProperty('display');
@@ -405,26 +418,24 @@ script.
 
       // hide single letter
       var elem2 = $('.searchPlaceHolder');
-      console.log(elem2[0]);
       elem2[0].style.removeProperty('display');
       elem2[0].style.setProperty('display', 'inline', 'important');
 
       // post icon probably now upload button
       var elem1 = $('.postIcon');
-      if(elem1[0]){
+      if (elem1[0]) {
         elem1[0].style.removeProperty('display');
         elem1[0].style.setProperty('display', 'none', 'important');
       }
 
-      // shwo the search bar again
-      $('.search-bar, .search-form').css({
+      // show the search bar again
+      $('.searchBar, .search-form').css({
         display: 'inline'
       });
 
-      $('.search-query-input').css({
+      $('.searchQueryInput').css({
         'margin-left' : '-61px'
       });
-
 
       $('.hamburgerDropdown, .userImage, .searchExpanderButton').css({
         display: 'none'
@@ -432,24 +443,18 @@ script.
 
       $('.searchButton').css({
         top: '-8px'
-      })
+      });
 
       // no need to autofocus
-      $('.search-query-input').focus();
-
+      $('.searchQueryInput').focus();
     })
-
-
-
 
     // REVERSE EFFECT
     // show the old header
     $('.backButtonIcon').click(function () {
-      console.log('something else ')
-
       $('.signInDiv').show();
 
-      $('.backButtonIcon, .singleLetter, .search-bar, .search-form').css({
+      $('.backButtonIcon, .singleLetter, .searchBar, .search-form').css({
         display: 'none'
       });
 
@@ -464,32 +469,27 @@ script.
       $('.searchPlaceHolder').css({
         display: 'inline-block'
       });
-
-
     })
-
   });
 
 if !user
   script.
-    $('.subscribed-link').on('release click', function(e){
+    $('.subscribed-link').on('release click', function (e) {
       e.preventDefault();
 
       swal({
-        text: "Please register to subscribe to content",
+        text: 'Please register to subscribe to content',
         type: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Sign Up Now'
       }).then(function (result) {
         if (result.value) {
-          window.location.href = "/signup";
+          window.location.href = '/signup';
         }
       })
+    });
 
-
-    })
-
-// hide the header when you scroll down
+// to hide the header when you scroll down
 // first I have to make it fixed to the top
 script.
   $(document).ready(function () {
@@ -499,57 +499,37 @@ script.
     var headroom = new Headroom(myElement);
     // initialise
     headroom.init();
-
-    console.log(headroom);
-
-    console.log("ready!");
   });
-
 
 script.
   $(document).ready(function () {
-
-
-
-    console.log('lets')
-
-    var orderBy = '#{orderBy}'
-    var mediaType = '#{mediaType}'
-    var searchQuery = '#{searchQuery}'
-    var searchType = '#{searchType}' // upload or user
-
-    console.log(orderBy, mediaType, searchQuery, searchType)
+    var orderBy = '#{orderBy}';
+    var mediaType = '#{mediaType}';
+    var searchQuery = '#{searchQuery}';
+    var searchType = '#{searchType}'; // upload or user
 
     if (!orderBy) {
-      orderBy = 'newToOld'
+      orderBy = 'newToOld';
     }
 
-
-    console.log(orderBy, mediaType, searchQuery, searchType)
-
-    // $('.search-query-input').focus();
-
-
-
-
     // TODO: how to capture enter from input
-    $(".search-query-input").on('keyup', function (e) {
+    $('.searchQueryInput').on('keyup', function (e) {
       if (e.key === 'Enter' || e.keyCode === 13) {
-        var userSearchQuery = $('.search-query-input').val()
+        var userSearchQuery = $('.searchQueryInput').val();
 
-        window.location = '/search?orderBy=' + orderBy + '&mediaType=' + mediaType + '&searchQuery=' + userSearchQuery + '&searchType=' + searchType
-        // Do something
+        window.location = (
+            '/search?orderBy=' + orderBy + '&mediaType=' + mediaType +
+            '&searchQuery=' + userSearchQuery + '&searchType=' + searchType);
       }
     });
 
-
     // capture submit
-    $('.search-uploads-button').click(function () {
+    $('.searchUploadsButton').click(function () {
+      var userSearchQuery = $('.searchQueryInput').val();
 
-      var userSearchQuery = $('.search-query-input').val()
-
-      window.location = '/search?orderBy=' + orderBy + '&mediaType=' + mediaType + '&searchQuery=' + userSearchQuery + '&searchType=' + searchType
+      window.location = (
+          '/search?orderBy=' + orderBy + '&mediaType=' + mediaType +
+          '&searchQuery=' + userSearchQuery + '&searchType=' + searchType);
     });
-
   });
 
