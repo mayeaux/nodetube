@@ -127,6 +127,7 @@
     "web-push": "^3.4.4",
     "webhook-discord": "^3.5.1",
     "webp-converter": "^2.3.0",
+    "which": "^2.0.2",
     "winston": "^3.2.1",
     "ws": "^3.3.3",
     "youtube-dl": "github:mayeaux/workingyoutubedl",
