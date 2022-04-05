@@ -4,34 +4,30 @@ block content
     div
         div
             h2
-            h2.view-header Users (Admin)
+            h2.view-header Comments (Admin)
+            h1 Visibility = #{visibility}
+            h4
+                a(href=`/admin/comments/${highlightedNumber}?visibility=public`) Public
+                br
+                a(href=`/admin/comments/${highlightedNumber}?visibility=removed`) Removed
         hr
         if comments.length == 0
-            .center-block.text-center
-                ul.pagination
-                    li.page-item
-                        a.page-link(href=`/admin/comments/${previousNumber}`) <
-
-                    each number in numbersArray
-                        li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
-                            a.page-link(href=`/admin/comments/${number}`) #{number}
-
-                    li.page-item
-                        a.page-link(href=`/admin/comments/${nextNumber}`) >
-            
             p There are no more comments
         else
             .center-block.text-center
                 ul.pagination
                     li.page-item
-                        a.page-link(href=`/admin/comments/${previousNumber}`) <
+                        a.page-link(href=`/admin/comments/${previousNumber}?visibility=${visibility}`) <
 
                     each number in numbersArray
                         li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
-                            a.page-link(href=`/admin/comments/${number}`) #{number}
+                            a.page-link(href=`/admin/comments/${number}?visibility=${visibility}`) #{number}
 
                     li.page-item
-                        a.page-link(href=`/admin/comments/${nextNumber}`) >
+                        a.page-link(href=`/admin/comments/${nextNumber}?visibility=${visibility}`) >
+
+
+
             each comment in comments
                 div.col-sm-4(style="text-align:center;height:420px;border:1px solid black;")
                     // NEW CHANNEL UPLOAD FORMAT
@@ -61,3 +57,15 @@ block content
                                 br
                                 button.btn.btn-danger(name="commentChangeValue" value="deleteCommentBanUser" type="submit" ) Delete Comment/Ban User
 
+            div.col-sm-12(style="text-align:center;margin-top:200px;")
+                .center-block.text-center
+                    ul.pagination
+                        li.page-item
+                            a.page-link(href=`/admin/comments/${previousNumber}?visibility=${visibility}`) <
+
+                        each number in numbersArray
+                          li.page-item(class=(number == highlightedNumber) ? 'active' : undefined)
+                              a.page-link(href=`/admin/comments/${number}?visibility=${visibility}`) #{number}
+
+                        li.page-item
+                            a.page-link(href=`/admin/comments/${nextNumber}?visibility=${visibility}`) >

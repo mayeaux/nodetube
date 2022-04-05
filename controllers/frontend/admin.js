@@ -219,8 +219,21 @@ exports.getComments = async(req, res) => {
 
   const { startingNumber, previousNumber, nextNumber, numbersArray } = pagination.buildPaginationObject(page);
 
+  let { visibility } = req.query;
+
+  if(!visibility) visibility = 'all'
+
+  let searchQuery = {};
+
+  if(visibility !== 'all'){
+    searchQuery.visibility = visibility;
+  }
+
+  console.log('visibility')
+  console.log(visibility);
+
   try {
-    const comments = await Comment.find({}).sort({ _id : -1  }).populate('commenter upload')
+    const comments = await Comment.find(searchQuery).sort({ _id : -1  }).populate('commenter upload')
       .skip(skipAmount).limit(limit);
 
     res.render('admin/comments', {
@@ -230,7 +243,8 @@ exports.getComments = async(req, res) => {
       previousNumber,
       nextNumber,
       numbersArray,
-      highlightedNumber: page
+      highlightedNumber: page,
+      visibility: visibility
     });
   } catch(err){
     console.log('err');
