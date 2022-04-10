@@ -55,7 +55,7 @@ if(akismetApiKey){
   akismetClient = new AkismetClient({ key: akismetApiKey, blog: siteUrl });
 
   (async function() {
-    const isValid = await client.verifyKey();
+    const isValid = await akismetClient.verifyKey();
 
     if (isValid){
       console.log('Spam blocking turned on with valid key');
@@ -860,7 +860,7 @@ exports.postComment = async(req, res) => {
     res.status(500);
     return res.send('failed to post comment');
   }
-  
+
   try {
 
     // note: this functionality is kind of crappy so turning it off
