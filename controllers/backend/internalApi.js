@@ -878,12 +878,25 @@ async function detectSpamComment(request){
   }
 }
 
+async function checkIfUserIsBlockedFromCommenting(user, upload){
+  const blockedUsers = upload.uploader.blockedUsers;
+
+  if(user){
+    const viewingUserId = user._id;
+
+    for(const blockedUser of blockedUsers){
+      if(blockedUser.toString() == viewingUserId) return true
+    }
+  }
+}
+
 /**
  * POST /api/comment
  * Create a comment
  */
 exports.postComment = async(req, res) => {
 
+  // user has a banned account
   if(req.user.status == 'restricted'){
     return res.send('Comment failed, please try again.');
   }
@@ -909,27 +922,21 @@ exports.postComment = async(req, res) => {
 
     let upload = await Upload.findOne({_id: req.body.upload}).populate('uploader');
 
-    const blockedUsers = upload.uploader.blockedUsers;
-
-    let viewingUserIsBlocked = false;
-    if(req.user){
-      const viewingUserId = req.user._id;
-
-      for(const blockedUser of blockedUsers){
-        if(blockedUser.toString() == viewingUserId) viewingUserIsBlocked = true;
-      }
-    }
+    const viewingUserIsBlocked = checkIfUserIsBlockedFromCommenting(user, upload)
 
     if(viewingUserIsBlocked){
       res.status(500);
       return res.send('user is blocked from sending comment');
     }
 
-    const userIsSameAsCommenter = upload.uploader._id.toString() === req.user._id.toString();
-    const userIsATrustedCommenter = req.user.trustedCommenter;
+    const commenterIsSameAsUploader = upload.uploader._id.toString() === req.user._id.toString();
+    const customerIsATrustedCustomer = req.user.trustedCommenter;
 
-    // TODO: don't check if it's a user's own, or user is trusted_commenter
-    const wasASpamComment = await detectSpamComment(req);
+    // check if it was a spam comment
+    let wasASpamComment = false;
+    if(!commenterIsSameAsUploader && !customerIsATrustedCustomer){
+      wasASpamComment = await detectSpamComment(req);
+    }
 
     if(wasASpamComment){
       res.status(500);
@@ -941,57 +948,58 @@ exports.postComment = async(req, res) => {
       text: req.body.comment,
       upload: req.body.upload,
       commenter: req.user._id,
-      inResponseTo: req.body.commentId
+      inResponseTo: req.body.commentId,
+      visibility: 'public'
     });
 
     await comment.save();
 
-    if(req.body.commentId){
-      let respondedToComment = await Comment.findOne({ _id : req.body.commentId });
+    // associate the comment id with the user
+    let user = req.user;
+    user.comments.push(comment._id);
+    await user.save();
 
+    // TODO: the rest of this downward should run with 'mark as not spam'
+    // associate the comment id with the upload
+    upload.comments.push(comment._id);
+    upload = await upload.save();
+
+    const uploaderId = upload.uploader._id;
+    const commenterId = req.user._id;
+
+    const respondedToCommentId = req.body.commentId;
+
+    /** responded to comment functionality **/
+    // if there is a commentId (badly named) it means it is a response to another comment
+    if(respondedToCommentId){
+      let respondedToComment = await Comment.findOne({ _id : respondedToCommentId });
+
+      // associate new comment with responded to comment
       respondedToComment.responses.push(comment._id);
 
       await respondedToComment.save();
 
-      console.log(respondedToComment);
-    }
-
-    comment = await comment.save(); // necessary to have this same call?
-
-    // CREATE NOTIFICATION
-
-    let user = req.user;
-
-    user.comments.push(comment._id);
-
-    user = await user.save();
-
-    upload.comments.push(comment._id);
-
-    upload = await upload.save();
-
-    // send notification if youre not reacting to your own material
-
-    // create notif for comment on your upload if its not your own thing
-    if(!userIsSameAsCommenter){
-      await createNotification(upload.uploader._id, req.user._id, 'comment', upload, undefined, comment);
-    }
-
-    // if its a reply comment send a notification to the original commenter
-    if(req.body.commentId){
       // find replied to comment and get commenter
       const repliedToComment = await Comment.findOne({
-        _id : req.body.commentId
+        _id : respondedToCommentId
       }).populate('commenter');
 
       const repliedToCommentCommenter = repliedToComment.commenter;
       const repliedToCommentCommenterIsSameAsCurrentCommenter = repliedToCommentCommenter._id.toString() === req.user._id.toString();
 
-      // TODO: would be cool if there were automated tests for these
+      // TODO: automated testing here please
       // tell person that they were replied to
       if(!repliedToCommentCommenterIsSameAsCurrentCommenter){
-        await createNotification(repliedToCommentCommenter._id, req.user._id, 'comment', upload, undefined, comment);
+        // send comment to person whose comment is at the top of the thread
+        await createNotification(repliedToCommentCommenter._id, commenterId, 'comment', upload, undefined, comment);
       }
+    }
+
+    comment = await comment.save(); // necessary to have this same call?
+
+    // send notif for comment to uploader if the commenter is not the uploader
+    if(!commenterIsSameAsUploader){
+      await createNotification(uploaderId, commenterId, 'comment', upload, undefined, comment);
     }
 
     const timeAgo = timeAgoEnglish.format( new Date(comment.createdAt)  );

@@ -345,12 +345,14 @@ exports.postComments = async(req, res) => {
   }
 
   if(commentChangeValue === 'markCommentAsNotSpam'){
+    // TODO: hit akismet to tell them it's
     // TODO: do things here
     comment.visibility = 'public';
     await comment.save();
   }
 
   if(commentChangeValue === 'markCommentAsSpam'){
+    // TODO: can hit akismet here
     comment.visibility = 'spam';
     await comment.save();
   }
