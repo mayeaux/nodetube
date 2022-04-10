@@ -29,6 +29,7 @@ $(function(){
       data: $(this).serialize(),
       success: function(data){
 
+        console.log('data here!');
         console.log(data);
 
         if(data == 'Comment already exists'){
@@ -74,6 +75,16 @@ $(function(){
         // console.log(data);
       },
       error: function(err){
+        console.log('the error here!');
+        const errorText = err.responseText;
+        if(errorText === 'spam-detected'){
+          const spamDetectedText = 'A robot thought your comment was spam but a human will take a look at it. ' +
+            'If it’s legit it will be reinstated and you may be marked trusted where we won’t check you for spam anymore. '
+            // + '\n\n If you\'re a spammer you\'ll be banned.';
+
+          return swal(spamDetectedText);
+        }
+
         console.log(err);
       }
     });

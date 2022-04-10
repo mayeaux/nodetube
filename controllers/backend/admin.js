@@ -9,7 +9,7 @@ const createAdminAction = require('../../lib/administration/createAdminAction');
 const deleteUsers = require('../../lib/administration/deleteUsers');
 
 exports.postUsers = async(req, res) => {
-  
+
   const userId = req.body.user;
 
   const userChangeValue = req.body.userChangeValue;

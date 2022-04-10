@@ -850,10 +850,10 @@ async function detectSpamComment(request){
   /** spam check **/
   if(akismetApiKey){
     const commentCheck = {
-      ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress || null,
-      useragent: req.headers['user-agent'],
-      content: req.body.comment,
-      name: req.user.channelName || req.user.channelUrl
+      ip: request.headers['x-forwarded-for'] || request.socket.remoteAddress || null,
+      useragent: request.headers['user-agent'],
+      content: request.body.comment,
+      name: request.user.channelName || request.user.channelUrl
     };
 
     const isSpam = await akismetClient.checkSpam(commentCheck)
@@ -861,18 +861,17 @@ async function detectSpamComment(request){
     if (isSpam){
       // create and save comment
       let comment = new Comment({
-        text: req.body.comment,
-        upload: req.body.upload,
-        commenter: req.user._id,
-        inResponseTo: req.body.commentId,
+        text: request.body.comment,
+        upload: request.body.upload,
+        commenter: request.user._id,
+        inResponseTo: request.body.commentId,
         visibility: 'spam'
       });
 
       await comment.save();
 
-      res.status(500);
-      console.log('Spam comment detected')
-      return res.send('spam-detected');
+      console.log('spam comment detected');
+      return true
     }
   } else {
     return false
@@ -926,8 +925,16 @@ exports.postComment = async(req, res) => {
       return res.send('user is blocked from sending comment');
     }
 
+    const userIsSameAsCommenter = upload.uploader._id.toString() === req.user._id.toString();
+    const userIsATrustedCommenter = req.user.trustedCommenter;
+
     // TODO: don't check if it's a user's own, or user is trusted_commenter
-    await detectSpamComment(req);
+    const wasASpamComment = await detectSpamComment(req);
+
+    if(wasASpamComment){
+      res.status(500);
+      return res.send('spam-detected');
+    }
 
     // create and save comment
     let comment = new Comment({
@@ -966,7 +973,7 @@ exports.postComment = async(req, res) => {
     // send notification if youre not reacting to your own material
 
     // create notif for comment on your upload if its not your own thing
-    if(upload.uploader._id.toString() !== req.user._id.toString()){
+    if(!userIsSameAsCommenter){
       await createNotification(upload.uploader._id, req.user._id, 'comment', upload, undefined, comment);
     }
 
@@ -977,10 +984,13 @@ exports.postComment = async(req, res) => {
         _id : req.body.commentId
       }).populate('commenter');
 
-      const user = repliedToComment.commenter;
+      const repliedToCommentCommenter = repliedToComment.commenter;
+      const repliedToCommentCommenterIsSameAsCurrentCommenter = repliedToCommentCommenter._id.toString() === req.user._id.toString();
 
-      if(user._id.toString() !== req.user._id.toString()){
-        await createNotification(user._id, req.user._id, 'comment', upload, undefined, comment);
+      // TODO: would be cool if there were automated tests for these
+      // tell person that they were replied to
+      if(!repliedToCommentCommenterIsSameAsCurrentCommenter){
+        await createNotification(repliedToCommentCommenter._id, req.user._id, 'comment', upload, undefined, comment);
       }
     }
 
@@ -991,7 +1001,6 @@ exports.postComment = async(req, res) => {
       user: req.user.channelName || req.user.channelUrl,
       timeAgo
     };
-
 
     res.json(responseObject);
 
