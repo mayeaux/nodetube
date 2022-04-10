@@ -217,7 +217,7 @@ exports.getEmbed = async function(req, res){
 
   let upload = await Upload.findOne({
     uniqueTag,
-    visibility: { $ne: 'removed' }
+    visibility: { $in: ['public', 'unlisted'] }
   }).populate({path: 'uploader', populate: {path: ''}}).exec();
 
   if(!upload){
