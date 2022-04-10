@@ -2,11 +2,13 @@ extends ../layout
 
 block content
     div
-        div
+        div(style="margin-left:20px")
             h2
             h2.view-header Comments (Admin)
-            h1 Visibility = #{visibility}
+            h3 Visibility = #{visibility}
             h4
+                a(href=`/admin/comments/${highlightedNumber}?visibility=all`) All
+                br
                 a(href=`/admin/comments/${highlightedNumber}?visibility=public`) Public
                 br
                 a(href=`/admin/comments/${highlightedNumber}?visibility=removed`) Removed
@@ -31,7 +33,7 @@ block content
 
 
             each comment in comments
-                div.col-sm-4(style="text-align:center;height:420px;border:1px solid black;")
+                div.col-sm-4(style="text-align:center;height:470px;border:1px solid black;")
                     // NEW CHANNEL UPLOAD FORMAT
 
                     a(href=`/user/${comment.commenter.channelUrl}`)
@@ -41,7 +43,7 @@ block content
                     if comment.upload
                         a(href=`/user/${comment.commenter.channelUrl}/${comment.upload.uniqueTag}`)
                             h3 Media: #{comment.upload.title}
-                    p(style="height:90px") Comment: #{comment.text}
+                    p(style="height:120px;overflow:hidden;") Comment: #{comment.text}
 
 
 
@@ -51,13 +53,13 @@ block content
                                 input(type='hidden', name='_csrf', value=_csrf)
                                 input(type='hidden', name='user', value=`${comment.commenter._id}`)
                                 input(type='hidden', name='comment', value=`${comment._id}`)
-                                button.btn.btn-success(name="commentChangeValue" value="reinstateComment" type="submit" ) Reinstate Comment
+                                button.btn.btn-success(name="commentChangeValue" value="reinstateComment" type="submit" ) Make Comment Public
                                 br
+                                button.btn.btn-danger(name="commentChangeValue" value="deleteComment" type="submit" ) Make Comment Removed
                                 br
-                                button.btn.btn-danger(name="commentChangeValue" value="deleteComment" type="submit" ) Delete Comment
+                                button.btn.btn-warning(name="commentChangeValue" value="markCommentAsSpam" type="submit" ) Mark As Spam
                                 br
-                                br
-                                button.btn.btn-danger(name="commentChangeValue" value="deleteCommentBanUser" type="submit" ) Delete Comment/Ban User
+                                button.btn.btn-warning(name="commentChangeValue" value="markCommentAsNotSpam" type="submit" ) Mark As Not Spam
 
             div.col-sm-12(style="text-align:center;margin-top:200px;")
                 .center-block.text-center

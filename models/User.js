@@ -48,6 +48,11 @@ const userSchema = new mongoose.Schema({
   youtubeChannelId: String,
   youtubeUsername: String,
 
+  trustedCommenter: {
+    type: Boolean,
+    default: false
+  },
+
   receivedSubscriptions: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Subscription'

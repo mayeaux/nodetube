@@ -846,6 +846,39 @@ exports.deleteComment = async(req, res) => {
 
 };
 
+async function detectSpamComment(request){
+  /** spam check **/
+  if(akismetApiKey){
+    const commentCheck = {
+      ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress || null,
+      useragent: req.headers['user-agent'],
+      content: req.body.comment,
+      name: req.user.channelName || req.user.channelUrl
+    };
+
+    const isSpam = await akismetClient.checkSpam(commentCheck)
+
+    if (isSpam){
+      // create and save comment
+      let comment = new Comment({
+        text: req.body.comment,
+        upload: req.body.upload,
+        commenter: req.user._id,
+        inResponseTo: req.body.commentId,
+        visibility: 'spam'
+      });
+
+      await comment.save();
+
+      res.status(500);
+      console.log('Spam comment detected')
+      return res.send('spam-detected');
+    }
+  } else {
+    return false
+  }
+}
+
 /**
  * POST /api/comment
  * Create a comment
@@ -875,35 +908,6 @@ exports.postComment = async(req, res) => {
     //   return res.send('Comment already exists');
     // }
 
-    /** spam check **/
-    if(akismetApiKey){
-      const commentCheck = {
-        ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress || null,
-        useragent: req.headers['user-agent'],
-        content: req.body.comment,
-        name: req.user.channelName || req.user.channelUrl
-      };
-
-      const isSpam = await akismetClient.checkSpam(commentCheck)
-
-      if (isSpam){
-        // create and save comment
-        let comment = new Comment({
-          text: req.body.comment,
-          upload: req.body.upload,
-          commenter: req.user._id,
-          inResponseTo: req.body.commentId,
-          visibility: 'spam'
-        });
-
-        await comment.save();
-
-        res.status(500);
-        console.log('Spam comment detected')
-        return res.send('problem-processing-comment');
-      }
-    }
-
     let upload = await Upload.findOne({_id: req.body.upload}).populate('uploader');
 
     const blockedUsers = upload.uploader.blockedUsers;
@@ -921,6 +925,9 @@ exports.postComment = async(req, res) => {
       res.status(500);
       return res.send('user is blocked from sending comment');
     }
+
+    // TODO: don't check if it's a user's own, or user is trusted_commenter
+    await detectSpamComment(req);
 
     // create and save comment
     let comment = new Comment({

@@ -9,7 +9,7 @@ const createAdminAction = require('../../lib/administration/createAdminAction');
 const deleteUsers = require('../../lib/administration/deleteUsers');
 
 exports.postUsers = async(req, res) => {
-
+  
   const userId = req.body.user;
 
   const userChangeValue = req.body.userChangeValue;
@@ -43,11 +43,24 @@ exports.postUsers = async(req, res) => {
     await user.save();
   }
 
+  if(userChangeValue == 'trustUserAsCommenter'){
+    user.trustedCommenter = true;
+    await user.save();
+  }
+
+  if(userChangeValue == 'untrustUserAsCommenter'){
+    user.trustedCommenter = false;
+    await user.save();
+  }
+
   actionType = userChangeValue;
 
   await createAdminAction(adminOrModerator, actionType, user._id, [], []);
 
   req.flash('success', {msg: `User ${user.channelUrl} moderated, thank you.`});
+
+  // TODO: might be able to just use this in general
+  if(req.body.requestLocation === 'channelPage') return (res.redirect(req.headers.referer))
 
   res.redirect('/admin/users');
 
@@ -321,17 +334,28 @@ exports.postComments = async(req, res) => {
   const user = await User.findOne({ _id: userId });
   const comment = await Comment.findOne({ _id: commentId });
 
-  if(commentChangeValue == 'deleteComment'){
+  if(commentChangeValue === 'deleteComment'){
     comment.visibility = 'removed';
     await comment.save();
   }
 
-  if(commentChangeValue == 'reinstateComment'){
+  if(commentChangeValue === 'reinstateComment'){
     comment.visibility = 'public';
     await comment.save();
   }
 
-  if(commentChangeValue == 'deleteCommentBanUser'){
+  if(commentChangeValue === 'markCommentAsNotSpam'){
+    // TODO: do things here
+    comment.visibility = 'public';
+    await comment.save();
+  }
+
+  if(commentChangeValue === 'markCommentAsSpam'){
+    comment.visibility = 'spam';
+    await comment.save();
+  }
+
+  if(commentChangeValue === 'deleteCommentBanUser'){
     comment.visibility = 'removed';
     await comment.save();
     user.status = 'restricted';

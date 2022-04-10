@@ -155,11 +155,16 @@ block content
                             form(action="/admin/users" method="POST")
                                 input(type='hidden', name='_csrf', value=_csrf)
                                 input(type='hidden', name='user', value=`${channel._id}`)
-                                button.btn.btn-primary(name="userChangeValue" value="trustUser" type="submit" ) Trust User
-                                button.btn.btn-danger(name="userChangeValue" value="untrustUser" type="submit" ) Untrust User
+                                input(type='hidden', name='requestLocation', value='channelPage')
+                                button.btn.btn-primary(name="userChangeValue" value="trustUser" type="submit" ) Trust User (Uploads)
+                                button.btn.btn-danger(name="userChangeValue" value="untrustUser" type="submit" ) Untrust User (Uploads)
+                                br
+                                button.btn.btn-primary(name="userChangeValue" value="trustUserAsCommenter" type="submit" ) Trust User As Commenter
+                                button.btn.btn-danger(name="userChangeValue" value="untrustUserAsCommenter" type="submit" ) Untrust User As Commenter
                                 br
                                 br
-                                p User Trusted: #{channel.privs.autoVisibleUpload}
+                                p User Trusted (Uploads): #{channel.privs.autoVisibleUpload}
+                                p User Trusted (Comments): #{channel.trustedCommenter}
                                 if channel.stripeCustomerId
                                     p Stripe Customer ID: #{channel.stripeCustomerId}
 
