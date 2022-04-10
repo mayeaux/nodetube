@@ -43,6 +43,28 @@ require('javascript-time-ago/intl-messageformat-global');
 require('intl-messageformat/dist/locale-data/en');
 const timeAgoEnglish = new javascriptTimeAgo('en-US');
 
+const akismetApi = require('akismet-api');
+const AkismetClient = akismetApi.AkismetClient;
+
+const akismetApiKey = process.env.AKISMET_API_KEY;
+let akismetClient;
+
+// TODO: do a better check to turn this on via a variable
+if(akismetApiKey){
+  const siteUrl = domainNameAndTLD;
+  akismetClient = new AkismetClient({ key: akismetApiKey, blog: siteUrl });
+
+  (async function() {
+    const isValid = await client.verifyKey();
+
+    if (isValid){
+      console.log('Spam blocking turned on with valid key');
+    } else {
+      console.log('Spam blocking turned on but with invalid key');
+    }
+  })();
+}
+
 if(process.env.THUMBNAIL_SERVER){
   console.log(`THUMBNAIL SERVER: ${process.env.THUMBNAIL_SERVER}`);
 }
@@ -779,8 +801,8 @@ exports.editUpload = async(req, res, next) => {
 };
 
 /**
- * POST /api/comment
- * List of API examples.
+ * POST /api/comment/delete
+ * Delete comment when hit
  */
 exports.deleteComment = async(req, res) => {
 
@@ -826,7 +848,7 @@ exports.deleteComment = async(req, res) => {
 
 /**
  * POST /api/comment
- * List of API examples.
+ * Create a comment
  */
 exports.postComment = async(req, res) => {
 
@@ -838,7 +860,7 @@ exports.postComment = async(req, res) => {
     res.status(500);
     return res.send('failed to post comment');
   }
-
+  
   try {
 
     // note: this functionality is kind of crappy so turning it off
@@ -852,6 +874,35 @@ exports.postComment = async(req, res) => {
     // if(oldComment){
     //   return res.send('Comment already exists');
     // }
+
+    /** spam check **/
+    if(akismetApiKey){
+      const commentCheck = {
+        ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress || null,
+        useragent: req.headers['user-agent'],
+        content: req.body.comment,
+        name: req.user.channelName || req.user.channelUrl
+      };
+
+      const isSpam = await akismetClient.checkSpam(commentCheck)
+
+      if (isSpam){
+        // create and save comment
+        let comment = new Comment({
+          text: req.body.comment,
+          upload: req.body.upload,
+          commenter: req.user._id,
+          inResponseTo: req.body.commentId,
+          visibility: 'spam'
+        });
+
+        await comment.save();
+
+        res.status(500);
+        console.log('Spam comment detected')
+        return res.send('problem-processing-comment');
+      }
+    }
 
     let upload = await Upload.findOne({_id: req.body.upload}).populate('uploader');
 
@@ -891,7 +942,7 @@ exports.postComment = async(req, res) => {
       console.log(respondedToComment);
     }
 
-    comment = await comment.save();
+    comment = await comment.save(); // necessary to have this same call?
 
     // CREATE NOTIFICATION
 
@@ -933,6 +984,7 @@ exports.postComment = async(req, res) => {
       user: req.user.channelName || req.user.channelUrl,
       timeAgo
     };
+
 
     res.json(responseObject);
 

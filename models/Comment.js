@@ -30,7 +30,7 @@ const commentSchema = new mongoose.Schema({
   text: String,
   visibility: {
     type: String,
-    enum: ['public', 'removed'],
+    enum: ['public', 'removed', 'spam'],
     default: 'public',
     index: true
   }

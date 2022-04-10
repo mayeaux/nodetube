@@ -10,6 +10,8 @@ block content
                 a(href=`/admin/comments/${highlightedNumber}?visibility=public`) Public
                 br
                 a(href=`/admin/comments/${highlightedNumber}?visibility=removed`) Removed
+                br
+                a(href=`/admin/comments/${highlightedNumber}?visibility=spam`) Spam
         hr
         if comments.length == 0
             p There are no more comments
