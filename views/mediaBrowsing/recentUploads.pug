@@ -60,11 +60,11 @@ block content
 
         include ../viewPartials/adminSensitivityButtons
 
-        div.col-sm-12(style="display:inline")
+        div.col-sm-12(style="display:inline;text-align:center;")
             include ../viewPartials/pagination
 
 
-        if user && user.role == 'admin'
+        if user && user.role === 'admin'
             include ../viewPartials/adminChangeRatingsJs
 
         include ../viewPartials/changeSensitivityFilterJs
