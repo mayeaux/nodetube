@@ -299,12 +299,18 @@ style.
         max-width: 370px;
     }
 
+    /** kind of buggy, ease out doesnt work properly **/
+    /*.image-container:hover .upload-thumbnail {*/
+    /*    !*transform: scale(1.05) translate(0px, 30px);*!*/
+    /*    transform: scale(1.12);*/
+    /*    -webkit-filter: brightness(120%);*/
+    /*}*/
 
+    /*.image-container:hover .upload-thumbnail {*/
+    /*    transition: transform .7s ease;*/
+    /*}*/
 
     .upload-thumbnail:hover {
-
-        /*transform: scale(1.05) translate(0px, 30px);*/
-
         transform: scale(1.12);
 
         -webkit-filter: brightness(120%);
