@@ -501,7 +501,6 @@ exports.postFileUpload = async(req, res) => {
 
           console.log('done moving file');
 
-
           /** BASIC VIDEO PROCESSING COMPLETED, CHECKING IF NEEDS CONVERSION **/
 
           const specificMatches = ( codecName == 'hevc' || codecProfile == 'High 4:4:4 Predictive' );
@@ -639,13 +638,13 @@ exports.postFileUpload = async(req, res) => {
           if(upload.fileType === 'video'){
             // will automatically stick it at /uploads/$channelUrl/$uniqueTag_sprite.png and /$uniqueTag_sprite.vtt
             (async function(){
-              if(user.plan === 'plus') {
-                await createSpriteImageAndVtt(channelUrl, uniqueTag, fileInDirectory)
+              if(user.plan === 'plus'){
+                await createSpriteImageAndVtt(channelUrl, uniqueTag, fileInDirectory);
 
                 upload.hasPreviewSpriteThumbnail = true;
                 await upload.save();
               }
-            })()
+            })();
           }
         });
 

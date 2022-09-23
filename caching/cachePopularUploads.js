@@ -24,7 +24,7 @@ async function getPopularUploads(){
 
   if(logCaching == 'true'){
     c.l('Beginning caching popular uploads, getting popular uploads from db');
-    console.log(moment(new Date).format('hh:mm:ss A'))
+    console.log(moment(new Date).format('hh:mm:ss A'));
   }
 
   // TODO: have to have a job to update upload's view amounts
@@ -63,17 +63,17 @@ async function setPopularUploads(){
 
   let formattedPopularUploads = [];
 
-  console.log(moment(new Date).format('hh:mm:ss A'))
+  console.log(moment(new Date).format('hh:mm:ss A'));
 
   for(const upload of popularUploads){
-    const uploadViews = await View.find({ upload, validity: 'real' }).select('createdAt')
+    const uploadViews = await View.find({ upload, validity: 'real' }).select('createdAt');
 
     formattedPopularUploads.push(calculateViewsByPeriod(upload, uploadViews));
   }
 
   if(logCaching == 'true'){
     c.l('Popular uploads have been calculated according to view periods');
-    console.log(moment(new Date).format('hh:mm:ss A'))
+    console.log(moment(new Date).format('hh:mm:ss A'));
   }
 
   // build json objects representing uploads

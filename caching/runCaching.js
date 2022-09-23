@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 const logCaching = process.env.LOG_CACHING;
 const jsHelpers = require('../lib/helpers/js-helpers');
 
-function sleep(ms) {
+function sleep(ms){
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
@@ -116,7 +116,7 @@ console.log(`CACHE TOTAL VIEW INTERVAL IN MINUTES: ${cacheIntervalInMinutes} \n`
 async function runRecentInterval(){
   // calculate and cache recent uploads every minute
   await cacheOnlyRecentUploads();
-  await sleep(cacheRecentIntervalInMs)
+  await sleep(cacheRecentIntervalInMs);
   runRecentInterval();
 }
 
@@ -124,11 +124,11 @@ runRecentInterval();
 
 async function runOtherCaching(){
   await cachePopularDailyStatsAndIndex();
-  await sleep(cacheIntervalInMs)
-  runOtherCaching()
+  await sleep(cacheIntervalInMs);
+  runOtherCaching();
 }
 
-runOtherCaching()
+runOtherCaching();
 
 // async function main(){
 //

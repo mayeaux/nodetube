@@ -54,10 +54,10 @@ if(akismetApiKey){
   const siteUrl = domainNameAndTLD;
   akismetClient = new AkismetClient({ key: akismetApiKey, blog: siteUrl });
 
-  (async function() {
+  (async function(){
     const isValid = await akismetClient.verifyKey();
 
-    if (isValid){
+    if(isValid){
       console.log('Spam blocking turned on with valid key');
     } else {
       console.log('Spam blocking turned on but with invalid key');
@@ -884,9 +884,9 @@ exports.postComment = async(req, res) => {
         name: req.user.channelName || req.user.channelUrl
       };
 
-      const isSpam = await akismetClient.checkSpam(commentCheck)
+      const isSpam = await akismetClient.checkSpam(commentCheck);
 
-      if (isSpam){
+      if(isSpam){
         // create and save comment
         let comment = new Comment({
           text: req.body.comment,
@@ -899,7 +899,7 @@ exports.postComment = async(req, res) => {
         await comment.save();
 
         res.status(500);
-        console.log('Spam comment detected')
+        console.log('Spam comment detected');
         return res.send('problem-processing-comment');
       }
     }
@@ -984,7 +984,6 @@ exports.postComment = async(req, res) => {
       user: req.user.channelName || req.user.channelUrl,
       timeAgo
     };
-
 
     res.json(responseObject);
 
