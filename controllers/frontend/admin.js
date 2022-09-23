@@ -219,9 +219,9 @@ exports.getComments = async(req, res) => {
 
   const { startingNumber, previousNumber, nextNumber, numbersArray } = pagination.buildPaginationObject(page);
 
-  let { visibility } = req.query;
+  let{ visibility } = req.query;
 
-  if(!visibility) visibility = 'all'
+  if(!visibility) visibility = 'all';
 
   let searchQuery = {};
 
@@ -229,7 +229,7 @@ exports.getComments = async(req, res) => {
     searchQuery.visibility = visibility;
   }
 
-  console.log('visibility')
+  console.log('visibility');
   console.log(visibility);
 
   try {

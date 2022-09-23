@@ -24,7 +24,7 @@ async function calculateViewAmounts(){
 
   if(logCaching == 'true'){
     c.l('Calculating view amounts for particular videos');
-    console.log(moment(new Date).format('hh:mm:ss A'))
+    console.log(moment(new Date).format('hh:mm:ss A'));
   }
 
   // TODO: have to have a job to update upload's view amounts
@@ -51,7 +51,7 @@ async function calculateViewAmounts(){
 
   if(logCaching == 'true'){
     c.l('View amounts calculated');
-    console.log(moment(new Date).format('hh:mm:ss A'))
+    console.log(moment(new Date).format('hh:mm:ss A'));
   }
 
   // if(logCaching == 'true'){

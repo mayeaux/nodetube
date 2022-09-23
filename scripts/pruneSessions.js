@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 const logCaching = process.env.LOG_CACHING;
 const jsHelpers = require('../lib/helpers/js-helpers');
 
-function sleep(ms) {
+function sleep(ms){
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
@@ -69,18 +69,15 @@ console.log(`CACHING IS RUNNING AGAINST: ${database} \n`);
 //   })
 // }, 1000)
 
-
-
-mongoose.connection.on('open', function (ref) {
+mongoose.connection.on('open', function(ref){
   console.log('Connected to mongo server.');
-  //trying to get collection names
-  mongoose.connection.db.listCollections().toArray(function (err, names) {
-
+  // trying to get collection names
+  mongoose.connection.db.listCollections().toArray(function(err, names){
 
     // console.log(names); // [{ name: 'dbname.myCollection' }]
 
-    mongoose.connection.db.collection('sessions', function (err, collection) {
-      console.log(collection)
+    mongoose.connection.db.collection('sessions', function(err, collection){
+      console.log(collection);
 
       collection.deleteMany({ session: { $not: /.*passport.*/i }}, function(err, result){
         console.log(result);
@@ -88,4 +85,4 @@ mongoose.connection.on('open', function (ref) {
     });
 
   });
-})
+});
