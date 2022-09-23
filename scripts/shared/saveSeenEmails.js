@@ -179,7 +179,7 @@ mailListener.on('error', function(err){
     // mail processing code goes here
   });
 
-// mailListener.imap.move(:msguids, :mailboxes, function(){})
+  // mailListener.imap.move(:msguids, :mailboxes, function(){})
 
 })();
 
