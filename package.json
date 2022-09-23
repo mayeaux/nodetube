@@ -7,7 +7,7 @@
     "url": "https://github.com/mayeuax/nodetube"
   },
   "engines": {
-    "node": "^8 || ^10"
+    "node": "^12"
   },
   "author": "Anthony Mayfield",
   "license": "MIT",

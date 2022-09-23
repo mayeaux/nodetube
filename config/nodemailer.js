@@ -3,6 +3,7 @@ var mg = require('nodemailer-mailgun-transport');
 
 process.on('unhandledRejection', console.log);
 
+// TODO: update nodemailer (vulnerabilities)
 const zohoTransport = nodemailer.createTransport({
   host: process.env.NODETUBE_NOREPLY_EMAIL_HOST,
   port: process.env.NODETUBE_NOREPLY_EMAIL_PORT,

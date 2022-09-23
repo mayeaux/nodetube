@@ -1,0 +1,55 @@
+// DURATION/FILE TYPE DISPLAYED ON IMAGE
+style.
+    .durationTime {
+        color: #e8e8e8;
+        font-family:initial;
+    }
+
+    .underThing {
+        position: absolute;
+        background-color: black;
+        z-index: 9999;
+        bottom: 0px;
+        right: 0px;
+        border-radius: 10px;
+        opacity: 0.85;
+        padding: 3px 8px;
+    }
+
+    .underThing > i {
+        color: #c8c8c8;
+    }
+
+div.underThing(style="")
+    // all the details including title
+    if ( upload.fileType === 'audio' || upload.fileType === 'video') && upload.formattedDuration
+        div.duration(style="display:inline;height:26px;max-width:70px;text-align:center;position:relative;bottom:0;right:0;opacity:1;margin: 0 auto;border-radius: 5px")
+            span.durationTime(style="margin-right:7px;font-size:15px;") #{upload.formattedDuration}
+
+
+    // list file type
+    if upload.fileType === 'video'
+        i.fa.fa-video-camera(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;")
+    else if upload.fileType === 'audio'
+        i.fa.fa-volume-up(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;")
+    else if upload.fileType === 'image'
+        i.fa.fa-picture-o(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;")
+
+    // list visibilities
+    if upload.visibility === 'unlisted'
+        i.fas.fa-eye-slash(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;margin-left:8px;")
+    if upload.visibility === 'private'
+        i.fas.fa-lock(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;margin-left:8px;")
+    if upload.visibility === 'pending'
+        i.fas.fa-clock(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;margin-left:8px;")
+
+    // sensitivity (rating)
+    if upload.rating === 'mature'
+        i.fas.fa-exclamation-triangle(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;margin-left:8px;")
+    if upload.rating === 'sensitive'
+        i.fas.fa-radiation-alt(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;margin-left:8px;")
+
+
+
+    //i.fas.fa-eye(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;margin-left:8px;")
+

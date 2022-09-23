@@ -180,7 +180,7 @@ exports.postSignup = async(req, res, next) => {
 
       console.log(err);
 
-      if(err && err.errors && err.errors.channelUrl && err.errors.channelUrl.kind == 'unique'){
+      if(err && err.errors && err.errors.channelUrl && err.errors.channelUrl.kind === 'unique'){
         req.flash('errors', { msg: 'That channel username is taken, please choose another one' });
         return res.redirect('/signup');
       }
@@ -237,6 +237,7 @@ exports.postUpdateProfile = async(req, res, next)  => {
   const channelNameBetween3And20Chars = req.body.channelName.length < 3 &&  req.body.channelName.length < 0 || req.body.channelName.length > 20;
 
   if(channelNameBetween3And20Chars){
+    // TODO: log here better
     console.log('SHOULDNT BE POSSIBLE: Someone messing with channelName?');
   }
 
@@ -259,7 +260,7 @@ exports.postUpdateProfile = async(req, res, next)  => {
     await fs.move(req.files.filetoupload.path, `${saveAndServeFilesDirectory}/${req.user.channelUrl}/user-thumbnail${fileExtension}`, {overwrite: true});
 
     // upload thumbnail to b2
-    if(process.env.UPLOAD_TO_B2 == 'true'){
+    if(process.env.UPLOAD_TO_B2 === 'true'){
       await backblaze.uploadUserThumbnailToB2(req.user.channelUrl, fileExtension);
       // await uploadToB2thing(param)
     }
