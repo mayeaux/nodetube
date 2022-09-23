@@ -62,7 +62,7 @@
     "express-useragent": "^1.0.12",
     "express-validator": "^3.1.2",
     "fbgraph": "^1.4.4",
-    "file-type": "^15.0.1",
+    "file-type": "^16.5.4",
     "fluent-ffmpeg": "^2.1.2",
     "forever": "^4.0.3",
     "formidable": "^1.2.1",
