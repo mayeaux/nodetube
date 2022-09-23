@@ -97,7 +97,7 @@
     "node-webvtt": "^1.9.3",
     "nodemailer": "^3.1.7",
     "nodemailer-mailgun-transport": "^1.4.0",
-    "nodemon": "^1.19.0",
+    "nodemon": "^2.0.20",
     "object-sizeof": "^1.3.1",
     "passport": "^0.6.0",
     "passport-facebook": "^2.1.1",
