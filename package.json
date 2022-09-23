@@ -124,7 +124,7 @@
     "tumblr.js": "^1.1.1",
     "twilio": "^3.31.0",
     "twit": "^2.2.11",
-    "validator": "^7.0.0",
+    "validator": "^13.7.0",
     "web-push": "^3.4.4",
     "webhook-discord": "^3.5.1",
     "webp-converter": "^2.3.0",
