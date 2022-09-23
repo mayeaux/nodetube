@@ -32,6 +32,8 @@ if(process.env.SHOW_LOG_LOCATION == 'true' || 1 == 2){
   jsHelpers.showLogLocation();
 }
 
+global.l = console.log;
+
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);

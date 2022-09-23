@@ -82,7 +82,7 @@
     "mkdirp": "^0.5.1",
     "moment": "^2.24.0",
     "mongoose": "^5.7.5",
-    "mongoose-unique-validator": "^1.0.6",
+    "mongoose-unique-validator": "^2.0.3",
     "morgan": "^1.9.1",
     "multer": "^1.4.1",
     "multiparty": "^4.2.1",
