@@ -856,12 +856,11 @@ block content
                         if upload.visibility === 'private'
                             i.fas.fa-lock(aria-hidden='true' style="margin:0 auto;text-align:center;display:inline;margin-left:8px;font-size:12px;")
 
+                if (user && user.channelUrl === upload.uploader.channelUrl) || (user && user.role === 'admin')
                     div.editButtonDiv(style="margin-top:14px")
                         // edit button
-                        if ( user && user.channelUrl == upload.uploader.channelUrl ) || ( user && user.role == 'admin' )
-                            a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}/edit`)
-                                button.fw.btn.btn-success(style="margin-bottom:-10px;border-radius:5px;opacity:0.75;") Edit
-
+                        a(href=`/user/${upload.uploader.channelUrl}/${upload.uniqueTag}/edit`)
+                            button.fw.btn.btn-success(style="margin-bottom:-10px;border-radius:5px;opacity:0.75;") Edit
 
                         br
                         br
