@@ -136,7 +136,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "eslint": "^4.18.2",
+    "eslint": "^8.23.1",
     "eslint-config-airbnb-base": "^11.3.2",
     "eslint-plugin-chai-friendly": "^0.2.0",
     "eslint-plugin-import": "^2.17.2",
