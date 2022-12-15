@@ -935,15 +935,15 @@ block content
                                                         a(href=`/user/${comment.commenter.channelUrl}` style="color:#d2d2d2;margin-right:5px;") #{comment.commenter.channelName || comment.commenter.channelUrl}
                                                     p.fw(style="display:inline-block;") - #{comment.timeAgo} &nbsp
                                                         if user && !viewingUserIsBlocked
-                                                            a.reply-link(style="cursor:pointer") Reply
+                                                            a.reply-link(style="cursor:pointer") Comment in Thread
                                                         // delete button
                                                         // if uploader or admin or commenter, let them delete comment
                                                         if isUploaderOrAdmin || ( user && comment.commenter._id == user._id )
-                                                            a.delete-comment-button(style="margin-left:9px;cursor:pointer;" commentId=comment._id) Delete
+                                                            a.delete-comment-thread-button(style="margin-left:9px;cursor:pointer;" commentId=comment._id) Delete
 
-                                                        if isUploader && !comment.commenter.isBlocked
+                                                        if isUploader && !comment.commenter.isBlocked && ( user && comment.commenter._id != user._id )
                                                             a.block-user-button(style="margin-left:9px;cursor:pointer;" blockedusername=comment.commenter.channelUrl) Block User
-                                                        if isUploader && comment.commenter.isBlocked
+                                                        if isUploader && comment.commenter.isBlocked && ( user && comment.commenter._id != user._id )
                                                             a.unblock-user-button(style="margin-left:9px;cursor:pointer;" blockedusername=comment.commenter.channelUrl) Unblock User
 
 
@@ -969,6 +969,17 @@ block content
                                                                 p.fw(style="text-align:left;display:inline-block;")
                                                                     a(href=`/user/${responseComment.commenter.channelUrl}` style="color:#d2d2d2;margin-right:5px;") #{responseComment.commenter.channelName || responseComment.commenter.channelUrl}
                                                                 p.fw(style="display:inline-block;") - #{responseComment.timeAgo} &nbsp
+                                                                    // delete button
+                                                                    // if uploader, admin or commenter, let them delete comment
+                                                                    if isUploaderOrAdmin || ( user && comment.commenter._id == user._id )
+                                                                        a.delete-thread-comment-button(style="margin-left:9px;cursor:pointer;" commentId=responseComment._id) Delete
+
+                                                                    // if uploader, allow (un)blocking a user
+                                                                    // uploader cannot (un)block themselves
+                                                                    if isUploader && !comment.commenter.isBlocked && ( user && comment.commenter._id != user._id )
+                                                                        a.block-user-button(style="margin-left:9px;cursor:pointer;" blockedusername=comment.commenter.channelUrl) Block User
+                                                                    if isUploader && comment.commenter.isBlocked && ( user && comment.commenter._id != user._id )
+                                                                        a.unblock-user-button(style="margin-left:9px;cursor:pointer;" blockedusername=comment.commenter.channelUrl) Unblock User
                                                             p.fw(style="text-align:left;") #{responseComment.text}
 
                                                         //div.reply-container(style="display:none")

@@ -1,6 +1,6 @@
 script.
   $(function(){
-    function deleteComment(commentId, commentThread) {
+    function deleteComment(commentId, comment) {
 
       var upload = '#{upload._id}';
 
@@ -21,7 +21,7 @@ script.
 
           swal('Comment deleted!');
 
-          commentThread.hide();
+          comment.hide();
 
 
           // remove comment
@@ -36,7 +36,7 @@ script.
 
     }
 
-    $('.delete-comment-button').on('release click', function (e) {
+    $('.delete-comment-thread-button').on('release click', function (e) {
 
       var commentThread = $(this).parent().parent().parent().parent();
 
@@ -54,6 +54,30 @@ script.
       }).then(function (result) {
         if (result.value) {
           deleteComment(commentId, commentThread)
+        } else {
+          swal.close();
+        }
+      })
+    })
+
+    $('.delete-thread-comment-button').on('release click', function (e) {
+
+      var commentInThread = $(this).parent().parent().parent();
+
+      var commentId = $(this).attr('commentId');
+
+      // dont move browser
+      e.preventDefault();
+
+      swal({
+        title: "Delete Comment",
+        text: "Are you sure you want to delete the comment?",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Delete Comment'
+      }).then(function (result) {
+        if (result.value) {
+          deleteComment(commentId, commentInThread)
         } else {
           swal.close();
         }
